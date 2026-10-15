@@ -12,12 +12,17 @@ It
 
 A row Binary Ninja refuses is printed and skipped; a summary ends the run.
 
+On a database that already has names the default keeps them: an item whose name is not Binary
+Ninja's own (sub_, data_ ...) keeps its name and its type, and our name is added to its comment.
+Set OVERWRITE_NAMES below, or BENILLA_RE_OVERWRITE=1, to name, type and comment every row.
+
 The data is read from beside this script: benilla-re.json, and benilla-re.h one folder up or
 beside it. Keep the folders as the export wrote them (binja/ next to bundle/ and benilla-re.h), or
 put the two files next to the script; BENILLA_RE_DIR names the script's folder when `__file__` is
 not set. The repo is not needed.
 
 Environment:
+  BENILLA_RE_OVERWRITE=1  the same as OVERWRITE_NAMES = True.
   BENILLA_RE_FORCE=1  apply to an exe other than 1.12.1.5875 (the addresses will not match).
 """
 
@@ -32,6 +37,9 @@ try:
     from binaryninja import Symbol, SymbolType
 except ImportError:  # outside Binary Ninja, so that the helpers can be read and tested
     binaryninja = Symbol = SymbolType = None
+
+# False: leave a name, a type and a comment that are already set. True: replace them with ours.
+OVERWRITE_NAMES = os.environ.get("BENILLA_RE_OVERWRITE") == "1"
 
 try:
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -65,6 +73,7 @@ CONVENTIONS = {
 
 DECLARATION = re.compile(r"^/\* (0x[0-9a-f]{6}) \*/ (.*)$")
 TRAILING_COMMENT = re.compile(r"\s*/\*.*\*/\s*$")
+DEFAULT_NAME = re.compile(r"^(?:j_)?(?:sub|data|loc|unknown)_[0-9a-fA-F]+$")
 STRUCT_BLOCK = re.compile(r"(?m)^(?=/\* \d+ bytes: )")
 
 
@@ -188,6 +197,24 @@ def parse(bv, declaration):
     return type_
 
 
+def made_by_analysis(symbol):
+    """Whether a symbol is Binary Ninja's own: sub_401000, data_401000 ..."""
+    if symbol is None:
+        return True
+    return bool(getattr(symbol, "auto", False)) or bool(DEFAULT_NAME.match(symbol.name))
+
+
+def comment_for(row, existing, keep):
+    """The comment to set: ours, or, for an item that keeps its name, its own with ours added."""
+    text = comment_of(row)
+    if not keep:
+        return text
+    mine = "benilla-re: %s\n%s" % (row["name"], text) if row["name"] else text
+    if existing and mine in existing:
+        return existing
+    return "%s\n\n%s" % (existing, mine) if existing else mine
+
+
 def apply_functions(bv, rows, declarations, summary):
     for number, row in enumerate(rows):
         if number and number % 5000 == 0:
@@ -202,20 +229,23 @@ def apply_functions(bv, rows, declarations, summary):
                     summary.failed(row["address"], name, "no function could be made")
                     continue
                 summary.add("functions created")
-            if name:
+            keep = not OVERWRITE_NAMES and not made_by_analysis(function.symbol)
+            if keep:
+                summary.add("functions kept as they are")
+            elif name:
                 function.name = name
                 summary.add("functions named")
             declaration = declarations.get(address)
             if declaration is None:
                 if row["signature"]:
                     summary.add("signatures the header does not state")
-            else:
+            elif not keep:
                 try:
                     function.set_user_type(parse(bv, declaration))
                     summary.add("functions typed")
                 except SyntaxError as error:
                     summary.failed(row["address"], name, "type refused: %s: %s" % (declaration, error))
-            function.comment = comment_of(row)
+            function.comment = comment_for(row, function.comment, keep)
         except Exception as error:
             summary.failed(row["address"], name, "error: %s" % error)
 
@@ -228,8 +258,11 @@ def apply_globals(bv, rows, declarations, summary):
             if not bv.is_valid_offset(address):
                 summary.failed(row["address"], name, "not in the view")
                 continue
+            keep = not OVERWRITE_NAMES and not made_by_analysis(bv.get_symbol_at(address))
             declaration = declarations.get(address)
-            if declaration is None:
+            if keep:
+                summary.add("globals kept as they are")
+            elif declaration is None:
                 summary.add("globals the header does not state")
             else:
                 try:
@@ -237,10 +270,10 @@ def apply_globals(bv, rows, declarations, summary):
                     summary.add("globals typed")
                 except SyntaxError as error:
                     summary.failed(row["address"], name, "type refused: %s: %s" % (declaration, error))
-            if name:
+            if name and not keep:
                 bv.define_user_symbol(Symbol(SymbolType.DataSymbol, address, name))
                 summary.add("globals named")
-            bv.set_comment_at(address, comment_of(row))
+            bv.set_comment_at(address, comment_for(row, bv.get_comment_at(address), keep))
         except Exception as error:
             summary.failed(row["address"], name, "error: %s" % error)
 
@@ -259,7 +292,15 @@ def apply(bv):
     if not check_exe(bv, document):
         print("benilla-re: stopped; BENILLA_RE_FORCE=1 applies it anyway")
         return 1
-    print("benilla-re: table of commit %s" % document["commit"])
+    print(
+        "benilla-re: table of commit %s; %s"
+        % (
+            document["commit"],
+            "replacing names, types and comments"
+            if OVERWRITE_NAMES
+            else "keeping names, types and comments already set",
+        )
+    )
     types, declarations = read_header(header)
     summary = Summary()
     apply_types(bv, types, summary)

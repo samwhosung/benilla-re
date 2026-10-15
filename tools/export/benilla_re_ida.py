@@ -8,11 +8,17 @@ Run it in an IDA database of that exe (File > Script file...). It
 
 A row IDA refuses is printed and skipped; a summary ends the run.
 
+On a database that already has names (vmangos/idb, say) the default keeps them: an item whose name
+is not IDA's own (sub_, dword_, unk_, loc_ ...) keeps its name and its type, and takes ours as a
+repeatable comment; no comment of yours is replaced. Set OVERWRITE_NAMES below, or
+BENILLA_RE_OVERWRITE=1, to name, type and comment every row.
+
 The data is read from beside this script: benilla-re.json, and benilla-re.h one folder up or
 beside it. Keep the folders as the export wrote them (ida/ next to bundle/ and benilla-re.h), or
 put the two files next to the script. The repo is not needed.
 
 Environment:
+  BENILLA_RE_OVERWRITE=1  the same as OVERWRITE_NAMES = True.
   BENILLA_RE_DIR      the script's folder, when `__file__` is not set.
   BENILLA_RE_FORCE=1  apply to an exe other than 1.12.1.5875 (the addresses will not match).
 """
@@ -29,6 +35,9 @@ try:
     import idc
 except ImportError:  # outside IDA, so that the helpers can be read and tested
     ida_bytes = ida_funcs = ida_name = ida_nalt = idc = None
+
+# False: leave a name, a type and a comment that are already set. True: replace them with ours.
+OVERWRITE_NAMES = os.environ.get("BENILLA_RE_OVERWRITE") == "1"
 
 try:
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -172,59 +181,74 @@ def apply_types(types):
     return errors
 
 
+def has_name(address):
+    """Whether the item has a name of its own, not IDA's sub_, dword_, unk_ ..."""
+    return bool(ida_bytes.has_name(ida_bytes.get_flags(address)))
+
+
+def has_type(address):
+    try:
+        return bool(idc.get_type(address))
+    except Exception:
+        return False
+
+
+def apply_row(address, row, declaration, summary, kind):
+    """Names, types and comments one item; false when a call failed."""
+    name = row["name"]
+    keep = not OVERWRITE_NAMES and has_name(address)
+    ok = True
+    if name:
+        if keep:
+            summary.add(kind + " names kept")
+        else:
+            how = set_name(address, name)
+            if how is None:
+                summary.failed(row["address"], name, "name refused")
+                ok = False
+            else:
+                summary.add(kind + " named " + how)
+    if declaration is None:
+        if kind == "globals" or row["signature"]:
+            summary.add(kind + " the header does not state")
+    elif not OVERWRITE_NAMES and has_type(address):
+        summary.add(kind + " types kept")
+    elif idc.SetType(address, declaration):
+        summary.add(kind + " typed")
+    else:
+        summary.failed(row["address"], name, "type refused: " + declaration)
+    text = comment_of(row)
+    if keep and name:
+        text = "benilla-re: " + name + "\n" + text
+    return ok, text
+
+
 def apply_functions(rows, declarations, summary):
     for number, row in enumerate(rows):
         if number and number % 5000 == 0:
             print("benilla-re: %d of %d functions" % (number, len(rows)))
         address = int(row["address"], 16)
-        name = row["name"]
         function = ida_funcs.get_func(address)
         if function is None:
             if ida_funcs.add_func(address, address + int(row["size"])):
                 summary.add("functions created")
                 function = ida_funcs.get_func(address)
             else:
-                summary.failed(row["address"], name, "no function could be made")
+                summary.failed(row["address"], row["name"], "no function could be made")
                 continue
-        if name:
-            how = set_name(address, name)
-            if how is None:
-                summary.failed(row["address"], name, "name refused")
-            else:
-                summary.add("functions named " + how)
-        declaration = declarations.get(address)
-        if declaration is None:
-            if row["signature"]:
-                summary.add("signatures the header does not state")
-        elif idc.SetType(address, declaration):
-            summary.add("functions typed")
-        else:
-            summary.failed(row["address"], name, "type refused: " + declaration)
+        _, text = apply_row(address, row, declarations.get(address), summary, "functions")
         if function is not None:
-            ida_funcs.set_func_cmt(function, comment_of(row), False)
+            ida_funcs.set_func_cmt(function, text, not OVERWRITE_NAMES)
 
 
 def apply_globals(rows, declarations, summary):
     for row in rows:
         address = int(row["address"], 16)
-        name = row["name"]
         if idc.get_segm_start(address) == idc.BADADDR:
-            summary.failed(row["address"], name, "not in the database")
+            summary.failed(row["address"], row["name"], "not in the database")
             continue
-        if name:
-            how = set_name(address, name)
-            if how is None:
-                summary.failed(row["address"], name, "name refused")
-            else:
-                summary.add("globals named " + how)
-        declaration = declarations.get(address)
-        if declaration is None:
-            summary.add("globals the header does not state")
-        elif idc.SetType(address, declaration):
-            summary.add("globals typed")
-        else:
-            summary.failed(row["address"], name, "type refused: " + declaration)
-        ida_bytes.set_cmt(address, comment_of(row), False)
+        _, text = apply_row(address, row, declarations.get(address), summary, "globals")
+        ida_bytes.set_cmt(address, text, not OVERWRITE_NAMES)
 
 
 def main():
@@ -240,7 +264,15 @@ def main():
     if not check_exe(document):
         print("benilla-re: stopped; BENILLA_RE_FORCE=1 applies it anyway")
         return 1
-    print("benilla-re: table of commit %s" % document["commit"])
+    print(
+        "benilla-re: table of commit %s; %s"
+        % (
+            document["commit"],
+            "replacing names, types and comments"
+            if OVERWRITE_NAMES
+            else "keeping names, types and comments already set",
+        )
+    )
     types, declarations = read_header(header)
     summary = Summary()
     summary.add("struct parse errors", apply_types(types))
