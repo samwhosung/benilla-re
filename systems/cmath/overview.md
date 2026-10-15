@@ -7,7 +7,7 @@ file (`0x455c00` through `0x4567c2`, `cmath/scalars`), the software floats (`0x7
 initializers the C runtime's run `0x82da20` to `0x82dab0` lists in groups of +∞, 2π and 1/2π
 (`cmath/geometry#static-constants`). They hold the matrix routines (not yet in a doc), the
 quaternions (`cmath/quaternions`), the rays, points and segments (`cmath/geometry`) and the tests of
-boxes, cones and triangles (`cmath/solids`). The run gives a file's initializers, not its extent, so
+boxes, cones and triangles (`cmath/solids`). The value types they take are in `cmath/types`. The run gives a file's initializers, not its extent, so
 no routine is placed in a file here. Four routines of a second small group, `0x6dc2c0` through
 `0x6dc900`, have the same shape and are in `cmath/solids`; their rows are not assigned to a system.
 Most of the library is not called. The live routines are the dominant axis, the bounds, the matrix to

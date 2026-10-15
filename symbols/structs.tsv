@@ -1,6 +1,15 @@
 name	name_from	size	vtable	system	meaning	confidence	proof	finding
 AccountDataSection		44		net	Holds an account data section: scope, file names, pending byte, read callback, save timer and cached digest	verified	one	net/accountdata#section-table
 BlizzardObject		324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
+C33Matrix	later-build	36		cmath	Holds a 3×3 matrix of floats row by row: entry (r, c) at float 3r + c	verified	one	cmath/types#matrices
+C34Matrix	later-build	48		cmath	Holds a rotation with a translation: a 3×3 row by row, then the translation as a fourth row	verified	one	cmath/types#matrices
+C3Ray	later-build	24		cmath	Holds a ray: its origin, then its direction	verified	one	cmath/types#rays-and-segments
+C3Segment	later-build	24		cmath	Holds a segment: its start point, then its end point	verified	one	cmath/types#rays-and-segments
+C44Matrix	later-build	64		cmath	Holds a 4×4 matrix of floats row by row for a row vector on the left; row 3 holds the translation	verified	one	cmath/types#matrices
+C4Quaternion	later-build	16		cmath	Holds a quaternion: x, y and z, then the scalar w	verified	one	cmath/types#quaternions
+C4Vector	later-build	16		cmath	Holds a vector of four floats: x, y, z, w	verified	one	cmath/types#vectors
+CAaBox	later-build	24		cmath	Holds an axis-aligned box: its minimum corner, then its maximum	verified	one	cmath/types#boxes-spheres-and-planes
+CAaSphere	later-build	16		cmath	Holds a sphere: its centre, then its radius	verified	one	cmath/types#boxes-spheres-and-planes
 CBaseManaged		28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
 CCamera		368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
 CEffect		144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
@@ -45,6 +54,7 @@ ChatMessageGroup		12		ui	Holds a message group: its name, whether a new second w
 ChatWindow		152		ui	Holds one chat window: name, group flags, channel name and id arrays, size, colour, locked, docked and shown	verified	one	ui/chatwindows#window-records
 ClientConnection		6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
 ClientLink		548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
+Cone		36		cmath	Holds a cone: apex, unit axis, cap length and the cosine of its half-angle; the size is the extent read	inferred	none	cmath/types#cones-and-oriented-boxes
 DYNAMICELEMENTVERT		24		loadingscreen	Holds one route vertex: position, texture coordinates and colour	verified	one	loadingscreen/route#route-ribbon
 DictionaryRecord		8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
 EvtContext		532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
@@ -73,10 +83,17 @@ M2Sequence		68		models	Holds a sequence record of an MD20 file: time range, flag
 M2Submesh		32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
 M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
 M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
+Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#cones-and-oriented-boxes
 MovementGlobals		312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
 NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
+NTempest::C2Vector		8		cmath	Holds a vector of two floats: x, y	verified	one	cmath/types#vectors
+NTempest::C3Vector		12		cmath	Holds a vector of three floats: x, y, z	verified	one	cmath/types#vectors
+NTempest::C4Plane	later-build	16		cmath	Holds a plane: the unit normal n, then d, so that n·p + d is 0 on the plane	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::CFacet		52		cmath	Holds a triangle with its plane: the plane, then the three vertices	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::CImVector		4		cmath	Holds a colour as four bytes: blue, green, red, alpha	verified	one	cmath/types#colours
 NTempest::CRndSeed	idb	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager		224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
+OrientedBox		60		cmath	Holds an oriented box: centre, half-extents and three unit axes; the size is the extent read	inferred	none	cmath/types#cones-and-oriented-boxes
 OsThreadRecord		6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
 PATHINFO		16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
 PLAYERNAMEDESC		56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout

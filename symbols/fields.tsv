@@ -17,6 +17,33 @@ BlizzardObject	0x0120	4	float	m_accumulator	spell	Holds the fractional shards ca
 BlizzardObject	0x0124	4	float	m_rate	spell	Holds the shards per second after the spellEffectLevel scale; 0.0 once stopped	verified	one	spell/visuals#shard-emission-rate
 BlizzardObject	0x0128	16	uint32_t[4]	m_unused128	spell	Holds four dwords 0x6ece30 zeroes and no function of this file reads	verified	one	spell/visuals#area-shard-emitter-creation
 BlizzardObject	0x0138	12	uint32_t[3]	m_shards	spell	Holds the shard list: link offset 0, then the terminator link	verified	one	spell/visuals#area-shard-emitter-creation
+C33Matrix	0x0000	12	float[3]	m_row0	cmath	Holds row 0, entries (0, 0) to (0, 2)	verified	one	cmath/types#matrices
+C33Matrix	0x000c	12	float[3]	m_row1	cmath	Holds row 1, entries (1, 0) to (1, 2)	verified	one	cmath/types#matrices
+C33Matrix	0x0018	12	float[3]	m_row2	cmath	Holds row 2, entries (2, 0) to (2, 2)	verified	one	cmath/types#matrices
+C34Matrix	0x0000	12	float[3]	m_row0	cmath	Holds row 0 of the 3×3	verified	one	cmath/types#matrices
+C34Matrix	0x000c	12	float[3]	m_row1	cmath	Holds row 1 of the 3×3	verified	one	cmath/types#matrices
+C34Matrix	0x0018	12	float[3]	m_row2	cmath	Holds row 2 of the 3×3	verified	one	cmath/types#matrices
+C34Matrix	0x0024	12	NTempest::C3Vector	m_translation	cmath	Holds the translation, added after a point goes through the 3×3	verified	one	cmath/types#matrices
+C3Ray	0x0000	12	NTempest::C3Vector	m_origin	cmath	Holds the origin	verified	one	cmath/types#rays-and-segments
+C3Ray	0x000c	12	NTempest::C3Vector	m_direction	cmath	Holds the direction, of any length unless a routine says otherwise	verified	one	cmath/types#rays-and-segments
+C3Segment	0x0000	12	NTempest::C3Vector	m_start	cmath	Holds the start point, parameter 0	verified	one	cmath/types#rays-and-segments
+C3Segment	0x000c	12	NTempest::C3Vector	m_end	cmath	Holds the end point, parameter 1	verified	one	cmath/types#rays-and-segments
+C44Matrix	0x0000	16	float[4]	m_row0	cmath	Holds row 0, which x multiplies	verified	one	cmath/types#matrices
+C44Matrix	0x0010	16	float[4]	m_row1	cmath	Holds row 1, which y multiplies	verified	one	cmath/types#matrices
+C44Matrix	0x0020	16	float[4]	m_row2	cmath	Holds row 2, which z multiplies	verified	one	cmath/types#matrices
+C44Matrix	0x0030	16	float[4]	m_row3	cmath	Holds row 3, which w multiplies: the translation in entries 0 to 2	verified	one	cmath/types#matrices
+C4Quaternion	0x0000	4	float	m_x	cmath	Holds x, the first component of the vector part	verified	one	cmath/types#quaternions
+C4Quaternion	0x0004	4	float	m_y	cmath	Holds y	verified	one	cmath/types#quaternions
+C4Quaternion	0x0008	4	float	m_z	cmath	Holds z	verified	one	cmath/types#quaternions
+C4Quaternion	0x000c	4	float	m_w	cmath	Holds w, the scalar part: the cosine of half the rotation angle	verified	one	cmath/types#quaternions
+C4Vector	0x0000	4	float	m_x	cmath	Holds x	verified	one	cmath/types#vectors
+C4Vector	0x0004	4	float	m_y	cmath	Holds y	verified	one	cmath/types#vectors
+C4Vector	0x0008	4	float	m_z	cmath	Holds z	verified	one	cmath/types#vectors
+C4Vector	0x000c	4	float	m_w	cmath	Holds w, which multiplies row 3 of a matrix	verified	one	cmath/types#vectors
+CAaBox	0x0000	12	NTempest::C3Vector	m_min	cmath	Holds the minimum corner	verified	one	cmath/types#boxes-spheres-and-planes
+CAaBox	0x000c	12	NTempest::C3Vector	m_max	cmath	Holds the maximum corner	verified	one	cmath/types#boxes-spheres-and-planes
+CAaSphere	0x0000	12	NTempest::C3Vector	m_center	cmath	Holds the centre	verified	one	cmath/types#boxes-spheres-and-planes
+CAaSphere	0x000c	4	float	m_radius	cmath	Holds the radius	verified	one	cmath/types#boxes-spheres-and-planes
 CBaseManaged	0x0000	4	void **	__vfptr	camera	Holds the vtable: delete, evaluate, verify, store	verified	one	camera#property-updates
 CBaseManaged	0x0004	8	void *[2]	m_link	camera	Holds the property's link in the update list	verified	one	camera#lifetime
 CBaseManaged	0x000c	1	uint8_t	m_type	camera	Holds the property type: 3 vector, 6 scalar or angle in the camera	verified	one	camera#property-updates
@@ -725,6 +752,10 @@ ClientConnection	0x1b18	4	uint32_t	m_worldHandle	net	Holds the handle set when t
 ClientConnection	0x1b1c	1	uint8_t	m_quitAfterLogout	net	Holds the quit flag of the pending logout	verified	one	net/connection#logout
 ClientConnection	0x1b1d	1	uint8_t	m_logoutPending	net	Holds 1 while a logout is requested and not yet answered	verified	one	net/connection#logout
 ClientConnection	0x1b20	4	void *	m_cleanup	net	Holds the operation cleanup callback, run once	verified	one	net/connection#operations
+Cone	0x0000	12	NTempest::C3Vector	m_apex	cmath	Holds the apex	verified	one	cmath/types#cones-and-oriented-boxes
+Cone	0x0010	12	NTempest::C3Vector	m_axis	cmath	Holds the unit axis	verified	one	cmath/types#cones-and-oriented-boxes
+Cone	0x001c	4	float	m_height	cmath	Holds the cap length along the axis; 0 for no cap	verified	one	cmath/types#cones-and-oriented-boxes
+Cone	0x0020	4	float	m_cosHalfAngle	cmath	Holds the cosine of the half-angle	verified	one	cmath/types#cones-and-oriented-boxes
 DYNAMICELEMENTVERT	0x0000	4	float	m_x	loadingscreen	Holds the x position	verified	one	loadingscreen/route#route-ribbon
 DYNAMICELEMENTVERT	0x0004	4	float	m_y	loadingscreen	Holds the y position	verified	one	loadingscreen/route#route-ribbon
 DYNAMICELEMENTVERT	0x0008	4	float	m_z	loadingscreen	Holds the z position, 0	verified	one	loadingscreen/route#route-ribbon
@@ -1053,6 +1084,8 @@ M2View	0x001c	4	M2Submesh *	m_submeshes	models	Holds the submeshes	verified	one	
 M2View	0x0020	4	uint32_t	m_unitCount	models	Holds the number of texture units	verified	one	models/records#view-record
 M2View	0x0024	4	M2TextureUnit *	m_units	models	Holds the texture units	verified	one	models/records#view-record
 M2View	0x0028	4	uint32_t	m_paletteBones	models	Holds the bones the view palette needs	verified	one	models/records#view-record
+Matrix2x2	0x0000	8	float[2]	m_row0	cmath	Holds row 0	verified	one	cmath/types#cones-and-oriented-boxes
+Matrix2x2	0x0008	8	float[2]	m_row1	cmath	Holds row 1	verified	one	cmath/types#cones-and-oriented-boxes
 MovementGlobals	0x0000	260	char[260]	m_logPath	collision	Holds the movement log path copied by 0x616860	verified	one	collision/mover#initialisation-and-teardown
 MovementGlobals	0x0104	4	void *	m_logFile	collision	Holds a log file handle, closed by 0x7c4e90 and 0x616910	inferred	none	collision/mover#initialisation-and-teardown
 MovementGlobals	0x0108	4	void *	m_fallLogFile	collision	Holds a second log file handle, closed by 0x616910	inferred	none	collision/mover#initialisation-and-teardown
@@ -1065,6 +1098,19 @@ NETEVENTQUEUENODE	0x0008	4	uint32_t	m_type	net	Holds the event type, 0x12 to 0x1
 NETEVENTQUEUENODE	0x000c	4	uint32_t	m_time	net	Holds the client clock when the node was queued	verified	one	net/dispatch#network-thread-handoff
 NETEVENTQUEUENODE	0x0010	4	void *	m_data	net	Holds the node's own copy of the packet bytes	verified	one	net/dispatch#network-thread-handoff
 NETEVENTQUEUENODE	0x0014	4	uint32_t	m_length	net	Holds the length of the copied bytes	verified	one	net/dispatch#network-thread-handoff
+NTempest::C2Vector	0x0000	4	float	m_x	cmath	Holds x	verified	one	cmath/types#vectors
+NTempest::C2Vector	0x0004	4	float	m_y	cmath	Holds y	verified	one	cmath/types#vectors
+NTempest::C3Vector	0x0000	4	float	m_x	cmath	Holds x	verified	one	cmath/types#vectors
+NTempest::C3Vector	0x0004	4	float	m_y	cmath	Holds y	verified	one	cmath/types#vectors
+NTempest::C3Vector	0x0008	4	float	m_z	cmath	Holds z	verified	one	cmath/types#vectors
+NTempest::C4Plane	0x0000	12	NTempest::C3Vector	m_normal	cmath	Holds the unit normal	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::C4Plane	0x000c	4	float	m_distance	cmath	Holds d, the negated distance of the plane from the origin along the normal	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::CFacet	0x0000	16	NTempest::C4Plane	m_plane	cmath	Holds the plane of the three vertices	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::CFacet	0x0010	36	NTempest::C3Vector[3]	m_vertices	cmath	Holds the three vertices	verified	one	cmath/types#boxes-spheres-and-planes
+NTempest::CImVector	0x0000	1	uint8_t	m_b	cmath	Holds blue	verified	one	cmath/types#colours
+NTempest::CImVector	0x0001	1	uint8_t	m_g	cmath	Holds green	verified	one	cmath/types#colours
+NTempest::CImVector	0x0002	1	uint8_t	m_r	cmath	Holds red	verified	one	cmath/types#colours
+NTempest::CImVector	0x0003	1	uint8_t	m_a	cmath	Holds alpha; 0xff is opaque	verified	one	cmath/types#colours
 NTempest::CRndSeed	0x0000	4	uint32_t	m_accumulator	random	Holds the sum the advance returns; the seed after seeding	verified	two	random#state-and-seeding
 NTempest::CRndSeed	0x0004	4	uint32_t	m_lanes	random	Holds four lane indices, byte k a byte offset into the table	verified	two	random#state-and-seeding
 ObjectManager	0x0000	40	uint8_t[40]	m_liveObjects	objectlayer	Holds the GUID hash table of live objects: buckets at +0x1c, mask at +0x24	verified	one	objectlayer/manager#manager-block
@@ -1076,6 +1122,9 @@ ObjectManager	0x00c0	8	uint64_t	m_activePlayerGuid	objectlayer	Holds the active 
 ObjectManager	0x00cc	4	uint32_t	m_mapId	objectlayer	Holds the map id, written by 0x4685a0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d0	4	ClientConnection *	m_client	objectlayer	Holds the client connection the update handlers are registered on, written by 0x4685b0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d4	4	MovementGlobals *	m_movementGlobals	objectlayer	Holds the movement manager, written by 0x468600	verified	one	objectlayer/manager#accessors-and-enumeration
+OrientedBox	0x0000	12	NTempest::C3Vector	m_center	cmath	Holds the centre	verified	one	cmath/types#cones-and-oriented-boxes
+OrientedBox	0x000c	12	NTempest::C3Vector	m_halfExtents	cmath	Holds the half-extents along the three axes	verified	one	cmath/types#cones-and-oriented-boxes
+OrientedBox	0x0018	36	NTempest::C3Vector[3]	m_axes	cmath	Holds the three unit axes, one per row	verified	one	cmath/types#cones-and-oriented-boxes
 OsThreadRecord	0x0000	8	void *[2]	m_link	os	Holds the record's link in the record list	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x000c	4	void *	m_handle	os	Holds a duplicate of the thread handle	verified	one	core/threads#engine-thread-records

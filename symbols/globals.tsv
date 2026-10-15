@@ -1780,6 +1780,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84ffb0	char[9]	s_textNearclip		unassigned	Holds the string "nearclip"	inferred	none	
 0x84ffec	char[12]	s_textCameraPitch		uicamera	Holds the string "cameraPitch", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
 0x84fff8	char[15]	s_textCameraDistance		uicamera	Holds the string "cameraDistance", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
+0x85005c	char[22]	s_typeTagCFacet		unassigned	Holds the RTTI name of NTempest::CFacet, the allocation tag of facet arrays	verified	one	cmath/types#type-names
 0x8500a0	char[15]	s_textCameraViewS		unassigned	Holds the format "Camera view %s" that SetView prints with the view name	inferred	none	uicamera/driver#setting-a-view
 0x8500b8	void *[52]	s_bindingCommands		input	Pairs the 26 movement and mouse binding commands' names with their handlers	verified	one	input#mouse-commands
 0x850340	char[53]	s_inputControlSourcePath		input	Holds the source path the object file asserts with, ending InputControl.cpp	verified	one	input#input-state
@@ -1908,6 +1909,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85a860	char[65]	s_pathCGxDeviceD3d		gx	Holds the source path of CGxDeviceD3d.cpp	verified	one	gx/overview#object-files
 0x85a9ec	char[29]	s_wglGetPixelFormatAttribivArb		gx	Holds the name "wglGetPixelFormatAttribivARB" looked up with wglGetProcAddress	verified	one	gx/device#opengl-window-and-pixel-formats
 0x85aaf8	char[71]	s_pathCGxDeviceOpenGl		gx	Holds the source path of CGxDeviceOpenGl.cpp	verified	one	gx/overview#object-files
+0x85ab48	char[24]	s_typeTagC2Vector		unassigned	Holds the RTTI name of NTempest::C2Vector, the allocation tag of two-float arrays	verified	one	cmath/types#type-names
 0x85acf0	uint32_t[6]	s_primitiveCountDivisor		gx	Holds the divisor of the primitive count of each topology: 1, 2, 1, 3, 1, 1	verified	one	gx/draw#draw-call
 0x85ad08	uint32_t[6]	s_primitiveCountSubtrahend		gx	Holds the amount subtracted from the primitive count of each topology: 0, 0, 1, 0, 2, 2	verified	one	gx/draw#draw-call
 0x85ad20	uint32_t[11]	s_alphaRefByBlendMode		gx	Holds the default alpha reference of each blend mode 0 to 10: 0, 224, then 1 for modes 2 to 6, then 0	verified	one	gx/renderstate#cache-dirty-list-and-stack
@@ -1978,6 +1980,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8607e4	uint32_t[13]	s_gameObjectStateAnims		objectlayer	Holds the animation of each family A state: 0x91, 0x93, 0x94, 0x95, 0x92, 0x96 to 0x9d	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860818	char *[13]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 12: Closed to Despawn for states 0 to 8, null for 9 to 12	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860850	char[4]	s_textOm3		unassigned	Holds the string "om3"	inferred	none	
+0x860944	char[23]	s_typeTagC4Plane		unassigned	Holds the RTTI name of NTempest::C4Plane, the tag the transport handler frees its plane array with	verified	one	cmath/types#type-names
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
