@@ -13,6 +13,7 @@ mod objfiles;
 mod site;
 mod tables;
 mod tree;
+mod vendored;
 
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -21,6 +22,7 @@ const USAGE: &str = "\
 usage: cargo xtask check [--exe]
        cargo xtask census [--all | --write | --why <address> | --fill [--idb <names.tsv>] | --assign [--idb <names.tsv>]]
        cargo xtask cited <benilla checkout> [--write | --strict]
+       cargo xtask vendored <benilla checkout> [--strict]
        cargo xtask listing <GNU objdump> <output>
        cargo xtask site <output directory>
        cargo xtask export <output directory>
@@ -50,6 +52,12 @@ cited         lists the client addresses a benilla tree cites that no row or doc
               --write adds a globals.tsv row for each such data address and code table;
               --strict exits nonzero when any address has neither, the standing check that
               every address benilla cites is backed here (the report alone never fails)
+vendored      compares the table copies under <checkout>/reference with the tables at the
+              commit its reference/PIN names: each file named like a table is `same`,
+              `differs` or `missing` (the pinned commit has no such table) against
+              `git show <commit>:tables/<name>` byte for byte, and the report says whether the
+              pin is behind main; --strict exits nonzero when any file differs; a checkout with
+              no reference/PIN is reported as having none and passes
 listing       writes the disassembly of WoW/WoW.exe (or $BENILLA_RE_WOW_EXE) the findings
               cite, as tools/disasm.sh does, with that objdump
 export        writes the symbol table as files other tools start from, the same bytes
@@ -86,6 +94,8 @@ fn main() -> ExitCode {
         ["cited", benilla] => cited(&root, Path::new(benilla), false, false),
         ["cited", benilla, "--write"] => cited(&root, Path::new(benilla), true, false),
         ["cited", benilla, "--strict"] => cited(&root, Path::new(benilla), false, true),
+        ["vendored", benilla] => vendored::run(&root, Path::new(benilla), false),
+        ["vendored", benilla, "--strict"] => vendored::run(&root, Path::new(benilla), true),
         ["export", out] => export::run(&root, Path::new(out)),
         ["listing", objdump, out] => listing(&root, Path::new(objdump), Path::new(out)),
         ["site", out] => site(&root, Path::new(out)),
