@@ -1,9 +1,14 @@
 # The symbol table
 
-`cargo xtask check --exe` adds the stack: the sum of the bytes a `__stdcall`, `__thiscall` or
-`__fastcall` signature puts on the stack (`__thiscall` without `this`) is the `N` of every
-`ret N` the body reaches, and a `__cdecl` body returns with `ret`. A body with no `ret` (it ends in
-a tail jump) is not compared.
+`cargo xtask check --exe` adds the stack: the sum of the bytes the signature puts on the stack is
+the `N` of every `ret N` the body reaches in its own extent, and a `__cdecl` body returns with
+`ret`. A struct returned by value through a hidden pointer (any size but 1, 2, 4 and 8) adds four
+bytes to `__stdcall` and `__thiscall`. A body that ends in a tail jump, as a thunk does, takes the
+`ret N` of the row it jumps to; a body that never returns is not compared.
+The convention is decided at the bytes on both sides of the call, by `tools/conventions.py`: the
+registers the body reads before it writes them, and what every direct caller loads into `ecx` and
+`edx` before the call. Which test it applies, and how far its answer goes, is in the tool's
+header.
 - `RET` is a type with no name. `CONV` is `__cdecl`, `__stdcall`, `__fastcall` or `__thiscall`,
   and no other word: a register is never written in the signature.
 - `PARAMS` is `void`, nothing, or parameters separated by `, `. A parameter is a type with an
@@ -18,10 +23,12 @@ a tail jump) is not compared.
   a struct row: a Windows handle is `void *`, and a `RECT` passed by value is its four `int32_t`.
 - `__thiscall` lists `T *this` first: the object in `ecx`. The rest are the stack arguments.
   `T` is the class when the method's name gives one, else `void`. A function that takes an
-  integer in `ecx` is `__fastcall`.
+  integer in `ecx` is `__fastcall`. Only `__thiscall` names a parameter `this`.
 - `__fastcall` takes its first two parameters of at most four bytes that are not `float` in `ecx`
   and `edx`, and the rest on the stack. A register the body never reads still has its parameter
-  (`uint32_t unused`), since the next parameter does not move into it.
+  (`uint32_t unused`; `unused1` and `unused2` when both are), since the next parameter does not
+  move into it. A register parameter with no known name is `argN`, where N counts every
+  parameter of the signature from 1, `this` included.
 - Every parameter takes four bytes on the stack, rounded up: eight for `uint64_t`, `int64_t` and
   `double`, a struct's size rounded up to four.
 A signature is `RET CONV (PARAMS)` and nothing else: the return type, one convention, the
