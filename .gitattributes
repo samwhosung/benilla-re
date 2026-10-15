@@ -1,0 +1,3 @@
+# Tables and symbols are compared and hashed byte for byte; no line-ending conversion.
+tables/*.tsv -text
+symbols/*.tsv -text

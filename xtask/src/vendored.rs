@@ -1,11 +1,13 @@
 //! `cargo xtask vendored <checkout>`: whether the copies of these tables a consumer keeps are the
 //! tables at the commit it pins. The consumer's `reference/PIN` names a commit of this repo, and
 //! each file under its `reference/` named like a table must equal `git show <commit>:tables/<name>`
-//! byte for byte. A report; with `--strict` it fails when any file differs.
+//! byte for byte. A report; with `--strict` it fails when any file differs or is missing, and when
+//! no file matched a table.
 //!
-//! A file is `same` when its bytes equal the pinned table's, `differs` when they do not, and
-//! `missing` when the pinned commit has no such table. A checkout with no `reference/PIN` has
-//! nothing to compare: the command says so and succeeds.
+//! The pin is a full 40-digit commit hash; a branch or tag name moves and is refused. A file is
+//! `same` when its bytes equal the pinned table's, `differs` when they do not, and `missing` when
+//! the pinned commit has no such table. A checkout with no `reference/PIN` has nothing to
+//! compare: the command says so and succeeds.
 
 use std::fs;
 use std::io;
@@ -37,9 +39,9 @@ pub enum Report {
     Pinned {
         pin: String,
         files: Vec<(String, Status)>,
-        /// Commits on `main` that the pin lacks, when this repo has a `main`.
+        /// Commits on `origin/main` (else `main`) that the pin lacks, when this repo has a `main`.
         behind: Option<usize>,
-        /// Tables whose bytes differ between the pin and `main`.
+        /// Tables whose bytes differ between the pin and that branch.
         changed: Option<usize>,
     },
 }
@@ -51,6 +53,11 @@ fn git(repo: &Path, args: &[&str]) -> io::Result<Option<Vec<u8>>> {
         .output()
         .map_err(|e| io::Error::other(format!("git: {e}")))?;
     Ok(out.status.success().then_some(out.stdout))
+}
+
+/// Whether `pin` is a full commit hash: 40 hexadecimal digits.
+fn is_full_hash(pin: &str) -> bool {
+    pin.len() == 40 && pin.bytes().all(|b| b.is_ascii_hexdigit())
 }
 
 /// The first line of `reference/PIN` that is not blank or a comment.
@@ -70,6 +77,12 @@ pub fn compare(repo: &Path, consumer: &Path) -> io::Result<Report> {
     else {
         return Ok(Report::NoPin);
     };
+    if !is_full_hash(&pin) {
+        return Err(io::Error::other(format!(
+            "{}: the pin {pin} is not a 40-digit commit hash",
+            reference.join("PIN").display()
+        )));
+    }
     let commit = match git(
         repo,
         &["rev-parse", "--verify", &format!("{pin}^{{commit}}")],
@@ -98,7 +111,7 @@ pub fn compare(repo: &Path, consumer: &Path) -> io::Result<Report> {
         };
         files.push((name, status));
     }
-    let main = ["main", "origin/main"]
+    let main = ["origin/main", "main"]
         .into_iter()
         .find(|r| git(repo, &["rev-parse", "--verify", "--quiet", r]).is_ok_and(|o| o.is_some()));
     let count = |args: &[&str]| -> io::Result<Option<usize>> {
@@ -125,7 +138,7 @@ pub fn compare(repo: &Path, consumer: &Path) -> io::Result<Report> {
 }
 
 /// Prints the report; true when the run passes: always for a report, and with `strict` only when
-/// no file differs.
+/// at least one file was compared and every file is the pinned table.
 pub fn run(repo: &Path, consumer: &Path, strict: bool) -> io::Result<bool> {
     let report = compare(repo, consumer)?;
     match &report {
@@ -166,7 +179,8 @@ pub fn passes(report: &Report, strict: bool) -> bool {
     match report {
         Report::NoPin => true,
         Report::Pinned { files, .. } => {
-            !strict || files.iter().all(|(_, status)| *status != Status::Differs)
+            !strict
+                || (!files.is_empty() && files.iter().all(|(_, status)| *status == Status::Same))
         }
     }
 }
@@ -241,8 +255,75 @@ mod tests {
         assert!(passes(&report, false));
         assert!(!passes(&report, true));
 
+        // A branch name moves; only a full hash pins.
+        fs::write(reference.join("PIN"), "main\n").expect("a pin");
+        assert!(compare(&repo, &consumer).is_err());
+        fs::write(reference.join("PIN"), format!("{}\n", &pin[..12])).expect("a pin");
+        assert!(compare(&repo, &consumer).is_err());
         fs::write(reference.join("PIN"), "not-a-commit\n").expect("a pin");
         assert!(compare(&repo, &consumer).is_err());
+        fs::remove_dir_all(&base).expect("cleaned up");
+    }
+
+    fn pinned_files(report: Report) -> Vec<(String, Status)> {
+        match report {
+            Report::Pinned { files, .. } => files,
+            Report::NoPin => panic!("a pinned report"),
+        }
+    }
+
+    #[test]
+    fn line_endings_and_the_last_newline_are_bytes_and_strict_wants_every_file_compared() {
+        let base = std::env::temp_dir().join(format!("vendored-bytes-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&base);
+        let repo = base.join("re");
+        let consumer = base.join("consumer");
+        fs::create_dir_all(repo.join("tables")).expect("a repo");
+        fs::create_dir_all(consumer.join("reference")).expect("a consumer");
+        run_git(&repo, &["init", "-q", "-b", "main"]);
+        fs::write(repo.join("tables/a.tsv"), "x\n1\n").expect("a table");
+        fs::write(repo.join("tables/b.tsv"), "x\n2\n").expect("a table");
+        run_git(&repo, &["add", "tables"]);
+        run_git(&repo, &["commit", "-q", "-m", "first"]);
+        let head = git(&repo, &["rev-parse", "HEAD"])
+            .expect("git runs")
+            .expect("a commit");
+        let pin = String::from_utf8(head).expect("text").trim().to_string();
+        let reference = consumer.join("reference");
+        fs::write(reference.join("PIN"), format!("{pin}\n")).expect("a pin");
+
+        // CRLF and a missing final newline each differ.
+        fs::write(reference.join("a.tsv"), "x\r\n1\r\n").expect("a copy");
+        fs::write(reference.join("b.tsv"), "x\n2").expect("a copy");
+        let report = compare(&repo, &consumer).expect("a report");
+        assert_eq!(
+            pinned_files(compare(&repo, &consumer).expect("a report")),
+            vec![
+                ("a.tsv".to_string(), Status::Differs),
+                ("b.tsv".to_string(), Status::Differs),
+            ]
+        );
+        assert!(!passes(&report, true));
+
+        // Only a table the pin lacks: nothing was compared, so strict fails.
+        fs::remove_file(reference.join("a.tsv")).expect("removed");
+        fs::remove_file(reference.join("b.tsv")).expect("removed");
+        fs::write(reference.join("1.12-a.tsv"), "# header\nx\n1\n").expect("a copy");
+        let report = compare(&repo, &consumer).expect("a report");
+        assert_eq!(
+            pinned_files(compare(&repo, &consumer).expect("a report")),
+            vec![("1.12-a.tsv".to_string(), Status::Missing)]
+        );
+        assert!(passes(&report, false));
+        assert!(!passes(&report, true));
+
+        // No file at all: strict fails too; exact copies pass.
+        fs::remove_file(reference.join("1.12-a.tsv")).expect("removed");
+        let report = compare(&repo, &consumer).expect("a report");
+        assert!(passes(&report, false));
+        assert!(!passes(&report, true));
+        fs::write(reference.join("a.tsv"), "x\n1\n").expect("a copy");
+        assert!(passes(&compare(&repo, &consumer).expect("a report"), true));
         fs::remove_dir_all(&base).expect("cleaned up");
     }
 }
