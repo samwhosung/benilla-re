@@ -1345,12 +1345,12 @@ WardenModuleHeader	0x0018	4	uint32_t	m_exportBase	warden	Holds the ordinal of th
 WardenModuleHeader	0x001c	4	uint32_t	m_importOffset	warden	Holds the offset of the import table	verified	two	warden/modules#the-module-image
 WardenModuleHeader	0x0020	4	uint32_t	m_importCount	warden	Holds the number of import libraries	verified	two	warden/modules#the-module-image
 WardenModuleHeader	0x0024	4	uint32_t	m_sectionCount	warden	Holds the number of 12-byte section entries after the header	verified	two	warden/modules#the-module-image
-WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/friends#who-list-reply
-WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/friends#who-list-reply
-WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/friends#who-list-reply
-WhoResult	0x0094	4	uint32_t	m_race	net	Holds the race id	verified	one	net/friends#who-list-reply
-WhoResult	0x0098	4	uint32_t	m_class	net	Holds the class id	verified	one	net/friends#who-list-reply
-WhoResult	0x009c	4	uint32_t	m_zone	net	Holds the area id	verified	one	net/friends#who-list-reply
+WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/who#who-list-reply
+WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/who#who-list-reply
+WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/who#who-list-reply
+WhoResult	0x0094	4	uint32_t	m_race	net	Holds the race id	verified	one	net/who#who-list-reply
+WhoResult	0x0098	4	uint32_t	m_class	net	Holds the class id	verified	one	net/who#who-list-reply
+WhoResult	0x009c	4	uint32_t	m_zone	net	Holds the area id	verified	one	net/who#who-list-reply
 WowConnection	0x0010	4	uint32_t	m_state	net	Holds the socket state: 5 connected, 6 closed, 7 closing	verified	one	net/wire#sending
 WowConnection	0x001c	4	uint8_t *	m_recvBuffer	net	Holds the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0020	4	uint32_t	m_recvFill	net	Holds the count of bytes in the receive buffer	verified	one	net/wire#receive-loop

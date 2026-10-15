@@ -24,6 +24,7 @@ mod realms;
 mod srp;
 mod srp_helpers;
 mod srp_session;
+mod who;
 
 pub use addresslist::*;
 pub use cipher::*;
@@ -42,3 +43,4 @@ pub use realms::*;
 pub use srp::*;
 pub use srp_helpers::*;
 pub use srp_session::*;
+pub use who::*;

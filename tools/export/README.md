@@ -74,11 +74,11 @@ Check your exe against the build above first: any other build has other addresse
 ## From a `finding` to its doc
 
 A function row's `finding` cell, and an `entries` cell of `opcode_entries.tsv`, name a doc and an
-anchor: `net/friends#who-query-tags`.
+anchor: `net/who#who-query-tags`.
 
-- In this export it is the file `systems/net/friends.md`, at the heading `who-query-tags`. A
+- In this export it is the file `systems/net/who.md`, at the heading `who-query-tags`. A
   finding of `METHOD#...` is `docs/METHOD.md`.
-- On the site it is `{{SITE}}d/systems/net/friends.html#who-query-tags`.
+- On the site it is `{{SITE}}d/systems/net/who.html#who-query-tags`.
 
 An address looks up on the site as `{{SITE}}?0x5e6853`, which goes to the row that holds it. A
 doc's link to another file of the repository (`symbols/README.md`, `tables/README.md`) is here

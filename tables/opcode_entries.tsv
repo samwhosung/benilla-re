@@ -45,8 +45,8 @@ opcode	name	role	site	function	entries	basis
 0x05f	SMSG_GAMEOBJECT_QUERY_RESPONSE	handler	0x55500d	0x555100	dbcache#handlers	opcode
 0x060	CMSG_CREATURE_QUERY	send	0x556bd2	0x556aa0	net/server#cache-query-opcodes	opcode
 0x061	SMSG_CREATURE_QUERY_RESPONSE	handler	0x554ffc	0x5550e0	dbcache#handlers	opcode
-0x062	CMSG_WHO	send	0x5af168	0x5aebb0	net/friends#who-query-packet	opcode
-0x063	SMSG_WHO	handler	0x5adc98	0x5adf60	net/friends#who-list-reply	opcode
+0x062	CMSG_WHO	send	0x5af168	0x5aebb0	net/who#who-query-packet	opcode
+0x063	SMSG_WHO	handler	0x5adc98	0x5adf60	net/who#who-list-reply	opcode
 0x064	CMSG_WHOIS	send	0x5adf1f	0x5adee0	net/server#formats-vmangos-reads|net/server#social-messages	opcode
 0x065	SMSG_WHOIS	handler	0x5adca8	0x5adda0	net/server#social-messages	opcode
 0x066	CMSG_FRIEND_LIST	send	0x5ad373	0x5ad340	net/friends#friend-requests	opcode
@@ -464,7 +464,7 @@ opcode	name	role	site	function	entries	basis
 0x1fb	MSG_RANDOM_ROLL	handler	0x5e35f4	0x5e38c0	objectlayer/playermessages#dice-rolls	opcode
 0x1fb	MSG_RANDOM_ROLL	send	0x48c871	0x48c7b0	ui/groupverbs#small-sends	opcode
 0x1fc	SMSG_ENVIRONMENTALDAMAGELOG	handler	0x6255a3	0x6255b0	objectlayer/unitcombat#attack-messages	opcode
-0x1fe	SMSG_RWHOIS	handler	0x5adcb8	0x5adde0	net/friends#reverse-whois	opcode
+0x1fe	SMSG_RWHOIS	handler	0x5adcb8	0x5adde0	net/who#reverse-whois	opcode
 0x1ff	MSG_LOOKING_FOR_GROUP	handler	0x4e7e30	0x4e8dc0	ui/lfg#the-results	opcode
 0x1ff	MSG_LOOKING_FOR_GROUP	send	0x4e9840	0x4e9760	ui/lfg#the-results	opcode
 0x200	CMSG_SET_LOOKING_FOR_GROUP	send	0x4e898e	0x4e88c0	ui/lfg#the-slots-packet	opcode

@@ -129,6 +129,6 @@ WardenBuffer		8		warden	Holds a length and a data pointer; the record the module
 WardenClient		4	0x811434	warden	Holds the service table pointer that a module receives	verified	two	warden/wire#the-service-table
 WardenModule		12		warden	Holds a loaded module: its image base, its size and its count of libraries	verified	one	warden/modules#loading-an-image
 WardenModuleHeader		40		warden	Holds the ten dwords that open a decompressed module image	verified	two	warden/modules#the-module-image
-WhoResult		160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
+WhoResult		160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/who#who-list-reply
 WowConnection		304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg		8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

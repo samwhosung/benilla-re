@@ -3675,12 +3675,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc28134	uint8_t	s_realmSelected		net	Holds the byte that says the selected-realm copy is valid	verified	one	net/connection#realm-selection
 0xc28135	uint8_t	s_telemetryPresent		net	Holds the byte set once telemetry.dat has been read	verified	one	net/connection#telemetry-record
 0xc28168	FriendList *	s_friendList		net	Holds the one FriendList object, created once at start-up	verified	one	net/friends#friend-list-object
-0xc2817c	uint32_t[14]	s_whoSortChain		net	Holds seven pairs of sort key and direction for the who results	verified	one	net/friends#who-sort-keys
-0xc281b8	WhoResult[50]	s_whoResults		net	Holds the 50 who result records of 160 bytes	verified	one	net/friends#who-list-reply
-0xc2a120	uint32_t	s_whoResultCount		net	Holds the number of who results kept, at most 50	verified	one	net/friends#who-list-reply
-0xc2a124	uint32_t	s_whoResultTotal		net	Holds the server total of the last who reply	verified	one	net/friends#who-list-reply
-0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/friends#who-list-reply
-0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/friends#who-list-reply
+0xc2817c	uint32_t[14]	s_whoSortChain		net	Holds seven pairs of sort key and direction for the who results	verified	one	net/who#who-sort-keys
+0xc281b8	WhoResult[50]	s_whoResults		net	Holds the 50 who result records of 160 bytes	verified	one	net/who#who-list-reply
+0xc2a120	uint32_t	s_whoResultCount		net	Holds the number of who results kept, at most 50	verified	one	net/who#who-list-reply
+0xc2a124	uint32_t	s_whoResultTotal		net	Holds the server total of the last who reply	verified	one	net/who#who-list-reply
+0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/who#who-list-reply
+0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/who#who-list-reply
 0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the four bytes of the configured country and language packed into a dword	verified	one	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain

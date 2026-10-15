@@ -17477,7 +17477,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ad290	63	Script::AddFriend	idb	net	orchestration	int __fastcall (lua_State *L)	Asks to add a friend by name through 0x5ae670	verified	one	net/friends#friend-requests	
 0x5ad2d0	106	Script::RemoveFriend	idb	net	orchestration	int __fastcall (lua_State *L)	Removes a friend by 1-based index through 0x5ae7e0 or by name through 0x5ae6f0	inferred	none		
 0x5ad340	97	Script::ShowFriends	idb	net	orchestration	int __fastcall (lua_State *L)	Sends opcode 0x66 with no body, asking the server for the friend list	verified	one	net/friends#friend-requests	
-0x5ad3b0	72	Script::SendWho	idb	net	orchestration	int __fastcall (lua_State *L)	Sends a who query built from a filter string through 0x5aebb0	verified	one	net/friends#who-query-tags	
+0x5ad3b0	72	Script::SendWho	idb	net	orchestration	int __fastcall (lua_State *L)	Sends a who query built from a filter string through 0x5aebb0	verified	one	net/who#who-query-tags	
 0x5ad400	81	Script::GetNumIgnores	idb	net	orchestration	int __fastcall (lua_State *L)	Returns the ignore count from 0x5ae550, or 0 when there is no friend list	inferred	none		
 0x5ad460	179	Script::GetIgnoreName	idb	net	orchestration	int __fastcall (lua_State *L)	Returns the cached name of the ignore at a 1-based index, or UNKNOWN	inferred	none		
 0x5ad520	69	Script::SetSelectedIgnore	idb	net	orchestration	int __fastcall (lua_State *L)	Selects the ignore at a 1-based index through 0x5ae5f0	inferred	none		
@@ -17485,21 +17485,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ad5a0	72	Script::AddOrDelIgnore	idb	net	orchestration	int __fastcall (lua_State *L)	Toggles an ignore by name through 0x5af1a0	inferred	none		
 0x5ad5f0	72	Script::AddIgnore	idb	net	orchestration	int __fastcall (lua_State *L)	Adds an ignore by name through 0x5af300	inferred	none		
 0x5ad640	72	Script::DelIgnore	idb	net	orchestration	int __fastcall (lua_State *L)	Removes an ignore by name through 0x5af400	inferred	none		
-0x5ad690	80	Script::GetNumWhoResults	idb	net	orchestration	int __fastcall (lua_State *L)	Returns the stored who result count, at most 50, and the server total	verified	one	net/friends#who-list-reply	
-0x5ad6e0	393	Script::GetWhoInfo	idb	net	orchestration	int __fastcall (lua_State *L)	Returns a who result name, guild, level, race, class and zone for a 1-based index	verified	one	net/friends#who-results-function	
-0x5ad870	20	Script::SetWhoToUI	idb	net	orchestration	int __fastcall (lua_State *L)	Stores a boolean argument as the flag that sends who answers to the frame	verified	one	net/friends#who-list-reply	
-0x5ad890	364	Script::SortWho	idb	net	orchestration	int __fastcall (lua_State *L)	Moves a sort key to the front of the who sort chain, flipping it if already first, then sorts and fires WHO_LIST_UPDATE	verified	one	net/friends#who-sort-keys	
-0x5ada00	471	CompareWhoResults		net	primitive	int32_t __cdecl (const void *a, const void *b)	Orders two who results by the sort chain keys in turn, negating the first nonzero result of a reversed key	verified	one	net/friends#who-comparator	net::friends_who_compare
+0x5ad690	80	Script::GetNumWhoResults	idb	net	orchestration	int __fastcall (lua_State *L)	Returns the stored who result count, at most 50, and the server total	verified	one	net/who#who-list-reply	
+0x5ad6e0	393	Script::GetWhoInfo	idb	net	orchestration	int __fastcall (lua_State *L)	Returns a who result name, guild, level, race, class and zone for a 1-based index	verified	one	net/who#who-results-function	
+0x5ad870	20	Script::SetWhoToUI	idb	net	orchestration	int __fastcall (lua_State *L)	Stores a boolean argument as the flag that sends who answers to the frame	verified	one	net/who#who-list-reply	
+0x5ad890	364	Script::SortWho	idb	net	orchestration	int __fastcall (lua_State *L)	Moves a sort key to the front of the who sort chain, flipping it if already first, then sorts and fires WHO_LIST_UPDATE	verified	one	net/who#who-sort-keys	
+0x5ada00	471	CompareWhoResults		net	primitive	int32_t __cdecl (const void *a, const void *b)	Orders two who results by the sort chain keys in turn, negating the first nonzero result of a reversed key	verified	one	net/who#who-comparator	net::friends_who_compare
 0x5adc00	33	RegisterSocialScriptFunctions		net	orchestration	void __cdecl (void)	Registers the 19 social script functions from their name table	inferred	none		
 0x5adc30	27	UnregisterSocialScriptFunctions		net	orchestration	void __cdecl (void)	Unregisters the 19 social script functions	inferred	none		
 0x5adc50	214	FriendList::Initialize	idb	net	orchestration	void __cdecl (void)	Creates the friend list when none exists, registers six message handlers and whois, resets the who sort and counts	verified	one	net/friends#friend-list-object	
 0x5add30	73	FriendListStatusHandler	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads opcode 0x68 result and guid and passes them with the message to 0x5acab0	verified	one	net/friends#friend-status-result	
 0x5add80	27	FriendListHandler	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes opcode 0x67 message to 0x5ae350	inferred	none		
 0x5adda0	53	WhoisResponseHandler	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Writes opcode 0x65 string to the console	inferred	none		
-0x5adde0	246	ReverseWhoisResponseHandler	idb	net	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Writes opcode 0x1fe accounts and their characters to the console, highlighting one character per account	verified	one	net/friends#reverse-whois	net::friends_reverse_whois
+0x5adde0	246	ReverseWhoisResponseHandler	idb	net	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Writes opcode 0x1fe accounts and their characters to the console, highlighting one character per account	verified	one	net/who#reverse-whois	net::friends_reverse_whois
 0x5adee0	113	SendWhoisRequest		net	orchestration	uint32_t __fastcall (const char *name, const char *args)	Sends opcode 0x64 with the command argument string	inferred	none		
-0x5adf60	499	OnWhoList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores opcode 0x63 results, sorts them, then fires WHO_LIST_UPDATE or prints them to chat	verified	one	net/friends#who-list-reply	
-0x5ae160	336	PrintWhoResultLine		net	orchestration	void __fastcall (const char *name, const char *guild, uint32_t level, uint32_t classId, uint32_t raceId, uint32_t zoneId)	Adds one who result to chat as WHO_LIST_FORMAT, or WHO_LIST_GUILD_FORMAT when it has a guild	verified	one	net/friends#who-list-reply	
+0x5adf60	499	OnWhoList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores opcode 0x63 results, sorts them, then fires WHO_LIST_UPDATE or prints them to chat	verified	one	net/who#who-list-reply	
+0x5ae160	336	PrintWhoResultLine		net	orchestration	void __fastcall (const char *name, const char *guild, uint32_t level, uint32_t classId, uint32_t raceId, uint32_t zoneId)	Adds one who result to chat as WHO_LIST_FORMAT, or WHO_LIST_GUILD_FORMAT when it has a guild	verified	one	net/who#who-list-reply	
 0x5ae2b0	31	OnIgnoreList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes opcode 0x6b message to 0x5af530 when the friend list exists	verified	one	net/friends#ignore-list-packet	
 0x5ae2d0	124	ShutdownFriendList		net	orchestration	void __cdecl (void)	Clears the six social message handlers and the whois command, then destroys the friend list	inferred	none		
 0x5ae350	319	FriendList::ReadFriendList		net	primitive	void __thiscall (FriendList *this, CDataStore *msg)	Replaces the friend slots from opcode 0x67 list and requests each name	verified	one	net/friends#friend-list-packet	net::friends_read_list
@@ -17527,7 +17527,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5aeb30	62	FriendList::SetFriendStatus		net	orchestration	void __thiscall (FriendList *this, uint64_t guid, uint8_t status)	Stores the online byte of the friend slot holding a GUID	verified	one	net/friends#friend-status-result	
 0x5aeb70	27	FriendList::DecrementPendingFriendNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending friend-name count and sorts the friends when it reaches zero	verified	one	net/friends#pending-names	net::friends_pending_counts
 0x5aeb90	27	FriendList::DecrementPendingIgnoreNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending ignore-name count and sorts the ignores when it reaches zero	verified	one	net/friends#pending-names	net::friends_pending_counts
-0x5aebb0	1512	FriendList::SendWhoQuery		net	primitive	void __thiscall (FriendList *this, const char *filter)	Parses a /who filter into levels, name, guild, race and class masks, zones and terms and sends opcode 0x62	verified	one	net/friends#who-query-tags	
+0x5aebb0	1512	FriendList::SendWhoQuery		net	primitive	void __thiscall (FriendList *this, const char *filter)	Parses a /who filter into levels, name, guild, race and class masks, zones and terms and sends opcode 0x62	verified	one	net/who#who-query-tags	net::who_query_packet
 0x5af1a0	342	FriendList::AddOrDelIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Sends opcode 0x6d with the GUID of the ignored player whose cached name matches, else opcode 0x6c with the name	inferred	none		
 0x5af300	242	FriendList::AddIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Shows game error 0x111 with the name when it is already ignored, else sends opcode 0x6c with the name	inferred	none		
 0x5af400	167	FriendList::DelIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Sends the remove-ignore message for the ignored player whose cached name matches, or shows game error 0x110	inferred	none		
@@ -23415,7 +23415,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a8b0	43	SStrVPrintf	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, ISStrVPrintf; not read here	inferred	none		
 0x64a8e0	434			storm	unreached		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
 0x64aaa0	434	SStrToFloat	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
-0x64ac60	98	SStrToInt	idb	storm	boundary		Converts a decimal string to an integer	inferred	none	objectlayer/party#guild-events	
+0x64ac60	98	SStrToInt	idb	storm	boundary		Converts a decimal string to an integer	verified	one	net/who#who-query-packet	net::who_string_helpers
 0x64acd0	269			storm	unreached		Runs its object file code that calls SErrSetLastError, __CIpow, __ftol and 1 more; not read here	inferred	none		
 0x64ade0	70	SStrToUnsigned	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23429,7 +23429,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
 0x64b4a0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
 0x64b4f0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
-0x64b540	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
+0x64b540	80			storm	boundary		Finds a string in another without case; null for an empty haystack, no match or a null argument	verified	one	net/who#who-query-tags	net::who_string_helpers
 0x64b590	80			storm	unreached		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
 0x64b5e0	221			storm	boundary		Runs its object file code that calls __allrem, __alldiv; not read here	inferred	none		
 0x64b6c0	136			storm	unreached		Runs SStr.cpp code that calls SInterlockedIncrement, SInterlockedDecrement, SMemFree; not read here	inferred	none		
