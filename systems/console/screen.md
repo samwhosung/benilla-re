@@ -123,14 +123,14 @@ holding the key flips it on every repeat. The key's own character is swallowed w
 `SetConsoleKey` (`0x63cb00`) replaces the code. Closing clears the selection. Without the switch the
 console never opens.
 
-Addresses: `0x63cb00`, `0x488640`, `0x63c4a3`, `0x63c876`, `0x63be90`, `0x63bea6`, `0x864554`, `0xc4eac8`, `0xc4ec20`, `0x419c10`, `0x63c970`
+Addresses: `0x63cb00`, `0x488640`, `0x63c4a3`, `0x63c876`, `0x63be90`, `0x63bea6`, `0x864554`, `0xc4eac8`, `0xc4ec20`, `0x419c10`, `0x63c970`, `0x403ba0`, `0x7ff8b8`, `0x64fdc0`, `0x64fe20`, `0x7ff9a8`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x63c49b` tests `0xc4ec20` and `0x63c4a3` to `0x63c4b2` negate the open flag; the repeat handler does the
 same at `0x63c876` to `0x63c884`. `0x63a2b4` to `0x63a2bf` store 1 in `0xc4ec20` when `0x419c10(0x22)`
-returns 1. The switch table at 0x7ff8b8 lists index `0x22` as `console`. The only other writers of the open
+returns 1. `0x403ba0` passes the switch table `0x7ff8b8` and the count 0x11 to `0x64fdc0`, which hands each 16-byte record's dwords at +0 (flags, 0 or 0x20000), +4 (id), +8 (name pointer) and +0xc (always 0) to `0x64fe20`; that stores the flags at +8, the id at +0xc and the copied name at +0x10 of a switch node. The record at `0x7ff9a8` has id `0x22` and the name `console`. The only other writers of the open
 flag store 0 (`0x63c52c`, `0x639240`). The Lua function `SetConsoleKey` (`0x488640`) calls `0x63cb00`.
 
 ## Mouse

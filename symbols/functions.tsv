@@ -28203,7 +28203,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c61e0	56			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c6220	8	CurrencyMultiplier	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6260	59	SplitCopper		unassigned	primitive		Splits copper into copper, silver and gold	inferred	none	objectlayer/quests#quest-completion	
+0x6c6260	59	SplitCopper		unassigned	primitive		Splits an amount into copper, silver and gold: divides by 10000, 100 and 1, each step on the last remainder	inferred	none	objectlayer/quests#quest-completion	
 0x6c62a0	34			unassigned	unreached		Runs its object file code that calls CurrencyMultiplier; not read here	inferred	none		
 0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
 0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		

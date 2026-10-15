@@ -368,7 +368,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7c547c	uint8_t[15]	s_displacementCaseIndex		collision	Holds the case index for modes 1 to 15 of the displacement dispatcher	verified	one	collision/kinematics#displacement-dispatcher
 0x7ff310	const void *			unassigned	Holds a function address that OsGetTickCount, OsGetCachedUnixTime, DestroyTimeManager read; not read here	inferred	none	
 0x7ff6f8	const void *	s_importSetsockopt		unassigned	Holds the import address of setsockopt, WSOCK32 ordinal 21	verified	one	net/wire#disabling-nagle
-0x7ff8b8	const uint32_t[68]	s_commandLineSwitches		client	Holds 17 command line switch records of 16 bytes: a word, the switch id, its name and a zero	verified	one	console/screen#console-key
+0x7ff8b8	const uint32_t[68]	s_commandLineSwitches		client	Holds 17 command line switch records of 16 bytes: flags, the switch id, a name pointer and a zero	verified	one	console/screen#console-key
 0x7ff9c8	const float	s_floatbce38e39		unassigned	Holds the float -0.027777778 (0xbce38e39)	inferred	none	
 0x7ff9d0	const float	s_float3ce38e39		unassigned	Holds the float 0.027777778 (0x3ce38e39)	inferred	none	
 0x7ff9d8	const float	s_float3f800000		unassigned	Holds the float 1 (0x3f800000)	inferred	none	
@@ -405,7 +405,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
 0x801490	const uint8_t			os	Holds a byte its object file's code reads; not read here	inferred	none	
-0x8015a8	const float	s_infinityClock		unassigned	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
+0x8015a8	const float	s_infinityClock		core	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
 0x8015ac	const float	s_piClock		core	Holds pi, 0x40490fdb, which the clock file doubles into 2 pi at start-up	verified	one	core/time#static-initializers
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
 0x8015c0	double	s_calibrationLimitA		core	Holds 0.016, a mode-1 calibration threshold	verified	one	core/time#calibration-thread
@@ -418,9 +418,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8015f8	double	s_calibrationLimitH		core	Holds 0.002, the 20-sample tolerance	verified	one	core/time#calibration-thread
 0x801600	double	s_calibrationLimitI		core	Holds 0.000333, the 120-sample tolerance	verified	one	core/time#calibration-thread
 0x801608	double	s_thousandthDouble		core	Holds 0.001 as a double, a pooled constant many systems read	verified	one	core/time#unreached-functions
-0x801610	const float	s_infinityIme		unassigned	Holds +inf, 0x7f800000, the literal the IME file copies at start-up	verified	one	core/input#static-initializers
-0x801618	const float	s_infinityInput		unassigned	Holds +inf, 0x7f800000, the literal the input window file copies at start-up	verified	one	core/input#static-initializers
-0x80161c	const float	s_piInput		unassigned	Holds pi, 0x40490fdb, which the input window file doubles into 2 pi at start-up	verified	one	core/input#static-initializers
+0x801610	const float	s_infinityIme		os	Holds +inf, 0x7f800000, the literal the IME file copies at start-up	verified	one	core/input#static-initializers
+0x801618	const float	s_infinityInput		core	Holds +inf, 0x7f800000, the literal the input window file copies at start-up	verified	one	core/input#static-initializers
+0x80161c	const float	s_piInput		core	Holds pi, 0x40490fdb, which the input window file doubles into 2 pi at start-up	verified	one	core/input#static-initializers
 0x801620	float	s_mouseSpeedMin		core	Holds 0.1, the lowest mouse speed setting and the factor 0x42cd60 returns it with	verified	one	core/input#mouse-speed-and-num-lock
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
@@ -797,7 +797,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c5dc	const float	s_drunkRateB		objectlayer	Holds 0.154, the rate of the second drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
 0x80c5e0	const float	s_drunkRateA		objectlayer	Holds 0.093, the rate of the first drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
 0x80c5e4	const float	s_negHalfPi		unassigned	Holds -pi/2, the lower clamp of a pitch	verified	one	objectlayer/unitbody#drunk-sway
-0x80c5f8	const double	s_oneDegreeRadians		objectlayer	Holds pi/180 as a double, from which the auto move stop threshold cos 1 degree is built	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c5f8	const double	s_oneDegreeRadians		objectlayer	Holds pi/180 rounded to float and widened to double, 0x3f91df46a0000000; the auto move stop's cos 1 degree uses it	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
 0x80c600	const float	s_autoMoveBackAngleHigh		objectlayer	Holds 3.8397243, 220 degrees, the far bound of the angle off the facing that stops a walk	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
 0x80c604	const float	s_autoMoveBackAngleLow		objectlayer	Holds 2.7925267, 160 degrees, the near bound of the angle off the facing that stops a walk	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
 0x80c608	const float	s_autoMoveTurnChance		objectlayer	Holds 0.07, the bound that the mode 3 random fraction times its factor must top to drop bit 1	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
@@ -1200,7 +1200,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d680	void *[39]	CSimpleHyperlinkedFrame::vftable		ui	Holds the vtable of the hyperlinked frame base, with its three hyperlink firers at +0x90	verified	one	ui/hyperlinks#the-two-classes
 0x81d728	const float	s_cutoffFadeFraction		sound	Holds 0.10000002, the fraction of the cutoff the distance gain fades over	verified	one	sound/engine#distance-cutoff
 0x81d72c	const float	s_volumeLevelBias		sound	Holds 512.5, the bias that reads a volume back as a level	verified	one	sound/engine#volume-of-a-sound
-0x81d7a0	const float	s_infinityCameraProperty		unassigned	Holds +inf, 0x7f800000, the literal that InitCameraPropertyInfinity copies at start-up	verified	one	camera#object-files-and-initializers
+0x81d7a0	const float	s_infinityCameraProperty		camera	Holds +inf, 0x7f800000, the literal that InitCameraPropertyInfinity copies at start-up	verified	one	camera#object-files-and-initializers
 0x81d7a8	const float	s_infinityCamera		camera	Holds +inf, 0x7f800000, the literal that InitCameraInfinity copies at start-up	verified	one	camera#object-files-and-initializers
 0x81d7ac	const float	s_piCamera		camera	Holds pi, which the camera 2 pi initializer doubles and the default field of view initializer reads	verified	one	camera#object-files-and-initializers
 0x81d7b0	float	s_defaultDistance		camera	Holds 100.0, the default distance and eye x	verified	one	camera#properties
@@ -1213,8 +1213,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d7e8	void *[2]	s_propertySetVftable		camera	Holds the camera base's vtable: 0x7acd10, then 0x442a70	verified	one	camera#lifetime
 0x81d7f0	void *[3]	CBaseManaged::vftable		camera	Holds the base property vtable: 0x7acb50, 0x7acb30, 0x7acb40	verified	one	camera#property-updates
 0x81d7fc	void *[4]	s_anglePropertyVftable		camera	Holds the angle property vtable: delete, the scalar evaluate and verify, store	verified	one	camera#property-updates
-0x81d80c	const float	s_infinityParticleRegistry		unassigned	Holds +inf, 0x7f800000, the literal the particle registry file copies at start-up	verified	one	camera#object-files-and-initializers
-0x81d810	const float	s_piParticleRegistry		unassigned	Holds pi, which the particle registry 2 pi initializer doubles at start-up	verified	one	camera#object-files-and-initializers
+0x81d80c	const float	s_infinityParticleRegistry		models	Holds +inf, 0x7f800000, the literal the particle registry file copies at start-up	verified	one	camera#object-files-and-initializers
+0x81d810	const float	s_piParticleRegistry		models	Holds pi, which the particle registry 2 pi initializer doubles at start-up	verified	one	camera#object-files-and-initializers
 0x81d814	float	s_infinity		unassigned	Holds +inf as a float	verified	one	gx/lightning#static-initializers
 0x81d828	float	s_particleSubstep		models	Holds 0.1, the particle substep in seconds	verified	one	models/particles#substeps
 0x81d82c	float	s_particleVelocityPeriod		models	Holds 1/30, the period over which an emitter derives its velocity	verified	one	models/particles#update
@@ -1592,7 +1592,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x846b04	void *[8]	s_tutorialFunctions		ui	Holds the 4 name and function pairs of the tutorial Lua functions, TutorialsEnabled to ResetTutorials	verified	one	ui/scriptapi#function-tables
 0x846b68	char[14]	s_textTutorialPopup		ui	Holds the string "TutorialPopup"	inferred	none	
 0x846bd0	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0x846bd4	uint32_t[6]	s_modifierBits		unassigned	Holds the modifier bit index and prefix string of SHIFT-, CTRL- and ALT-, which 0x4b6630 walks downward	verified	one	ui/keybindings#chord-names
+0x846bd4	uint32_t[6]	s_modifierBits		ui	Holds the modifier bit index and prefix string of SHIFT-, CTRL- and ALT-, which 0x4b6630 walks downward	verified	one	ui/keybindings#chord-names
 0x846bec	uint32_t[6]	s_modifierPrefixes		ui	Holds the prefix strings SHIFT-, CTRL- and ALT- with their lengths 6, 5 and 4, which the key strip loop walks	verified	one	ui/keybindings#valid-key-strings
 0x846c04	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x846c20	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -2491,7 +2491,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884c80	uint32_t	s_clockMode		core	Holds the clock counter: 0 GetTickCount, 1 the time-stamp counter	verified	one	core/time#the-millisecond-clock
 0x884c88	double	s_clockOffset		core	Holds the clock's offset in milliseconds; 0 at startup	verified	one	core/time#the-millisecond-clock
 0x884ca0	uint32_t			os	Holds a dword its object file's code reads and writes; not read here	inferred	none	core/input#static-initializers
-0x884ca8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	core/input#static-initializers
+0x884ca8	uint32_t			os	Holds a dword its object file's code reads and writes; not read here	inferred	none	core/input#static-initializers
 0x884cb0	uint32_t	s_savedMouseSpeed		core	Holds the Windows mouse speed saved at startup	verified	one	core/input#mouse-speed-and-num-lock
 0x884cb4	uint32_t	s_mouseSpeed		core	Holds the Windows mouse speed applied while the window is active	verified	one	core/input#mouse-speed-and-num-lock
 0x884cc0	uint32_t[80]	s_inputRing		core	Holds the 16 input records of five dwords: kind, three values, time	verified	one	core/input#the-ring
