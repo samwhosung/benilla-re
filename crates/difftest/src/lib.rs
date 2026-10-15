@@ -279,6 +279,53 @@ pub struct StubCall {
     pub args: [u32; 8],
 }
 
+/// The emulator as an [`Emu::stub_fn`] closure sees it, at the stubbed callee's entry: `ECX`,
+/// `EDX` and the stack arguments as the caller left them.
+pub struct StubIo<'s, 'u> {
+    uc: &'s mut Unicorn<'u, EmuState>,
+}
+
+impl StubIo<'_, '_> {
+    /// Stack argument `i` (0 = `[esp+4]`).
+    pub fn arg(&self, i: u64) -> u32 {
+        let esp = self.reg(RegisterX86::ESP);
+        self.read_u32(esp + 4 + 4 * i)
+    }
+    pub fn reg(&self, reg: RegisterX86) -> u64 {
+        self.uc.reg_read(reg).expect("reg_read")
+    }
+    pub fn read(&self, va: u64, n: usize) -> Vec<u8> {
+        let mut b = vec![0u8; n];
+        self.uc.mem_read(va, &mut b).expect("mem_read");
+        b
+    }
+    pub fn read_u32(&self, va: u64) -> u32 {
+        let mut b = [0u8; 4];
+        self.uc.mem_read(va, &mut b).expect("mem_read");
+        u32::from_le_bytes(b)
+    }
+    /// The NUL-terminated bytes at `va`, without the NUL.
+    pub fn read_cstr(&self, va: u64) -> Vec<u8> {
+        let mut out = Vec::new();
+        let mut b = [0u8; 1];
+        let mut p = va;
+        loop {
+            self.uc.mem_read(p, &mut b).expect("mem_read");
+            if b[0] == 0 {
+                return out;
+            }
+            out.push(b[0]);
+            p += 1;
+        }
+    }
+    pub fn write(&mut self, va: u64, bytes: &[u8]) {
+        self.uc.mem_write(va, bytes).expect("mem_write");
+    }
+    pub fn write_u32(&mut self, va: u64, v: u32) {
+        self.write(va, &v.to_le_bytes());
+    }
+}
+
 /// The registers [`Emu::snapshot`] carries; the x87 data stack is not among them.
 const SNAP_REGS: &[RegisterX86] = &[
     RegisterX86::EAX,
@@ -510,6 +557,34 @@ impl<'a> Emu<'a> {
                 uc.set_pc(ret).unwrap();
             })
             .expect("add stub hook");
+    }
+
+    /// Replaces the function at `addr` with `f`, for a callee whose result depends on its inputs
+    /// (a directory listing, a file system query). `f` reads and writes the emulator through
+    /// [`StubIo`] at the callee's entry and returns `EAX`; the call is logged and returns as the
+    /// callee would, popping `pop_args` stack dwords.
+    pub fn stub_fn<F>(&mut self, addr: u64, pop_args: u32, mut f: F)
+    where
+        F: FnMut(&mut StubIo<'_, '_>) -> u32 + 'a,
+    {
+        self.uc
+            .add_code_hook(addr, addr, move |uc, _addr, _size| {
+                let mut io = StubIo { uc };
+                let esp = io.reg(RegisterX86::ESP);
+                let ret = u64::from(io.read_u32(esp));
+                let mut args = [0u32; 8];
+                for (i, a) in args.iter_mut().enumerate() {
+                    *a = io.read_u32(esp + 4 + 4 * i as u64);
+                }
+                let eax = f(&mut io);
+                let uc = io.uc;
+                uc.get_data_mut().calls.push(StubCall { addr, args });
+                uc.reg_write(RegisterX86::EAX, u64::from(eax)).unwrap();
+                uc.reg_write(RegisterX86::ESP, esp + 4 + 4 * u64::from(pop_args))
+                    .unwrap();
+                uc.set_pc(ret).unwrap();
+            })
+            .expect("add stub_fn hook");
     }
 
     /// Stubs a function that returns through a pointer argument: copies `len` bytes from
