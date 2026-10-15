@@ -5,8 +5,13 @@ It runs the listing's instructions from a function's start with concrete registe
 memory. A value it cannot know (the result of a call it does not model, a byte of a stack buffer
 nothing wrote, x87 state) is `None`; arithmetic on `None` gives `None`, and a branch on a flag
 that is `None` stops the run (`Unknown`). Reads outside the stack come from the image, unless an
-earlier store in the run wrote the place (then the value is whatever was stored). Calls the walk
-does not model return `None` in eax, ecx and edx, and the callee pops its own `ret N`.
+earlier store in the run wrote the place (then the value is whatever was stored). The image's
+zero-filled tail (`.bss`) reads as unknown: another function may have written it. A call the walk
+does not model returns `None` in eax, ecx and edx and may write through any pointer it was given,
+so the caller's stack (above the entry `esp`) and the 0x400 bytes at each pointer among its
+arguments (the register arguments and the first four stack dwords) become unknown; the callee
+pops its own `ret N`, read from the first `ret` inside its function row, and a callee with no row,
+no `ret` in its row or rets that disagree stops the run.
 
 Modelled: the instructions below, `Image` reads, and one call, the bounded string append
 `0x64a760` (destination, source, destination size; `ret 0xc`).
@@ -43,8 +48,8 @@ def split_ops(ops):
 
 
 class Walk:
-    def __init__(self, dis, img, start):
-        self.dis, self.img = dis, img
+    def __init__(self, dis, img, start, fns):
+        self.dis, self.img, self.fns = dis, img, fns
         self.reg = {r: None for r in REGS}
         self.reg['esp'] = STACK_TOP
         self.flags = {'zf': None, 'sf': None, 'cf': None, 'of': None}
@@ -54,6 +59,9 @@ class Walk:
         self.steps = 0
         self.hooks = {}        # call target -> function(walk)
         self.pops = {}         # call target -> bytes the callee pops
+        self.clobbered = []    # (lo, hi) image ranges an unmodelled call may have written
+        data = img.sections.get('.data')
+        self.bss = (data[0] + min(data[2], data[1] - data[0]), data[1]) if data else (0, 0)
 
     # --- values -------------------------------------------------------------------------
     def addr_of(self, expr):
@@ -99,7 +107,9 @@ class Walk:
             return self.mem[a]
         if a >= STACK_TOP - 0x100000:
             return None
-        if not self.img.in_image(a):
+        if not self.img.in_image(a) or self.bss[0] <= a < self.bss[1]:
+            return None
+        if any(lo <= a < hi for lo, hi in self.clobbered):
             return None
         return self.img.u8(a)
 
@@ -164,6 +174,7 @@ class Walk:
 
     # --- flags --------------------------------------------------------------------------
     def set_flags(self, result, a=None, b=None, op=None):
+        """Flags of a 32-bit result; a narrower result is passed shifted up to the top of 32 bits."""
         if result is None:
             self.flags = dict.fromkeys(self.flags)
             return
@@ -208,17 +219,36 @@ class Walk:
 
     # --- the run ------------------------------------------------------------------------
     def callee_pops(self, target):
+        """The bytes the callee at `target` pops: the operand of the `ret`s in its function row,
+        which must exist, hold a `ret` and agree."""
         if target in self.pops:
             return self.pops[target]
-        k, n = self.dis.at.get(target), 0
-        if k is not None:
-            for j in range(k, min(k + 400, len(self.dis.ins))):
-                _, _, mn, ops = self.dis.ins[j]
-                if mn == 'ret':
-                    n = int(ops, 16) if ops else 0
-                    break
-        self.pops[target] = n
-        return n
+        row = self.fns.at.get(target)
+        k = self.dis.at.get(target)
+        if row is None or k is None:
+            raise Unknown('callee 0x%x has no function row' % target)
+        end, pops = target + row['size'], set()
+        for j in range(k, len(self.dis.ins)):
+            at, _, mn, ops = self.dis.ins[j]
+            if at >= end:
+                break
+            if mn == 'ret':
+                pops.add(int(ops, 16) if ops else 0)
+        if len(pops) != 1:
+            raise Unknown('callee 0x%x pops %s' % (target, sorted(pops) or 'nothing known'))
+        self.pops[target] = pops.pop()
+        return self.pops[target]
+
+    def clobber(self, extra_pointers):
+        """What a call the walk does not model may have changed."""
+        for a in [a for a in self.mem if a >= STACK_TOP]:
+            self.mem[a] = None
+        for p in extra_pointers:
+            if p is None or not (self.img.in_image(p) or STACK_TOP - 0x100000 <= p < STACK_TOP + 0x100000):
+                continue
+            for a in [a for a in self.mem if p <= a < p + 0x400]:
+                self.mem[a] = None
+            self.clobbered.append((p, p + 0x400))
 
     def run(self, on_call, limit=400000):
         """Run to the function's `ret`; `on_call(walk, site, target)` sees every call and
@@ -254,6 +284,9 @@ class Walk:
                         self.mem[dst + i] = b
                     self.reg['eax'] = dst
                 else:
+                    esp = self.reg['esp']
+                    self.clobber([self.reg['ecx'], self.reg['edx']]
+                                 + [self.read_mem(esp + 4 * i, 4) for i in range(4)])
                     self.reg['eax'] = None
                 self.reg['ecx'] = self.reg['edx'] = None
                 self.reg['esp'] = (self.reg['esp'] + self.callee_pops(target)) & MASK
@@ -304,28 +337,38 @@ class Walk:
             if mn not in ('cmp', 'test'):
                 self.put(ops[0], r, size)
         elif mn in ('inc', 'dec'):
-            size = self.width(ops[0]) or 4
+            size = self.width(ops[0]) or (1 if ops[0] in LOW8 else 4)
+            bits = 8 * size
             a = self.get(ops[0], size)
-            r = None if a is None else (a + (1 if mn == 'inc' else -1)) & MASK
+            r = None if a is None else (a + (1 if mn == 'inc' else -1)) & ((1 << bits) - 1)
             saved = self.flags['cf']
-            self.set_flags(r, op='incdec')
+            if r is None:
+                self.flags = dict.fromkeys(self.flags)
+            else:
+                self.flags['zf'] = r == 0
+                self.flags['sf'] = bool(r >> (bits - 1))
+                self.flags['of'] = a == ((1 << (bits - 1)) - 1 if mn == 'inc' else 1 << (bits - 1))
             self.flags['cf'] = saved
-            if r is not None:
-                self.flags['of'] = (mn == 'inc' and a == 0x7FFFFFFF) or (mn == 'dec' and a == 0x80000000)
             self.put(ops[0], r, size)
         elif mn in ('shl', 'shr', 'sar'):
-            a = self.get(ops[0])
+            size = self.width(ops[0]) or (1 if ops[0] in LOW8 else 4)
+            bits = 8 * size
+            a = self.get(ops[0], size)
             n = self.get(ops[1])
+            if n is not None:
+                n &= 31
+            if n == 0:
+                return
             if a is None or n is None:
                 r = None
             elif mn == 'shl':
-                r = (a << n) & MASK
+                r = (a << n) & ((1 << bits) - 1)
             elif mn == 'shr':
                 r = a >> n
             else:
-                r = ((a - (1 << 32) if a >> 31 else a) >> n) & MASK
-            self.put(ops[0], r)
-            self.set_flags(r)
+                r = ((a - (1 << bits) if a >> (bits - 1) else a) >> n) & ((1 << bits) - 1)
+            self.put(ops[0], r, size)
+            self.set_flags(None if r is None else r << (32 - bits))
         elif mn in ('fld', 'fstp', 'fst', 'fild', 'fmul', 'fdiv', 'fadd', 'fsub', 'fxch', 'fnstsw',
                     'fldcw', 'fnstcw'):
             if mn in ('fstp', 'fst') and 'PTR' in ops[0]:

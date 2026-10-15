@@ -187,10 +187,10 @@ def spans_of(reads):
     return spans
 
 
-def walk_function(dis, img, start):
+def walk_function(dis, img, fns, start):
     """Every `CVar::Register` call a run of the function at `start` makes, as
     {site: [dict of the arguments]}, or the reason the run could not be trusted."""
-    w = Walk(dis, img, start)
+    w = Walk(dis, img, start, fns)
     found = {}
 
     def on_call(w, site, target):
@@ -291,7 +291,7 @@ def main():
             continue
         start = fns.holding(site)['address']
         if start not in walked:
-            walked[start] = walk_function(dis, img, start)
+            walked[start] = walk_function(dis, img, fns, start)
         got = walked[start]
         if isinstance(got, str) or site not in got:
             if isinstance(got, str):
