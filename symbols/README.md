@@ -7,7 +7,12 @@ bytes to `__stdcall` and `__thiscall`. A body that ends in a tail jump, as a thu
 `ret N` of the row it jumps to; a body that never returns is not compared.
 The convention is decided at the bytes on both sides of the call, by `tools/conventions.py`: the
 registers the body reads before it writes them, and what every direct caller loads into `ecx` and
-`edx` before the call. Which test it applies, and how far its answer goes, is in the tool's
+`edx` before the call. A function the client reaches through a pointer has the type of the
+registration, whatever its body reads: `int __fastcall (lua_State *L)` for a Lua C function,
+`__fastcall (const char *name, const char *args)` for a console command, and `__fastcall (void
+*param, uint32_t opcode, uint32_t time, CDataStore *msg)` for a message handler. Another function
+that no direct call reaches and whose body reads neither register keeps the registers of its older
+signature. Which test it applies, and how far its answer goes, is in the tool's
 header.
 - `RET` is a type with no name. `CONV` is `__cdecl`, `__stdcall`, `__fastcall` or `__thiscall`,
   and no other word: a register is never written in the signature.
@@ -22,8 +27,11 @@ header.
   pointer, which the header declares opaque. A type by value, the return included, is built in or
   a struct row: a Windows handle is `void *`, and a `RECT` passed by value is its four `int32_t`.
 - `__thiscall` lists `T *this` first: the object in `ecx`. The rest are the stack arguments.
-  `T` is the class when the method's name gives one, else `void`. A function that takes an
-  integer in `ecx` is `__fastcall`. Only `__thiscall` names a parameter `this`.
+  `T` is the type of the object `ecx` points to: the class when the method's name gives one,
+  else the struct or built-in type the body treats it as (`EvtContext *this`, `float *this`), else
+  `void`. A name's class does not give way to a type the body shows (`uint64_t *this` for
+  `CGGameUI::Target`, whose `ecx` is a guid pointer). A function that takes an integer in `ecx` is `__fastcall`. Only
+  `__thiscall` names a parameter `this`.
 - `__fastcall` takes its first two parameters of at most four bytes that are not `float` in `ecx`
   and `edx`, and the rest on the stack. A register the body never reads still has its parameter
   (`uint32_t unused`; `unused1` and `unused2` when both are), since the next parameter does not
