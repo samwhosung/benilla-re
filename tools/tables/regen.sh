@@ -13,5 +13,5 @@ exe=${BENILLA_RE_WOW_EXE:-WoW/WoW.exe}
 [ -f dumps/disasm.txt ] || tools/disasm.sh
 mkdir -p "$out"
 for name in opcodes messages events glue_events event_sites cvars dbc_stores dbc_schemas bindings chat_types chat_groups channel_notices unit_gates tutorial_triggers calls event_args verb_events glue_surface; do
-    python3 "tools/tables/$name.py" --exe "$exe" -o "$out/$name.tsv"
+    python3 "tools/tables/$name.py" --exe "$exe" --tables "$out" -o "$out/$name.tsv"
 done

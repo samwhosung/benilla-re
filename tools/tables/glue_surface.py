@@ -40,7 +40,9 @@ Rows are sorted by name.
 
 import re
 
-from lib import ROOT, Disasm, Image, addr, note, parse_args, read_tsv, write_table
+from pathlib import Path
+
+from lib import Disasm, Image, addr, note, parse_args, read_tsv, write_table
 
 GLUE_BUILDER = 0x46A7B0
 GLUE_REGISTRAR = 0x46ABB0
@@ -117,13 +119,13 @@ def openers(dis, img):
 def main():
     args = parse_args(__doc__, disasm=True)
     dis, img = Disasm(args.disasm), Image(args.exe)
-    bindings = read_tsv(ROOT / 'tables' / 'bindings.tsv')
+    bindings = read_tsv(Path(args.tables) / 'bindings.tsv')
     by_table = {}
     for r in bindings:
         by_table.setdefault(int(r['table'], 16), []).append(r)
 
     callers = {}
-    for r in read_tsv(ROOT / 'tables' / 'calls.tsv'):
+    for r in read_tsv(Path(args.tables) / 'calls.tsv'):
         for c in r['callees'].split('|'):
             callers.setdefault(int(c, 16), set()).add(int(r['function'], 16))
     glue_lo, glue_hi = 0x46A000, 0x476000

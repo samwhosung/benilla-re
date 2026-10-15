@@ -29,7 +29,9 @@ not mean it has none). `note` says which sites declare more than they push, `;`-
 
 import re
 
-from lib import (SIGNAL2, Disasm, addr, declared, note, parse_args, read_tsv, ROOT,
+from pathlib import Path
+
+from lib import (SIGNAL2, Disasm, addr, declared, note, parse_args, read_tsv,
                  signal2_passed, write_table)
 
 FANOUT = 0x515E50
@@ -76,7 +78,7 @@ def fanout_ids(dis):
 def main():
     args = parse_args(__doc__, disasm=True)
     dis = Disasm(args.disasm)
-    names = {int(r['id']): r['name'] for r in read_tsv(ROOT / 'tables' / 'events.tsv')}
+    names = {int(r['id']): r['name'] for r in read_tsv(Path(args.tables) / 'events.tsv')}
     ev = {}
 
     def add(name, eid, producer, fmt, text=None):
@@ -90,7 +92,7 @@ def main():
             e['notes'].append(text)
 
     glue = 0
-    for r in read_tsv(ROOT / 'tables' / 'event_sites.tsv'):
+    for r in read_tsv(Path(args.tables) / 'event_sites.tsv'):
         if r['space'] == 'glue':
             glue += 1
             continue

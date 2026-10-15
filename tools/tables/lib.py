@@ -6,6 +6,7 @@ Standard library only. Every generator takes the same options:
     --exe PATH      the client (default WoW/WoW.exe at the repo root)
     --disasm PATH   the disassembly (default dumps/disasm.txt at the repo root), for the
                     generators that read instructions
+    --tables DIR    where a generator that reads other tables finds them (default tables/)
     -o PATH         write the table there instead of standard output
 
 The exe must be build 5875, by the size and SHA-256 in tools/exe.env. Another build is refused.
@@ -328,6 +329,8 @@ def parse_args(doc, disasm=False, extra=None):
     ap.add_argument('--exe', default=str(ROOT / 'WoW' / 'WoW.exe'))
     if disasm:
         ap.add_argument('--disasm', default=str(ROOT / 'dumps' / 'disasm.txt'))
+    ap.add_argument('--tables', default=str(ROOT / 'tables'),
+                    help='the directory the generators that read other tables take them from')
     ap.add_argument('-o', '--out')
     if extra:
         extra(ap)

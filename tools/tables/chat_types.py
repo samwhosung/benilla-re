@@ -10,7 +10,9 @@ tables/events.tsv with that id, empty where the id has no name.
 import csv
 import sys
 
-from lib import ROOT, Image, addr, note, parse_args, write_table
+from pathlib import Path
+
+from lib import Image, addr, note, parse_args, write_table
 
 TYPES, STRIDE, COUNT = 0x804710, 0x43, 94
 EVENTS = 0x8062E0
@@ -20,7 +22,7 @@ def main():
     args = parse_args(__doc__)
     img = Image(args.exe)
     names = {}
-    with open(ROOT / 'tables' / 'events.tsv', encoding='utf-8') as f:
+    with open(Path(args.tables) / 'events.tsv', encoding='utf-8') as f:
         for row in csv.DictReader(f, delimiter='\t'):
             names[int(row['id'])] = row['name']
     rows = []
