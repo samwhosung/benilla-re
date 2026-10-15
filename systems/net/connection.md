@@ -172,14 +172,14 @@ Test: none
 
 ## Telemetry record
 
-At start-up `0x5aa2d0` clears 32 bytes at `0xc27e90`, opens `Data\base.MPQ`, reads the 28-byte file `telemetry.dat` from it, and on success copies the 28 bytes to `0xc27e94`, stores the word `0x14` at `0xc27e90` and sets the byte `0xc28135`. `0x5ab9b0`, slot 1 of the realm holder's vtable `0x803808`, returns 0 while that byte is clear; otherwise it appends the 32-byte record to the logon object's record array (count `+8`, capacity `+4`, pointer `+0xc`, growth step `+0x10`), sets the array's first dword to 1 and returns 1. The logon proof sends the array's count and records (`login`, Logon proof).
+At start-up `0x5aa2d0` clears 32 bytes at `0xc27e90` and reads the 28-byte `telemetry.dat` from `Data\base.MPQ`; on success it copies the bytes to `0xc27e94`, stores the word `0x14` at `0xc27e90` and sets the byte `0xc28135`. `0x5ab9b0`, slot 1 of the realm holder's vtable `0x803808`, returns 0 while that byte is clear; otherwise it appends the 32-byte record to the logon object's array (capacity `+4`, count `+8`, pointer `+0xc`, step `+0x10`), sets its first dword to 1 and returns 1. A full array grows to a multiple of its step: the stored one, else 8 from 8 records on (then stored), else the next power of two. The logon proof sends the count and records (`login`).
 
 Addresses: `0x5aa2d0`, `0x5ab9b0`, `0xc27e90`, `0xc28135`, `0x803808`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::telemetry_append`
 
-`0x5aa2d6` zeroes 8 dwords at `0xc27e90`; `0x5aa2f2` is the archive open, `0x5aa31f` the file open; `0x5aa32f` `cmp [ebp-4],esi` requires a read length of `0x1c`; `0x5aa334` to `0x5aa350` copy 7 dwords, set `0xc28135` and the word `0x14`. `0x5ab9b4` loads `0xc28135`. `0x5abab4` to `0x5abac7` store the count, the first dword 1 and `rep movs` 8 dwords from `0xc27e90`. The byte and the record have no other writer.
+`0x5aa2d6` zeroes 8 dwords at `0xc27e90`; `0x5aa2f2` is the archive open, `0x5aa31f` the file open; `0x5aa32f` `cmp [ebp-4],esi` requires a read length of `0x1c`; `0x5aa334` to `0x5aa350` copy 7 dwords, set `0xc28135` and the word `0x14`. `0x5ab9b4` loads `0xc28135`. `0x5abab4` to `0x5abac7` store the count, the first dword 1 and `rep movs` 8 dwords from `0xc27e90`. The byte and the record have no other writer. `0x5ab9e1` to `0x5aba0c` pick the step, clearing low bits (`lea eax,[esi-1]; and eax,esi`) below 8; `0x5aba15` rounds up by `div`; `0x5aba3f` reallocates with `0x10`, and on null `0x5aba54` allocates, `0x5aba86` copies 8 dwords a record and `0x5abaa1` frees the old block.
 
 ## Sending a packet
 
