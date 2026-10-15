@@ -25,7 +25,7 @@ Each threshold is the square of a constant, folded by a static initialiser (`fld
 | site | distance from the player to | squared threshold | passes when |
 |---|---|---|---|
 | `0x4944a0` | a player unit that it can cooperate with, or itself | `0xb4d918` = 10² | at most |
-| `0x48ba00` | the unit, by distance index 1 to 4 | 10², 11.11², 10², 30² | strictly less |
+| `0x48ba00` | the unit, by distance index 1 to 4 | 10², 11.111111², 10², 30² | strictly less |
 | `0x4924c0` | a spirit guide it may assist (NPC flag 0x40) | 20² | at most |
 | `0x4923b0` | the cached area spirit healer | (20 * 1.1)² as a float | at most |
 | `0x492130` | the cached corpse position | `0xb4e2ac` = 40² | at most |
@@ -37,7 +37,7 @@ Confidence: verified
 Proof: one
 Test: `ui::dist2_4923b0`, `ui::dist2_4924c0`
 
-The 10, 11.11, 10 and 30 of `CheckInteractDistance` are the cells `0xb4d918`, `0xb4e29c`, `0xb4e258` and `0xb4e2a0`, copied into the table `0xb4e3cc` once, at the first call (`0x48ba30`). `0x4923b0` keeps an area spirit healer to 22.000001 yards and `0x4924c0` accepts one within 20, so a healer leaves at 22 and is chosen at 20.
+The 10, 11.111111, 10 and 30 of `CheckInteractDistance` are the cells `0xb4d918`, `0xb4e29c`, `0xb4e258` and `0xb4e2a0`, copied into the table `0xb4e3cc` once, at the first call (`0x48ba30`). `0x4923b0` keeps an area spirit healer to 22.000001 yards and `0x4924c0` accepts one within 20, so a healer leaves at 22 and is chosen at 20.
 The cinematic gates are `uicamera/cinematic`; the corpse gate is `deathui#corpse-range-events`. The squares of `0x48edf0` and `0x48f080` are formed inline from 30.0.
 
 `ui::dist2_4923b0` runs the slice `0x492448` to `0x492475` and `ui::dist2_4924c0` the slice `0x492527` to `0x492559`, each the distance test.

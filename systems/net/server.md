@@ -28,7 +28,7 @@ The three puts are byte-identical bodies. `0x5379a0` tests connection state 6 an
 
 ## Send site rows
 
-`tables/opcode_sends.tsv` has one row per place a send call follows an opcode write. Most write the opcode as an immediate. Others take it from a register (`via-register`), from a caller's argument (`through-<function>`, for the movement and channel senders), from the cache object (`cache-object`), or by hand (`hand-resolved`); a row with opcode `?` has an opcode chosen at run time. The scan follows the listing, not the branches, so a send reached from several writes lists each opcode.
+`tables/opcode_sends.tsv` has one row per place a send call follows an opcode write. Most write the opcode as an immediate. Others take it from a register (`via-register`), from a caller's argument (`through-<function>`, for the movement and channel senders), from the cache object (`cache-object`), or by hand (`hand-resolved`); a row with opcode `?` is one of three: the `wowcache` lookup `0x56b5fa`, whose cache object holds opcode 0, and the two writes in `0x619b50` (`0x619bb9`, `0x619c05`), whose opcode is not a constant and which no live code reaches. The scan follows the listing, not the branches, so a send reached from several writes lists each opcode.
 
 Addresses: `0x5ab630`, `0x5379a0`, `0x728640`, `0x600a30`, `0x600a10`, `0x60e0a0`, `0x4a00f0`, `0x4a04b0`, `0x5ab000`
 Confidence: verified
@@ -99,7 +99,7 @@ The comparison is by index and name against the two tables; `chat_types.tsv` row
 | attachment | one item GUID; bound, quest, conjured and container-with-contents items are refused | `ui/mailsend#attaching-an-item` |
 | money | `SetSendMailMoney` stores the amount only when coinage covers it | `ui/mailsend#money-and-cod` |
 | COD | needs an attachment; money and COD together send nothing | `ui/mailsend#sending` |
-| postage shown | 30 copper, plus the stationery's price when the player does not carry it, plus the package's cost | `ui/mailsend#postage-and-the-attachments-details` |
+| postage shown | the money being sent, plus 30 copper, plus the stationery's price when the player does not carry it, plus the package's cost | `ui/mailsend#postage-and-the-attachments-details` |
 | body | GUID, target, subject, body, stationery u32, package u32, item GUID, money u32, COD u32, zero u64, zero u8 | `ui/mailsend#sending` |
 
 Addresses: `0x4ae800`, `0x4ae8dd`, `0x4ae99e`, `0x4ae756`, `0x4ae730`, `0x4aea6c`
@@ -268,7 +268,7 @@ The client's own range tests, and the vmangos constants they meet.
 |---|---|---|
 | NPC click | walks up when farther than 5.5555553 yards | `INTERACTION_DISTANCE 5.0` plus both bounding radii (`ObjectDefines.h:24`, `Player.cpp:2556`, `Object.h:595`) |
 | inspect | squared distance at most 10² | `INSPECT_DISTANCE 10.0` (`ObjectDefines.h:26`, `MiscHandler.cpp:951`) |
-| `CheckInteractDistance` 1 to 4 | 10, 11.11, 10, 30 | `TRADE_DISTANCE 11.11` (`ObjectDefines.h:27`), trade checks center to center (`TradeHandler.cpp:272`) |
+| `CheckInteractDistance` 1 to 4 | 10, 11.111111 (`0x4131c71c`, 100/9), 10, 30 | `TRADE_DISTANCE 11.11`, slightly below the client's value (`ObjectDefines.h:27`), trade checks center to center (`TradeHandler.cpp:272`) |
 | spirit healer | chosen within 20, kept to 22.000001 | not read |
 | corpse | within 40 | not read |
 
@@ -277,7 +277,7 @@ Confidence: verified
 Proof: one
 Test: `objectlayer::p3_in_range_gate_5f0130`, `ui::dist2_4944a0`, `ui::check_interact_dist2`
 
-The NPC range is `InitPlayerSquare4` (`0x5f1350`): `fld [0x80ae48]; fmul [0x80ae48]` with 5.5555553 stored as a float at `0xc4c28c`, 30.864195. `CheckInteractDistance` is an interface function; the client's trade sender `0x5d3fb0` tests no range, so only an interface that calls it first applies the 11.11. The entries are `objectlayer/interaction#talking-to-an-npc` and `ui/distancegates#thresholds`.
+The NPC range is `InitPlayerSquare4` (`0x5f1350`): `fld [0x80ae48]; fmul [0x80ae48]` with 5.5555553 at `0x80ae48`; its square, 30.864195, is the float at `0xc4c28c`. `CheckInteractDistance` is an interface function; the client's trade sender `0x5d3fb0` tests no range, so only an interface that calls it first applies the 11.111111. The entries are `objectlayer/interaction#talking-to-an-npc` and `ui/distancegates#thresholds`.
 
 ## Movement sends and cadence
 
