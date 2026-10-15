@@ -6,6 +6,12 @@ mod common;
 use benilla_re_difftest::Emu;
 use benilla_re_net::{send_who_query, sstr_str_i, sstr_to_int, WhoRow, WhoTables, WhoTags};
 use common::{Lcg, Wow};
+use std::sync::atomic::{AtomicU32, Ordering};
+
+/// The units `GetStringTypeW` was asked about: sign-extended high bytes (`U+FF80` to `U+FFFE`)
+/// and the ones it calls space.
+static ASKED_HIGH: AtomicU32 = AtomicU32::new(0);
+static ASKED_SPACE: AtomicU32 = AtomicU32::new(0);
 
 const SEND_WHO_QUERY: u64 = 0x5aebb0;
 const SSTR_STR_I: u64 = 0x64b540;
@@ -17,6 +23,8 @@ const SMEM_REALLOC: u64 = 0x646320;
 const SMEM_FREE: u64 = 0x646430;
 const SERR_SET_LAST_ERROR: u64 = 0x64e850;
 const LOCALE: u64 = 0xc0e080;
+/// The pointer `___crtGetStringTypeW` (`0x413ed3`) calls `GetStringTypeW` through.
+const GET_STRING_TYPE_W: u64 = 0x8824a0;
 /// The tag names `FrameScript_GetText` is asked for: name, guild, zone, race, class.
 const TAG_KEYS: [u32; 5] = [0x85dce0, 0x85dcd0, 0x85dcc0, 0x85dcb0, 0x85dca0];
 /// Each table's record array pointer (its count follows), record size and name offset:
@@ -69,6 +77,27 @@ impl<'a> Rig<'a> {
         e.stub_realloc_sized(SMEM_REALLOC, 5);
         e.stub(SMEM_FREE, 1, 4);
         e.stub(SERR_SET_LAST_ERROR, 0, 1);
+        // `iswctype` past `0xff` asks the system: page 0 holds `fs:0` for its exception frame,
+        // and `GetStringTypeW(CT_CTYPE1, &unit, 1, &type)` answers with [`wide`].
+        e.map(0, 0x1000);
+        let api = e.alloc(0x10);
+        e.stub_fn(api, 4, |c| {
+            assert_eq!(
+                (c.arg(0), c.arg(2)),
+                (1, 1),
+                "GetStringTypeW(CT_CTYPE1, _, 1, _)"
+            );
+            let unit = u16::from_le_bytes(c.read(u64::from(c.arg(1)), 2).try_into().unwrap());
+            if (0xff80..0xffff).contains(&unit) {
+                ASKED_HIGH.fetch_add(1, Ordering::Relaxed);
+            }
+            if wide(unit) & 8 != 0 {
+                ASKED_SPACE.fetch_add(1, Ordering::Relaxed);
+            }
+            c.write(u64::from(c.arg(3)), &wide(unit).to_le_bytes());
+            1
+        });
+        e.write_u32(GET_STRING_TYPE_W, api as u32);
         let tags = e.alloc(0x100);
         // `FrameScript_GetText(ecx = key)`: `cmp ecx,key; jne next; mov eax,text; ret 4`.
         let mut c = Vec::new();
@@ -104,13 +133,53 @@ impl<'a> Rig<'a> {
     }
 }
 
-/// A word of the alphabet the row names and the filters share, so that searches hit.
+/// `GetStringTypeW`'s `CT_CTYPE1` answer the stub and the model share: `C1_SPACE` for the
+/// Ogham space mark, the en quad to the hair space and the ideographic space, and no digit.
+fn wide(unit: u16) -> u16 {
+    match unit {
+        0x1680 | 0x2000..=0x200a | 0x3000 => 8,
+        _ => 0,
+    }
+}
+
+/// UTF-8 pieces: letters of two and three bytes, white space of three (`U+3000`, `U+2003`), an
+/// overlong space (`C0 A0`), a four-byte code point whose low unit is a space (`U+10020`), the
+/// half-width `U+FF91`, a stray continuation, leads a space or a letter breaks, and the bytes
+/// `_isdigit` reads before its table.
+const WIDE: &[&[u8]] = &[
+    b"\xc3\xa9",
+    b"\xc3\x89",
+    b"\xe5\x90\x8d",
+    b"\xe3\x80\x80",
+    b"\xe2\x80\x83",
+    b"\xc0\xa0",
+    b"\xf0\x90\x80\xa0",
+    b"\xef\xbe\x91",
+    b"\x80",
+    b"\xc3",
+    b"\xe3\x81",
+    b"\xfc\x80\x80\x80\x80\x80",
+    b"\xfd",
+    b"\xfb",
+    b"\xf7",
+    b"\xff",
+    b"\xfe",
+];
+
+/// A word of the alphabet the row names and the filters share, so that searches hit, with now
+/// and then a UTF-8 piece.
 fn word(g: &mut Lcg, max: usize) -> Vec<u8> {
     const PICK: &[u8] = b"abAB";
     let n = (g.next() >> 16) as usize % (max + 1);
-    (0..n)
-        .map(|_| PICK[(g.next() >> 16) as usize % PICK.len()])
-        .collect()
+    let mut w = Vec::new();
+    for _ in 0..n {
+        if g.next() >> 28 == 0 {
+            w.extend(WIDE[(g.next() >> 16) as usize % WIDE.len()]);
+        } else {
+            w.push(PICK[(g.next() >> 16) as usize % PICK.len()]);
+        }
+    }
+    w
 }
 
 fn pick<'b>(g: &mut Lcg, from: &[&'b [u8]]) -> &'b [u8] {
@@ -147,6 +216,14 @@ fn token(g: &mut Lcg, tags: &[Vec<u8>; 5]) -> Vec<u8> {
                 b"99a-5",
                 b"1--2",
                 b"-0",
+                b"-\xfd",
+                b"-\xfb7",
+                b"-\xf7",
+                b"-\xfe",
+                b"3-\xfd",
+                b"\xff5",
+                b"\xef\xbe\x915",
+                b"9\xc3\xa9-2",
             ],
         )),
         9..=10 => {
@@ -174,7 +251,20 @@ fn filter(g: &mut Lcg, tags: &[Vec<u8>; 5]) -> Vec<u8> {
     let n = (g.next() >> 16) as usize % 8;
     for _ in 0..n {
         f.extend(token(g, tags));
-        f.extend(pick(g, &[b" ", b"\t", b"  ", b"\x0b", b" \r\n"]));
+        f.extend(pick(
+            g,
+            &[
+                b" ",
+                b"\t",
+                b"  ",
+                b"\x0b",
+                b" \r\n",
+                b"\xe3\x80\x80",
+                b"\xc0\xa0",
+                b"\xf0\x90\x80\xa0",
+                b"\xc2\xa0",
+            ],
+        ));
     }
     if g.next() >> 29 == 0 {
         // Long filters reach the copy's end and the name that follows it.
@@ -189,9 +279,10 @@ fn filter(g: &mut Lcg, tags: &[Vec<u8>; 5]) -> Vec<u8> {
 }
 
 /// `FriendList::SendWhoQuery` whole on filters of tags, level ranges, quoted phrases and terms
-/// separated by any white space, up to and past the 127 bytes the copy keeps, with the tags
-/// themselves varied (empty, long, any case) and race, class and area rows whose names, ids,
-/// parents and locales vary: the packet it sends, byte for byte.
+/// separated by any white space, ASCII or wide, up to and past the 127 bytes the copy keeps,
+/// with UTF-8 in words, tags and names (valid, overlong, cut short, stray, and the high bytes the
+/// digit tests read), the tags themselves varied (empty, long, any case) and race, class and area
+/// rows whose names, ids, parents and locales vary: the packet it sends, byte for byte.
 #[test]
 fn who_query_packet() {
     let Some(wow) = Wow::load() else {
@@ -211,7 +302,11 @@ fn who_query_packet() {
         ];
         if g.next() >> 29 == 0 {
             let k = (g.next() >> 16) as usize % 5;
-            tags[k] = pick(&mut g, &[b"", b"n", b"name:", b"G-"]).to_vec();
+            tags[k] = pick(
+                &mut g,
+                &[b"", b"n", b"name:", b"G-", b"\xe5\x90\x8d-", b"\xc3\xa9-"],
+            )
+            .to_vec();
         }
         for (k, t) in tags.iter().enumerate() {
             let at = r.tags + 0x20 * k as u64;
@@ -289,7 +384,7 @@ fn who_query_packet() {
             race: &tags[3],
             class: &tags[4],
         };
-        let want = send_who_query(&f, &t, &tables);
+        let want = send_who_query(&f, &t, &tables, &wide);
         assert_eq!(
             got,
             want.packet(),
@@ -297,10 +392,20 @@ fn who_query_packet() {
             String::from_utf8_lossy(&f)
         );
     }
+    // The system's answers were asked for, for high bytes and for wide white space.
+    assert!(
+        ASKED_HIGH.load(Ordering::Relaxed) > 0,
+        "no high byte reached iswdigit"
+    );
+    assert!(
+        ASKED_SPACE.load(Ordering::Relaxed) > 0,
+        "no wide space reached iswspace"
+    );
 }
 
 /// `SStrStrI` (`0x64b540`) on haystacks and needles of the shared alphabet, empty ones included,
-/// and its null arguments; `SStrToInt` (`0x64ac60`) on signs, digits, overflow and trailing text.
+/// and its null arguments; `SStrToInt` (`0x64ac60`) on signs, digits, overflow, trailing text
+/// and a null string.
 #[test]
 fn who_string_helpers() {
     let Some(wow) = Wow::load() else {
@@ -340,7 +445,7 @@ fn who_string_helpers() {
         );
         let mut s: Vec<u8> = match g.next() >> 29 {
             0 => b"-".to_vec(),
-            1 => b"".to_vec(),
+            1 => b"+".to_vec(),
             _ => Vec::new(),
         };
         let digits = (g.next() >> 16) as usize % 13;
@@ -355,4 +460,10 @@ fn who_string_helpers() {
             "SStrToInt {s:?}"
         );
     }
+    // A null string sets error 0x57 (`0x64ac6a`) and returns 0.
+    r.e.clear_calls();
+    assert_eq!(r.e.call(SSTR_TO_INT, 0, 0, &[0]), 0, "SStrToInt null");
+    let c = r.e.calls();
+    assert_eq!(c.len(), 1, "SStrToInt null: one call");
+    assert_eq!((c[0].addr, c[0].args[0]), (SERR_SET_LAST_ERROR, 0x57));
 }

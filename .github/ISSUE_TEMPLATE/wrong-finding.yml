@@ -5,7 +5,7 @@ body:
     id: where
     attributes:
       label: The row or the entry
-      description: The address, or the doc and anchor (net/friends#who-query-tags), or the page on the site.
+      description: The address, or the doc and anchor (net/who#who-query-tags), or the page on the site.
     validations:
       required: true
   - type: textarea

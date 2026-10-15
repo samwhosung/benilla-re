@@ -19,7 +19,7 @@ Test: `net::who_query_packet`
 
 ## Who filter copy
 
-The filter is copied up to 127 bytes and a space is appended, so the last token ends. Double quotes toggle, are dropped, and keep white space in a token; a token still open at the end is dropped. The copy's 128 bytes are followed on the stack by the name buffer. A filter of 127 bytes or more puts the space in the copy's last byte and its NUL in the name's first, so a name a tag sets earlier in the filter runs on from the copy and its words are parsed too: from `"n-a b"` the word `a` becomes a term, while `b`, which no space ends, is dropped.
+The filter is copied up to 127 bytes and a space is appended, so the last token ends. Double quotes toggle, are dropped, and keep white space in a token; a token still open at the end is dropped. The copy's 128 bytes are followed on the stack by the name buffer. A filter of 127 bytes or more puts the space in the copy's last byte and its NUL in the name's first, so a name a tag sets earlier in the filter runs on from the copy and its words are parsed too: with `n-` as `WHO_TAG_NAME`, from `"n-a b"` the word `a` becomes a term, while `b`, which no space ends, is dropped.
 
 Addresses: `0x5aebc8`, `0x5aebf2`, `0x5aec12`, `0x5aec1a`, `0x5aec90`, `0x5aecda`, `0x5af07c`
 Confidence: verified
@@ -28,9 +28,31 @@ Test: `net::who_query_packet`
 
 `0x5aebf2` is `SStrCopy` into `[ebp-0x128]` with the bound `0x80`, which keeps 127 bytes and a NUL. `0x5aec12` and `0x5aec1a` write the space and a NUL at the copy's length; at 127 the NUL lands at `[ebp-0xa8]`, the name buffer (`0x5aebe4` zeroes its first byte; `0x5aed14` copies a name there). `0x5aec90` `cmp eax,0x22` toggles the quote flag and steps past the quote. `0x5af07c` stores a token byte at `[edi+esi]` with no bound; `0x5aecda` ends the token with a NUL at a white space outside quotes. The scan ends when `0x41aab0` returns `-1` at a NUL (`0x5af099`).
 
+## Who filter decoding
+
+The copy is read as UTF-8, one code point at a time. A code point goes to the token as every byte the decoder read, so a broken sequence takes the byte that broke it, a space after a lone lead byte included, and a NUL inside a sequence ends the scan. White space is `iswspace` of the code point's low 16 bits: `0x09` to `0x0d` and the space from the C table, nothing from `0x80` to `0xff` (so not `U+00A0`), and from `0x100` on what Windows' `GetStringTypeW` says, such as `U+3000`. The overlong `C0 A0` and `U+10020` are spaces too.
+
+Addresses: `0x41aab0`, `0x5af06f`, `0x5aec2b`, `0x5af03d`, `0x5aecb8`, `0x74006f`, `0x7458e4`, `0x413ed3`, `0x8824a0`, `0x831724`
+Confidence: verified
+Proof: one
+Test: `net::who_query_packet`
+
+`0x41aab0` takes up to five continuations by the lead's high bits with no overlong check; a stray continuation, or a byte that is not `10xxxxxx`, gives `0x80000000`, and the count it stores at `[ebp-0x10]` includes that byte. `0x5af06f` to `0x5af083` copy that many bytes. The skips at `0x5aec2b` and `0x5af03d` and the test at `0x5aecb8` push the code point to `0x74006f`, `_iswctype` (`0x7458e4`) with `_SPACE`, which reads a 16-bit unit: `0xffff` is 0, below `0x100` the table `_ctype` (`0x831724`, read at its second entry), else `___crtGetStringTypeW` (`0x413ed3`), which calls the system through `0x8824a0`. The table has no bit for `0x80` to `0xff`. Its pointers (`0x83171c`, `0x831720`), `__mb_cur_max` (`0x831710`) and the decimal point (`0x831714`) are written only by the category initializers `0x41237d` and `0x411eff`, named only in `__lc_category` (`0x831bd8`), which only `_setlocale` (`0x4109d6`) and `0x410c1c` read; nothing calls or names `_setlocale`, so they keep their initial values.
+
+## Who level digits
+
+A byte of `0x80` or more begins no level range. After a range's digits, or a leading `-`, the bytes `0xf7`, `0xfb` and `0xfd` pass the digit test, and the maximum becomes 0, the value of no digits.
+
+Addresses: `0x5aef7d`, `0x740050`, `0x5aefd9`, `0x73fc0f`, `0x831710`, `0x83171c`, `0x831720`, `0x831714`
+Confidence: verified
+Proof: one
+Test: `net::who_query_packet`
+
+`0x5aef7d` passes the first byte to `iswdigit` (`0x740050`) sign-extended to 16 bits by `movsx ax`, as does the loop at `0x5aefa5`: a high byte becomes `U+FF80` to `U+FFFF`, none of them a decimal digit in Unicode, and `U+FFFF` is 0 without asking. `0x5aefd9` passes the next byte, sign-extended, to `_isdigit` (`0x73fc0f`), which with `__mb_cur_max` 1 (`0x831710`) reads the table entry at the byte, so a high byte reads the 128 bytes before `_ctype`'s second entry. Of those, the `_DIGIT` bit is set only in `0x26`, the low byte of `_pctype` (`0x83171c`) and `_pwctype` (`0x831720`), read for `0xfb` and `0xfd`, and in the decimal point `.` (`0x831714`), read for `0xf7`. `0x64ac60` reads no digit in any of them.
+
 ## Who query packet
 
-A token that begins with a digit is a level range: the number is the minimum and the maximum, a `-` after it sets the maximum to 100, and a number after that dash replaces it. A token that begins with `-` sets only the maximum, and only when a digit follows; the minimum keeps 0 or an earlier range's. Levels are not clamped; the defaults are 0 and 100. Any other token is a search term, up to four; the scan stops after the fourth. The packet is `CMSG_WHO` (`0x62`): minimum, maximum, name and guild C strings, race mask, class mask, the zone count (0 to 10) with the zone ids, then the term count with the C strings
+A token that begins with a digit is a level range: the number is the minimum and the maximum, a `-` after it sets the maximum to 100, and a number after that dash replaces it. A token that begins with `-` sets only the maximum, and only when a digit follows; the minimum keeps 0 or an earlier range's. Levels are not clamped; the defaults are 0 and 100. Any other token is a search term, up to four; the scan stops after the fourth. The packet is `CMSG_WHO` (`0x62`): minimum, maximum, name and guild C strings, race mask, class mask, the zone count (0 to 10) with the zone ids, then the term count with the C strings.
 
 Addresses: `0x5aebb0`, `0x5aef7d`, `0x5aefc4`, `0x5aefd9`, `0x5af02d`, `0x5af0a4`, `0x5af168`, `0x5ab630`
 Confidence: verified

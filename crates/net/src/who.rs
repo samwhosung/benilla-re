@@ -60,9 +60,85 @@ fn copy(f: &mut [u8], dst: usize, src: &[u8], cap: usize) {
     f[dst + n] = 0;
 }
 
-/// The C ctype table's white space: `0x09` to `0x0d` and the space.
-fn is_space(c: u8) -> bool {
-    matches!(c, 0x09..=0x0d | 0x20)
+/// `sgetu8` (`0x41aab0`): the code point at `at` and the bytes read. A NUL lead, or a NUL where a
+/// continuation belongs, gives `0xffffffff`; a stray continuation lead, or a continuation that is
+/// not `10xxxxxx`, gives `0x80000000`. The count includes every non-NUL byte read, the bad one
+/// too. Leads up to `0xfc` take up to five continuations, with no check for overlong forms.
+fn utf8_next(f: &[u8], at: usize) -> (u32, usize) {
+    let b = |i: usize| u32::from(f.get(at + i).copied().unwrap_or(0));
+    let lead = b(0);
+    if lead == 0 {
+        return (0xffff_ffff, 0);
+    }
+    let (n, mut acc) = match lead {
+        0xfc..=0xfd => (5, lead & 1),
+        0xf8..=0xfb => (4, lead & 3),
+        0xf0..=0xf7 => (3, lead & 7),
+        0xe0..=0xef => (2, lead & 0xf),
+        0xc0..=0xdf => (1, lead & 0x1f),
+        0x80..=0xff => return (0x8000_0000, 1),
+        _ => return (lead, 1),
+    };
+    for k in 1..=n {
+        let c = b(k);
+        if c == 0 {
+            return (0xffff_ffff, k);
+        }
+        if c & 0xc0 != 0x80 {
+            return (0x8000_0000, k + 1);
+        }
+        acc = acc << 6 | (c & 0x3f);
+    }
+    (acc, n + 1)
+}
+
+/// The C ctype table at `0x831726` (`_pctype` and `_pwctype`, which `_setlocale`, unreached,
+/// would replace): its `_SPACE` bit is set for `0x09` to `0x0d` and the space, its `_DIGIT` bit
+/// for `0` to `9`, and no bit at all for `0x80` to `0xff`.
+const CT_SPACE: u16 = 8;
+const CT_DIGIT: u16 = 4;
+
+fn c_ctype(w: u16) -> u16 {
+    match w {
+        0x09..=0x0d | 0x20 => CT_SPACE,
+        0x30..=0x39 => CT_DIGIT,
+        _ => 0,
+    }
+}
+
+/// `_iswctype` (`0x7458e4`) on the UTF-16 unit `w`: 0 for `0xffff`, the C table below `0x100`,
+/// and otherwise `GetStringTypeW`'s `CT_CTYPE1` bits (`0x413ed3`), which `wide` gives.
+fn iswctype(w: u16, mask: u16, wide: &dyn Fn(u16) -> u16) -> bool {
+    let bits = match w {
+        0xffff => 0,
+        0..=0xff => c_ctype(w),
+        _ => wide(w),
+    };
+    bits & mask != 0
+}
+
+/// `iswspace` (`0x74006f`) of a decoded code point: only its low 16 bits are tested, so
+/// `0x80000000` is the NUL's class and a code point past `0xffff` is its low unit's.
+fn is_space(c: u32, wide: &dyn Fn(u16) -> u16) -> bool {
+    iswctype(c as u16, CT_SPACE, wide)
+}
+
+/// `iswdigit` (`0x740050`) of a byte sign-extended to 16 bits (`movsx ax`), so a byte of `0x80`
+/// or more asks `wide` about `U+FF80` to `U+FFFE`, and `0xff` is no digit.
+fn is_wdigit(c: u8, wide: &dyn Fn(u16) -> u16) -> bool {
+    iswctype(c as i8 as i16 as u16, CT_DIGIT, wide)
+}
+
+/// `_isdigit` (`0x73fc0f`) of a sign-extended byte with `__mb_cur_max` 1: the table entry at the
+/// byte, which for a byte of `0x80` or more lies before the table. Of those 128 bytes, the ones
+/// with `_DIGIT` set are the low bytes of the pointers `_pwctype` (`0x831720`) and `_pctype`
+/// (`0x83171c`), `0x26`, and the decimal point (`0x831714`), `.`: bytes `0xfd`, `0xfb` and
+/// `0xf7`.
+fn is_digit(c: u8) -> bool {
+    match c {
+        0..=0x7f => c_ctype(u16::from(c)) & CT_DIGIT != 0,
+        _ => matches!(c, 0xfd | 0xfb | 0xf7),
+    }
 }
 
 /// `SStrToInt` (`0x64ac60`): an optional `-`, then decimal digits in wrapping 32-bit arithmetic;
@@ -132,14 +208,23 @@ impl WhoQuery {
     }
 }
 
-/// `FriendList::SendWhoQuery` on a filter of ASCII bytes. The filter is copied up to 127 bytes
+/// `FriendList::SendWhoQuery` on a filter of any bytes, read as UTF-8 by `sgetu8`: a code point is
+/// copied to the token as every byte the decoder read, so a bad sequence takes the byte that broke
+/// it, and the scan ends at a NUL or a sequence a NUL cuts short. White space is `iswspace` of
+/// the code point, where `wide` answers for units of `0x100` and more as `GetStringTypeW` does.
+/// The filter is copied up to 127 bytes
 /// and a space is appended; a filter of 127 or more puts that space in the copy's last byte and
 /// its NUL in the name's first, so a name a tag sets later runs on from the copy and is parsed
 /// too. Tokens end at white space outside double quotes, which toggle and are dropped; a token
 /// still open at the end is dropped. Each token is tested, without case and as a prefix, for
 /// the name, guild, zone, race and class tags in that order, then for a level range; any other
 /// token is a term, and the fourth term ends the scan. A tag's text is the token after the tag.
-pub fn send_who_query(filter: &[u8], tags: &WhoTags, tables: &WhoTables) -> WhoQuery {
+pub fn send_who_query(
+    filter: &[u8],
+    tags: &WhoTags,
+    tables: &WhoTables,
+    wide: &dyn Fn(u16) -> u16,
+) -> WhoQuery {
     let mut f = [0u8; FRAME];
     copy(&mut f, COPY, filter, 0x80);
     let len = cstr(&f, COPY).len();
@@ -159,37 +244,41 @@ pub fn send_who_query(filter: &[u8], tags: &WhoTags, tables: &WhoTables) -> WhoQ
     let mut tlen = 0usize;
     let mut quote = false;
     let mut pos = COPY;
-    while is_space(f[pos]) {
-        pos += 1;
-    }
-    loop {
-        let c = f[pos];
-        if c == 0 {
+    let skip = |f: &[u8], pos: &mut usize| loop {
+        let (c, n) = utf8_next(f, *pos);
+        if !is_space(c, wide) {
             break;
         }
-        if c == b'"' {
+        *pos += n;
+    };
+    skip(&f, &mut pos);
+    loop {
+        let (c, n) = utf8_next(&f, pos);
+        if c == 0xffff_ffff {
+            break;
+        }
+        if c == u32::from(b'"') {
             quote = !quote;
-            pos += 1;
+            pos += n;
             continue;
         }
-        if quote || !is_space(c) {
-            f[TERMS + 0x80 * terms + tlen] = c;
-            tlen += 1;
-            pos += 1;
+        if quote || !is_space(c, wide) {
+            let at = TERMS + 0x80 * terms + tlen;
+            f.copy_within(pos..pos + n, at);
+            tlen += n;
+            pos += n;
             continue;
         }
         let slot = TERMS + 0x80 * terms;
         f[slot + tlen] = 0;
         tlen = 0;
-        if !tag(&mut f, slot, &mut q, tags, tables) {
+        if !tag(&mut f, slot, &mut q, tags, tables, wide) {
             terms += 1;
         }
         if terms >= 4 {
             break;
         }
-        while is_space(f[pos]) {
-            pos += 1;
-        }
+        skip(&f, &mut pos);
     }
     q.name = cstr(&f, NAME).to_vec();
     q.guild = cstr(&f, GUILD).to_vec();
@@ -200,7 +289,14 @@ pub fn send_who_query(filter: &[u8], tags: &WhoTags, tables: &WhoTables) -> WhoQ
 }
 
 /// Tests the token at `slot` for a tag or a level range and applies it; `false` for a term.
-fn tag(f: &mut [u8], slot: usize, q: &mut WhoQuery, tags: &WhoTags, tables: &WhoTables) -> bool {
+fn tag(
+    f: &mut [u8],
+    slot: usize,
+    q: &mut WhoQuery,
+    tags: &WhoTags,
+    tables: &WhoTables,
+    wide: &dyn Fn(u16) -> u16,
+) -> bool {
     let tok = cstr(f, slot).to_vec();
     let is = |t: &[u8]| strnicmp(&tok, t, t.len() as u32) == 0;
     let text = |t: &[u8]| tok[t.len().min(tok.len())..].to_vec();
@@ -248,12 +344,12 @@ fn tag(f: &mut [u8], slot: usize, q: &mut WhoQuery, tags: &WhoTags, tables: &Who
     let at = |i: usize| tok.get(i).copied().unwrap_or(0);
     let mut range = false;
     let mut p = 1;
-    if at(0).is_ascii_digit() {
+    if is_wdigit(at(0), wide) {
         let v = sstr_to_int(&tok);
         q.min = v;
         q.max = v;
         range = true;
-        while at(p).is_ascii_digit() {
+        while is_wdigit(at(p), wide) {
             p += 1;
         }
         if at(p) == b'-' {
@@ -263,7 +359,7 @@ fn tag(f: &mut [u8], slot: usize, q: &mut WhoQuery, tags: &WhoTags, tables: &Who
     } else if at(0) != b'-' {
         return false;
     }
-    if at(p).is_ascii_digit() {
+    if is_digit(at(p)) {
         q.max = sstr_to_int(&tok[p..]);
         return true;
     }

@@ -11,6 +11,8 @@ publish = false
 num-bigint = "0.4"
 # The random state ConnectToRandomAddress seeds and advances inline.
 benilla-re-random.workspace = true
+# The MD5 the download check runs (Storm's in the exe).
+benilla-re-storm.workspace = true
 
 [dev-dependencies]
 benilla-re-difftest.workspace = true

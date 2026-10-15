@@ -161,8 +161,8 @@ writes the same bytes.
   path (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
   `repo` and `site` are additions to schema 1; a reader that ignores unknown keys is unaffected.
 - `docs/` (`docs/METHOD.md`, `docs/CONTRIBUTING.md`) and `systems/` (every system doc): the Markdown a
-  `finding` cell names, so that `net/friends#who-query-tags` is the file
-  `systems/net/friends.md` at its heading, and on the site `d/systems/net/friends.html`.
+  `finding` cell names, so that `net/who#who-query-tags` is the file
+  `systems/net/who.md` at its heading, and on the site `d/systems/net/who.html`.
 - With `--symbols <dir>`, a folder rebased onto another build (Other builds), the export has the
   folder's `symbols/` only: the other tables (opcodes, cvars, bindings, the call tables) hold
   5875's addresses and are left out, `exe` has `size` and `sha256` null and `rebased` true, and

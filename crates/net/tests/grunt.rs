@@ -5,9 +5,9 @@ mod common;
 
 use benilla_re_difftest::Emu;
 use benilla_re_net::{
-    can_read, cmd_auth_logon_challenge, cmd_grunt_auth_verify, cmd_realm_list, cmd_xfer_initiate,
-    on_data, pending_expire, put_challenge_body, Arg, ChallengeRecord, DataStore, Fetch, LinkCall,
-    OnDataEnd, LINK_COMMANDS,
+    can_read, cmd_auth_logon_challenge, cmd_grunt_auth_verify, cmd_grunt_hello, cmd_realm_list,
+    cmd_xfer_initiate, on_data, pending_expire, put_challenge_body, Arg, ChallengeRecord,
+    DataStore, Fetch, HelloInfo, LinkCall, OnDataEnd, LINK_COMMANDS,
 };
 use common::{Lcg, Wow};
 
@@ -396,7 +396,8 @@ fn grunt_xfer_initiate() {
 }
 
 /// `ClientLink::PutChallengeBody` whole, appending to stores that already hold 0 to 19 bytes,
-/// with accounts of 0 to 300 characters: every byte of the store and its size.
+/// with accounts of 0 to 63 characters, the most the senders copy to `+0x19c`, and of 64 to 300
+/// written there directly: every byte of the store and its size.
 #[test]
 fn grunt_challenge_body() {
     let Some(wow) = Wow::load() else {
@@ -409,9 +410,10 @@ fn grunt_challenge_body() {
         let pn = (g.next() >> 16) as usize % 20;
         let pre = fill(&mut g, pn);
         let n = match g.next() >> 29 {
-            0 => 255 + (g.next() >> 24) as usize % 46,
+            0 => 64 + (g.next() >> 16) as usize % 237,
             1 => 0,
-            _ => (g.next() >> 24) as usize % 20,
+            2 => 63,
+            _ => (g.next() >> 24) as usize % 64,
         };
         let account: Vec<u8> = fill(&mut g, n).into_iter().map(|b| b | 1).collect();
         let record = ChallengeRecord {
@@ -750,5 +752,108 @@ fn grunt_auth_verify() {
             "case {case} len {len:#x} {} bytes",
             bytes.len()
         );
+    }
+}
+
+/// `ServerLink::CmdGruntHello` whole, its realm source, address formatter, log and send replaced:
+/// stores from empty to past the u32, the modes 0, 1 and others, a realm source that answers or
+/// not, records of every field width with names of 0 to 34 bytes and an address of 0, which takes
+/// the link's own: the result, the value at `+0x74`, the reply byte for byte and the state.
+#[test]
+fn grunt_hello() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow, 0);
+    let link = r.e.alloc(0x200);
+    let source = r.e.alloc(0x20);
+    let vt = r.e.alloc(0x20);
+    let info = r.e.alloc(0x40);
+    let answer = r.e.alloc(0x10);
+    let sent = r.e.alloc(0x800);
+    r.e.write_u32(link + 0x108, source as u32);
+    r.e.write_u32(source, vt as u32);
+    // Slot 4: copies the record at `info` to the argument and returns the byte at `answer`.
+    let mut c = vec![0x56, 0x57, 0x8b, 0x7c, 0x24, 0x0c, 0xbe];
+    c.extend((info as u32).to_le_bytes());
+    c.extend([0xb9, 0x40, 0, 0, 0, 0xf3, 0xa4, 0x5f, 0x5e, 0xa0]);
+    c.extend((answer as u32).to_le_bytes());
+    c.extend([0xc2, 0x04, 0x00]);
+    let slot4 = r.e.alloc(0x40);
+    r.e.write(slot4, &c);
+    r.e.write_u32(vt + 0x10, slot4 as u32);
+    // `ServerLink::Send(store)`: copies the store's bytes to `sent + 4`, the count to `sent`.
+    let mut c = vec![
+        0x56, 0x57, 0x8b, 0x4c, 0x24, 0x0c, 0x8b, 0x71, 0x04, 0x8b, 0x41, 0x10, 0xa3,
+    ];
+    c.extend((sent as u32).to_le_bytes());
+    c.push(0xbf);
+    c.extend((sent as u32 + 4).to_le_bytes());
+    c.extend([0x89, 0xc1, 0xf3, 0xa4, 0x5f, 0x5e, 0xc2, 0x04, 0x00]);
+    let send = r.e.alloc(0x40);
+    r.e.write(send, &c);
+    let mut j = vec![0xe9];
+    j.extend((send as u32).wrapping_sub(0x5b9b00 + 5).to_le_bytes());
+    r.e.write(0x5b9b00, &j);
+    let text = r.e.alloc(0x10);
+    r.e.stub(0x5b90a0, text as u32, 2);
+    r.e.stub(0x646430, 1, 4);
+    let mut g = Lcg(0x4e11_0001);
+    for case in 0..4000 {
+        let n = [0usize, 1, 3, 4, 7][(g.next() >> 16) as usize % 5];
+        let bytes = fill(&mut g, n);
+        let mode = [0u32, 0, 0, 1, 2, 0xffff_ffff][(g.next() >> 16) as usize % 6];
+        let answers = g.next() >> 30 != 0;
+        let name: Vec<u8> = (0..(g.next() >> 16) % 35)
+            .map(|_| 1 + (g.next() >> 24) as u8 % 0xff)
+            .collect();
+        let i = HelloInfo {
+            id: g.next(),
+            flags: (g.next() >> 24) as u8,
+            addr: if g.next() >> 30 == 0 { 0 } else { g.next() },
+            port: (g.next() >> 16) as u16,
+            b12: (g.next() >> 24) as u8,
+            b13: (g.next() >> 24) as u8,
+            b14: (g.next() >> 24) as u8,
+            w16: (g.next() >> 16) as u16,
+            d18: g.next(),
+            b1c: (g.next() >> 24) as u8,
+            name,
+        };
+        let mut rec = vec![0xa5u8; 0x40];
+        rec[0..4].copy_from_slice(&i.id.to_le_bytes());
+        rec[4] = i.flags;
+        rec[0xc..0x10].copy_from_slice(&i.addr.to_le_bytes());
+        rec[0x10..0x12].copy_from_slice(&i.port.to_le_bytes());
+        rec[0x12] = i.b12;
+        rec[0x13] = i.b13;
+        rec[0x14] = i.b14;
+        rec[0x16..0x18].copy_from_slice(&i.w16.to_le_bytes());
+        rec[0x18..0x1c].copy_from_slice(&i.d18.to_le_bytes());
+        rec[0x1c] = i.b1c;
+        rec[0x1d..0x1d + i.name.len()].copy_from_slice(&i.name);
+        rec[0x1d + i.name.len()] = 0;
+        r.e.write(info, &rec);
+        r.e.write(answer, &[u8::from(answers)]);
+        let (own, tail) = (g.next(), g.next());
+        r.e.write_u32(link + 0x74, 0xdead_beef);
+        r.e.write_u32(link + 0x78, tail);
+        r.e.write_u32(link + 0x7c, own);
+        r.e.write_u32(link + 0x90, 7);
+        r.e.write_u32(link + 0x104, mode);
+        r.e.write_u32(sent, 0xffff_ffff);
+        r.load(&bytes, 0);
+        let got = r.e.call(0x5b8c40, link as u32, 0, &[r.store as u32]);
+        let mut m = plain(&bytes, 0);
+        let want = cmd_grunt_hello(&mut m, mode, answers.then_some(&i), own, tail);
+        let ctx = format!("case {case} {n} bytes mode {mode:#x} answers {answers}");
+        assert_eq!(got, want.result, "{ctx}: result");
+        let value = r.e.read_u32(link + 0x74);
+        assert_eq!(value, want.value.unwrap_or(0xdead_beef), "{ctx}: +0x74");
+        let count = r.e.read_u32(sent);
+        let reply = (count != 0xffff_ffff).then(|| r.e.read(sent + 4, count as usize));
+        assert_eq!(reply, want.reply, "{ctx}: reply");
+        let state = if want.reply.is_some() { 3 } else { 7 };
+        assert_eq!(r.e.read_u32(link + 0x90), state, "{ctx}: state");
     }
 }

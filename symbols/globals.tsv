@@ -1293,6 +1293,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
+0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
+0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
+0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
+0x831720	const uint16_t *	_pwctype		crt	Points to the type table iswctype reads below 0x100, the same 0x831726; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
+0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
+0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	one	ui/regions#layout-space-and-units
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
@@ -1951,8 +1957,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85dcf0	AccountDataSection[8]	s_accountDataSections		net	Holds the eight account data sections	verified	one	net/accountdata#section-table
 0x85de74	char[17]	s_textMacrosCacheTxt		unassigned	Holds the string "macros-cache.txt"	inferred	none	
 0x85de88	char[17]	s_textMacrosLocalTxt		unassigned	Holds the string "macros-local.txt"	inferred	none	
+0x85dee4	char[11]	s_partialFormat		net	Holds the format %s.partial that names a download's partial file	verified	one	net/download#opening-a-download
 0x85def0	uint32_t			unassigned	Holds a dword that ChecksumExecutables reads; not read here	inferred	none	
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
+0x85e2e8	uint32_t[28]	s_serverLinkCommands		net	Holds ServerLink's seven commands: byte, name, handler and this offset each	verified	one	net/logonlink#server-link-commands
 0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
 0x85f3f0	void *	s_networkShutdownFunction		unassigned	Holds the network library's shutdown function, 0x5bf300 in the image, which the stop handler calls	verified	one	core/close#stop-handler-order
@@ -2419,6 +2427,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x881c70	const char[29]	s_starModelPath		lighting	Holds the path of the star model	verified	one	lighting/celestial#body-objects
 0x881fec	char[28]	s_textJunkAfterDocumentElement		unassigned	Holds the string "junk after document element"	inferred	none	
 0x882094	char[13]	s_textExpat1955		unassigned	Holds the string "expat_1.95.5"	inferred	none	
+0x8824a0	void *	s_getStringTypeW		crt	Holds GetStringTypeW, bound from kernel32.dll by its first call (0x4156bd); 0x413ed3 calls it	verified	one	net/who#who-filter-decoding
 0x8824fc	uint32_t *	s_startupStringsRecords		dbc	Points at the Startup_Strings records, 0x2c bytes each	verified	one	dbc#startup-strings
 0x882500	uint32_t	s_startupStringsCount		dbc	Holds the Startup_Strings record count	verified	one	dbc#startup-strings
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
@@ -3681,6 +3690,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a124	uint32_t	s_whoResultTotal		net	Holds the server total of the last who reply	verified	one	net/who#who-list-reply
 0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/who#who-list-reply
 0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/who#who-list-reply
+0xc2a1a0	uint8_t[24]	s_downloadLock		net	Holds the lock a download file's release and feed take	verified	one	net/download#releasing-a-download
 0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the four bytes of the configured country and language packed into a dword	verified	one	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain

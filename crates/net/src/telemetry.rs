@@ -24,7 +24,9 @@ pub enum ArrayCall {
 
 /// The capacity a growth to `needed` records sets, and the step it stores: the stored step, or,
 /// when it is 0, 8 for 8 records or more (stored) and otherwise the largest power of two not
-/// above `needed`; `needed` rounded up to a multiple of the step.
+/// above `needed`; `needed` rounded up to a multiple of the step. The step of 1 for a `needed`
+/// of 0 (`0x5ab9fe`) is never reached from the append, which grows only when `needed` is above
+/// the capacity.
 pub fn grow_capacity(needed: u32, step: u32) -> (u32, u32) {
     let (by, stored) = match step {
         0 if needed >= 8 => (8, 8),

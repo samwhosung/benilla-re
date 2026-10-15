@@ -233,7 +233,9 @@ pub struct ChallengeRecord {
 /// `ClientLink::PutChallengeBody` (`0x5bb460`): appends a u16 placeholder, the record's fields in
 /// the order game, version bytes, build, platform, system, locale, time zone, then the link's
 /// address (`+0x7c`), the account's length as a byte and the account's first `length & 0xff`
-/// bytes; then sets the placeholder to the bytes after it, `(size - start - 2) & 0xffff`.
+/// bytes; then sets the placeholder to the bytes after it, `(size - start - 2) & 0xffff`. The
+/// senders copy the account to `+0x19c` with `SStrCopy` bounded at `0x40` (`0x5bb55a`,
+/// `0x5bb6ea`), so it is at most 63 bytes and the length byte never wraps in the client.
 pub fn put_challenge_body(s: &mut DataStore, r: &ChallengeRecord, address: u32, account: &[u8]) {
     let start = s.size;
     s.put(&0u16.to_le_bytes());
@@ -391,5 +393,90 @@ pub fn cmd_grunt_auth_verify(s: &mut DataStore) -> u32 {
         1
     } else {
         2
+    }
+}
+
+/// What `ServerLink::CmdGruntHello` (`0x5b8c40`) reads from the realm source's slot 4: the
+/// 0x40-byte record at the reply's heart.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct HelloInfo {
+    /// `+0`, `+4` (bit 0 adds a log line), `+0xc` (0 for the link's own `+0x7c`), `+0x10`.
+    pub id: u32,
+    pub flags: u8,
+    pub addr: u32,
+    pub port: u16,
+    /// `+0x12`, `+0x13`, `+0x14`, `+0x16`, `+0x18`, `+0x1c`.
+    pub b12: u8,
+    pub b13: u8,
+    pub b14: u8,
+    pub w16: u16,
+    pub d18: u32,
+    pub b1c: u8,
+    /// `+0x1d`: a C string of up to 34 bytes.
+    pub name: Vec<u8>,
+}
+
+/// What the handler does.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HelloEffect {
+    pub result: u32,
+    /// The u32 stored at `+0x74`.
+    pub value: Option<u32>,
+    /// The reply sent through `ServerLink::Send` (`0x5b9b00`), after which the state `+0x90`
+    /// is 3.
+    pub reply: Option<Vec<u8>>,
+}
+
+/// `ServerLink::CmdGruntHello` (`0x5b8c40`), command `0x20` of the server's table: 0 while the
+/// store lacks 4 bytes; else the u32 goes to `+0x74` and the mode `+0x104` decides. Mode 1
+/// replies `20 00`. Mode 0 asks the realm source (`info`, `None` when its slot 4 returns 0,
+/// which returns 1 with no reply) and replies `20 0e`, a u16 length of what follows, the name's
+/// length byte and bytes, the address (or `own_addr`), the port, the id, the flag byte, the
+/// three bytes, the u16, the u32, the byte and `tail` (`+0x78`). Any other mode returns 1. A
+/// reply returns 2.
+pub fn cmd_grunt_hello(
+    s: &mut DataStore,
+    mode: u32,
+    info: Option<&HelloInfo>,
+    own_addr: u32,
+    tail: u32,
+) -> HelloEffect {
+    if !can_read(s, 4) {
+        return HelloEffect {
+            result: 0,
+            value: None,
+            reply: None,
+        };
+    }
+    let value = s.get(4).map(|v| u32::from_le_bytes(v.try_into().unwrap()));
+    let none = |result| HelloEffect {
+        result,
+        value,
+        reply: None,
+    };
+    let mut r = vec![0x20];
+    match (mode, info) {
+        (1, _) => r.push(0),
+        (0, Some(i)) => {
+            r.extend([0x0e, 0, 0]);
+            r.push(i.name.len() as u8);
+            r.extend(&i.name);
+            r.extend((if i.addr == 0 { own_addr } else { i.addr }).to_le_bytes());
+            r.extend(i.port.to_le_bytes());
+            r.extend(i.id.to_le_bytes());
+            r.extend([i.flags, i.b12, i.b13, i.b14]);
+            r.extend(i.w16.to_le_bytes());
+            r.extend(i.d18.to_le_bytes());
+            r.push(i.b1c);
+            r.extend(tail.to_le_bytes());
+            let n = (r.len() - 4) as u16;
+            r[2..4].copy_from_slice(&n.to_le_bytes());
+        }
+        _ => return none(1),
+    }
+    HelloEffect {
+        result: 2,
+        value,
+        reply: Some(r),
     }
 }

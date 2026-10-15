@@ -64,7 +64,7 @@ password are upper-cased first. A reconnect sends the same body after `0x02`, `0
 | address | 4 | the socket's local address |
 | account | 1 + n | length, then the upper-cased bytes |
 
-Addresses: `0x5b20e0`, `0x5bb540`, `0x5bb460`, `0x5bb6d0`, `0x5bb5f9`, `0x5bb605`, `0x5bb523`, `0x5bb501`
+Addresses: `0x5b20e0`, `0x5bb540`, `0x5bb460`, `0x5bb6d0`, `0x5bb5f9`, `0x5bb605`, `0x5bb523`, `0x5bb501`, `0x5bb55a`, `0x5bb6ea`
 Confidence: verified
 Proof: two
 Test: `net::grunt_challenge_body`
@@ -76,10 +76,12 @@ on failure. `0x5bb540` stores the account at `+0x19c`, upper-cases it and a copy
 with `0x64b460`, hashes both (`0x5d3590`), writes `0x00` and `0x03` (`0x5bb5f9`, `0x5bb605`), calls
 `0x5bb460` and sends; it then zeroes the password copy. `0x5bb460` writes the fields in the order
 above, the address from `+0x7c`, and patches the size at `0x5bb523` as the bytes after it.
-`0x5bb6d0` writes `0x02`, `0x02`. The account's length is `SStrLen`'s low byte (`0x5bb501`), and
-only that many bytes follow, so an account of 256 characters or more goes out cut to its length
-modulo 256. The test runs `0x5bb460` whole, appending to stores that hold 0 to 19 bytes, with
-accounts of 0 to 300 characters.
+`0x5bb6d0` writes `0x02`, `0x02`. The account at `+0x19c` is at most 63 bytes:
+both senders copy it there with `SStrCopy` bounded at `0x40` (`0x5bb55a`, `0x5bb6ea`). Its length
+byte is `SStrLen`'s low byte (`0x5bb501`), and that many bytes follow. The test runs `0x5bb460`
+whole, appending to stores that hold 0 to 19 bytes, with accounts of 0 to 63 characters, and of
+64 to 300 written to `+0x19c` directly, which no caller stores: those of 256 and more go out cut
+to their length modulo 256.
 
 ## Challenge reply
 

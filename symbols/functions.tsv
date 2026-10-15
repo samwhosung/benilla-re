@@ -1562,7 +1562,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41a660	425			unassigned			Runs its object file code not read here	inferred	none		
 0x41a830	226			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x41a930	360			unassigned			Runs its object file code not read here	inferred	none		
-0x41aab0	256	sgetu8	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x41aab0	256	sgetu8	idb	unassigned			Decodes the UTF-8 code point at a string, storing the bytes read; -1 at a NUL, 0x80000000 for a bad sequence	verified	one	net/who#who-filter-decoding	
 0x41abb0	234			unassigned			Runs its object file code not read here	inferred	none		
 0x41aca0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41acb0	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -17522,7 +17522,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ae910	34	FriendList::SortIgnores		net	orchestration	void __thiscall (FriendList *this)	Sorts the 25 ignore GUIDs with 0x5ae940 and signals IGNORELIST_UPDATE	verified	one	net/friends#friend-status-result	
 0x5ae940	189	CompareIgnoredByName		net	orchestration	int __cdecl (const uint64_t *a, const uint64_t *b)	Orders ignore GUIDs: zero last, then cached names without case, an uncached name last	inferred	none		
 0x5aea00	94	FriendList::ClearFriendSlot		net	orchestration	void __thiscall (FriendList *this, uint64_t guid)	Zeroes the GUID of the friend slot holding it and frees its name string	verified	one	net/friends#friend-status-result	
-0x5aea60	86	FriendList::FindOrAddFriendSlot		net	orchestration	int32_t __thiscall (FriendList *this, uint64_t guid)	Returns the friend slot holding a GUID, else claims the first empty slot for it with status 0	verified	one	net/friends#friend-slot-claim	
+0x5aea60	86	FriendList::FindOrAddFriendSlot		net	orchestration	int32_t __thiscall (FriendList *this, uint64_t guid)	Returns the friend slot holding a GUID, else claims the first empty slot for it with an online byte of 0	verified	one	net/friends#friend-slot-claim	
 0x5aeac0	105	FriendList::SetFriendName		net	orchestration	void __thiscall (FriendList *this, uint64_t guid, const char *name)	Replaces the name string of the friend slot holding a GUID with a heap copy	verified	one	net/friends#friend-status-result	
 0x5aeb30	62	FriendList::SetFriendStatus		net	orchestration	void __thiscall (FriendList *this, uint64_t guid, uint8_t status)	Stores the online byte of the friend slot holding a GUID	verified	one	net/friends#friend-status-result	
 0x5aeb70	27	FriendList::DecrementPendingFriendNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending friend-name count and sorts the friends when it reaches zero	verified	one	net/friends#pending-names	net::friends_pending_counts
@@ -17605,24 +17605,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b03c0	10	InitCriticalSection1		net	orchestration	void __cdecl (void)	Constructs a global critical section by a tail call to 0x657990	verified	one	net/layout#static-initializers	
 0x5b03d0	12	RegisterDownloadLockExit		net	orchestration	void __cdecl (void)	Registers 0x5b03e0 with atexit; a static initializer	inferred	none		
 0x5b03e0	10	DestroyDownloadLock		net	host	void __cdecl (void)	Deletes the critical section that guards download files	inferred	none		
-0x5b03f0	68	DownloadFileInit		net	orchestration	void * __thiscall (void *this)	Clears a download file's handle and state and sets its trailer magic to DInf	inferred	none		
-0x5b0440	8	DownloadFileClose		net	orchestration	void __thiscall (void *this)	Closes a download file, keeping it on disk	inferred	none		
-0x5b0450	117	DownloadFileRelease		net	primitive	void __thiscall (void *this, bool deleteFile, bool commit)	Releases a download file's handle under its lock, then deletes the file or commits the partial one	inferred	none		
-0x5b04d0	29	ReleaseRefChain		net	primitive	void __thiscall (void *this)	Releases one reference on an object and on each object its link field chains to, deleting each that reaches zero	inferred	none		
+0x5b03f0	68	DownloadFileInit		net	orchestration	void * __thiscall (void *this)	Clears a download file's handle and state and sets its trailer magic to DInf	verified	one	net/download#download-file-object	
+0x5b0440	8	DownloadFileClose		net	orchestration	void __thiscall (void *this)	Closes a download file, keeping it on disk	verified	one	net/download#releasing-a-download	
+0x5b0450	117	DownloadFileRelease		net	primitive	void __thiscall (void *this, bool deleteFile, bool commit)	Releases a download file's handle under its lock, then deletes the file or commits the partial one	verified	one	net/download#releasing-a-download	net::download_release
+0x5b04d0	29	ReleaseRefChain		net	primitive	void __thiscall (void *this)	Releases one reference on an object and on each object its link field chains to, deleting each that reaches zero	verified	one	net/download#releasing-a-download	net::download_release_chain
 0x5b04f0	96	DownloadFileDelete		net	host	void __thiscall (void *this)	Deletes the download's .partial file when it wrote one, else its final file	inferred	none		
-0x5b0550	18	DownloadFileCloseOrDelete		net	orchestration	void __thiscall (void *this, bool deleteFile)	Releases a download file without committing it, deleting it when asked	inferred	none		
+0x5b0550	18	DownloadFileCloseOrDelete		net	orchestration	void __thiscall (void *this, bool deleteFile)	Releases a download file without committing it, deleting it when asked	verified	one	net/download#releasing-a-download	
 0x5b0570	113	DownloadFileCommit		net	host	void __thiscall (void *this)	Moves the .partial file over the final path, setting state 3 with error 1 when the move fails	inferred	none		
-0x5b05f0	643	DownloadFileOpen		net	primitive	bool __thiscall (void *this, const char *path, const uint8_t digest[16], uint64_t size, uint64_t *offset)	Resumes a valid .partial file or a complete final one, else creates a .partial sized for the data and trailer	inferred	none		
-0x5b0880	145	DigestFileRange		net	primitive	void __thiscall (void *this, void *file, uint64_t start, uint64_t end, uint8_t digest[16])	Writes the MD5 of a file's bytes from start to end, read in 32 KiB chunks, or zeros when a read fails	inferred	none		
-0x5b0920	69	DownloadFileVerify		net	orchestration	bool __thiscall (void *this, uint64_t length)	Returns whether the MD5 of the file's first length bytes equals the expected digest	inferred	none		
-0x5b0970	57	DownloadFileIsComplete		net	orchestration	bool __thiscall (void *this)	Returns whether the file is exactly the expected size and its MD5 matches	inferred	none		
-0x5b09b0	249	DownloadFileReadTrailer		net	primitive	bool __thiscall (void *this, bool *complete)	Loads a matching DInf trailer from a file one trailer longer than the data, or accepts a complete trailerless file	inferred	none		
+0x5b05f0	643	DownloadFileOpen		net	primitive	bool __thiscall (void *this, const char *path, const uint8_t digest[16], uint64_t size, uint64_t *offset)	Resumes a valid .partial file or a complete final one, else creates a .partial sized for the data and trailer	verified	one	net/download#opening-a-download	net::download_open
+0x5b0880	145	DigestFileRange		net	primitive	void __thiscall (void *this, void *file, uint64_t start, uint64_t end, uint8_t digest[16])	Writes the MD5 of a file's bytes from start to end less start, read in 32 KiB chunks, or zeros when a read fails	verified	one	net/download#download-trailer	net::download_digest_range
+0x5b0920	69	DownloadFileVerify		net	orchestration	bool __thiscall (void *this, uint64_t length)	Returns whether the MD5 of the file's first length bytes equals the expected digest	verified	one	net/download#download-trailer	
+0x5b0970	57	DownloadFileIsComplete		net	orchestration	bool __thiscall (void *this)	Returns whether the file is exactly the expected size and its MD5 matches	verified	one	net/download#download-trailer	
+0x5b09b0	249	DownloadFileReadTrailer		net	primitive	bool __thiscall (void *this, bool *complete)	Loads a matching DInf trailer from a file one trailer longer than the data, or accepts a complete trailerless file	verified	one	net/download#download-trailer	net::download_read_trailer
 0x5b0ab0	97	DownloadFileFinish		net	orchestration	void __thiscall (void *this)	Truncates the file to the data size and commits it, or sets state 3 with error 1 and closes it when truncation fails	inferred	none		
-0x5b0b20	64	DownloadFileAbort		net	orchestration	void __thiscall (void *this)	Sets state 3 with error 3 under the lock, writes the trailer and closes the file, keeping it for a resume	inferred	none		
-0x5b0b60	7	DownloadFileGetState		net	orchestration	uint32_t __thiscall (void *this)	Returns a download file's state: 2 complete, 3 failed	inferred	none		
-0x5b0b70	80	DownloadFileWriteTrailer		net	orchestration	void __thiscall (void *this)	Writes the 40-byte trailer after the data, setting state 3 with error 1 when the write fails	inferred	none		
-0x5b0bc0	288	DownloadFileFeed		net	primitive	uint32_t __thiscall (void *this, const void *data, uint32_t size)	Writes data at the received offset, advances it, writes the trailer per MiB and checks the MD5 at the end	inferred	none		
-0x5b0ce0	124	DownloadFileProgress		net	primitive	float __thiscall (void *this)	Returns the received byte count over the total, both as unsigned 64-bit, or 0 when the total is 0	inferred	none		
+0x5b0b20	64	DownloadFileAbort		net	orchestration	void __thiscall (void *this)	Sets state 3 with error 3 under the lock, writes the trailer and closes the file, keeping it for a resume	verified	one	net/download#download-file-object	
+0x5b0b60	7	DownloadFileGetState		net	orchestration	uint32_t __thiscall (void *this)	Returns a download file's state: 2 complete, 3 failed	verified	one	net/download#download-file-object	
+0x5b0b70	80	DownloadFileWriteTrailer		net	orchestration	void __thiscall (void *this)	Writes the 40-byte trailer after the data, setting state 3 with error 1 when the write fails	verified	one	net/download#download-trailer	
+0x5b0bc0	288	DownloadFileFeed		net	primitive	uint32_t __thiscall (void *this, const void *data, uint32_t size)	Writes data at the received offset, advances it, writes the trailer per MiB and checks the MD5 at the end	verified	one	net/download#feeding-a-download	net::download_feed
+0x5b0ce0	124	DownloadFileProgress		net	primitive	float __thiscall (void *this)	Returns the received byte count over the total, both as unsigned 64-bit, or 0 when the total is 0	verified	one	net/download#feeding-a-download	net::download_progress
 0x5b0d60	5	InitDouble6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0d70; a static initializer	verified	one	net/layout#static-initializers	
 0x5b0d70	15	InitDouble6		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0d80	5	InitQuotient9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0d90; a static initializer	verified	one	net/layout#static-initializers	
@@ -18081,7 +18081,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b8ab0	3	ServerLink::Ignore		net	unreached	void __thiscall (ServerLink *this, void *a, uint32_t b, void *c)	Returns at once, discarding three arguments	inferred	none	net/layout#unreached-functions	
 0x5b8ac0	43	ServerLink::DeletingDestructor		net	unreached	ServerLink * __thiscall (ServerLink *this, uint32_t flags)	Destroys a server link and frees it when flag bit 0 is set; returns it	inferred	none	net/layout#unreached-functions	
 0x5b8af0	324	ServerLink::~ServerLink		net	unreached	void __thiscall (ServerLink *this)	Stops the timer, drops the connection, frees the name, server list and stream, and unlinks pending requests	inferred	none	net/layout#unreached-functions	
-0x5b8c40	1105	ServerLink::CmdGruntHello		net	primitive	uint32_t __thiscall (ServerLink *this, CDataStore *msg)	Reads the server's uint32 and replies with command 0x20 carrying this realm's identity; sets state 3	verified	one	net/logonlink#server-link-commands	
+0x5b8c40	1105	ServerLink::CmdGruntHello		net	primitive	uint32_t __thiscall (ServerLink *this, CDataStore *msg)	Reads the server's uint32 and replies with command 0x20 carrying this realm's identity; sets state 3	verified	one	net/logonlink#server-link-commands	net::grunt_hello
 0x5b90a0	36	FormatIpPort		net	orchestration	char * __fastcall (uint32_t ip, uint16_t port, char *buf, uint32_t size)	Formats an IPv4 address and port as text into buf and returns buf	inferred	none		
 0x5b90d0	28	DataStoreCanRead		net	primitive	uint32_t __fastcall (CDataStore *msg, uint32_t bytes)	Returns 1 when a data store's cursor is not past its size and at least edx bytes remain, else 0	verified	one	net/login#logon-commands	net::grunt_can_read
 0x5b90f0	623	ServerLink::CmdGruntProvesession		net	orchestration	uint32_t __thiscall (ServerLink *this, CDataStore *msg)	Reads a session-proof result and account record, takes its pending request and reports the result to the owner	inferred	none		
@@ -31267,7 +31267,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fb91	46	_isalpha	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fbbf	40	_isupper	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fbe7	40	_islower	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x73fc0f	40	_isdigit	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
+0x73fc0f	40	_isdigit	idb	crt	boundary		Tests a character's digit bit in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	net/who#who-level-digits	
 0x73fc37	45	_isxdigit	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fc64	40	_isspace	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fc8c	40	_ispunct	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
@@ -31287,9 +31287,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x740023	17	_iswalpha	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x740034	14			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x740042	14	_iswlower	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
-0x740050	14	_iswdigit	idb	crt	boundary		Runs its object file code that calls _iswctype; not read here	inferred	none		
+0x740050	14	_iswdigit	idb	crt	boundary		Tests a wide character for a decimal digit through _iswctype	verified	one	net/who#who-level-digits	
 0x74005e	17	_iswxdigit	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
-0x74006f	14	_iswspace	idb	crt	boundary		Runs its object file code that calls _iswctype; not read here	inferred	none		
+0x74006f	14	_iswspace	idb	crt	boundary		Tests a wide character for white space through _iswctype	verified	one	net/who#who-filter-decoding	
 0x74007d	14			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x74008b	17	_iswalnum	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x74009c	17	_iswprint	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
@@ -31462,7 +31462,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x745897	23	__un_inc	idb	crt	boundary		Runs its object file code that calls 0x741c1b; not read here	inferred	none		
 0x7458ae	36	__whiteout	idb	crt	boundary		Runs its object file code that calls 0x74587d, _isspace; not read here	inferred	none		
 0x7458d2	18	__frnd	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x7458e4	82	_iswctype	idb	crt	boundary		Runs its object file code that calls ___crtGetStringTypeW; not read here	inferred	none		
+0x7458e4	82	_iswctype	idb	crt	boundary		Tests a 16-bit unit's type bits: 0 for 0xffff, the C table below 0x100, else GetStringTypeW's CT_CTYPE1	verified	one	net/who#who-filter-decoding	
 0x745936	16			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x745946	220	__filbuf	idb	crt	boundary		Runs its object file code that calls __getbuf, __read; not read here	inferred	none		
 0x745a22	405	__mbsicmp	idb	crt	boundary		Runs its object file code that calls __strcmpi, __lock, ___crtLCMapStringA and 1 more; not read here	inferred	none		
