@@ -100,7 +100,7 @@ arguments)`.
 
 Only `0x703e50` and `0x703f50` deliver an event: 485 direct calls and tail jumps, 149 of them to
 `0x703f50`. Every site's id is a constant on each path into it except at three sites.
-`0x49b199` fires the dword of `0x8062e0` at the chat type (`chatevents`). `0x5de4c1` fires the
+`0x49b199` fires the dword of `0x8062e0` at the chat type, 0 to 93 (`chatevents`). `0x5de4c1` fires the
 argument a watcher on the active player is registered with (`objectlayer/playerfields`).
 `0x515e7a` fires `0x515e50`'s `edx`, which its 38 callers set to a constant, to 17 or 23 plus a
 power-type byte, or, from the watcher callback `0x51bd50`, to the watched field's offset over 4
@@ -122,13 +122,14 @@ loads `[ebp+0x14]`, the record's `+0x14` that `0x465570` pushes. `0x515e57` copi
 
 ## Events no site fires
 
-Six named events have no fire site: `SYSMSG` (223), `CHAT_MSG_COMBAT_LOG` (251), `TRADE_REQUEST`
-(285), `SHOW_COMPARE_TOOLTIP` (377), `UPDATE_LFG` (389) and `GM_PLAYER_INFO` (409). A frame can
-register for them, and their handlers never run. Of the computed ids, only the power-type
-families reach two of them: 17 + 206 is 223, and 17 + 234 and 23 + 228 are 251. The other four
-are past both families' ends, 272 and 278.
+No resolved id of a fire site is one of six named events: `SYSMSG` (223), `CHAT_MSG_COMBAT_LOG`
+(251), `TRADE_REQUEST` (285), `SHOW_COMPARE_TOOLTIP` (377), `UPDATE_LFG` (389) and
+`GM_PLAYER_INFO` (409). The last four never fire: they lie past the ends of both power-type
+families, 272 and 278. The first two fire only when a server sends a power type of 200, 206, 228
+or 234, which the client takes without a bound: 223 is 17 + 206 and 23 + 200, 251 is 17 + 234 and
+23 + 228.
 
-Addresses: `0x51ab30`, `0x51ae6f`, `0x51af87`, `0x51b0d1`, `0x51b45f`, `0x51b4e1`, `0x51b5a9`, `0xceef68`, `0x7019c0`, `0x7019f0`, `0x704060`, `0x703d90`, `0x703e50`, `0x703f50`
+Addresses: `0x51ab30`, `0x51ae6f`, `0x51af87`, `0x51b0d1`, `0x51b45f`, `0x51b4e1`, `0x51b5a9`, `0xceef68`, `0x7019c0`, `0x7019f0`, `0x704060`, `0x703d90`, `0x703e50`, `0x703f50`, `0x5e573c`, `0x5e579b`, `0x5e57ae`, `0x5e58c4`, `0x5e58dd`, `0x6004e6`, `0x5e5234`, `0x5e53ce`, `0x4666e3`
 Confidence: verified
 Proof: one
 Test: none
@@ -139,7 +140,11 @@ the image for each name string's address finds one dword, the name's store in `0
 control. The 17 dwords of the image that hold the record array's address `0xceef68` lie in its
 initializer `0x7019c0`, its destroyers `0x7019f0` and `0x704060`, the four register and
 unregister functions, the installer `0x703d90` and the two dispatchers, so no other code runs a
-listener by event.
+listener by event. The 17 family adds a party member's power type, record `+0x9` (`0x5e573c`,
+`0x5e579b`), its pet's, `+0xd8` (`0x5e58c4`), or byte 3 of a unit's field 30 (`0x6004e6`); the
+23 family the first two (`0x5e57ae`, `0x5e58dd`). The party stats reader takes `+0x9` and
+`+0xd8` from the message with `CDataStore::GetUInt8` (`0x5e5234`, `0x5e53ce`), and the values
+block stores field 30 as the u32 it reads (`0x4666e3`); neither path bounds the byte.
 
 ## Listener order
 

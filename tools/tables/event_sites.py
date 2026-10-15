@@ -18,17 +18,24 @@ reaches the site. Per path, a walk ends at the first definition of what it track
     mov R, R2             track R2 instead
     push R                (SignalEvent2) track R
     add R, K              track R and add K
-    shr R, K              track R and shift it right by K
     xor R, R              the value is 0
     setcc R8              the value is 0 or 1, given a clearing xor above it
     sbb R, R              the value is 0 or -1
+
+The walk the sites use, `Tracer.walk`, also takes these steps, which `resolve` (the walk
+tables/tutorial_triggers.py imports) does not:
+
+    shr R, K              track R and shift it right by K
     cmp R, K; jne / je    on the edge where R equals K, the value is K
 
-and at four computed shapes, each named in `notes`:
+and ends at five computed shapes, each named in `notes`:
 
     table-<T>             mov R, [X*4 + T]: the dwords of T at the indexes 0 to N - 1, where the
-                          index is the value a `cmp Y, N; jge` or `jae` past the site bounds,
-                          stored once into the stack slot X is loaded from
+                          index is the value a `cmp Y, N; jae` past the site bounds, stored once
+                          into the stack slot X is loaded from
+    table-signed-<T>      the same with a signed `jge`, which does not reject a negative index:
+                          the dwords below T that a negative index reads are not listed, and
+                          whether one arrives is the site's own finding
     through-<F>           R is ecx or edx at the entry of F: the values every call and tail jump
                           to F passes, each walked the same way
     watch-arg-<F>         R is loaded from [ebp+0x14] of F, the argument a watcher callback is
@@ -505,7 +512,7 @@ class Tracer:
             bad.append((a, 'table index slot %s stored %d times' % (slot, len(stores))))
             return
         y, st = src(ins[stores[0]][2]), stores[0]
-        bound = None
+        bound, signed = None, False
         for j in range(st - 1, max(st - 6, lo - 1), -1):
             _, mn, ops = ins[j]
             c = CMP_IMM.match(ops) if mn == 'cmp' else None
@@ -513,7 +520,7 @@ class Tracer:
                 for t in range(j + 1, st + 6):
                     tmn, tops = ins[t][1], ins[t][2]
                     if tmn in ('jge', 'jae') and IMM.match(tops) and int(tops, 16) > a:
-                        bound = int(c.group(2), 16)
+                        bound, signed = int(c.group(2), 16), tmn == 'jge'
                     if tmn not in FLAG_SAFE:
                         break
                 break
@@ -522,7 +529,7 @@ class Tracer:
         if bound is None:
             bad.append((a, 'table index %s has no bound before its store' % y))
             return
-        notes.add('table-%s' % addr(base))
+        notes.add('table-%s%s' % ('signed-' if signed else '', addr(base)))
         for k in range(bound):
             vals.add(self.value(self.img.u32(base + 4 * k), xf))
 

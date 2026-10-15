@@ -29,9 +29,9 @@ producer reaches the name.
 
 `conf` is `exact` (every producer's shape is known), `advisory` (a contributing site's format
 declares more values than its caller pushes, found as tools/event-args.py finds it; the script
-reads whatever lies above the last push) or `none` (no fire site reaches the name: event_sites.py
-resolves every site's id or stops). `note` says which sites declare more than they push,
-`;`-separated.
+reads whatever lies above the last push) or `none` (no resolved id of a fire site is the name's:
+event_sites.py resolves every site's id or stops, and lists apart only the ids a site computes
+as K plus an unbounded byte). `note` says which sites declare more than they push, `;`-separated.
 """
 
 import re

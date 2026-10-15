@@ -107,7 +107,7 @@ speaker is a unit the client has, `0x608ac0(type, text)` (`0x49acd9`). Fifty cal
 with `%s%s%s%s%s%s%d%d%s%d`: the text, the sender, the language's name, the channel name with its number, the
 second name of a two-name notice, the tag token, the channel's ChatChannels id, its slot number, its stored
 name and its instance number; the last four are zero, zero, empty and zero without a joined channel.
-A type of 94 or more fires nothing; the test is `cmp edx,0x5e; jge`, which is signed, so a negative type is not rejected (callers pass small positive types). The event of a type is `tables/chat_types.tsv`; type 89 has an id with
+A type of 94 or more fires nothing; the test is `cmp edx,0x5e; jge`, which is signed, so a negative type is not rejected ("Sources of the chat type"). The event of a type is `tables/chat_types.tsv`; type 89 has an id with
 no name.
 
 Addresses: `0x49b0b0`, `0x49b0b6`, `0x49b0bf`, `0x49b0c5`, `0x49b0f4`, `0x49b10c`, `0x49b113`, `0x49b115`, `0x49b11b`, `0x49b11e`, `0x49b12f`, `0x49b146`, `0x49b162`, `0x49b16e`, `0x49b189`, `0x49b18c`, `0x49b193`, `0x49b199`, `0x8062e0`, `0x844608`, `0x703f50`, `0x49b1b0`, `0x49b1ce`, `0x49b495`
@@ -137,6 +137,33 @@ Test: none
 The table is read from the image at `0x8062e0`; 94 entries are in range of the helper's test. The ids that
 the table names are those of `tables/events.tsv`. Chat type 89 maps to id 540, which has no event name,
 and the chat message handler turns the type into 6 before a line can reach the event.
+
+## Sources of the chat type
+
+Every type that reaches `0x49b0b0` is 0 or more but one, which is open. The chat line function's
+type is a constant from 10 to 86, the chat message's type byte zero-extended, a queued line's type
+(the same byte or a constant), or the message catalogue's chat type, 10 or 23 for an index from 0
+to 464. The combat log's type is a constant or a type helper's return, from 25 to 94, and 94
+sends nothing; the text emote passes 9. The open one: `0x496720` bounds the catalogue index only
+from above (`cmp eax,0x1d1; jge`), and not every caller's index is traced, so whether a negative
+index reads a negative type below the catalogue is not settled.
+
+Addresses: `0x49a886`, `0x49ac9a`, `0x49d5af`, `0x49dbc6`, `0x49cae0`, `0x49cb74`, `0x49d7b5`, `0x49cfc1`, `0x49d432`, `0x496822`, `0x49672c`, `0x49b1b0`, `0x626850`, `0x62685d`, `0x626886`, `0x627a53`, `0x628242`, `0x629e17`, `0x62abf0`, `0x62cf3d`, `0x62dd3d`, `0x629a7c`, `0x49b48a`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x49a870` keeps its `edx` in `[ebp-0x4]` (`0x49a886`) for `0x49ac9a`; of its 50 calls, 47 pass
+constants. `0x49dbc6` passes `movzx edx,BYTE PTR [ebp+0xf]`, the byte `0x49d5af` reads.
+`0x49cfc1` and `0x49d432` pass a queued line's `+0x8`, which `0x49cae0` stores from its `ecx`
+(`0x49cb74`); its 8 calls pass constants or the same byte (`0x49d7b5` and three more).
+`0x496842` passes the catalogue's `+0x10` (`0x496822`). `0x49b1b0` passes its `edx` on; its one
+call, `0x626886`, passes `0x626850`'s first argument, which returns at 0x5e (`0x62685d`). At the
+111 calls of `0x626850` that argument is a constant or a return of `0x626be0`, `0x6274a0`,
+`0x627820`, `0x627d80`, `0x62a0d0`, `0x62a2e0`, `0x62b7d0`, `0x628980` or `0x62c140`, directly,
+through `0x627d30`, `0x627d60` or `0x62b190`, or stored first (`0x627a53`, `0x628242`,
+`0x629e17`, `0x62abf0`, `0x62cf3d`, `0x62dd3d`, and a pending entry's `+0x28`, `0x629a7c`);
+each helper returns constants. No dword of the image holds any of these functions' addresses.
 
 ## Addon messages
 

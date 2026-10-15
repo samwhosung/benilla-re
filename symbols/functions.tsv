@@ -7165,7 +7165,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49a850	23	GetChatHistoryTime		ui	primitive		Returns the time of line i of the 60-line chat history ring	verified	one	objectlayer/playermessages#gm-tickets	
 0x49a870	1904	AddChatLine		ui	primitive		Shows one chat line: rewrites, filters and decorates it, fires its event, bubbles it and logs it	verified	one	ui/chatevents#the-chat-line-function	
 0x49b0b0	250	FireChatEvent		ui	orchestration		Fires the CHAT_MSG event of a type with the ten arguments of a line	verified	one	ui/chatevents#the-ten-event-arguments	
-0x49b1b0	66			ui	orchestration		Runs ChatFrame.cpp code that calls SErrSetLastError, 0x49b0b0, SLogWrite; not read here	inferred	none		
+0x49b1b0	66	FireChatEventAndLog		ui	orchestration	void __fastcall (const char *text, int32_t type)	Fires the chat event of a type with only the text, then writes the text to the combat log file while logging	verified	one	ui/chatevents#sources-of-the-chat-type	
 0x49b200	761	ComposeTextEmote		ui	orchestration	void __fastcall (uint64_t *performer, int32_t textId, const char *targetName, uint32_t emoteNum)	Picks the template of a text emote and shows its sentence as an event line	verified	one	ui/chatemote#the-sentence-column	
 0x49b500	81			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49b560	837	RewriteInLanguage		ui	primitive		Rewrites each word the skill does not cover into a same-length word of the language, in the source's case	verified	one	ui/chatlanguage#when-a-line-is-rewritten	
