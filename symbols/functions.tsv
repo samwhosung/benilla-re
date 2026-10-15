@@ -51,7 +51,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401a40	187	MovementInit	idb	client		void __cdecl (void)	Runs 0x616860 on the movement log path and registers 0x616800 as the handler of event 5	verified	one	collision/mover#initialisation-and-teardown	
 0x401b00	189	NewWorldHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the new world's map, position and facing, checks the map, and posts the world-port executor with an ack	verified	one	collision/teleport#far-transfer-handlers	
 0x401bc0	325	LoadNewWorld	idb	client			Calls 0x616910 and then unregisters 0x616800 from event 5, among other teardown	verified	one	collision/mover#initialisation-and-teardown	
-0x401d10	12			client			Runs Client.cpp code not read here	inferred	none		
+0x401d10	12	CDataStore::IsRead		client			Returns 1 when a data store's cursor equals its size, else 0	verified	one	net/messages#data-store-reads	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x401d20	74			client			Runs Client.cpp code not read here	inferred	none		
 0x401d70	8			client			Runs Client.cpp code not read here	inferred	none		
 0x401d80	5			client			Runs Client.cpp code not read here	inferred	none		
@@ -1453,60 +1453,60 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x417bb0	11			base			Runs its object file code not read here	inferred	none		
 0x417bc0	3			base			Runs its object file code not read here	inferred	none		
 0x417bd0	67	CDataStore::InternalDestroy	idb	base			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x417c20	5			base			Runs its object file code not read here	inferred	none		
-0x417c30	79			base			Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
+0x417c20	5	CDataStore::FetchRead		base			Refuses to move a plain data store's window for a read: returns 0	verified	one	net/messages#data-store-reads	net::datastore_heap
+0x417c30	79	CDataStore::FetchWrite		base			Grows a plain data store's buffer to the write's end rounded up to 256 bytes; returns 1	verified	one	net/messages#data-store-writes	net::datastore_heap
 0x417c80	78			base	unreached		Runs its object file code not read here	inferred	none		
-0x417cd0	78			base			Runs its object file code not read here	inferred	none		
+0x417cd0	78	CDataStore::Set8		base			Writes a byte at a given position of a data store, its size unchanged	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x417d20	80			base	unreached		Runs its object file code not read here	inferred	none		
-0x417d70	80			base			Runs its object file code not read here	inferred	none		
-0x417dc0	78			base			Runs its object file code not read here	inferred	none		
-0x417e10	78			base			Runs its object file code not read here	inferred	none		
+0x417d70	80	CDataStore::Set16		base			Writes a 16-bit value at a given position of a data store, its size unchanged	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x417dc0	78	CDataStore::SetInt32		base			Writes a dword at a given position of a data store, its size unchanged; the same body as 0x417e10	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x417e10	78	CDataStore::SetUInt32		base			Writes a dword at a given position of a data store, its size unchanged; the same body as 0x417dc0	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x417e60	78			base	unreached		Runs its object file code not read here	inferred	none		
 0x417eb0	78			base	unreached		Runs its object file code not read here	inferred	none		
 0x417f00	85			base	unreached		Runs its object file code not read here	inferred	none		
 0x417f60	85			base	unreached		Runs its object file code not read here	inferred	none		
 0x417fc0	76			base	unreached		Runs its object file code not read here	inferred	none		
 0x418010	82			base	unreached		Runs its object file code not read here	inferred	none		
-0x418070	82	CDataStore::PutInt8	idb	base			Appends one byte to a data store	verified	one	spell/cast#cast-request-packets	
-0x4180d0	85			base			Runs its object file code not read here	inferred	none		
-0x418130	85	CDataStore::PutUInt16		base			Appends two bytes to a data store	verified	one	spell/cast#cast-request-packets	
-0x418190	83	CDataStore::PutUInt32	idb	base			Appends four bytes to a data store	verified	one	spell/cast#cast-request-packets	
-0x4181f0	83	CDataStore::PutUInt32_3	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x418070	82	CDataStore::PutInt8	idb	base			Appends one byte to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x4180d0	85	CDataStore::PutInt16		base			Appends two bytes to a data store; the same body as 0x418130	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418130	85	CDataStore::PutUInt16		base			Appends two bytes to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418190	83	CDataStore::PutUInt32	idb	base			Appends four bytes to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x4181f0	83	CDataStore::PutUInt32_3	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418250	83			base	unreached		Runs its object file code not read here	inferred	none		
-0x4182b0	83	CDataStore::PutUInt32_2	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x4182b0	83	CDataStore::PutUInt32_2	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418310	90			base	unreached		Runs its object file code not read here	inferred	none		
-0x418370	90	CDataStore::PutGuid	idb	base			Appends a 64-bit value, low dword first, to a data store	verified	one	spell/cast#cast-request-packets	
-0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	
-0x418430	53	CDataStore::PutCString	idb	base			Runs its object file code that calls SErrSetLastError, SStrLen, CDataStore::PutArray; not read here	inferred	none		
+0x418370	90	CDataStore::PutGuid	idb	base			Appends a 64-bit value, low dword first, to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418430	53	CDataStore::PutCString	idb	base			Appends a C string and its NUL to a data store; a null string sets error 87	verified	one	net/messages#data-store-writes	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418470	245			base	unreached		Runs its object file code that calls SErrSetLastError, 0x41a550, 0x41a660; not read here	inferred	none		
-0x418570	267	CDataStore::PutArray	idb	base			Appends a given number of raw bytes to a data store	verified	one	spell/cast#cast-request-packets	
+0x418570	267	CDataStore::PutArray	idb	base			Appends a given number of raw bytes to a data store	verified	one	spell/cast#cast-request-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418680	271			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418790	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4188b0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4189d0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418af0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x418c10	20	CDataStore::PutData	idb	base			Appends a count of bytes to a data store through PutArray	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x418c10	20	CDataStore::PutData	idb	base			Appends a count of bytes to a data store through PutArray	verified	one	ui/addons#the-auth-packets-add-on-block	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418c30	120			base	unreached		Runs its object file code not read here	inferred	none		
-0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore * __thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
-0x418d30	123	CDataStore::GetInt16	idb	base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
-0x418db0	123	CDataStore::GetUInt16	idb	base		void * __thiscall (CDataStore *this, uint16_t *out)	Reads a little-endian 16-bit word from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
-0x418e30	121	CDataStore::GetInt32	idb	base		CDataStore * __thiscall (CDataStore *this, uint32_t *out)	Reads four bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
-0x418eb0	121	CDataStore::GetUInt32	idb	base		void * __thiscall (CDataStore *this, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
+0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore * __thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418d30	123	CDataStore::GetInt16	idb	base	primitive		Reads a 16-bit value from a data store	verified	one	net/messages#data-store-reads	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418db0	123	CDataStore::GetUInt16	idb	base		void * __thiscall (CDataStore *this, uint16_t *out)	Reads a little-endian 16-bit word from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418e30	121	CDataStore::GetInt32	idb	base		CDataStore * __thiscall (CDataStore *this, uint32_t *out)	Reads four bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x418eb0	121	CDataStore::GetUInt32	idb	base		void * __thiscall (CDataStore *this, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x418f30	121			base	unreached		Runs its object file code not read here	inferred	none		
-0x418fb0	121	CDataStore::GetUInt32_2	idb	base		void * __thiscall (CDataStore *this, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
+0x418fb0	121	CDataStore::GetUInt32_2	idb	base		void * __thiscall (CDataStore *this, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x419030	128			base	unreached		Runs its object file code not read here	inferred	none		
-0x4190b0	128	CDataStore::GetGuid	idb	base		CDataStore * __thiscall (CDataStore *this, uint64_t *out)	Reads eight bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
-0x419130	121	CDataStore::GetFloat	idb	base			Reads four bytes from a data store into a destination, a float by its community name	verified	one	spell/cast#small-spell-helpers	
-0x4191b0	300	CDataStore::GetCString	idb	base		void * __thiscall (CDataStore *this, char *dest, uint32_t capacity)	Copies a C string out of the store to a capacity; a missing NUL or overrun empties it and poisons the cursor	verified	one	net/messages#data-store-strings-and-pointers	
+0x4190b0	128	CDataStore::GetGuid	idb	base		CDataStore * __thiscall (CDataStore *this, uint64_t *out)	Reads eight bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x419130	121	CDataStore::GetFloat	idb	base			Reads four bytes from a data store into a destination, a float by its community name	verified	one	spell/cast#small-spell-helpers	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x4191b0	300	CDataStore::GetCString	idb	base		void * __thiscall (CDataStore *this, char *dest, uint32_t capacity)	Copies a C string out of the store to a capacity; a missing NUL or overrun empties it and poisons the cursor	verified	one	net/messages#data-store-strings-and-pointers	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x4192e0	288			base	unreached		Runs its object file code that calls SErrSetLastError, 0x41a930; not read here	inferred	none		
-0x419400	257	CDataStore::GetData		base			Copies a number of bytes out of the store into a buffer	inferred	none		
+0x419400	257	CDataStore::GetData		base			Copies a count of bytes out of a data store a window at a time; a short store copies what remains, then poisons	verified	one	net/messages#data-store-reads	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x419510	267			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x419620	273			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x419740	273			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x419860	273			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x419980	273			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x419aa0	20			base			Runs its object file code that calls CDataStore::GetData; not read here	inferred	none		
-0x419ac0	136	CDataStore::GetDataInSitu		base			Returns a pointer to the next n bytes in the store and advances the cursor past them	verified	one	objectlayer/movement#skipping-a-movement-block	
+0x419aa0	20	CDataStore::GetBytes		base			Copies a count of bytes out of a data store through CDataStore::GetData	verified	one	net/messages#data-store-reads	net::datastore_heap, net::datastore_inline, net::datastore_window
+0x419ac0	136	CDataStore::GetDataInSitu		base			Returns a pointer to the next n bytes in the store and advances the cursor past them	verified	one	objectlayer/movement#skipping-a-movement-block	net::datastore_heap, net::datastore_inline, net::datastore_window
 0x419b50	43			base			Runs its object file code not read here	inferred	none		
 0x419b80	58			base			Runs its object file code not read here	inferred	none		
 0x419bc0	5			base			Runs its object file code not read here	inferred	none		
@@ -18147,7 +18147,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bc500	289	ClientLink::~ClientLink		net	orchestration	void __thiscall (ClientLink *this)	Stops the timer, releases the connection, frees the receive store and lock, and empties the pending-request list	inferred	none		
 0x5bc630	24	InlineDataStoreInitialize		net	orchestration	void __thiscall (CDataStore *this, void **data, uint32_t *base, uint32_t *capacity)	Points a data store at its own 1024-byte inline buffer	inferred	none		
 0x5bc650	98	InlineDataStoreDestroy		net	orchestration	void __thiscall (CDataStore *this, void **data, uint32_t *base, uint32_t *capacity)	Frees a data store's buffer unless it is the inline one, and clears the buffer pointer and capacity	inferred	none		
-0x5bc6c0	225	InlineDataStoreGrow		net	primitive	uint32_t __thiscall (CDataStore *this, uint32_t pos, uint32_t count, void **data, uint32_t *base, uint32_t *capacity, const char *file, int line)	Grows a data store to pos + count bytes, moving off the inline buffer to the heap on the first growth; returns 1	inferred	none		
+0x5bc6c0	225	InlineDataStoreGrow		net	primitive	uint32_t __thiscall (CDataStore *this, uint32_t pos, uint32_t count, void **data, uint32_t *base, uint32_t *capacity, const char *file, int line)	Grows a data store to pos + count bytes, moving off the inline buffer to the heap on the first growth; returns 1	verified	one	net/messages#data-store-writes	net::datastore_inline
 0x5bc7b0	127	InlineDataStoreDetachBuffer		net	orchestration	void __thiscall (CDataStore *this, void **data, uint32_t *size, uint32_t *capacity)	Detaches a data store's buffer, copying it to the heap first when it is the inline buffer and not empty	inferred	none		
 0x5bc830	98	DeleteInlineDataStore		net	orchestration	CDataStore * __thiscall (CDataStore *this, uint32_t flags)	Frees an inline data store's buffer through both destroy slots and frees the store when bit 0 of flags is set	inferred	none		
 0x5bc8a0	41	GetNextTimerLink		net	orchestration	void * __thiscall (void *this, int32_t linkOffset)	Returns the link a timer node's link points at, or the list head marked by its low bit	inferred	none		

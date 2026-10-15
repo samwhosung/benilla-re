@@ -8,6 +8,7 @@
 #![forbid(unsafe_code)]
 
 mod cipher;
+mod datastore;
 mod digest;
 mod framing;
 mod initializers;
@@ -19,6 +20,7 @@ mod srp_helpers;
 mod srp_session;
 
 pub use cipher::*;
+pub use datastore::*;
 pub use digest::*;
 pub use framing::*;
 pub use initializers::*;

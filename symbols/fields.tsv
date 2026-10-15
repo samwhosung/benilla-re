@@ -56,6 +56,12 @@ CCamera	0x0148	28	CBaseManaged	m_yawProperty	camera	Holds the yaw angle property
 CCamera	0x0164	4	float	m_yaw	camera	Holds the yaw angle	inferred	none	camera#properties
 CCamera	0x0168	4	float	m_yawCos	camera	Holds the cosine of the yaw angle, recomputed on every store	inferred	none	camera#angle-properties
 CCamera	0x016c	4	float	m_yawSin	camera	Holds the sine of the yaw angle, recomputed on every store	inferred	none	camera#angle-properties
+CDataStore	0x0000	4	void *	__vfptr	base	Points at the store's vtable, whose slots 2 and 3 move the window	verified	one	net/messages#data-store-reads
+CDataStore	0x0004	4	uint8_t *	m_buffer	base	Points at the window's bytes: position p is at m_buffer - m_base + p	verified	one	net/messages#data-store-reads
+CDataStore	0x0008	4	uint32_t	m_base	base	Holds the position of the window's first byte	verified	one	net/messages#data-store-reads
+CDataStore	0x000c	4	uint32_t	m_alloc	base	Holds the window's length in bytes	verified	one	net/messages#data-store-reads
+CDataStore	0x0010	4	uint32_t	m_size	base	Holds the count of bytes written	verified	one	net/messages#data-store-reads
+CDataStore	0x0014	4	uint32_t	m_read	base	Holds the read cursor, size + 1 once a read has failed	verified	one	net/messages#data-store-reads
 CEffect	0x0000	4	CM2Model *	m_model	objectlayer	Points at the effect model	verified	one	objectlayer/effects#the-effect-object
 CEffect	0x0004	4	CM2Model *	m_lineModel	objectlayer	Points at the fishing line model	verified	one	objectlayer/effects#the-effect-object
 CEffect	0x0008	8	uint64_t	m_owner	objectlayer	Holds the owner GUID	verified	one	objectlayer/effects#the-effect-object

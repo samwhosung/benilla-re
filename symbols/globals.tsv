@@ -372,6 +372,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ff9c8	const float	s_floatbce38e39		unassigned	Holds the float -0.027777778 (0xbce38e39)	inferred	none	
 0x7ff9d0	const float	s_float3ce38e39		unassigned	Holds the float 0.027777778 (0x3ce38e39)	inferred	none	
 0x7ff9d8	const float	s_float3f800000		unassigned	Holds the float 1 (0x3f800000)	inferred	none	
+0x7ff9e4	void *[11]	CDataStore::vftable		base	Holds the plain data store's vtable: slot 2 refuses a read outside the window, slot 3 grows the buffer	verified	one	net/messages#data-store-writes
 0x7ffa10	uint8_t[20]	CStatus::vftable		client	Holds the vtable of CStatus	inferred	none	
 0x7ffa24	const float	s_half		ui	Holds 0.5, the factor of the layout's centre arithmetic	verified	one	ui/anchors#edge-resolution-from-size
 0x7ffaac	float	s_degreesToRadians		terrain	Holds pi/180 (0x3c8efa35)	verified	one	terrain/files#doodad-placements
@@ -693,7 +694,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a778	void *[1]	s_serverLinkTimerVftable		net	Holds the vtable of ServerLink's timer, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a77c	void *[1]	s_serverLinkPendingVftable		net	Holds the vtable of ServerLink's pending requests, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
-0x80a7a8	void *[2]	s_wdataStoreVtable		net	Holds the vtable of the data store the logon link writes its commands into	verified	one	net/connection#connect-and-realm-list
+0x80a7a8	void *[11]	s_wdataStoreVtable		net	Holds the vtable of the data store the logon link writes its commands into	verified	one	net/connection#connect-and-realm-list
 0x80a7dc	void *[9]	ClientLink::vftable		net	Holds ClientLink's vtable: the connection callbacks, slot 7 the raw data hook	verified	one	net/login#logon-commands
 0x80a884	void *[4]	BatchElementList::vftable		font	Holds the vtable of a batch's element list	verified	one	font/api#batches
 0x80a8ac	float	s_oneOver256		terrain	Holds 1/256, the scale of a magma coordinate	verified	one	terrain/groupdraw#group-liquid-mesh

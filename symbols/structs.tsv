@@ -3,6 +3,7 @@ AccountDataSection		44		net	Holds an account data section: scope, file names, pe
 BlizzardObject		324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
 CBaseManaged		28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
 CCamera		368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
+CDataStore		24	0x7ff9e4	base	Holds a packet buffer: a window onto its bytes, the size written and a read cursor	verified	one	net/messages#data-store-reads
 CEffect		144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
 CFrameStrataNode		284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
 CGCharacterModelBase		1016	0x8084f8	ui	Holds a character pane: a CSimpleModel, the unit GUID, the turn latch and deadline and the display record	verified	one	ui/playermodel#pane-fields
