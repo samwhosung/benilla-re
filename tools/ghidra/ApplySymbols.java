@@ -26,7 +26,7 @@ public class ApplySymbols extends GhidraScript {
     private static final Pattern FUNC_POINTER =
             Pattern.compile("^(.+?)\\s*\\((\\*+)(?:\\[(\\d+)\\])?(\\w*)\\)\\s*\\(.*\\)$");
     private static final Pattern ARRAY = Pattern.compile("^(.*?)\\s*\\[(\\d+)\\]$");
-    private static final Pattern SIGNATURE = Pattern.compile("^(.+?)\\s+(__\\w+)\\s+\\((.*)\\)$");
+    private static final Pattern SIGNATURE = Pattern.compile("^(.+?)\\s*\\b(__\\w+)\\s+\\((.*)\\)$");
     private static final Pattern PARAM = Pattern.compile("^(.*?)([A-Za-z_]\\w*)$");
 
     private DataTypeManager dtm;
