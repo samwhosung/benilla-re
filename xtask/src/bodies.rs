@@ -4,7 +4,7 @@
 
 use crate::check::Problem;
 use regex::Regex;
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 use std::path::Path;
@@ -768,6 +768,73 @@ fn ret_bytes(instruction: &str) -> Option<u32> {
     }
 }
 
+/// The bytes each row's returns pop, and the rows its body tail-jumps to.
+///
+/// A row's own returns are the `ret` instructions its walk reaches inside its own extent: a walk
+/// that follows a branch into another row's entry, or a `jmp` to code no row owns, leaves the
+/// extent, and what it finds there is that code's. A `jmp` to another row's entry is a tail call
+/// and the row inherits what that row pops, so a thunk takes its target's `ret N`. A body with no
+/// `ret` and no tail jump never returns and pops nothing, so there is nothing to compare.
+fn popped_bytes(
+    rows: &[Function],
+    bodies: &[Option<(Vec<u32>, Tables)>],
+    starts: &HashSet<u32>,
+    listing: &Listing,
+) -> (Vec<BTreeSet<u32>>, Vec<Vec<u32>>) {
+    let index: HashMap<u32, usize> = rows
+        .iter()
+        .enumerate()
+        .map(|(i, r)| (r.address, i))
+        .collect();
+    let mut own = vec![BTreeSet::new(); rows.len()];
+    let mut tails: Vec<Vec<u32>> = vec![Vec::new(); rows.len()];
+    for (i, (row, body)) in rows.iter().zip(bodies).enumerate() {
+        let Some((reached, _)) = body else { continue };
+        let end = u64::from(row.address) + u64::from(row.size);
+        for &a in reached {
+            if a < row.address || u64::from(a) >= end {
+                continue;
+            }
+            let Some(instruction) = listing.get(a) else {
+                continue;
+            };
+            if let Some(n) = ret_bytes(instruction) {
+                own[i].insert(n);
+            } else if let Some(found) = DIRECT.captures(instruction) {
+                if &found[1] != "jmp" {
+                    continue;
+                }
+                if let Ok(target) = u32::from_str_radix(&found[2], 16) {
+                    if target != row.address && starts.contains(&target) {
+                        tails[i].push(target);
+                    }
+                }
+            }
+        }
+        tails[i].sort_unstable();
+        tails[i].dedup();
+    }
+    // Each row takes the returns of the rows it tail-jumps to, to a fixed point.
+    let mut pops = own;
+    loop {
+        let mut changed = false;
+        for i in 0..rows.len() {
+            for target in &tails[i] {
+                let Some(&t) = index.get(target) else {
+                    continue;
+                };
+                let inherited: Vec<u32> = pops[t].iter().copied().collect();
+                for n in inherited {
+                    changed |= pops[i].insert(n);
+                }
+            }
+        }
+        if !changed {
+            return (pops, tails);
+        }
+    }
+}
+
 /// What the whole listing says about one address, read once for every row.
 struct Context<'a> {
     listing: &'a Listing,
@@ -924,6 +991,7 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
         .filter(|(_, why)| why.is_empty())
         .map(|(row, _)| row.address)
         .collect();
+    let (pops, tail_jumps) = popped_bytes(rows, &bodies, &walker.starts, listing);
     let mut problems = Vec::new();
     let mut add = |row: &Function, message: String| {
         problems.push(Problem {
@@ -941,18 +1009,19 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
             add(row, why.clone());
         }
         if let Some(expected) = row.pops {
-            let mut popped: Vec<u32> = reached
-                .iter()
-                .filter_map(|&a| listing.get(a).and_then(ret_bytes))
-                .collect();
-            popped.sort_unstable();
-            popped.dedup();
+            let popped: Vec<u32> = pops[i].iter().copied().collect();
             if !popped.is_empty() && popped != [expected] {
                 let found: Vec<String> = popped.iter().map(u32::to_string).collect();
+                let tails: Vec<String> = tail_jumps[i].iter().map(|t| format!("{t:#x}")).collect();
+                let via = if tails.is_empty() {
+                    String::new()
+                } else {
+                    format!(", counting the tail jump to {}", tails.join(" and "))
+                };
                 add(
                     row,
                     format!(
-                        "ret pops {} bytes, the signature takes {expected}",
+                        "ret pops {} bytes, the signature takes {expected}{via}",
                         found.join(" and ")
                     ),
                 );
@@ -1077,6 +1146,129 @@ WoW.exe:     file format pei-i386
             .iter()
             .map(|p| p.to_string())
             .collect()
+    }
+
+    /// Rows with the bytes their signatures pop, over a listing of `code` lines.
+    fn stack_problems(code: &str, rows: &[(u32, u32, Option<u32>)]) -> Vec<String> {
+        let text = format!("\nWoW.exe:     file format pei-i386\n\n00401000 <.text>:\n{code}");
+        let listing = Listing::parse(text.as_bytes()).expect("parses");
+        let bytes = image_bytes();
+        let image = Image::new(&bytes).expect("a PE");
+        let rows: Vec<Function> = rows
+            .iter()
+            .map(|&(address, size, pops)| Function {
+                place: format!("{address:#x}"),
+                address,
+                size,
+                pops,
+            })
+            .collect();
+        check(&rows, &listing, &image)
+            .iter()
+            .map(|p| p.to_string())
+            .collect()
+    }
+
+    /// A function that returns, a thunk to it, a thunk to a function that never returns, and the
+    /// loop that never returns.
+    const STACK: &str = "
+  401000:\tret    0x8
+  401003:\tint3
+  401010:\tjmp    0x401000
+  401015:\tint3
+  401020:\tjmp    0x401030
+  401025:\tint3
+  401030:\tjmp    0x401030
+  401035:\tint3
+";
+
+    #[test]
+    fn a_thunk_pops_what_its_target_pops() {
+        let rows = |thunk: Option<u32>| [(0x401000, 3, Some(8)), (0x401010, 5, thunk)];
+        assert_eq!(stack_problems(STACK, &rows(Some(8))), Vec::<String>::new());
+        assert_eq!(
+            stack_problems(STACK, &rows(Some(4))),
+            ["0x401010: ret pops 8 bytes, the signature takes 4, counting the tail jump to 0x401000"]
+        );
+        // The target's own `ret N` is checked on its own row.
+        assert_eq!(
+            stack_problems(STACK, &[(0x401000, 3, Some(0)), (0x401010, 5, Some(0))]),
+            [
+                "0x401000: ret pops 8 bytes, the signature takes 0",
+                "0x401010: ret pops 8 bytes, the signature takes 0, counting the tail jump to 0x401000"
+            ]
+        );
+    }
+
+    #[test]
+    fn a_body_that_never_returns_pops_nothing_to_compare() {
+        // The loop, and a thunk to it, have no `ret` for any signature to disagree with.
+        let rows = |pops: u32| [(0x401020, 5, Some(pops)), (0x401030, 5, Some(pops))];
+        assert_eq!(stack_problems(STACK, &rows(0)), Vec::<String>::new());
+        assert_eq!(stack_problems(STACK, &rows(12)), Vec::<String>::new());
+    }
+
+    /// A body that returns on one path and tail-jumps on another pops both.
+    #[test]
+    fn a_return_and_a_tail_jump_are_both_counted() {
+        let code = "
+  401000:\tret    0x8
+  401003:\tint3
+  401010:\tje     0x401017
+  401012:\tjmp    0x401000
+  401017:\tret    0x4
+  40101a:\tint3
+";
+        let rows = |pops| [(0x401000, 3, Some(8)), (0x401010, 10, Some(pops))];
+        assert_eq!(
+            stack_problems(code, &rows(4)),
+            ["0x401010: ret pops 4 and 8 bytes, the signature takes 4, counting the tail jump to 0x401000"]
+        );
+        assert_eq!(
+            stack_problems(code, &rows(8)),
+            ["0x401010: ret pops 4 and 8 bytes, the signature takes 8, counting the tail jump to 0x401000"]
+        );
+    }
+
+    /// A conditional branch into another row's entry is walked no further than the entry: the
+    /// other row's `ret` is its own.
+    #[test]
+    fn a_branch_into_another_row_borrows_no_return() {
+        let code = "
+  401000:\tjne    0x401010
+  401002:\tret    0x4
+  401005:\tint3
+  401010:\tret    0x8
+  401013:\tint3
+";
+        // The layout problems are all there is: no ret is charged to the wrong row.
+        assert_eq!(
+            stack_problems(code, &[(0x401000, 5, Some(4)), (0x401010, 3, Some(8))]),
+            [
+                "0x401000: size 5, body 19",
+                "0x401010: a conditional jump lands on it"
+            ]
+        );
+    }
+
+    /// A `jmp` that leaves the extent to code no row owns finds that code's `ret` outside the
+    /// row: it counts for nothing, and the size check names the misfit.
+    #[test]
+    fn a_return_outside_the_extent_is_not_the_rows() {
+        let code = "
+  401000:\tjmp    0x401010
+  401005:\tint3
+  401010:\tret    0x8
+  401013:\tint3
+";
+        assert_eq!(
+            stack_problems(code, &[(0x401000, 5, Some(4))]),
+            ["0x401000: size 5, body 19"]
+        );
+        assert_eq!(
+            stack_problems(code, &[(0x401000, 19, Some(4))]),
+            ["0x401000: ret pops 8 bytes, the signature takes 4"]
+        );
     }
 
     /// One function at 0x401000 whose returns are `returns`, checked against `pops`.
@@ -1352,6 +1544,37 @@ WoW.exe:     file format pei-i386
         assert_eq!(
             problems_storing(&handlers, EXCEPTION, &[(0x403000, 20), (0x403003, 9)]),
             ["0x403000: 0x403003, another row's entry, lies inside the extent"]
+        );
+    }
+
+    /// The `ret N` of a catch funclet and of a handler that only the exception data reaches are
+    /// not the function's: it pops what its own return pops.
+    #[test]
+    fn a_funclets_return_is_not_the_functions() {
+        let listing = EXCEPTION
+            .replace("40300b:\tret", "40300b:\tret    0x8")
+            .replace("403017:\tret", "403017:\tret    0x10");
+        let listing = Listing::parse(listing.as_bytes()).expect("parses");
+        let bytes = image_storing(&[0x403003, 0x403014]);
+        let image = Image::new(&bytes).expect("a PE");
+        let row = |pops| {
+            [Function {
+                place: "0x403000".to_string(),
+                address: 0x403000,
+                size: 20,
+                pops: Some(pops),
+            }]
+        };
+        let problems = |pops| -> Vec<String> {
+            check(&row(pops), &listing, &image)
+                .iter()
+                .map(|p| p.to_string())
+                .collect()
+        };
+        assert_eq!(problems(0), Vec::<String>::new());
+        assert_eq!(
+            problems(8),
+            ["0x403000: ret pops 0 bytes, the signature takes 8"]
         );
     }
 

@@ -189,9 +189,29 @@ fn param_class(param: &str, structs: &Structs) -> Option<(u32, bool)> {
     }
 }
 
-/// The bytes the callee pops: what `ret N` says. `None` when a size is unknown.
+/// Whether the return value is a struct by value that MSVC returns through a hidden pointer
+/// argument: any size but 1, 2, 4 and 8.
+fn returns_through_pointer(ret: &str, structs: &Structs) -> bool {
+    let words: Vec<&str> = ret
+        .split_whitespace()
+        .filter(|w| !matches!(*w, "const" | "volatile" | "struct"))
+        .collect();
+    structs
+        .get(words.join(" ").as_str())
+        .is_some_and(|size| !matches!(size, 1 | 2 | 4 | 8))
+}
+
+/// The bytes the callee pops: what `ret N` says. `None` when a size is unknown. A struct
+/// returned through a hidden pointer adds that pointer's four bytes to `__stdcall` and
+/// `__thiscall`; `__cdecl` pops nothing, and `__fastcall` is left out since the pointer's place
+/// among its registers is not settled.
 pub fn pops(sig: &Signature, structs: &Structs) -> Option<u32> {
     let mut total = 0;
+    if matches!(sig.conv, Conv::Stdcall | Conv::Thiscall)
+        && returns_through_pointer(sig.ret, structs)
+    {
+        total += 4;
+    }
     let mut registers = match sig.conv {
         Conv::Cdecl => return Some(0),
         Conv::Stdcall => 0,
@@ -299,5 +319,16 @@ mod tests {
             Some(12)
         );
         assert_eq!(of("void __stdcall (void)"), Some(0));
+    }
+
+    #[test]
+    fn hidden_return_pointer() {
+        let s = structs();
+        let of = |text: &str| pops(&parse(text, &s).unwrap(), &s);
+        assert_eq!(of("C3Vector __stdcall (int a)"), Some(8));
+        assert_eq!(of("C3Vector __thiscall (T *this, int a)"), Some(8));
+        assert_eq!(of("C3Vector __cdecl (int a)"), Some(0));
+        assert_eq!(of("C3Vector * __stdcall (int a)"), Some(4));
+        assert_eq!(of("uint64_t __stdcall (int a)"), Some(4));
     }
 }
