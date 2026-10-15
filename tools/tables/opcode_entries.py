@@ -59,9 +59,7 @@ def names_opcode(text, opcode):
 
 
 def main():
-    def extra(ap):
-        ap.add_argument('--tables', default=str(ROOT / 'tables'))
-    args = parse_args(__doc__, extra=extra)
+    args = parse_args(__doc__)
     fns = Functions()
     cover = {}   # function address -> [(doc, anchor, text)]
     for doc, anchor, addresses, text in entries():
