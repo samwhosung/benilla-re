@@ -19754,248 +19754,248 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f2e20	264	ReallocProficiencyBuckets		objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2f30	5	InitGameObjCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f2f40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f2f40	11	InitGameObjCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f2f50	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds a type handler's base: base vtable, the object, error 0xdb and range 5.0	verified	one	objectlayer/gameobjects#building-the-type-handler	
-0x5f2f80	226			objectlayer	primitive		Decides whether the active player may interact with a game object: reaction, trap lock, flags	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
-0x5f3070	180			objectlayer	primitive		Picks a game object's cursor: its lock type's cursor, Interact or UnableInteract, by usability	verified	one	objectlayer/gameobjects#cursor	
-0x5f3130	678			objectlayer	primitive		Decides whether the active player may use a game object now, giving the error and the use range	verified	one	objectlayer/gameobjects#usable	objectlayer::go_canuse_dist2_difftest
-0x5f33e0	627			objectlayer	primitive		Uses a game object: casts the spell that opens it or sends 0xb1, else shows why its lock refuses	verified	one	objectlayer/gameobjects#using-a-game-object	
-0x5f3660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f3670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f3680	6			objectlayer	unreached		Returns the empty string	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f3690	42			objectlayer	primitive		Writes a game object's GAMEOBJECT_POS_X to _Z	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f36c0	13			objectlayer	orchestration		Returns a game object's GAMEOBJECT_FACING	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f2f50	37	ConstructBaseHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds a type handler's base: base vtable, the object, error 0xdb and range 5.0	verified	one	objectlayer/gameobjects#building-the-type-handler	
+0x5f2f80	226	BaseHandlerIsInteractable		objectlayer	primitive		Decides whether the active player may interact with a game object: reaction, trap lock, flags	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f3070	180	BaseHandlerGetCursor		objectlayer	primitive		Picks a game object's cursor: its lock type's cursor, Interact or UnableInteract, by usability	verified	one	objectlayer/gameobjects#cursor	
+0x5f3130	678	BaseHandlerCanUse		objectlayer	primitive		Decides whether the active player may use a game object now, giving the error and the use range	verified	one	objectlayer/gameobjects#usable	objectlayer::go_canuse_dist2_difftest
+0x5f33e0	627	BaseHandlerUse		objectlayer	primitive		Uses a game object: casts the spell that opens it or sends 0xb1, else shows why its lock refuses	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f3660	3	BaseHandlerOnStateChanged		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f3670	3	BaseHandlerOnModelEvent		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f3680	6	BaseHandlerGetStateName		objectlayer	unreached		Returns the empty string	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f3690	42	BaseHandlerGetPosition		objectlayer	primitive		Writes a game object's GAMEOBJECT_POS_X to _Z	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f36c0	13	BaseHandlerGetFacing		objectlayer	orchestration		Returns a game object's GAMEOBJECT_FACING	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f36d0	10	InitGameObjConst2Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5f36e0, then jumps to 0x5f3720 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f36e0	11	InitGameObjConst2		objectlayer	orchestration	void __cdecl (void)	Stores 0x0080b188 in a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f36f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f3700	5			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f3710	6			objectlayer	unreached		Returns "Unknown Object Type"	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f36f0	3	StaticHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f3700	5	StaticHandlerCanUse		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f3710	6	StaticHandlerGetStateName		objectlayer	unreached		Returns "Unknown Object Type"	verified	one	objectlayer/gameobjects#unreached-game-object-code	
 0x5f3720	12	InitGameObjRegisterExit2		objectlayer	orchestration	void __cdecl (void)	Registers 0x5f3730 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5f3730	11	InitGameObjConst3		objectlayer	orchestration	void __cdecl (void)	Stores 0x0080b100 in a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f3740	40			objectlayer	orchestration		Restores the base vtable of the static handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f3770	5			objectlayer	orchestration		Jumps to 0x5f3c30	verified	one	objectlayer/overview#small-bodies	
-0x5f3780	44			objectlayer	orchestration		Moves a family A handler's looping sound to the object's position	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f37b0	5			objectlayer	orchestration		Jumps to 0x5f40c0	verified	one	objectlayer/overview#small-bodies	
-0x5f37c0	22			objectlayer	orchestration		Stops a family A handler's looping sound and restores the base vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f37e0	11			objectlayer	orchestration		Returns whether a family A handler's state is not 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f37f0	43			objectlayer	orchestration		Destroys the family A base handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f3820	24			objectlayer	orchestration		Sends a game object animation event 1 when its byte argument is set	verified	one	objectlayer/gameobjecttypes#animation-events	
-0x5f3840	49			objectlayer	orchestration		Picks the state again once a reactivated object's model is loaded	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
-0x5f3880	109			objectlayer	primitive		Pauses or resumes a family A model by GAMEOBJECT_FLAGS 0x80 in its moving states	verified	one	objectlayer/gameobjecttypes#playing-a-state	
-0x5f38f0	64			objectlayer	orchestration		Replays the state on a GAMEOBJECT_ANIMPROGRESS change outside a reactivation	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
-0x5f3930	525			objectlayer	primitive	void __thiscall (void *this, CM2Model *model)	Plays a family A state's animation from the saved progress, falling back for missing ones	verified	one	objectlayer/gameobjecttypes#playing-a-state	
-0x5f3b50	223			objectlayer	primitive		Sets a family A handler's state and plays its animation, keeping the reverse progress	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f3c30	119			objectlayer	primitive		Picks a family A handler's state after reactivation from the object's state and progress	verified	one	objectlayer/gameobjecttypes#animation-states	
-0x5f3cb0	237			objectlayer	primitive		Picks the moving state for a change of GAMEOBJECT_STATE and plays it	verified	one	objectlayer/gameobjecttypes#animation-states	
-0x5f3da0	124			objectlayer	primitive		Ends the state of an object whose release is pending once its model stops	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
-0x5f3e20	489			objectlayer	primitive		Answers a model event: display sounds, sound kits, camera shakes and looping sounds	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
-0x5f4010	162			objectlayer	orchestration		Plays sound slot n of a game object's display row, a looping one replacing the running one	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
-0x5f40c0	24			objectlayer	orchestration		Stops a family A handler's looping sound	verified	one	objectlayer/gameobjecttypes#animation-states	
-0x5f40e0	63			objectlayer	orchestration		Releases the hold of a played state that holds the object	verified	one	objectlayer/gameobjecttypes#playing-a-state	
-0x5f4120	193			objectlayer	orchestration		Moves a family A handler to the next state when its animation ends	verified	one	objectlayer/gameobjecttypes#animation-states	
-0x5f4220	88			objectlayer	orchestration		Plays an event's state when the model has its animation, starting the fade for state 0	verified	one	objectlayer/gameobjecttypes#animation-events	
-0x5f4280	11			objectlayer	unreached		Returns the name of a family A handler's state	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f4290	42			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the door handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f42c0	43			objectlayer	orchestration		Destroys the door handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f42f0	100			objectlayer	orchestration		Returns whether a door is not moving and so may be used	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
-0x5f4360	55			objectlayer	orchestration		Decides whether a door is usable, refusing a moving one with error 0xe3	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
-0x5f43a0	40			objectlayer	orchestration		Sets a door's state and stores whether it now collides	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
-0x5f43d0	42			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the button handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4400	43			objectlayer	orchestration		Destroys the button handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4430	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chest handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4460	43			objectlayer	orchestration		Destroys the chest handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4490	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the trap handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f44c0	43			objectlayer	orchestration		Destroys the trap handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f44f0	36			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the area damage handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f4520	43			objectlayer	orchestration		Destroys the area damage handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f3740	40	DestroyStaticHandler		objectlayer	orchestration		Restores the base vtable of the static handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f3770	5	AnimatedHandlerOnModelLoaded		objectlayer	orchestration		Jumps to 0x5f3c30	verified	one	objectlayer/overview#small-bodies	
+0x5f3780	44	AnimatedHandlerMoveSound		objectlayer	orchestration		Moves a family A handler's looping sound to the object's position	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f37b0	5	AnimatedHandlerOnDeactivate		objectlayer	orchestration		Jumps to 0x5f40c0	verified	one	objectlayer/overview#small-bodies	
+0x5f37c0	22	ResetAnimatedHandler		objectlayer	orchestration		Stops a family A handler's looping sound and restores the base vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f37e0	11	AnimatedHandlerShouldFadeIn		objectlayer	orchestration		Returns whether a family A handler's state is not 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f37f0	43	DestroyAnimatedHandler		objectlayer	orchestration		Destroys the family A base handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f3820	24	AnimatedHandlerOnCreate		objectlayer	orchestration		Sends a game object animation event 1 when its byte argument is set	verified	one	objectlayer/gameobjecttypes#animation-events	
+0x5f3840	49	AnimatedHandlerOnReactivated		objectlayer	orchestration		Picks the state again once a reactivated object's model is loaded	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3880	109	AnimatedHandlerOnFlagsChanged		objectlayer	primitive		Pauses or resumes a family A model by GAMEOBJECT_FLAGS 0x80 in its moving states	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f38f0	64	AnimatedHandlerOnAnimProgressChanged		objectlayer	orchestration		Replays the state on a GAMEOBJECT_ANIMPROGRESS change outside a reactivation	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3930	525	PlayAnimatedHandlerState		objectlayer	primitive	void __thiscall (void *this, CM2Model *model)	Plays a family A state's animation from the saved progress, falling back for missing ones	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f3b50	223	AnimatedHandlerSetState		objectlayer	primitive		Sets a family A handler's state and plays its animation, keeping the reverse progress	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f3c30	119	PickAnimatedStateAfterReactivation		objectlayer	primitive		Picks a family A handler's state after reactivation from the object's state and progress	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f3cb0	237	AnimatedHandlerOnStateChanged		objectlayer	primitive		Picks the moving state for a change of GAMEOBJECT_STATE and plays it	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f3da0	124	AnimatedHandlerOnGroundPass		objectlayer	primitive		Ends the state of an object whose release is pending once its model stops	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3e20	489	AnimatedHandlerOnModelEvent		objectlayer	primitive		Answers a model event: display sounds, sound kits, camera shakes and looping sounds	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
+0x5f4010	162	PlayHandlerSound		objectlayer	orchestration		Plays sound slot n of a game object's display row, a looping one replacing the running one	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
+0x5f40c0	24	StopAnimatedHandlerSound		objectlayer	orchestration		Stops a family A handler's looping sound	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f40e0	63	AnimatedHandlerOnModelDoneFlagSet		objectlayer	orchestration		Releases the hold of a played state that holds the object	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f4120	193	AnimatedHandlerOnModelDoneFlagClear		objectlayer	orchestration		Moves a family A handler to the next state when its animation ends	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f4220	88	AnimatedHandlerOnAnimationEvent		objectlayer	orchestration		Plays an event's state when the model has its animation, starting the fade for state 0	verified	one	objectlayer/gameobjecttypes#animation-events	
+0x5f4280	11	AnimatedHandlerGetStateName		objectlayer	unreached		Returns the name of a family A handler's state	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f4290	42	ConstructDoorHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the door handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f42c0	43	DestroyDoorHandler		objectlayer	orchestration		Destroys the door handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f42f0	100	DoorIsNotMoving		objectlayer	orchestration		Returns whether a door is not moving and so may be used	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f4360	55	DoorHandlerCanUse		objectlayer	orchestration		Decides whether a door is usable, refusing a moving one with error 0xe3	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f43a0	40	DoorHandlerSetState		objectlayer	orchestration		Sets a door's state and stores whether it now collides	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f43d0	42	ConstructButtonHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the button handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4400	43	DestroyButtonHandler		objectlayer	orchestration		Destroys the button handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4430	35	ConstructChestHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chest handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4460	43	DestroyChestHandler		objectlayer	orchestration		Destroys the chest handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4490	35	ConstructTrapHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the trap handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f44c0	43	DestroyTrapHandler		objectlayer	orchestration		Destroys the trap handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f44f0	36	ConstructAreaDamageHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the area damage handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4520	43	DestroyAreaDamageHandler		objectlayer	orchestration		Destroys the area damage handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
 0x5f4550	5	InitGameObjDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f4560, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f4560	15	InitGameObjDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f4570	5	InitGameObjQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f4580, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f4580	19	InitGameObjQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f45a0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the quest giver handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f45d0	43			objectlayer	orchestration		Destroys the quest giver handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4600	277			objectlayer	primitive		Plays a quest giver's open state or custom animation as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f4720	65			objectlayer	orchestration		Plays a quest giver's close state 4 from state 2 or 3	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f4770	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the binder handler with range 10.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f47a0	40			objectlayer	orchestration		Restores the base vtable of the binder handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f47d0	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the generic handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f47f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f4800	40			objectlayer	orchestration		Restores the base vtable of the generic handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f4830	42			objectlayer	primitive		Returns whether a generic object's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f4860	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the map object handler, world entity 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f4890	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/transports#map-objects	
-0x5f48a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f48b0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f48c0	4			objectlayer	orchestration		Returns the dword at +0x10 of its object	verified	one	objectlayer/transports#map-objects	
-0x5f48d0	43			objectlayer	orchestration		Destroys the map object handler's entity and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f4900	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
-0x5f4910	22			objectlayer	orchestration		Destroys the map object handler's entity and restores the base vtable	verified	one	objectlayer/transports#map-objects	
-0x5f4930	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
-0x5f4940	5			objectlayer	orchestration		Jumps to 0x5f4950	verified	one	objectlayer/transports#map-objects	
-0x5f4950	24			objectlayer	orchestration		Destroys a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
-0x5f4970	59			objectlayer	orchestration		Creates a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
-0x5f49b0	68			objectlayer	orchestration		Chains a transport entity's animations when one ends: 0xa2 to 0xa3, 0xa4 to 0, others replay	verified	one	objectlayer/transports#map-objects	
-0x5f4ab0	142			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the moving transport handler, path and position from the fields	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f4b40	33			objectlayer	primitive		Writes a moving transport's position	verified	one	objectlayer/transports#the-moving-transport	
-0x5f4b70	4			objectlayer	orchestration		Returns the float at +0x50 of its object	verified	one	objectlayer/transports#the-moving-transport	
-0x5f4b80	4			objectlayer	orchestration		Returns the address of +0x20 of its object	verified	one	objectlayer/transports#the-moving-transport	
-0x5f4b90	43			objectlayer	orchestration		Destroys the moving transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f4bc0	255			objectlayer	primitive		Tears a moving transport handler down: transport list, legs and passengers	verified	one	objectlayer/transports#the-moving-transport	
-0x5f4cc0	700			objectlayer	primitive		Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	
-0x5f4f80	46			objectlayer	orchestration		Reactivates a moving transport: entity, transport list and a tick	verified	one	objectlayer/transports#the-ship-path	
-0x5f4fb0	233			objectlayer	primitive		Deactivates a moving transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
-0x5f50a0	1118			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	objectlayer::g3_transport_ms_scale, objectlayer::g3_transport_leg_fraction, objectlayer::g3_transport_heading, objectlayer::g3_transport_heading_angle
-0x5f5500	179			objectlayer	primitive		Boards a mover onto a moving transport, flagging it while the entity is not ready	verified	one	objectlayer/transports#passengers	
-0x5f55c0	34			objectlayer	orchestration		Tests a point against a moving transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
-0x5f55f0	68			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chair handler with five empty seats and range 100.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5640	40			objectlayer	orchestration		Restores the base vtable of the chair handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5670	226			objectlayer	primitive		Decides whether a chair is usable: in use range and within 3 yards of a seat	verified	one	objectlayer/gameobjecttypes#chairs	objectlayer::diff_interact_range
-0x5f5760	74			objectlayer	primitive		Places a chair's seats when its record arrives	verified	one	objectlayer/gameobjecttypes#chairs	
-0x5f57b0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell focus handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f57e0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f57f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f5800	43			objectlayer	orchestration		Destroys the spell focus handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5830	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the text handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5860	43			objectlayer	orchestration		Destroys the text handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5890	39			objectlayer	primitive		Returns a text object's cursor: Inspect when usable, else UnableInspect	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f58c0	61			objectlayer	orchestration		Uses a text object: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5900	34			objectlayer	orchestration		Returns a game object's pageID column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5930	32			objectlayer	orchestration		Returns a game object's language column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5950	32			objectlayer	orchestration		Returns a game object's pageMaterial column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5970	37			objectlayer	primitive		Returns whether a game object's notInCombat column is 0	verified	one	objectlayer/gameobjects#usable	
-0x5f59a0	47			objectlayer	primitive		Returns 0 for a chest, else whether the noDamageImmune column is 0	verified	one	objectlayer/gameobjects#usable	
-0x5f59d0	83			objectlayer	orchestration		Refreshes the open text when its record arrives	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5a30	11			objectlayer	orchestration		Plays a text object's open state 2	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5a40	11			objectlayer	orchestration		Plays a text object's close state 4	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f5a50	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the goober handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5a80	43			objectlayer	orchestration		Destroys the goober handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5ab0	341			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the transport handler and finds its TransportAnimation rows	verified	one	objectlayer/gameobjects#handler-types-11-to-20	objectlayer::g3_transport_ctor_add
-0x5f5c10	33			objectlayer	primitive		Writes a transport's base position	verified	one	objectlayer/transports#the-transport-tick	
-0x5f5c40	45			objectlayer	primitive		Writes a transport's velocity: speed times heading	verified	one	objectlayer/transports#the-transport-tick	objectlayer::diff_scale_vec3
-0x5f5c70	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f5c80	43			objectlayer	orchestration		Destroys the transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f5cb0	188			objectlayer	primitive		Tears a transport handler down: transport list, plane array and passengers	verified	one	objectlayer/transports#the-transports-path	
-0x5f5d70	34			objectlayer	orchestration		Creates a transport's entity when its record arrives and lists it	verified	one	objectlayer/transports#the-transports-path	
-0x5f5da0	41			objectlayer	orchestration		Reactivates a transport: animation reset, entity and transport list	verified	one	objectlayer/transports#the-transports-path	
-0x5f5dd0	233			objectlayer	primitive		Deactivates a transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
-0x5f5ec0	72			objectlayer	primitive		Returns the first TransportAnimation row of a game object's entry, or -1	verified	one	objectlayer/transports#the-transports-path	
-0x5f5f10	841			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a transport along its animation path and carries its passengers	verified	one	objectlayer/transports#the-transport-tick	objectlayer::g3_move_pos_add, objectlayer::g3_move_delta_sub, objectlayer::g3_move_dist2_gate, objectlayer::g3_move_normalize, objectlayer::g3_move_leg_speed
-0x5f6260	20			objectlayer	primitive		Returns the next TransportAnimation row index, wrapping	verified	one	objectlayer/transports#the-transports-path	
-0x5f6280	528			objectlayer	primitive	float * __thiscall (void *this, float *out, uint32_t now)	Returns a transport's path offset at a time, rotated by its quaternion, playing row animations	verified	one	objectlayer/transports#the-transports-path	objectlayer::gameobject_path_eval_difftest, objectlayer::gameobject_path_eval_large_times_difftest
-0x5f6490	175			objectlayer	primitive		Boards a mover onto a transport, flagging it while the model is not loaded	verified	one	objectlayer/transports#passengers	
-0x5f6540	34			objectlayer	orchestration		Tests a point against a transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
-0x5f6570	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the camera handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f6590	40			objectlayer	orchestration		Restores the base vtable of the camera handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f65c0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the duel flag handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f65f0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6600	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6610	43			objectlayer	orchestration		Destroys the duel flag handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f6640	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing hole handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6660	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6670	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6680	40			objectlayer	orchestration		Restores the base vtable of the fishing hole handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f66b0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing node handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f66e0	43			objectlayer	orchestration		Destroys the fishing node handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f6710	73			objectlayer	orchestration		Decides whether a fishing node is interactable: only for the player channelling it	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
-0x5f6760	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the ritual handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f6790	43			objectlayer	orchestration		Destroys the ritual handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f67c0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the mailbox handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f67f0	43			objectlayer	orchestration		Destroys the mailbox handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f6820	21			objectlayer	orchestration		Uses a mailbox: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6840	39			objectlayer	primitive		Returns a mailbox's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6870	11			objectlayer	orchestration		Sends a mailbox's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6880	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the auction house handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f68a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f68b0	40			objectlayer	orchestration		Restores the base vtable of the auction house handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
-0x5f68e0	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell caster handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6900	40			objectlayer	orchestration		Restores the base vtable of the spell caster handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6930	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the meeting stone handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6960	43			objectlayer	orchestration		Destroys the meeting stone handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6990	49			objectlayer	orchestration		Decides whether a meeting stone is interactable: not in the area a client global holds	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
-0x5f69d0	308			objectlayer	primitive		Uses a meeting stone: refuses by party leader, size, level and raid, else hands the GUID on	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
-0x5f6b10	221			objectlayer	orchestration		Adds a meeting stone's area name and level range to its tooltip	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
-0x5f6bf0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag stand handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6c20	43			objectlayer	orchestration		Destroys the flag stand handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6c50	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag drop handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6c80	43			objectlayer	orchestration		Destroys the flag drop handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6cb0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the minigame handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6ce0	43			objectlayer	orchestration		Destroys the minigame handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6d10	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the capture point handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6d40	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6d50	43			objectlayer	orchestration		Destroys the capture point handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6d80	42			objectlayer	primitive		Returns whether a capture point's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6db0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the lottery kiosk handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6de0	43			objectlayer	orchestration		Destroys the lottery kiosk handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6e10	21			objectlayer	orchestration		Uses a lottery kiosk: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6e30	39			objectlayer	primitive		Returns a lottery kiosk's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6e60	11			objectlayer	orchestration		Sends a lottery kiosk's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
-0x5f6e70	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the aura generator handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
-0x5f6ea0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6eb0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
-0x5f6ec0	43			objectlayer	orchestration		Destroys the aura generator handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f45a0	44	ConstructQuestGiverHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the quest giver handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f45d0	43	DestroyQuestGiverHandler		objectlayer	orchestration		Destroys the quest giver handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4600	277	QuestGiverHandlerOnFrameOpen		objectlayer	primitive		Plays a quest giver's open state or custom animation as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f4720	65	QuestGiverHandlerOnFrameClose		objectlayer	orchestration		Plays a quest giver's close state 4 from state 2 or 3	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f4770	37	ConstructBinderHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the binder handler with range 10.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47a0	40	DestroyBinderHandler		objectlayer	orchestration		Restores the base vtable of the binder handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47d0	28	ConstructGenericHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the generic handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47f0	3	GenericHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f4800	40	DestroyGenericHandler		objectlayer	orchestration		Restores the base vtable of the generic handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4830	42	GenericHandlerIsMouseoverable		objectlayer	primitive		Returns whether a generic object's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f4860	35	ConstructMapObjectHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the map object handler, world entity 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4890	3	MapObjectHandlerCollides		objectlayer	orchestration		Returns false	verified	one	objectlayer/transports#map-objects	
+0x5f48a0	3	MapObjectHandlerIsMouseoverable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f48b0	3	MapObjectHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f48c0	4	MapObjectHandlerGetWorldEntity		objectlayer	orchestration		Returns the dword at +0x10 of its object	verified	one	objectlayer/transports#map-objects	
+0x5f48d0	43	DestroyMapObjectHandler		objectlayer	orchestration		Destroys the map object handler's entity and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4900	5	MapObjectHandlerOnRecordArrived		objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
+0x5f4910	22	ResetMapObjectHandler		objectlayer	orchestration		Destroys the map object handler's entity and restores the base vtable	verified	one	objectlayer/transports#map-objects	
+0x5f4930	5	MapObjectHandlerOnReactivated		objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
+0x5f4940	5	MapObjectHandlerOnDeactivate		objectlayer	orchestration		Jumps to 0x5f4950	verified	one	objectlayer/transports#map-objects	
+0x5f4950	24	DestroyMapObjectEntity		objectlayer	orchestration		Destroys a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
+0x5f4970	59	CreateMapObjectEntity		objectlayer	orchestration		Creates a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
+0x5f49b0	68	OnTransportEntityAnimationDone		objectlayer	orchestration		Chains a transport entity's animations when one ends: 0xa2 to 0xa3, 0xa4 to 0, others replay	verified	one	objectlayer/transports#map-objects	
+0x5f4ab0	142	ConstructMovingTransportHandler		objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the moving transport handler, path and position from the fields	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4b40	33	MovingTransportHandlerGetPosition		objectlayer	primitive		Writes a moving transport's position	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b70	4	MovingTransportHandlerGetFacing		objectlayer	orchestration		Returns the float at +0x50 of its object	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b80	4	MovingTransportHandlerGetPath		objectlayer	orchestration		Returns the address of +0x20 of its object	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b90	43	DestroyMovingTransportHandler		objectlayer	orchestration		Destroys the moving transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4bc0	255	ReleaseMovingTransportHandler		objectlayer	primitive		Tears a moving transport handler down: transport list, legs and passengers	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4cc0	700	MovingTransportHandlerOnRecordArrived		objectlayer	primitive		Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	
+0x5f4f80	46	MovingTransportHandlerOnReactivated		objectlayer	orchestration		Reactivates a moving transport: entity, transport list and a tick	verified	one	objectlayer/transports#the-ship-path	
+0x5f4fb0	233	MovingTransportHandlerOnDeactivate		objectlayer	primitive		Deactivates a moving transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
+0x5f50a0	1118	MovingTransportHandlerOnTick		objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	objectlayer::g3_transport_ms_scale, objectlayer::g3_transport_leg_fraction, objectlayer::g3_transport_heading, objectlayer::g3_transport_heading_angle
+0x5f5500	179	MovingTransportHandlerOnBoard		objectlayer	primitive		Boards a mover onto a moving transport, flagging it while the entity is not ready	verified	one	objectlayer/transports#passengers	
+0x5f55c0	34	MovingTransportHandlerContainsPoint		objectlayer	orchestration		Tests a point against a moving transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
+0x5f55f0	68	ConstructChairHandler		objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chair handler with five empty seats and range 100.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5640	40	DestroyChairHandler		objectlayer	orchestration		Restores the base vtable of the chair handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5670	226	ChairHandlerCanUse		objectlayer	primitive		Decides whether a chair is usable: in use range and within 3 yards of a seat	verified	one	objectlayer/gameobjecttypes#chairs	objectlayer::diff_interact_range
+0x5f5760	74	ChairHandlerOnRecordArrived		objectlayer	primitive		Places a chair's seats when its record arrives	verified	one	objectlayer/gameobjecttypes#chairs	
+0x5f57b0	35	ConstructSpellFocusHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell focus handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f57e0	3	SpellFocusHandlerIsMouseoverable		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f57f0	3	SpellFocusHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f5800	43	DestroySpellFocusHandler		objectlayer	orchestration		Destroys the spell focus handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5830	44	ConstructTextHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the text handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5860	43	DestroyTextHandler		objectlayer	orchestration		Destroys the text handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5890	39	TextHandlerGetCursor		objectlayer	primitive		Returns a text object's cursor: Inspect when usable, else UnableInspect	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f58c0	61	TextHandlerUse		objectlayer	orchestration		Uses a text object: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5900	34	CGGameObject_C::GetPageTextId		objectlayer	orchestration		Returns a game object's pageID column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5930	32	GetGameObjectLanguage		objectlayer	orchestration		Returns a game object's language column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5950	32	GetGameObjectPageMaterial		objectlayer	orchestration		Returns a game object's pageMaterial column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5970	37	GameObjectUsableInCombat		objectlayer	primitive		Returns whether a game object's notInCombat column is 0	verified	one	objectlayer/gameobjects#usable	
+0x5f59a0	47	GameObjectUsableWhileDamageImmune		objectlayer	primitive		Returns 0 for a chest, else whether the noDamageImmune column is 0	verified	one	objectlayer/gameobjects#usable	
+0x5f59d0	83	TextHandlerOnRecordArrived		objectlayer	orchestration		Refreshes the open text when its record arrives	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a30	11	TextHandlerOnFrameOpen		objectlayer	orchestration		Plays a text object's open state 2	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a40	11	TextHandlerOnFrameClose		objectlayer	orchestration		Plays a text object's close state 4	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a50	35	ConstructGooberHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the goober handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5a80	43	DestroyGooberHandler		objectlayer	orchestration		Destroys the goober handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5ab0	341	ConstructTransportHandler		objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the transport handler and finds its TransportAnimation rows	verified	one	objectlayer/gameobjects#handler-types-11-to-20	objectlayer::g3_transport_ctor_add
+0x5f5c10	33	TransportHandlerGetPosition		objectlayer	primitive		Writes a transport's base position	verified	one	objectlayer/transports#the-transport-tick	
+0x5f5c40	45	TransportHandlerGetVelocity		objectlayer	primitive		Writes a transport's velocity: speed times heading	verified	one	objectlayer/transports#the-transport-tick	objectlayer::diff_scale_vec3
+0x5f5c70	3	TransportHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f5c80	43	DestroyTransportHandler		objectlayer	orchestration		Destroys the transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f5cb0	188	ReleaseTransportHandler		objectlayer	primitive		Tears a transport handler down: transport list, plane array and passengers	verified	one	objectlayer/transports#the-transports-path	
+0x5f5d70	34	TransportHandlerOnRecordArrived		objectlayer	orchestration		Creates a transport's entity when its record arrives and lists it	verified	one	objectlayer/transports#the-transports-path	
+0x5f5da0	41	TransportHandlerOnReactivated		objectlayer	orchestration		Reactivates a transport: animation reset, entity and transport list	verified	one	objectlayer/transports#the-transports-path	
+0x5f5dd0	233	TransportHandlerOnDeactivate		objectlayer	primitive		Deactivates a transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
+0x5f5ec0	72	FindFirstTransportAnimationRow		objectlayer	primitive		Returns the first TransportAnimation row of a game object's entry, or -1	verified	one	objectlayer/transports#the-transports-path	
+0x5f5f10	841	TransportHandlerOnTick		objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a transport along its animation path and carries its passengers	verified	one	objectlayer/transports#the-transport-tick	objectlayer::g3_move_pos_add, objectlayer::g3_move_delta_sub, objectlayer::g3_move_dist2_gate, objectlayer::g3_move_normalize, objectlayer::g3_move_leg_speed
+0x5f6260	20	NextTransportAnimationRow		objectlayer	primitive		Returns the next TransportAnimation row index, wrapping	verified	one	objectlayer/transports#the-transports-path	
+0x5f6280	528	GetTransportPathOffset		objectlayer	primitive	float * __thiscall (void *this, float *out, uint32_t now)	Returns a transport's path offset at a time, rotated by its quaternion, playing row animations	verified	one	objectlayer/transports#the-transports-path	objectlayer::gameobject_path_eval_difftest, objectlayer::gameobject_path_eval_large_times_difftest
+0x5f6490	175	TransportHandlerOnBoard		objectlayer	primitive		Boards a mover onto a transport, flagging it while the model is not loaded	verified	one	objectlayer/transports#passengers	
+0x5f6540	34	TransportHandlerContainsPoint		objectlayer	orchestration		Tests a point against a transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
+0x5f6570	28	ConstructCameraHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the camera handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6590	40	DestroyCameraHandler		objectlayer	orchestration		Restores the base vtable of the camera handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f65c0	35	ConstructDuelFlagHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the duel flag handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f65f0	3	DuelFlagHandlerIsMouseoverable		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6600	3	DuelFlagHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6610	43	DestroyDuelFlagHandler		objectlayer	orchestration		Destroys the duel flag handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6640	28	ConstructFishingHoleHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing hole handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6660	3	FishingHoleHandlerIsMouseoverable		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6670	3	FishingHoleHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6680	40	DestroyFishingHoleHandler		objectlayer	orchestration		Restores the base vtable of the fishing hole handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f66b0	44	ConstructFishingNodeHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing node handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f66e0	43	DestroyFishingNodeHandler		objectlayer	orchestration		Destroys the fishing node handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6710	73	FishingNodeHandlerIsInteractable		objectlayer	orchestration		Decides whether a fishing node is interactable: only for the player channelling it	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6760	35	ConstructRitualHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the ritual handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6790	43	DestroyRitualHandler		objectlayer	orchestration		Destroys the ritual handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f67c0	35	ConstructMailboxHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the mailbox handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f67f0	43	DestroyMailboxHandler		objectlayer	orchestration		Destroys the mailbox handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6820	21	MailboxHandlerUse		objectlayer	orchestration		Uses a mailbox: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6840	39	MailboxHandlerGetCursor		objectlayer	primitive		Returns a mailbox's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6870	11	MailboxHandlerOnFrameOpen		objectlayer	orchestration		Sends a mailbox's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6880	28	ConstructAuctionHouseHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the auction house handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f68a0	3	AuctionHouseHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f68b0	40	DestroyAuctionHouseHandler		objectlayer	orchestration		Restores the base vtable of the auction house handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f68e0	28	ConstructSpellCasterHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell caster handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6900	40	DestroySpellCasterHandler		objectlayer	orchestration		Restores the base vtable of the spell caster handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6930	35	ConstructMeetingStoneHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the meeting stone handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6960	43	DestroyMeetingStoneHandler		objectlayer	orchestration		Destroys the meeting stone handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6990	49	MeetingStoneHandlerIsInteractable		objectlayer	orchestration		Decides whether a meeting stone is interactable: not in the area a client global holds	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f69d0	308	MeetingStoneHandlerUse		objectlayer	primitive		Uses a meeting stone: refuses by party leader, size, level and raid, else hands the GUID on	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6b10	221	MeetingStoneHandlerAddTooltipLines		objectlayer	orchestration		Adds a meeting stone's area name and level range to its tooltip	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6bf0	44	ConstructFlagStandHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag stand handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c20	43	DestroyFlagStandHandler		objectlayer	orchestration		Destroys the flag stand handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c50	44	ConstructFlagDropHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag drop handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c80	43	DestroyFlagDropHandler		objectlayer	orchestration		Destroys the flag drop handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6cb0	44	ConstructMinigameHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the minigame handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6ce0	43	DestroyMinigameHandler		objectlayer	orchestration		Destroys the minigame handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d10	35	ConstructCapturePointHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the capture point handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d40	3	CapturePointHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6d50	43	DestroyCapturePointHandler		objectlayer	orchestration		Destroys the capture point handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d80	42	CapturePointHandlerIsMouseoverable		objectlayer	primitive		Returns whether a capture point's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6db0	35	ConstructLotteryKioskHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the lottery kiosk handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6de0	43	DestroyLotteryKioskHandler		objectlayer	orchestration		Destroys the lottery kiosk handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6e10	21	LotteryKioskHandlerUse		objectlayer	orchestration		Uses a lottery kiosk: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e30	39	LotteryKioskHandlerGetCursor		objectlayer	primitive		Returns a lottery kiosk's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e60	11	LotteryKioskHandlerOnFrameOpen		objectlayer	orchestration		Sends a lottery kiosk's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e70	35	ConstructAuraGeneratorHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the aura generator handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6ea0	3	AuraGeneratorHandlerIsMouseoverable		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6eb0	3	AuraGeneratorHandlerIsInteractable		objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6ec0	43	DestroyAuraGeneratorHandler		objectlayer	orchestration		Destroys the aura generator handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
 0x5f6ef0	51	CGGameObject_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGGameObject_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
-0x5f6f30	1946			objectlayer	primitive	CGGameObject_C * __thiscall (CGGameObject_C *this, uint32_t time, void *block)	Builds a game object: watcher lists, transform, fields from the update and its type handler	verified	one	objectlayer/gameobjects#the-game-object	
-0x5f7750	43			objectlayer	orchestration		Destroys a game object and frees it on bit 0	verified	one	objectlayer/gameobjects#the-game-object	
-0x5f7780	287			objectlayer	primitive		Tears a game object down: record request, handler, transport link and watcher lists	verified	one	objectlayer/gameobjects#the-game-object	
-0x5f78a0	107			objectlayer	orchestration		Hands an arrived game object record to the object its GUID names	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f7910	484			objectlayer	primitive		Places a game object's loaded model: world matrix, bounds, world box, collision and art kit	verified	one	objectlayer/gameobjects#world-transform-and-box	objectlayer::go_animate_bounds_difftest
-0x5f7b00	279			objectlayer	primitive	void __fastcall (CM2Model *model, uint32_t artKit)	Puts an art kit on a model: detaches points 0 to 3, then its textures and attached models	verified	one	objectlayer/gameobjecttypes#art-kits	
-0x5f7c20	22			objectlayer	orchestration		Runs the handler's slot 11 for the object's ground pass	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f7c40	349			objectlayer	primitive		Runs a game object's creation: transform, model callbacks, handler slot 23 and the record request	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f7da0	66			objectlayer	orchestration		Passes a model event to the game object's handler slot 12	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f7df0	66			objectlayer	orchestration		Passes a model's done callback to the handler's slot 13 or 14 by its flag	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f7e40	63			objectlayer	orchestration		Deactivates a game object: the handler's slot 26, or cancels the record request, then the object's	verified	one	objectlayer/gameobjects#object-slots	
-0x5f7e80	74			objectlayer	orchestration		Reactivates a game object: the object's, then the handler's slot 25 and the model	verified	one	objectlayer/gameobjects#object-slots	
-0x5f7ed0	122			objectlayer	orchestration		Ends a game object's reactivation: the handler's slot 27, or requests the record	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f7f50	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f7f60	39			objectlayer	unreached		Copies bytes into a game object's field section	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f7f90	20			objectlayer	unreached		Maps an update level to a field section offset: 0 to 0, 5 to 0x18, others to -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f7fb0	27			objectlayer	orchestration		Stores a game object's record and calls the handler's slot 24	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f6f30	1946	CGGameObject_C::CGGameObject_C		objectlayer	primitive	CGGameObject_C * __thiscall (CGGameObject_C *this, uint32_t time, void *block)	Builds a game object: watcher lists, transform, fields from the update and its type handler	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f7750	43	CGGameObject_C::DeletingDestructor		objectlayer	orchestration		Destroys a game object and frees it on bit 0	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f7780	287	CGGameObject_C::~CGGameObject_C		objectlayer	primitive		Tears a game object down: record request, handler, transport link and watcher lists	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f78a0	107	OnGameObjectRecordArrived		objectlayer	orchestration		Hands an arrived game object record to the object its GUID names	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7910	484	CGGameObject_C::OnModelLoaded		objectlayer	primitive		Places a game object's loaded model: world matrix, bounds, world box, collision and art kit	verified	one	objectlayer/gameobjects#world-transform-and-box	objectlayer::go_animate_bounds_difftest
+0x5f7b00	279	CGGameObject_C::ApplyArtKit		objectlayer	primitive	void __fastcall (CM2Model *model, uint32_t artKit)	Puts an art kit on a model: detaches points 0 to 3, then its textures and attached models	verified	one	objectlayer/gameobjecttypes#art-kits	
+0x5f7c20	22	CGGameObject_C::Conform		objectlayer	orchestration		Runs the handler's slot 11 for the object's ground pass	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f7c40	349	CGGameObject_C::OnCreate		objectlayer	primitive		Runs a game object's creation: transform, model callbacks, handler slot 23 and the record request	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7da0	66	OnGameObjectModelEvent		objectlayer	orchestration		Passes a model event to the game object's handler slot 12	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f7df0	66	OnGameObjectModelDone		objectlayer	orchestration		Passes a model's done callback to the handler's slot 13 or 14 by its flag	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f7e40	63	CGGameObject_C::Deactivate		objectlayer	orchestration		Deactivates a game object: the handler's slot 26, or cancels the record request, then the object's	verified	one	objectlayer/gameobjects#object-slots	
+0x5f7e80	74	CGGameObject_C::Reactivate		objectlayer	orchestration		Reactivates a game object: the object's, then the handler's slot 25 and the model	verified	one	objectlayer/gameobjects#object-slots	
+0x5f7ed0	122	CGGameObject_C::EndReactivation		objectlayer	orchestration		Ends a game object's reactivation: the handler's slot 27, or requests the record	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7f50	8	GameObjectSetFieldStub		objectlayer	unreached		Returns 1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7f60	39	CopyIntoGameObjectFields		objectlayer	unreached		Copies bytes into a game object's field section	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7f90	20	GameObjectFieldSectionOffset		objectlayer	unreached		Maps an update level to a field section offset: 0 to 0, 5 to 0x18, others to -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7fb0	27	CGGameObject_C::SetRecord		objectlayer	orchestration		Stores a game object's record and calls the handler's slot 24	verified	one	objectlayer/gameobjects#the-game-object-record	
 0x5f7fd0	95	CGGameObject_C::ObjectReaction	idb	objectlayer	orchestration	uint32_t __thiscall (CGGameObject_C *this, CGUnit_C *other)	Returns its creator's reaction toward a unit when the creator is live, else its faction's, else 3	verified	one	objectlayer/reaction#corpses-and-game-objects	
-0x5f8030	82			objectlayer	primitive	void * __thiscall (CGGameObject_C *this, uint32_t guidLow, uint32_t guidHigh)	Creates a game object's map entity at its position and facing	verified	one	objectlayer/transports#map-objects	
-0x5f8090	69			objectlayer	orchestration		Returns the model path of a game object's display row, logging NOOBJECTFILENAME when missing	verified	one	objectlayer/gameobjects#object-slots	
-0x5f80e0	32			objectlayer	orchestration		Returns a game object's model path, none for transports and map objects	verified	one	objectlayer/gameobjects#object-slots	
-0x5f8100	20			objectlayer	orchestration		Returns a game object's record name, or the empty string	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f8120	23			objectlayer	unreached		Returns a game object's type name	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f8140	11			objectlayer	unreached		Jumps through the handler's slot 16	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x5f8150	35			objectlayer	orchestration	uint32_t __thiscall (CGGameObject_C *this, uint32_t column)	Returns data column i of a game object's record, 0 without a record or past 23	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f8180	69			objectlayer	orchestration		Returns the Lock row the game object's open column names	verified	one	objectlayer/gameobjects#locks	
-0x5f81d0	135			objectlayer	primitive		Tests a lock slot's action against the game object's state and flags	verified	one	objectlayer/gameobjects#locks	
-0x5f8260	359			objectlayer	primitive		Tests whether a spell opens a game object's lock by skill or by the item it targets	verified	one	objectlayer/gameobjects#lock-actions-and-spell-targets	
-0x5f83d0	515			objectlayer	primitive		Finds how the active player opens a game object's lock: a spell with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
-0x5f85e0	15			objectlayer	orchestration		Returns the handler's slot 2 for fade in on appear	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f85f0	39			objectlayer	orchestration		Returns whether a game object collides, 0 for a door given flag 0x8000	verified	one	objectlayer/gameobjects#world-transform-and-box	
-0x5f8620	15			objectlayer	orchestration		Answers the object's mouseover slot through the handler's slot 3	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
-0x5f8630	38			objectlayer	primitive		Returns whether a game object's floatingTooltip column is set	verified	one	objectlayer/gameobjects#object-slots	
-0x5f8660	80			objectlayer	orchestration		Interacts with a game object, storing the auto-loot choice first	verified	one	objectlayer/gameobjects#using-a-game-object	
-0x5f86b0	171			objectlayer	orchestration		Uses a game object in range, else walks to it or shows the use error	verified	one	objectlayer/gameobjects#using-a-game-object	
-0x5f8760	46			objectlayer	primitive		Returns cursor 0x29 for an interactable object with a record cursor name, else the handler's cursor	verified	one	objectlayer/gameobjects#cursor	
-0x5f8790	97			objectlayer	orchestration		Formats the cursor file of a record's cursor name, with Unable when the object is not usable	verified	one	objectlayer/gameobjects#cursor	
-0x5f8800	11			objectlayer	orchestration		Asks the handler whether the object is interactable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
-0x5f8810	16			objectlayer	orchestration		Asks the handler whether the object is usable, without error or range	verified	one	objectlayer/gameobjects#cursor	
-0x5f8820	156			objectlayer	orchestration		Registers the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f88c0	104			objectlayer	orchestration		Handles 0x1df: passes the game object's GUID to the interface	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8930	92			objectlayer	primitive		Handles 0xb3: sends a custom animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8990	67			objectlayer	orchestration		Handles 0x215: sends the despawn animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f89e0	67			objectlayer	orchestration		Watches GAMEOBJECT_STATE: stores the state and notifies the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8a30	72			objectlayer	primitive		Watches GAMEOBJECT_FLAGS: passes the changed bits to the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8a80	87			objectlayer	orchestration		Watches GAMEOBJECT_ARTKIT: puts the art kit on the loaded model	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8ae0	57			objectlayer	orchestration		Watches GAMEOBJECT_ANIMPROGRESS: calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8b20	119			objectlayer	orchestration		Clears the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8ba0	22			objectlayer	orchestration		Passes changed GAMEOBJECT_FLAGS bits to the handler's slot 8	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8bc0	11			objectlayer	orchestration		Calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8bd0	41			objectlayer	orchestration	void __thiscall (void *go, uint32_t state)	Stores a game object's state at +0x27c and notifies its model when it changes	verified	one	spell/go#player-cast-tail	
-0x5f8c00	16			objectlayer	orchestration	void __thiscall (void *go)	Passes a game object's descriptor state dword to 0x5f8bd0	verified	one	spell/handlers#small-spell-handlers	
-0x5f8c10	19			objectlayer	orchestration		Stores GAMEOBJECT_ANIMPROGRESS	verified	one	objectlayer/gameobjecttypes#playing-a-state	
-0x5f8c30	11			objectlayer	orchestration		Calls the handler's slot 31 as the interface opens the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f8c40	14			objectlayer	orchestration		Calls the handler's slot 32 as the interface closes the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f8c50	63			objectlayer	orchestration		Plays an animation event on the loaded model, or keeps it until the model loads	verified	one	objectlayer/gameobjects#watchers-and-messages	
-0x5f8c90	18			objectlayer	orchestration		Hands a game object's world object to the light update	verified	one	objectlayer/gameobjects#object-slots	
-0x5f8cb0	60			objectlayer	primitive		Normalises a 2D vector in place, leaving one shorter than 2^-22	verified	one	objectlayer/transports#moving-the-ship	objectlayer::diff_normalize_vec2
+0x5f8030	82	CGGameObject_C::CreateMapEntity		objectlayer	primitive	void * __thiscall (CGGameObject_C *this, uint32_t guidLow, uint32_t guidHigh)	Creates a game object's map entity at its position and facing	verified	one	objectlayer/transports#map-objects	
+0x5f8090	69	CGGameObject_C::GetDisplayModelPath		objectlayer	orchestration		Returns the model path of a game object's display row, logging NOOBJECTFILENAME when missing	verified	one	objectlayer/gameobjects#object-slots	
+0x5f80e0	32	CGGameObject_C::GetModelPath		objectlayer	orchestration		Returns a game object's model path, none for transports and map objects	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8100	20	CGGameObject_C::GetRecordName		objectlayer	orchestration		Returns a game object's record name, or the empty string	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f8120	23	CGGameObject_C::GetTypeName		objectlayer	unreached		Returns a game object's type name	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f8140	11	CGGameObject_C::GetHandlerStateName		objectlayer	unreached		Jumps through the handler's slot 16	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f8150	35	CGGameObject_C::GetDataColumn		objectlayer	orchestration	uint32_t __thiscall (CGGameObject_C *this, uint32_t column)	Returns data column i of a game object's record, 0 without a record or past 23	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f8180	69	CGGameObject_C::GetLockRow		objectlayer	orchestration		Returns the Lock row the game object's open column names	verified	one	objectlayer/gameobjects#locks	
+0x5f81d0	135	CGGameObject_C::LockActionAllowed		objectlayer	primitive		Tests a lock slot's action against the game object's state and flags	verified	one	objectlayer/gameobjects#locks	
+0x5f8260	359	DoesSpellOpenGameObjectLock		objectlayer	primitive		Tests whether a spell opens a game object's lock by skill or by the item it targets	verified	one	objectlayer/gameobjects#lock-actions-and-spell-targets	
+0x5f83d0	515	FindGameObjectLockOpener		objectlayer	primitive		Finds how the active player opens a game object's lock: a spell with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
+0x5f85e0	15	CGGameObject_C::ShouldFadeIn		objectlayer	orchestration		Returns the handler's slot 2 for fade in on appear	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f85f0	39	CGGameObject_C::IsCollidable		objectlayer	orchestration		Returns whether a game object collides, 0 for a door given flag 0x8000	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5f8620	15	CGGameObject_C::IsMouseoverable		objectlayer	orchestration		Answers the object's mouseover slot through the handler's slot 3	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f8630	38	CGGameObject_C::HasFloatingTooltip		objectlayer	primitive		Returns whether a game object's floatingTooltip column is set	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8660	80	CGGameObject_C::Interact		objectlayer	orchestration		Interacts with a game object, storing the auto-loot choice first	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f86b0	171	CGGameObject_C::TryUse		objectlayer	orchestration		Uses a game object in range, else walks to it or shows the use error	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f8760	46	CGGameObject_C::GetCursor		objectlayer	primitive		Returns cursor 0x29 for an interactable object with a record cursor name, else the handler's cursor	verified	one	objectlayer/gameobjects#cursor	
+0x5f8790	97	FormatGameObjectCursorFile		objectlayer	orchestration		Formats the cursor file of a record's cursor name, with Unable when the object is not usable	verified	one	objectlayer/gameobjects#cursor	
+0x5f8800	11	CGGameObject_C::IsInteractable		objectlayer	orchestration		Asks the handler whether the object is interactable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f8810	16	CGGameObject_C::IsUsable		objectlayer	orchestration		Asks the handler whether the object is usable, without error or range	verified	one	objectlayer/gameobjects#cursor	
+0x5f8820	156	RegisterGameObjectWatchers		objectlayer	orchestration		Registers the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f88c0	104	HandleGameObjectPageText		objectlayer	orchestration		Handles 0x1df: passes the game object's GUID to the interface	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8930	92	HandleGameObjectCustomAnim		objectlayer	primitive		Handles 0xb3: sends a custom animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8990	67	HandleGameObjectDespawnAnim		objectlayer	orchestration		Handles 0x215: sends the despawn animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f89e0	67	OnGameObjectStateChanged		objectlayer	orchestration		Watches GAMEOBJECT_STATE: stores the state and notifies the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8a30	72	OnGameObjectFlagsChanged		objectlayer	primitive		Watches GAMEOBJECT_FLAGS: passes the changed bits to the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8a80	87	OnGameObjectArtKitChanged		objectlayer	orchestration		Watches GAMEOBJECT_ARTKIT: puts the art kit on the loaded model	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8ae0	57	OnGameObjectAnimProgressChanged		objectlayer	orchestration		Watches GAMEOBJECT_ANIMPROGRESS: calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8b20	119	RemoveGameObjectWatchers		objectlayer	orchestration		Clears the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8ba0	22	CGGameObject_C::NotifyFlagsChanged		objectlayer	orchestration		Passes changed GAMEOBJECT_FLAGS bits to the handler's slot 8	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8bc0	11	CGGameObject_C::NotifyAnimProgressChanged		objectlayer	orchestration		Calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8bd0	41	CGGameObject_C::SetState		objectlayer	orchestration	void __thiscall (void *go, uint32_t state)	Stores a game object's state at +0x27c and calls the handler's slot 10 with the old and new state when it changes	verified	one	spell/go#player-cast-tail	
+0x5f8c00	16	CGGameObject_C::SetStateFromFields		objectlayer	orchestration	void __thiscall (void *go)	Passes a game object's descriptor state dword to 0x5f8bd0	verified	one	spell/handlers#small-spell-handlers	
+0x5f8c10	19	CGGameObject_C::SetAnimProgress		objectlayer	orchestration		Stores GAMEOBJECT_ANIMPROGRESS	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f8c30	11	CGGameObject_C::OnFrameOpen		objectlayer	orchestration		Calls the handler's slot 31 as the interface opens the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f8c40	14	CGGameObject_C::OnFrameClose		objectlayer	orchestration		Calls the handler's slot 32 as the interface closes the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f8c50	63	CGGameObject_C::PlayAnimationEvent		objectlayer	orchestration		Plays an animation event on the loaded model, or keeps it until the model loads	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8c90	18	CGGameObject_C::UpdateLight		objectlayer	orchestration		Hands a game object's world object to the light update	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8cb0	60	NormalizeVector2InPlace		objectlayer	primitive		Normalises a 2D vector in place, leaving one shorter than 2^-22	verified	one	objectlayer/transports#moving-the-ship	objectlayer::diff_normalize_vec2
 0x5f8cf0	34	ScaleVector3		objectlayer	primitive	float * __fastcall (float *out, const float *v, float s)	Writes s·v	verified	one	camera#unprojection	objectlayer::vector3_scale_add_difftest
-0x5f8d20	62			objectlayer	orchestration		Stores nine floats	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f8d60	57			objectlayer	orchestration		Stores a 4x4 identity	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f8da0	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/transports#carrying-and-changing-legs	
-0x5f8dc0	463			objectlayer	primitive	float __thiscall (void *path, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	objectlayer::transport_speed_easing_difftest, objectlayer::transport_speed_easing_special_values_difftest
+0x5f8d20	62	InitMatrix3x3		objectlayer	orchestration		Stores nine floats	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f8d60	57	InitIdentityMatrix4x4		objectlayer	orchestration		Stores a 4x4 identity	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f8da0	25	PassengerNodeLink		objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/transports#carrying-and-changing-legs	
+0x5f8dc0	463	ShipSpanDistanceAtTime		objectlayer	primitive	float __thiscall (void *path, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	objectlayer::transport_speed_easing_difftest, objectlayer::transport_speed_easing_special_values_difftest
 0x5f8f90	5	InitGameObjProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f8fa0	19	InitGameObjProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f8fc0	5	InitGameObjProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -20010,19 +20010,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9090	19	InitGameObjSquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f90b0	5	InitGameObjQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f90c0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f90c0	19	InitGameObjQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f90e0	33			objectlayer	orchestration		Returns row i of a 36-byte store, or 0 out of range	verified	one	objectlayer/transports#the-ship-path	
-0x5f9110	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/transports#the-transports-path	
-0x5f9120	600			objectlayer	primitive	void __thiscall (void *path, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	objectlayer::leg_time_difftest, objectlayer::leg_time_special_values_difftest
-0x5f9380	23			objectlayer	orchestration		Frees a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
-0x5f93a0	304			objectlayer	primitive		Resizes a ship path's legs, making new ones empty with a spline in mode 1	verified	one	objectlayer/transports#the-moving-transport	
-0x5f94d0	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/transports#the-moving-transport	
-0x5f94e0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f94f0	63			objectlayer	primitive		Sets the count of a 12-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
-0x5f9530	55			objectlayer	primitive		Appends a point to a 12-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
-0x5f9570	76			objectlayer	primitive		Makes a fixed array over a buffer	verified	one	objectlayer/transports#the-ship-path	
-0x5f95c0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f95d0	54			objectlayer	primitive		Sets the count of an 8-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
-0x5f9610	41			objectlayer	primitive		Appends a pair to an 8-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
+0x5f90e0	33	GetTaxiPathNodeRow		objectlayer	orchestration		Returns row i of a 36-byte store, or 0 out of range	verified	one	objectlayer/transports#the-ship-path	
+0x5f9110	12	InitPassengerListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/transports#the-transports-path	
+0x5f9120	600	TimeShipPathLeg		objectlayer	primitive	void __thiscall (void *path, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	objectlayer::leg_time_difftest, objectlayer::leg_time_special_values_difftest
+0x5f9380	23	FreeLegStops		objectlayer	orchestration		Frees a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
+0x5f93a0	304	ResizeShipPathLegs		objectlayer	primitive		Resizes a ship path's legs, making new ones empty with a spline in mode 1	verified	one	objectlayer/transports#the-moving-transport	
+0x5f94d0	16	ClearLegStopArray		objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/transports#the-moving-transport	
+0x5f94e0	1	DestroyFixedPointArray		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5f94f0	63	SetPointArrayCount		objectlayer	primitive		Sets the count of a 12-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
+0x5f9530	55	AppendPoint		objectlayer	primitive		Appends a point to a 12-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
+0x5f9570	76	InitFixedPairArray		objectlayer	primitive		Makes a fixed array over a buffer	verified	one	objectlayer/transports#the-ship-path	
+0x5f95c0	1	DestroyFixedPairArray		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5f95d0	54	SetPairArrayCount		objectlayer	primitive		Sets the count of an 8-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
+0x5f9610	41	AppendPair		objectlayer	primitive		Appends a pair to an 8-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
 0x5f9640	10	InitGameObjCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5f9650, then jumps to 0x5f9670 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f9650	22	InitGameObjCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x5f9670	12	InitGameObjBRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x5f9680 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -20063,43 +20063,43 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9990	19	InitGameObjSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f99b0	5	InitGameObjSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f99c0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f99c0	19	InitGameObjSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f99e0	235			objectlayer	primitive		Grows a leg's stop array by a count	verified	one	objectlayer/transports#the-ship-path	
-0x5f9ad0	314			objectlayer	primitive		Reallocates the ship path's legs, copying each leg's spline and stops and freeing the old	verified	one	objectlayer/transports#the-moving-transport	
-0x5f9c10	254			objectlayer	primitive		Copies a leg's spline: its point and length arrays	verified	one	objectlayer/transports#the-moving-transport	
-0x5f9d10	124			objectlayer	primitive		Copies a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
-0x5f9d90	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9da0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9db0	5			objectlayer	orchestration		Jumps through slot 5 of its object's vtable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
-0x5f9dc0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9dd0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9de0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9df0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e20	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e30	20			objectlayer	orchestration		Writes a zero velocity	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e50	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e60	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e70	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9e80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9e90	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9ea0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9eb0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9ec0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9ed0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9ee0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9ef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9f00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9f10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5f9f20	40			objectlayer	orchestration		Destroys a base handler and frees it on bit 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
-0x5f9f50	96			objectlayer	primitive		Writes a game object's position through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9fb0	27			objectlayer	orchestration		Returns a game object's facing through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9fd0	26			objectlayer	orchestration		Fills an out vector with a game object's velocity through its handler and returns it	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9ff0	18			objectlayer	orchestration		Returns the handler's path, or 0 without a handler	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5fa010	26			objectlayer	orchestration		Returns whether a game object collides or its handler says mouseover	verified	one	objectlayer/gameobjects#world-transform-and-box	
-0x5fa030	22			objectlayer	orchestration		Tests a point against a game object through its handler's slot 21	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5fa050	29			objectlayer	orchestration		Copies a game object's world matrix	verified	one	objectlayer/gameobjects#world-transform-and-box	
-0x5fa070	5			objectlayer	orchestration		Jumps to 0x5f8100	verified	one	objectlayer/overview#small-bodies	
+0x5f99e0	235	GrowLegStops		objectlayer	primitive		Grows a leg's stop array by a count	verified	one	objectlayer/transports#the-ship-path	
+0x5f9ad0	314	ReallocShipPathLegs		objectlayer	primitive		Reallocates the ship path's legs, copying each leg's spline and stops and freeing the old	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9c10	254	CopyLegSpline		objectlayer	primitive		Copies a leg's spline: its point and length arrays	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9d10	124	CopyLegStops		objectlayer	primitive		Copies a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9d90	3	BaseHandlerCollides		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9da0	3	BaseHandlerShouldFadeIn		objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9db0	5	BaseHandlerIsMouseoverable		objectlayer	orchestration		Jumps through slot 5 of its object's vtable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f9dc0	3	BaseHandlerOnFlagsChanged		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9dd0	1	BaseHandlerOnAnimProgressChanged		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9de0	3	BaseHandlerOnGroundPass		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9df0	1	BaseHandlerOnModelDoneFlagSet		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e00	1	BaseHandlerOnModelDoneFlagClear		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e10	3	BaseHandlerOnAnimationEvent		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e20	3	BaseHandlerOnBoard		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e30	20	BaseHandlerGetVelocity		objectlayer	orchestration		Writes a zero velocity	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e50	5	BaseHandlerContainsPoint		objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e60	3	BaseHandlerGetWorldEntity		objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e70	3	BaseHandlerOnCreate		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e80	1	BaseHandlerOnRecordArrived		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9e90	1	BaseHandlerOnReactivate		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ea0	1	BaseHandlerOnDeactivate		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9eb0	1	BaseHandlerOnReactivated		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ec0	3	BaseHandlerGetPath		objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ed0	3	BaseHandlerOnTick		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ee0	1	BaseHandlerOnModelLoaded		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ef0	1	BaseHandlerOnFrameOpen		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f00	1	BaseHandlerOnFrameClose		objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f10	3	BaseHandlerAddTooltipLines		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f20	40	DestroyBaseHandler		objectlayer	orchestration		Destroys a base handler and frees it on bit 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9f50	96	CGGameObject_C::GetPosition		objectlayer	primitive		Writes a game object's position through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9fb0	27	CGGameObject_C::GetFacing		objectlayer	orchestration		Returns a game object's facing through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9fd0	26	CGGameObject_C::GetVelocity		objectlayer	orchestration		Fills an out vector with a game object's velocity through its handler and returns it	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9ff0	18	CGGameObject_C::GetPath		objectlayer	orchestration		Returns the handler's path, or 0 without a handler	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5fa010	26	CGGameObject_C::IsPickable		objectlayer	orchestration		Returns whether a game object collides or its handler says mouseover	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5fa030	22	CGGameObject_C::ContainsPoint		objectlayer	orchestration		Tests a point against a game object through its handler's slot 21	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5fa050	29	CGGameObject_C::GetWorldMatrix		objectlayer	orchestration		Copies a game object's world matrix	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5fa070	5	CGGameObject_C::GetName		objectlayer	orchestration		Jumps to 0x5f8100	verified	one	objectlayer/overview#small-bodies	
 0x5fa080	5	InitUnitCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5fa090, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5fa090	11	InitUnitCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5fa0a0	10	InitUnitConst2Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5fa0b0, then jumps to 0x5fa0c0 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
