@@ -346,3 +346,24 @@ pub fn on_data(
         }
     }
 }
+
+/// `Grunt::Pending::Expire` (`0x5b8650`, `(force)`) on a pending list whose nodes carry the
+/// times `times` (`+0x10`, 0 for none), in list order: the index of the one node it unlinks,
+/// hands to the owner's slot 0 and frees, or `None`. Without `force` the walk skips a node of
+/// time 0 and stops at the first whose age `now - time` is below `timeout` (`+4`); with it the
+/// first node goes. A moved node's link then belongs to the local list, so the walk reads its
+/// end there and stops: one node goes per call.
+pub fn pending_expire(times: &[u32], force: bool, now: u32, timeout: u32) -> Option<usize> {
+    for (i, &t) in times.iter().enumerate() {
+        if !force {
+            if t == 0 {
+                continue;
+            }
+            if now.wrapping_sub(t) < timeout {
+                return None;
+            }
+        }
+        return Some(i);
+    }
+    None
+}

@@ -4,7 +4,9 @@
 mod common;
 
 use benilla_re_difftest::Emu;
-use benilla_re_net::{align_up, mark_socket_open, random_address_index, CallbackBracket};
+use benilla_re_net::{
+    align_up, check_character_name, mark_socket_open, random_address_index, CallbackBracket,
+};
 use common::{Lcg, Wow};
 
 const ALIGN_UP: u64 = 0x5bd4d0;
@@ -12,6 +14,9 @@ const CONNECT_RANDOM: u64 = 0x5bc2b0;
 const MARK_SOCKET_OPEN: u64 = 0x5b6330;
 const BEGIN_CALLBACK: u64 = 0x5b7260;
 const END_CALLBACK: u64 = 0x5b7290;
+const CHECK_CHARACTER_NAME: u64 = 0x5abd50;
+const VALIDATE_CHARACTER_NAME: u64 = 0x6c9ae0;
+const LOCALE: u64 = 0xc0e080;
 
 /// Points `at` at `code` in scratch with a five-byte `jmp`.
 fn redirect(e: &mut Emu, at: u64, code: &[u8]) {
@@ -221,5 +226,42 @@ fn connection_callback_bracket() {
             b.end();
         }
         assert_eq!(get(&e), b, "case {case}");
+    }
+}
+
+/// `CheckCharacterName` whole, the validator replaced by code that logs its `ecx` and `edx` and
+/// returns a chosen result: every result from 0 to 13, the top values and the locales 0 to 7, the
+/// locale passed in `ecx` and the name in `edx`.
+#[test]
+fn connection_check_name() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let log = e.alloc(0x10);
+    let l = log as u32;
+    let mut c = vec![0xa1];
+    c.extend(l.to_le_bytes());
+    c.extend([0x89, 0x0d]);
+    c.extend((l + 4).to_le_bytes());
+    c.extend([0x89, 0x15]);
+    c.extend((l + 8).to_le_bytes());
+    c.push(0xc3);
+    redirect(&mut e, VALIDATE_CHARACTER_NAME, &c);
+    let mut g = Lcg(0xc4a2_0001);
+    let results = (0u32..=13).chain([14, 0x7fff_ffba, 0x7fff_ffff, 0xffff_ffba, 0xffff_ffff]);
+    for result in results {
+        for locale in 0..8u32 {
+            let name = g.next();
+            e.write_u32(log, result);
+            e.write_u32(LOCALE, locale);
+            let got = e.call(CHECK_CHARACTER_NAME, name, 0, &[]);
+            assert_eq!(got, check_character_name(result), "{result:#x}");
+            assert_eq!(
+                (e.read_u32(log + 4), e.read_u32(log + 8)),
+                (locale, name),
+                "the arguments"
+            );
+        }
     }
 }

@@ -31,3 +31,10 @@ impl CallbackBracket {
         }
     }
 }
+
+/// `ClientServices::CheckCharacterName` (`0x5abd50`): the result `ValidateCharacterName`
+/// (`0x6c9ae0`) gives for the name in the current locale, plus `0x45`, so that 0 is
+/// `CHAR_NAME_NO_NAME` and 13 `CHAR_NAME_SUCCESS`.
+pub fn check_character_name(validator: u32) -> u32 {
+    validator.wrapping_add(0x45)
+}

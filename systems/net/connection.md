@@ -155,7 +155,7 @@ The prefix test is `0x64a4c0` (case-insensitive) against `0x85d6bc` for its leng
 Addresses: `0x5abd20`, `0x5abd40`, `0x5abd50`, `0x5abd90`, `0x5abdc0`, `0x5abd70`, `0x5abd80`, `0x6c9ae0`, `0xc27d80`, `0xc27d88`, `0xc27d08`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::connection_check_name`
 
 `0x5abd20` is `test ecx,ecx; jle`, `cmp ecx,0x53; jge`, then `mov eax,[ecx*4+0x85cae8]`; the other branch returns `0x882748`, an empty string. `0x5abd50` calls `0x6c9ae0` with the locale `[0xc0e080]` in `ecx` and the name in `edx`, then `add eax,0x45`; the codes from `0x45` (`CHAR_NAME_NO_NAME`) to `0x52` (`CHAR_NAME_SUCCESS`) are the validator's results from 0 up. `0x5abd90` is `rep movs` of `0x44` dwords to `0xc27d80`. `0x5abdc0` is `neg al; sbb eax,eax; and eax,0xc27d88`.
 

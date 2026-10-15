@@ -92,3 +92,14 @@ makes a NUL digit, and the hash stops there. `0x5b31cc` reports state 9 through 
 4 with the names `LOGIN_STATE_CHECKSUM` and `LOGIN_OK`. `net::logon_pin_proof` runs `0x5b3120`
 whole for counts 0 to 11, the clock and the C runtime's time and `rand` stubbed.
 
+
+## Pending request expiry
+
+`ClientLink::ClientLink` builds a `Grunt::Pending` (`0x5b8490`): a timeout at `+4` and a list of 24-byte requests linked at their first bytes, each with a time at `+0x10`, 0 for none. `ClientLink::OnTimer` (`0x5bb3d0`) calls `0x5b8650(0)` each tick. The walk skips a time of 0, stops at the first request younger than the timeout, and moves the first older one to a local list; its link then ends the walk, so one request expires per call, going to slot 0 of the owner and then freed. With `force` the first request goes whatever its time. The only adder, `0x5b84e0`, is called from the unreached `ServerLink::ProveSession`, so the client's list stays empty.
+
+Addresses: `0x5bc426`, `0x5b8490`, `0x5bb3d0`, `0x5b8650`, `0x5b86a7`, `0x5b86b6`, `0x5b86e7`, `0x5b8719`, `0x5b874b`, `0x5b84e0`, `0x5ba000`
+Confidence: verified
+Proof: one
+Test: `net::grunt_pending_expire`
+
+`0x5b84c3` stores the link offset 0 and `0x5b84bb` to `0x5b84c0` make the empty list. In `0x5b8650`, `0x5b86a7` skips a zero time and `0x5b86b6` (`cmp ecx,[edi+4]; jb`) stops the walk; `0x5b86bd` unlinks the node and `0x5b86d9` to `0x5b86e4` link it at the local list's tail, at the same bytes. `0x5b86e7` reads the next node from those bytes, which now hold the local list's end, marked by bit 0. `0x5b8719` calls `[[edi]]` with the node and `0x5b874b` frees it. `0x5b84e0` has the one caller `0x5ba000`, and no stored address.

@@ -5,7 +5,7 @@ mod common;
 
 use benilla_re_difftest::Emu;
 use benilla_re_net::{
-    can_read, cmd_auth_logon_challenge, cmd_realm_list, cmd_xfer_initiate, on_data,
+    can_read, cmd_auth_logon_challenge, cmd_realm_list, cmd_xfer_initiate, on_data, pending_expire,
     put_challenge_body, Arg, ChallengeRecord, DataStore, Fetch, LinkCall, OnDataEnd, LINK_COMMANDS,
 };
 use common::{Lcg, Wow};
@@ -612,5 +612,107 @@ fn grunt_on_data() {
                 assert_eq!(closed, 1, "{ctx}: disconnect");
             }
         }
+    }
+}
+
+/// `Grunt::Pending::Expire` whole on lists of 0 to 6 nodes linked as `Grunt::Pending::Add` links
+/// them, with times of 0, expired, at the timeout and fresh, clocks that wrap, and `force` 0 and
+/// 1: the list left behind, its back links, the node handed to slot 0 and the node freed.
+#[test]
+fn grunt_pending_expire() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let obj = e.alloc(0x40);
+    let nodes = e.alloc(0x200);
+    let vt = e.alloc(0x10);
+    let expired = e.alloc(0x10);
+    let now_at = e.alloc(0x10);
+    e.stub(expired, 0, 1);
+    e.write_u32(vt, expired as u32);
+    e.stub(0x6579b0, 0, 0);
+    e.stub(0x6579c0, 0, 0);
+    e.stub(0x646430, 1, 4);
+    let mut c = vec![0xa1];
+    c.extend((now_at as u32).to_le_bytes());
+    c.push(0xc3);
+    let clock = e.alloc(0x10);
+    e.write(clock, &c);
+    let mut j = vec![0xe9];
+    j.extend((clock as u32).wrapping_sub(0x42c010 + 5).to_le_bytes());
+    e.write(0x42c010, &j);
+    let term = obj + 0x28;
+    let mut g = Lcg(0x9e1d_0001);
+    for case in 0..4000 {
+        let n = (g.next() >> 16) as usize % 7;
+        let now = if g.next() >> 30 == 0 {
+            g.next() >> 28
+        } else {
+            g.next()
+        };
+        let timeout = [0u32, 1, 1000, 30000, 0xffff_ffff][(g.next() >> 16) as usize % 5];
+        let times: Vec<u32> = (0..n)
+            .map(|_| match g.next() >> 29 {
+                0 | 1 => 0,
+                2 => now.wrapping_sub(timeout),
+                3 => now.wrapping_sub(timeout).wrapping_add(1),
+                4 => now,
+                _ => g.next(),
+            })
+            .collect();
+        let force = g.next() >> 30 == 0;
+        e.write_u32(now_at, now);
+        e.write_u32(obj, vt as u32);
+        e.write_u32(obj + 4, timeout);
+        e.write_u32(obj + 0x24, 0);
+        let at = |i: usize| nodes + 0x20 * i as u64;
+        let mut prev = term;
+        for (i, &t) in times.iter().enumerate() {
+            e.write(at(i), &[0xa5; 0x20]);
+            e.write_u32(at(i), prev as u32);
+            e.write_u32(prev + 4, at(i) as u32);
+            e.write_u32(at(i) + 0x10, t);
+            prev = at(i);
+        }
+        e.write_u32(prev + 4, term as u32 | 1);
+        e.write_u32(term, prev as u32);
+        e.clear_calls();
+        e.call(0x5b8650, obj as u32, 0, &[u32::from(force)]);
+        let want = pending_expire(&times, force, now, timeout);
+        let ctx =
+            format!("case {case} times {times:x?} force {force} now {now:#x} timeout {timeout:#x}");
+        let left: Vec<u64> = (0..n).filter(|&i| Some(i) != want).map(at).collect();
+        let mut walked = Vec::new();
+        let mut link = term;
+        loop {
+            let next = e.read_u32(link + 4);
+            let back = if walked.is_empty() { term } else { link };
+            if next & 1 == 1 {
+                assert_eq!(u64::from(next & !1), term, "{ctx}: the end");
+                assert_eq!(u64::from(e.read_u32(term)), back, "{ctx}: the last link");
+                break;
+            }
+            assert_eq!(
+                u64::from(e.read_u32(u64::from(next))),
+                back,
+                "{ctx}: a back link"
+            );
+            walked.push(u64::from(next));
+            link = u64::from(next);
+            assert!(walked.len() <= n, "{ctx}: a loop");
+        }
+        assert_eq!(walked, left, "{ctx}: the list");
+        let calls: Vec<(u64, u32)> = e
+            .calls()
+            .iter()
+            .filter(|c| c.addr == expired || c.addr == 0x646430)
+            .map(|c| (c.addr, c.args[0]))
+            .collect();
+        let want_calls = match want {
+            Some(i) => vec![(expired, at(i) as u32), (0x646430, at(i) as u32)],
+            None => vec![],
+        };
+        assert_eq!(calls, want_calls, "{ctx}: the calls");
     }
 }
