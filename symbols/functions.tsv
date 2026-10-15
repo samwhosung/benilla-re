@@ -38,8 +38,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401440	15			client			Runs its object file code not read here	inferred	none		
 0x401450	17			client	unreached		Runs its object file code not read here	inferred	none		
 0x401470	124	EnumerateArchiveFiles		client			Passes each listfile name of the mounted archives that begins with a prefix to a callback	verified	one	ui/addons#finding-add-ons	
-0x4014f0	42			client			Calls a callback for a name beginning with a prefix, ignoring case, and answers 1 otherwise	verified	one	ui/addons#finding-add-ons	
-0x401520	16			client	orchestration		Arms a repeating timer through EventSetTimer	inferred	none	objectlayer/players#area-triggers	
+0x4014f0	42	CallIfNameHasPrefix		client			Calls a callback for a name beginning with a prefix, ignoring case, and answers 1 otherwise	verified	one	ui/addons#finding-add-ons	
+0x401520	16	EventSetTimerWrapper		client	orchestration		Passes its delay, handler and argument to EventSetTimer and returns the timer id	inferred	none	objectlayer/players#area-triggers	
 0x401530	24			client	unreached		Runs its object file code that calls EventSetTimerEx; not read here	inferred	none		
 0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
 0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	inferred	none		
@@ -57,7 +57,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401d80	5			client			Runs Client.cpp code not read here	inferred	none		
 0x401d90	68			client			Runs Client.cpp code that calls SMemFree; not read here	inferred	none		
 0x401de0	212	HandleLoginVerifyWorldPacket	idb	client			Reads map, position and facing and, for another map, calls the world-port executor without an ack	verified	one	collision/teleport#far-transfer-handlers	
-0x401ec0	26			client	orchestration		Runs another tick function on its argument, then polls the area list; returns 1	inferred	none	objectlayer/players#area-list-polling	
+0x401ec0	26	ClientIdle	idb	client	orchestration		Runs another tick function on its argument, then polls the area list; returns 1	inferred	none	objectlayer/players#area-list-polling	
 0x401ee0	443	ClientDestroyGame	idb	client			Shuts the game systems down, among them the spell tables through 0x6dde30	inferred	none	spell/tables#teardown-at-shutdown	
 0x4020a0	26			client	unreached		Runs Client.cpp code that calls CWorld::GetAreaIdAt; not read here	inferred	none		
 0x4020c0	5			client	unreached		Runs Client.cpp code not read here	inferred	none		
@@ -78,7 +78,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402a20	106	CacheUpdateHandler	idb	client			Runs Client.cpp code that calls OsGetAsyncTimeMs, 0x448ec0, SysMsgAdd and 2 more; not read here	inferred	none		
 0x402a90	1			client			Runs Client.cpp code not read here	inferred	none		
 0x402aa0	43			client			Runs Client.cpp code that calls CStatus::~CStatus, SMemFree; not read here	inferred	none		
-0x402ad0	195			client			Initializes the client's systems at startup and ends by registering 0x403620 for event category 6	verified	one	net/dispatch#main-thread-drain	
+0x402ad0	195	WowClientInit	idb	client			Initializes the client's systems at startup and ends by registering 0x403620 for event category 6	verified	one	net/dispatch#main-thread-drain	
 0x402ba0	797	ClientRegisterConsoleCommands	idb	client			Registers the client console commands and CVars, checkAddonVersion among them	verified	one	ui/addons#whether-an-add-on-may-load	
 0x402ec0	30			client			Runs Client.cpp code that calls SStrToFloat, OsInputSetMouseSpeed; not read here	inferred	none		
 0x402ee0	62			client			Runs Client.cpp code that calls 0x64ac60, 0x409170, 0x4091a0 and 2 more; not read here	inferred	none		
@@ -91,8 +91,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403200	624			client			Runs Client.cpp code that calls SStrTokenize, SStrCmpI, 0x44cc80 and 2 more; not read here	inferred	none		
 0x4034d0	46			client			Runs Client.cpp code that calls SStrToFloat, 0x589c00; not read here	inferred	none		
 0x403500	104			client			Runs Client.cpp code that calls 0x64ac60, 0x589c70, 0x589c20 and 1 more; not read here	inferred	none		
-0x403570	49			client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
-0x4035b0	49			client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
+0x403570	49	ProfanityFilterCallback		client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
+0x4035b0	49	SpamFilterCallback		client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035f0	21	ReloadUiCommand		client			Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	inferred	none		
 0x403610	5			client			Runs Client.cpp code not read here	inferred	none		
 0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	one	net/dispatch#main-thread-drain	
@@ -818,7 +818,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41318d	143	__Getdays	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x41321c	149	__Getmonths	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x4132b1	562	__Gettnames	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc, _memcpy and 1 more; not read here	inferred	none		
-0x4134e3	27			crt	boundary		Formats a broken-down time with a format string into a buffer	inferred	none	core/time#calendar-time	
+0x4134e3	27	_strftime		crt	boundary		Formats a broken-down time with a format string into a buffer	inferred	none	core/time#calendar-time	
 0x4134fe	250			crt	boundary		Runs its object file code that calls __lock, __expandtime, __unlock; not read here	inferred	none		
 0x4135f8	1007	__expandtime	idb	crt	boundary		Runs its object file code that calls __store_num, __store_winword, ___tzset and 1 more; not read here	inferred	none		
 0x4139e7	39	__store_str	idb	crt	boundary		Runs its object file code not read here	inferred	none		
@@ -1471,9 +1471,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4180d0	85			base			Runs its object file code not read here	inferred	none		
 0x418130	85	CDataStore::PutUInt16		base			Appends two bytes to a data store	verified	one	spell/cast#cast-request-packets	
 0x418190	83	CDataStore::PutUInt32	idb	base			Appends four bytes to a data store	verified	one	spell/cast#cast-request-packets	
-0x4181f0	83			base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x4181f0	83	CDataStore::PutUInt32_3	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418250	83			base	unreached		Runs its object file code not read here	inferred	none		
-0x4182b0	83			base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x4182b0	83	CDataStore::PutUInt32_2	idb	base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418310	90			base	unreached		Runs its object file code not read here	inferred	none		
 0x418370	90	CDataStore::PutGuid	idb	base			Appends a 64-bit value, low dword first, to a data store	verified	one	spell/cast#cast-request-packets	
 0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	
@@ -1485,10 +1485,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4188b0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4189d0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418af0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x418c10	20			base			Appends a count of bytes to a data store through PutData	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x418c10	20	CDataStore::PutBytes		base			Appends a count of bytes to a data store through PutData	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418c30	120			base	unreached		Runs its object file code not read here	inferred	none		
 0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore *__thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
-0x418d30	123			base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
+0x418d30	123	CDataStore::GetInt16	idb	base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
 0x418db0	123	CDataStore::GetUInt16	idb	base		void *__thiscall (void *store, uint16_t *out)	Reads a little-endian 16-bit word from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
 0x418e30	121	CDataStore::GetInt32	idb	base		CDataStore *__thiscall (CDataStore *this, uint32_t *out)	Reads four bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
 0x418eb0	121	CDataStore::GetUInt32	idb	base		void *__thiscall (void *store, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
@@ -2279,7 +2279,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42c840	11	InitImeInfinity		os	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/input#static-initializers	
 0x42c850	68			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContext; not read here	inferred	none		
 0x42c8a0	59			os			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmAssociateContext; not read here	inferred	none		
-0x42c8e0	85			os			Sets or clears the native-mode bit of the window's input method conversion status	verified	one	ui/inputlanguage#the-language-index	
+0x42c8e0	85	OsImeSetNativeMode		os			Sets or clears the native-mode bit of the window's input method conversion status	verified	one	ui/inputlanguage#the-language-index	
 0x42c940	21			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContext; not read here	inferred	none		
 0x42c960	28			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContextEx; not read here	inferred	none		
 0x42c980	5	InitImeTwoPiThunk		os	orchestration	void __cdecl (void)	Jumps to 0x42c990; a static initializer	verified	one	core/input#static-initializers	
@@ -12123,7 +12123,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50a950	154			unassigned			Runs its object file code that calls 0x50a9f0; not read here	inferred	none		
 0x50a9f0	348			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		ui::glue_509_50a9f0_lookat_frame
 0x50ab50	27			unassigned			Runs its object file code that calls 0x7bf4b0; not read here	inferred	none		
-0x50ab70	406			models	orchestration		Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	ui::glue_50a_50ab70_proj_aspect
+0x50ab70	406	ApplyCameraProjectionAndView		models	orchestration		Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	ui::glue_50a_50ab70_proj_aspect
 0x50ad10	23			unassigned			Runs its object file code that calls M2CreateScene; not read here	inferred	none		
 0x50ad30	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50ad40	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -14356,7 +14356,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x557110	228			dbcache	unreached		Runs its object file code that calls 0x556670, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x557200	163			dbcache	orchestration		Runs its object file code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x5572b0	1055	CreatureCacheLoad		dbcache	orchestration	void __thiscall ()	Loads the Creature cache from its file, or returns at once for a cache that is not saved	inferred	none		
-0x5576d0	625			dbcache	unreached		Duplicates the Creature cache file writer; no branch or stored address reaches it	verified	one	dbcache#the-wdb-file	
+0x5576d0	625	CreatureCacheWriteFile		dbcache	unreached		Duplicates the Creature cache file writer; no branch or stored address reaches it	verified	one	dbcache#the-wdb-file	
 0x557950	406			dbcache	unreached		Runs DBCache.cpp code that calls 0x556670, 0x557af0, 0x56c8f0 and 1 more; not read here	inferred	none		
 0x557af0	17			dbcache	orchestration		Runs DBCache.cpp code not read here	inferred	none		
 0x557b10	96			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
@@ -14428,8 +14428,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55b9e0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache	primitive		Returns a cached item record by id, or requests it with an optional callback	inferred	none	spell/cooldowns#reading-a-cooldown	
 0x55bc50	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
-0x55bc60	3			dbcache	orchestration		Returns at once, dropping three stack arguments	verified	one	objectlayer/players#arrival-in-the-world	
-0x55bc70	308			dbcache	unreached		Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
+0x55bc60	3	ItemCacheNoOp		dbcache	orchestration		Returns at once, dropping three stack arguments	verified	one	objectlayer/players#arrival-in-the-world	
+0x55bc70	308	ItemCacheReceive		dbcache	unreached		Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
 0x55bdb0	471			dbcache	primitive		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x55b630 and 5 more; not read here	inferred	none		
 0x55bf90	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x55b630; not read here	inferred	none		
 0x55c0c0	236	DBCache::CancelCallback		dbcache	primitive	void __thiscall (void *cache, uint32_t id, void *callback, void *arg)	Removes a callback from the pending record with that id	verified	one	tradeskill/recipes#created-item	
@@ -14474,7 +14474,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55eb40	135			dbcache	primitive		Runs DBCache.cpp code that calls 0x55ec50, 0x555e60, SMemFree; not read here	inferred	none		
 0x55ebd0	120			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55ec50	25			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55ec70	652			dbcache	primitive		Saves the Name cache's valid nodes that have +0x180 clear when it persists, then frees the cache	inferred	none	dbcache#name-cache-node	
+0x55ec70	652	NameCacheSave		dbcache	primitive		Saves the Name cache's valid nodes that have +0x180 clear when it persists, then frees the cache	inferred	none	dbcache#name-cache-node	
 0x55ef00	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x55f050; not read here	inferred	none		
 0x55f000	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55f050	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
@@ -14487,7 +14487,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55f870	281			dbcache	primitive		Runs DBCache.cpp code that calls 0x55ec50, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x55f990	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x55fa50	1164	NameCacheLoad		dbcache	orchestration	void __thiscall ()	Loads the Name cache from its file, or returns at once for a cache that is not saved	verified	one	dbcache#caches-that-are-not-saved	
-0x55fee0	647			dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache#name-cache-node	
+0x55fee0	647	NameCacheWriteFile		dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache#name-cache-node	
 0x560170	506	NameCacheRemove		dbcache	orchestration	void __thiscall (uint64_t guid)	Unlinks a name from both lists and frees it	inferred	none	dbcache#name-cache-writers	
 0x560370	135	NameCacheSetSkipSave		dbcache	orchestration		Sets the skip-from-save flag at +0x180 on the name node with the given guid	verified	one	dbcache#name-cache-node	
 0x560400	93	NameCacheClear		dbcache	orchestration	void __thiscall ()	Frees every node of the names cache and empties it	verified	one	dbcache#caches-that-are-not-saved	
@@ -14510,11 +14510,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x561070	308	GuildCacheReceive		dbcache	orchestration	void __thiscall (GuildRecord *record, uint32_t key)	Stores a decoded guild record in the guild cache and runs its callbacks	verified	one	dbcache#name-and-guild-responses	
 0x5611b0	471			dbcache	unreached		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x560a00 and 5 more; not read here	inferred	none		
 0x561390	293	GuildCacheRefuse		dbcache	orchestration	void __thiscall (uint32_t key)	Runs a guild's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache#name-and-guild-responses	
-0x5614c0	236			dbcache	primitive		Removes a pending callback from a cache's request	inferred	none	objectlayer/players#destruction	
+0x5614c0	236	GuildCacheCancelCallback		dbcache	primitive		Removes a pending callback from a cache's request	inferred	none	objectlayer/players#destruction	
 0x5615b0	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x561670	1061	GuildCacheLoad		dbcache	orchestration	void __thiscall ()	Loads the Guild cache from its file, or returns at once for a cache that is not saved	inferred	none		
 0x561aa0	637			dbcache	unreached		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 8 more; not read here	inferred	none		
-0x561d20	424			dbcache	primitive		Drops a cached record so the next request asks the server	inferred	none	objectlayer/playerfields#guild-timestamps	
+0x561d20	424	GuildCacheRemove		dbcache	primitive		Drops a cached record so the next request asks the server	inferred	none	objectlayer/playerfields#guild-timestamps	
 0x561ed0	99			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x561f40	93			dbcache	primitive		Runs DBCache.cpp code that calls 0x555ea0; not read here	inferred	none		
 0x561fa0	218	QuestCacheConstruct		dbcache	orchestration	void __thiscall (uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Quest cache: empty lists, mask -1, the file tag and name, opcode and flags	inferred	none		
@@ -14640,7 +14640,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x569ba0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bb0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bc0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, 0x56e210, 0x556690 and 2 more; not read here	inferred	none		
-0x569d00	476			dbcache	primitive		Receives an item text response, refusing a key with its top bit set, else decoding the text inline	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_item_text
+0x569d00	476	ItemTextCacheReceive		dbcache	primitive		Receives an item text response, refusing a key with its top bit set, else decoding the text inline	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_item_text
 0x569ee0	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550; not read here	inferred	none		
 0x56a010	236			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x56a100	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
@@ -16344,7 +16344,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589de0	27	SetDeviceLightEnabled		gx	orchestration	void __fastcall (uint32_t index, uint32_t enabled)	Enables or disables one of the device's four fixed lights, rejecting an index of 4 or more	verified	one	models/lights#fixed-function-lights	
 0x589e00	43	GxRsSetWord		gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets a one-word render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e30	39	GxRsSetFloat		gx	orchestration	void __fastcall (uint32_t id, float value)	Sets a float render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
-0x589e60	27		idb	gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets an integer render state through the device and cascades the alpha reference, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
+0x589e60	27	GxRsSet	idb	gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets an integer render state through the device and cascades the alpha reference, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e80	14	GxRsSetObject		gx	orchestration	void __fastcall (uint32_t id, void *object)	Sets an object render state, a stage texture or a program, through the device	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e90	14	GxRsSetVector		gx	unreached	void __fastcall (uint32_t id, const float *v)	Sets a three-float render state through the device	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589ea0	27	GxRsGetWord		gx	unreached	void __fastcall (uint32_t id, uint32_t *out)	Reads a render state's first dword, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
@@ -16478,7 +16478,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b580	11			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b590	18	SetCursorShown		gx	orchestration		Calls slot +0xec of the device object with a show flag	inferred	none		
 0x58b5b0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58b5c0	21			gx	orchestration		Calls slot 61 of a global device object with its two register arguments	inferred	none		
+0x58b5c0	21	SetDeviceCursorHotspot		gx	orchestration		Sets the device cursor hotspot to its two register arguments through slot 61 of the global device object	inferred	none		
 0x58b5e0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b5f0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b600	16			gx	orchestration		Runs its object file code that calls 0x595df0; not read here	inferred	none		
@@ -17006,7 +17006,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59d120	529	CGxDeviceOpenGl::ApplyTexCoordMode		gx	primitive	void __thiscall (uint32_t stage, uint32_t mode)	Sets a stage's coordinate generation flags and texture matrix for mode 0 to 6	verified	one	gx/renderstate#opengl-coordinate-modes	gx::matrix_reorient_matches_binary
 0x59d350	1606	CGxDeviceOpenGl::ApplyRenderState		gx	orchestration	void __thiscall (uint32_t id)	Applies one render state through OpenGL calls by the jump table 0x59d998	verified	one	gx/renderstate#render-state-ids	gx::color_norm_at_0x59d350_matches_binary
 0x59da70	43			gx	host		Runs its object file code that calls 0x59dcf0, 0x59daa0; not read here	inferred	none		
-0x59daa0	560			gx	host		Chooses a GDI pixel format for a format record; returns 0 for a sample count above 1	inferred	none		
+0x59daa0	560	ChooseGdiPixelFormat		gx	host		Chooses, checks and sets a GDI pixel format for a format record; returns 0 for a sample count above 1	inferred	none		
 0x59dcf0	871	CGxDeviceOpenGl::ChoosePixelFormat		gx	host	uint32_t __fastcall (void *dc, const void *format)	Builds the pixel format attribute list, chooses a format, checks it against the request and sets it	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e070	27	CGxDeviceOpenGl::GetPixelFormatAttrib		gx	orchestration	uint32_t __fastcall (void *dc, uint32_t format, uint32_t attrib, uint32_t *value)	Queries one pixel format attribute through the ARB entry point	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e090	22			gx	host		Runs its object file code not read here	inferred	none		
@@ -17085,7 +17085,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a11d0	629	CGxDeviceD3d::SetProjection		gx	host	void __thiscall (const float *matrix)	Stores a projection matrix, rescales it by element 11, remaps its depth terms and sets it as the projection transform	verified	one	gx/draw#projection-matrix	
 0x5a1450	40	CGxDeviceD3d::SetView		gx	orchestration	void __thiscall (const float *matrix)	Records a view matrix and sets it as the Direct3D view transform	verified	one	gx/draw#projection-matrix	
 0x5a1480	96			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5a14e0	416			gx	primitive		Sets the Direct3D texture transform and transform flags of a stage from the state 0x37 plus the stage	inferred	none		
+0x5a14e0	416	CGxDeviceD3d::FlushTextureTransform		gx	primitive		Sets the Direct3D texture transform and transform flags of a stage from the state 0x37 plus the stage	inferred	none		
 0x5a1680	277	CGxDeviceD3d::BeginFrame		gx	host	void __thiscall (uint32_t mask)	Resets a lost device, clears with the mask when capability bit 6 is set and begins the scene	verified	one	gx/device#direct3d-present	
 0x5a17a0	40	CGxDeviceD3d::EndScene		gx	host	void __thiscall ()	Ends the scene when one is begun and clears the flag	verified	one	gx/device#direct3d-present	
 0x5a17d0	317	CGxDeviceD3d::Clear		unassigned	host	void __thiscall (uint32_t mask)	Clears the target and depth buffers the mask names with the device clear colour after applying the viewport	verified	one	gx/device#direct3d-clear-and-viewport	
@@ -23065,11 +23065,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642c30	30	WowTime::WowDecodeTime	idb	base			Decodes a packed date into a seven-field record by calling 0x642b30	verified	one	net/messages#time-speed-packet	
 0x642c50	38			base	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
 0x642c80	397			base			Runs its object file code that calls 0x642c10, SStrPrintf; not read here	inferred	none		
-0x642e10	118			base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
+0x642e10	118	PackGuidIntoStore		base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
 0x642e90	5			base			Runs its object file code not read here	inferred	none		
 0x642ea0	11			base			Runs its object file code not read here	inferred	none		
 0x642eb0	15			base	unreached		Runs its object file code that calls 0x642e10; not read here	inferred	none		
-0x642ec0	15			base			Appends a packed guid to a data store through 0x642e10	verified	one	spell/cast#cast-request-packets	
+0x642ec0	15	CDataStore::PutPackGuid		base			Appends a packed guid to a data store through 0x642e10	verified	one	spell/cast#cast-request-packets	
 0x642ed0	105	CDataStore::GetPackGuid	idb	base		void *__fastcall (void *store, uint64_t *out)	Reads a packed guid: a mask byte, then one byte for each set bit, low bit first	verified	one	spell/handlers#handler-calling-convention	
 0x642f40	5			base			Runs its object file code not read here	inferred	none		
 0x642f50	15			base			Runs its object file code not read here	inferred	none		
@@ -23366,7 +23366,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648ef0	57			storm	boundary		Runs SFile2.cpp code that calls 0x668440, 0x653780, SMemFree; not read here	inferred	none		
 0x648f30	38			storm	unreached		Runs SFile2.cpp code that calls 0x6550b0; not read here	inferred	none		
 0x648f60	67			storm	unreached		Runs SFile2.cpp code not read here	inferred	none		
-0x648fb0	239			storm	boundary		Calls a callback for each line of an archive's (listfile) not ending in .md5	verified	one	ui/addons#finding-add-ons	
+0x648fb0	239	EnumerateArchiveListfile		storm	boundary		Calls a callback for each line of an archive's (listfile) not ending in .md5	verified	one	ui/addons#finding-add-ons	
 0x6490a0	23			storm	unreached		Runs SFile2.cpp code that calls 0x655010; not read here	inferred	none		
 0x6490c0	114			storm	boundary		Runs SFile2.cpp code that calls SMemFree, 0x41c120, 0x649380 and 1 more; not read here	inferred	none		
 0x649140	185			storm	boundary		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
@@ -23415,7 +23415,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a8b0	43	SStrVPrintf	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, ISStrVPrintf; not read here	inferred	none		
 0x64a8e0	434			storm	unreached		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
 0x64aaa0	434	SStrToFloat	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
-0x64ac60	98			storm	boundary		Converts a decimal string to an integer	inferred	none	objectlayer/party#guild-events	
+0x64ac60	98	SStrToInt	idb	storm	boundary		Converts a decimal string to an integer	inferred	none	objectlayer/party#guild-events	
 0x64acd0	269			storm	unreached		Runs its object file code that calls SErrSetLastError, __CIpow, __ftol and 1 more; not read here	inferred	none		
 0x64ade0	70	SStrToUnsigned	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23426,7 +23426,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b1d0	493	bjhash	idb	storm	boundary		Runs its object file code not read here	inferred	none		
 0x64b3f0	100	SStrHashHT	idb	storm	boundary		Runs its object file code that calls bjhash; not read here	inferred	none		
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
-0x64b480	19			storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
+0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
 0x64b4a0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
 0x64b4f0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
 0x64b540	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
@@ -23803,7 +23803,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x659520	588			storm	unreached		Runs SLock.cpp code that calls 0x667440, CSRWLock::Leave; not read here	inferred	none		
 0x659770	387			storm	boundary		Runs SLock.cpp code that calls 0x667440; not read here	inferred	none		
 0x659900	40			storm	unreached		Runs SLock.cpp code not read here	inferred	none		
-0x659930	9			storm	boundary		Stores 0 at ecx, an empty handle	verified	one	core/threads#host-calls	
+0x659930	9	SHandleInit		storm	boundary		Stores 0 at ecx, an empty handle	verified	one	core/threads#host-calls	
 0x659940	22			storm	unreached		Runs SLock.cpp code that calls 0x659900; not read here	inferred	none		
 0x659960	5	SHandleCloseThunk		storm	boundary		Jumps to 0x6599a0, which closes the handle at ecx and zeroes it	verified	one	core/threads#host-calls	
 0x659970	29			storm	unreached		Runs SLock.cpp code that calls SHandleClose, 0x659900; not read here	inferred	none		
@@ -24011,7 +24011,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6604e0	147			unassigned			Runs its object file code not read here	inferred	none		
 0x660580	5			unassigned			Runs its object file code not read here	inferred	none		
 0x660590	11			unassigned			Runs its object file code not read here	inferred	none		
-0x6605a0	188			zlib	boundary		Compresses a buffer with zlib 1.1.3	inferred	none	objectlayer/playermessages#gm-tickets	
+0x6605a0	188	ZlibCompressWithArena		zlib	boundary		Compresses a buffer with zlib 1.1.3	inferred	none	objectlayer/playermessages#gm-tickets	
 0x660660	73			storm	boundary		Runs SComp.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x6606b0	35			storm	boundary		Runs SComp.cpp code that calls SMemFree; not read here	inferred	none		
 0x6606e0	89			storm	boundary		Runs SComp.cpp code that calls 0x6605a0; not read here	inferred	none		
@@ -24051,8 +24051,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		storm::md5
 0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
 0x662810	72			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
-0x662860	100			storm	boundary		Computes a CRC-32 over a buffer, flag 1 starting at 0xffffffff and flag 4 inverting the result	verified	one	ui/addons#the-auth-packets-add-on-block	storm::crc32
-0x6628d0	26			storm	boundary		Returns the CRC-32 of a buffer through 0x662860 with a start value and flags	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x662860	100	Crc32Update		storm	boundary		Computes a CRC-32 over a buffer, flag 1 starting at 0xffffffff and flag 4 inverting the result	verified	one	ui/addons#the-auth-packets-add-on-block	storm::crc32
+0x6628d0	26	Crc32UpdateStdcall		storm	boundary		Returns the CRC-32 of a buffer through 0x662860 with a start value and flags	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x6628f0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662900	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662910	127			storm	boundary		Runs its object file code that calls 0x662d50, SMemAlloc, 0x662d60 and 2 more; not read here	inferred	none		
@@ -24123,7 +24123,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6657c0	84			storm	boundary		Runs its object file code that calls __allmul; not read here	inferred	none		net::srp6_client_session
 0x665820	197			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
 0x6658f0	22			storm	boundary		Runs its object file code that calls 0x665910; not read here	inferred	none		net::srp6_client_session
-0x665910	329			storm	boundary		Loads a big number from little-endian bytes: byte i into bits 8(i mod 4) of word i/4	verified	one	net/login#srp6-client	net::srp6_client_session
+0x665910	329	SBigFromBinary		storm	boundary		Loads a big number from little-endian bytes: byte i into bits 8(i mod 4) of word i/4	verified	one	net/login#srp6-client	net::srp6_client_session
 0x665a60	18			storm	unreached		Runs its object file code that calls 0x665a80; not read here	inferred	none		
 0x665a80	54			storm	unreached		Runs its object file code that calls 0x664370, 0x6640d0, 0x664800; not read here	inferred	none		
 0x665ac0	26			storm	unreached		Runs its object file code that calls 0x665ae0; not read here	inferred	none		
@@ -26344,7 +26344,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a07f0	79	AllocDoodadDef		terrain	orchestration	void * __cdecl (void)	Takes a doodad def from its pool and constructs it	inferred	none		
 0x6a0840	238	FreeDoodadDef		terrain	orchestration	void __fastcall (void *def)	Frees a doodad def's sound emitter and list nodes, destroys it and returns it to its pool	verified	one	terrain/doodads#doodad-def-release	
 0x6a0930	317	AllocMapEntity		terrain	orchestration	void * __cdecl (void)	Takes a map entity from its pool and constructs it	inferred	none		
-0x6a0a70	91			terrain	orchestration		Unlinks a world object from its list, calls its slot 0 and tail-calls a free	inferred	none		
+0x6a0a70	91	FreeMapEntity		terrain	orchestration		Unlinks a world object from its list, calls its slot 0 and tail-calls a free	inferred	none		
 0x6a0ad0	168	AllocMapLight		terrain	orchestration	void * __cdecl (void)	Takes a map light from its pool and constructs it	inferred	none		
 0x6a0b80	28	FreeMapLight		terrain	orchestration	void __fastcall (void *light)	Destroys a map light and returns it to its pool	inferred	none		
 0x6a0ba0	101	AllocCacheLight		terrain	orchestration	void * __cdecl (void)	Takes a cached light from its pool and clears its model light	inferred	none		
@@ -28374,7 +28374,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ca010	83			warden			Runs WardenClient.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x6ca070	68			warden			Runs WardenClient.cpp code that calls 0x4181f0, CDataStore::PutInt8; not read here	inferred	none		
 0x6ca0c0	94			warden			Runs WardenClient.cpp code that calls CDataStore::GetUInt32, SMemAlloc, CDataStore::GetUInt8; not read here	inferred	none		
-0x6ca120	6			warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache#the-wdb-file	
+0x6ca120	6	WowCacheFileVersion		warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache#the-wdb-file	
 0x6ca130	10			warden			Runs WardenClient.cpp code that calls 0x6ca140; not read here	inferred	none		
 0x6ca140	10			warden			Runs WardenClient.cpp code not read here	inferred	none		
 0x6ca150	12			warden			Runs WardenClient.cpp code that calls _atexit; not read here	inferred	none		
@@ -29791,7 +29791,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f6b10	101			lua	unreached		Runs its object file code that calls 0x6f6b80, 0x6f7b20, 0x6f6c40 and 1 more; not read here	inferred	none		
 0x6f6b80	19			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f6ba0	159			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f6c40	69			lua	boundary		Zeroes a new state and stores 1 in its collector switch +0x60	verified	one	ui/luastate#the-collector-switch	
+0x6f6c40	69	preinit_state		lua	boundary		Zeroes a new state and stores 1 in its collector switch +0x60	verified	one	ui/luastate#the-collector-switch	
 0x6f6c90	36			lua	boundary		Runs lstate.c code that calls 0x6f9f60, 0x6f6ce0; not read here	inferred	none		
 0x6f6cc0	17			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f6ce0	63			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
@@ -35932,12 +35932,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c4b80	258	CMovement::GetWorldUpVector		collision	primitive	float * __thiscall (CMovement *this, float *out)	Writes the +0x24 vector rotated by the transport matrix, or copied without a transport	verified	one	collision/kinematics#transport-space-transforms	collision::tf_dir_to_transport_rotation_difftest
 0x7c4c90	234	CMovement::GetCurrentSpeed		collision	primitive	float __thiscall (CMovement *this, uint32_t walk)	Returns 0, the spline speed, or the swim, walk, run or back speed the movement flags pick	verified	one	collision/kinematics#current-speed-selector	collision::move_setters_difftest
 0x7c4d80	175	OpenFallLog		collision	unreached	void __stdcall (uint32_t a, uint32_t b)	Opens a __fall log file beside the movement globals path and stores its two arguments	inferred	none	collision/kinematics#unreached-functions	
-0x7c4e30	5			collision	unreached	uint32_t __stdcall (uint32_t a, uint32_t b)	Returns 0, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
-0x7c4e40	3			collision	unreached	uint32_t __cdecl (void)	Returns 0	verified	one	collision/kinematics#unreached-functions	
-0x7c4e50	1			collision	unreached	void __cdecl (void)	Returns at once	verified	one	collision/kinematics#unreached-functions	
-0x7c4e60	3			collision	unreached	void __stdcall (uint32_t a, uint32_t b)	Returns at once, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
-0x7c4e70	5			collision	unreached	uint32_t __stdcall (uint32_t a, uint32_t b)	Returns 0, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
-0x7c4e80	3			collision	unreached	uint32_t __cdecl (void)	Returns 0	verified	one	collision/kinematics#unreached-functions	
+0x7c4e30	5	MovementStubReturnZeroPop2Args		collision	unreached	uint32_t __stdcall (uint32_t a, uint32_t b)	Returns 0, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
+0x7c4e40	3	MovementStubReturnZero		collision	unreached	uint32_t __cdecl (void)	Returns 0	verified	one	collision/kinematics#unreached-functions	
+0x7c4e50	1	MovementStubReturnNothing		collision	unreached	void __cdecl (void)	Returns at once	verified	one	collision/kinematics#unreached-functions	
+0x7c4e60	3	MovementStubReturnNothingPop2Args		collision	unreached	void __stdcall (uint32_t a, uint32_t b)	Returns at once, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
+0x7c4e70	5	MovementStubReturnZeroPop2ArgsB		collision	unreached	uint32_t __stdcall (uint32_t a, uint32_t b)	Returns 0, popping two stack arguments	verified	one	collision/kinematics#unreached-functions	
+0x7c4e80	3	MovementStubReturnZeroB		collision	unreached	uint32_t __cdecl (void)	Returns 0	verified	one	collision/kinematics#unreached-functions	
 0x7c4e90	5	CloseMovementLogThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c4ea0	verified	one	collision/kinematics#teardown	
 0x7c4ea0	43	CloseMovementLog		collision	host	void __cdecl (void)	Closes the file at offset 0x104 of the movement globals and zeroes the handle	verified	one	collision/kinematics#teardown	
 0x7c4ed0	81	CMovement::LinearDisplacement		collision	primitive	void __thiscall (CMovement *this, float t, float *out)	Writes the displacement t seconds along the direction at the current speed	verified	one	collision/kinematics#straight-line-displacement	collision::linear_move_difftest
