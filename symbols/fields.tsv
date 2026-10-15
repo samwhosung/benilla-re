@@ -204,9 +204,9 @@ CGTooltip	0x044c	4	uint32_t	m_scriptCleared	ui	Holds the OnTooltipCleared script
 CGTooltip	0x0454	4	uint32_t	m_scriptAddMoney	ui	Holds the OnTooltipAddMoney script slot	verified	one	ui/tooltipobject#the-script-slots
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
-CGUnit_C	0x0118	4	CMovement *	m_movement	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object
+CGUnit_C	0x0118	4	CMovement *	m_movementPtr	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object
 CGUnit_C	0x011c	2184	uint32_t[546]	m_watcherLists	objectlayer	Holds the 182 field watcher lists of 12 bytes that 0x5fad50 empties and 0x5fb5e0 unlinks	verified	one	objectlayer/units#the-unit-object
-CGUnit_C	0x09a8	352	CMovement	m_movementData	objectlayer	Holds the unit's CMovement, built in place by the unit constructor 0x5fad50 through 0x616fa0	verified	one	collision/mover#construction
+CGUnit_C	0x09a8	352	CMovement	m_movement	objectlayer	Holds the unit's CMovement, built in place by the unit constructor 0x5fad50 through 0x616fa0	verified	one	collision/mover#construction
 CGUnit_C	0x0b18	4	uint32_t	m_soundRace	objectlayer	Holds +0x34 of the unit's ChrRaces row, written by 0x5fb880	verified	one	objectlayer/units#lifecycle
 CGUnit_C	0x0b1c	4	void *	m_speechSound	objectlayer	Holds the playing greeting or farewell sound, written by 0x60c270 and 0x60c3b0	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
 CGUnit_C	0x0b2c	4	void *	m_questMarker	objectlayer	Holds the marker model hung over the head, written by 0x607480 and cleared by 0x6073f0	verified	one	objectlayer/unitnames#quest-markers
