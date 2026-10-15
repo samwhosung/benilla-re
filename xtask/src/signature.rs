@@ -335,6 +335,10 @@ pub struct Signature {
     /// The pattern occurs once in the executable sections.
     pub unique: bool,
     pub pattern: Pattern,
+    /// The direct calls and jumps whose target is another function row: the offset of the
+    /// instruction in the body and the 5875 address it goes to. Only `call`, `jmp` and
+    /// conditional jumps with a rel32.
+    pub calls: Vec<(u32, u32)>,
 }
 
 /// The pattern in text.
@@ -371,13 +375,68 @@ pub fn read_pattern(text: &str) -> Result<Pattern, String> {
         .collect()
 }
 
-pub const HEADER: &str = "address\tunique\tpattern\n";
+pub const HEADER: &str = "address\tunique\tpattern\tcalls\n";
+
+/// The calls of the body `[start, start + size)` to the addresses in `rows`: `(offset, target)`.
+pub fn call_sites(
+    pe: &Pe,
+    listing: &Listing,
+    start: u32,
+    size: u32,
+    rows: &std::collections::HashSet<u32>,
+) -> Option<Vec<(u32, u32)>> {
+    let body = pe.read(start, size)?;
+    let end = start + size;
+    let mut out = Vec::new();
+    let mut k = listing.index(start)?;
+    while let Some(&a) = listing.addresses.get(k) {
+        if a >= end {
+            break;
+        }
+        let lo = (a - start) as usize;
+        let mut rest = listing.at(k);
+        let (mut mnemonic, mut operands);
+        loop {
+            let (m, o) = rest.split_once(' ').unwrap_or((rest, ""));
+            mnemonic = m;
+            operands = o;
+            if PREFIXES.contains(&m) && !o.is_empty() {
+                rest = o;
+            } else {
+                break;
+            }
+        }
+        if is_branch(mnemonic) {
+            let target = DIRECT
+                .captures(operands)
+                .and_then(|c| u32::from_str_radix(&c[1], 16).ok());
+            if let Some(t) = target.filter(|t| rows.contains(t) && (*t < start || *t >= end)) {
+                if rel32_at(&body[lo..]).is_some() {
+                    out.push((lo as u32, t));
+                }
+            }
+        }
+        k += 1;
+    }
+    Some(out)
+}
+
+/// Where the rel32 of the instruction at the start of `code` is, when it is a `call`, `jmp` or
+/// conditional jump with one.
+pub fn rel32_at(code: &[u8]) -> Option<usize> {
+    match code {
+        [0xe8 | 0xe9, _, _, _, _, ..] => Some(1),
+        [0x0f, b, _, _, _, _, ..] if b & 0xf0 == 0x80 => Some(2),
+        _ => None,
+    }
+}
 
 /// The signature of every `(address, size)` row, in the order given.
 pub fn generate(pe: &Pe, listing: &Listing, rows: &[(u32, u32)]) -> Result<Vec<Signature>, String> {
     let scanner = Scanner::new(pe);
     let mut out = Vec::new();
     let mut seen: HashMap<Pattern, bool> = HashMap::new();
+    let addresses: std::collections::HashSet<u32> = rows.iter().map(|r| r.0).collect();
     for &(address, size) in rows {
         let whole = mask(pe, listing, address, size).ok_or_else(|| {
             format!("{address:#08x}: the body is not in the image or the listing")
@@ -405,6 +464,8 @@ pub fn generate(pe: &Pe, listing: &Listing, rows: &[(u32, u32)]) -> Result<Vec<S
             address,
             unique,
             pattern: whole[..length].to_vec(),
+            calls: call_sites(pe, listing, address, size, &addresses)
+                .ok_or_else(|| format!("{address:#08x}: the body is not in the listing"))?,
         });
     }
     Ok(out)
@@ -416,10 +477,15 @@ pub fn table(signatures: &[Signature]) -> String {
     for s in signatures {
         let _ = writeln!(
             out,
-            "{:#08x}\t{}\t{}",
+            "{:#08x}\t{}\t{}\t{}",
             s.address,
             if s.unique { "yes" } else { "no" },
-            show(&s.pattern)
+            show(&s.pattern),
+            s.calls
+                .iter()
+                .map(|(o, t)| format!("{o:x}:{t:x}"))
+                .collect::<Vec<_>>()
+                .join(" ")
         );
     }
     out
@@ -434,8 +500,8 @@ pub fn parse(text: &str) -> Result<Vec<Signature>, String> {
     let mut out = Vec::new();
     for (i, line) in lines.enumerate() {
         let cells: Vec<&str> = line.split('\t').collect();
-        let [address, unique, pattern] = cells[..] else {
-            return Err(format!("signatures:{}: not three cells", i + 2));
+        let [address, unique, pattern, calls] = cells[..] else {
+            return Err(format!("signatures:{}: not four cells", i + 2));
         };
         out.push(Signature {
             address: u32::from_str_radix(address.trim_start_matches("0x"), 16)
@@ -446,6 +512,18 @@ pub fn parse(text: &str) -> Result<Vec<Signature>, String> {
                 _ => return Err(format!("signatures:{}: unique is yes or no", i + 2)),
             },
             pattern: read_pattern(pattern).map_err(|e| format!("signatures:{}: {e}", i + 2))?,
+            calls: calls
+                .split(' ')
+                .filter(|c| !c.is_empty())
+                .map(|c| {
+                    let (o, t) = c.split_once(':')?;
+                    Some((
+                        u32::from_str_radix(o, 16).ok()?,
+                        u32::from_str_radix(t, 16).ok()?,
+                    ))
+                })
+                .collect::<Option<Vec<_>>>()
+                .ok_or_else(|| format!("signatures:{}: bad calls", i + 2))?,
         });
     }
     Ok(out)
@@ -471,11 +549,13 @@ mod tests {
                 address: 0x401000,
                 unique: true,
                 pattern: read_pattern("e8 ?? ?? ?? ??").unwrap(),
+                calls: vec![(0, 0x401010), (0x1a, 0x4098c0)],
             },
             Signature {
                 address: 0x401010,
                 unique: false,
                 pattern: read_pattern("c3").unwrap(),
+                calls: vec![],
             },
         ];
         assert_eq!(parse(&table(&s)).unwrap(), s);

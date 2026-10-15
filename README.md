@@ -165,19 +165,46 @@ cargo xtask match <exe> <out>
 ```
 
 reads any PE, searches its executable sections for every pattern, and writes `<out>/match.tsv`
-(`address` in 5875, `name`, `found`: the address in that build, `missing`, or `ambiguous` for two
-or more matches or a shared address) and `<out>/symbols/`, the tables with each found function at
-its new address and the others left out. Structs and fields are copied; globals have no pattern,
-so that table is empty. `cargo xtask export <dir> --symbols <out>/symbols` writes the header, the
-scripts' inputs and the database from it. It needs no 5875 exe, only the checkout.
+(`address` in 5875, `name`, `found`: the address in that build, `missing`, `ambiguous` or
+`conflict`; and `via`: `pattern`, `call` or `order`), `<out>/conflicts.tsv` (why each conflict is
+one) and `<out>/symbols/`, the tables with each found function at its new address and the others
+left out. Structs and fields are copied; globals have no pattern, so that table is empty.
+`cargo xtask export <dir> --symbols <out>/symbols` writes the header, the scripts' inputs and the
+database from it. It needs no 5875 exe, only the checkout.
 
-On 5875 itself 15,076 of the 37,967 rows have a unique pattern and the matcher finds all 15,076 at
-their own address. The other 22,891 are indistinguishable by their bytes (the `jmp` thunks, the
-static initializers, the one-line accessors) and report `ambiguous`. A test patches, swaps and
-copies bodies in the 5875 image and checks the found, missing and ambiguous counts. No other
-build has been run through it yet; a count from one belongs here. A found row is a match of
-bytes, not a proof that the function is the same: a changed body can still match, and a row's
-`size` is 5875's.
+A pattern alone leaves most rows ambiguous, so the matcher builds on what it has found, in steps:
+
+1. **Pattern**: the row's pattern occurs once.
+2. **Calls**: a found function's body in the build has, at the offsets its 5875 body has them, a
+   `call` or `jmp` whose 5875 target is row X. X is at the address that instruction goes to,
+   when X's pattern matches there. `signatures.tsv` lists each row's call offsets and targets.
+   Repeated until nothing new is found.
+3. **Order**: the found rows whose addresses rise with 5875's bound the rows between them (a
+   found row off that rising run moved, and bounds nothing). A row with exactly one address its
+   pattern matches between its bounds is found there, and so are several rows between two bounds
+   that have exactly one way to take rising addresses. Alternates with step 2 until nothing new is
+   found.
+
+A row with several candidates left stays `ambiguous`. Two rows claiming one address, a row claimed
+at two addresses, a claimed address that its pattern refutes, and two rows in one gap that fall
+out of order are `conflict`: reported and left out, with what was found from them, not resolved.
+
+On 5875 itself 15,076 of the 37,967 rows have a unique pattern and the matcher finds all 15,076
+at their own address. The other 22,891 are indistinguishable by their bytes (the `jmp` thunks,
+the static initializers, the one-line accessors). After each step:
+
+| step | found | of which new | ambiguous | conflict | at a wrong address |
+|---|---|---|---|---|---|
+| pattern | 15,076 | 15,076 | 22,891 | 0 | 0 |
+| calls | 18,729 | 3,653 | 19,238 | 0 | 0 |
+| order | 34,364 | 15,635 (15,454 by order, 181 by calls) | 3,603 | 0 | 0 |
+
+Tests patch, swap and copy bodies in the 5875 image and check the counts at each step (the
+swapped pair is found at each other's address by pattern; the callers of a swapped row send it
+to an address its pattern refutes, and are reported as conflicts), and small images check each
+step and each refusal. No other build has been run through it yet; a count from one belongs
+here. A found row is a match of bytes and position, not a proof that the function is the same: a
+changed body can still match, a call can move with a changed caller, and a row's `size` is 5875's.
 
 ## How to trust it
 

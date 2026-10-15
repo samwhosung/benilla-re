@@ -74,7 +74,9 @@ export        writes the symbol table as files other tools start from, the same 
 signatures    writes tables/signatures.tsv: each function row's masked byte pattern, from your
               WoW.exe and dumps/disasm.txt
 match         finds the function rows in another build's executable sections by their patterns
-              and writes match.tsv (found, missing or ambiguous per row) and a symbols/ folder
+              and writes match.tsv (found, missing, ambiguous or conflict per row, and how it was
+              found: by pattern, by the call targets of found rows, or by order), conflicts.tsv
+              and a symbols/ folder
               rebased onto that build, into the output directory; reads no 5875 exe
 ";
 
