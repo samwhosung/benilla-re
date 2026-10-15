@@ -6503,7 +6503,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4826e0	90	CGWorldFrame::ClassifyHoveredGameObject		ui	orchestration	void __thiscall (CGWorldFrame *this, CGGameObject_C *object)	Sets the cursor mode a game object gives, or the custom cursor for 41	verified	one	ui/worldcursor#corpses-and-game-objects	
 0x482740	394	CGWorldFrame::ClassifyHoveredCorpse		ui	primitive	void __thiscall (CGWorldFrame *this, CGCorpse_C *corpse)	Sets the cursor mode for a hovered corpse from its loot and skin state	verified	one	ui/worldcursor#corpses-and-game-objects	ui::textglue_482_sq_len3_482740, ui::textglue_482_square_cmp, ui::textglue_482_sub3
 0x4828d0	309	CGWorldFrame::ClassifyHoveredObject		ui	orchestration	void __thiscall (CGWorldFrame *this, void *pick, int x, int y)	Sets the cursor mode for the picked object and publishes it as the mouseover	verified	one	ui/worldcursor#classifying-a-hovered-object	
-0x482aa0	34	CGWorldFrame::OnMouseMove		ui	orchestration		Overrides the probe of the world frame, calling the base probe	verified	one	ui/mouse#what-the-pointer-is-tested-against	
+0x482aa0	34	CGWorldFrame::OnMouseMove		ui	orchestration		Runs the frame's mouse-move and, when it answers nonzero, calls 0x5143e0 and answers 1	verified	one	ui/mouse#what-the-pointer-is-tested-against	
 0x482ad0	316	StampLightState		ui	primitive		Writes the frame's clock, player, camera, far clip and weather density into the light state	verified	one	lighting/daynight#light-state	ui::textglue_482_normalize3, ui::textglue_482_sq_len3_482200, ui::textglue_482_tick_scale
 0x482c10	132	ApplySelfFade		ui	primitive		Sets the own-model flag from the fade alpha when the camera follows the active player and sets the model alpha	verified	one	ui/worldpick#the-local-player-as-a-target	ui::textglue_482_bool_inv255
 0x482ca0	42	ResetPickLists		ui	orchestration		Empties both pick lists and ticks every unit and game object	verified	one	ui/worldpick#the-candidate-list	
@@ -6997,7 +6997,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494600	164	SignalUnitCombat		ui	primitive		Signals UNIT_COMBAT for each unit token of a GUID with an action, a hit word, an amount and a school	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x4946b0	27	SignalUnitCombatWound		ui	orchestration		Signals UNIT_COMBAT with WOUND, an amount, a school and marks	verified	one	objectlayer/playercombat#non-melee-damage	
 0x4946d0	77	SignalSwingRecord		ui	orchestration		Calls SignalUnitCombat with a swing record's GUID, three values and the event name of its kind	verified	one	ui/gameui#interface-state-helpers	
-0x494720	28	SignalCombatMiss		ui	orchestration		Passes a miss reason below 12, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
+0x494720	28	SignalCombatMiss		ui	orchestration		Passes a miss reason from 0 to 11, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
 0x494740	33	SignalUnitCombatHeal		ui	primitive		Signals UNIT_COMBAT with HEAL and the critical mark 0x80 when its byte is set	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x494770	3	SignalUnitCombatEnergize		ui	orchestration		Returns at once, dropping its stack argument	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x494780	491	UpdateZoneText		ui	orchestration		Commits the zone and area ids and name caches and signals the zone event	verified	one	ui/zonetext#the-commit-and-its-events	
@@ -9204,11 +9204,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cc420	60	HandleAuctionHelloPacket	idb	ui	orchestration	uint32_t __stdcall (int, CDataStore *store)	Reads the auctioneer GUID and house id of a hello packet and opens the window	verified	one	ui/auction#opening-and-closing	
 0x4cc460	852	HandleAuctionCommandResultPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads an auction command result, shows its message and refreshes or patches the lists	verified	one	ui/auctionmessages#command-result	
 0x4cc7f0	534	HandleAuctionListResultPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads the browse list rows and total, then sorts when no item lookups are pending	verified	one	ui/auction#browse-results	
-0x4cca10	25	AuctionBrowseItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down a browse lookup and sorts the browse list when none is left	verified	one	ui/auction#browse-results	
+0x4cca10	25	AuctionBrowseItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down a pending browse lookup and sorts the browse list when the count is zero or reaches zero	verified	one	ui/auction#browse-results	
 0x4cca30	557	HandleAuctionOwnerListResultPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads the owner list rows and total, re-arming the owner request when the count differs	verified	one	ui/auction#owner-and-bidder-results	
-0x4ccc60	25	AuctionOwnerItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down an owner lookup and sorts the owner list when none is left	verified	one	ui/auction#owner-and-bidder-results	
+0x4ccc60	25	AuctionOwnerItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down a pending owner lookup and sorts the owner list when the count is zero or reaches zero	verified	one	ui/auction#owner-and-bidder-results	
 0x4ccc80	557	HandleAuctionBidderListResultPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads the bidder list rows and total, re-arming the bidder request when the count differs	verified	one	ui/auction#owner-and-bidder-results	
-0x4cceb0	25	AuctionBidderItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down a bidder lookup and sorts the bidder list when none is left	verified	one	ui/auction#owner-and-bidder-results	
+0x4cceb0	25	AuctionBidderItemCallback		ui	primitive	void __stdcall (uint32_t, uint8_t)	Counts down a pending bidder lookup and sorts the bidder list when the count is zero or reaches zero	verified	one	ui/auction#owner-and-bidder-results	
 0x4cced0	696	HandleAuctionBidderNotificationPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads a bidder notification, shows won or outbid and patches the bidder and browse rows	verified	one	ui/auctionmessages#bidder-notification	
 0x4cd190	85	AuctionMessageItemArrived		ui	orchestration	void __fastcall (uint32_t entry, uint8_t ok, void *record)	Shows a queued auction message with its item name once the item record arrives	verified	one	ui/auctionmessages#item-names-in-messages	
 0x4cd1f0	653	HandleAuctionOwnerNotificationPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads an owner notification, patching rows on a bid and showing sold or expired at the end	verified	one	ui/auctionmessages#owner-notification	
@@ -9982,7 +9982,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4df480	40	IsQuestExpiryLatched		ui	primitive		Returns whether a row's expiry latch is set	verified	one	ui/questtimers#getquesttimers	
 0x4df4b0	64	IsQuestExpiryLatched		ui	primitive		Answers whether the quest has a non-header display row with its expiry latch set; 0 when the quest is not listed	inferred	none	objectlayer/quests#quest-updates	
 0x4df4f0	81	LatchQuestExpiry		ui	primitive		Sets a row's expiry latch unless its quest can be turned in, calls 0x5eb070 and returns 1; else returns 0	verified	one	ui/questtimers#getquesttimers	
-0x4df550	42	LatchQuestExpiryByQuest		ui	primitive		Marks a timed quest failed	inferred	none	objectlayer/quests#quest-updates	
+0x4df550	42	LatchQuestExpiryByQuest		ui	primitive		Finds the quest's display row and sets its expiry latch through 0x4df4f0; returns 0 when the quest is not listed	inferred	none	objectlayer/quests#quest-updates	
 0x4df580	560	CanTurnInQuest		ui	primitive		Tells whether a quest can be handed in, from its complete bit and its objectives	verified	one	ui/questobjectives#the-turn-in-test	
 0x4df7b0	194			ui	primitive		Runs its object file code that calls 0x562a40, FrameScript_SignalEvent and 3 more; not read here	inferred	none		
 0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based position of a quest among the 40 log entries, headers counted and skipped, or 0	verified	one	objectlayer/quests#quest-updates	
@@ -16344,7 +16344,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589de0	27	SetDeviceLightEnabled		gx	orchestration	void __fastcall (uint32_t index, uint32_t enabled)	Enables or disables one of the device's four fixed lights, rejecting an index of 4 or more	verified	one	models/lights#fixed-function-lights	
 0x589e00	43	GxRsSetWord		gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets a one-word render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e30	39	GxRsSetFloat		gx	orchestration	void __fastcall (uint32_t id, float value)	Sets a float render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
-0x589e60	27	GxRsSet	idb	gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets an integer render state through the device and cascades the alpha reference, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
+0x589e60	27	GxRsSet	idb	gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets an integer render state through the device and cascades the alpha reference, rejecting a signed id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e80	14	GxRsSetObject		gx	orchestration	void __fastcall (uint32_t id, void *object)	Sets an object render state, a stage texture or a program, through the device	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e90	14	GxRsSetVector		gx	unreached	void __fastcall (uint32_t id, const float *v)	Sets a three-float render state through the device	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589ea0	27	GxRsGetWord		gx	unreached	void __fastcall (uint32_t id, uint32_t *out)	Reads a render state's first dword, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
@@ -35873,7 +35873,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c1880	19	InitCmathFile09Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c6c, at 0xcf5c68	verified	one	cmath/geometry#static-constants	
 0x7c18a0	5	InitCmathFile10Copy1Thunk		cmath	orchestration		Jumps to 0x7c18b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7c18b0	11	InitCmathFile10Copy1		cmath	orchestration		Stores +infinity at 0xcf5c70, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7c18c0	10	InitPolygonAxisPairsThunk		cmath	orchestration		Calls 0x7c18d0, a static initializer	verified	one	cmath/geometry#point-in-polygon	
+0x7c18c0	10	InitPolygonAxisPairsThunk		cmath	orchestration		Calls 0x7c18d0, a static initializer, then jumps to 0x7c1900, which registers its exit handler	verified	one	cmath/geometry#point-in-polygon	
 0x7c18d0	45	InitPolygonAxisPairs		cmath	orchestration		Stores the kept axis pairs of the point in polygon test	verified	one	cmath/geometry#point-in-polygon	
 0x7c1900	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7c1910	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
