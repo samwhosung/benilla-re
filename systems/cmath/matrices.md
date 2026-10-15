@@ -62,7 +62,8 @@ call sites. The tests run each whole.
 row 3: `x = ((m8·z + m4·y) + x·m0) + m12`, `y = ((m9·z + m1·x) + m5·y) + m13`, `z = ((m10·z + m2·x) + m6·y)
 + m14`, each stored as a float; `0x7bcc60` is the same in place. `0x7bcb40` does it for four components
 (`w` first): `x' = ((m12·w + m8·z) + m4·y) + x·m0`, `y'`, `z'` and `w'` from columns 1 to 3. `0x7bcae0` (`ecx` out, `edx`
-a 3×4 of rows of four, vector on the stack) gives `row·v + row[3]` for each of three rows.
+a 4×4, vector on the stack) gives `row·v + row[3]` for each of the 4×4's first three rows, the product with its
+transpose (`cmath/types#matrices`).
 
 Addresses: `0x7bca80`, `0x7bcc60`, `0x7bcb40`, `0x7bcae0`, `0x7bcb4c`
 Confidence: verified
