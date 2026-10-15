@@ -13,9 +13,9 @@ The handler takes the lock, passes every byte after the opcode to the active mod
 through module slot 2, then runs `ActivateNextModule`, and returns 1. With no active module it takes the
 bytes and does nothing more. The client does not decrypt, parse or check the payload.
 
-Addresses: `0x6ca5c0`, `0x6ca2f0`, `0x6ca338`, `0x6ca347`, `0x6ca5c6`, `0x6ca5e7`, `0x6ca5ef`, `0x6ca615`, `0x6ca618`, `0x6ca627`, `0x419ac0`, `0x5ab650`
+Addresses: `0x6ca5c0`, `0x6ca2f0`, `0x6ca338`, `0x6ca33d`, `0x6ca347`, `0x6ca5c6`, `0x6ca5e7`, `0x6ca5ef`, `0x6ca615`, `0x6ca618`, `0x6ca627`, `0x419ac0`, `0x5ab650`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `warden::handler_whole`
 
 `tables/opcodes.tsv` has `0x2e6 0x6ca5c0 0x6ca347 A`. A handler gets its context in `ecx`, the opcode in `edx`
@@ -23,7 +23,8 @@ and the time and the data store on the stack, and returns with `ret 8` (`net/dis
 compares `edx` with `0x2e6` and returns 0 otherwise. The length is the store's `+0x10` less its `+0x14`
 (`0x6ca5e4`, `0x6ca5e7`); `0x419ac0` returns that many bytes in place and moves the cursor. With an active module
 (`[0xce8978]`), `0x6ca615` calls slot 2 with the pointer, the length and the address of a dword set to 0; the
-dword is not read afterwards. `0x6ca627` returns 1.
+dword is not read afterwards, nor is the call's return value (`0x6ca618` follows at once). `0x6ca627` returns 1.
+`0x6ca338` and `0x6ca33d` load the handler and the opcode `0x2e6` for the registration call `0x6ca347`.
 
 ## The client's message
 
@@ -35,7 +36,7 @@ connection layer frames the message and enciphers its header as for any message;
 
 Addresses: `0x6ca6a0`, `0x6ca6da`, `0x6ca6e2`, `0x6ca6fc`, `0x6ca70c`, `0x418190`, `0x418070`, `0x5ab630`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6ca6da` pushes `0x2e7` and `0x6ca6e2` calls `0x418190` (`PutUInt32`) on a data store built in the frame.
@@ -46,7 +47,9 @@ the control, the same scan for `0x2e8`, finds twenty.
 ## The service table
 
 The module receives `0xce8954`, whose dword points at the table `0x811434`: seven stdcall services, in this
-order. The service functions take no lock; they run inside the caller's hold.
+order. The service functions take no lock and none reads `ecx` before writing it, so what a module passes there is
+unused. A service called from inside a module slot runs under the client's lock, which every call into a slot
+holds (inferred: a call from another thread would run without it).
 
 | slot | function | arguments | does |
 |---|---|---|---|
@@ -60,7 +63,7 @@ order. The service functions take no lock; they run inside the caller's hold.
 
 Addresses: `0x811434`, `0xce8954`, `0x6ca6a0`, `0x6ca770`, `0x6ca810`, `0x6ca840`, `0x6ca8c0`, `0x6ca8e0`, `0x6ca900`, `0x6ca960`, `0x6ca7cf`, `0x6ca7e6`, `0x6ca7f4`, `0x6ca801`, `0x6ca86f`, `0x6ca8a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The dwords at `0x811434` to `0x81144c` are the seven function addresses; `0x6ca180` stores the table's address in
@@ -79,7 +82,7 @@ entry, export ordinal 1, is called with `ecx = 0xce8954` and no stack arguments,
 
 Addresses: `0x6ca1e0`, `0x6ca204`, `0x6ca227`, `0x6ca2a2`, `0x6ca615`, `0x6ca1c0`, `0x6ca214`, `0x6ca21b`, `0x537a50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6ca1f4` pushes 1 and `0x6ca1f6` calls the export lookup `0x7a7de0`; `0x6ca204` calls the result. `0x6ca214`
@@ -106,8 +109,12 @@ Test: none
 `0x7a7d80` on its image, the object freed under the tag `delete` (`0x6ca2cb`), and `0xce8978` and `0xce897c`
 zeroed (`0x6ca2d0`, `0x6ca2da`). `0x6ca208` stores the object in `0xce897c` before slot 0 runs; `0x6ca22e` copies
 the pending module to `0xce8978` and `0x6ca233` zeroes `0xce8974`. A failure calls `0x6ca250` (`0x6ca241`), which
-unloads and frees the pending module. Slot 0 runs while `0xce8978` is 0 and `0xce8974` still holds the module, so
-a slot 1 call from the module's start frees the module being started. The calls from the tick (`0x6ca1c3`) and the
+unloads and frees the pending module. Slot 0 runs while `0xce8978` is 0 and `0xce8974` still holds the module. A call to
+service 1 from the module's start frees the module being started (`0x6ca7e6`, `0x6ca250`: its libraries are freed,
+its image stays mapped by the rejection `modules` names, its `WardenModule` is freed) and stores the module it decodes
+in `0xce8974`. When the start returns, `0x6ca22e` and `0x6ca233` make that module active without running its entry
+point, and `0xce897c` still holds the first module's object: the tick, the packet handler and the unload call the
+first module's slots for the second's life. Only a signed module can do this. The calls from the tick (`0x6ca1c3`) and the
 handler (`0x6ca618`) lie inside the branch that tests `[0xce8978]`.
 
 ## The tick
@@ -136,10 +143,10 @@ Shutdown, and the start of a connection, free and clear it. No other code in thi
 Addresses: `0x6ca900`, `0x6ca960`, `0x6ca640`, `0x6ca66a`, `0x6ca674`, `0x6ca67e`, `0x6ca97b`, `0x6ca981`, `0x6ca993`, `0x6ca9af`, `0x6ca9b5`, `0x6ca9bf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `warden::handover_buffer`
 
 `0x6ca900` frees `[0xce8980]` when set (`0x6ca919`), allocates the length (`0x6ca930`) and stores the pointer and the
 length at `0xce8980` and `0xce8984` (`0x6ca937`, `0x6ca93c`). `0x6ca960` returns 0 when `[0xce8980]` is 0
 (`0x6ca96c`), clamps `*length` to the stored length (`0x6ca97b`, `0x6ca97f`), copies that many bytes
 (`0x6ca993`), frees the buffer (`0x6ca9af`) and zeroes both globals (`0x6ca9b5`, `0x6ca9bf`). `0x6ca66a` frees it in
-the shutdown.
+the shutdown. The test runs `0x6ca900` and `0x6ca960` whole; the shutdown's free is not run.

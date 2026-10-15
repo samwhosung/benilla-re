@@ -19,10 +19,12 @@ Roots: `0x6ca130`, `0x6ca170`, `0x6ca2f0`, `0x6ca190`, `0x6ca640`, `0x6ca5c0`, `
 
 ## Globals and lifetime
 
-The state is nine globals and two structs. The table pointer `0xce8954` is the object a module receives; the
+The state is eight globals and two structs. The table pointer `0xce8954` is the object a module receives; the
 lock `0xce8958` guards the rest. Static initializers build the lock and store the table pointer. The connect
 event runs `InitWardenHandler`, each frame runs the tick, and a disconnect, a failed connect or a
-`Disconnect` call runs `ShutdownWardenHandler`. Modules are not unloaded at process exit.
+`Disconnect` call runs `ShutdownWardenHandler`. No `atexit` entry unloads a module; `Disconnect` is reached from the
+client's stop handler through `ClientServices::Destroy` (`0x5ab40a`), and whether process exit takes that path is not
+read here.
 
 | address | holds |
 |---|---|
@@ -35,7 +37,7 @@ event runs `InitWardenHandler`, each frame runs the tick, and a disconnect, a fa
 | `0xce8984` | the handover buffer's length |
 | `0xce8988` | the time of the last tick, ms |
 
-Addresses: `0x86f074`, `0xce8954`, `0xce8958`, `0xce8974`, `0xce8978`, `0xce897c`, `0xce8980`, `0xce8984`, `0xce8988`, `0x6ca2f0`, `0x6ca190`, `0x6ca640`, `0x5aaaa6`, `0x5aaae0`, `0x5aab06`, `0x5ab1b2`, `0x403629`
+Addresses: `0x86f074`, `0xce8954`, `0xce8958`, `0xce8974`, `0xce8978`, `0xce897c`, `0xce8980`, `0xce8984`, `0xce8988`, `0x6ca2f0`, `0x6ca190`, `0x6ca640`, `0x5aaaa6`, `0x5aaae0`, `0x5aab06`, `0x5ab1b2`, `0x5ab40a`, `0x403629`
 Confidence: verified
 Proof: one
 Test: none

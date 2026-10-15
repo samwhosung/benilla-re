@@ -32,26 +32,40 @@ and copies the id to `+0x2c` (`0x56b7ed`). Remove unlinks the node's two chains 
 ## The cache file
 
 The file is `WDB/wowcache.wdb`, relative to the working directory, made with the directory first. A header of five
-dwords: the tag bytes `NDRW`, the build `0x16f3`, the locale tag, the record size 8, the version 1. Entries
-follow: the 16-byte id, a dword size, and the record, which is a dword length and that many bytes; the size is
-the record's total, length included. Twenty zero bytes end the file. The exit function writes the file anew,
-every valid node; the start-up function reads it.
+dwords: the tag bytes `NDRW`, the build `0x16f3` (5875), the locale tag, the record size 8, the version 1. Entries
+follow: the 16-byte id, a dword size, and the record, which is a dword length and that many bytes; the size is the
+record's total, length included. Twenty zero bytes (an all-zero id and a zero dword) end the file. The exit function
+writes the file anew, every valid node; the start-up function reads it.
 
 Addresses: `0x56b040`, `0x56b05c`, `0x56b07b`, `0x56b09c`, `0x56b137`, `0x56b13c`, `0x56b149`, `0x56b158`, `0x56b162`, `0x56b1ed`, `0x56b1fc`, `0x56b208`, `0x56b21b`, `0x56b268`, `0x56be60`, `0x56bf46`, `0x56bf5a`, `0x56bf82`, `0x56bfce`, `0x56bff8`, `0x56c091`, `0x56c09d`, `0x56c05c`, `0x56c0a4`, `0x56c277`, `0x554f00`, `0x554f20`, `0x554f30`, `0x554f50`, `0x402b1b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x554f00` constructs the cache with the tag `0x5752444e`, a name, opcode 0, and both flags 1; `0x554f20`
-registers `0x554f30`, which jumps to the save `0x56b040`, with `atexit`. `0x56b05c` makes `WDB`; `0x56b07b` formats
-`%s/%s` and `0x56b09c` opens it for writing, creating always. The header is built from `0x56b137` (tag), `0x56b13c`
-(`0x16f3`), `0x56b149` (the dword at `0xc2a2a4`), `0x56b158` (8) and `0x56b162` (`0x6ca120`, returning 1). Per
-node with `+0x3c` set and `+0x4c` clear, `0x56b1ed` writes the id's 16 bytes, `0x56b1fc` a zero size, `0x56b208`
-the record, and `0x56b21b` patches the size with the written length less 20. The id's bytes at `+0x2c` are
-written; `+0x4c` is set nowhere in this cache's code. `0x56b268` writes 16 zero bytes and a zero dword. The load
-`0x56be60` (called from `0x554f50` by `0x402b1b`) compares tag, build, locale, size and version
-(`0x56bf46` to `0x56bff8`) and on any difference closes the file and leaves the cache empty. It reads 20 bytes
-per entry head (`0x56c05c`); an all-zero id (`0x56c0a4`) ends the file; a short read of an entry clears the cache.
+`0x554f00` constructs the cache with the tag `0x5752444e`, a name, opcode 0, and both flags 1; `0x554f20` registers
+`0x554f30`, which jumps to the save `0x56b040`, with `atexit`. `0x56b05c` makes `WDB`; `0x56b07b` formats `%s/%s` and
+`0x56b09c` opens it for writing, creating always. The header is built from `0x56b137` (tag), `0x56b13c` (`0x16f3`),
+`0x56b149` (the dword at `0xc2a2a4`), `0x56b158` (8) and `0x56b162` (`0x6ca120`, returning 1). Per node with `+0x3c`
+set and `+0x4c` clear, `0x56b1ed` writes the id's 16 bytes, `0x56b1fc` a zero size, `0x56b208` the record, and
+`0x56b21b` patches the size with the written length less 20. The id's bytes at `+0x2c` are written; `+0x4c` is set
+nowhere in this cache's code. `0x56b268` writes 16 zero bytes and a zero dword, the end marker. The load `0x56be60`
+(called from `0x554f50` by `0x402b1b`) compares tag, build, locale, size and version (`0x56bf46` to `0x56bff8`) and on
+any difference closes the file and leaves the cache empty. It reads 20 bytes per entry head (`0x56c05c`); an all-zero
+id (`0x56c0a4`) ends the file; a short read of an entry clears the cache.
+
+## The stored module
+
+The record of a module is the blob as the server sent it: RC4-encrypted under the key the server gives with the id,
+and signed. The file holds no plain module code.
+
+Addresses: `0x6ca770`, `0x6ca7f4`, `0x6ca840`, `0x6ca6a0`
+Confidence: verified
+Proof: two
+Test: none
+
+The built-in module stores the bytes it received (service 2, `0x6ca840`; `0x25cd` to `0x25e3` in the module,
+`embedded`), after their MD5 matches the id. A load passes the stored record and the key to `LoadWardenModule`
+(`0x6ca7f4`), which decrypts it with that key (`modules`).
 
 ## The cache record
 
