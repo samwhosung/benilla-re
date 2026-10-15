@@ -25,10 +25,12 @@ takes no stack arguments and returns with a plain `ret`. It is the plain high-ha
 Addresses: `0x455c70`, `0x455c72`, `0x455c74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::mul_high32_difftest`
 
 `0x455c70` is `mov eax,ecx; mul edx; mov eax,edx; ret`, so the product is unsigned (`mul`) and the
 low dword is dropped. It has 17 call sites: `0x4501fb`, `0x450339`, `0x450478`, `0x4505a8`, `0x4506d8`
-in the random library, `0x458d45` and `0x458e95` in the sound code, and ten more in other
-systems, one of them in the unreached `0x455c80`.
+in the random library, `0x458d45`, `0x458e95`, `0x45bcc8` and `0x4601de` in the sound code, and
+eight more in other systems, one of them in the unreached `0x455c80`.
+The test runs the whole function over the zeros, the extremes, each power of two and a step
+either side, and a fuzz of pairs.
 

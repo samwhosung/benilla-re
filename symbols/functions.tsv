@@ -3807,7 +3807,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x455c10	11	InitScalarInfinity		cmath	orchestration		Copies +inf into a global nothing reads	verified	one	cmath/scalars#header-initializers	
 0x455c20	64	SmoothWave		cmath	unreached	float __stdcall (float x, float y)	Returns a smooth zigzag between -1 and 1 of the phase x times y	verified	one	cmath/scalars#shaping-functions	
 0x455c60	12	MulHighSigned		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b)	Returns the high dword of the signed 64-bit product a times b	verified	one	cmath/scalars#division-by-constants	
-0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	verified	one	cmath/overview#high-product	
+0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	verified	one	cmath/overview#high-product	cmath::mul_high32_difftest
 0x455c80	15	DivideBy3		cmath	unreached	uint32_t __fastcall (uint32_t n)	Returns n divided by 3 through a multiply by 0xaaaaaaab	verified	one	cmath/scalars#division-by-constants	
 0x455c90	12	DivideBy3Signed		cmath	unreached	int32_t __fastcall (int32_t n)	Returns the high dword of n times 0x55555556, n divided by 3 rounded down	verified	one	cmath/scalars#division-by-constants	
 0x455ca0	30	DivideBy5		cmath	unreached	uint32_t __fastcall (uint32_t n)	Returns n divided by 5 through shifts and adds, exact for small n	verified	one	cmath/scalars#division-by-constants	
