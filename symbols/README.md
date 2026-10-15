@@ -79,7 +79,9 @@ One convention, the client's own C++ style:
 - **Later builds.** A struct the image does not name may take the name a later build's public
   symbols give the type, as the wowdev wiki's Common Types page documents them (`C44Matrix`,
   `CAaBox`), only when the size and field order match what the functions over it build and use
-  here, with `later-build` in `name_from`. A type with no such match gets a descriptive name.
+  here, with `later-build` in `name_from`. A type of the math library takes the `NTempest`
+  namespace the image gives the library's own types (`NTempest::C44Matrix`). A type with no such
+  match gets a descriptive name.
 
 A name is unique among functions and globals, and a field's name is unique within its struct.
 The exports (`cargo xtask export`, and the Ghidra apply `../tools/ghidra/setup.sh`) leave a

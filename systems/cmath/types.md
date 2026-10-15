@@ -6,7 +6,8 @@ colour is four bytes) with no vtable, and each layout is read from the routines 
 it. A matrix is stored row by row for a row vector multiplied on the right, so its last row holds the
 translation. Five types are named by the image itself, through the type names its growable arrays
 pass as allocation tags; the others take the names a later build's public symbols give the same
-layouts, or descriptive names (`../../symbols/README.md`, Names).
+layouts, in the `NTempest` namespace the image gives the library's own types, or descriptive
+names (`../../symbols/README.md`, Names).
 
 Roots: none
 
@@ -34,11 +35,12 @@ transport handler under `0x860944`; `0x77f6f0` frees a region's colour array und
 `0x4a2c10` packs its four byte arguments into one dword and stores it at `ecx` (`0x4a2c2d`). Each
 name is preceded by the eight bytes of a type descriptor. A scan of the image for `@NTempest@@`
 finds four more names, `CRect`, `CiRect`, `C2iVector` and `C3iVector`, which no math routine takes.
+`NTempest::CRect` and `NTempest::CiRect`, the rects, have no struct row yet.
 
 ## Vectors
 
 `NTempest::C2Vector` is two floats, x then y. `NTempest::C3Vector` is three floats, x, y, z.
-`C4Vector` is four floats, x, y, z, w, where w multiplies row 3 of a matrix. Vertex lists are arrays
+`NTempest::C4Vector` is four floats, x, y, z, w, where w multiplies row 3 of a matrix. Vertex lists are arrays
 of `NTempest::C3Vector` with a stride of 12.
 
 Addresses: `0x6dc2c0`, `0x7c3d20`, `0x7bf680`, `0x7bf700`, `0x7c1450`, `0x7bcb40`, `0x7bcb4c`
@@ -53,9 +55,9 @@ x, y, z, w; the name is from a later build.
 
 ## Matrices
 
-`C44Matrix` is 16 floats, row by row: entry (r, c) at float `4r + c`. A point is a row vector
-multiplied on the right, `x' = x·m0 + y·m4 + z·m8 + m12`, so row 3 holds the translation. `C33Matrix`
-is nine floats, entry (r, c) at `3r + c`. `C34Matrix` is a `C33Matrix` followed by a translation row
+`NTempest::C44Matrix` is 16 floats, row by row: entry (r, c) at float `4r + c`. A point is a row vector
+multiplied on the right, `x' = x·m0 + y·m4 + z·m8 + m12`, so row 3 holds the translation. `NTempest::C33Matrix`
+is nine floats, entry (r, c) at `3r + c`. `NTempest::C34Matrix` is a `NTempest::C33Matrix` followed by a translation row
 at `+0x24`. `Matrix2x2` is four floats, row by row; its one builder `0x7c42f0` writes the rotation
 `[[cos, sin], [−sin, cos]]`.
 
@@ -66,16 +68,16 @@ Test: none
 
 `0x7bca80` adds `[m+0x38]` to the z output (`0x7bca9e`) after the three products of column 2, and `[m+0x30]` and
 `[m+0x34]` to x and y. `0x7bc6a0` stores `out[4i + j]` as row `i` of `a` by column `j` of `b`, and `0x7bdfc0` does
-the same for `3i + j`. `0x7bb0e0` and `0x7bae60` add the translation from `+0x24`. `0x7bcae0` takes a `C44Matrix`
+the same for `3i + j`. `0x7bb0e0` and `0x7bae60` add the translation from `+0x24`. `0x7bcae0` takes a `NTempest::C44Matrix`
 and reads its first three rows as rows of four, the product with the transpose: `0x674c50` builds an identity
 4×4, rotates it with `0x7bdd60` (`0x674f45`) and passes it (`0x674f54`). The wowdev wiki documents `C44Matrix` as
 four `C4Vector` columns, column-major, which is the same 16 floats with the translation at floats 12 to 14, and
-`C33Matrix` and `C34Matrix` as three and four `C3Vector`s; those names are from a later build. No public name
+`NTempest::C33Matrix` and `NTempest::C34Matrix` as three and four `C3Vector`s; those names are from a later build. No public name
 for the 2×2 is known, so its name is descriptive.
 
 ## Quaternions
 
-`C4Quaternion` is four floats: the vector part x, y, z, then the scalar w.
+`NTempest::C4Quaternion` is four floats: the vector part x, y, z, then the scalar w.
 
 Addresses: `0x7c0190`, `0x7c01bf`, `0x7c01d0`, `0x7c1340`, `0x7c135e`, `0x7c03b0`
 Confidence: verified
@@ -89,7 +91,7 @@ build.
 
 ## Boxes, spheres and planes
 
-`CAaBox` is the minimum corner then the maximum. `CAaSphere` is the centre then the radius.
+`NTempest::CAaBox` is the minimum corner then the maximum. `NTempest::CAaSphere` is the centre then the radius.
 `NTempest::C4Plane` is the unit normal `n` then `d`, with `n·p + d = 0` for a point `p` on the plane.
 `NTempest::CFacet` is a plane followed by the three vertices it was built from, at `+0x10`, `+0x1c`
 and `+0x28`.
@@ -109,7 +111,7 @@ documents `CAaBox`, `CAaSphere` and `C4Plane` with these layouts; those names ar
 
 ## Rays and segments
 
-`C3Ray` is an origin then a direction. `C3Segment` is a start point then an end point. The line
+`NTempest::C3Ray` is an origin then a direction. `NTempest::C3Segment` is a start point then an end point. The line
 routines take a record of the ray's layout, an origin then a direction.
 
 Addresses: `0x7c22b0`, `0x7c22c6`, `0x7c29f0`, `0x7c46d0`, `0x7c46f2`, `0x7c4630`
