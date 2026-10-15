@@ -1,0 +1,9 @@
+address	convention	ecx	edx	reason
+0x465690	__fastcall	used		edx is set by one caller of three for another use; ecx is a table index
+0x493910	__fastcall	used		edx holds an or-test temporary at the one caller that sets it; the other callers set ecx to a constant
+0x4d5620	__fastcall	used		edx holds a subtraction temporary at the one caller that sets it; ecx is a slot index
+0x4e4430	__fastcall	used		one caller of six zeroes edx for another use; ecx is a table index
+0x55f080	__thiscall	used		edx is set by two callers of 102 for another use; the callers load ecx with the address of a global
+0x5afae0	__fastcall	used		one caller of two zeroes edx for another use; ecx is a table index
+0x5fa6d0	__thiscall	used		edx is the zero of a division at the one caller that sets it; ecx is dereferenced
+0x63b460	__cdecl			the one caller zeroes ecx for the call before; the body writes ecx first

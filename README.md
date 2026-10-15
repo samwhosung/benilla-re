@@ -56,6 +56,8 @@ any other build.
   `cargo xtask export` packages, and the instruments below. Each opens with what it does and how
   far its answer goes.
   - `tools/callers.py`: every call, jump and stored address that names an address, with controls.
+  - `tools/conventions.py`: the calling convention of every row with a signature, from the
+    registers its body reads and what each caller loads before the call.
   - `tools/closure.py`: a system's closure walked from its roots, and what in it lacks a class,
     a reading or a test.
   - `tools/clones.py`: functions whose bytes match once the addresses in them are masked.
