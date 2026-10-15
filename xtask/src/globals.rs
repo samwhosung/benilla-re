@@ -195,8 +195,8 @@ impl Functions {
 /// complete-object locator, the dword before it, points at.
 fn vtable_class(image: &Image, address: u32) -> Option<String> {
     let locator = image.dword(address.checked_sub(4)?)?;
-    let descriptor = image.dword(locator + 12)?;
-    let name = c_string(image, descriptor + 8)?;
+    let descriptor = image.dword(locator.checked_add(12)?)?;
+    let name = c_string(image, descriptor.checked_add(8)?)?;
     let found = RTTI_NAME.captures(&name)?;
     let mut parts: Vec<&str> = found[1].split('@').collect();
     parts.reverse();
