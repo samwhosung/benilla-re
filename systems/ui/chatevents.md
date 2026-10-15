@@ -110,13 +110,13 @@ name and its instance number; the last four are zero, zero, empty and zero witho
 A type of 94 or more fires nothing; the test is `cmp edx,0x5e; jge`, which is signed, so a negative type is not rejected (callers pass small positive types). The event of a type is `tables/chat_types.tsv`; type 89 has an id with
 no name.
 
-Addresses: `0x49b0b0`, `0x49b0b6`, `0x49b0bf`, `0x49b0c5`, `0x49b0f4`, `0x49b10c`, `0x49b113`, `0x49b115`, `0x49b11b`, `0x49b11e`, `0x49b12f`, `0x49b146`, `0x49b162`, `0x49b16e`, `0x49b189`, `0x49b18c`, `0x49b193`, `0x49b199`, `0x8062e0`, `0x703f50`, `0x49b1b0`, `0x49b1ce`, `0x49b495`
+Addresses: `0x49b0b0`, `0x49b0b6`, `0x49b0bf`, `0x49b0c5`, `0x49b0f4`, `0x49b10c`, `0x49b113`, `0x49b115`, `0x49b11b`, `0x49b11e`, `0x49b12f`, `0x49b146`, `0x49b162`, `0x49b16e`, `0x49b189`, `0x49b18c`, `0x49b193`, `0x49b199`, `0x8062e0`, `0x844608`, `0x703f50`, `0x49b1b0`, `0x49b1ce`, `0x49b495`
 Confidence: verified
 Proof: one
 Test: none
 
-`cmp edx,0x5e` bounds the type; the id is `[0x8062e0 + 4*type]`. A null string is replaced by the empty
-string (`0x49b14a` to `0x49b16e`). The language name is `Languages` `Name_lang[locale]` for an id in range with
+`cmp edx,0x5e` bounds the type; the id is `[0x8062e0 + 4*type]` and the format `0x844608`. A null string is replaced by the empty
+string (`0x882748`, `0x49b14a` to `0x49b16e`). The language name is `Languages` `Name_lang[locale]` for an id in range with
 a row, else empty (`0x49b0c5` to `0x49b0f8`), so language 0 gives empty. Arguments 7 to 10 are
 `[chan+0x94]`, `[chan+0]`, `chan+4` and `[chan+0x98]` (`0x49b11e`, `0x49b113`, `0x49b11b`, `0x49b115`), all
 defaults for a null record (`0x49b12f`). The helper has three callers: `0x49a870`, a wrapper

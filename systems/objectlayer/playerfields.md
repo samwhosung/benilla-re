@@ -61,6 +61,7 @@ guild-stamp, initial-spell, item-swap and weapon-spell arrays and clears the bin
 `0x5dd8a0` registers object watchers on the active player (`ClntObjMgrSetObjectMirrorHandler`), and
 `0x5de5b0` removes them. The removal also asks for a watcher on
 `PLAYER_FIELD_LIFETIME_HONORABLE_KILLS` (`+0x10ac`) that nothing adds, which removes nothing.
+`0x5de4b0` fires the event id its registration gives as the argument, with `"player"` as `arg1`.
 
 | fields | callback |
 |---|---|
@@ -76,17 +77,21 @@ guild-stamp, initial-spell, item-swap and weapon-spell arrays and clears the bin
 | `PLAYER_FIELD_BYTES2` byte 1 | `0x5de560` |
 | experience, rest, resistances, damage mods, kills, PvP rank, watched faction | `0x5de4b0`, each with its event |
 
-Addresses: `0x5dd8a0`, `0x5de5b0`, `0x5de922`, `0x467e70`, `0x467fb0`, `0x5de4b0`
+Addresses: `0x5dd8a0`, `0x5de5b0`, `0x5de922`, `0x467e70`, `0x467fb0`, `0x5de4b0`, `0x5de4b3`, `0x5de4c1`, `0x82e280`, `0x847894`, `0x5ddb24`, `0x5ddb4b`, `0x5ddb72`, `0x5ddb99`, `0x5ddbc0`, `0x5ddbe7`, `0x5ddc0e`, `0x5ddc35`, `0x5ddc5c`, `0x5ddc83`, `0x5ddcce`
 Confidence: verified
 Proof: one
 Test: none
 
-The registrations pair an offset in `edx` with the callback and length pushed before `0x467e70`.
-`0x5de4b0(event)` signals its argument for "player": `UPDATE_EXHAUSTION` (`+0xf6c`),
-`PLAYER_XP_UPDATE` (`+0x840`, `+0x844`), `UNIT_RESISTANCES` (`+0xf9c`, 0x38 bytes),
-`PLAYER_DAMAGE_DONE_MODS` (`+0xfd4`, `+0xff0`, `+0x100c`), `PLAYER_PVP_KILLS_CHANGED` (`+0x1098`),
-`PLAYER_PVP_RANK_CHANGED` (`+0x1c`, `+0x10c0`), `UPDATE_FACTION` (`+0x10c4`). `0x5de922` loads
-`edx` 0x10ac for a removal with no matching add in `0x5dd8a0`.
+The registrations pair an offset in `edx` with the callback and length pushed before `0x467e70`;
+the push before the callback is the argument. `0x5de4b0` loads it from `[ebp+0x14]` (`0x5de4b3`)
+and calls `0x703f50(argument, "%s", "player")` (`0x5de4c1`; `0x82e280`, `0x847894`). Its
+arguments: 406 `UPDATE_EXHAUSTION` (`+0xf6c`, `0x5ddb24`), 189 `PLAYER_XP_UPDATE` (`+0x840`,
+`+0x844`; `0x5ddb4b`, `0x5ddb72`), 149 `UNIT_RESISTANCES` (`+0xf9c`, 0x38 bytes, `0x5ddb99`), 201
+`PLAYER_DAMAGE_DONE_MODS` (`+0xfd4`, `+0xff0`, `+0x100c`; `0x5ddbc0`, `0x5ddbe7`, `0x5ddc0e`), 523
+`PLAYER_PVP_KILLS_CHANGED` (`+0x1098`, `0x5ddc35`), 524 `PLAYER_PVP_RANK_CHANGED` (`+0x1c`,
+`+0x10c0`; `0x5ddc5c`, `0x5ddc83`), 372 `UPDATE_FACTION` (`+0x10c4`, `0x5ddcce`). The image holds
+`0x5de4b0` in these 11 pushes and the 12 of the removals, nothing else. `0x5de922` loads `edx`
+0x10ac for a removal with no matching add in `0x5dd8a0`.
 
 ## Inventory and money changes
 
@@ -146,17 +151,17 @@ permanent bonus) calls `0x4d7d40`, `0x4fca20(0)` and `0x4d2cb0`; `0x5de470` (tem
 
 ## Rest state
 
-A rest-state change (`PLAYER_BYTES_2` byte 3) signals `UPDATE_EXHAUSTION`; for state 1 it shows
+A rest-state change (`PLAYER_BYTES_2` byte 3) signals `UPDATE_EXHAUSTION` with no arguments; for state 1 it shows
 `ERR_EXHAUSTION_RESTED` and the rest tutorial, for state 2 `ERR_EXHAUSTION_NORMAL`. States 0 and
 3 and above show nothing. `PLAYER_FIELD_BYTES2` byte 1 refreshes aura visibility with the bits
 that changed.
 
-Addresses: `0x5de4e0`, `0x80af50`, `0x5de560`, `0x5f0d90`
+Addresses: `0x5de4e0`, `0x5de4e8`, `0x80af50`, `0x5de560`, `0x5f0d90`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5de4e0` reads `[+0xe68]+0x1b` and indexes the 8-byte table `0x80af50` for states below 3, each
+`0x5de4e0` fires 406 through `0x703e50` (`0x5de4e8`), reads `[+0xe68]+0x1b` and indexes the 8-byte table `0x80af50` for states below 3, each
 an error id and a tutorial with 0x1d1 and 0x32 as none. `0x5de560` passes `new ^ old` to
 `0x5f0d90`, which calls `CGUnit_C::RefreshAuraVisibility` on every unit through `0x5f0db0`.
 

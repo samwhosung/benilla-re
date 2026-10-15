@@ -528,7 +528,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8046d8	const uint32_t[14]	s_profanityChatTypes		ui	Holds the 14 chat types whose lines are profanity masked	verified	one	ui/chatfilter#which-lines-are-filtered
 0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
 0x805fb0	ChatMessageGroup[68]	s_chatMessageGroups		ui	Holds the 68 message groups a window can show	verified	one	ui/chatwindows#message-groups-of-a-window
-0x8062e0	const uint32_t[94]	s_chatTypeEvents		ui	Holds the event id each of the 94 chat types fires	verified	one	ui/chatevents#the-ten-event-arguments
+0x8062e0	const uint32_t[94]	s_chatTypeEvents		ui	Holds the event id each of the 94 chat types fires; type 89 holds 540, which has no name	verified	one	ui/chatevents#the-ten-event-arguments
 0x806458	char[8]	s_maskCharacters		ui	Holds the mask characters !@#$%^&*	verified	one	ui/chatfilter#masking
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	verified	one	ui/chatcolors#changechatcolor
 0x806524	const float	s_mapInvVerticalSpan		ui	Holds 1/41.75, the divisor that turns the vertical world span of a map into 0 to 1	verified	one	ui/geometry#the-rectangle-of-a-continent
@@ -1254,7 +1254,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x827000	void (*[7180])(void)	__xc_a		crt	Lists the C++ static initializers __cinit runs in ascending order, up to __xc_z	verified	one	random#static-initializers
 0x82e124	char *[2]	s_archiveRoots		storm	Holds the two search roots of archives: Data\ and ..\Data\	verified	one	storm/mount#base-and-speech-archives
 0x82e12c	uint32_t			client	Holds a dword its object file's code reads; not read here	inferred	none	
-0x82e280	char[3]	s_textS		unassigned	Holds the string "%s"	inferred	none	
+0x82e280	char[3]	s_textS		unassigned	Holds the string "%s"	verified	one	objectlayer/playerfields#watchers-on-the-active-player
 0x82e3e0	char[6]	s_textLogin		unassigned	Holds the string "login"	inferred	none	
 0x82e3e8	char[11]	s_textCharselect		unassigned	Holds the string "charselect"	inferred	none	
 0x82e424	const char[5]	s_textPercentSPercentS		charactermodel	Holds the string "%s%s"	verified	one	charactermodel/equipment#item-models
@@ -1575,7 +1575,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84453c	char[3]	s_textH		unassigned	Holds the string "|h"	inferred	none	
 0x8445b4	char[15]	s_textPVPRANKDD		unassigned	Holds the string "PVP_RANK_%d_%d"	inferred	none	
 0x8445c8	char[7]	s_textDSAt8445c8		ui	Holds the string "%d. %s"	inferred	none	
-0x844608	char[21]	s_textSSSSSSDDSD		ui	Holds the string "%s%s%s%s%s%s%d%d%s%d"	inferred	none	
+0x844608	char[21]	s_textSSSSSSDDSD		ui	Holds the string "%s%s%s%s%s%s%d%d%s%d"	verified	one	ui/chatevents#the-ten-event-arguments
 0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
@@ -1627,7 +1627,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x847490	const char[15]	s_keyPlayerOffline		ui	Holds the global string key PLAYER_OFFLINE of the offline party member line	verified	one	ui/tooltipunit#the-offline-and-faction-lines
 0x8474a0	char[32]	s_textUsageGetRaidRosterInfoIndex		ui	Holds the string "Usage: GetRaidRosterInfo(index)"	inferred	none	
 0x8475a0	void *[56]	s_petFunctions		ui	Holds the 28 name and function pairs of the pet Lua functions, PetHasActionBar to GetPetIcon	verified	one	ui/scriptapi#function-tables
-0x847894	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName, Script::UnitIsFriend, Script::UnitCanCooperate read; not read here	inferred	none	
+0x847894	char[7]	s_textPlayer		unassigned	Holds the string "player", the unit token	verified	one	objectlayer/playerfields#watchers-on-the-active-player
 0x8479f8	void *[28]	s_tradeFunctions		ui	Holds the 14 name and function pairs of the trade Lua functions, CloseTrade to SetTradeMoney	verified	one	ui/scriptapi#function-tables
 0x847ce0	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x847ce4	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	ui/loot#the-row-widget

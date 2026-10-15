@@ -96,6 +96,51 @@ dword is set (`0x703efb`). It pushes the saved value back, stores it as `event`,
 reference (`0x703f3d`). `0x703f50` does the same with `0x702710(object, object + 0xc, format,
 arguments)`.
 
+## Fire sites and their ids
+
+Only `0x703e50` and `0x703f50` deliver an event: 485 direct calls and tail jumps, 149 of them to
+`0x703f50`. Every site's id is a constant on each path into it except at three sites.
+`0x49b199` fires the dword of `0x8062e0` at the chat type (`chatevents`). `0x5de4c1` fires the
+argument a watcher on the active player is registered with (`objectlayer/playerfields`).
+`0x515e7a` fires `0x515e50`'s `edx`, which its 38 callers set to a constant, to 17 or 23 plus a
+power-type byte, or, from the watcher callback `0x51bd50`, to the watched field's offset over 4
+(`unittokens`). `tables/event_sites.tsv` lists every site with its ids.
+
+Addresses: `0x703e50`, `0x703f50`, `0x49b0b6`, `0x49b0bf`, `0x49b18c`, `0x8062e0`, `0x5de4b3`, `0x5de4c1`, `0x515e57`, `0x515e79`, `0x515e7a`, `0x51bd55`, `0x46c0a5`, `0x46c0b4`
+Confidence: verified
+Proof: one
+Test: none
+
+An `e8`/`e9` scan of `.text` finds 336 calls of `0x703e50` and 149 of `0x703f50`, the listing's
+485; no dword of the image holds either address. Control: the same scan finds the 38 calls of
+`0x515e50` the listing has. `0x49b18c` loads `[eax*4+0x8062e0]` with the type stored from `edx`,
+which `cmp edx,0x5e` (`0x49b0b6`) and the signed `jge` (`0x49b0bf`) keep below 94. `0x5de4b3`
+loads `[ebp+0x14]`, the record's `+0x14` that `0x465570` pushes. `0x515e57` copies `edx` to
+`edi`, pushed at `0x515e79`; `0x51bd55` shifts `ecx` right by 2. The glue site `0x46c0b4` pushes
+`eax`, which `cmp eax,0x4; jne` at `0x46c0a5` fixes at 4. The generator,
+`tools/tables/event_sites.py`, stops on a site it cannot resolve.
+
+## Events no site fires
+
+Six named events have no fire site: `SYSMSG` (223), `CHAT_MSG_COMBAT_LOG` (251), `TRADE_REQUEST`
+(285), `SHOW_COMPARE_TOOLTIP` (377), `UPDATE_LFG` (389) and `GM_PLAYER_INFO` (409). A frame can
+register for them, and their handlers never run. Of the computed ids, only the power-type
+families reach two of them: 17 + 206 is 223, and 17 + 234 and 23 + 228 are 251. The other four
+are past both families' ends, 272 and 278.
+
+Addresses: `0x51ab30`, `0x51ae6f`, `0x51af87`, `0x51b0d1`, `0x51b45f`, `0x51b4e1`, `0x51b5a9`, `0xceef68`, `0x7019c0`, `0x7019f0`, `0x704060`, `0x703d90`, `0x703e50`, `0x703f50`
+Confidence: verified
+Proof: one
+Test: none
+
+No site's id set holds the six (`tables/event_sites.tsv`, with every site resolved). A scan of
+the image for each name string's address finds one dword, the name's store in `0x51ab30`
+(`0x51ae6f`, `0x51af87`, `0x51b0d1`, `0x51b45f`, `0x51b4e1`, `0x51b5a9`), which is the scan's
+control. The 17 dwords of the image that hold the record array's address `0xceef68` lie in its
+initializer `0x7019c0`, its destroyers `0x7019f0` and `0x704060`, the four register and
+unregister functions, the installer `0x703d90` and the two dispatchers, so no other code runs a
+listener by event.
+
 ## Listener order
 
 Listeners of an event run in the order they registered: registering appends at the tail of the
