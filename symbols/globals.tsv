@@ -1952,6 +1952,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
 0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
+0x85f3f0	void *	s_networkShutdownFunction		unassigned	Holds the network library's shutdown function, 0x5bf300 in the image, which the stop handler calls	verified	one	core/close#stop-handler-order
 0x85f4d8	const uint32_t[21]	s_stripTable		font	Holds seven triples of mask, replacement character and prefix flag per token class	verified	one	font/markup#stripping
 0x85f534	const char[20]	s_batchTag		font	Holds the allocation tag of a batch	verified	one	font/api#batches
 0x85f554	const char[14]	s_fontTag		font	Holds the allocation tag of a font	verified	one	font/api#creating-a-font
@@ -2433,7 +2434,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882720	uint32_t	s_readTos		cvar	Points at the readTOS option's record	inferred	none	
 0x88272c	uint32_t	s_pvpRealmGate		unassigned	Holds 1 when the selected realm type allows player killing, set at world entry	verified	one	ui/zonetext#the-realm-gate
 0x882730	uint32_t	s_iniRegion		client	Holds the Region value read from the WoW Config section of Wow.ini, 0 by default	inferred	none	
-0x882734	uint32_t			client	Holds a dword that ClientInitializeGame, ClientDestroyGame read and write; not read here	inferred	none	
+0x882734	uint32_t	s_gameInitialized		client	Holds 1 from the end of ClientInitializeGame until ClientDestroyGame ends	verified	one	core/close#stop-handler-order
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
 0x882748	const char[1]	s_emptyString		unassigned	Holds the empty string	verified	one	ui/tooltipcontent#localized-lines
 0x882894	float	s_progressUi		loadingscreen	Holds the interface load fraction	verified	one	loadingscreen/screen#progress-fraction

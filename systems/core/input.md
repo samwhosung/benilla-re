@@ -304,7 +304,7 @@ then calls `0x423ca0` and sets the quit flag (`0x423a2e`, `0x423a36`); kind 0xe 
 flag (`0x423b04`). `0x41fe40` jumps to `0x424250`, which stores the callback and its argument.
 The client's start handler `0x402840` installs `0x63c9a0` through `0x63b460` (`0x63b599`); that
 calls `0x41f9b0` for the current context through `0x63cdf0` and returns 0. The stop handler
-`0x403640` clears it (`0x63c9b5`).
+`0x403640` clears it (`0x63c9b5`). `core/close` follows the teardown from there.
 
 ## Mouse speed and Num Lock
 

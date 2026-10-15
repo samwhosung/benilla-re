@@ -42,7 +42,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401520	16	EventSetTimerWrapper		client	orchestration		Passes its delay, handler and argument to EventSetTimer and returns the timer id	inferred	none	objectlayer/players#area-triggers	
 0x401530	24			client	unreached		Runs its object file code that calls EventSetTimerEx; not read here	inferred	none		
 0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
-0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	inferred	none		
+0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	verified	one	core/close#tail-and-exit	
 0x401570	646	ClientInitializeGame	idb	client			Initializes the game systems, among them the spell tables through 0x6dda50	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x401800	78	NotifyHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetCString, CGGameUI::AddErrorMessage, ConsoleWriteA; not read here	inferred	none		
 0x401850	163	PlayedTimeHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetInt32, ConsolePrintf, 0x49e9d0 and 1 more; not read here	inferred	none		
@@ -58,7 +58,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401d90	68			client			Runs Client.cpp code that calls SMemFree; not read here	inferred	none		
 0x401de0	212	HandleLoginVerifyWorldPacket	idb	client			Reads map, position and facing and, for another map, calls the world-port executor without an ack	verified	one	collision/teleport#far-transfer-handlers	
 0x401ec0	26	ClientIdle	idb	client	orchestration		Runs another tick function on its argument, then polls the area list; returns 1	inferred	none	objectlayer/players#area-list-polling	
-0x401ee0	443	ClientDestroyGame	idb	client			Shuts the game systems down, among them the spell tables through 0x6dde30	inferred	none	spell/tables#teardown-at-shutdown	
+0x401ee0	443	ClientDestroyGame	idb	client			Tears the game down: handlers, objects, modules, interface shutdown, account-data timers; no-op before world entry	verified	one	core/close#world-teardown	
 0x4020a0	26			client	unreached		Runs Client.cpp code that calls CWorld::GetAreaIdAt; not read here	inferred	none		
 0x4020c0	5			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x4020d0	5			client	unreached		Runs Client.cpp code not read here	inferred	none		
@@ -73,7 +73,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4022d0	74			client			Runs Client.cpp code that calls 0x402320, OsFileExists; not read here	inferred	none		
 0x402320	37			client			Runs Client.cpp code that calls SStrPrintf; not read here	inferred	none		
 0x402350	1253	InitializeGlobal	idb	client			Initializes the client's systems, then the event library and its interactive context	inferred	none	core/loop#startup-and-shutdown	
-0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	inferred	none	core/input#close-and-quit	
+0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	verified	one	core/close#confirm-close-callback	
 0x402a00	23			client			Runs Client.cpp code that calls EventSetTimer; not read here	inferred	none		
 0x402a20	106	CacheUpdateHandler	idb	client			Runs Client.cpp code that calls OsGetAsyncTimeMs, 0x448ec0, SysMsgAdd and 2 more; not read here	inferred	none		
 0x402a90	1			client			Runs Client.cpp code not read here	inferred	none		
@@ -96,7 +96,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4035f0	21	ReloadUiCommand		client			Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	inferred	none		
 0x403610	5			client			Runs Client.cpp code not read here	inferred	none		
 0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	one	net/dispatch#main-thread-drain	
-0x403640	88	ClientContextStop		client			Handles the context's stop event; removes the confirm-close callback through 0x63c9b0	inferred	none	core/input#close-and-quit	
+0x403640	88	ClientContextStop		client			Runs the game teardown, client systems and network services, then the other shutdowns and removes the callback	verified	one	core/close#stop-handler-order	
 0x4036a0	26	CacheUpdateShutdown	idb	client			Runs Client.cpp code that calls EventKillTimer; not read here	inferred	none		
 0x4036c0	100	DestroyClientSystems		client			Shuts down client systems at context stop, 0x6ec130 among them	inferred	none	spell/visuals#startup-and-shutdown	
 0x403730	10			client			Runs Client.cpp code not read here	inferred	none		
@@ -105,7 +105,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x403b00	147			client			Runs Client.cpp code that calls 0x402320, 0x648dd0, 0x64df50 and 1 more; not read here	inferred	none		
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
-0x403bc0	167	DestroyGlobal		client			Shuts the client's systems down, the time manager and the event library among them	inferred	none	core/loop#startup-and-shutdown	
+0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	one	core/close#tail-and-exit	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
 0x403ca0	555			client			Runs Client.cpp code that calls SStrPrintf, 0x467d10, ClntObjMgrEmptyHook and 11 more; not read here	inferred	none		
 0x403ed0	119			client			Runs its object file code that calls SStrPack, CWorld::GetEntityAreaId, FormatAreaName; not read here	inferred	none		
@@ -6901,7 +6901,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48efe0	99	CinematicNextShot		ui	primitive		Plays the next shot of the sequence, or ends the cinematic	verified	one	uicamera/cinematic#stepping-and-ending	
 0x48f050	34	StopCinematicNarration		ui	orchestration		Stops the narration and schedules the end of the cinematic	verified	one	uicamera/cinematic#stepping-and-ending	
 0x48f080	377	EndCinematic		ui	primitive		Ends a cinematic, restoring the music, the cursor and the zone channels	verified	one	uicamera/cinematic#stepping-and-ending	ui::dist2_48f080
-0x48f200	396	EndLootWindow		ui	primitive		Ends the loot window, releasing the held loot and showing ERR_LOOT_NO_UI where it applies	inferred	none	objectlayer/players#death	
+0x48f200	396	EndLootWindow		ui	primitive		Ends the loot window: releases a held source, takes a disenchant window's rows, clears a dead source's target	verified	one	core/close#leave-world-cascade	
 0x48f390	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48f3a0	54	OpenLootWindow		ui	primitive		Opens the loot window for an object, money and loot type	inferred	none	objectlayer/inventory#loot	
 0x48f3e0	20	SignalResurrectRequest		ui	orchestration		Signals RESURRECT_REQUEST with a name	verified	one	objectlayer/playermessages#resurrection-and-summoning	
@@ -8625,7 +8625,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c1c60	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1c70	5	InitQuotient4c1c80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c1c80, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c1c80	19	InitQuotient4c1c80		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4c1ca0	12			ui	orchestration		Runs its object file code that calls 0x48f200; not read here	inferred	none		
+0x4c1ca0	12	EndLootWindowWithRelease		ui	orchestration	void __cdecl (void)	Calls EndLootWindow with 1, 0 and a zero stack argument	verified	one	core/close#leave-world-cascade	
 0x4c1cb0	580	SetLootSource		ui	primitive	void __fastcall (CGObject_C *source, uint32_t money, uint32_t type)	Ends the loot session in progress and starts one for the source object in ecx, copying the wire entries	verified	one	ui/loot#opening-and-closing-a-session	
 0x4c1f00	148	ClearLootRow		ui	primitive	void __fastcall (uint32_t wireSlot)	Removes the row with a wire slot, signals LOOT_SLOT_CLEARED and closes the loot when nothing is left	verified	one	ui/loot#taking-a-row-out	
 0x4c1fa0	696	AutoLootAll		ui	primitive	void __fastcall (uint32_t signalDone)	Takes the money and the plain rows, clears the auto-loot byte, then signals LOOT_OPENED or closes	verified	one	ui/loot#auto-loot	
@@ -17372,7 +17372,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ab380	3	IgnoreRealmDisconnected		net	orchestration	void __thiscall (void *this, void *conn)	Ignores the realm connection's disconnect notice	inferred	none		
 0x5ab390	3	IgnoreRealmConnectFailed		net	orchestration	void __thiscall (void *this, void *conn)	Ignores the realm connection's connect-failure notice	inferred	none		
 0x5ab3a0	37	ConsoleLogout		net	orchestration	uint32_t __cdecl (void)	Requests an instant logout on the current connection when in world, and returns 1	inferred	none		
-0x5ab3d0	177	ClientServices::Destroy		net	orchestration	void __cdecl (void)	Clears the realm selection, cancels the login, unregisters logout, then deletes the connection and the other singletons	inferred	none		
+0x5ab3d0	177	ClientServices::Destroy		net	orchestration	void __cdecl (void)	Cancels the logon link, disconnects and deletes the world connection and the other session objects; sends nothing	verified	one	core/close#network-teardown	
 0x5ab490	6	ClientServices::GetCurrent	idb	net	orchestration	ClientConnection * __cdecl (void)	Returns the current ClientConnection	verified	one	net/dispatch#handler-tables	
 0x5ab4a0	6	ClientServices::GetLoginSession		net	orchestration	void * __cdecl (void)	Returns the login-server session object, or null	inferred	none		
 0x5ab4b0	226	ClientServices::Logon		net	orchestration	void __fastcall (const char *account, const char *password)	Creates the login session (rebuilt when flagged, with the realm holder), sets account and password, and dials realmList	verified	one	net/connection#starting-the-logon	
