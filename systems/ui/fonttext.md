@@ -222,18 +222,21 @@ are lower-cased with `0x40f92b` and index the table at `0x81c6d0` (`0x77197c`); 
 
 `|2` followed by a non-digit and optional spaces turns the word that follows into its "of the" form. `La`, `Le` and `L'` become `de la `, `du ` and `l'`;
 any other word gets `d'` when it starts with a vowel (ASCII or the Latin-1 letters `0xc0`-`0xc6`, `0xc8`-`0xcf`, `0xd2`-`0xd6`, `0xd8`-`0xdc`
-and their lower-case forms), with `h` or `H`, or with `y` or `Y` before a vowel, else `de `. When `0xcf4d24` is set, a number
-with exactly one `.` and any commas before it has the two swapped.
+and their lower-case forms), with `h` or `H`, or with `y` or `Y` before a vowel, else `de `. When `0xcf4d24` is set, a run of digits,
+`.` and `,` from a digit swaps them if it has one `.`, no `,` after it, the next byte at least `0` and the one after
+at most `9` (signed): `1,234.56` gives `1.234,56`, `1.5` `1,5`, `1.55g` `1,55g`, `1.555` `1,555`; `1.5g`, `1,234,567` stay.
 
-Addresses: `0x7719a0`, `0x7719f5`, `0x771a2b`, `0x771a3b`, `0x771a4e`, `0x771a75`, `0x771aae`, `0x771aec`, `0x771b03`, `0x771b60`, `0x771b74`, `0x771c50`, `0x771cc3`, `0x771d16`, `0x771d23`, `0x771d74`, `0xcf4d24`, `0xcf1cc8`
+Addresses: `0x7719a0`, `0x7719f5`, `0x771a2b`, `0x771a3b`, `0x771a4e`, `0x771a75`, `0x771aae`, `0x771aec`, `0x771b03`, `0x771b60`, `0x771b74`, `0x771c50`, `0x771cc3`, `0x771ccc`, `0x771cd1`, `0x771cd7`, `0x771d16`, `0x771d23`, `0x771d74`, `0xcf4d24`, `0xcf1cc8`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7719a0` writes `d`, `e`, space at `0x771aec` to `0x771b01`, and `d`, `'` at `0x771b03`. `0x771b60` answers 1 for an ASCII vowel through the jump table `0x771bf4` indexed by the byte
-table `0x771bfc` (`ch − 0x41`), or for a code in one of the Latin-1 ranges; the other characters give 0. `0x771c50` walks the text to the 4,095th byte of `0xcf1cc8`: a run of digits, dots and commas with one dot, at most
-two characters after it, and no comma after it is copied with each `.` written as `,` and each `,` as `.` (`0x771d16`, `0x771d23`); anything else is copied
-unchanged.
+table `0x771bfc` (`ch − 0x41`), or for a code in one of the Latin-1 ranges; the other characters give 0. `0x771c50` walks the text into `0xcf1cc8` and stops at 4,095 bytes (`cmp esi,0xcf2cc7; jae`). At a digit it scans the run, counting dots and
+commas and keeping the last of each; it swaps only when the count of dots is 1 (`0x771cc3`), no comma lies at or past the dot
+(`0x771ccc`, `jae`), `[dot+1]` passes `cmp 0x30; jl` (`0x771cd1`) and `[dot+2]` passes `cmp 0x39; jg` (`0x771cd7`). The terminating
+NUL is below `9`, so `1.5` swaps, and a letter after the dot is above `0`, so `1.g5` swaps too. The copy writes `.` as `,` and `,`
+as `.` (`0x771d16`, `0x771d23`); any other run, and each other byte, is copied unchanged.
 
 ## Font part and region slots
 
