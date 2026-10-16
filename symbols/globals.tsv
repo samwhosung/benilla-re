@@ -1929,6 +1929,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85acf0	uint32_t[6]	s_primitiveCountDivisor		gx	Holds the divisor of the primitive count of each topology: 1, 2, 1, 3, 1, 1	verified	one	gx/draw#draw-call
 0x85ad08	uint32_t[6]	s_primitiveCountSubtrahend		gx	Holds the amount subtracted from the primitive count of each topology: 0, 0, 1, 0, 2, 2	verified	one	gx/draw#draw-call
 0x85ad20	uint32_t[11]	s_alphaRefByBlendMode		gx	Holds the default alpha reference of each blend mode 0 to 10: 0, 224, then 1 for modes 2 to 6, then 0	verified	one	gx/renderstate#cache-dirty-list-and-stack
+0x85ad4c	uint32_t	s_streamVertexPoolSize		gx	Holds the size of the stream vertex pool, 2,883,540 bytes	verified	one	gx/device#stream-pools
+0x85ad50	uint32_t	s_streamIndexPoolSize		gx	Holds the size of the stream index pool, 262,144 bytes	verified	one	gx/device#stream-pools
+0x85ad54	char *[8]	s_formatNames		gx	Holds the names of the four colour formats and the four depth formats the device log prints	verified	one	gx/device#device-log
 0x85aea4	char[59]	s_pathCGxDevice		gx	Holds the source path of CGxDevice.cpp	verified	one	gx/overview#object-files
 0x85b260	char[65]	s_pathCGxD3dDevice		gx	Holds the source path of CGxD3dDevice.cpp	verified	one	gx/overview#object-files
 0x85c1f8	uint32_t[11]	s_glBlendSource		gx	Holds the OpenGL source blend factor of each blend mode 0 to 10	verified	one	gx/renderstate#blend-alpha-and-depth-tables
@@ -3646,8 +3649,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e5b8	float	s_gameObjectDisplayInfoInfinity		dbc	Holds +inf, set at startup by the record file; nothing reads it	verified	one	dbc#record-files
 0xc0ed2c	uint32_t	s_gxVertexCount		gx	Holds the vertex count GxBuildVerticesCounted stores for the draw that follows	inferred	none	gx/draw#interleaving-helper
 0xc0ed38	void *	s_gxDevice		gx	Holds the global graphics device the facade calls	verified	one	gx/device#backend-selection-and-creation
+0xc0ed3c	uint8_t	s_glEntryPointsProbed		gx	Holds 1 once the OpenGL entry point probe has run	verified	one	gx/opengl#loading-the-entry-points
+0xc0ef60	float	s_aspectRatio		gx	Holds the width over the height of the device format when it constrains the aspect, else 0	verified	one	gx/device#base-format-setter
+0xc0ef64	uint32_t[2]	s_minFormatSize		gx	Holds the smallest device format width and height, 320 and 240	verified	one	gx/device#base-format-setter
 0xc0ef70	float[3]	s_defaultPointAttenuation		gx	Holds the default point attenuation (1, 0, 0), set by an initializer and used as id 66's default	verified	one	gx/renderstate#point-state
+0xc0ef7c	uint32_t	s_gxLogBytes		gx	Holds the number of bytes written to the device log	verified	one	gx/device#device-log
+0xc0ef80	void *	s_gxLog		gx	Holds the device log handle, 0 until the log is open	verified	one	gx/device#device-log
 0xc0f22c	uint32_t	s_defaultTextureColour		gx	Holds 0xff00ff00, the colour of the Direct3D device's default 8 by 8 texture	verified	one	gx/device#direct3d-device-start
+0xc0f234	uint32_t	s_swapControlFlag		gx	Holds 1 when WGL_EXT_swap_control is listed	verified	one	gx/opengl#gl-and-wgl-extension-loads
 0xc0f23c	uint32_t	s_pixelFormatArbFlag		gx	Holds 1 when WGL_ARB_pixel_format is listed	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f254	uint32_t	s_vertexProgramFlag		gx	Holds 1 when GL_NV_vertex_program is listed	verified	one	gx/device#opengl-initial-state
 0xc0f274	uint32_t	s_textureMaxLevelExtension		gx	Holds the flag that lets OpenGL limit GL_TEXTURE_MAX_LEVEL for compressed texture formats	verified	one	gx/textures#device-texture-upload
@@ -3656,10 +3665,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0f2a4	uint32_t	s_pointParameterExtension		gx	Holds the flag under which the OpenGL point parameter call is used for render state ids 0x42 to 0x44	verified	one	gx/renderstate#point-state
 0xc0f2ac	uint32_t	s_multisampleFlag		gx	Holds 1 when GL_ARB_multisample is listed	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
+0xc0f2bc	uint32_t	s_vertexBufferObjectFlag		gx	Holds whether buffer objects back the pools: set from GL_ARB_vertex_buffer_object, cleared by override slot 1	verified	one	gx/opengl#gl-and-wgl-extension-loads
+0xc0f2c8	void *	s_wglSwapIntervalEntry		gx	Holds the wglSwapIntervalEXT entry point	verified	one	gx/opengl#gl-and-wgl-extension-loads
 0xc0f2e0	void *	s_wglChoosePixelFormatEntry		gx	Holds the entry point the pixel format choice calls with its attribute list	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f2e8	void *	s_attribivArbEntry		gx	Holds the wglGetPixelFormatAttribivARB entry point	verified	one	gx/device#opengl-window-and-pixel-formats
+0xc0f2ec	void *	s_wglGetExtensionsStringEntry		gx	Holds the wglGetExtensionsStringARB entry point, 0 when absent	verified	one	gx/opengl#extension-tests
+0xc0f350	void *	s_glBufferDataEntry		gx	Holds the glBufferDataARB entry point	verified	one	gx/opengl#gl-and-wgl-extension-loads
+0xc0f354	void *	s_glGenBuffersEntry		gx	Holds the glGenBuffersARB entry point	verified	one	gx/opengl#gl-and-wgl-extension-loads
+0xc0f35c	void *	s_glBindBufferEntry		gx	Holds the glBindBufferARB entry point	verified	one	gx/opengl#gl-and-wgl-extension-loads
 0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
 0xc0f3ec	uint32_t	s_glVersion		gx	Holds the GL_VERSION major number shifted left 16 ored with its minor number	verified	one	gx/device#opengl-initial-state
+0xc0f3f0	char *	s_wglExtensionString		gx	Holds the cached WGL extension string until the context is released	verified	one	gx/opengl#extension-tests
+0xc0f3f4	char *	s_glExtensionString		gx	Holds the cached GL extension string until the context is released	verified	one	gx/opengl#extension-tests
 0xc0f548	float	s_tgaInfinity		image	Holds +inf copied by 0x5a35f0, which nothing reads	verified	one	image/overview#initializers-and-statics
 0xc0f54c	float	s_convertInfinity		image	Holds +inf copied by 0x5a4c20, which nothing reads	verified	one	image/overview#initializers-and-statics
 0xc0f550	float	s_convertInfinity2		image	Holds +inf copied by 0x5a4f00, which nothing reads	verified	one	image/overview#initializers-and-statics

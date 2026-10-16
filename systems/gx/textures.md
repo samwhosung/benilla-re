@@ -187,3 +187,25 @@ Proof: one
 Test: none
 
 The block edge table `0x809d48` is 1 for formats 0 to 4 and 8 and 4 for formats 5 to 7; the bytes per block table `0x809d6c` is 0, 4, 2, 2, 2, 8, 16, 16, 2 for formats 0 to 8, indexed by the format at `+0x34` of the record. Passing -1 for width or height takes the record's own size at `+0x24` and `+0x28`.
+
+## TGA mip file names
+
+A TGA texture's lower levels come from files beside it: `0x449550(name, buffer)` copies the name
+into a 260-byte buffer, cuts it at its last `.`, and appends `_mip%d.tga`, so `Foo.tga` gives the
+pattern `Foo_mip%d.tga` and a name with no dot gets the suffix at its end. The TGA decoder passes
+the pattern on to `0x4493a0`. `0x4490c0`, which nothing live reaches, decodes a file as TGA or BLP by
+its extension, tries the other decoder when the first fails, and, when both fail and it was given an
+error sink, reports `Error loading texure file "%s": unsupported image format` to it with the code 3.
+
+Addresses: `0x449550`, `0x44955a`, `0x449561`, `0x449571`, `0x449580`, `0x449314`, `0x449329`, `0x4490c0`, `0x449111`, `0x449121`, `0x449162`, `0x44918a`, `0x449196`, `0x4491c9`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x44955a` is `SStrCopy` with 0x104, `0x449561` calls `0x449580`, which finds the last `.` with
+`0x64a450` and writes 0 over it, and `0x449571` is `SStrPack` of the suffix. `0x449314` builds the
+pattern in `0x4491f0` and `0x449329` passes it. In `0x4490c0` `0x449111` splits the name (Texture name
+split), `0x449121` appends the extension of the current kind from `s_textureExtensions`, and kind 0
+calls `0x4491f0` (`0x44918a`), kind 1 `TextureDecodeBlp` (`0x449162`); `0x449196` flips the kind for the
+second try and `0x4491c9` reports through the error sink's slot `+0xc`.
+

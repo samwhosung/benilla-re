@@ -115,6 +115,29 @@ Test: none
 
 The fog options are chosen by `0x5938a0(9)` and `0x5938a0(15)` through the table of three string pointers at `[ebp-0x20]`. The vertex counterpart is `0x59e700`.
 
+## OpenGL vertex program constants
+
+Before an OpenGL vertex program is built, its text is rewritten in place. Each declaration
+`PARAM c<n>` or `PARAM c<n>[<m>]` bound to ` = { program.local` or ` = program.local` is bound to
+`program.env` instead, padded with two spaces to keep the length. The declaration of `c31` is then
+replaced whole by `PARAM c31[N−31]={program.env[31..N−1]}`, N being the device's vertex constant
+count `[dev+0x2d8]`, followed by `;` and spaces up to the line's end. A program whose fields `+0x40`
+or `+0x4c` hold an untagged pointer is left alone. Nothing bounds the rewrite of `c31` by the length
+of the line it replaces.
+
+Addresses: `0x59e800`, `0x59e811`, `0x59e84e`, `0x59e875`, `0x59e8a3`, `0x59e995`, `0x59e9b5`, `0x59e9bf`, `0x59e9e6`, `0x59e9f4`, `0x59ea05`, `0x59ea29`, `0x59ea36`, `0x59ea41`, `0x59eb30`, `0x59eb6d`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x59eb30` calls `0x59e800` for each program of kind 0 whose `+0x2c` is set (`0x59eb6d`) and then
+builds with `0x59e700` or `0x59e530`. `0x59e811` and `0x59e81c` skip unless each field is 0 or has bit 0
+set. `0x59e84e` compares 7 bytes with `PARAM c`; `0x59e875` accumulates decimal digits; `0x59e8a3` accepts
+`[digits]`. `0x59e995` requires 0x11 more bytes, `0x59e9b5` compares nine words and `0x59e9bf` writes the
+`program.env` form, else `0x59e9e6` compares four dwords and `0x59e9f4` writes the short form; text
+matching neither is left. `0x59ea05` tests `n` against 31 and `0x59ea29` is `sprintf` at the declaration's
+start with 31, N − 31, 31 and N − 1; `0x59ea36` writes `;` and `0x59ea41` spaces until a byte 0x0a.
+
 ## Point state
 
 Direct3D maps id `0x41` to `D3DRS_POINTSIZE` (154), divided by a term from the viewport when id `0x42` is not (1, 0, 0); id `0x42` to `POINTSCALE_A`, `_B` and `_C` (`0x9e` to `0xa0`), with `POINTSCALEENABLE` (`0x9d`) set when the triple differs from (1, 0, 0); ids `0x43` and `0x44` to `POINTSIZE_MIN` and `_MAX` (`0x9b`, `0xa6`); id `0x45` to `POINTSPRITEENABLE` (`0x9c`). OpenGL passes id `0x41` to `glPointSize`, ids `0x42` to `0x44` to the point parameter call under the extension flag `[0xc0f2a4]`, and id `0x45` to `0x8861` and `0x8642`.

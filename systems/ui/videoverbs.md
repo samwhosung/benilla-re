@@ -133,14 +133,14 @@ from the two constant stores.
 `0x4034d0` converts the new text and, only while `DesktopGamma` is 0, rebuilds and uploads the ramp at once through the
 device slot at `+0x34`. `DesktopGamma` set to nonzero restores the desktop's ramp, and set to 0 re-applies `gamma`.
 
-Addresses: `0x4891c0`, `0x4891d0`, `0x4891f0`, `0x4891fe`, `0x48920d`, `0x8424cc`, `0x489235`, `0x489251`, `0x489267`, `0x8015b8`, `0x4034d0`, `0x4034e8`, `0x4034f3`, `0x403500`, `0x589c00`, `0x58d080`, `0x599dc0`, `0x592220`
+Addresses: `0x4891c0`, `0x4891d0`, `0x4891f0`, `0x4891fe`, `0x48920d`, `0x8424cc`, `0x489235`, `0x489251`, `0x489267`, `0x8015b8`, `0x4034d0`, `0x4034e8`, `0x4034f3`, `0x403500`, `0x589c00`, `0x589c20`, `0x589c70`, `0x5920f0`, `0x58d080`, `0x599dc0`, `0x592220`
 Confidence: verified
 Proof: one
 Test: `ui::luabind_488_set_gamma`, `ui::luabind_488_get_gamma_basemip`
 
 `0x4891d0` is `dc 2d`, `fsubr qword`, so the result is the constant minus the option's float at `+0x24`. `0x489251` formats
 into a 16-byte buffer through `0x64a7f0`. The callback returns 1 at `0x4034f8`, so it never vetoes. `0x403500` converts the
-text with `0x64ac60`; nonzero copies the device's saved ramp (`0x589c70`, from device `+0x928`) and sends it through slot
+text with `0x64ac60`; nonzero copies the device's saved ramp (`0x589c70`, through `0x5920f0`, which copies 0x180 dwords from device `+0x928` unless the target is that ramp) and sends it through slot
 `+0x30` (`0x589c20`), zero uploads `gamma` from its record. `0x589c00` calls device
 slot `+0x34`. Both upload paths skip the hardware write when the format's windowed byte (device `+0x20b`) is set; Direct3D
 also requires bit 0x20000 of the device's `Caps2`.

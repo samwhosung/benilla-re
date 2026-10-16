@@ -26,6 +26,27 @@ Test: none
 
 `+0x258` is the colour component order flag the emitters read (`draw.md`): 1 for OpenGl, 0 for Direct3D. The stores are `0x58df39` and `0x598d31`; `0x5916e0` clears the block first. Slot 0 is the deleting destructor in each table (`0x594c80` base, `0x59f5b0`, `0x5a0d70`).
 
+## Base format setter
+
+`CGxDevice::DeviceSetFormat(format)`, slot `+0x28`, copies the 14-dword format to `+0x204`. When
+both its width and its height are below the minimum, 320 × 240, it raises them to it; one below
+alone is kept. With the format's constrain-aspect byte set it stores width / height as the aspect
+ratio `0xc0ef60`, and 0 otherwise, and it returns 1. Each backend's setter calls it once its
+window and its context or device are made. The two window procedures' sizing helpers read the ratio and the minimum.
+
+Addresses: `0x591fd0`, `0x591fe5`, `0x591fed`, `0x591ffb`, `0x592003`, `0x592015`, `0x592021`, `0x59203c`, `0x590fd0`, `0xc0ef60`, `0xc0ef64`, `0x58ced6`, `0x599cff`, `0x5910a0`, `0x5911a0`
+Confidence: verified
+Proof: one
+Test: `gx::aspect_ratio_matches_binary`
+
+`0x591fd0` is at `+0x28` of the base vtable `0x809da0`, the slot where `0x809af8` and `0x809ef8` hold
+`0x58ce40` and `0x599c90`, which call it at `0x58ced6` and `0x599cff`. `0x591fe5` is the `rep movsd` of
+0xe dwords; `0x591fed` (`jge`) skips when the width `+0x214` is not below `0xc0ef64`, and `0x591ffb` when
+the height `+0x218` is not below the next dword; `0x592003` stores both. `0x592015` tests byte `+0x20c`,
+the format's `+8`; `0x592021` is `fild`/`fidiv` of width by height, and `0x59203c` stores 0. The static
+initializer `0x590fd0` sets the minimum to 0x140 and 0xf0. `0x5910a0` to `0x591160` read the ratio
+and `0x5911a0` to `0x591200` the minimum; their callers are `0x58c6d0` and `0x598750`. The test runs `0x592021` to `0x592038`.
+
 ## Direct3D device start
 
 Slot `+0x20` of `CGxDeviceD3d` (`0x599a60`, arguments the window procedure and the format) saves the screen's gamma ramp (`GetDeviceGammaRamp` into `+0x928`, copied to `+0x328`), registers the window class `GxWindowClassD3d` (`0x599b30`, icon `BlizzardIcon.ico`, cursor `BlizzardCursor.cur`, procedure `0x598750`) and runs `0x5992a0`, which loads `d3d9.dll` (`0x598e40`, `Direct3DCreate9(32)`), reads `GetDeviceCaps` into `+0x38ac` and `GetAdapterDisplayMode` into `+0x3a24`. It stores the window procedure at `+0xf28` and calls slot `+0x28` (`0x599c90`) with the format: that copies the format to `+0x204`, creates the window (`0x598b50`), creates the device (`0x5995c0`) and shows the window.
@@ -193,3 +214,84 @@ Proof: one
 Test: none
 
 The flag at `0xc0f2a0` is 1 when the GL version at `0xc0f3ec` is at least 2.0 (`0x20000`) or the extension `GL_ARB_point_sprite` is listed (`0x59b7a0`), otherwise 0; `0x58e797` copies it to `+0x310` of the device.
+
+## Device log
+
+The device logs to `Logs\gx.log`. The console's device start calls `0x58b5e0`, which opens the log
+once, after creating `Logs`. Every line is formatted with `vsnprintf` into 2 KiB and
+written only while the log is open and fewer than 2 MiB (0x200000 bytes) have gone to it; it is
+also passed with the prefix `CGxDevice::Log(): ` to `0x590630`, which only returns. The console's
+device start and the hardware detection print through `0x58b600`; the device's own print,
+`0x595e70`, writes only when the log is open. The device logs its caps (`0x595e90`) and each format
+it sets (`0x595f40`), as `Format: W x H Window` or `Format W x H @ R Fullscreen`, with the colour and
+depth names and the sample count.
+
+Addresses: `0x58b5e0`, `0x595d90`, `0x595da0`, `0x595db1`, `0x58b600`, `0x595df0`, `0x595e00`, `0x595e10`, `0x595e1d`, `0x595e33`, `0x595e64`, `0x590630`, `0x595e70`, `0x595e90`, `0x595f40`, `0xc0ef80`, `0xc0ef7c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x58b5e0` is a jump to `0x595d90`, which returns when `0xc0ef80` is set, else calls `OsCreateDirectory`
+(`0x595da0`) and `SLogCreate` (`0x595db1`) into `0xc0ef80` and zeroes the count `0xc0ef7c`.
+`0x595df0(format, args)` returns at `0x595e00` without a log, formats at `0x595e10`, compares the count
+with 0x200000 (`0x595e1d`, `jae`), writes with `SLogWrite` (`0x595e33`) and adds the line's length.
+`0x58b600` passes its own argument list without the open test; the line still needs the handle.
+`0x595f40` picks the windowed form on byte `+7`, the names from `0x85ad54` by `+0x24` and `+0xc`.
+
+## Device overrides
+
+`CGxDevice::DeviceOverride(slot, value)` logs the pair; for slot 8 it stores `value > 1` at `+0x308` and `+0x310` and the value as a float at `+0x30c`. Each backend's
+override calls it first. Both store slot 0 at `+0x2d4` and slot 7 as `value != 0` at `+0x298`. OpenGL
+also takes: slot 1 = 0 turns buffer objects off (`opengl.md`); slots 2 and 3 = 0 clear the
+buffer-object choice for the vertex and the index pools of usage 2, and slots 4 and 5 non-zero set
+their broker choice; slot 6 picks the texture generation of mode 6, `0x8512` when non-zero and
+`0x2402` when 0. Other values of slots 1 to 5 change nothing.
+
+Addresses: `0x592370`, `0x592381`, `0x592390`, `0x5923a6`, `0x5923ad`, `0x58e320`, `0x58e33e`, `0x58e35b`, `0x58e36b`, `0x58e37c`, `0x58e38d`, `0x58e3a2`, `0x58e3b7`, `0x58e3c8`, `0x59a440`, `0x59a466`, `0x59a472`, `0xc0f2bc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x592390` compares the slot with 8; `cmp 1, value; sbb; neg` is `value > 1`, unsigned, and `0x5923a6`
+loads the value as a 64-bit integer. `0x58e320` dispatches slots 0 to 7 through the table `0x58e3f0`
+(`0x58e33e`): slot 1 stores 0 in `0xc0f2bc` (`0x58e35b`), slots 2 and 3 store 0 at `+0x3a78` and `+0x3a84`,
+slots 4 and 5 store 1 at `+0x3a60` and `+0x3a6c`, slot 6 writes `+0x39dc` (`0x58e3b7`, `0x58e3c8`).
+`0x59a440` handles 0 (`0x59a472`) and 7 (`0x59a466`). The slots come from the override string
+(`console/display`, Override string).
+
+## Stream pools
+
+Both device constructors create two pools: `Stream_vtx`, of kind 0, usage 2 and 2,883,540 bytes,
+at `+0x26c4`, and `Stream_idx`, of kind 1, usage 2 and 262,144 bytes, at `+0x26c8`.
+
+Addresses: `0x594730`, `0x594744`, `0x594763`, `0x85ad4c`, `0x85ad50`, `0x5947a0`, `0x594320`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x594744` and `0x594763` call `0x5947a0(kind, 2, size, 3, name)`, the sizes loaded from `0x85ad4c` and
+`0x85ad50`, which nothing writes; the results go to `+0x26c4` and `+0x26c8`. `0x5947a0` allocates 0x34
+bytes, runs `0x594320`, which stores the kind at `+0x8`, the usage at `+0xc`, the size at `+0x10`, the
+fourth argument at `+0x2c` and the name at `+0x30`, and links the pool into the list at `+0x26a8`. The callers are
+`0x58df9a` and `0x598dc0`.
+
+## Format lists
+
+`0x589a00(api, list)` clears the list, reserves room for 256 records, sets its growth step to 64,
+and fills it from the backend `api` names: 0 OpenGL, 1 Direct3D, any other none. It returns whether
+the list holds a record. The OpenGL fill opens a hidden window of class `adfmt`, takes its first
+suitable pixel format and a context as the probe does (`opengl.md`), and lists the formats through
+`wglGetPixelFormatAttribivARB` when `WGL_ARB_pixel_format` is listed, else through
+`DescribePixelFormat`, then puts the previous context back.
+
+Addresses: `0x589a00`, `0x589a1c`, `0x589a4b`, `0x589a5d`, `0x589a73`, `0x58d2b0`, `0x58d2f1`, `0x58d3a3`, `0x58d3e2`, `0x58d3fd`, `0x58d40b`, `0x58d412`, `0x58d41f`, `0x48c455`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x589a1c` destroys each 0x38-byte record, `0x589a4b` grows the capacity to 0x100 when it is less, and
+the step `+0xc` is set to 0x40. `0x589a5d` calls `CGxDeviceD3d::EnumerateFormats` and `0x589a73`
+`0x58d2b0`. `0x58d3e2` makes the new context current after saving the current one, `0x58d3fd` tests
+the extension and `0x58d40b` or `0x58d412` lists; `0x58d41f` restores. The caller is
+`BuildMultisampleList` (`0x48c455`).
+

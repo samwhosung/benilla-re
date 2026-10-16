@@ -90,7 +90,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403110	229	PrintSysMsgFilter		client		void __cdecl (void)	Prints the error display's filter: all messages, or the category names of the selector's bits	verified	one	sysmsg#error-display-settings	
 0x403200	624			client			Runs Client.cpp code that calls SStrTokenize, SStrCmpI, 0x44cc80 and 2 more; not read here	inferred	none		
 0x4034d0	46	GammaCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies the Gamma setting to the device's working ramp unless DesktopGamma is set	verified	one	gx/device#gamma-setting	
-0x403500	104			client			Runs Client.cpp code that calls 0x64ac60, 0x589c70, 0x589c20 and 1 more; not read here	inferred	none		
+0x403500	104	DesktopGammaCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Restores the saved desktop gamma ramp for a nonzero DesktopGamma, else applies the gamma setting	verified	one	ui/videoverbs#gamma	
 0x403570	49	ProfanityFilterCallback		client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035b0	49	SpamFilterCallback		client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035f0	21	ReloadUiCommand		client		uint32_t __fastcall (const char *name, const char *args)	Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	inferred	none		
@@ -3198,8 +3198,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x442260	165			unassigned			Runs its object file code not read here	inferred	none		
 0x442310	30			unassigned			Runs its object file code that calls EventUnregister; not read here	inferred	none		
 0x442330	20			unassigned			Runs its object file code not read here	inferred	none		
-0x442350	921			unassigned			Runs its object file code that calls 0x65c610, 0x65bd90, 0x65ca80 and 13 more; not read here	inferred	none		
-0x4426f0	190			unassigned			Runs its object file code that calls 0x589cc0, OsCreateDirectory, OsGetDateTimeStamp and 5 more; not read here	inferred	none		
+0x442350	921	RunFramePass		unassigned			Runs the post-update frame pass, ending with the present and any requested screenshot	verified	one	gx/capture#capture-request-and-frame-order	
+0x4426f0	190	WriteScreenshot		unassigned			Writes the captured frame to Screenshots\WoWScrnShot_<date>_<time>.tga	verified	one	gx/capture#screenshot-file	
 0x4427b0	30			unassigned			Runs its object file code that calls EventRegister; not read here	inferred	none		
 0x4427d0	9			unassigned			Runs its object file code not read here	inferred	none		
 0x4427e0	14			unassigned	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
@@ -3210,7 +3210,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4429e0	4			unassigned			Runs its object file code not read here	inferred	none		
 0x4429f0	4	StoreDwordAt2c		unassigned	primitive		Stores a dword at +0x2c of the object it is given	inferred	none		
 0x442a00	7			unassigned			Runs its object file code not read here	inferred	none		
-0x442a10	7			unassigned			Runs its object file code not read here	inferred	none		
+0x442a10	7	RequestScreenshot		unassigned		void __fastcall (void *callback)	Stores a completion callback, arming one screenshot	verified	one	gx/capture#capture-request-and-frame-order	
 0x442a20	5			unassigned			Runs its object file code not read here	inferred	none		
 0x442a30	15			unassigned			Runs its object file code not read here	inferred	none		
 0x442a40	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -3475,11 +3475,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x448ec0	309	TexturePoolTrim		gx	orchestration	void __fastcall (uint32_t now)	Destroys pooled device textures that have been idle more than 30000 ms	verified	one	gx/textures#device-texture-pool	
 0x449000	1			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
 0x449010	172	FreeTextureCaches		gx	orchestration	void __cdecl ()	Destroys every pooled device texture in the 25 size-class lists	verified	one	gx/textures#device-texture-pool	
-0x4490c0	291			gx	unreached		Runs Texture.cpp code that calls SErrSetLastError, 0x449590, SStrCopy and 2 more; not read here	inferred	none		
+0x4490c0	291	DecodeImageFile		gx	unreached		Decodes an image file as TGA or BLP by its extension, trying the other on failure and reporting both failing	verified	one	gx/textures#tga-mip-file-names	
 0x4491f0	430			gx	primitive		Runs Texture.cpp code that calls 0x5a3660, 0x5a3600, 0x5a3a30 and 8 more; not read here	inferred	none		
 0x4493a0	425			gx	primitive		Runs Texture.cpp code that calls 0x44ae70, SStrPrintf, 0x648a30 and 6 more; not read here	inferred	none		
-0x449550	40			gx	orchestration		Runs Texture.cpp code that calls SStrCopy, 0x449580, SStrPack; not read here	inferred	none		
-0x449580	15			gx	orchestration		Runs Texture.cpp code that calls SStr::sub_64A450; not read here	inferred	none		
+0x449550	40	FormatTgaMipPattern		gx	orchestration	void __fastcall (const char *name, char *buffer)	Copies a name, cuts it at its last dot and appends _mip%d.tga	verified	one	gx/textures#tga-mip-file-names	
+0x449580	15	CutAtLastDot		gx	orchestration	void __fastcall (char *name)	Writes 0 over a name's last dot when it has one	verified	one	gx/textures#tga-mip-file-names	
 0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name and strips a dot four bytes from the end, returning 0 for tga and 1 otherwise	verified	one	gx/textures#texture-name-split	
 0x449610	470	TextureCreateFromFile		gx	orchestration	void * __fastcall (const char *path, uint32_t format, uint32_t loose)	Opens path with .blp appended and returns an HTEXTURE handle whose pixels decode when the async read completes	verified	one	gx/textures#texture-file-creation	
 0x4497f0	80	TextureFileReadDone		gx	orchestration	void __thiscall (void *this)	Decodes a file texture's bytes, closes the file and frees its async record	verified	one	gx/textures#texture-file-creation	
@@ -16312,7 +16312,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5899d0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5899e0	11			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5899f0	5	GxGetDesktopModeFacade		gx	orchestration	uint32_t __thiscall (void *this)	Jumps to 0x58be60, the desktop mode query	verified	one	gx/device#display-modes	
-0x589a00	135			gx	primitive		Runs its object file code that calls 0x58b640, 0x58b6a0, 0x58b740 and 1 more; not read here	inferred	none		
+0x589a00	135	GxEnumerateFormats		gx	primitive	uint32_t __fastcall (uint32_t api, void *list)	Clears a format list and fills it from the OpenGL or Direct3D backend, returning whether it holds one	verified	one	gx/device#format-lists	
 0x589a90	23	GxVertexStride		gx	primitive	uint32_t __fastcall (uint32_t format)	Returns the stride of a vertex format id from the table at 0x809c00	verified	one	gx/draw#interleaving-helper	
 0x589ab0	13			gx	primitive		Runs its object file code not read here	inferred	none		
 0x589ac0	92	GxDevCreate		gx	orchestration	void * __fastcall (uint32_t type, void *wndproc, void *format)	Creates the OpenGl (0) or Direct3D (1) device, stores it at 0xc0ed38 and initialises it; returns 0 on failure	verified	one	gx/device#backend-selection-and-creation	
@@ -16321,13 +16321,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589ba0	56			gx	orchestration		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x589be0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x589bf0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x589c00	22			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x589c20	15			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x589c00	22	GxDevSetGamma		gx	orchestration	void __stdcall (float gamma)	Calls the device's slot +0x34 with a gamma value	verified	one	gx/device#gamma-setting	
+0x589c20	15	GxDevSetGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Calls the device's slot +0x30 with a gamma ramp	verified	one	ui/videoverbs#gamma	
 0x589c30	15			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589c40	11			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589c50	11			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x589c60	13			gx	unreached		Runs its object file code that calls 0x5920d0; not read here	inferred	none		
-0x589c70	13			gx	orchestration		Runs its object file code that calls 0x5920f0; not read here	inferred	none		
+0x589c70	13	GxDevGetSavedGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Copies the device's saved gamma ramp into a buffer	verified	one	ui/videoverbs#gamma	
 0x589c80	11			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589c90	11			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x589ca0	11	QueryDevice		gx	host	uint32_t __cdecl ()	Returns the device's tag at +0x1fc through a tail call to 0x592120: 0 OpenGl, 1 Direct3D	verified	one	gx/device#device-object	
@@ -16479,9 +16479,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b590	18	SetCursorShown		gx	orchestration		Calls slot +0xec of the device object with a show flag	inferred	none		
 0x58b5b0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b5c0	21	SetDeviceCursorPair		gx	orchestration		Passes its two register arguments to slot 61 of the global device, which stores them and refreshes the cursor texture	inferred	none		
-0x58b5e0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x58b5e0	5	GxOpenLog		gx	orchestration	void __cdecl (void)	Jumps to the device log opener	verified	one	gx/device#device-log	
 0x58b5f0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58b600	16			gx	orchestration		Runs its object file code that calls 0x595df0; not read here	inferred	none		
+0x58b600	16	GxLogPrintf		gx	orchestration	void __cdecl (const char *format, ...)	Writes a formatted line to the device log through CGxDevice::Log	verified	one	gx/device#device-log	
 0x58b610	39			gx	unreached		Runs its object file code that calls SErrSetLastError, 0x594e40; not read here	inferred	none		
 0x58b640	1			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b650	5			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16503,10 +16503,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58c0f0	72			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58c140	300			gx	host		Runs its object file code not read here	inferred	none		
 0x58c270	199			gx	host		Runs its object file code not read here	inferred	none		
-0x58c340	180			gx	host		Runs its object file code that calls 0x58c400, 0x59da70, 0x58c640 and 5 more; not read here	inferred	none		
-0x58c400	372			gx	host		Runs its object file code that calls 0x59aff0, 0x58c580; not read here	inferred	none		
-0x58c580	189			gx	host		Runs its object file code that calls 0x59b850; not read here	inferred	none		
-0x58c640	137			gx	host		Runs its object file code that calls 0x58c0f0, 0x58ea00, 0x59f980 and 4 more; not read here	inferred	none		
+0x58c340	180	CGxDeviceOpenGl::CreateContext		gx	host	uint32_t __thiscall (CGxDeviceOpenGl *this, void *format)	Creates and makes current the device's context for a format, sets vsync and the initial state	verified	one	gx/opengl#context-creation-and-release	
+0x58c400	372	LoadGlEntryPoints		gx	host	void __cdecl (void)	Loads the GL and WGL extension entry points once through a hidden window and a temporary context	verified	one	gx/opengl#loading-the-entry-points	
+0x58c580	189	LoadWglExtensions		gx	host	void __cdecl (void)	Loads wglGetExtensionsStringARB and the pixel format, pbuffer and swap control entry points	verified	one	gx/opengl#gl-and-wgl-extension-loads	
+0x58c640	137	CGxDeviceOpenGl::DestroyContext		gx	host	void __thiscall (CGxDeviceOpenGl *this)	Releases the device's context, restores the desktop gamma ramp and releases the device context	verified	one	gx/opengl#context-creation-and-release	
 0x58c6d0	820			gx	host		Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
 0x58ca60	316			gx	primitive		Runs its object file code that calls 0x58c640, 0x58c140, 0x592330 and 4 more; not read here	inferred	none		gx::rect_b_smaller_matches_binary
 0x58cbb0	149			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16515,7 +16515,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58cda0	84			gx	orchestration		Runs its object file code that calls 0x591fc0, 0x58c0f0, 0x58ce20 and 1 more; not read here	inferred	none		
 0x58ce00	29			gx	host		Runs its object file code not read here	inferred	none		
 0x58ce20	20			gx	host		Runs its object file code not read here	inferred	none		
-0x58ce40	204			gx	orchestration		Runs its object file code that calls 0x595e70, 0x595f40, 0x58c640 and 6 more; not read here	inferred	none		
+0x58ce40	204	CGxDeviceOpenGl::DeviceSetFormat		gx	orchestration	uint32_t __thiscall (CGxDeviceOpenGl *this, void *format)	Logs a format, recreates the window and context for it and uploads the gamma ramp	verified	one	gx/opengl#context-creation-and-release	
 0x58cf10	322	CGxDeviceOpenGl::CreateWindow		gx	host	void __fastcall (void *windowProc, const void *format)	Creates the OpenGL window from the format's mode and style bytes and its client size	verified	one	gx/device#opengl-window-and-pixel-formats	
 0x58d060	27			gx	orchestration		Runs its object file code that calls 0x592050, 0x59f980; not read here	inferred	none		
 0x58d080	50			gx	host		Runs its object file code that calls 0x592060; not read here	inferred	none		
@@ -16523,7 +16523,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58d100	380			gx	host		Runs its object file code that calls 0x592230, 0x592330, 0x592340 and 3 more; not read here	inferred	none		
 0x58d280	27			gx	orchestration		Runs its object file code that calls 0x5920a0, 0x59f980; not read here	inferred	none		
 0x58d2a0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58d2b0	435			gx	host		Runs its object file code that calls 0x59b850, 0x58d470, 0x58d770; not read here	inferred	none		
+0x58d2b0	435	CGxDeviceOpenGl::EnumerateFormats		gx	host	uint32_t __fastcall (void *list)	Lists the OpenGL pixel formats through a hidden window and a temporary context	verified	one	gx/device#format-lists	
 0x58d470	761	CGxDeviceOpenGl::EnumPixelFormatsArb		gx	host	void __fastcall (void *window, void *list)	Lists pixel formats through wglGetPixelFormatAttribivARB and adds a record for each that passes	verified	one	gx/device#opengl-window-and-pixel-formats	
 0x58d770	500	CGxDeviceOpenGl::EnumPixelFormats		gx	host	void __fastcall (void *window, void *list)	Lists pixel formats through DescribePixelFormat and adds a record for each window OpenGL format	verified	one	gx/device#opengl-window-and-pixel-formats	
 0x58d970	180			gx	host		Runs its object file code that calls 0x592220, 0x5922e0, __ftol; not read here	inferred	none		
@@ -16532,7 +16532,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58da60	43			gx	orchestration		Runs its object file code that calls 0x58da90, SMemFree; not read here	inferred	none		
 0x58da90	7			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58daa0	1			gx	unreached		Runs its object file code not read here	inferred	none		
-0x58dab0	356			gx	primitive		Runs its object file code that calls 0x58da50, 0x4420b0; not read here	inferred	none		
+0x58dab0	356	ConstructVboBroker		gx	primitive	void * __thiscall (void *this, uint32_t target, uint32_t maxSize, void *device)	Builds a VBO broker: sets of stream buffers of each power-of-two size from 2^12 up to 2^maxSize bytes	verified	one	gx/opengl#pool-buffers-and-the-broker	
 0x58dc20	43			gx	orchestration		Runs its object file code that calls 0x58dc50, SMemFree; not read here	inferred	none		
 0x58dc50	90			gx	primitive		Runs its object file code that calls 0x58da90; not read here	inferred	none		
 0x58dcb0	119			gx	primitive		Runs its object file code not read here	inferred	none		
@@ -16545,12 +16545,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58dfe0	218			gx	orchestration		Runs CGxDeviceOpenGl.cpp code that calls 0x58fae0, 0x58fdf0, 0x58fec0 and 2 more; not read here	inferred	none		
 0x58e0c0	345			gx	host		Runs CGxDeviceOpenGl.cpp code that calls 0x591020, 0x526930, 0x5922e0 and 2 more; not read here	inferred	none		
 0x58e220	243			gx	host		Runs CGxDeviceOpenGl.cpp code that calls 0x591020, 0x58fee0, 0x58ff20 and 3 more; not read here	inferred	none		
-0x58e320	205			gx	orchestration		Runs CGxDeviceOpenGl.cpp code that calls 0x592370; not read here	inferred	none		
+0x58e320	205	CGxDeviceOpenGl::DeviceOverride		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, uint32_t slot, uint32_t value)	Applies a device override, then the OpenGL slots 0 to 7: buffer objects, brokers, texture generation	verified	one	gx/device#device-overrides	
 0x58e410	40			gx	unreached		Runs CGxDeviceOpenGl.cpp code not read here	inferred	none		
 0x58e440	40			gx	unreached		Runs CGxDeviceOpenGl.cpp code not read here	inferred	none		
 0x58e470	1			gx	unreached		Runs CGxDeviceOpenGl.cpp code not read here	inferred	none		
 0x58e480	849			gx	host		Runs CGxDeviceOpenGl.cpp code that calls 0x595e90; not read here	inferred	none		
-0x58e7e0	287			gx	primitive		Runs CGxDeviceOpenGl.cpp code that calls SMemAlloc, 0x58dab0, 0x59baa0 and 1 more; not read here	inferred	none		
+0x58e7e0	287	CGxDeviceOpenGl::CreatePoolAPI		gx	primitive	void __thiscall (CGxDeviceOpenGl *this, void *pool)	Backs a pool with a VBO broker, one buffer object or system memory, by its kind and usage	verified	one	gx/opengl#pool-buffers-and-the-broker	
 0x58e900	204			gx	orchestration		Runs CGxDeviceOpenGl.cpp code that calls 0x594440, 0x59baa0, SMemFree; not read here	inferred	none		
 0x58e9d0	46			gx	unreached		Runs CGxDeviceOpenGl.cpp code that calls 0x58e7e0; not read here	inferred	none		
 0x58ea00	46			gx	orchestration		Runs CGxDeviceOpenGl.cpp code that calls 0x58e900; not read here	inferred	none		
@@ -16592,7 +16592,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x590390	319			gx	primitive		Runs its object file code that calls 0x58fd60, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		
 0x5904d0	77			gx	primitive		Runs its object file code not read here	inferred	none		
 0x590520	264			gx	primitive		Runs its object file code that calls 0x5904d0, 0x58fe80, SMemReAlloc and 3 more; not read here	inferred	none		
-0x590630	1			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x590630	1	GxDebugOutputStub		gx	orchestration	void __cdecl (const char *format, ...)	Returns at once; the device log passes it each line	verified	one	gx/device#device-log	
 0x590640	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x590650	45			gx	orchestration		Runs its object file code that calls 0x589ab0; not read here	inferred	none		
 0x590680	5			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16663,7 +16663,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x591f80	25			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x591fa0	32			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x591fc0	11			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x591fd0	127			gx	primitive		Runs its object file code not read here	inferred	none		gx::aspect_ratio_matches_binary
+0x591fd0	127	CGxDevice::DeviceSetFormat		gx	primitive	uint32_t __thiscall (CGxDevice *this, void *format)	Copies a format into the device, raising a size below 320 x 240 to it, sets the aspect ratio and returns 1	verified	one	gx/device#base-format-setter	gx::aspect_ratio_matches_binary
 0x592050	16	CGxDevice::SetTextureSkip		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t levels)	Stores the number of top mip levels the texture upload skips at +0x31c	verified	one	gx/textures#device-texture-upload	
 0x592060	22	CGxDevice::SetGamma		gx	orchestration	void __thiscall (CGxDevice *this, float gamma)	Builds the working gamma ramp at +0x328 for a gamma value	verified	one	gx/device#gamma-ramp	
 0x592080	31	CGxDevice::SetGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, const uint16_t *ramp)	Copies a whole 0x600-byte gamma ramp into the working ramp at +0x328	verified	one	gx/device#gamma-ramp	
@@ -16671,7 +16671,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5920b0	7			gx	unreached		Runs its object file code not read here	inferred	none		
 0x5920c0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5920d0	31			gx	unreached		Runs its object file code not read here	inferred	none		
-0x5920f0	31			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x5920f0	31	CGxDevice::GetSavedGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, void *ramp)	Copies the 0x600-byte ramp at +0x928 into a buffer unless the buffer is that ramp	verified	one	ui/videoverbs#gamma	
 0x592110	7			gx	unreached		Runs its object file code not read here	inferred	none		
 0x592120	7	CGxDevice::GetTag		gx	orchestration	uint32_t __thiscall (CGxDevice *this)	Returns the dword at +0x1fc of the device	verified	one	gx/device#device-object	
 0x592130	11			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16685,7 +16685,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5922f0	50			gx	orchestration		Runs its object file code that calls 0x592340; not read here	inferred	none		
 0x592330	7			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x592340	38			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x592370	88			gx	primitive		Runs its object file code that calls 0x595e70; not read here	inferred	none		
+0x592370	88	CGxDevice::DeviceOverride		gx	primitive	void __thiscall (CGxDevice *this, uint32_t slot, uint32_t value)	Logs a device override and applies slot 8 to the fields +0x308, +0x30c and +0x310	verified	one	gx/device#device-overrides	
 0x5923d0	7	CGxDevice::GetCaps		gx	orchestration	void * __thiscall (CGxDevice *this)	Returns this + 0x23c, the capability block	verified	one	gx/device#capability-block	models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
 0x5923e0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5923f0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16752,7 +16752,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x594150	159	CGxDevice::ForceRenderStateDirty		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t id)	Queues an id and stores the complement of its value as the applied copy so the next flush reapplies it	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x5941f0	23	CGxDevice::ForceAllRenderStatesDirty		gx	orchestration	void __thiscall (CGxDevice *this)	Forces every one of the 70 render states to be reapplied at the next flush	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x594210	262	CGxDevice::FlushRenderState		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t all)	Applies every dirty state whose value differs from the applied copy through slot +4, then refreshes the program objects	verified	one	gx/renderstate#cache-dirty-list-and-stack	
-0x594320	72			gx	primitive		Runs its object file code not read here	inferred	none		
+0x594320	72	CGxPool::CGxPool		gx	primitive	CGxPool * __thiscall (CGxPool *this, uint32_t kind, uint32_t usage, uint32_t size, uint32_t arg4, const char *name)	Constructs a pool with its kind, usage, size, a fourth value and its name, and empty lists	verified	one	gx/device#stream-pools	
 0x594370	98			gx	primitive		Runs its object file code not read here	inferred	none		
 0x5943e0	83			gx	primitive		Runs its object file code not read here	inferred	none		
 0x594440	33			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16766,9 +16766,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5946c0	48			gx	primitive		Runs CGxDevice.cpp code not read here	inferred	none		
 0x5946f0	32			gx	primitive		Runs CGxDevice.cpp code not read here	inferred	none		
 0x594710	17			gx	orchestration		Runs CGxDevice.cpp code not read here	inferred	none		
-0x594730	64			gx	orchestration		Runs CGxDevice.cpp code that calls 0x5947a0; not read here	inferred	none		
+0x594730	64	CGxDevice::CreateStreamPools		gx	orchestration	void __thiscall (CGxDevice *this)	Creates the Stream_vtx and Stream_idx pools of usage 2 and keeps them at +0x26c4 and +0x26c8	verified	one	gx/device#stream-pools	
 0x594770	39			gx	orchestration		Runs CGxDevice.cpp code not read here	inferred	none		
-0x5947a0	157			gx	primitive		Runs CGxDevice.cpp code that calls SMemAlloc, 0x594320; not read here	inferred	none		
+0x5947a0	157	CGxDevice::CreatePool		gx	primitive	void * __thiscall (CGxDevice *this, uint32_t kind, uint32_t usage, uint32_t size, uint32_t arg4, const char *name)	Allocates and constructs a pool and links it into the device's pool list	verified	one	gx/device#stream-pools	
 0x594840	166			gx	primitive		Runs CGxDevice.cpp code that calls 0x596880, 0x596790, SMemFree; not read here	inferred	none		
 0x5948f0	142			gx	orchestration		Runs CGxDevice.cpp code that calls 0x596880, 0x596850, 0x596790 and 1 more; not read here	inferred	none		
 0x594980	254			gx	primitive		Runs CGxDevice.cpp code that calls SMemAlloc, 0x591540, 0x594ce0; not read here	inferred	none		
@@ -16809,12 +16809,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x595cc0	44			gx	primitive		Runs its object file code not read here	inferred	none		
 0x595cf0	136			gx	host		Runs its object file code that calls 0x595d80, __allmul; not read here	inferred	none		
 0x595d80	3			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x595d90	49			gx	orchestration		Runs its object file code that calls OsCreateDirectory, SLogCreate; not read here	inferred	none		
+0x595d90	49	OpenGxLogFile		gx	orchestration	void __cdecl (void)	Creates the Logs folder and opens Logs\gx.log once, zeroing its byte count	verified	one	gx/device#device-log	
 0x595dd0	26			gx	orchestration		Runs its object file code that calls SLogClose; not read here	inferred	none		
-0x595df0	128			gx	primitive		Runs its object file code that calls __vsnprintf, SLogWrite, 0x590630; not read here	inferred	none		
-0x595e70	25			gx	orchestration		Runs its object file code that calls 0x595df0; not read here	inferred	none		
-0x595e90	162			gx	orchestration		Runs its object file code that calls 0x595e70; not read here	inferred	none		
-0x595f40	93			gx	orchestration		Runs its object file code that calls 0x595e70; not read here	inferred	none		
+0x595df0	128	CGxDevice::Log		gx	primitive	void __fastcall (const char *format, va_list args)	Formats a line and writes it to gx.log while under 2 MiB have been written, then passes it to the empty debug output	verified	one	gx/device#device-log	
+0x595e70	25	GxLogIfOpen		gx	orchestration	void __cdecl (const char *format, ...)	Writes a formatted line to the device log when the log is open	verified	one	gx/device#device-log	
+0x595e90	162	LogGxCaps		gx	orchestration		Logs a capability block: texture units, mipmap generation, anisotropy, render target formats, shader targets	verified	one	gx/device#device-log	
+0x595f40	93	LogGxFormat		gx	orchestration		Logs a device format as its windowed or full-screen size, colour and depth names and sample count	verified	one	gx/device#device-log	
 0x595fa0	23			gx	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x595fc0	16			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x595fd0	23			gx	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -16944,7 +16944,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x599bc0	101			gx	orchestration		Runs its object file code that calls 0x591fa0, 0x5992a0, CreateD3dDevice; not read here	inferred	none		
 0x599c30	64			gx	orchestration		Runs its object file code that calls 0x591fc0, 0x598cc0, 0x599c70; not read here	inferred	none		
 0x599c70	29			gx	host		Runs its object file code not read here	inferred	none		
-0x599c90	181	CGxDeviceD3d::SetFormat		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, void *format)	Copies a format, creates the window and the device from it, and shows the window	verified	one	gx/device#direct3d-device-start	
+0x599c90	181	CGxDeviceD3d::DeviceSetFormat		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, void *format)	Copies a format, creates the window and the device from it, and shows the window	verified	one	gx/device#direct3d-device-start	
 0x599d50	66			gx	host		Runs its object file code not read here	inferred	none		
 0x599da0	29			gx	orchestration		Runs its object file code that calls 0x592050, 0x5a0700; not read here	inferred	none		
 0x599dc0	66	CGxDeviceD3d::SetGamma		gx	host	void __thiscall (CGxDeviceD3d *this, float gamma)	Builds the ramp and applies it with SetGammaRamp when full-screen gamma is supported and not windowed	verified	one	gx/device#gamma-ramp	
@@ -16955,7 +16955,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59a130	133			gx	primitive		Runs its object file code that calls 0x591020, 0x58ff20, 0x4548a0; not read here	inferred	none		
 0x59a1c0	257			gx	orchestration		Runs its object file code that calls 0x599d50, 0x5922f0, 0x599900 and 2 more; not read here	inferred	none		
 0x59a2e0	343			gx	primitive		Runs its object file code that calls 0x592230, 0x5a0930, 0x5a23f0 and 1 more; not read here	inferred	none		
-0x59a440	63			gx	orchestration		Runs its object file code that calls 0x592370; not read here	inferred	none		
+0x59a440	63	CGxDeviceD3d::DeviceOverride		gx	orchestration	void __thiscall (CGxDeviceD3d *this, uint32_t slot, uint32_t value)	Applies a device override, then the Direct3D slots 0 and 7	verified	one	gx/device#device-overrides	
 0x59a480	36			gx	orchestration		Runs its object file code that calls 0x599510, 0x5994c0; not read here	inferred	none		
 0x59a4b0	34			gx	orchestration		Runs its object file code that calls 0x599510, 0x594840; not read here	inferred	none		
 0x59a4e0	432			gx	primitive		Runs CGxD3dDevice.cpp code that calls 0x594470, 0x5994c0, 0x5914a0 and 2 more; not read here	inferred	none		
@@ -16980,11 +16980,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59af30	83			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x59af90	57			gx	primitive		Runs its object file code not read here	inferred	none		
 0x59afd0	31			gx	primitive		Runs its object file code not read here	inferred	none		
-0x59aff0	1951			gx	host		Runs its object file code that calls _sscanf, 0x59b7a0; not read here	inferred	none		
-0x59b790	13			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x59b7a0	65			gx	host		Runs its object file code that calls 0x414e94, 0x64ac60; not read here	inferred	none		
-0x59b7f0	92			gx	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x59b850	53			gx	host		Runs its object file code not read here	inferred	none		
+0x59aff0	1951	LoadGlExtensions		gx	host	void __cdecl (void)	Reads the GL version and the flags and entry points of thirty-six GL extensions	verified	one	gx/opengl#gl-and-wgl-extension-loads	
+0x59b790	13	ResetExtensionStrings		gx	orchestration	void __cdecl (void)	Clears the cached GL and WGL extension strings	verified	one	gx/opengl#extension-tests	
+0x59b7a0	65	IsGlExtensionListed		gx	host	bool __fastcall (const char *name)	Returns whether a GL extension is listed, unless an environment variable of its name converts to 0	verified	one	gx/opengl#extension-tests	
+0x59b7f0	92	FindExtensionName		gx	primitive	bool __fastcall (const char *list, const char *name)	Returns whether a name begins a space-separated word of a list, ignoring case	verified	one	gx/opengl#extension-tests	
+0x59b850	53	IsWglExtensionListed		gx	host	bool __fastcall (const char *name)	Returns whether a WGL extension is listed in the cached wglGetExtensionsStringARB string	verified	one	gx/opengl#extension-tests	
 0x59b890	126			gx	orchestration		Runs its object file code that calls 0x592640, GxSetViewport; not read here	inferred	none		
 0x59b910	242	GxClearGL		gx	host	void __thiscall (void *this, uint32_t mask)	Applies the viewport and scissor, then clears the colour and depth buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
 0x59ba10	89			gx	host		Runs its object file code that calls 0x592430, 0x592140, 0x59b890; not read here	inferred	none		
@@ -17020,7 +17020,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59e480	175	CGxDeviceOpenGl::ApplyVertexProgram		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, void *program)	Binds a vertex program, building it on first use, or disables the vertex path for null	verified	one	gx/renderstate#programs	
 0x59e530	453	CGxDeviceOpenGl::BuildPixelProgram		gx	host	void __thiscall (CGxDeviceOpenGl *this, void *program)	Splices the fog option into an ARB fragment program's text and loads it, marking the program object loaded	verified	one	gx/renderstate#opengl-fragment-program-build	
 0x59e700	250	CGxDeviceOpenGl::BuildVertexProgram		gx	host	void __thiscall (CGxDeviceOpenGl *this, void *program)	Builds an OpenGL vertex program from a program object's text	inferred	none	gx/renderstate#opengl-fragment-program-build	
-0x59e800	609			gx	primitive		Runs its object file code that calls _isdigit, _sprintf; not read here	inferred	none		
+0x59e800	609	CGxDeviceOpenGl::PatchVertexProgram		gx	primitive	void __thiscall (CGxDeviceOpenGl *this, void *program)	Rebinds a vertex program's local PARAM constants to program.env in place and rewrites c31 as a range	verified	one	gx/renderstate#opengl-vertex-program-constants	
 0x59ea70	17			gx	unreached		Runs its object file code not read here	inferred	none		
 0x59ea90	87			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x59eaf0	57			gx	primitive		Runs its object file code not read here	inferred	none		
