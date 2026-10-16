@@ -16446,7 +16446,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b210	14			gx	orchestration		Runs its object file code that calls 0x592790; not read here	inferred	none		
 0x58b220	13			gx	orchestration		Runs its object file code that calls 0x5927d0; not read here	inferred	none		
 0x58b230	13			gx	orchestration		Runs its object file code that calls 0x5927f0; not read here	inferred	none		
-0x58b240	14	GxXformSetTexture		gx	orchestration		Sets a texture stage matrix on the device	inferred	none		
+0x58b240	14	GxXformSetTexture		gx	orchestration		Sets the matrix of a transform slot through 0x592810	verified	one	gx/renderstate#texture-transform-kinds	
 0x58b250	14			gx	orchestration		Runs its object file code that calls 0x592850; not read here	inferred	none		
 0x58b260	14			gx	orchestration		Runs its object file code that calls 0x592880; not read here	inferred	none		
 0x58b270	14			gx	orchestration		Runs its object file code that calls 0x5928b0; not read here	inferred	none		
@@ -16641,10 +16641,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5912e0	9			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5912f0	107			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591360	1			gx	unreached		Runs its object file code not read here	inferred	none		
-0x591370	91			gx	primitive		Runs its object file code not read here	inferred	none		
+0x591370	91	MatrixStackSetIdentity		gx	primitive	void __thiscall (void *this)	Writes the identity into a stack's top matrix and marks its level identity, unless it already is	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
 0x5913d0	81			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591430	14			gx	primitive		Runs its object file code not read here	inferred	none		
-0x591440	26			gx	primitive		Runs its object file code not read here	inferred	none		
+0x591440	26	MatrixStackTopForWrite		gx	primitive	float * __thiscall (void *this)	Marks a stack dirty and its top level not identity, and returns the top matrix	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
 0x591460	61			gx	primitive		Runs its object file code not read here	inferred	none		
 0x5914a0	141			gx	primitive		Runs its object file code that calls 0x590630, 0x5268b0; not read here	inferred	none		
 0x591530	5			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16704,8 +16704,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592770	28			gx	primitive		Runs its object file code that calls 0x5913d0; not read here	inferred	none		
 0x592790	62			gx	primitive		Runs its object file code that calls 0x5913d0, 0x591440; not read here	inferred	none		
 0x5927d0	28			gx	primitive		Runs its object file code that calls 0x591430; not read here	inferred	none		
-0x5927f0	28			gx	primitive		Runs its object file code that calls 0x591370; not read here	inferred	none		
-0x592810	57			gx	primitive		Runs its object file code that calls 0x591440; not read here	inferred	none		
+0x5927f0	28	CGxDevice::XformSetIdentity		gx	primitive	void __thiscall (CGxDevice *this, uint32_t index)	Loads the identity into the matrix stack of a transform slot through 0x591370	verified	one	gx/renderstate#texture-transform-kinds	
+0x592810	57	CGxDevice::XformSet		gx	primitive	void __thiscall (CGxDevice *this, uint32_t index, const float *matrix)	Copies a matrix into the top of the matrix stack of a transform slot through 0x591440	verified	one	gx/renderstate#texture-transform-kinds	
 0x592850	39			gx	primitive		Runs its object file code that calls 0x591440, TranslateMatrix; not read here	inferred	none		
 0x592880	39			gx	primitive		Runs its object file code that calls 0x591440, ScaleMatrixRows; not read here	inferred	none		
 0x5928b0	39			gx	primitive		Runs its object file code that calls 0x591440, 0x7bce30; not read here	inferred	none		
@@ -17085,7 +17085,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a11d0	629	CGxDeviceD3d::SetProjection		gx	host	void __thiscall (CGxDeviceD3d *this, const float *matrix)	Stores a projection matrix, rescales it by element 11, remaps its depth terms and sets it as the projection transform	verified	one	gx/draw#projection-matrix	
 0x5a1450	40	CGxDeviceD3d::SetView		gx	orchestration	void __thiscall (CGxDeviceD3d *this, const float *matrix)	Records a view matrix and sets it as the Direct3D view transform	verified	one	gx/draw#projection-matrix	
 0x5a1480	96			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5a14e0	416	CGxDeviceD3d::FlushTextureTransform		gx	primitive		Sets the Direct3D texture transform and transform flags of a stage from the state 0x37 plus the stage	inferred	none		
+0x5a14e0	416	CGxDeviceD3d::FlushTextureTransform		gx	primitive		Sets the Direct3D transform and transform flags of a stage from the kind in state 0x37 plus the stage	verified	one	gx/renderstate#texture-transform-kinds	
 0x5a1680	277	CGxDeviceD3d::BeginFrame		gx	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Resets a lost device, clears with the mask when capability bit 6 is set and begins the scene	verified	one	gx/device#direct3d-present	
 0x5a17a0	40	CGxDeviceD3d::EndScene		gx	host	void __thiscall (CGxDeviceD3d *this)	Ends the scene when one is begun and clears the flag	verified	one	gx/device#direct3d-present	
 0x5a17d0	317	CGxDeviceD3d::Clear		unassigned	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Clears the target and depth buffers the mask names with the device clear colour after applying the viewport	verified	one	gx/device#direct3d-clear-and-viewport	
@@ -17106,7 +17106,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a24a0	207			gx	orchestration		Runs its object file code that calls 0x5941f0, 0x594210, 0x591ef0 and 1 more; not read here	inferred	none		
 0x5a2570	891	CGxDeviceD3d::SetCachedState		gx	orchestration	void __thiscall (CGxDeviceD3d *this, uint32_t index, uint32_t value)	Issues a Direct3D render, sampler or texture stage state when it differs from the shadow copy	verified	one	gx/renderstate#render-state-ids	
 0x5a29d0	358	CGxDeviceD3d::ApplyStageTexture		gx	orchestration	void __thiscall (CGxDeviceD3d *this, uint32_t stage, void *texture)	Binds a texture to a stage with its filters, wrap and anisotropy from the flags word, or unbinds it	verified	one	gx/renderstate#stage-sampler-state	
-0x5a2b40	556	CGxDeviceD3d::ApplyTexCoordMode		gx	primitive	void __thiscall (CGxDeviceD3d *this, uint32_t stage, uint32_t mode)	Sets a stage's coordinate generator and texture matrix for mode 0 to 6	verified	one	gx/renderstate#texture-coordinate-modes	
+0x5a2b40	556	CGxDeviceD3d::ApplyTexCoordMode		gx	primitive	void __thiscall (CGxDeviceD3d *this, uint32_t stage, uint32_t mode)	Sets a stage's coordinate generator and texture matrix for mode 0 to 6	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
 0x5a2d90	52	CGxDeviceD3d::ApplyMipBias		gx	orchestration	void __thiscall (CGxDeviceD3d *this, uint32_t stage, float bias)	Sets a stage's mip map LOD bias when the device supports it	verified	one	gx/renderstate#render-state-ids	
 0x5a2dd0	80	CGxDeviceD3d::ApplyCombinePreset		gx	orchestration	void __thiscall (CGxDeviceD3d *this, uint32_t stage, uint32_t preset)	Sets a stage's colour and alpha operation from the preset tables 0x80a25c and 0x80a274	verified	one	gx/renderstate#texture-stage-combine	
 0x5a2e20	144	CGxDeviceD3d::SetMaterial		gx	primitive	void __thiscall (CGxDeviceD3d *this, uint32_t diffuse, uint32_t emissive, uint32_t specular, float power)	Builds the D3DMATERIAL9 from packed colours and sets it	verified	one	gx/draw#lighting-at-draw-time	

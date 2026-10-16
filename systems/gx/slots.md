@@ -325,7 +325,7 @@ for pixel shaders, one per program level. The device takes the offset at its lev
 loaded (`+0x2c` = 1) and clears `+0x34`. A negative level, a missing file, a wrong magic or
 version, or an offset of 0 loads nothing.
 
-Addresses: `0x595130`, `0x59513d`, `0x595154`, `0x595177`, `0x59519c`, `0x5951c1`, `0x5951e6`, `0x5951f7`, `0x595211`, `0x809d20`, `0x809d28`, `0x809d90`
+Addresses: `0x595130`, `0x59513d`, `0x595154`, `0x595177`, `0x59519c`, `0x5951c1`, `0x5951e6`, `0x5951f7`, `0x595211`, `0x809d20`, `0x809d28`, `0x809d90`, `0x598320`, `0x598180`, `0x5990a7`, `0x58e6b1`, `0x58e6c7`, `0x5a02ff`
 Confidence: verified
 Proof: one
 Test: none
@@ -333,6 +333,11 @@ Test: none
 `0x59513d` tests the level; `0x595154` opens the file with `SFile::Open`. `0x595177` compares the
 first dword with `0x809d20[target]` (0x47585653, 0x47585053) and `0x59519c` the second with
 `0x809d28[target]`; the table is `0x809d90[target]` dwords (6, 12). `0x5951e6` picks the entry at the
-level and `0x5951f7` seeks to it (`0x648a60`); `0x595211` calls slot 0 of each shader with the file.
-The file closes either way. Its callers are `LoadShaders` and `ReloadShader`, which pass the
-target and the file name, as the weather, liquid, map object, effect, model and interface code do.
+level and `0x5951f7` seeks to it (`0x648a60`); `0x595211` calls slot 0 of each shader with the file,
+in array order. Slot 0 (`0x598320`) reads a record: two parameter lists (`0x598180`), the format tag
+at `+0x50`, the code size, the code and padding to 4 bytes. The tag is 2 in a Direct3D set, which
+the creation requires (`0x5a02ff`), and 0 in an ARB set. The vertex level is 1 on Direct3D with
+vertex shader 2.0 or later (`0x5990a7`; 1.1 gives 0), 2 on OpenGL with ARB vertex programs
+(`0x58e6b1`), else -1 (`0x58e6c7`). The file closes either way. Its callers are `LoadShaders` and
+`ReloadShader`, which pass the target and the file name, as the weather, liquid, map object, effect,
+model and interface code do.

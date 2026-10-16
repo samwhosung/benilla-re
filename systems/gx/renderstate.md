@@ -151,14 +151,49 @@ The default (1, 0, 0) is written by an initializer at `0x590f70` to `0xc0ef70`; 
 
 ## Texture coordinate modes
 
-Ids `0x2f` to `0x36` give a stage a coordinate mode 0 to 6. Direct3D (`0x5a2b40`) sets the stage's `TEXCOORDINDEX` to the stage number or-ed with a generator: mode 0 none; modes 1, 2 and 3 `0x20000` (camera-space position); mode 4 `0x30000` (reflection vector); mode 5 `0x10000` (camera-space normal); mode 6 `0x30000`. The texture matrix is the identity for modes 0, 3, 4 and 5, a copy of the top view matrix with its 3 by 3 part transposed and its translation row negated for modes 1 and 2 (mode 1 multiplies it further), and for mode 6 a fixed matrix with 0.5 entries. A stage at or above the unit count `[dev+0x23c]` is ignored.
+Ids `0x2f` to `0x36` give a stage a coordinate mode 0 to 6. Direct3D (`0x5a2b40`) sets the stage's
+`TEXCOORDINDEX` to the stage number or-ed with a generator: mode 0 none; modes 1, 2 and 3 `0x20000`
+(camera-space position); mode 4 `0x30000` (reflection vector); mode 5 `0x10000` (camera-space
+normal); mode 6 `0x30000`. The stage's mode matrix is the identity for modes 0, 3, 4 and 5, a copy
+of the top view matrix with its 3 by 3 part transposed and its translation row negated for modes 1
+and 2 (mode 1 multiplies it further), and for mode 6 the rows (0.5, 0, 0, 0), (0, 0.5, 0, 0), (0, 0,
+1, 0), (0.5, 0.5, 0, 1).
 
-Addresses: `0x5a2b40`, `0x5a2d6c`, `0x5a2c6e`
+Addresses: `0x5a2b40`, `0x5a2d6c`, `0x5a2c6e`, `0x5a2bb8`, `0x5a2bfd`, `0x5a2c12`, `0x5a2c19`, `0x5a2c2e`, `0x5a2c35`, `0x5a2b6b`, `0x5a2b92`, `0x5a2c4f`, `0x5a2c60`, `0x591370`, `0x591440`
+Confidence: verified
+Proof: one
+Test: `gx::tex_coord_mode_difftest`
+
+A stage at or above the unit count `[dev+0x23c]` is ignored. The Direct3D jump table `0x5a2d6c` lists the handlers `0x5a2b6b`, `0x5a2c4f` for modes 1 to 3,
+`0x5a2b92`, `0x5a2c60` and `0x5a2b92`; the view matrix code is `0x5a2c6e` to `0x5a2d34`. Mode 6
+reaches `0x5a2bb8`, which stores sixteen floats on the stack (`0x5a2c19` to `0x5a2c2e` the four 0.5,
+`0x5a2bfd` and `0x5a2c12` the two 1.0), takes the stage's mode stack top with `0x591440` (it marks
+the stack dirty and clears bit 0 of the level's flags) and copies them in. The other modes call
+`0x591370`, which writes the identity and sets the level's flags word to 1 unless it is already
+marked identity. The mode stacks are at `+0x1bd8 + 0x118·stage`. `tex_coord_mode_difftest` runs
+`0x5a2b40` with modes 0, 3 to 6 and above 6, the cache call `0x5a2570` stubbed; it runs `0x591370`
+and `0x591440` whole.
+
+## Texture transform kinds
+
+The device sets a stage's transform from the state `0x37 + stage`, its kind. Kind 0 passes the
+stage's mode matrix to `SetTransform` and sets `TEXTURETRANSFORMFLAGS` to 0 when the matrix's level
+is marked identity, else 3 (two coordinates). Kinds 1 and 2 combine the stage's user matrix, which
+`0x58b240` stores at `+0xfd0 + 0x118·stage`, with the mode matrix and set the flags 3 and `0x103`.
+Kind 0 never reads the user matrix.
+
+Addresses: `0x5a14e0`, `0x5a14f1`, `0x5a15f4`, `0x5a1617`, `0x5a1633`, `0x5a1639`, `0x5a164a`, `0x5a1650`, `0x5a1561`, `0x5a15c8`, `0x5a15d5`, `0x58b240`, `0x592810`, `0x58b230`, `0x5927f0`
 Confidence: verified
 Proof: one
 Test: none
 
-The Direct3D jump table `0x5a2d6c` lists the handlers `0x5a2b6b`, `0x5a2c4f` for modes 1 to 3, `0x5a2b92`, `0x5a2c60` and `0x5a2b92`; the matrix code is `0x5a2c6e` to `0x5a2d34`.
+`0x5a14e0` reads the state at `0x5a14f1` and branches on the kind. Kind 0 (`0x5a15f4`) tests bit 0
+of the level's flags (`0x5a1617`) and calls `SetTransform` with state `0x10 + stage` (`0x5a1633`,
+`0x5a164a`): when the bit is set it jumps past the load of 3 (`0x5a1639`), so the flags stay 0; else
+`0x5a1650` loads 3. Kind 1 reaches `0x5a1650`; kind 2 loads `0x103` (`0x5a1561`). In kind 1, when
+the stage's mode is 0 (`0x5a15c8`), entries 12 and 13 of the product are copied to 8 and 9
+(`0x5a15d5`). `0x58b240` reaches `0x592810`, which copies the matrix into the top of the user stack, and `0x58b230` reaches
+`0x5927f0`, which loads the identity there.
 
 ## OpenGL coordinate modes
 
@@ -223,6 +258,30 @@ Proof: one
 Test: none
 
 The GL records read (mode, RGB scale, three RGB sources, RGB operation, alpha scale, three alpha sources, alpha operation). Preset 2's GL interpolation takes its weight from the alpha of the constant source (`0x8576`), Direct3D's `BLENDTEXTUREALPHA` (13) from the texture's alpha. Preset 5's GL interpolation takes it from the alpha of the previous stage (`0x8578`), Direct3D's `BLENDDIFFUSEALPHA` (12) from the vertex colour's: the same on stage 0. The sources are texture `0x1702`, previous `0x8578`, constant `0x8576`; the alpha operation of presets 0, 2 and 5 is `GL_REPLACE` of the previous alpha.
+
+## Combine arguments
+
+Direct3D sets only the colour and alpha operation of a stage and never an argument, so every stage
+runs with the Direct3D 9 defaults: argument 1 the texture, argument 2 the previous stage's result
+(the vertex colour on stage 0). On stage 0 preset 1 multiplies texture and vertex colour, colour and
+alpha; preset 2 blends the texture with the vertex colour by the texture's alpha, and preset 5 by
+the vertex colour's alpha, both keeping the vertex alpha. A stage's operations apply while it has a
+texture: binding one applies its stored preset, and unbinding sets both operations to disable.
+
+Addresses: `0x5a04e3`, `0x5a04fc`, `0x5a0515`, `0x5a052e`, `0x5a268e`, `0x5a26d6`, `0x5a26fa`, `0x5a271e`, `0x5a2dd0`, `0x5a29d0`, `0x5a2ab7`, `0x5a2ad0`, `0x5a2b15`, `0x5a2b1d`, `0x5a2b2a`
+Confidence: verified
+Proof: one
+Test: none
+
+`SetTextureStageState` is the device slot `+0x10c`. Every instruction in the image that calls
+through `+0x10c` is one of eight in the device code: `0x5a04e3`, `0x5a04fc`, `0x5a0515` and
+`0x5a052e` push types 7 to 10 (the bump matrix), `0x5a268e` type 0x18 (transform flags), `0x5a26d6`
+type 0xb (coordinate index), `0x5a26fa` type 1 and `0x5a271e` type 4 (the operations, the control).
+No site pushes type 2, 3, 5, 6 or 0x1a to 0x1c, the arguments. `0x5a2dd0` writes the tables only
+when the byte `[dev + 0x3bfc + stage]` is set. The texture bind `0x5a29d0` sets it (`0x5a2ab7`) and
+calls `0x5a2dd0` with the stored preset (`0x5a2ad0`); its null path clears it (`0x5a2b15`) and sets
+types 1 and 4 to 1 (`0x5a2b1d`, `0x5a2b2a`). `D3DTOP` 3 is select argument 2, 4 modulate, 12 blend
+diffuse alpha, 13 blend texture alpha.
 
 ## Stage sampler state
 
