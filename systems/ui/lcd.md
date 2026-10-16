@@ -9,7 +9,7 @@ Roots: `0x72a370`, `0x72a450`, `0x72a4a0`, `0x72a510`, `0x72a8d0`, `0x72b440`, `
 
 ## Ready test and element lookup
 
-Every entry point first tests that the wrapper exists, that its device handle is not −1 (`0x72c850`) and that the cvar value at `0xc0e080` is 0 to 3 (`0x72a350`), and returns at once on failure.
+Every entry point first tests that the wrapper exists, that its device handle is not −1 (`0x72c850`) and that the locale index `0xc0e080` is 0 to 3, enUS, koKR, frFR or deDE (`dbc#localized-strings`, `0x72a350`), and returns at once on failure.
 `0x72a2f0(id)` walks the tree rooted at `0xcf0638` by the integer key and answers the element stored at `+0x1c` of the node with that key, or 0.
 
 Addresses: `0x72a350`, `0x72a2f0`, `0x72c850`, `0x72dcc0`, `0x72a2fd`, `0x72a306`, `0x72a31b`, `0x72a342`, `0xc0e080`, `0xcf06e4`, `0xcf0638`

@@ -30763,7 +30763,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x729dd0	1068	LcdInitialize		ui	host		Starts the LCD layer	inferred	none		
 0x72a200	231	LcdShutdown		ui	host		Shuts the LCD layer down	inferred	none		
 0x72a2f0	87	LcdFindElement		ui	orchestration	void * __thiscall (void *this)	Returns the element with an id from the element tree when the LCD is ready, or 0	verified	one	ui/lcd#ready-test-and-element-lookup	
-0x72a350	20	LcdIsModeValid		ui	orchestration	uint8_t __cdecl ()	Answers 1 when the cvar value at 0xc0e080 lies in 0 to 3	verified	one	ui/lcd#ready-test-and-element-lookup	
+0x72a350	20	LcdIsLocaleSupported		ui	orchestration	uint8_t __cdecl ()	Answers 1 when the locale index 0xc0e080 is 0 to 3: enUS, koKR, frFR or deDE	verified	one	ui/lcd#ready-test-and-element-lookup	
 0x72a370	200	LcdEnterWorld		ui	orchestration	void __cdecl ()	Shows screen 1, sets the in-world flag, caches the player and sets flags on elements 0x14 and 0x2a by class	verified	one	ui/lcd#entering-and-leaving-the-world	
 0x72a450	71	LcdLeaveWorld		ui	orchestration	void __cdecl ()	Clears the in-world and battlefield flags and the player, shows screen 0 and updates the display	verified	one	ui/lcd#entering-and-leaving-the-world	
 0x72a4a0	61	LcdShowBattlefield		ui	orchestration	void __cdecl ()	Sets the battlefield flag and time, fills the battlefield screen and shows screen 3	verified	one	ui/lcd#entering-and-leaving-the-world	
