@@ -10,7 +10,7 @@ global state at `[L+0x10]` holds the string table at `+4`, the collector lists (
 userdata, `+0x18` to finalize), the registry (`+0x30`), the default metatable (`+0x40`), the
 threshold (`+0x24`) and the block count (`+0x28`). The names are upstream's.
 
-Roots: `0x6f5e20`, `0x6f5ef0`, `0x6f5f60`, `0x6f61c0`, `0x6f6200`, `0x6f6370`, `0x6f6470`, `0x6f65a0`, `0x6f6680`, `0x6f6960`, `0x6f6b10`, `0x6f6b80`, `0x6f6ef0`, `0x6f7080`, `0x6f71d0`, `0x6f7370`, `0x6f7b20`, `0x6f7ba0`, `0x6f7cf0`, `0x6f7d60`, `0x6f7ee0`, `0x6f7f40`, `0x6f8190`, `0x6f8330`, `0x6f84d0`, `0x6f8670`, `0x6f9900`, `0x6f99e0`, `0x6f9a80`, `0x6fb480`, `0x6fb4c0`, `0x6fb4f0`, `0x6fb520`, `0x6fb5c0`, `0x6fba10`, `0x6fbb90`, `0x6fbef0`, `0x6fbf20`, `0x6fc4c0`, `0x6fc6f0`, `0x6fc8a0`
+Roots: `0x6f5e20`, `0x6f5ef0`, `0x6f5f60`, `0x6f61c0`, `0x6f6200`, `0x6f6370`, `0x6f6470`, `0x6f65a0`, `0x6f6680`, `0x6f6960`, `0x6f6b10`, `0x6f6b80`, `0x6f6ef0`, `0x6f7080`, `0x6f71d0`, `0x6f7370`, `0x6f7b20`, `0x6f7ba0`, `0x6f7cf0`, `0x6f7d60`, `0x6f7ee0`, `0x6f7f40`, `0x6f8190`, `0x6f8330`, `0x6f84d0`, `0x6f8670`, `0x6f9900`, `0x6f99e0`, `0x6f9a80`, `0x6fb480`, `0x6fb4c0`, `0x6fb4f0`, `0x6fb520`, `0x6fb5c0`, `0x6fba10`, `0x6fbb90`, `0x6fbef0`, `0x6fbf20`, `0x6fc4c0`, `0x6fc6f0`, `0x6fc8a0`, `0x6fb9e0`, `0x6fbd20`
 
 ## Stack and call records
 
@@ -245,7 +245,7 @@ instruction that set a register by `luaG_symbexec` (`0x6fc508`) and maps the opc
 
 ## Input streams
 
-The compiler reads its input through a stream record: a count `n` at `+0`, the next byte `p`
+The compiler (`compiler`) reads its input through a stream record: a count `n` at `+0`, the next byte `p`
 at `+4`, the reader function at `+8`, its data at `+0xc` and the chunk name at `+0x10`. `luaZ_init`
 fills it and `luaZ_fill` calls the reader with a null state, the data and the address of a size,
 keeping the block it returns. `luaZ_lookahead` peeks at the next byte, `luaZ_read` copies a number
@@ -267,18 +267,56 @@ Test: none
 `luaZ_fill` stores the size minus 1 as the count and the block as `p`, then returns the byte at `p` and
 advances it (`0x6fb4a4`..`0x6fb4aa`), as upstream 5.0 does; `luaM_irealloc` here passes the line 75,
 the line of the allocation in upstream `luaZ_openspace`. `luaZ_read` returns the number of bytes it
-could not read. The lexer calls `luaZ_fill` from six sites (`0x700067`, `0x700104`, `0x70016e`,
-`0x7001cb`, `0x7001eb`, `0x7002ee`).
+could not read. The lexer's 38 calls of `luaZ_fill` are the inline `zgetc` refilling an empty block: 2 in
+`luaX_setinput`, 18 in `luaX_lex`, 1 in `inclinenumber`, 1 in `readname`, 6 in `read_numeral`, 5 in
+`read_long_string` (`0x700067`, `0x700104`, `0x70016e`, `0x7001cb`, `0x7001eb`) and 5 in `read_string`
+(`0x7002ee` the first). Of the 41 `call 0x6fb480` in the listing the other three are in
+`luaZ_lookahead`, `luaZ_read` and the chunk reader's `ezgetc` (`lua/chunks`).
+
+## Hooks and locals
+
+`lua_sethook` stores the hook function, its event mask and its count, which also restarts the
+running count, clearing the function and the mask when either is empty, and marks the hooks
+uninitialized; `luaG_inithooks` then saves the pc of every active call record before the first line
+event and marks them initialized. `lua_getlocal` pushes local n of a call level and returns its
+name; `lua_setlocal` pops the top value into it unless the name begins with `(`, the internal
+locals. `info_tailcall` describes a level lost to a tail call: what `tail`, source `=(tail call)`,
+lines -1, no upvalues, and nil at the stack top.
+
+| function | name | decided by |
+|---|---|---|
+| `0x6fb9e0` | `luaG_inithooks` | call records from the current down to the first (`0x6fb9e4`..`0x6fb9ff`), `currentpc` each (`0x6fb9f2`), flag set (`0x6fba01`) |
+| `0x6fba40` | `lua_sethook` | empty function or mask clears both (`0x6fba43`..`0x6fba51`), count twice (`0x6fba56`, `0x6fba59`), mask (`0x6fba5c`), function (`0x6fba5f`), flag cleared (`0x6fba62`) |
+| `0x6fba70` | `lua_gethook` | `[L+0x3c]` (`0x6fba70`) |
+| `0x6fba80` | `lua_gethookmask` | byte `[L+0x30]` (`0x6fba80`) |
+| `0x6fba90` | `lua_gethookcount` | `[L+0x34]` (`0x6fba90`) |
+| `0x6fbb20` | `lua_getlocal` | call record of the level (`0x6fbb24`..`0x6fbb32`), `getluaproto` (`0x6fbb3a`), `currentpc` (`0x6fbb47`), `luaF_getlocalname` (`0x6fbb54`), `luaA_pushobject` (`0x6fbb6b`) |
+| `0x6fbbb0` | `lua_setlocal` | call record (`0x6fbbb4`..`0x6fbbc1`), top lowered (`0x6fbbce`..`0x6fbbd9`), `luaF_getlocalname` (`0x6fbbf2`), `(` refused (`0x6fbbfb`), the copy (`0x6fbc0c`..`0x6fbc4c`) |
+| `0x6fbd20` | `info_tailcall` | empty names (`0x6fbd23`..`0x6fbd2c`), `tail` (`0x6fbd3e`), -1 lines (`0x6fbd45`, `0x6fbd48`), `luaO_chunkid` (`0x6fbd4e`), no upvalues (`0x6fbd53`), nil (`0x6fbd5d`) |
+
+Addresses: `0x6fb9e0`, `0x6fb9e4`, `0x6fb9ff`, `0x6fb9f2`, `0x6fba01`, `0x6fba40`, `0x6fba43`, `0x6fba51`, `0x6fba56`, `0x6fba59`, `0x6fba5c`, `0x6fba5f`, `0x6fba62`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbb24`, `0x6fbb32`, `0x6fbb3a`, `0x6fbb47`, `0x6fbb54`, `0x6fbb6b`, `0x6fbbb0`, `0x6fbbb4`, `0x6fbbc1`, `0x6fbbce`, `0x6fbbd9`, `0x6fbbf2`, `0x6fbbfb`, `0x6fbc0c`, `0x6fbc4c`, `0x6fbd20`, `0x6fbd23`, `0x6fbd2c`, `0x6fbd3e`, `0x6fbd45`, `0x6fbd48`, `0x6fbd4e`, `0x6fbd53`, `0x6fbd5d`, `0x6f9970`, `0x6fbc26`, `0x6fbd63`, `0x6fbd6a`
+Confidence: verified
+Proof: one
+Test: none
+
+The hook fields of the state are the mask byte at `+0x30`, the initialized flag at `+0x32`, the
+count at `+0x34`, the running count at `+0x38` and the function at `+0x3c`. A level's call record is
+the first record plus 24 times the index the debug record holds at `+0x5c`. `traceexec` calls
+`luaG_inithooks` while the flag is clear (`0x6f9970`). `lua_setlocal` and `info_tailcall` stamp the
+value they write with the context word (`ui/luastate`, The context word): the copy at `0x6fbc26`..
+`0x6fbc4c`, and `[0xceeac0]` at `+4` of the nil (`0x6fbd63`, `0x6fbd6a`).
 
 ## Unreached functions
 
-Nothing live reaches these 4 functions, which belong to the library the client links.
+Nothing live reaches these 10 functions, which belong to the library the client links.
 
 | functions |
 |---|
 | `lua_resume` `0x6f6620`, `resume` `0x6f67b0`, `lua_yield` `0x6f6860`, `luaE_newthread` `0x6f6b10` |
+| `lua_sethook` `0x6fba40`, `lua_gethook` `0x6fba70`, `lua_gethookmask` `0x6fba80`, `lua_gethookcount` `0x6fba90` |
+| `lua_getlocal` `0x6fbb20`, `lua_setlocal` `0x6fbbb0` |
 
-Addresses: `0x6f6620`, `0x6f67b0`, `0x6f6860`, `0x6f6b10`
+Addresses: `0x6f6620`, `0x6f67b0`, `0x6f6860`, `0x6f6b10`, `0x6fba40`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbbb0`
 Confidence: verified
 Proof: one
 Test: none

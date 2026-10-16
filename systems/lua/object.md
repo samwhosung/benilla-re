@@ -173,6 +173,33 @@ the entry address minus the vector base, divided by 40 by multiplying with `0xcc
 (`0x6fa485`) and shifting (`0x6fa48a`). `newkey` moves the node found in the main position of a key
 that is not its own to the free node and puts the new key in the main position.
 
+## Allocation
+
+The Lua core allocates through `luaM_irealloc`, which takes the state, the block, the old size, the
+new size, a source path and a line, and is the one caller of `luaM_reallocPool`. It adds the new size less the old to the block
+count at `+0x28` of the global state when there is a state, then reallocates through
+`luaM_reallocPool` with the block and the new size; the path and the line are never read.
+`luaM_growaux` grows a vector: it doubles the capacity, takes 4 below 4, and near the limit takes the
+limit while 4 places remain, else raises the caller's message.
+
+| function | name | decided by |
+|---|---|---|
+| `0x6fc980` | `luaM_irealloc` | no state skips the count (`0x6fc983`, `0x6fc989`), old size out and new size in (`0x6fc996`..`0x6fc99e`), `luaM_reallocPool` (`0x6fc9a4`), `ret 0x10` (`0x6fc9ab`) |
+| `0x6fc900` | `luaM_growaux` | doubled, at least 4 (`0x6fc90e`..`0x6fc919`), half the limit (`0x6fc920`..`0x6fc92a`), the limit (`0x6fc92c`..`0x6fc936`), `luaG_runerror` (`0x6fc93f`), `luaM_irealloc` in `lmem.c` (`0x6fc962`), size stored (`0x6fc967`) |
+
+Addresses: `0x6fc980`, `0x6fc983`, `0x6fc989`, `0x6fc996`, `0x6fc99e`, `0x6fc9a4`, `0x6fc9ab`, `0x6fc900`, `0x6fc90e`, `0x6fc919`, `0x6fc920`, `0x6fc92a`, `0x6fc92c`, `0x6fc936`, `0x6fc93f`, `0x6fc962`, `0x6fc967`, `0x6fc9a3`, `0x6fc954`, `0x6fc94e`, `0x6fc951`
+Confidence: verified
+Proof: one
+Test: none
+
+A census of `call` and `jmp` targets finds 56 sites calling `luaM_irealloc` and one calling
+`luaM_reallocPool` (`0x6fc9a4`); the control is the same search finding `luaM_growaux`'s
+callers in the compiler. `luaM_irealloc` reads only `[ebp+0x8]` and `[ebp+0xc]` of its four stack arguments and pushes the
+new size alone before the call (`0x6fc9a3`), with the state in `ecx` and the block in `edx`.
+`luaM_growaux` passes `lmem.c` with the line 62 (`0x6fc954`), where the call stands at line 54 of
+the 5.0 source, and the sizes as count times element size (`0x6fc94e`, `0x6fc951`). Its callers in
+the compiler pass the limits `0x3ffff` and `0x7ffffffd`.
+
 ## Unreached functions
 
 Nothing live reaches this function, which belongs to the library the client links.
