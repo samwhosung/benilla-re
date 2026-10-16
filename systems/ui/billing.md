@@ -15,7 +15,7 @@ Roots: `0x48ec50`, `0x48eb70`, `0x48ebe0`, `0x48f480`, `0x495590`
 `GetBillingTimeRested()` takes no argument, reads the session object's word at `+0x1af8` and pushes it as one number, whole, unsigned and unscaled. It never pushes nil and cannot
 raise. The glue twin `0x46dcf0` is the same 56 bytes apart from its two call targets. The word is written once per authentication response by `0x5b41b0` (the third value of the
 billing group, only when the result is 0x0c or 0x1b and the group's 9 bytes are all there), and by nothing else; the session object is
-allocated with the zero-fill flag off and its constructors do not write the word, so a response without the trio leaves it unset.
+allocated with the zero-fill flag off and its constructors do not write the word, so a response without the full group leaves it as it was.
 
 Addresses: `0x48ec50`, `0x48ec59`, `0x48ec5e`, `0x48ec67`, `0x48ec6e`, `0x48ec79`, `0x5b421a`, `0x5ab490`, `0x46dcf0`
 Confidence: verified
@@ -40,14 +40,14 @@ Test: none
 
 ## The billing group
 
-After a result byte of 0x0c (`AUTH_OK`) or 0x1b (`AUTH_WAIT_QUEUE`), `0x5b41b0` reads the billing group when at least 5 bytes of the message remain: a dword into the remaining minutes `+0x1af4`, a byte into the plan flags `+0x1afc`, then a dword into the rested time `+0x1af8`. The gate counts 5 bytes and the group is 9: with 5 to 8 left the first two reads complete and the third finds too few bytes, writes nothing and leaves `+0x1af8` as it was. The three fields have no other writer. Flag bit 1 (0x02) means no warning; bit 3 (0x08) is the internet-cafe plan, the third value of `GetBillingPlan`.
+After result 0x0c (`AUTH_OK`) or 0x1b (`AUTH_WAIT_QUEUE`), `0x5b41b0` reads the billing group when at least 5 bytes remain: a dword into `+0x1af4` (minutes remaining), a byte into `+0x1afc` (plan flags), a dword into `+0x1af8` (rested time). The gate counts 5 bytes and the group is 9: with 5 to 8 left the third read writes nothing and leaves `+0x1af8` as it was. Flag mask 0x16 selects the plan `GetBillingPlan` returns first (0x02 gives 1, 0x04 gives 2, none gives 3, 0x10 gives 4, other mixes 0); 0x02 also zeroes `GetBillingTimeRemaining` and arms no warning; 0x20 is the second value and 0x08 the third, the internet-cafe plan the poll tests.
 
-Addresses: `0x5b41b0`, `0x5b41e2`, `0x5b41f3`, `0x5b41f9`, `0x5b41fe`, `0x5b420c`, `0x5b421a`, `0x418cb0`, `0x418eb0`, `0x418ec4`, `0x46dbff`, `0x46dc0a`, `0x46dc4d`, `0x46dcc5`, `0x46dcfe`, `0x48ec5e`, `0x48f641`, `0x48f654`, `0x4956c0`
+Addresses: `0x5b41b0`, `0x5b41e2`, `0x5b41f3`, `0x5b41f9`, `0x5b41fe`, `0x5b420c`, `0x5b421a`, `0x418cb0`, `0x418eb0`, `0x418ec4`, `0x46dbff`, `0x46dc0a`, `0x46dc13`, `0x46dc4d`, `0x46dc5e`, `0x46dca8`, `0x46dcc5`, `0x46dcfe`, `0x48ec5e`, `0x48f641`, `0x48f654`, `0x4956c0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5b41f3` computes the unread count as the store's size `[edi+0x10]` less its cursor `[edi+0x14]`, and `0x5b41f9` is `cmp edx,5; jb`. The reads are `0x418eb0` (`+0x1af4`), `0x418cb0` (`+0x1afc`) and `0x418eb0` (`+0x1af8`); a read past the size sets the cursor to size + 1 and returns without storing (`0x418ec4` to `0x418ec6`). The dwords 0x1af4, 0x1afc and 0x1af8 occur as displacements only at the three `lea` writes (`0x5b41fe`, `0x5b420c`, `0x5b421a`) and eight reads: the glue functions (`0x46dbff`, `0x46dc0a`, `0x46dc4d`, `0x46dcfe`), `0x48ec5e`, and the warning's `0x48f641`, `0x48f654` and `0x4956c0`; the scan is over every dword of `.text` and finds each known site. `0x46dc0a` is the glue `GetBillingTimeRemaining` flag test and `0x46dcc5` the `GetBillingPlan` shift by 3.
+`0x5b41f3` computes the unread count as the store's size `[edi+0x10]` less its cursor `[edi+0x14]`, and `0x5b41f9` is `cmp edx,5; jb`. The reads are `0x418eb0` (`+0x1af4`), `0x418cb0` (`+0x1afc`) and `0x418eb0` (`+0x1af8`); a read past the size sets the cursor to size + 1 and returns without storing (`0x418ec4` to `0x418ec6`). The dwords 0x1af4, 0x1afc and 0x1af8 occur as displacements only at the three `lea` writes (`0x5b41fe`, `0x5b420c`, `0x5b421a`) and eight reads: the glue functions (`0x46dbff`, `0x46dc0a`, `0x46dc4d`, `0x46dcfe`), `0x48ec5e`, and the warning's `0x48f641`, `0x48f654` and `0x4956c0`; the scan is over every dword of `.text` and finds each known site. `0x46dc0a` tests bit 1 and `0x46dc13` zeroes the remaining time. `GetBillingPlan` masks with `and eax,0x16` (`0x46dc5e`) and compares with 2, 4, 0 and 0x10 for 1, 2, 3 and 4; `0x46dca8` shifts by 5 and `0x46dcc5` by 3 for the two values after.
 
 ## The warning timer
 
@@ -64,14 +64,14 @@ Bit-exact coverage: `ui::billing_arm` covers `0x48f636` to `0x48f679` of `0x48f4
 
 ## The minutes reading
 
-The poll reads the time left as minutes: `left = deadline - now` as a dword, zero-extended, times the `f32` `0x378bcf65` (a hair over 1/60000) at 53-bit precision, rounded up, truncated to an integer, and compared as unsigned. For 1 <= left < 89,999,999 the reading is left / 60000 + 1 (integer division), so a whole minute reads as two and 0 reads 0. Above that the first left that reads n is 60000(n - 1) less 1 ms from n = 1501, 2 ms from n = 3000 and 3 ms from n = 4499. A deadline passed by up to 2^31 ms wraps to a left of at least 2^31, reading 35,792 or more.
+The poll reads the time left as minutes: `left = deadline - now` as a dword, zero-extended, times the `f32` `0x378bcf65` (a hair over 1/60000) at 53-bit precision, rounded up, truncated to an integer, and compared as unsigned. For 1 <= left < 89,999,999 the reading is left / 60000 + 1 (integer division): a whole minute reads as two, 0 reads 0. For n >= 2 the first left that reads n is floor(60000(n - 1) * 2^34 / 17179869375) + 1, which is 60000(n - 1) less k ms, k = 1 from n = 1501, 2 from 3000, 3 from 4499. The arm's 4320-minute cap reaches only k of 1 and 2; more needs a wrapped left.
 
 Addresses: `0x495693`, `0x49569b`, `0x4956a1`, `0x4956a7`, `0x4956aa`, `0x4956b2`, `0x4956b7`, `0x804590`, `0x73fdf5`, `0x40a2b0`, `0x40cf81`, `0x42c010`, `0x404100`
 Confidence: verified
 Proof: one
 Test: `ui::billing_minutes_left`, `ui::glue_geom_480_495590_tick_scale`
 
-`0x495698` stores `ebx` (zero since `0x49559f`) as the high dword, `0x49569b` is `fild qword`, `0x4956a1` `fmul dword [0x804590]` and `0x4956a7` `fstp qword`. `ceil` (`0x73fdf5`) sets the control word to 0x1b3f, round up, through `0x40cf81`, rounds the finite double with `frndint` (`0x7458d2`) and restores the old word (`0x73fe92`). `__ftol` truncates it. The product has up to 56 bits and rounds once at 53, the control word WinMain sets (`0x404100`); a Rust `f64` product matches. The test runs `0x49569b` to `0x4956b7` in the exe, `ceil` and `__ftol` included, over every minute boundary to 2^32 ms.
+`0x495698` stores `ebx` (zero since `0x49559f`) as the high dword, `0x49569b` is `fild qword`, `0x4956a1` `fmul dword [0x804590]` and `0x4956a7` `fstp qword`. `ceil` (`0x73fdf5`) sets the control word to 0x1b3f, round up, through `0x40cf81`, rounds the finite double with `frndint` (`0x7458d2`) and restores the old word (`0x73fe92`). `__ftol` truncates it. The product has up to 56 bits and rounds once at 53, the control word WinMain sets (`0x404100`); a Rust `f64` product matches. A deadline passed by up to 2^31 ms wraps to a left of at least 2^31, reading 35,792 or more. The test runs `0x49569b` to `0x4956b7` in the exe, `ceil` and `__ftol` included, over the first left of every reading n to 71,583 and the left below it.
 
 Bit-exact coverage: `ui::billing_minutes_left` covers `0x49569b` to `0x4956b7` of `0x495590`; `ui::glue_geom_480_495590_tick_scale` covers `0x49569b` to `0x4956aa`.
 
@@ -92,13 +92,13 @@ Confidence: verified
 Proof: one
 Test: `ui::billing_poll`
 
-The poll starts at `0x495679` (`cmp [0xb4e360],ebx; je 0x495830`), which every path of the function's first part reaches through `0x49565b` while the reload byte `0xb4b3f4` is clear; a reload frame returns after `0x48fbf0` without it (`0x495664`, `0x495669`). Event ids 0x205 and 0x206 are `BILLING_NAG_DIALOG` (`"%d"`, `0x835154`, `0x703f50`) and `IGR_BILLING_NAG_DIALOG` (`0x703e50`). The step `div` (`0x4957fb`) divides left by 60000 (`0x495841`) or `0x493e0`, and `0x4957ff` adds `now`. N and D take 0 as unset, so a sum that lands on 0 repeats the first poll. A left that is a whole step stores N = now, and the next poll prints again.
+The function's first part, from `0x4955ab`, also signals events 0x1b1 and 0x1b2 (`0x49563d`, `0x495656`). The poll starts at `0x495679` (`cmp [0xb4e360],ebx; je 0x495830`), which every path of the function's first part reaches through `0x49565b` while the reload byte `0xb4b3f4` is clear; a reload frame returns after `0x48fbf0` without it (`0x495664`, `0x495669`). Event ids 0x205 and 0x206 are `BILLING_NAG_DIALOG` (`"%d"`, `0x835154`, `0x703f50`) and `IGR_BILLING_NAG_DIALOG` (`0x703e50`). The step `div` (`0x4957fb`) divides left by 60000 (`0x495841`) or `0x493e0`, and `0x4957ff` adds `now`. N and D take 0 as unset, so a sum that lands on 0 repeats the first poll. A left that is a whole step stores N = now, and the next poll prints again.
 
 Bit-exact coverage: `ui::billing_poll` covers `0x495679` to `0x495830` of `0x495590`, all of it, with `0x42c010`, `0x5ab490`, `0x703f50`, `0x703e50`, `0x703bf0`, `0x64a7f0`, `0x49cae0` and `0x49a870` stubbed and logged.
 
 ## The warning lines
 
-A line is the text `SStrPrintf(buf, 0x800, GetText("BILLING_NAG_WARNING", nil, m), m)` as chat type 10, `CHAT_MSG_SYSTEM`. While the chat display latch `0x8435fc` is set it is queued with `0x49cae0` and shown when the latch releases; otherwise `AddChatLine` shows it. A line is due from the poll after the first when m <= 30, then at each mark where the time left is a whole 5 minutes, and each whole minute from 5: for an arm at 32 minutes, 30, 25, 20, 15, 10, 5, 4, 3, 2, 1. A poll exactly on D prints 0; one after D prints nothing and clears D. A poll exactly on a mark reads one minute high and prints again on the next poll.
+A line is `SStrPrintf(buf, 0x800, GetText("BILLING_NAG_WARNING", nil, m), m)` as chat type 10 (`CHAT_MSG_SYSTEM`): queued with `0x49cae0` while the display latch `0x8435fc` is set, else shown by `AddChatLine`. Lines are due from the poll after the first when m <= 30, then at each whole 5 minutes of time left and each whole minute from 5 (an arm at 32 minutes: 30, 25, 20, 15, 10, 5, 4, 3, 2, 1). A poll exactly on D prints 0; a later one, while now - D < 2^31 ms, prints nothing and clears D. A poll exactly on a mark reads one minute high and prints again on the next.
 
 Addresses: `0x49575a`, `0x49575e`, `0x495763`, `0x495775`, `0x49577a`, `0x4957ad`, `0x4957d1`, `0x8433f0`, `0x8435fc`, `0x703bf0`, `0x64a7f0`, `0x49cae0`, `0x49a870`
 Confidence: verified

@@ -676,7 +676,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40cf37	45	__errcode	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40cf64	14	__statfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40cf72	15	__clrfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40cf81	35	__ctrlfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x40cf81	35	__ctrlfp	idb	crt	boundary	int32_t __cdecl (uint32_t newWord, uint32_t mask)	Sets the x87 control word to (old & ~mask) | (new & mask) and returns the old word	verified	one	ui/billing#the-minutes-reading	
 0x40cfa4	86	__set_statfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40cffa	17			crt	unreached		Runs its object file code that calls _x_ismbbtype; not read here	inferred	none		
 0x40d00b	17	__ismbbkprint	idb	crt	unreached		Runs its object file code that calls _x_ismbbtype; not read here	inferred	none		
@@ -7025,7 +7025,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4953e0	62	LockItem		ui	primitive	void __stdcall (uint64_t guid)	Sets an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
 0x495420	62	UnlockItem		ui	primitive	void __stdcall (uint64_t guid)	Clears an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
 0x495460	297	UnlockAllItems		ui	primitive	void __cdecl (void)	Clears the lock of every item the player holds and signals ITEM_LOCK_CHANGED once	verified	one	ui/cursor#the-item-lock	
-0x495590	696	CGGameUI::Update		ui	primitive		Runs the interface frame update: zeroes the context count, reloads on request, polls the play-time warning	verified	one	ui/billing#the-play-time-poll	ui::billing_minutes_left, ui::billing_poll, ui::glue_geom_480_495590_tick_scale
+0x495590	696	CGGameUI::Update		ui	primitive		Runs the interface frame update: zeroes the context count, signals memory events, reloads on request, polls play time	verified	one	ui/billing#the-play-time-poll	ui::billing_minutes_left, ui::billing_poll, ui::glue_geom_480_495590_tick_scale
 0x495850	72	SignalDeathState		ui	orchestration		Signals PLAYER_DEAD and clears the cursor at no health, else PLAYER_ALIVE	verified	one	ui/deathui#dead-and-alive	
 0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
@@ -31279,7 +31279,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fd73	8	___toascii	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x73fd7b	61	___iscsymf	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdb8	61	___iscsym	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	
+0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	ui::billing_minutes_left
 0x73fec4	82	_sprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
 0x73ff20	31	__allshl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
@@ -31461,7 +31461,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74587d	26			crt	boundary		Runs its object file code that calls __filbuf; not read here	inferred	none		
 0x745897	23	__un_inc	idb	crt	boundary		Runs its object file code that calls 0x741c1b; not read here	inferred	none		
 0x7458ae	36	__whiteout	idb	crt	boundary		Runs its object file code that calls 0x74587d, _isspace; not read here	inferred	none		
-0x7458d2	18	__frnd	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x7458d2	18	__frnd	idb	crt	boundary	double __cdecl (double x)	Rounds a double to an integral value in the current rounding mode and returns it in st0	verified	one	ui/billing#the-minutes-reading	
 0x7458e4	82	_iswctype	idb	crt	boundary		Tests a 16-bit unit's type bits: 0 for 0xffff, the C table below 0x100, else GetStringTypeW's CT_CTYPE1	verified	one	net/who#who-filter-decoding	
 0x745936	16			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x745946	220	__filbuf	idb	crt	boundary		Runs its object file code that calls __getbuf, __read; not read here	inferred	none		

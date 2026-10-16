@@ -51,8 +51,7 @@ fn set_frame(emu: &mut Emu, f: &Frame) {
     emu.set_reg(RegisterX86::ESP, f.esp);
 }
 
-// The first `left` that reads each minute count, found by the model, probed in the exe at the
-// boundary and a step either side.
+// Lefts around every whole minute, and the extremes of the dword.
 fn boundary_lefts() -> Vec<u32> {
     let mut v = vec![
         0,
@@ -67,8 +66,7 @@ fn boundary_lefts() -> Vec<u32> {
     ];
     v.push((1 << 31) - 1);
     v.push((1 << 31) + 1);
-    // Every multiple of a minute up to the longest remaining a response can carry and past it
-    // (2^32 ms is 71,582.8 minutes), and the first left of each reading by search.
+    // Every multiple of a minute up to 2^32 ms (71,582.8 minutes), three milliseconds either way.
     for n in 0..=71_583u32 {
         let base = n.saturating_mul(MINUTE_MS);
         for d in [-3i64, -2, -1, 0, 1, 2, 3] {
@@ -116,13 +114,18 @@ fn billing_minutes_left() {
         assert_eq!(run(&mut emu, left), minutes_left(left), "left={left}");
         total += 1;
     }
-    // The first left of each reading that selects a branch, by the model, in the exe: one
-    // millisecond below reads one less.
-    for n in [1u32, 2, 5, 6, 30, 31, 600, 601, 4320, 4321] {
-        let mut first = (MINUTE_MS * (n - 1)).saturating_sub(8);
+    // The first left of every reading n, searched in the model from 100 ms below the minute (the
+    // offset reaches 47 ms by n = 71,583), and the exe on it and on the left below it.
+    for n in 1..=71_583u32 {
+        let mut first = (MINUTE_MS * (n - 1)).saturating_sub(100);
         while minutes_left(first) < n {
             first += 1;
         }
+        assert_eq!(
+            minutes_left(first - 1),
+            n - 1,
+            "model: one below the first of {n}"
+        );
         assert_eq!(run(&mut emu, first), n, "first left of {n}");
         assert_eq!(
             run(&mut emu, first - 1),

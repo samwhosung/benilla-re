@@ -39,7 +39,7 @@ pub enum Shown {
     Line { minutes: u32, held: bool },
 }
 
-/// The minutes the poll reads (`0x49569b` to `0x4956b2`): `left` is `deadline - now` as a dword,
+/// The minutes the poll reads (`0x49569b` to `0x4956b7`): `left` is `deadline - now` as a dword,
 /// zero-extended into a 64-bit `fild`, multiplied by the `f32` at `0x804590` at 53 bits, rounded up
 /// by `ceil` (`0x73fdf5`) and truncated by `__ftol` (`0x40a2b0`).
 pub fn minutes_left(left: u32) -> u32 {
