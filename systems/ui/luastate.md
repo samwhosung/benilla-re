@@ -143,7 +143,8 @@ before `lua_load` (`0x6f4320`). Its callers are `0x704b0c` (files and buffers), 
 elements), `0x7032b0` (`loadstring`) and `0x6f57d0`; no dword holds its address. `0x6f6a00` zeroes
 the parser's binary flag (`0x6f6a15`) and never reads its argument, so `0x6f6a80`'s test of it
 (`0x6f6a98`) always takes `0x6fc9b0`; the undump `0x6fec00` has that one caller.
-`0x6ff5cd` is `cmp eax,0x23` in `0x6ff580`. `0x703280` passes `luaL_optstring(2, s)` as the name and
+`0x6ff5cd` is `cmp eax,0x23` in `0x6ff580`. The parser and lexer are in `lua/compiler`, the code
+generator in `lua/codegen` and the precompiled-chunk reader in `lua/chunks`. `0x703280` passes `luaL_optstring(2, s)` as the name and
 on failure pushes nil under the message and returns 2.
 
 ## Lua 5.0 behaviour kept

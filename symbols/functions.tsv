@@ -29896,20 +29896,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fb4f0	35	luaZ_init		lua	boundary		Sets up a stream with a reader, its data and a name	verified	one	lua/runtime#input-streams	
 0x6fb520	146	luaZ_read		lua	boundary		Copies a number of bytes out of a stream, refilling it as needed, and returns the bytes missing	verified	one	lua/runtime#input-streams	
 0x6fb5c0	56	luaZ_openspace		lua	boundary		Grows a work buffer to at least a number of bytes, 32 at the least, and returns it	verified	one	lua/runtime#input-streams	
-0x6fb600	52			lua	boundary		Runs its object file code that calls 0x6fb940, 0x6fb640; not read here	inferred	none		
-0x6fb640	135			lua	boundary		Runs its object file code that calls 0x6fb730, 0x6fb710, 0x6fb6d0 and 5 more; not read here	inferred	none		
-0x6fb6d0	25			lua	boundary		Runs its object file code that calls 0x6fb6f0; not read here	inferred	none		
-0x6fb6f0	24			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fb710	25			lua	boundary		Runs its object file code that calls 0x6fb6f0; not read here	inferred	none		
-0x6fb730	52			lua	boundary		Runs its object file code that calls 0x6fb770, 0x6fb6f0; not read here	inferred	none		
-0x6fb770	25			lua	boundary		Runs its object file code that calls 0x6fb6f0; not read here	inferred	none		
-0x6fb790	32			lua	boundary		Runs its object file code that calls 0x6fb710, 0x6fb6f0; not read here	inferred	none		
-0x6fb7b0	96			lua	boundary		Runs its object file code that calls 0x6fb710, 0x6fb730; not read here	inferred	none		
-0x6fb810	32			lua	boundary		Runs its object file code that calls 0x6fb710, 0x6fb6f0; not read here	inferred	none		
-0x6fb830	60			lua	boundary		Runs its object file code that calls 0x6fb710, 0x6fb730; not read here	inferred	none		
-0x6fb870	163			lua	boundary		Runs its object file code that calls 0x6fb710, 0x6fb6d0, 0x6fb730 and 2 more; not read here	inferred	none		
-0x6fb920	21			lua	boundary		Runs its object file code that calls 0x6fb6f0; not read here	inferred	none		
-0x6fb940	160			lua	boundary		Runs its object file code that calls 0x6fb6f0, 0x6fb6d0, 0x6ff3f0 and 1 more; not read here	inferred	none		
+0x6fb600	52	luaU_dump		lua	boundary		Writes a function as a precompiled chunk through a writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb640	135	DumpFunction		lua	boundary		Writes a function prototype and its nested prototypes	verified	one	lua/chunks#dumping-a-function	
+0x6fb6d0	25	DumpByte		lua	boundary		Writes one byte through the dump writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb6f0	24	DumpBlock		lua	boundary		Writes a block through the dump writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb710	25	DumpInt		lua	boundary		Writes a four-byte integer through the dump writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb730	52	DumpString		lua	boundary		Writes a string with its size and terminating zero, or size 0 for none	verified	one	lua/chunks#dumping-a-function	
+0x6fb770	25	DumpSize		lua	boundary		Writes a four-byte size through the dump writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb790	32	DumpCode		lua	boundary		Writes a prototype's instructions	verified	one	lua/chunks#dumping-a-function	
+0x6fb7b0	96	DumpLocals		lua	boundary		Writes a prototype's local variable records	verified	one	lua/chunks#dumping-a-function	
+0x6fb810	32	DumpLines		lua	boundary		Writes a prototype's line numbers	verified	one	lua/chunks#dumping-a-function	
+0x6fb830	60	DumpUpvalues		lua	boundary		Writes a prototype's upvalue names	verified	one	lua/chunks#dumping-a-function	
+0x6fb870	163	DumpConstants		lua	boundary		Writes a prototype's constants and nested prototypes	verified	one	lua/chunks#dumping-a-function	
+0x6fb920	21	DumpNumber		lua	boundary		Writes an eight-byte number through the dump writer	verified	one	lua/chunks#dumping-a-function	
+0x6fb940	160	DumpHeader		lua	boundary		Writes a precompiled chunk's header	verified	one	lua/chunks#dumping-a-function	
 0x6fb9e0	40			lua	boundary		Runs its object file code that calls 0x6fba10; not read here	inferred	none		
 0x6fba10	42	currentpc		lua	boundary		Returns the index of the current instruction of a Lua call record, -1 for a C function	verified	one	lua/runtime#error-messages	
 0x6fba40	48			lua	unreached		Runs its object file code not read here	inferred	none		
@@ -29926,11 +29926,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fbef0	35	currentline		lua	boundary		Returns the source line of the current instruction, -1 for a C function	verified	one	lua/runtime#error-messages	
 0x6fbf20	99	funcinfo		lua	boundary		Fills the source name, line, kind and short source of a function for lua_getinfo	verified	one	lua/runtime#error-messages	
 0x6fbf90	103	travglobals		lua	primitive		Returns the last string key of the globals hash part whose value equals the given function, or null	verified	one	ui/luastate#function-names-from-globals	
-0x6fc000	14			lua	boundary		Runs its object file code that calls 0x6fc010; not read here	inferred	none		
-0x6fc010	865			lua	boundary		Runs its object file code that calls 0x6fc3d0, 0x6fc430, 0x6fc400; not read here	inferred	none		
-0x6fc3d0	43			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fc400	47			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fc430	38			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6fc000	14	luaG_checkcode		lua	boundary		Answers whether a prototype's code passes the code checker	verified	one	lua/chunks#the-code-checker	
+0x6fc010	865	luaG_symbexec		lua	boundary		Checks a prototype's instructions up to a pc and returns the last one that set a register	verified	one	lua/chunks#the-code-checker	
+0x6fc3d0	43	precheck		lua	boundary		Checks a prototype's stack size, line count and final return	verified	one	lua/chunks#the-code-checker	
+0x6fc400	47	checkopenop		lua	boundary		Checks the instruction after an open call	verified	one	lua/chunks#the-code-checker	
+0x6fc430	38	checkRK		lua	boundary		Answers whether an operand is a valid register or constant of a prototype	verified	one	lua/chunks#the-code-checker	
 0x6fc460	86	getfuncname		lua	boundary		Names the function of a call from the calling instruction, or null	verified	one	ui/luastate#function-names-from-globals	
 0x6fc4c0	265	getobjname		lua	boundary		Names the value in a register from the instructions that loaded it	verified	one	lua/runtime#error-messages	
 0x6fc5f0	37	kname		lua	boundary		Returns the text of a string constant named by an index, or a question mark	verified	one	lua/runtime#error-messages	
@@ -30015,26 +30015,26 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6feae0	148	retstat		lua	boundary		Compiles a return statement, turning a lone call into a tail call	verified	one	lua/compiler#statements-and-assignments	
 0x6feb80	114	breakstat		lua	boundary		Compiles a break out of the innermost loop	verified	one	lua/compiler#statements-and-assignments	
 0x6fec00	68	luaU_undump		lua	boundary		Loads a precompiled chunk; its one caller never reaches it	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x6fec50	18			lua	boundary		Runs its object file code that calls 0x6ff210; not read here	inferred	none		
-0x6fec70	165			lua	boundary		Runs its object file code that calls 0x6f9fe0, 0x6fee40, 0x6fed80 and 8 more; not read here	inferred	none		
-0x6fed20	60			lua	boundary		Runs its object file code that calls 0x6fb480, 0x6fed60; not read here	inferred	none		
-0x6fed60	21			lua	boundary		Runs its object file code that calls 0x6fc870; not read here	inferred	none		
-0x6fed80	52			lua	boundary		Runs its object file code that calls 0x6fedc0, 0x6fc870; not read here	inferred	none		
-0x6fedc0	66			lua	boundary		Runs its object file code that calls 0x6fed20, 0x6fee10; not read here	inferred	none		
-0x6fee10	34			lua	boundary		Runs its object file code that calls 0x6fb520, 0x6fed60; not read here	inferred	none		
-0x6fee40	57			lua	boundary		Runs its object file code that calls 0x6fee80, 0x6fb5c0, 0x6fee10 and 1 more; not read here	inferred	none		
-0x6fee80	21			lua	boundary		Runs its object file code that calls 0x6fedc0; not read here	inferred	none		
-0x6feea0	62			lua	boundary		Runs lundump.c code that calls 0x6fed80, luaM_irealloc, 0x6feee0; not read here	inferred	none		
-0x6feee0	113			lua	boundary		Runs lundump.c code that calls 0x6fed20, 0x6fee10; not read here	inferred	none		
-0x6fef60	124			lua	boundary		Runs lundump.c code that calls 0x6fed80, luaM_irealloc, 0x6fee40; not read here	inferred	none		
-0x6fefe0	65			lua	boundary		Runs lundump.c code that calls 0x6fed80, luaM_irealloc, 0x6feee0; not read here	inferred	none		
-0x6ff030	124			lua	boundary		Runs lundump.c code that calls 0x6fed80, 0x6fc870, luaM_irealloc and 1 more; not read here	inferred	none		
-0x6ff0b0	306			lua	boundary		Runs lundump.c code that calls 0x6fed80, luaM_irealloc, 0x6fed20 and 4 more; not read here	inferred	none		
-0x6ff1f0	23			unassigned			Runs its object file code that calls 0x6fedc0; not read here	inferred	none		
-0x6ff210	334			unassigned			Runs its object file code that calls 0x6ff360, 0x6fed20, 0x6fc870 and 4 more; not read here	inferred	none		
-0x6ff360	71			unassigned			Runs its object file code that calls 0x6fed20, 0x6fc870; not read here	inferred	none		
-0x6ff3b0	53			unassigned			Runs its object file code that calls 0x6fed20, 0x6fc870; not read here	inferred	none		
-0x6ff3f0	6			unassigned			Runs its object file code not read here	inferred	none		
+0x6fec50	18	LoadChunk		lua	boundary		Loads a precompiled chunk's header and its main function	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6fec70	165	LoadFunction		lua	boundary		Loads a function prototype and its nested prototypes, then checks its code	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6fed20	60	ezgetc		lua	boundary		Reads a byte of a precompiled chunk, raising an error at the end of the stream	verified	one	lua/chunks#reading-the-stream	
+0x6fed60	21	unexpectedEOZ		lua	boundary		Raises the error for a precompiled chunk that ends too soon	verified	one	lua/chunks#reading-the-stream	
+0x6fed80	52	LoadInt		lua	boundary		Reads a non-negative four-byte integer of a precompiled chunk	verified	one	lua/chunks#reading-the-stream	
+0x6fedc0	66	LoadBlock		lua	boundary		Reads a block of a precompiled chunk, reversing its bytes when the byte order differs	verified	one	lua/chunks#reading-the-stream	
+0x6fee10	34	ezread		lua	boundary		Reads bytes of a precompiled chunk, raising an error on a short read	verified	one	lua/chunks#reading-the-stream	
+0x6fee40	57	LoadString		lua	boundary		Reads a string of a precompiled chunk, null when its size is 0	verified	one	lua/chunks#reading-the-stream	
+0x6fee80	21	LoadSize		lua	boundary		Reads a four-byte size of a precompiled chunk	verified	one	lua/chunks#reading-the-stream	
+0x6feea0	62	LoadCode		lua	boundary		Loads a prototype's instructions	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6feee0	113	LoadVector		lua	boundary		Reads a vector of a precompiled chunk, reversing each element when the byte order differs	verified	one	lua/chunks#reading-the-stream	
+0x6fef60	124	LoadLocals		lua	boundary		Loads a prototype's local variable records	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6fefe0	65	LoadLines		lua	boundary		Loads a prototype's line numbers	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff030	124	LoadUpvalues		lua	boundary		Loads a prototype's upvalue names, refusing a count other than 0 or its upvalue count	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff0b0	306	LoadConstants		lua	boundary		Loads a prototype's constants with the current context word and its nested prototypes	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff1f0	23	LoadNumber		lua	boundary		Reads an eight-byte number of a precompiled chunk	verified	one	lua/chunks#reading-the-stream	
+0x6ff210	334	LoadHeader		lua	boundary		Checks a precompiled chunk's signature, version, byte order, sizes and test number	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff360	71	LoadSignature		lua	boundary		Checks that a precompiled chunk starts with the bytes 1b 4c 75 61	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff3b0	53	TestSize		lua	boundary		Checks one size byte of a precompiled chunk's header	verified	one	lua/chunks#loading-a-precompiled-chunk	
+0x6ff3f0	6	luaU_endianness		lua	boundary		Returns 1, the byte order of the machine as a precompiled chunk records it	verified	one	lua/chunks#loading-a-precompiled-chunk	
 0x6ff400	55	luaX_init		lua	boundary		Interns the 21 reserved words as fixed strings that carry their token index	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ff440	49	luaX_checklimit		lua	boundary		Raises a syntax error when a count passes its limit	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ff480	76	luaX_errorline		lua	boundary		Throws a syntax error with the chunk name, the line and the token near it	verified	one	lua/compiler#lexer-errors-and-limits	
