@@ -1,6 +1,6 @@
 //! Reimplements the arithmetic inside the pick and chat-colour functions: the distance and
-//! normalise in the pick tracer `TracePick` (`0x480df0`) and its driver `0x480a50`, the tick
-//! scale of `0x495590`, and the byte-to-unit colour channels of `LoadChatSettings` (`0x498a60`).
+//! normalise in the pick tracer `TracePick` (`0x480df0`) and its driver `0x480a50`, the
+//! milliseconds-to-minutes product of the play-time poll in `0x495590`, and the byte-to-unit colour channels of `LoadChatSettings` (`0x498a60`).
 //! The x87 runs at 53-bit precision, so each chain is `f64` with `as f32` at the `fstp dword`
 //! stores; the tests in `tests/worldpick.rs` diff each against the exe.
 
@@ -16,7 +16,7 @@
 /// `INV255_F32_BITS`.) Widened to f64 in the multiply.
 pub const INV255_F32_BITS: u32 = 0x3b80_8081;
 /// `[0x804590]` (`.rdata`) = `1.6666666851961054e-05` as a **dword** `f32` (`0x378bcf65`), 0x495590's
-/// `(i64)delta · k` multiplier (`fmul dword [0x804590]`; numerically ≈ `1/60000`). Widened to f64.
+/// `(i64)left · k` minutes multiplier (`fmul dword [0x804590]`; numerically ≈ `1/60000`). Widened to f64.
 pub const K_804590_F32_BITS: u32 = 0x378b_cf65;
 /// `[0x8029d4]` (`.rdata`) = `2.384185791015625e-07` (`0x34800000`), 0x480df0's `fabs(dist)`
 /// vs-epsilon compare operand (a `fcomp` compare, NOT arithmetic; documented for context).
@@ -131,18 +131,18 @@ pub fn normalize_block(dist2: f64, scalar: f32, cy: f32, cx: f32, cz: f32) -> (f
 }
 
 // ===========================================================================================
-// (3) 0x495590 — one `(i64)delta · k` product, kept f64.
+// (3) 0x495590 — the play-time poll's `(i64)left · k` product, kept f64.
 // ===========================================================================================
 //
 //   fild qword [ebp-0x8]; fmul dword [0x804590]; fstp qword [esp]
 // The signed 64-bit integer at `[ebp-0x8]` (low dword) / `[ebp-0x4]` (high dword) is `fild`'d (exact
 // for values in i53), `· k` (the f32 `0x804590` widened), kept f64 (pushed to `0x73fdf5`, then the
-// CRT `__ftol` `0x40a2b0` truncates — delegated).
+// CRT `__ftol` `0x40a2b0` truncates; `billing::minutes_left` covers those).
 
 /// 0x495590's owned product (`fild qword; fmul dword [0x804590]; fstp qword`): the signed 64-bit
-/// integer `n` (a tick delta) `· k` (the f32 `0x804590` ≈ 1/60000, widened to f64), kept as the
-/// un-narrowed PC_53 f64 (pushed as the formatter double arg). `n` is the `[ebp-0x8]` qword. Returns
-/// the f64 product.
+/// integer `n` (the milliseconds left) `· k` (the f32 `0x804590` ≈ 1/60000, widened to f64), kept as
+/// the un-narrowed PC_53 f64 (pushed to `ceil`). `n` is the `[ebp-0x8]` qword. Returns the f64
+/// product.
 pub fn tick_scale(n: i64) -> f64 {
     n as f64 * k_804590() // fild qword (exact in i53); fmul dword [0x804590]; fstp qword
 }

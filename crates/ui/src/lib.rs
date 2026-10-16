@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 pub mod anchors;
+pub mod billing;
 pub mod camera_arm_view;
 pub mod camera_cvars;
 pub mod camera_driver;

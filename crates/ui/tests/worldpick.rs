@@ -1,6 +1,6 @@
 //! Differential tests of the arithmetic inside the pick and chat-colour functions: the distance
-//! and normalise in the pick tracer `TracePick` (`0x480df0`) and its driver `0x480a50`, the tick
-//! scale of `0x495590`, and the byte-to-unit colour channels of `LoadChatSettings` (`0x498a60`),
+//! and normalise in the pick tracer `TracePick` (`0x480df0`) and its driver `0x480a50`, the
+//! milliseconds-to-minutes product of the play-time poll in `0x495590`, and the byte-to-unit colour channels of `LoadChatSettings` (`0x498a60`),
 //! each run against `WoW.exe` in the emulator.
 //!
 //! Coverage of the arithmetic opcode set (load/store/compare/convert/`fild`/`fxch`/`fld st(k)`
@@ -28,7 +28,7 @@
 //!   ops — `d9 fa / d9 c0 / d9 e1 / d8 1d d4 29 80 00 / d8 c9` **byte-verified == BOTH** source blocks
 //!   A and B; the `fdivr`'s opcode+reg-field (`0xd8`, reg 7 = fdivr) is verified == source `0x480f24`/
 //!   `0x480fe9` (a memory `fdivr` whose disp differs but whose SWAP direction the reg-field fixes).
-//! * **tick_scale** (0x495590): own-address **slice** `0x49569b..0x4956aa` (`fild qword; sub esp,8;
+//! * **tick_scale** (0x495590, the milliseconds-to-minutes product): own-address **slice** `0x49569b..0x4956aa` (`fild qword; sub esp,8;
 //!   fmul [0x804590]; fstp qword`, halt at the `call 0x73fdf5`), reading the pushed f64.
 //! * **color_channel** (0x498a60 ×12): a **copied-byte island** `fild dword [in]; fmul dword
 //!   [0x8026c8]; fstp qword [out]`, the `fmul` **byte-verified == ALL 12** source sites.
@@ -455,7 +455,7 @@ fn glue_geom_480_480df0_normalize() {
 }
 
 // ===========================================================================================
-// (4) tick_scale — own-address slice over 0x495590 (0x49569b..0x4956aa):
+// (4) tick_scale — the play-time poll's minutes product, own-address slice over 0x495590 (0x49569b..0x4956aa):
 //   fild qword [ebp-0x8]; sub esp,8; fmul dword [0x804590]; fstp qword [esp]   (halt at the call).
 // fmul @0x4956a1 (×1). Feed the i64 at [ebp-0x8]; the slice's `sub esp,8` runs before the fstp, so
 // the f64 lands at [esp_initial - 8].
