@@ -3064,14 +3064,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71ba0	int32_t	s_lootMoney		ui	Holds the loot window's money in copper, 0 for none and -1 once the coin row is taken	verified	one	ui/loot#loot-state
 0xb71bbc	uint32_t	s_lootType		ui	Holds the loot type of the open window, 3 for fishing loot	verified	one	ui/loot#loot-state
 0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once the auto-loot sweep has handled the coin row of this source	verified	one	ui/loot#auto-loot
-0xb71bd4	uint32_t	s_lotteryVendorClock		ui	Holds the clock value IsVendorActive waits to pass before it returns the vendor dword	inferred	none	ui/lottery#prizes
-0xb71bdc	uint32_t	s_lotteryNextDrawTime		ui	Holds the time of the next lottery draw, which GetNextDrawTime reports as seconds from now	inferred	none	ui/lottery#draws
-0xb71be8	int32_t[3]	s_lotteryMoneyPrizes		ui	Holds the three money prizes of the lottery window	inferred	none	ui/lottery#prizes
-0xb71bf4	int32_t	s_lotteryJackpot		ui	Holds the jackpot of the lottery window	inferred	none	ui/lottery#prizes
-0xb71bf8	uint32_t[4]	s_lotteryPrizeItems		ui	Holds up to four prize item ids of the lottery window	inferred	none	ui/lottery#prizes
-0xb71c38	uint32_t			ui	Holds the range argument that 0x4c3eb0 passes to SetInteractionTarget	verified	one	ui/lottery#buying
-0xb71c50	uint32_t[24]	s_lotteryDrawRecords		ui	Holds the four past draw records of 0x18 bytes	inferred	none	ui/lottery#draws
-0xb71df0	uint32_t	s_lotteryVendorActive		ui	Holds the dword IsVendorActive returns once the clock has passed 0xb71bd4	inferred	none	ui/lottery#prizes
+0xb71bd0	uint32_t	s_lotteryVendorDelay		ui	Holds the vendor delay of the lottery query result; zero ends the read	verified	one	ui/lottery#query-result
+0xb71bd4	uint32_t	s_lotteryVendorClock		ui	Holds now plus the vendor delay, the time IsVendorActive waits to pass	verified	one	ui/lottery#query-result
+0xb71bd8	uint32_t	s_lotteryDrawDelay		ui	Holds the seconds to the next draw as the lottery query result gives them	verified	one	ui/lottery#query-result
+0xb71bdc	uint32_t	s_lotteryNextDrawTime		ui	Holds the time of the next lottery draw, which GetNextDrawTime reports as seconds from now	verified	one	ui/lottery#query-result
+0xb71be0	uint32_t	s_lotteryResultWord5		ui	Holds the fifth word of the lottery query result, which no code reads	verified	one	ui/lottery#query-result
+0xb71be4	uint32_t	s_lotteryResultWord6		ui	Holds the sixth word of the lottery query result, which no code reads	verified	one	ui/lottery#query-result
+0xb71be8	int32_t[3]	s_lotteryMoneyPrizes		ui	Holds the first three money words of the lottery prize slots	verified	one	ui/lottery#query-result
+0xb71bf4	int32_t	s_lotteryJackpot		ui	Holds the jackpot, the fourth money word of the lottery prize slots	verified	one	ui/lottery#query-result
+0xb71bf8	uint32_t[4]	s_lotteryPrizeItems		ui	Holds the prize item ids of the four lottery prize slots	verified	one	ui/lottery#query-result
+0xb71c08	uint32_t[4]	s_lotteryPrizeDisplayIds		ui	Holds the display ids of the four lottery prize slots	verified	one	ui/lottery#query-result
+0xb71c38	float			ui	Holds 30.864195, the squared range 0x4c3eb0 passes to SetInteractionTarget	verified	one	ui/lottery#buying
+0xb71c48	uint32_t[24]	s_lotteryDrawRecords		ui	Holds four draw records of 0x18 bytes: age, stamp, then four numbers	verified	one	ui/lottery#query-result
+0xb71df0	uint32_t	s_lotteryVendorActive		ui	Holds the vendor dword IsVendorActive returns once the clock has passed 0xb71bd4	verified	one	ui/lottery#query-result
 0xb71e5c	void *	s_minigameObject		ui	Points to the active minigame object, or null	verified	one	ui/lottery#the-minigame
 0xb71e74	uint32_t[4]	s_worldStateUiList		ui	Holds the always-visible world state row ids: capacity, count, data and chunk size	verified	one	ui/worldstate#the-list-builder
 0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state

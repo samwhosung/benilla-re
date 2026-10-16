@@ -8720,31 +8720,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c3d00	5	InitInfinity4c3d10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c3d10, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c3d10	11	InitInfinity4c3d10		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x4c3d20	35	InitLotteryHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
-0x4c3d50	260	HandleLotteryQueryResultPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs its object file code that calls CDataStore::GetInt32, OsGetCachedUnixTime, FrameScript_SignalEvent; not read here	inferred	none		
-0x4c3e60	5	HandleLotteryResultPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs its object file code not read here	inferred	none		
+0x4c3d50	260	HandleLotteryQueryResultPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the lottery query result into the vendor, prize and draw globals and signals LOTTERY_SHOW	verified	one	ui/lottery#query-result	
+0x4c3e60	5	HandleLotteryResultPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Returns 0 without reading the lottery result message	verified	one	ui/lottery#query-result	
 0x4c3e70	13	ClearLotteryKioskGuid		ui	orchestration	void __cdecl ()	Zeroes the two dwords that hold the lottery kiosk GUID	verified	one	ui/loot#no-walk-away-leash	
 0x4c3e80	7	CloseLootWindowThunk		ui	orchestration		Loads 1 into cl and jumps to the loot window close 0x4c3f40	verified	one	ui/gameui#interaction-close	
 0x4c3e90	20	ClearLotteryHandlers		ui	orchestration		Clears the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3eb0	132	SendLotteryQuery		ui	unreached	void __stdcall (uint32_t guid_lo, uint32_t guid_hi)	Sets the interaction target to the kiosk GUID, stores it and sends opcode 0x334; nothing reaches it	verified	one	ui/lottery#buying	
 0x4c3f40	1	CloseLootWindow		ui	orchestration		Returns at once	verified	one	ui/gameui#interaction-close	
-0x4c3f50	394	GetPrizeItem		ui	primitive		Reads the n-th nonzero prize id and fetches the item record for it	verified	one	ui/lottery#prizes	
+0x4c3f50	394	GetPrizeItem		ui	primitive		Fills the name, icon, count, quality and usability of the prize slot an index selects	verified	one	ui/lottery#prizes	
 0x4c40e0	81			ui	orchestration		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 1 more; not read here	inferred	none		
-0x4c4140	32	GetVendorActive		ui	orchestration		Returns the vendor-active dword once the clock has passed the vendor time, else 0	verified	one	ui/lottery#prizes	
+0x4c4140	32	GetVendorActive		ui	orchestration		Returns the vendor dword once the clock has passed the vendor time, else 0	verified	one	ui/lottery#prizes	
 0x4c4160	25	CountPrizes		ui	primitive		Counts the nonzero entries of the prize array	verified	one	ui/lottery#prizes	
 0x4c4180	25	CountDrawRecords		ui	primitive		Counts the draw records whose first word is nonzero	verified	one	ui/lottery#draws	
-0x4c41a0	105	GetDrawRecord		ui	primitive		Copies the four numbers of the n-th used draw record and the seconds since its time stamp	verified	one	ui/lottery#draws	
+0x4c41a0	105	GetDrawRecord		ui	primitive		Copies the four numbers and the age of the draw record an index selects	verified	one	ui/lottery#draws	
 0x4c4210	3	Script::CloseLottery	idb	ui	orchestration	int __fastcall (lua_State *L)	Does nothing	verified	one	ui/lottery#buying	
 0x4c4220	100	Script::GetLastLotteryNumbers	idb	ui	orchestration	int __fastcall (lua_State *L)	Asks the server for the last lottery numbers	verified	one	ui/lottery#buying	
 0x4c4290	307	Script::SubmitNumbers	idb	ui	primitive	int __fastcall (lua_State *L)	Sends four chosen lottery numbers as a bit mask	verified	one	ui/lottery#buying	
-0x4c43d0	38	Script::IsVendorActive	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the lottery vendor value once its deadline has passed	inferred	none	ui/lottery#prizes	
+0x4c43d0	38	Script::IsVendorActive	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the vendor value 0x4c4140 returns and returns no values	verified	one	ui/lottery#prizes	
 0x4c4400	171	Script::BuyRandomPicks	idb	ui	orchestration	int __fastcall (lua_State *L)	Buys a number of random lottery picks	verified	one	ui/lottery#buying	
-0x4c44b0	36	Script::GetNumLotteryPrizes	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the number of lottery prizes	inferred	none	ui/lottery#prizes	
-0x4c44e0	232	Script::GetLotteryPrizeInfo	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the name, icon, count, quality and usability of a lottery prize	inferred	none	ui/lottery#prizes	
-0x4c45d0	20	Script::GetJackpotAmount	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the lottery jackpot	inferred	none	ui/lottery#prizes	
-0x4c45f0	62	Script::GetMoneyPrizes	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the three lottery money prizes	inferred	none	ui/lottery#prizes	
-0x4c4630	46	Script::GetNextDrawTime	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the seconds until the next lottery draw	inferred	none	ui/lottery#draws	
-0x4c4660	36	Script::GetNumPastDrawResults	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the number of past lottery draw records	inferred	none	ui/lottery#draws	
-0x4c4690	154	Script::GetPastDrawResult	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the numbers and age of a past lottery draw	inferred	none	ui/lottery#draws	
+0x4c44b0	36	Script::GetNumLotteryPrizes	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the count of nonzero prize ids and returns no values	verified	one	ui/lottery#prizes	
+0x4c44e0	232	Script::GetLotteryPrizeInfo	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the name, icon, count 1, quality and usability of the prize slot an index selects	verified	one	ui/lottery#prizes	
+0x4c45d0	20	Script::GetJackpotAmount	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the lottery jackpot and returns no values	verified	one	ui/lottery#prizes	
+0x4c45f0	62	Script::GetMoneyPrizes	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the three lottery money prizes and returns no values	verified	one	ui/lottery#prizes	
+0x4c4630	46	Script::GetNextDrawTime	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes the seconds until the next lottery draw and returns no values	verified	one	ui/lottery#draws	
+0x4c4660	36	Script::GetNumPastDrawResults	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the number of used lottery draw records and returns no values	verified	one	ui/lottery#draws	
+0x4c4690	154	Script::GetPastDrawResult	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the four numbers and age of the draw record an index selects	verified	one	ui/lottery#draws	
 0x4c4730	30	RegisterLotteryFunctions		ui	orchestration	void __cdecl ()	Registers the 12 lottery Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
 0x4c4750	24	UnregisterLotteryFunctions		ui	orchestration	void __cdecl ()	Unregisters the 12 lottery Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c4770	5	InitDouble4c4780Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4780, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8805,9 +8805,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4cf0	40	HandleMinigameStatePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4c4d20	20	MinigameMove		ui	orchestration		Calls MinigameMakeMove on the minigame object with its two arguments when the object exists	verified	one	ui/lottery#the-minigame	
 0x4c4d40	16	GetMinigameKind		ui	orchestration		Returns the kind at +8 of the minigame object	verified	one	ui/lottery#the-minigame	
-0x4c4d50	43	Script::GetMinigameType	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the name of the active minigame, or nil	verified	one	ui/lottery#the-minigame	
+0x4c4d50	43	Script::GetMinigameType	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes nil for every minigame kind, the name slot of kind 1 being null	verified	one	ui/lottery#the-minigame	
 0x4c4d80	109	Script::MakeMinigameMove	idb	ui	primitive	int __fastcall (lua_State *L)	Makes a move in the active minigame	verified	one	ui/lottery#the-minigame	
-0x4c4df0	21	Script::GetMinigameState	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the state of the active minigame	verified	one	ui/lottery#the-minigame	
+0x4c4df0	21	Script::GetMinigameState	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the result count of the minigame object's virtual +8, or 0 with no game	verified	one	ui/lottery#the-minigame	
 0x4c4e10	30	RegisterMinigameFunctions		ui	orchestration	void __cdecl ()	Registers the 3 minigame Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
 0x4c4e30	24	UnregisterMinigameFunctions		ui	orchestration	void __cdecl ()	Unregisters the 3 minigame Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c4e50	5	InitDouble4c4e60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4e60, a static initializer	verified	one	ui/initthunks#jump-thunks	
