@@ -113,3 +113,26 @@ Proof: one
 Test: none
 
 The negations are `fchs` at `0x5a001c`, `0x5a003e`, `0x5a0058` and `0x5a0072`; every other element is copied unchanged.
+
+## Stream locks
+
+Direct3D locks a buffer of a usage-2 pool, the stream pools, as a ring. The buffer is placed at
+the pool's write offset `+0x1c` rounded up to a multiple of the buffer's stride `+0xc`. When it
+would end past the pool's size `+0x10` it is placed at 0, every buffer of the pool is marked
+invalid, and the lock takes `D3DLOCK_DISCARD | D3DLOCK_NOSYSLOCK` (0x2800); otherwise
+`D3DLOCK_NOOVERWRITE | D3DLOCK_NOSYSLOCK` (0x1800). Other pools lock the buffer's own range with
+`D3DLOCK_NOSYSLOCK`. A pool without a Direct3D buffer, or a failed lock, hands out system memory.
+
+Addresses: `0x59a4e0`, `0x59a51d`, `0x59a534`, `0x59a539`, `0x59a540`, `0x59a549`, `0x59a5bf`, `0x59a5ff`, `0x59a622`, `0x594470`, `0x5994c0`, `0x5914a0`, `0x64d100`, `0x59a6b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x59a51d` loads the stride and rounds with `div`; `0x59a534` compares the end with the size and
+`0x59a540` calls `0x594470`, which clears each buffer's valid byte `+0x1c` and the write offset.
+The new offset goes to the buffer's `+0x18` and the end to the pool's `+0x1c`. `0x5994c0` makes the
+pool's vertex or index buffer on first use. `0x59a5bf` is `Lock(offset, size, &data, flags)`; the
+first byte is then written (stream pools) or rewritten under an exception handler, and a fault
+logs `IBufLock(): Lock succeeded but pointer is invalid!` (`0x59a5ff`). `D3DERR_DRIVERINTERNALERROR`
+(`0x59a622`) is reported through `0x64d100`. A failure unlocks (`0x59a6b0`) and returns the pool
+kind's scratch memory (`0x5914a0`). An invalid buffer is refused by the draw (`draw.md`).

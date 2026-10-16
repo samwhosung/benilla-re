@@ -658,14 +658,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80928c	int32_t[9]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, -42000 to 21000 and 42000, then the bound 43000	verified	one	objectlayer/playercombat#using-an-item
 0x8097a8	int32_t[169]	s_vertexComponentOffsets		gx	Holds each format's component byte offsets in 13 columns, -1 for an absent component	verified	one	gx/draw#vertex-formats
 0x809a5c	char[20]	s_openGlWindowClass		gx	Holds the window class name "GxWindowClassOpenGl"	verified	one	gx/device#opengl-window-and-pixel-formats
+0x809ac4	uint32_t[1]	s_glQueryTargets		gx	Holds the OpenGL query target by query type: GL_SAMPLES_PASSED_ARB (0x8914) for type 0	verified	one	gx/slots#query-slots
 0x809af8	void *[62]	CGxDeviceOpenGl::vftable		gx	Holds the OpenGL device vtable of 62 slots	verified	one	gx/device#device-object
 0x809c00	uint32_t[52]	s_vertexFormats		terrain	Holds the 13 vertex formats: descriptor pointer, element count, stride and usage mask	verified	one	terrain/render#vertex-formats
+0x809d20	uint32_t[2]	s_shaderFileMagic		gx	Holds the shader file magic by target: "SVXG" for vertex and "SPXG" for pixel shaders	verified	one	gx/slots#shader-files
+0x809d28	uint32_t[2]	s_shaderFileVersion		gx	Holds the shader file version by target: 0x10003 for both	verified	one	gx/slots#shader-files
 0x809d48	uint32_t[9]	s_texBlockEdge		gx	Holds the block edge in texels of each GxTex format: 1 and 4 for formats 5 to 7	verified	one	gx/textures#device-texture-record
 0x809d6c	uint32_t[9]	s_texBlockBytes		gx	Holds the bytes per block of each GxTex format	verified	one	gx/textures#device-texture-record
+0x809d90	uint32_t[2]	s_shaderLevelCounts		gx	Holds the count of level offsets in a shader file's table by target: 6 vertex, 12 pixel	verified	one	gx/slots#shader-files
 0x809d98	float	s_gammaRampScale		gx	Holds 65535.0, the scale of a gamma ramp entry	verified	one	gx/device#gamma-ramp
 0x809da0	void *[62]	CGxDevice::vftable		gx	Holds the base device vtable; unimplemented slots point at the pure-call stub	verified	one	gx/device#device-object
 0x809eac	char[17]	s_textGxWindowClassD3d		gx	Holds the string "GxWindowClassD3d"	verified	one	gx/device#direct3d-window
 0x809ec0	uint32_t[10]	s_d3dFormatCodes		gx	Holds D3DFMT codes by index: R5G6B5, X8R8G8B8, A8R8G8B8, A2R10G10B10, then depth D16, D24X8, D24S8, D32, and 4, 8	verified	one	gx/device#present-parameters
+0x809ef4	uint32_t[1]	s_d3dQueryTypes		gx	Holds the Direct3D query type by query type: D3DQUERYTYPE_OCCLUSION (9) for type 0	verified	one	gx/slots#query-slots
 0x809ef8	void *[62]	CGxDeviceD3d::vftable		gx	Holds the Direct3D device vtable of 62 slots	verified	one	gx/device#device-object
 0x809ffc	float	s_glColourScale		gx	Holds 1/255, the scale of a colour byte to a unit float in the OpenGL paths	verified	one	gx/draw#opengl-draw-preparation
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
@@ -3665,11 +3670,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ed2c	uint32_t	s_gxVertexCount		gx	Holds the vertex count GxBuildVerticesCounted stores for the draw that follows	inferred	none	gx/draw#interleaving-helper
 0xc0ed38	void *	s_gxDevice		gx	Holds the global graphics device the facade calls	verified	one	gx/device#backend-selection-and-creation
 0xc0ed3c	uint8_t	s_glEntryPointsProbed		gx	Holds 1 once the OpenGL entry point probe has run	verified	one	gx/opengl#loading-the-entry-points
+0xc0ed48	uint64_t	s_lastPresentStamp		gx	Holds the time-stamp counter at the last present, 0 by default	verified	one	gx/slots#frame-counters
+0xc0ed50	uint32_t	s_presentStepIndex		gx	Holds the next slot of the present step ring, 0 to 63	verified	one	gx/slots#frame-counters
+0xc0ed58	uint64_t[64]	s_presentSteps		gx	Holds the time-stamp counter steps between the last 64 presents	verified	one	gx/slots#frame-counters
+0xc0ef58	uint64_t	s_presentStamp		gx	Holds the time-stamp counter of the present being measured	verified	one	gx/slots#frame-counters
 0xc0ef60	float	s_aspectRatio		gx	Holds the width over the height of the device format when it constrains the aspect, else 0	verified	one	gx/device#base-format-setter
 0xc0ef64	uint32_t[2]	s_minFormatSize		gx	Holds the smallest device format width and height, 320 and 240	verified	one	gx/device#base-format-setter
 0xc0ef70	float[3]	s_defaultPointAttenuation		gx	Holds the default point attenuation (1, 0, 0), set by an initializer and used as id 66's default	verified	one	gx/renderstate#point-state
 0xc0ef7c	uint32_t	s_gxLogBytes		gx	Holds the number of bytes written to the device log	verified	one	gx/device#device-log
 0xc0ef80	void *	s_gxLog		gx	Holds the device log handle, 0 until the log is open	verified	one	gx/device#device-log
+0xc0f228	float	s_gxTicksPerSecond		gx	Holds the time-stamp counter's measured ticks per second, 0 until measured	verified	one	gx/slots#frame-counters
 0xc0f22c	uint32_t	s_defaultTextureColour		gx	Holds 0xff00ff00, the colour of the Direct3D device's default 8 by 8 texture	verified	one	gx/device#direct3d-device-start
 0xc0f234	uint32_t	s_swapControlFlag		gx	Holds 1 when WGL_EXT_swap_control is listed	verified	one	gx/opengl#gl-and-wgl-extension-loads
 0xc0f23c	uint32_t	s_pixelFormatArbFlag		gx	Holds 1 when WGL_ARB_pixel_format is listed	verified	one	gx/device#opengl-pixel-format-choice
