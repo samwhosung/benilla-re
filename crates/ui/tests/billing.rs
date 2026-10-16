@@ -280,7 +280,7 @@ fn decode(calls: &[Call], buf: u32, fake_text: u32) -> Vec<Shown> {
             }
             Call::Event { id } => {
                 assert_eq!(*id, 0x206, "IGR_BILLING_NAG_DIALOG call");
-                out.push(Shown::InternetCafeDialog);
+                out.push(Shown::IgrDialog);
                 i += 1;
             }
             Call::GetText {
@@ -485,7 +485,7 @@ fn billing_poll() {
         for e in &got {
             match *e {
                 Shown::Dialog(_) => seen[0] += 1,
-                Shown::InternetCafeDialog => seen[1] += 1,
+                Shown::IgrDialog => seen[1] += 1,
                 Shown::Line { minutes, held } => {
                     seen[if held { 2 } else { 3 }] += 1;
                     seen[if minutes <= 5 { 4 } else { 5 }] += 1;
@@ -600,7 +600,7 @@ fn billing_poll() {
     }
     assert!(
         seen.iter().all(|&n| n > 0),
-        "dialog, cafe dialog, held line, shown line, line at <=5, line above 5, deadline cleared, first poll: {seen:?}"
+        "dialog, IGR dialog, held line, shown line, line at <=5, line above 5, deadline cleared, first poll: {seen:?}"
     );
     eprintln!("billing_poll: {total} bit-exact (0x495679..0x495830, whole), reached {seen:?}");
 }

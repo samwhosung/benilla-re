@@ -720,7 +720,7 @@ ClientConnection	0x1aec	1	uint8_t	m_authenticated	net	Holds 1 after an auth resp
 ClientConnection	0x1af0	4	uint32_t	m_queuePosition	net	Holds the queue position the last wait-queue auth result carried	verified	one	net/connection#response-object
 ClientConnection	0x1af4	4	uint32_t	m_billingTimeRemaining	net	Holds the billing minutes remaining the auth response carried, read by 0x5b41b0	verified	one	ui/billing#the-billing-group
 ClientConnection	0x1af8	4	uint32_t	m_billingTimeRested	net	Holds the billing rested time the auth response carried, unwritten when fewer than 9 bytes follow	verified	one	ui/billing#the-billing-group
-ClientConnection	0x1afc	1	uint8_t	m_billingFlags	net	Holds the plan flags: mask 0x16 picks the plan, 0x02 also stops the warning, 0x08 internet cafe, 0x20 second value	verified	one	ui/billing#the-billing-group
+ClientConnection	0x1afc	1	uint8_t	m_billingFlags	net	Holds the plan flags: mask 0x16 picks the plan, 0x02 also stops the warning, 0x08 the IGR plan, 0x20 second value	verified	one	ui/billing#the-billing-group
 ClientConnection	0x1b00	4	uint32_t	m_connected	net	Holds 1 while the world socket is connected: set on connect by 0x5aaa90, cleared on a drop	inferred	none	glue/script#server-name-and-connection
 ClientConnection	0x1b04	4	uint32_t	m_loginSent	net	Holds 1 from sending the player login until the world is left	verified	one	net/connection#character-login
 ClientConnection	0x1b08	4	uint32_t	m_statusDone	net	Holds 1 once the current operation's status is set	verified	one	net/session#session-status

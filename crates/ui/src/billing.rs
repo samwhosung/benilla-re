@@ -15,8 +15,8 @@ pub const MINUTE_MS: u32 = 60_000;
 pub const LINE_STEP_MS: u32 = 300_000;
 /// Bit 1 of the plan flags (`test byte [eax+0x1afc],2` at `0x48f654`): the plan arms no warning.
 pub const FLAG_NO_WARNING: u8 = 0x02;
-/// Bit 3 of the plan flags (`shr ecx,3; and ecx,1` at `0x4956cb`): the internet-cafe plan.
-pub const FLAG_INTERNET_CAFE: u8 = 0x08;
+/// Bit 3 of the plan flags (`shr ecx,3; and ecx,1` at `0x4956cb`): the Internet Gaming Room (IGR) plan.
+pub const FLAG_IGR: u8 = 0x08;
 
 /// The three words: the deadline (`0xb4e360`, 0 when unarmed), the next line's time (`0xb4e364`,
 /// 0 before the first poll) and the dialog latch (`0xb4e368`).
@@ -33,7 +33,7 @@ pub enum Shown {
     /// `BILLING_NAG_DIALOG` (event 0x205) with the minutes left (`0x495700`, `0x49581e`).
     Dialog(u32),
     /// `IGR_BILLING_NAG_DIALOG` (event 0x206, `0x4956e9`, `0x495741`).
-    InternetCafeDialog,
+    IgrDialog,
     /// A `CHAT_MSG_SYSTEM` line of `BILLING_NAG_WARNING` for the minutes left (`0x4957d1`), or
     /// `held` in the pending queue while the display latch is set (`0x4957ad`).
     Line { minutes: u32, held: bool },
@@ -69,13 +69,13 @@ pub fn poll(w: &mut Warning, now: u32, flags: u8, held: bool) -> Vec<Shown> {
     }
     let left = w.deadline.wrapping_sub(now);
     let minutes = minutes_left(left);
-    let cafe = flags & FLAG_INTERNET_CAFE != 0;
+    let igr = flags & FLAG_IGR != 0;
     if w.next_line == 0 {
         // The first poll (`0x4956d8` to `0x49570b`): the dialog when due, with no latch test, and
         // the line clock starts now.
-        if cafe {
+        if igr {
             if minutes <= 600 {
-                out.push(Shown::InternetCafeDialog);
+                out.push(Shown::IgrDialog);
                 w.dialog_shown = 1;
             }
         } else if minutes <= 30 {
@@ -85,7 +85,7 @@ pub fn poll(w: &mut Warning, now: u32, flags: u8, held: bool) -> Vec<Shown> {
         w.next_line = now;
     } else if (now.wrapping_sub(w.next_line) as i32) < 0 {
         // Before the line clock (`0x49574f`): straight to the dialogs.
-    } else if !cafe {
+    } else if !igr {
         // A line is due (`0x495755` to `0x4957ff`).
         if minutes <= 30 {
             out.push(Shown::Line { minutes, held });
@@ -102,9 +102,9 @@ pub fn poll(w: &mut Warning, now: u32, flags: u8, held: bool) -> Vec<Shown> {
         }
     }
     // The dialogs, once (`0x495723`, `0x495805`).
-    if cafe {
+    if igr {
         if minutes <= 600 && w.dialog_shown == 0 {
-            out.push(Shown::InternetCafeDialog);
+            out.push(Shown::IgrDialog);
             w.dialog_shown = 1;
         }
     } else if minutes <= 30 && w.dialog_shown == 0 {

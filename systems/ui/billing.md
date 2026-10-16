@@ -40,7 +40,7 @@ Test: none
 
 ## The billing group
 
-After result 0x0c (`AUTH_OK`) or 0x1b (`AUTH_WAIT_QUEUE`), `0x5b41b0` reads the billing group when at least 5 bytes remain: a dword into `+0x1af4` (minutes remaining), a byte into `+0x1afc` (plan flags), a dword into `+0x1af8` (rested time). The gate counts 5 bytes and the group is 9: with 5 to 8 left the third read writes nothing and leaves `+0x1af8` as it was. Flag mask 0x16 selects the plan `GetBillingPlan` returns first (0x02 gives 1, 0x04 gives 2, none gives 3, 0x10 gives 4, other mixes 0); 0x02 also zeroes `GetBillingTimeRemaining` and arms no warning; 0x20 is the second value and 0x08 the third, the internet-cafe plan the poll tests.
+After result 0x0c (`AUTH_OK`) or 0x1b (`AUTH_WAIT_QUEUE`), `0x5b41b0` reads the billing group when at least 5 bytes remain: a dword into `+0x1af4` (minutes remaining), a byte into `+0x1afc` (plan flags), a dword into `+0x1af8` (rested time). The gate counts 5 bytes and the group is 9: with 5 to 8 left the third read writes nothing and leaves `+0x1af8` as it was. Flag mask 0x16 selects the plan `GetBillingPlan` returns first (0x02 gives 1, 0x04 gives 2, none gives 3, 0x10 gives 4, other mixes 0); 0x02 also zeroes `GetBillingTimeRemaining` and arms no warning; 0x20 is the second value and 0x08 the third, the Internet Gaming Room (IGR) plan the poll tests.
 
 Addresses: `0x5b41b0`, `0x5b41e2`, `0x5b41f3`, `0x5b41f9`, `0x5b41fe`, `0x5b420c`, `0x5b421a`, `0x418cb0`, `0x418eb0`, `0x418ec4`, `0x46dbff`, `0x46dc0a`, `0x46dc13`, `0x46dc4d`, `0x46dc5e`, `0x46dca8`, `0x46dcc5`, `0x46dcfe`, `0x48ec5e`, `0x48f641`, `0x48f654`, `0x4956c0`
 Confidence: verified
@@ -77,15 +77,15 @@ Bit-exact coverage: `ui::billing_minutes_left` covers `0x49569b` to `0x4956b7` o
 
 ## The play-time poll
 
-Each tick, while the deadline D is nonzero, the poll reads left and the minutes m above, and the flag byte's bit 3 (cafe). The steps run in this order:
+Each tick, while the deadline D is nonzero, the poll reads left and the minutes m above, and the flag byte's bit 3 (IGR). The steps run in this order:
 
 | step | when | effect |
 |---|---|---|
-| first poll | line clock N is 0 | cafe: event 0x206 if m <= 600; else event 0x205 with m if m <= 30; either sets the latch L (L is not tested); N = now |
-| line | N not 0, now - N >= 0 (signed), not cafe | a line if m <= 30; then D = 0 if now - D >= 0 (signed), else N = now + left % step, step 60000 when m <= 5, else 300000 |
-| dialog | after the step above, every poll | cafe: event 0x206 if m <= 600 and L = 0; else event 0x205 with m if m <= 30 and L = 0; either sets L |
+| first poll | line clock N is 0 | IGR: event 0x206 if m <= 600; else event 0x205 with m if m <= 30; either sets the latch L (L is not tested); N = now |
+| line | N not 0, now - N >= 0 (signed), not IGR | a line if m <= 30; then D = 0 if now - D >= 0 (signed), else N = now + left % step, step 60000 when m <= 5, else 300000 |
+| dialog | after the step above, every poll | IGR: event 0x206 if m <= 600 and L = 0; else event 0x205 with m if m <= 30 and L = 0; either sets L |
 
-After its first poll a cafe plan never takes the line step, so its D and N stay as they are. The first poll never tests D.
+After its first poll an IGR plan never takes the line step, so its D and N stay as they are. The first poll never tests D.
 
 Addresses: `0x495590`, `0x495679`, `0x495686`, `0x49568b`, `0x4956c0`, `0x4956c6`, `0x4956cb`, `0x4956d1`, `0x4956d6`, `0x4956d8`, `0x4956dc`, `0x4956e9`, `0x4956f0`, `0x495700`, `0x49570b`, `0x495715`, `0x495723`, `0x49572f`, `0x495741`, `0x49574b`, `0x49574f`, `0x495751`, `0x495755`, `0x4957d6`, `0x4957dd`, `0x4957e1`, `0x4957ef`, `0x4957f6`, `0x4957fb`, `0x4957ff`, `0x495805`, `0x49580a`, `0x49581e`, `0x495826`, `0x495830`, `0x703f50`, `0x703e50`, `0x835154`, `0xb4e360`, `0xb4e364`, `0xb4e368`
 Confidence: verified
