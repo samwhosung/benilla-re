@@ -81,15 +81,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402ad0	195	WowClientInit	idb	client			Initializes the client's systems at startup and ends by registering 0x403620 for event category 6	verified	one	net/dispatch#main-thread-drain	
 0x402ba0	797	ClientRegisterConsoleCommands	idb	client			Registers the client console commands and CVars, checkAddonVersion among them	verified	one	ui/addons#whether-an-add-on-may-load	
 0x402ec0	30			client			Runs Client.cpp code that calls SStrToFloat, OsInputSetMouseSpeed; not read here	inferred	none		
-0x402ee0	62			client			Runs Client.cpp code that calls 0x64ac60, 0x409170, 0x4091a0 and 2 more; not read here	inferred	none		
-0x402f20	62			client			Runs Client.cpp code that calls 0x64ac60, 0x4091c0, 0x4091e0 and 2 more; not read here	inferred	none		
+0x402ee0	62	ErrorDisplayCallback		client		bool __fastcall (CVar *var, const char *oldValue, const char *value, void *arg)	Applies the Errors setting: enables or disables the error display and prints which	verified	one	sysmsg#error-display-settings	
+0x402f20	62	ErrorDisplayShowCallback		client		bool __fastcall (CVar *var, const char *oldValue, const char *value, void *arg)	Applies the ShowErrors setting: shows or hides the error display and prints which	verified	one	sysmsg#error-display-settings	
 0x402f60	63	ErrorDisplayMinLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMinDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
 0x402fa0	243	DisplayErrorLevelStatus	idb	client			Runs Client.cpp code that calls 0x44cc60, 0x44cc70, ConsoleWrite and 2 more; not read here	inferred	none		
 0x4030b0	63	ErrorDisplayMaxLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMaxDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
 0x4030f0	32			client			Runs Client.cpp code that calls 0x403200, 0x403110; not read here	inferred	none		
-0x403110	229			client			Runs Client.cpp code that calls 0x44cc90, ConsoleWrite, SStrPack and 1 more; not read here	inferred	none		
+0x403110	229	PrintFilterMask		client		void __cdecl (void)	Prints the error display's filter: all messages, or the category names of the selector's bits	verified	one	sysmsg#error-display-settings	
 0x403200	624			client			Runs Client.cpp code that calls SStrTokenize, SStrCmpI, 0x44cc80 and 2 more; not read here	inferred	none		
-0x4034d0	46			client			Runs Client.cpp code that calls SStrToFloat, 0x589c00; not read here	inferred	none		
+0x4034d0	46	GammaCallback		client		bool __fastcall (CVar *var, const char *oldValue, const char *value, void *arg)	Applies the Gamma setting to the device's working ramp unless DesktopGamma is set	verified	one	gx/device#gamma-setting	
 0x403500	104			client			Runs Client.cpp code that calls 0x64ac60, 0x589c70, 0x589c20 and 1 more; not read here	inferred	none		
 0x403570	49	ProfanityFilterCallback		client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035b0	49	SpamFilterCallback		client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
@@ -192,7 +192,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x404d10	170			unassigned			Runs its object file code that calls _finite; not read here	inferred	none		
 0x404dc0	570	CCommand_WorldTeleport	idb	unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 12 more; not read here	inferred	none		
 0x405000	533			unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x6c9c30 and 8 more; not read here	inferred	none		
-0x405220	41			unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls ToggleShowOwnModel, ConsoleWrite; not read here	inferred	none		
+0x405220	41	ShowPlayerCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Toggles the active player's model flag and prints player visible or player hidden	verified	one	console/commands#show-player-command	
 0x405250	147			unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls CDataStore::PutUInt32, SMemAlloc, NetClient::Send; not read here	inferred	none		
 0x4052f0	147			unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls CDataStore::PutUInt32, SMemAlloc, NetClient::Send; not read here	inferred	none		
 0x405390	60			unassigned			Runs its object file code that calls 0x63fb40; not read here	inferred	none		
@@ -9998,8 +9998,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dff20	215	Script::GetQuestLogQuestText	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the details and objectives text of the selected quest	verified	one	ui/questlogverbs#selected-quest-text	
 0x4e0000	265	Script::GetNumQuestLeaderBoards	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the number of objective lines of a quest	verified	one	ui/questobjectives#the-lines-of-a-quest	
 0x4e0110	1727	Script::GetQuestLogLeaderBoard	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the text, type and finished flag of a quest objective line	verified	one	ui/questobjectives#asking-for-a-line	
-0x4e07d0	40			ui	orchestration		Runs its object file code that calls ConsoleWrite, FrameScript_SignalEvent; not read here	inferred	none		
-0x4e0800	40			ui	orchestration		Runs its object file code that calls ConsoleWrite, FrameScript_SignalEvent; not read here	inferred	none		
+0x4e07d0	40	QuestCreatureQueryCallback		ui	orchestration	void __fastcall (uint32_t key, void *owner, void *data, uint32_t status)	Signals QUEST_LOG_UPDATE when a quest's creature record arrives, or logs the refusal	verified	one	ui/questobjectives#cache-query-callbacks	
+0x4e0800	40	QuestObjectQueryCallback		ui	orchestration	void __fastcall (uint32_t key, void *owner, void *data, uint32_t status)	Signals QUEST_LOG_UPDATE when a quest's game object record arrives, or logs the refusal	verified	one	ui/questobjectives#cache-query-callbacks	
 0x4e0830	24			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4e0850	5	InitDouble4e0860Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e0860, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e0860	15	InitDouble4e0860		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -17005,7 +17005,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59d0e0	58	CGxDeviceOpenGl::ApplyMipBias		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, uint32_t stage, float bias)	Sets a stage's texture LOD bias when the extension is present	verified	one	gx/renderstate#render-state-ids	
 0x59d120	529	CGxDeviceOpenGl::ApplyTexCoordMode		gx	primitive	void __thiscall (CGxDeviceOpenGl *this, uint32_t stage, uint32_t mode)	Sets a stage's coordinate generation flags and texture matrix for mode 0 to 6	verified	one	gx/renderstate#opengl-coordinate-modes	gx::matrix_reorient_matches_binary
 0x59d350	1606	CGxDeviceOpenGl::ApplyRenderState		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, uint32_t id)	Applies one render state through OpenGL calls by the jump table 0x59d998	verified	one	gx/renderstate#render-state-ids	gx::color_norm_at_0x59d350_matches_binary
-0x59da70	43			gx	host		Runs its object file code that calls 0x59dcf0, 0x59daa0; not read here	inferred	none		
+0x59da70	43	CreateGLContext		gx	host	void * __fastcall (void *dc, void *format)	Sets a pixel format on a device context and creates an OpenGL context on it, or returns 0	verified	one	gx/device#opengl-context-creation	
 0x59daa0	560	ChooseGdiPixelFormat		gx	host		Chooses, checks and sets a GDI pixel format for a format record; returns 0 for a sample count above 1	inferred	none		
 0x59dcf0	871	CGxDeviceOpenGl::ChoosePixelFormat		gx	host	uint32_t __fastcall (void *dc, const void *format)	Builds the pixel format attribute list, chooses a format, checks it against the request and sets it	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e070	27	CGxDeviceOpenGl::GetPixelFormatAttrib		gx	orchestration	uint32_t __fastcall (void *dc, uint32_t format, uint32_t attrib, uint32_t *value)	Queries one pixel format attribute through the ARB entry point	verified	one	gx/device#opengl-pixel-format-choice	
@@ -23038,7 +23038,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6422e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6422f0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x642300	30			unassigned			Runs its object file code not read here	inferred	none		
-0x642320	130			unassigned			Runs its object file code that calls 0x6423b0, _mktime; not read here	inferred	none		
+0x642320	130	WowTime::GetDaysSinceEpoch		unassigned		int32_t __thiscall (const WowTime *this)	Returns mktime of the date divided by 86,400, or 0 when its year, month or day is negative	verified	one	gametime#day-number-and-time-text	
 0x6423b0	3			unassigned			Runs its object file code not read here	inferred	none		
 0x6423c0	198			unassigned			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
 0x642490	33			unassigned			Runs its object file code that calls _localtime; not read here	inferred	none		
@@ -23064,7 +23064,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642c10	32			unassigned			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
 0x642c30	30	WowTime::WowDecodeTime	idb	base			Decodes a packed date into a seven-field record by calling 0x642b30	verified	one	net/messages#time-speed-packet	
 0x642c50	38			unassigned	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
-0x642c80	397			unassigned			Runs its object file code that calls 0x642c10, SStrPrintf; not read here	inferred	none		
+0x642c80	397	WowTime::WowGetTimeString		unassigned		char * __fastcall (const WowTime *time, char *buffer, uint32_t size)	Formats a time as month/day/year (weekday) hour:minute, or Not Set, into a buffer	verified	one	gametime#day-number-and-time-text	
 0x642e10	118	PackGuidIntoStore		base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
 0x642e90	5			base			Runs its object file code not read here	inferred	none		
 0x642ea0	11			base			Runs its object file code not read here	inferred	none		
@@ -23341,7 +23341,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648460	373	SFile::Read	idb	storm	boundary		Reads bytes from an open archive file	inferred	none		
 0x6485f0	36			storm	boundary		Runs SFile2.cpp code that calls SFile::Load; not read here	inferred	none		
 0x648620	210	SFile::Load	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx, SFile::GetFileSize, SMemAlloc and 3 more; not read here	inferred	none		
-0x648700	33			storm	boundary		Runs SFile2.cpp code that calls SMemFree; not read here	inferred	none		
+0x648700	33	SFile::Unload		storm	boundary	int __stdcall (void *buffer)	Frees a buffer that SFile::Load returned and returns 1	verified	one	storm/format#freeing-a-loaded-file	
 0x648730	126	SFile::Close	idb	storm	boundary		Runs SFile2.cpp code that calls _fclose, 0x653900, 0x668610 and 3 more; not read here	inferred	none		
 0x6487b0	59	SFileGetFileName		storm	orchestration		Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
 0x6487f0	129	SFile::GetFileSize	idb	storm	boundary		Runs SFile2.cpp code that calls __fstat, SFileGetFileSize, ZipFileGetFileSize; not read here	inferred	none		
@@ -24046,7 +24046,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x661d40	60			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661d80	17			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661da0	36	MD5Init		storm	orchestration		Starts an MD5 context	inferred	none		storm::md5
-0x661dd0	190			storm	boundary		Runs its object file code that calls 0x661f00; not read here	inferred	none		storm::md5
+0x661dd0	190	MD5Update		storm	boundary	void __fastcall (void *context, const uint8_t *input, uint32_t length)	Adds bytes to an MD5 context, transforming each full 64-byte block	verified	one	ui/framexml#the-signature-digest	storm::md5
 0x661e90	105	MD5Final		storm	primitive		Finishes an MD5 context into a 16-byte digest and clears it	inferred	none		storm::md5
 0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		storm::md5
 0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
@@ -29583,7 +29583,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f10d0	5	InitInfinity6f10e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f10e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f10e0	11	InitInfinity6f10e0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f10f0	268	CheckTocSignature		ui	orchestration		Checks a toc's .sig file: 0 unreadable, 1 bad size or verification, 2 digest differs, 3 good	verified	one	ui/framexml#building-the-game-interface	
-0x6f1200	108			unassigned	orchestration		Runs its object file code that calls MD5Init, 0x6f1270, SFile::Load and 3 more; not read here	inferred	none		
+0x6f1200	108	CalculateSignatureMD5		unassigned	orchestration	void __fastcall (const char *toc, const char *file, uint8_t *digest)	Computes the MD5 digest a toc's signature is checked against	verified	one	ui/framexml#the-signature-digest	
 0x6f1270	535			unassigned	primitive		Runs its object file code that calls SStrPrintf, SStrLen, 0x64b4f0 and 9 more; not read here	inferred	none		
 0x6f1490	101			unassigned	orchestration		Runs its object file code that calls SStrTokenize, 0x6f1270; not read here	inferred	none		
 0x6f1500	115			unassigned	primitive		Runs its object file code that calls 0x6f1580; not read here	inferred	none		
@@ -29645,7 +29645,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2e90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ea0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ec0	106			unassigned	unreached		Runs its object file code that calls luaD_growstack; not read here	inferred	none		
-0x6f2f30	80			unassigned			Runs its object file code that calls luaD_growstack; not read here	inferred	none		
+0x6f2f30	80	lua_checkstack		lua		int __fastcall (lua_State *L, int32_t size)	Makes room for size more stack slots, returning 0 when that passes 2048 in use	verified	one	ui/luastate#stack-room-and-run-errors	
 0x6f2f80	155			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6f3020	10			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6f3030	55			unassigned	unreached		Runs its object file code that calls luaC_collectgarbage, 0x6f6b10; not read here	inferred	none		
@@ -29940,7 +29940,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fc6f0	51			lua	boundary		Runs its object file code that calls 0x6f7c20, 0x6fc620; not read here	inferred	none		
 0x6fc730	80			lua	boundary		Runs its object file code that calls 0x6fc870; not read here	inferred	none		
 0x6fc780	225	luaG_errormsg	idb	lua	boundary		Calls the error function with the message when set and throws, never returning	verified	one	ui/luastate#the-c-function-contract	
-0x6fc870	40			lua	boundary		Runs its object file code that calls luaO_pushvfstring, 0x6fc8a0, luaG_errormsg; not read here	inferred	none		
+0x6fc870	40	luaG_runerror		lua	boundary	void __cdecl (lua_State *L, const char *fmt, ...)	Formats an error message, passes it to 0x6fc8a0 and throws it through luaG_errormsg	verified	one	ui/luastate#stack-room-and-run-errors	
 0x6fc8a0	85			lua	boundary		Runs its object file code that calls 0x6fbef0, 0x6fbb90, 0x6f5c40 and 1 more; not read here	inferred	none		
 0x6fc900	114			lua	boundary		Runs lmem.c code that calls 0x6fc870, luaM_irealloc; not read here	inferred	none		
 0x6fc980	46	luaM_irealloc	idb	lua	boundary		Runs its object file code that calls luaM_reallocPool; not read here	inferred	none		
@@ -37644,7 +37644,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7faed0	38			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIacos, lua_pushnumber; not read here	inferred	none		
 0x7faf00	37			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
 0x7faf30	64			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7faf70	41			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, ceil, lua_pushnumber; not read here	inferred	none		
+0x7faf70	41	math_ceil		lua		int __fastcall (lua_State *L)	Pushes the ceiling of argument 1, as math.ceil	verified	one	ui/luastate#mathceil	
 0x7fafa0	41			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, floor, lua_pushnumber; not read here	inferred	none		
 0x7fafd0	67			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIfmod, lua_pushnumber; not read here	inferred	none		
 0x7fb020	35			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		

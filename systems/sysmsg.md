@@ -104,3 +104,27 @@ Proof: one
 Test: none
 
 Both call sites load `ecx` just before the call (`0x4090e3`, `0x409109`).
+
+## Error display settings
+
+`ClientRegisterConsoleCommands` registers `Errors` with the callback `0x402ee0` and `ShowErrors` with
+`0x402f20`. Each reads the new value with `SStrToInt`. For `Errors`, a non-zero value calls `0x409170`
+and prints `Error display enabled`, zero calls `0x4091a0` and prints `Error display disabled`; for
+`ShowErrors`, non-zero calls `0x4091c0` with `Error display shown`, zero `0x4091e0` with
+`Error display hidden`. Both print through `ConsoleWrite` in class 0, then pass the integer to
+`SysMsgSetEnabled` and return 1, so either setting sets the display switch. `0x403110` prints the
+filter: `Now filtering: all messages` when `SysMsgGetSelected` is −1, else `Now filtering: ` and a
+name for each set bit: 0x1 `general`, 0x2 `world`, 0x4 `ui`, 0x8 `animation`, 0x10 `models`,
+0x20 `objects`, 0x80 `movement`. Bit 0x40 prints nothing.
+
+Addresses: `0x402ee0`, `0x402f20`, `0x403110`, `0x402c86`, `0x402ca9`, `0x402f12`, `0x402f52`, `0x40311e`, `0x4031cd`, `0x409170`, `0x4091a0`, `0x4091c0`, `0x4091e0`
+Confidence: verified
+Proof: one
+Test: none
+
+The pushes `0x402c86` and `0x402ca9` pass the callbacks to the registration; a callback reads the
+new text at `[ebp+8]` and returns with `mov al,1; ret 8`. `0x409170` sets a byte flag when it is
+clear and two fields of its file are set; `0x4091a0` clears it; `0x4091c0` clears a second flag and
+`0x4091e0` sets it. `0x403110` packs the names into an 80-byte buffer with `SStrPack` (limit 0x50),
+testing `bl` against 1 to 0x20 and its sign (`0x4031cd`, `jns`) for 0x80; nothing tests 0x40. It
+prints with `ConsolePrintf`. Its one caller is `0x4030f0`.

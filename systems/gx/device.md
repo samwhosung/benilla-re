@@ -103,6 +103,25 @@ Test: none
 
 `0x8026c8` is the `f32` 1/255 and `0x809d98` the `f32` 65535; `pow` is the C runtime's `__CIpow` (`0x73f940`) and the truncation `__ftol` (`0x40a2b0`). `0x592060` calls `0x591680` on `this + 0x328`; `0x592080` copies `0x180` dwords (0x600 bytes) into it.
 
+## Gamma setting
+
+`ClientRegisterConsoleCommands` registers `Gamma` with the callback `0x4034d0`. It reads the new
+value with `SStrToFloat` and, when the `DesktopGamma` record is registered and its integer value is
+0, passes the float to `0x589c00`, which calls slot `+0x34` of the device in `s_gxDevice`: the
+working ramp is rebuilt from that gamma (Gamma ramp). With `DesktopGamma` set the value is kept and
+not applied. It returns 1 either way.
+
+Addresses: `0x4034d0`, `0x402d58`, `0x4034df`, `0x4034e8`, `0x589c00`, `0x8826d4`, `0xc0ed38`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x402d58` pushes the callback. `0x4034df` loads `0x8826d4`, where the registration of
+`DesktopGamma` stores its record (`tables/cvars.tsv`), and skips on null; `0x4034e8` reads the
+record's `+0x28`, the value as an integer (`cvar/registry`), and skips on non-zero. The float is
+stored back over the callback's own argument and pushed. `0x589c00` loads `[0xc0ed38]` into `ecx`
+and calls `[vtable+0x34]` with the one argument, `ret 4`.
+
 ## Direct3D clear and viewport
 
 `0x5a17d0(mask)`, slot `+0x6c`, clears: bit 0 of the mask is `D3DCLEAR_TARGET`, bit 1 `D3DCLEAR_ZBUFFER`; the colour is `[dev+0x324]` (default `0xff000000`) unless bit 8 of the capability word is clear, when it cycles through three sine waves; depth 1.0, stencil 0; the viewport is applied first when dirty. `0x5a1100` builds the `D3DVIEWPORT9` from the fractions at `[dev+0xf38]` to `+0xf4c`: `X = ftol([+0xf38] * W)`, `Y = ftol((1 - [+0xf44]) * H)`, `Width = ftol([+0xf3c] * W) - X`, `Height = ftol((1 - [+0xf40]) * H) - Y`, `MinZ` and `MaxZ` from `+0xf48` and `+0xf4c`.
@@ -146,6 +165,23 @@ Proof: one
 Test: none
 
 `0x59da70` calls `0x59dcf0` when the word `0xc0f23c` is set and the GDI chooser `0x59daa0` otherwise; the GDI chooser returns 0 at once when the format's sample count at `+0x1c` is above 1 (`0x59daab`, `0x59dab4`), so it refuses multisampling. With the format it got back, `0x59dcf0` asks `0x59e070(dc, format, attribute, &value)` (a wrapper of `wglGetPixelFormatAttribivARB` through `0xc0f2e8`, one attribute) for each field and logs `SetupPixelFormatWGL(): pixelFormat does not match requested` through `0x595e70` when one differs; it returns 0 when the choice fails or a field differs. The fields read back, in order, are, only when the byte at `+7` is 0, alpha `0x201b` (skipped when the format's `+0x24` is 1), red, green and blue; then stencil `0x2023` (unless the format's `+0xc` is 5), depth `0x2022` and samples `0x2042`; when all match, `0x59dcf0` ends with `SetPixelFormat` (`0x59e047`) on a zeroed `0x28`-byte descriptor and returns its result. The reset ends with `glEnable` of capability `0xb57` (colour material) and `0xc11` (scissor), `glColorMaterial(0x408, 0x1602)` and `glPixelStorei(0xcf5, 1)`, unpack alignment 1.
+
+## OpenGL context creation
+
+`0x59da70(dc, format)` sets a pixel format on the device context with the chooser the previous
+entry names, `0x59dcf0` when `0xc0f23c` is set and `0x59daa0` otherwise, passing both arguments on.
+When the chooser returns non-zero it returns `wglCreateContext(dc)`; otherwise it returns 0 without
+creating one. Its one caller is `0x58c340`.
+
+Addresses: `0x59da70`, `0x59da7a`, `0x59da8c`, `0x59da8f`, `0x58c340`, `0x58c36a`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x59da70` keeps `ecx` in `esi` and leaves `ecx` and `edx` unchanged into either call. `0x59da7a`
+branches on the word; `0x59da8c` tests the result; `0x59da8f` calls through the import slot
+0x7ff4b4, `OPENGL32.dll!wglCreateContext`, with `esi` pushed. The census of `0x59da70` finds one `e8`,
+at `0x58c36a`, and no stored address.
 
 ## OpenGL initial state
 

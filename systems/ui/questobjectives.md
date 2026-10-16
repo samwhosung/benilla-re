@@ -65,6 +65,23 @@ byte of the objective text (`0x4e03da`). A name missing from the cache is the si
 `0x4e0481` and `0x4e0601`), and the lookup sends the query with a callback that fires `QUEST_LOG_UPDATE` when it
 arrives; it logs `Invalid creature in quest` or `Invalid object in quest` on failure.
 
+## Cache query callbacks
+
+`GetQuestLogLeaderBoard` passes `0x4e07d0` with a creature lookup and `0x4e0800` with a game object
+lookup. A cache calls each with its status: on 1 (the record arrived) it signals event 308,
+`QUEST_LOG_UPDATE`; on 0 (refused) it writes `Invalid creature in quest` or `Invalid object in
+quest` to the console in class 0. Only the status's low byte is read.
+
+Addresses: `0x4e07d0`, `0x4e0800`, `0x4e044c`, `0x4e0461`, `0x4e0387`, `0x4e039c`, `0x556aa0`, `0x558560`, `0x556f91`, `0x556f05`
+Confidence: verified
+Proof: one
+Test: none
+
+The pushes `0x4e044c` and `0x4e0387` pass the callbacks to `0x556aa0` on `s_creatureCache`
+(`0x4e0461`) and to `0x558560` on `s_gameObjectCache` (`0x4e039c`). The cache pushes the status, then
+the data (`0x556f91` with 1, `0x556f05` with 0), so the status is `[ebp+0xc]`; each callback tests
+its low byte and returns with `ret 8`. Event 308 is `mov ecx,0x134` before `FrameScript_SignalEvent`.
+
 ## Item counts
 
 The current count of an item objective is a live count of the player's items of that id, never above the

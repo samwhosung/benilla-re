@@ -116,6 +116,24 @@ Test: none
 `0x6400e0` calls `0x63f9e0` four times (`0x6400f1`, `0x640104`, `0x640117`, `0x64012a`) with the pushes `(help line, 2)` and `(0, 5)`; the names are `help`, `quit`, `ver` and `setmap`. `0x640130` calls
 `0x63cdf0` and returns 1; `0x640140` writes the version text and returns 1. The only caller of `0x6400e0` is the start-up wiring at `0x40236b`. The literal names at the registration sites, the 13 console commands and the CVar names of `tables/cvars.tsv` include no `run`.
 
+## Show player command
+
+`0x4049e0` registers `showplayer` with the handler `0x405220`, category 1 and no help line. With
+the world frame present (`s_worldFrame` non-null) the handler toggles the active player's model
+flag through `ToggleShowOwnModel` and prints `player visible` when the flag is now set and
+`player hidden` when it is now clear, through `ConsoleWrite` in class 0. Without a world frame it
+does nothing. It returns 1 either way and reads neither argument.
+
+Addresses: `0x4049e0`, `0x404a1d`, `0x404a27`, `0x405220`, `0x405229`, `0x40522e`, `0x5ec8c0`, `0xb4b2bc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x404a1d` loads `edx` with the handler and `0x404a27` calls `ConsoleCommandRegister` with `ecx` the
+name and the pushes 1 and 0. `0x405220` tests `[0xb4b2bc]` and skips to `mov eax,1; ret` on zero.
+`0x5ec8c0` writes `sete` of the old flag into the flag and returns it in `eax`; `0x40522e` tests that
+value to pick the text.
+
 ## Screen commands
 
 The screen registers 13 commands in category 2. `fontcolor`, `bgcolor` and `highlightcolor` set colours (`screen#colour-classes`). `fontsize <n>` sets the font size to

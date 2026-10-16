@@ -148,3 +148,18 @@ The table at `0x80fa1c` holds six `{mask, function}` pairs in the order `0x40, 0
 walks it from `0x80fa44` down to `0x80fa1c` (`0x661af8` to `0x661b13`) and fails if a bit is left (`0x661b1d`); the
 application loop starts at `0x80fa48` and steps by `−8` to `0x80fa20` (`0x661b64`, `0x661bd0` to `0x661bd3`), calling each
 function through `call [edi]` (`0x661bc2`). The copy case is `cmp ebx,eax` at `0x661abd`.
+
+## Freeing a loaded file
+
+`SFile::Unload(buffer)` (`0x648700`) frees a buffer with `SMemFree`, tagged with `SFile2.cpp` and
+line 1262, and returns 1. Callers pass it the buffer `SFile::Load` returns, as `0x6f1200` does;
+the census finds 27 call sites and no stored address.
+
+Addresses: `0x648700`, `0x648713`, `0x648620`, `0x646430`, `0x6f1238`, `0x6f1254`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x648700` pushes 0, `0x4ee` and the path `E:\build\buildWoW\Storm\Source\SFile2.cpp`, then the
+buffer, and calls `SMemFree` (`0x648713`); `ret 4`. In `0x6f1200` the buffer `SFile::Load` wrote at
+`0x6f1238` is passed to it at `0x6f1254`.

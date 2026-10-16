@@ -62,6 +62,28 @@ line (`0x6edcd9`), and `0x6edd24` trims spaces backwards. `0x6edd51`'s `eax` is 
 any test. `0x6edd91` calls `[0xcee9b8]` with the count `0xcee9fc` over `0xceea3c`; `0x6eddf0`
 answers 1. `0x6edb50` counts the lines not beginning with `#`, for that progress total.
 
+## The signature digest
+
+`0x6f1200(toc, file, digest)` makes the 16 bytes `CheckTocSignature` compares with a signature. It
+starts an MD5 context with `MD5Init`, passes it to `0x6f1270` with the toc and the empty string,
+and, when `file` is not null, loads that file with `SFile::Load`, adds it with `0x661dd0` and frees
+it with `SFile::Unload`; then it calls `MD5Final` with `digest`. `0x661dd0(context, input, length)` is
+MD5's update: it adds `8·length` to the 64-bit bit count at `+0x10` with a carry into `+0x14`, fills
+the 64-byte block at `+0x18` from index `(count >> 3) & 63`, runs the block transform `0x661f00`
+on it when full and then on each whole 64 bytes of the input in place, and keeps the rest.
+
+Addresses: `0x6f1200`, `0x6f120f`, `0x6f121e`, `0x6f1238`, `0x6f124b`, `0x6f1254`, `0x6f125f`, `0x6f11dc`, `0x6f11eb`, `0x661dd0`, `0x661dfd`, `0x661e1b`, `0x661e34`, `0x661e4f`, `0x661f00`, `0x661f3e`, `0x661f63`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6f11dc` passes the toc in `ecx`, `CheckTocSignature`'s own `edx` and its output buffer;
+`0x6f11eb` compares four dwords. `SFile::Load` gets `(0, file, &buffer, &size, 1, 1, 0)`
+(`0x6f1238`). In `0x661dd0`: `jae` past `inc [ctx+0x14]` (`0x661dfd`) is the carry, and the high
+word also gains `length >> 29`; `0x661e1b` `jb` takes the short copy when `length < 64 − index`;
+`0x661e34` transforms the filled block, and the loop at `0x661e4f` runs while `i + 63 < length`.
+`0x661f00` adds the MD5 constants 0xd76aa478 (`0x661f3e`) and 0xe8c7b756 (`0x661f63`).
+
 ## Loading one file
 
 `0x6ede10(path, md5, status)` first collapses `..`: while the path holds a `..` with a separator on

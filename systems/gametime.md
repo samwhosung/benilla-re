@@ -146,6 +146,28 @@ The stores `0x6c5f70`, `0x6c5f77`, `0x6c5f91`, `0x6c5f94`. Nothing in this file 
 (`0x6c5fa0`). Other users of the clock: `IsDaytime` (`0x60a0a4`, a range test of the clock), the sound frame
 (`0x457922`) and `StampLightState`, which stores the day phase each frame beside the minute of day and day number.
 
+## Day number and time text
+
+`WowTime::GetDaysSinceEpoch` (`0x642320`) returns 0 when the year, month or day field is negative.
+Otherwise it builds a `tm` with day `day + 1`, month `month`, year `year mod 100 + 100`, daylight
+saving −1 and every other field 0, and returns `(mktime(tm) + 0x6423b0()) / 86400`, truncated
+toward zero; `0x6423b0` returns 0. `WowTime::WowGetTimeString(time, buffer, size)` (`0x642c80`)
+writes `Not Set` when `0x642c10` gives 0 for the time, else `%s/%s/%s (%s) %s:%s` of month + 1,
+day + 1, year + 2000, the weekday's `Sun` to `Sat` (`Any` when negative), hour and the minute as
+two digits; any other negative field prints `A`. It returns `buffer`.
+
+Addresses: `0x642320`, `0x64232d`, `0x64234c`, `0x642372`, `0x64237b`, `0x6423b0`, `0x642c80`, `0x642c91`, `0x642cd5`, `0x642d64`, `0x642dc6`, `0x642df4`, `0x642c10`
+Confidence: verified
+Proof: one
+Test: none
+
+The record is the clock's: minute `+0`, hour `+4`, weekday `+8`, day `+0xc`, month `+0x10`, year
+`+0x14`. `0x64232d` to `0x642339` test the year, month and day with `jl`; `0x64234c` divides the
+year by 100 (`idiv`) and adds 100 to the remainder; `0x642372` calls `_mktime`. `0x64237b` multiplies
+by 0xc22e4507, adds the dividend, shifts right 16 and adds the sign bit: a signed division by
+86,400. In `0x642c80`, `0x642cd5` adds 2000; the weekday names are the seven string pointers from
+0x865864 (`0x642d64`); `0x642dc6` formats the minute with `%2.2i`.
+
 ## Unreached functions
 
 `0x643450` applies new minute and day offsets and sets the clock again. `0x643640` sets the clock from the host's

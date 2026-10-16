@@ -184,6 +184,24 @@ In `0x6fbd70`'s `n` case (`0x6fbdf8`) a null answer from `0x6fc460` leads to `0x
 value with `luaO_rawequalObj` (`0x6fbfcf`) and requires a string key (`0x6fbfd8`). A hit stores
 `global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores `""` (`0x6fbe2b`).
 
+## math.ceil
+
+`math.ceil` is `0x7faf70`, the `ceil` entry of `mathlib`. It reads argument 1 with `0x6f4c80`,
+which returns `lua_tonumber`'s double and, when that is 0.0 and `lua_isnumber` fails, first calls
+`0x6f4b80` with the index and type 3. It takes the C runtime's `ceil` of the double, pushes it
+with `lua_pushnumber` and returns one result.
+
+Addresses: `0x7faf70`, `0x822c60`, `0x6f4c80`, `0x6f4c91`, `0x6f4ca7`, `0x6f4cb6`, `0x73fdf5`, `0x6f3810`
+Confidence: verified
+Proof: one
+Test: none
+
+The pair at offset 0x40 of `mathlib` holds `ceil` and `0x7faf70`. `0x7faf70` calls `0x6f4c80`
+with `edx = 1`. `0x6f4c80` compares the double with 0.0 (`fcom` with `0x802970` at `0x6f4c91`,
+`test ah,0x44; jp`), so a non-zero value or a NaN skips the test; then `lua_isnumber` (`0x6f4ca7`)
+and the call with `push 3` (`0x6f4cb6`). The double passes on the stack to `ceil` and from it to
+`lua_pushnumber`; `eax = 1`.
+
 ## The C function contract
 
 Every C function the client registers is `int __fastcall f(lua_State *L)` that answers its result
@@ -233,6 +251,29 @@ and 4 (`0x6f7c32`). `0x6f34d0` mirrors those tests; `0x6f3510` compares `lua_typ
 `0x6f34d0` (`0x774f1c`) and raises at `0x774f8f`. `SetMaxLetters` compares `lua_gettop` with 2
 (`0x79919c`), raises otherwise, and stores `__ftol(lua_tonumber(2))` (`0x7991e8`).
 `SetScrollFromBottom` tests argument 2 first (`0x793078`) and returns 0 on failure.
+
+## Stack room and run errors
+
+`lua_checkstack(L, n)` (`0x6f2f30`) returns 0 when the slots in use, `(top − base) / 16`, plus `n`
+exceed 2048. Otherwise it grows the stack with `luaD_growstack(L, n)` when `stack_last − top` is at
+most `16·n` bytes, raises the current call's top to `top + 16·n` when it is lower, and returns 1.
+`luaG_runerror(L, fmt, ...)` (`0x6fc870`) formats the message with `luaO_pushvfstring`, passes it
+to `0x6fc8a0` and calls `luaG_errormsg`, which throws. When bit 0 of the current call's `+8` is
+clear, `0x6fc8a0` pushes `%s:%d: %s` of the text `0x6f5c40` writes, the number `0x6fbef0` returns
+and the message. The census finds 37 calls of `0x6f2f30` and 32 of `0x6fc870`.
+
+Addresses: `0x6f2f30`, `0x6f2f43`, `0x6f2f5a`, `0x6f2f71`, `0x6fc870`, `0x6fc8a0`, `0x6fc8ad`, `0x6f5990`, `0x6f5f60`, `0x6fc780`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6f2f30` takes `L` in `ecx` and `n` in `edx`: `sar ecx,4` on `[L+8] − [L+0xc]`, `cmp ecx,0x800;
+jle` (`0x6f2f43`), so 2048 in all passes; `[L+0x18] − [L+8]` against `n shl 4` with `jg` past the
+grow (`0x6f2f5a`); `[L+0x14]+4` against `[L+8] + 16·n` with `jae` (`0x6f2f71`). `0x6fc870` is `cdecl`
+and passes the address of its variable arguments; `0x6fc8a0` tests bit 0 of `[[L+0x14]+8]`
+(`0x6fc8ad`) and, when clear, calls `0x6fbef0` and `0x6fbb90` on the call, then `0x6f5c40` with a
+64-byte stack buffer, `[r+0x20] + 0x10` (`r` the result of `0x6fbb90`) and the length 60, and
+formats through `0x6f5c20`.
 
 ## The context word
 
