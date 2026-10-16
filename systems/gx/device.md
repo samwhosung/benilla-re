@@ -13,7 +13,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x419c10(index)` reads a command-line flag; the option table at `0x80108c` (records of id, name, 0, flags) gives id 0 to `d3d` and id 5 to `opengl`. The compare is `SStrCmpI` against `OpenGl` (`0x842a5c`); its result 0 means equal. A later assignment wins, so `-d3d` beats `-opengl`. The Direct3D object is `0x3c04` bytes (`0x58ba70`) and the OpenGL object `0x3ab4` (`0x58dd70`).
+`0x419c10(index)` reads a command-line switch; the switch table at `0x801088` (records of flags, id, name, 0) gives id 0 to `d3d` and id 5 to `opengl` (`storm/scmd`, The client's switch readers). The compare is `SStrCmpI` against `OpenGl` (`0x842a5c`); its result 0 means equal. A later assignment wins, so `-d3d` beats `-opengl`. The Direct3D object is `0x3c04` bytes (`0x58ba70`) and the OpenGL object `0x3ab4` (`0x58dd70`).
 
 ## Device object
 

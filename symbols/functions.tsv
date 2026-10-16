@@ -35,7 +35,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4013f0	23			client			Runs its object file code not read here	inferred	none		
 0x401410	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x401420	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x401440	15			client			Runs its object file code not read here	inferred	none		
+0x401440	15	IsDataLayoutParent		client		bool __cdecl (void)	Returns whether model.MPQ and interface.MPQ were both found under ..\Data\ (layout word 1)	verified	one	storm/mount#install-folder-and-data-path	
 0x401450	17			client	unreached		Runs its object file code not read here	inferred	none		
 0x401470	124	EnumerateArchiveFiles		client			Passes each listfile name of the mounted archives that begins with a prefix to a callback	verified	one	ui/addons#finding-add-ons	
 0x4014f0	42	CallIfNameHasPrefix		client			Calls a callback for a name beginning with a prefix, ignoring case, and answers 1 otherwise	verified	one	ui/addons#finding-add-ons	
@@ -67,11 +67,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402100	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402110	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402120	222	ClientMain		client			Runs the application: start-up calls, the time manager, init, the event loop and teardown	verified	one	core/threads#application-body	
-0x402200	15			client			Runs Client.cpp code not read here	inferred	none		
-0x402210	161			client			Runs Client.cpp code that calls 0x648c20, 0x648be0, 0x419c20 and 5 more; not read here	inferred	none		
-0x4022c0	12			client			Runs Client.cpp code not read here	inferred	none		
-0x4022d0	74			client			Runs Client.cpp code that calls 0x402320, OsFileExists; not read here	inferred	none		
-0x402320	37			client			Runs Client.cpp code that calls SStrPrintf; not read here	inferred	none		
+0x402200	15	IsDataLayoutSplit		client		bool __cdecl (void)	Returns whether model.MPQ was found under ..\Data\ and interface.MPQ was not (layout word 2)	verified	one	storm/mount#install-folder-and-data-path	
+0x402210	161	SetBaseAndDataPaths		client		void __cdecl (void)	Sets the working folder and base path from -datadir or the exe folder, the data layout word, and Data\ as data path	verified	one	storm/mount#install-folder-and-data-path	
+0x4022c0	12	FindBaseArchiveRoot		client		uint32_t __fastcall (uint32_t index)	Returns which archive root holds the base archive of an index: 0 Data\, 1 ..\Data\, 2 neither	verified	one	storm/mount#install-folder-and-data-path	
+0x4022d0	74	FindArchiveRoot		client		uint32_t __fastcall (const char *name)	Returns the first archive root, 0 or 1, under which a file exists, or 2 when neither holds it	verified	one	storm/mount#base-and-speech-archives	
+0x402320	37	FormatArchivePath		client		void __fastcall (char *buffer, uint32_t size, uint32_t root, const char *name)	Formats an archive root followed by a file name into a buffer	verified	one	storm/mount#base-and-speech-archives	
 0x402350	1253	InitializeGlobal	idb	client			Initializes the client's systems, then the event library and its interactive context	inferred	none	core/loop#startup-and-shutdown	
 0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	verified	two	core/close#confirm-close-callback	
 0x402a00	23			client			Runs Client.cpp code that calls EventSetTimer; not read here	inferred	none		
@@ -100,22 +100,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4036a0	26	CacheUpdateShutdown	idb	client			Runs Client.cpp code that calls EventKillTimer; not read here	inferred	none		
 0x4036c0	100	DestroyClientSystems		client			Shuts down client systems at context stop, 0x6ec130 among them	inferred	none	spell/visuals#startup-and-shutdown	
 0x403730	10			client			Runs Client.cpp code not read here	inferred	none		
-0x403740	613			client			Runs Client.cpp code that calls 0x42ad10, 0x41a350, 0x4045a0 and 10 more; not read here	inferred	none		
+0x403740	613	MountArchives		client			Mounts the patch, speech and base MPQ archives in priority order	verified	one	storm/mount#patch-archives	
 0x4039b0	290			client			Runs Client.cpp code that calls SStrPrintf, SMemReAlloc, SMemAlloc and 2 more; not read here	inferred	none		
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x403b00	147			client			Runs Client.cpp code that calls 0x402320, 0x648dd0, 0x64df50 and 1 more; not read here	inferred	none		
+0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, logging a missing one and failing fatally on a bad one	verified	one	storm/mount#base-and-speech-archives	
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
 0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	two	core/close#tail	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
-0x403ca0	555			client			Runs Client.cpp code that calls SStrPrintf, 0x467d10, ClntObjMgrEmptyHook and 11 more; not read here	inferred	none		
-0x403ed0	119			client			Runs its object file code that calls SStrPack, CWorld::GetEntityAreaId, FormatAreaName; not read here	inferred	none		
+0x403ca0	555	FormatErrorLogHeader		client		uint32_t __stdcall (char *buffer, uint32_t size)	Formats the error log header: the build, the zone, the player and target objects and the loaded add-ons	verified	one	storm/errorlog#the-log-file	
+0x403ed0	119	FormatErrorLogZone		client		void __fastcall (void *player, char *buffer, uint32_t size)	Appends Local Zone and the name of the player's area to an error log buffer	verified	one	storm/errorlog#the-log-file	
 0x403f50	24			client			Runs its object file code that calls 0x646600; not read here	inferred	none		
-0x403f70	139			client			Runs its object file code that calls 0x403f50, SStrPrintf, SStrPack; not read here	inferred	none		
-0x404000	52			client			Runs its object file code that calls 0x64e8d0, 0x404040; not read here	inferred	none		
-0x404040	64			client			Runs its object file code that calls SStrPrintf, 0x64ba90; not read here	inferred	none		
+0x403f70	139	FormatErrorLogObject		client		void __fastcall (const char *label, void *object, char *buffer, uint32_t size)	Appends a labelled line with an object's name, guid and position to an error log buffer	verified	one	storm/errorlog#the-log-file	
+0x404000	52	SendErrorLogsCallback		client		uint32_t __stdcall (uint32_t unused1, uint32_t unused2, uint32_t unused3, uint32_t unused4, uint32_t unused5)	Runs WowError.exe on the last error log written, when there is one, and returns 1	verified	one	storm/errorlog#client-registration	
+0x404040	64	RunWowError		client		void __fastcall (const char *path)	Starts WowError.exe with a log path on its command line	verified	one	storm/errorlog#client-registration	
 0x404080	3			client			Runs its object file code not read here	inferred	none		
 0x404090	1			client			Runs its object file code not read here	inferred	none		
-0x4040a0	84			client			Runs its object file code that calls 0x42b240, SStr::sub_64A450, SRegSaveString; not read here	inferred	none		
+0x4040a0	84	SaveInstallPath		client		void __cdecl (void)	Saves the exe folder with its trailing backslash as the registry value World of Warcraft\InstallPath	verified	one	storm/mount#install-folder-and-data-path	
 0x404100	33	_WinMain@16	idb	client		int __stdcall (void *instance, void *previous, char *command_line, int show)	Sets the x87 control word to 0x023F through 0x409bf2 and 0x409c06, then runs the client	verified	one	METHOD#the-harness	
 0x404130	38			client			Runs its object file code not read here	inferred	none		
 0x404160	5			client			Runs its object file code not read here	inferred	none		
@@ -1513,12 +1513,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419bd0	15			base			Runs its object file code not read here	inferred	none		
 0x419be0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x419bf0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x419c10	7	CmdLineGetBool	idb	unassigned			Runs its object file code that calls SCmdGetBool; not read here	inferred	none		
-0x419c20	22			unassigned			Runs its object file code that calls 0x64f270; not read here	inferred	none		
+0x419c10	7	CmdLineGetBool	idb	unassigned		uint32_t __fastcall (uint32_t id)	Returns SCmdGetBool of a switch id	verified	one	storm/scmd#the-clients-switch-readers	
+0x419c20	22	CmdLineGetString		unassigned		const char * __fastcall (uint32_t id)	Reads a switch's string into one shared 260-byte buffer and returns the buffer	verified	one	storm/scmd#the-clients-switch-readers	
 0x419c40	5			unassigned			Runs its object file code not read here	inferred	none		
 0x419c50	11			unassigned			Runs its object file code not read here	inferred	none		
 0x419c60	7			unassigned	unreached		Runs its object file code that calls SCmdGetNum; not read here	inferred	none		
-0x419c70	22			unassigned			Runs its object file code that calls 0x64fdc0, 0x64fda0; not read here	inferred	none		
+0x419c70	22	RegisterBaseSwitches		unassigned		void __cdecl (void)	Registers the fifteen base command-line switches and parses the process command line	verified	one	storm/scmd#the-clients-switch-readers	
 0x419c90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x419ca0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x419cb0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -2204,7 +2204,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42aa30	70			os			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
 0x42aa80	126			os			Runs its object file code that calls SErrSetLastError, SStrCopy, SStrPack and 2 more; not read here	inferred	none		
 0x42ab00	287			os			Runs its object file code that calls SStrCmp, SStrCopy, SStrPack and 4 more; not read here	inferred	none		
-0x42ac20	70			os			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
+0x42ac20	70	OsSetCurrentDirectory		os		uint32_t __fastcall (const char *path)	Sets the working directory to a UTF-8 path with SetCurrentDirectoryW	verified	one	storm/mount#install-folder-and-data-path	
 0x42ac70	83			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42acd0; not read here	inferred	none		
 0x42acd0	59			os			Runs its object file code that calls 0x65b080; not read here	inferred	none		
 0x42ad10	304			os			Runs its object file code that calls SStrCopy, 0x42b3d0, SStrPack and 2 more; not read here	inferred	none		
@@ -2222,7 +2222,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b240	13			unassigned			Runs its object file code that calls 0x42b250; not read here	inferred	none		
 0x42b250	78			unassigned			Runs its object file code that calls __alloca_probe, 0x42b2a0; not read here	inferred	none		
 0x42b2a0	59			unassigned			Runs its object file code that calls 0x65b080; not read here	inferred	none		
-0x42b2e0	16			unassigned			Runs its object file code that calls 0x42b240; not read here	inferred	none		
+0x42b2e0	16	OsGetExeFolder		unassigned		void __fastcall (char *buffer, uint32_t size)	Writes the exe's path cut after its last backslash into a buffer	verified	one	storm/mount#install-folder-and-data-path	
 0x42b2f0	20			unassigned	unreached		Runs its object file code that calls 0x64cc60, 0x42b250; not read here	inferred	none		
 0x42b310	54			unassigned	unreached		Runs its object file code that calls 0x42b250; not read here	inferred	none		
 0x42b350	78			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
@@ -2832,7 +2832,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x437620	119			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
 0x4376a0	42			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
 0x4376d0	102			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
-0x437740	337			os	unreached		Runs its object file code that calls _fopen, _setvbuf, _fprintf and 3 more; not read here	inferred	none		
+0x437740	337	WriteCallTraceLog		os	unreached	void __fastcall (const char *path)	Writes a call trace of every registered thread to a file, calldump.log by default	verified	one	core/threads#call-trace-log	
 0x4378a0	334			os	unreached		Runs its object file code that calls _fprintf; not read here	inferred	none		
 0x4379f0	1			os	unreached		Runs its object file code not read here	inferred	none		
 0x437a00	204			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
@@ -3173,7 +3173,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x441e50	319			unassigned			Runs its object file code that calls 0x440d80, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		
 0x441f90	264			unassigned			Runs its object file code that calls 0x441890, 0x441770, SMemReAlloc and 3 more; not read here	inferred	none		
 0x4420a0	9			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4420b0	1			unassigned			Runs its object file code not read here	inferred	none		
+0x4420b0	1	DebugPrintStub		unassigned		void __cdecl (const char *format, ...)	Returns at once; the client's diagnostic prints call it with a format and arguments	verified	one	core/threads#empty-diagnostic-print	
 0x4420c0	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x4420d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4420e0	11			unassigned			Runs its object file code not read here	inferred	none		
@@ -23252,7 +23252,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6454d0	1			storm	unreached		Runs its object file code not read here	inferred	none		
 0x6454e0	208			storm	boundary		Runs its object file code that calls 0x645100, 0x645040; not read here	inferred	none		
 0x6455b0	134			storm	boundary		Runs its object file code that calls 0x645120, 0x645090; not read here	inferred	none		
-0x645640	141			storm	boundary		Runs its object file code that calls 0x6452a0, 0x645910; not read here	inferred	none		
+0x645640	141	StormHeapAlloc		storm	boundary	void * __thiscall (void *this, uint32_t size, const char *name, uint32_t line)	Takes a block of the power-of-two class that holds size + 8 from the allocator and returns it past its header	verified	one	core/threads#allocator-and-error-calls	
 0x6456d0	177			storm	boundary		Runs its object file code that calls 0x6452a0, 0x6461c0, 0x645c10; not read here	inferred	none		
 0x645790	83			storm	boundary		Runs its object file code that calls 0x6461c0, 0x645eb0; not read here	inferred	none		
 0x6457f0	138			storm	boundary		Runs its object file code that calls 0x6461c0; not read here	inferred	none		
@@ -23339,8 +23339,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x647e60	796	SFileResolveOpen		storm	orchestration	int32_t __fastcall (const char *name, char *out, uint32_t size, uint32_t flags, uint32_t *kind, void **archive)	Resolves an open name through the disk-path builder, or the loose-file index and then the archives	verified	two	storm/mount#loose-files	storm::resolve_matches_index, storm::index_hit_has_no_fallback
 0x648180	725			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrPack, 0x646d90 and 3 more; not read here	inferred	none		
 0x648460	373	SFile::Read	idb	storm	boundary		Reads bytes from an open archive file	inferred	none		
-0x6485f0	36			storm	boundary		Runs SFile2.cpp code that calls SFile::Load; not read here	inferred	none		
-0x648620	210	SFile::Load	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx, SFile::GetFileSize, SMemAlloc and 3 more; not read here	inferred	none		
+0x6485f0	36	SFile::LoadByName		storm	boundary	uint32_t __stdcall (const char *name, void **buffer, uint32_t *size, uint32_t extra, void *overlapped)	Calls SFile::Load with no archive and open flags 0	verified	one	storm/format#loading-a-whole-file	
+0x648620	210	SFile::Load	idb	storm	boundary	uint32_t __stdcall (void *archive, const char *name, void **buffer, uint32_t *size, uint32_t extra, uint32_t flags, void *overlapped)	Reads a whole file into a new buffer with extra zero bytes after it, closing it unless overlapped	verified	one	storm/format#loading-a-whole-file	
 0x648700	33	SFile::Unload		storm	boundary	int __stdcall (void *buffer)	Frees a buffer that SFile::Load returned and returns 1	verified	one	storm/format#freeing-a-loaded-file	
 0x648730	126	SFile::Close	idb	storm	boundary		Runs SFile2.cpp code that calls _fclose, 0x653900, 0x668610 and 3 more; not read here	inferred	none		
 0x6487b0	59	SFileGetFileName		storm	orchestration		Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
@@ -23472,10 +23472,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64cb00	213			storm	unreached		Runs its object file code that calls BuildFullKeyName, SErrSetLastError; not read here	inferred	none		
 0x64cbe0	15			storm	boundary		Runs its object file code that calls 0x64a670, 0x64cda0; not read here	inferred	none		
 0x64cbf0	52			storm	boundary		Runs its object file code that calls 0x65c7f0, 0x66abe0, 0x669fe0 and 6 more; not read here	inferred	none		
-0x64cc30	40			storm	boundary		Runs its object file code that calls __cexit, 0x644ff0, __exit; not read here	inferred	none		
+0x64cc30	40	StormExitHandler		storm	boundary	void __cdecl (void)	Runs the C runtime exit once, shuts Storm down and ends the process with the stored exit code	verified	one	core/close#c-runtime-exit	
 0x64cc60	9			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64cc70	12			storm	unreached		Runs its object file code that calls _exit; not read here	inferred	none		
-0x64cc80	13			storm	boundary		Runs its object file code not read here	inferred	none		
+0x64cc80	13	StormExitProcess		storm	boundary	void __fastcall (uint32_t code)	Stores an exit code and ends the process with ExitProcess	verified	one	core/close#c-runtime-exit	
 0x64cc90	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64cca0	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ccb0	10			storm	boundary		Runs its object file code that calls 0x64ccc0; not read here	inferred	none		
@@ -23500,7 +23500,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64d920	53			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64d960	234			storm	boundary		Runs its object file code that calls SStrCopy, SStr::sub_64A450, SStrLen and 3 more; not read here	inferred	none		
 0x64da50	72			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64daa0	214			storm	boundary		Runs its object file code that calls 0x64d960, 0x66baa0, 0x64dc00 and 2 more; not read here	inferred	none		
+0x64daa0	214	WriteErrorLog		storm	boundary		Creates a timed .txt error log with the title, the error text and the header callback's text, keeping its path	verified	one	storm/errorlog#the-log-file	
 0x64db80	121			storm	boundary		Runs its object file code that calls __vsnprintf, SStrPack; not read here	inferred	none		
 0x64dc00	158			storm	boundary		Runs its object file code that calls __alloca_probe; not read here	inferred	none		
 0x64dca0	28			storm	boundary		Runs its object file code that calls 0x66bd50; not read here	inferred	none		
@@ -23516,14 +23516,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64df80	557	TopLevelExceptionFilter	idb	storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070, 0x64e1b0 and 4 more; not read here	inferred	none		
 0x64e1b0	722			storm	boundary		Runs its object file code that calls SStrCopy; not read here	inferred	none		
 0x64e5c0	55			storm	unreached		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
-0x64e600	226			storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
+0x64e600	226	AddErrorCallback		storm	boundary	void __stdcall (void *callback)	Links a record holding a callback onto Storm's error callback list under the error lock	verified	one	storm/errorlog#client-registration	
 0x64e6f0	76			storm	unreached		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
 0x64e740	18			storm	boundary		Runs its object file code that calls 0x64e760; not read here	inferred	none		
 0x64e760	227			storm	boundary		Runs its object file code that calls 0x64c650, SStrPrintf, 0x64d100; not read here	inferred	none		
 0x64e850	22	SErrSetLastError	idb	storm	boundary	void __stdcall (uint32_t code)	Stores an error code in a global and passes it to SetLastError	verified	one	core/threads#allocator-and-error-calls	
-0x64e870	46			storm	boundary		Runs its object file code that calls 0x64d020, SStrCopy, 0x64d070; not read here	inferred	none		
-0x64e8a0	35			storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
-0x64e8d0	65			storm	boundary		Runs its object file code that calls 0x64d020, SStrCopy, 0x64d070; not read here	inferred	none		
+0x64e870	46	SetErrorLogTitle		storm	boundary	void __stdcall (const char *title)	Copies up to 0x80 bytes of the error log title line under the error lock	verified	one	storm/errorlog#client-registration	
+0x64e8a0	35	SetErrorLogHeaderCallback		storm	boundary	void __stdcall (void *callback)	Stores the callback that adds a header to each error log, under the error lock	verified	one	storm/errorlog#client-registration	
+0x64e8d0	65	GetLastErrorLogPath		storm	boundary	uint32_t __stdcall (char *buffer, uint32_t size)	Copies the path of the last error log written and returns 1, or returns 0 when none was written	verified	one	storm/errorlog#client-registration	
 0x64e920	15			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64e930	125			storm	unreached		Runs its object file code that calls 0x64d020, 0x64ea70, 0x64d070; not read here	inferred	none		
 0x64e9b0	3			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23553,9 +23553,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64f020	145			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64f0c0	72			storm	unreached		Runs its object file code not read here	inferred	none		
 0x64f110	226			storm	boundary		Runs SCmd.cpp code that calls SMemFree, 0x64fff0, 0x64ffc0; not read here	inferred	none		
-0x64f200	22	SCmdGetBool	idb	storm	boundary		Runs SCmd.cpp code that calls SCmdGetNum; not read here	inferred	none		
-0x64f220	72	SCmdGetNum	idb	storm	boundary		Runs SCmd.cpp code not read here	inferred	none		
-0x64f270	138			storm	boundary		Runs SCmd.cpp code that calls SErrSetLastError, SStrCopy; not read here	inferred	none		
+0x64f200	22	SCmdGetBool	idb	storm	boundary	uint32_t __stdcall (uint32_t id)	Returns 1 when a switch's number is nonzero, else 0	verified	one	storm/scmd#reading-a-switch-by-id	
+0x64f220	72	SCmdGetNum	idb	storm	boundary	uint32_t __stdcall (uint32_t id)	Returns the value word of the switch with an id, or 0 when no switch has it	verified	one	storm/scmd#reading-a-switch-by-id	
+0x64f270	138	SCmdGetString		storm	boundary	uint32_t __stdcall (uint32_t id, char *buffer, uint32_t size)	Copies the string of the switch with an id into a buffer and returns 1, or returns 0 when none has it	verified	one	storm/scmd#reading-a-switch-by-id	
 0x64f300	5			storm	boundary		Runs SCmd.cpp code not read here	inferred	none		
 0x64f310	11			storm	boundary		Runs SCmd.cpp code not read here	inferred	none		
 0x64f320	160			storm	unreached		Runs SCmd.cpp code that calls SErrSetLastError, SStrDupA, SMemAlloc; not read here	inferred	none		
@@ -23565,13 +23565,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64f660	209			storm	boundary		Runs SCmd.cpp code that calls 0x64fb40, SStrChr2, 0x64fc10 and 3 more; not read here	inferred	none		
 0x64f740	387			storm	boundary		Runs SCmd.cpp code that calls 0x64f9d0, 0x64f940, 0x64f8d0 and 4 more; not read here	inferred	none		
 0x64f8d0	111			storm	boundary		Runs SCmd.cpp code not read here	inferred	none		
-0x64f940	132			storm	boundary		Runs SCmd.cpp code that calls _strtol, _strtoul, SStrLen; not read here	inferred	none		
+0x64f940	132	ParseSwitchNumber		storm	boundary	void __fastcall (void *node, const char *text, uint32_t *length)	Converts a text to a switch's number with strtol or strtoul and copies it to the switch's output	verified	one	storm/scmd#switch-name-and-number-parsing	
 0x64f9d0	109			storm	boundary		Runs SCmd.cpp code that calls SStrLen, SMemFree, SMemAlloc and 1 more; not read here	inferred	none		
 0x64fa40	122			storm	boundary		Runs SCmd.cpp code that calls 0x64f740, 0x64fac0; not read here	inferred	none		
-0x64fac0	126			storm	boundary		Runs SCmd.cpp code that calls SStrLen, strncmp, __strnicmp; not read here	inferred	none		
+0x64fac0	126	FindSwitchByPrefix		storm	boundary	void * __fastcall (const char *text, void *node, uint32_t minimum)	Returns the switch whose name is the longest prefix of a text, of at least a minimum length, or 0	verified	one	storm/scmd#switch-name-and-number-parsing	
 0x64fb40	194			storm	boundary		Runs SCmd.cpp code that calls 0x64f4b0, SMemAlloc, 0x64f5d0 and 1 more; not read here	inferred	none		
 0x64fc10	398			storm	boundary		Runs its object file code that calls SStrLen, SStrCopy, 0x64fac0 and 3 more; not read here	inferred	none		
-0x64fda0	29			storm	boundary		Runs its object file code that calls 0x64f3c0; not read here	inferred	none		
+0x64fda0	29	ParseProcessCommandLine		storm	boundary	uint32_t __stdcall (uint32_t arg1, uint32_t arg2)	Parses GetCommandLineA's text against the registered switches through 0x64f3c0	verified	one	storm/scmd#the-clients-switch-readers	
 0x64fdc0	90			storm	boundary		Runs its object file code that calls SErrSetLastError, 0x64fe20; not read here	inferred	none		
 0x64fe20	410			storm	boundary		Runs its object file code that calls SStrLen, SErrSetLastError, SMemAlloc and 3 more; not read here	inferred	none		
 0x64ffc0	41			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23655,7 +23655,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x652930	1941			storm	boundary		Runs SFile.cpp code that calls 0x6508b0, 0x650780, 0x652930 and 9 more; not read here	inferred	none		
 0x6530d0	108	SFileHashString		storm	primitive	uint32_t __fastcall (const char *name, int type)	Hashes an upper-cased name with backslashes to one of the four types	verified	one	storm/format#name-hash	
 0x653140	25			storm	boundary		Runs SFile.cpp code not read here	inferred	none		
-0x653160	447			storm	boundary		Runs SFile.cpp code that calls 0x650780, 0x66cdd0, SMemAlloc and 5 more; not read here	inferred	none		
+0x653160	447	SFile::VerifyArchiveSignature		storm	boundary	uint32_t __stdcall (void *archive, uint32_t *result, const void *key, uint32_t keySize, const void *exponent, uint32_t exponentSize)	Checks the signature after an archive's data with a key, setting 5 when it passes and 1 otherwise	verified	one	storm/format#archive-signature-check	
 0x653320	376			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, 0x662910, 0x66cb80 and 5 more; not read here	inferred	none		
 0x6534a0	124			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, MD5Init, 0x661dd0 and 1 more; not read here	inferred	none		
 0x653520	32			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, 0x653540; not read here	inferred	none		
@@ -24019,7 +24019,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x660800	60			storm	boundary		Runs SComp.cpp code that calls ZlibUncompress; not read here	inferred	none		
 0x660840	626			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
 0x660ac0	187			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
-0x660b80	133			storm	boundary		Runs SComp.cpp code that calls 0x738cd0, SStrPrintf, 0x64d100; not read here	inferred	none		
+0x660b80	133	Bzip2Compress		storm	unreached	void __fastcall (void *dest, uint32_t *destSize, const void *source, uint32_t sourceSize, uint32_t *flag, uint32_t unused)	Compresses a buffer with bzip2 at block size 9, giving the source size back when the output does not fit	verified	one	storm/format#compression-codecs	
 0x660c10	31			storm	boundary		Runs SComp.cpp code that calls 0x738e00; not read here	inferred	none		
 0x660c30	55			storm	boundary		Runs SComp.cpp code that calls 0x660c70, 0x660cc0; not read here	inferred	none		
 0x660c70	65			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
@@ -24339,7 +24339,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x66b340	13			storm	boundary		Runs its object file code not read here	inferred	none		
 0x66b350	12			storm	boundary		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x66b360	10			storm	boundary		Runs its object file code not read here	inferred	none		
-0x66b370	341			storm	boundary		Runs its object file code not read here	inferred	none		
+0x66b370	341	LoadDbgHelp		storm	boundary		Loads dbghelp.dll and its symbol and dump entry points into a table once	verified	one	storm/errorlog#crash-dump	
 0x66b4d0	4			storm	boundary		Runs its object file code not read here	inferred	none		
 0x66b4e0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x66b4f0	11			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -24361,7 +24361,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x66bd00	78			storm	boundary		Runs its object file code not read here	inferred	none		
 0x66bd50	321			storm	boundary		Runs its object file code that calls 0x66bb80, 0x66c900, 0x66c730 and 4 more; not read here	inferred	none		
 0x66bea0	181			storm	boundary		Runs its object file code that calls 0x66bf60, 0x66bfb0; not read here	inferred	none		
-0x66bf60	78			storm	boundary		Runs its object file code that calls 0x66bb80; not read here	inferred	none		
+0x66bf60	78	PrintReportSectionTitle		storm	boundary		Prints a crash report section title between blank lines and rules of dashes	verified	one	storm/errorlog#crash-dump	
 0x66bfb0	470			storm	boundary		Runs its object file code that calls _sprintf, _isprint; not read here	inferred	none		
 0x66c190	67			storm	boundary		Runs its object file code that calls 0x66e3e0, 0x66bb80; not read here	inferred	none		
 0x66c1e0	43			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -24373,9 +24373,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x66c5f0	306			storm	boundary		Runs its object file code that calls 0x66b870, 0x66c450; not read here	inferred	none		
 0x66c730	196			storm	boundary		Runs its object file code that calls 0x66bf60, 0x66c800; not read here	inferred	none		
 0x66c800	248			storm	boundary		Runs its object file code not read here	inferred	none		
-0x66c900	180			storm	boundary		Runs its object file code that calls 0x66bf60; not read here	inferred	none		
-0x66c9c0	159			storm	boundary		Runs its object file code not read here	inferred	none		
-0x66ca60	240			storm	boundary		Runs its object file code that calls 0x66b370, 0x66b4d0; not read here	inferred	none		
+0x66c900	180	PrintContextRegisters		storm	boundary	void __fastcall (void *print, void *argument, void *context)	Prints the x86 Registers section of a crash report from a thread context	verified	one	storm/errorlog#crash-dump	
+0x66c9c0	159	WriteMiniDump		storm	boundary	uint32_t __fastcall (void *file, void *exception, uint32_t count, const char **strings)	Writes a minidump with string streams from a thread of its own, one at a time, and returns its result	verified	one	storm/errorlog#crash-dump	
+0x66ca60	240	MiniDumpThread		storm	boundary	uint32_t __stdcall (void *record)	Calls MiniDumpWriteDump for a dump record and stores its result in the record	verified	one	storm/errorlog#crash-dump	
 0x66cb50	45			storm	boundary		Runs its object file code that calls 0x66b370; not read here	inferred	none		
 0x66cb80	47			storm	boundary		Runs its object file code that calls SMemAlloc, 0x66cbb0; not read here	inferred	none		
 0x66cbb0	36			storm	boundary		Runs its object file code not read here	inferred	none		

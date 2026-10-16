@@ -283,7 +283,7 @@ code (`0x40999b`), which calls `_exit`. Storm's exit function, registered last, 
 whose `_doexit` runs every other exit function from the last registered to the first; Storm then shuts down and
 `__exit` ends with `ExitProcess`.
 
-Addresses: `0x4098c0`, `0x40999b`, `0x40a30d`, `0x40a32f`, `0x40a31e`, `0x40a34d`, `0x40a39e`, `0x40a3ea`, `0x64cbf0`, `0x64cc18`, `0x64cc30`, `0x644ff0`
+Addresses: `0x4098c0`, `0x40999b`, `0x40a30d`, `0x40a32f`, `0x40a31e`, `0x40a34d`, `0x40a39e`, `0x40a3ea`, `0x64cbf0`, `0x64cc18`, `0x64cc30`, `0x644ff0`, `0x64cc80`, `0xc53bd8`
 Confidence: verified
 Proof: one
 Test: none
@@ -291,7 +291,9 @@ Test: none
 `0x40999b` calls `WinMain` and `0x4099a4` calls `_exit`, which calls `_doexit` with quick 0. `0x64cc30` counts
 its entry and calls `__cexit` (`0x40a32f`: `_doexit` with quick 0, return to caller), whose walk
 `0x40a39e` meets `0x64cc30` again and skips it; it then calls `0x644ff0` and `__exit` (`0x40a31e`: quick 1), which
-skips the table and reaches `ExitProcess` (`0x40a3ea`).
+skips the table and reaches `ExitProcess` (`0x40a3ea`). The code `__exit` gets is the dword `0xc53bd8`, in
+the zero-filled part of `.data`; its writers are `0x64cc80`, Storm's own exit, which stores its
+argument and then calls `ExitProcess` itself, and the unreached `0x64cc70`, so on this path it is 0.
 
 ## Cache files at exit
 

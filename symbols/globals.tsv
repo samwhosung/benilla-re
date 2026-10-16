@@ -388,7 +388,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffdbc	void *[7]	s_routeSplineBaseVtable		loadingscreen	Holds seven pure-call slots, the vtable the spline constructor stores before the curve class replaces it	verified	one	loadingscreen/overview#growable-arrays
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
-0x80108c	uint32_t[52]	s_commandLineOptions		unassigned	Holds 13 command-line option records of id, name, 0 and flags: d3d is id 0, opengl id 5	verified	one	gx/device#backend-selection-and-creation
+0x801088	uint32_t[60]	s_baseSwitches		unassigned	Holds the 15 base switch records of flags, id, name and 0, d3d id 0 to nowarnings id 14, that 0x419c70 registers	verified	one	storm/scmd#the-clients-switch-readers
 0x8012cc	const float	s_threeQuarters		unassigned	Holds 0.75	verified	one	lighting/clouds#cloud-colours
 0x80131c	void *[12]	s_baseObjectVtable		unassigned	Holds the 12 slots of a base vtable that object destructors store back into their object	verified	one	ui/initexits#other-exits
 0x801354	float	s_defaultHandlerPriority		core	Holds 0.0, the priority 0x41fc90 registers with	verified	one	core/events#registration-calls
@@ -854,6 +854,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e4b0	uint32_t[3]	s_auctionDurations		ui	Holds 120, 480 and 1440, the run times the deposit accepts	verified	one	ui/auctionlists#deposit
 0x80e4e0	const uint32_t			storm	Holds a dword that SStrHash reads; not read here	inferred	none	
 0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	inferred	none	
+0x80e648	uint8_t[256]	s_archiveSignatureKey		storm	Holds the built-in 256-byte key that checks an archive's signature when no key is given	verified	one	storm/format#archive-signature-check
+0x80e748	uint8_t[4]	s_archiveSignatureExponent		storm	Holds the built-in exponent 0x10001 of the archive signature check	verified	one	storm/format#archive-signature-check
+0x80f9ec	uint32_t[12]	s_compressorTable		storm	Holds six mask and compressor pairs of the codecs, in the order 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#compression-codecs
 0x80fa1c	uint32_t[12]	s_codecTable		storm	Holds six mask and function pairs of the codecs: 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#codecs
 0x80fe28	const float	s_infinity1		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x80fe30	const float	s_terrainSquareBase		terrain	Holds 10.0, the operand the terrain file squares at start-up	verified	one	terrain/statics#static-initializers
@@ -2456,6 +2459,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882730	uint32_t	s_iniRegion		client	Holds the Region value read from the WoW Config section of Wow.ini, 0 by default	inferred	none	
 0x882734	uint32_t	s_gameInitialized		client	Holds 1 from the end of ClientInitializeGame until ClientDestroyGame ends	verified	one	core/close#stop-handler-order
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
+0x88273c	uint32_t	s_dataLayout		client	Holds the data layout: 1 with both archives under ..\Data\, 2 with only model.MPQ there, 0 otherwise	verified	one	storm/mount#install-folder-and-data-path
 0x882748	const char[1]	s_emptyString		unassigned	Holds the empty string	verified	one	ui/tooltipcontent#localized-lines
 0x882894	float	s_progressUi		loadingscreen	Holds the interface load fraction	verified	one	loadingscreen/screen#progress-fraction
 0x8828a4	uint32_t	s_routeColor		loadingscreen	Holds the vertex colour of the route markers and revealed ribbon quads, white	verified	one	loadingscreen/overview#static-objects
@@ -2485,6 +2489,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e14	uint32_t	s_tipBatch		loadingscreen	Holds the tip string batch handle	verified	one	loadingscreen/screen#tip-text
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
+0x883c90	char[260]	s_cmdLineString		unassigned	Holds the string the last CmdLineGetString call read	verified	one	storm/scmd#the-clients-switch-readers
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
@@ -3995,9 +4000,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	two	storm/mount#loose-files
 0xc52560	double[200]	s_pow10Table		storm	Holds k times 10 to the power -(r+1) at row r, column k, for the string-to-double conversion	verified	one	core/threads#string-conversion-table
 0xc52ba0	uint32_t	s_pow10TableBuilt		storm	Holds 1 once the power table is built	verified	one	core/threads#string-conversion-table
+0xc53bd8	uint32_t	s_exitCode		storm	Holds the code the C runtime exit passes to ExitProcess	verified	one	core/close#c-runtime-exit
+0xc53d00	uint32_t[3]	s_errorCallbacks		storm	Holds the list of Storm's error callbacks: link offset and terminator	verified	one	storm/errorlog#client-registration
+0xc53d48	char[128]	s_errorLogTitle		storm	Holds the title line of the error log	verified	one	storm/errorlog#client-registration
+0xc53dc8	void *	s_errorLogHeaderCallback		storm	Holds the callback that writes the error log's header	verified	one	storm/errorlog#client-registration
+0xc53dd0	char[260]	s_lastErrorLogPath		storm	Holds the path of the last error log written, empty before one	verified	one	storm/errorlog#client-registration
 0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
+0xc53f24	uint32_t[3]	s_flaggedSwitchList		storm	Holds the list of switches with a flag bit of 0x3000000: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id
+0xc53f30	uint32_t[3]	s_switchList		storm	Holds the list of the other switches: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id
 0xc53fbc	uint32_t *	s_cryptTable		storm	Holds the crypt table, 0x500 dwords built at first use	verified	one	storm/format#name-hash
 0xc53fe0	void *	s_archiveList		storm	Holds the head of the open archive list, in descending priority	verified	one	storm/mount#archive-list
+0xc5a3f0	void *[15]	s_dbgHelp		storm	Holds the dbghelp.dll module, its use count, twelve Sym entry points and MiniDumpWriteDump	verified	one	storm/errorlog#crash-dump
+0xc5a430	uint32_t	s_reportBusy		storm	Holds the busy counter the crash dump and two report writers take with InterlockedIncrement	verified	one	storm/errorlog#crash-dump
 0xc5a45c	int32_t	s_maxLightsValue		cvar	Holds the MaxLights value the option stores; nothing reads it	verified	one	cvar/options#integer-range-settings
 0xc5a470	uint32_t	s_worldMode		terrain	Holds the world mode read from an option object at start-up	inferred	none	
 0xc5a474	uint32_t	s_batchCount		terrain	Holds the count of batch headers in use	verified	one	terrain/collide#triangle-batches

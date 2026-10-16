@@ -164,3 +164,65 @@ Test: none
 buffer, and calls `SMemFree` (`0x648713`); `ret 4`. In `0x6f1200` the buffer `SFile::Load` wrote at
 `0x6f1238` is passed to it at `0x6f1254`. The name pairs it with `SFile::Load`, a community name,
 whose class it takes.
+
+## Loading a whole file
+
+`SFile::Load(archive, name, &buffer, &size, extra, flags, overlapped)` opens the file with
+`SFile::OpenEx(archive, name, flags)`, allocates its size plus `extra` bytes, reads the whole file,
+zeroes the `extra` bytes after it, and stores the buffer and, when asked, the size. A failed open
+returns 0; a failed read frees the buffer, closes the file and returns 0. The file is closed unless
+`overlapped` is given, in which case it is marked at `+0x58` and left open. `0x6485f0(name, &buffer,
+&size, extra, overlapped)` is `SFile::Load` with no archive and flags 0.
+
+Addresses: `0x648620`, `0x648636`, `0x64864c`, `0x648666`, `0x648674`, `0x648685`, `0x64869a`, `0x6486bf`, `0x6486e1`, `0x6485f0`, `0x64860b`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x648636` opens and `0x64864c` takes the size with `SFile::GetFileSize`; `0x648666` is `SMemAlloc(size +
+extra, SFile2.cpp, 0x4d3, 0)`. `0x648674` stores 1 at `+0x58` for an overlapped read and `0x648685` calls
+`SFile::Read(file, buffer, size, sizeOut, overlapped, 0)`; a zero answer frees at `0x64869a`. `0x6486bf`
+is the zero fill. `0x6486e1` closes when `overlapped` is 0. `0x64860b` pushes 0 for the archive and the
+flags around its five arguments.
+
+## Archive signature check
+
+`0x653160(archive, &result, key, keySize, exponent, exponentSize)` checks an archive's signature.
+With no key and no exponent it takes the built-in 256-byte key `0x80e648` and the exponent
+`0x80e748` (4 bytes, 0x10001). It feeds the archive's first N bytes, N being its record's `+0x154`,
+to a check context in 64 KiB reads, then the seven bytes `ARCHIVE`, then the bytes that follow the N,
+as many as the context asks for, and verifies them with the key. The result is 5 when the check
+passes and 1 otherwise, and the function returns 1 only for 5. Patching calls it with the built-in
+key; the survey passes its own.
+
+Addresses: `0x653160`, `0x653174`, `0x6531aa`, `0x6531d9`, `0x653210`, `0x653241`, `0x65325c`, `0x653275`, `0x65327d`, `0x653299`, `0x6532e7`, `0x6532f9`, `0x6529d0`, `0x473f66`, `0x80e648`, `0x80e748`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x653174` stores the defaults only when both pointers are null. `0x6531aa` finds the archive's record
+and `0x6531d9` starts the context with the sizes. `0x653210` clamps each read to 0x10000; the read is
+the archive stream's slot `+4` (`0x653241`), and a short read leaves the loop. `0x65325c` and `0x653275`
+feed the context, `0x65327d` asks the signature's length and `0x653299` reads it from offset N.
+`0x6532e7` is the verify; `neg; sbb; and 4; inc` makes 5 or 1 and `0x6532f9` compares with 5. `0x6529d0`
+pushes four zeros; `0x473f66` passes `s_surveyArchiveKey`.
+
+## Compression codecs
+
+The table `0x80f9ec` pairs each codec bit with its compressor in the order `0x40`, `0x80`, `0x20`,
+`0x01`, `0x02`, `0x10`; only `0x6614f0`, which nothing reaches, reads it. The compressor of bit
+`0x10` is bzip2: `0x660b80(dest, &destSize, source, sourceSize, &flag, unused)` calls `0x738cd0` with
+the block size 9, verbosity 0 and work factor 0. An answer of −8, output too small, sets `destSize`
+to `sourceSize`; any other non-zero answer raises the error `0x85100083` with the text
+`bzip2Compress:%d`. The flag is set to 0 on every path.
+
+Addresses: `0x80f9ec`, `0x6614f0`, `0x6615dd`, `0x660b80`, `0x660b9d`, `0x660ba2`, `0x660baa`, `0x660bef`, `0x660bf8`, `0x738cd0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6615dd` loads the table; `0x6614f0` has no call, jump or stored address. `0x660b9d` pushes `0, 0, 9`,
+the source size, the source, `edx` and `ecx`; `0x660ba2` compares with `0xfffffff8` and `0x660baa` stores
+the source size. `0x660bef` calls `0x64d100` with `0x85100083`, `<unknown>` and the formatted text.
+`0x660b80` is stored in the table, its last pair, and nowhere else.
+

@@ -8,6 +8,31 @@ mounter is `0x403740`; the index's builder is `0x646ea0`. `format.md` has the ar
 Roots: `0x6549a0`, `0x6477a0`, `0x6477c0`, `0x648dd0`, `0x648ef0`, `0x648a10`, `0x648a30`, `0x646fc0`,
 `0x648be0`, `0x648c20`, `0x6488b0`, `0x648920`, `0x6466c0`, `0x6467a0`
 
+## Install folder and data path
+
+Before the mount, `0x402210` picks the folder the client runs from: the switch `-datadir` when the
+command line gives it, else the folder of the exe with its trailing backslash. It makes that the
+working directory and Storm's base path. It then asks which root holds `model.MPQ` and which
+holds `interface.MPQ`, records a layout word `0x88273c` (1 when both are under `..\Data\`, 2 when
+`model.MPQ` is there and `interface.MPQ` is not, 0 otherwise), and sets Storm's data path to `Data\`
+in every case. `ClientMain` writes the exe's folder to the registry value
+`World of Warcraft\InstallPath` only when the layout word is 0.
+
+Addresses: `0x402210`, `0x40222b`, `0x402242`, `0x40224f`, `0x402255`, `0x40225c`, `0x402268`, `0x402286`, `0x40229d`, `0x4022c0`, `0x88273c`, `0x401440`, `0x402200`, `0x4040a0`, `0x4040eb`, `0x4021bb`, `0x42b2e0`, `0x42ac20`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x40222b` reads switch 1 with `CmdLineGetString` (`storm/scmd`); an empty answer takes `0x42b2e0`
+(`0x402242`), which gets the module path and cuts it after its last backslash. `0x40224f` sets the
+working directory through `0x42ac20` and `0x402255` calls `SFileSetBasePath`. `0x4022c0(i)` runs
+`0x4022d0` on entry `i` of the base table `0x82e12c`: `0x40225c` asks for entry 0 and `0x402268` for
+entry 6. A model root of 0 or 2 stores 0 (`0x40229d`); a root of 1 stores `(interface root != 1) + 1`
+(`0x402286`). Both paths push `s_archiveRoots[0]` to `SFileSetDataPath`. `0x401440` and `0x402200`
+answer layout 1 and 2; `ClientMain` calls `0x4040a0` from `0x4021cd` only when both are false
+(`0x4021bb`). `0x4040a0` takes the exe path, cuts after the last backslash and saves it with
+`SRegSaveString` and flags 4 (`0x4040eb`).
+
 ## Patch archives
 
 `0x403740` collects `Data\patch-?.MPQ` through the operating system's wildcard (one character for `?`, so

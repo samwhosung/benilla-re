@@ -187,7 +187,9 @@ Proof: one
 Test: none
 
 `0x6462f0` loads the allocator object and `0x6462f5` calls its allocate (`0x645640`) with size,
-name and line; `0x6462fc` tests flag bit 3 and `rep stos` clears the block (`0x646308` to
+name and line; it takes the smallest power of two from 8 that holds `size + 8` (`0x645653` to
+`0x645664`), raises the memory error `0x6452a0` when none below 2^32 does or when the size class under
+the lock `+0x42c` yields no block (`0x6456be`), and returns the block plus 8 (`0x6456c4`); `0x6462fc` tests flag bit 3 and `rep stos` clears the block (`0x646308` to
 `0x646313`). `0x646444` calls the allocator's free (`0x645790`). `0x64a7f6` to `0x64a801` test the
 buffer and format and push 0x57; `0x64a814` calls `0x64a820` with the argument list at `ebp+0x14`.
 `0x64e857` stores the code before the `SetLastError` call. `0x658896` and `0x658b56` load the
@@ -209,3 +211,39 @@ Test: none
 when it passes -20 (`0x64a6c7`, `jg`). `fild` of the exponent and `fld` of the double 10.0 feed
 `0x73f940` (`0x64a694` to `0x64a6a2`); the inner loop `fild k; fmul st,st(1); fstp qword` runs 10
 times per row (`0x64a6b0` to `0x64a6c2`). The table ends at the guard `0xc52ba0`, 1600 bytes on.
+
+## Empty diagnostic print
+
+`0x4420b0` is a single `ret`. The client's diagnostic prints call it with a format and its
+arguments, 83 call sites with no stored address, so their text is never formatted or shown: the
+asynchronous reader's `AsyncFileReadWaitAll() Enter` and `Leave`, the object heaps' usage report,
+the VBO broker's sizes and the word filter warnings among them.
+
+Addresses: `0x4420b0`, `0x443d3d`, `0x463c56`, `0x58dbbb`, `0x6c923d`
+Confidence: verified
+Proof: one
+Test: none
+
+The census is `tools/callers.py 0x4420b0` with the control `0x4eb0c0` (one stored address found):
+83 `call` sites, no `jmp` and no stored address. The callers push a format first (`0x443d38`,
+`0x463c4b`, `0x58dbb3`, `0x6c9238`) and pop their own arguments after the call.
+
+## Call trace log
+
+`0x437740(path)` writes a call trace of every registered thread to `path`, or `calldump.log` for a
+null path: under the thread list's lock it opens the file `wb` with a 0x7fff-byte buffer, writes
+`;Call Trace Log Sep 19 2006, 20:30:03`, and for each name object suspends its thread unless it is
+the calling one, dumps it, and resumes it; a thread that will not suspend gets
+`;Couldn't dump thread: %s`. Nothing reaches it.
+
+Addresses: `0x437740`, `0x437795`, `0x4377a5`, `0x4377b5`, `0x4377d2`, `0x4377e7`, `0x43781f`, `0x437831`, `0x437848`, `0x437852`, `0x43786a`, `0x884ecc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x437795` enters `s_threadLock`, created on first use as in Engine thread records. `0x4377a5` defaults
+the path and `0x4377b5` is `_fopen(path, "wb")`; `0x4377d2` is `_setvbuf(file, 0, 0, 0x7fff)` and
+`0x4377e7` the header. The walk starts at the name list `0x884f0c`'s `+4`; `0x43781f` is `SuspendThread` and −1
+prints `0x437831`. `0x437848` and `0x437852` call `0x4378a0` and `0x4379f0`, which are not read here;
+`0x43786a` resumes. The census finds no call, jump or stored address of `0x437740`.
+
