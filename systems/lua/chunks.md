@@ -1,8 +1,8 @@
 # lua: precompiled chunks
 
 The writer and reader of precompiled chunks of the embedded Lua 5.0, `ldump.c` and `lundump.c` of
-the upstream source, and the code checker of `ldebug.c` they use. `ldump.c` lies from `0x6fb600` to
-`0x6fb940`, before the debug interface, and `lundump.c` from `0x6fec00` to `0x6ff3f0`, between the
+the upstream source, and the code checker of `ldebug.c` they use. `ldump.c` lies from `0x6fb600` through
+`DumpHeader` (`0x6fb940`), before the debug interface, and `lundump.c` from `0x6fec00` to `0x6ff3f0`, between the
 parser and the lexer (`compiler`); the code checker is from `0x6fc000` to `0x6fc430`. The loaders
 pass the path of `lundump.c` and the lines of the 5.0 source to `luaM_irealloc`. A load state holds
 the Lua state, the stream, the buffer, a byte-swap flag (`+0xc`) and the chunk's name (`+0x10`); a

@@ -277,7 +277,8 @@ could not read. The lexer's 38 calls of `luaZ_fill` are the inline `zgetc` refil
 
 `lua_sethook` stores the hook function, its event mask and its count, which also restarts the
 running count, clearing the function and the mask when either is empty, and marks the hooks
-uninitialized; `luaG_inithooks` then saves the pc of every active call record before the first line
+uninitialized; `luaG_inithooks` then saves the pc of every call record above the base
+(`cmp esi,[edi+0x28]`, `0x6fb9e7`, `0x6fb9fd`) before the first line
 event and marks them initialized. `lua_getlocal` pushes local n of a call level and returns its
 name; `lua_setlocal` pops the top value into it unless the name begins with `(`, the internal
 locals. `info_tailcall` describes a level lost to a tail call: what `tail`, source `=(tail call)`,
@@ -294,7 +295,7 @@ lines -1, no upvalues, and nil at the stack top.
 | `0x6fbbb0` | `lua_setlocal` | call record (`0x6fbbb4`..`0x6fbbc1`), top lowered (`0x6fbbce`..`0x6fbbd9`), `luaF_getlocalname` (`0x6fbbf2`), `(` refused (`0x6fbbfb`), the copy (`0x6fbc0c`..`0x6fbc4c`) |
 | `0x6fbd20` | `info_tailcall` | empty names (`0x6fbd23`..`0x6fbd2c`), `tail` (`0x6fbd3e`), -1 lines (`0x6fbd45`, `0x6fbd48`), `luaO_chunkid` (`0x6fbd4e`), no upvalues (`0x6fbd53`), nil (`0x6fbd5d`) |
 
-Addresses: `0x6fb9e0`, `0x6fb9e4`, `0x6fb9ff`, `0x6fb9f2`, `0x6fba01`, `0x6fba40`, `0x6fba43`, `0x6fba51`, `0x6fba56`, `0x6fba59`, `0x6fba5c`, `0x6fba5f`, `0x6fba62`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbb24`, `0x6fbb32`, `0x6fbb3a`, `0x6fbb47`, `0x6fbb54`, `0x6fbb6b`, `0x6fbbb0`, `0x6fbbb4`, `0x6fbbc1`, `0x6fbbce`, `0x6fbbd9`, `0x6fbbf2`, `0x6fbbfb`, `0x6fbc0c`, `0x6fbc4c`, `0x6fbd20`, `0x6fbd23`, `0x6fbd2c`, `0x6fbd3e`, `0x6fbd45`, `0x6fbd48`, `0x6fbd4e`, `0x6fbd53`, `0x6fbd5d`, `0x6f9970`, `0x6fbc26`, `0x6fbd63`, `0x6fbd6a`
+Addresses: `0x6fb9e0`, `0x6fb9e4`, `0x6fb9ff`, `0x6fb9f2`, `0x6fba01`, `0x6fba40`, `0x6fba43`, `0x6fba51`, `0x6fba56`, `0x6fba59`, `0x6fba5c`, `0x6fba5f`, `0x6fba62`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbb24`, `0x6fbb32`, `0x6fbb3a`, `0x6fbb47`, `0x6fbb54`, `0x6fbb6b`, `0x6fbbb0`, `0x6fbbb4`, `0x6fbbc1`, `0x6fbbce`, `0x6fbbd9`, `0x6fbbf2`, `0x6fbbfb`, `0x6fbc0c`, `0x6fbc4c`, `0x6fbd20`, `0x6fbd23`, `0x6fbd2c`, `0x6fbd3e`, `0x6fbd45`, `0x6fbd48`, `0x6fbd4e`, `0x6fbd53`, `0x6fbd5d`, `0x6f9970`, `0x6fbc26`, `0x6fbd63`, `0x6fbd6a`, `0x6fb9e7`, `0x6fb9fd`
 Confidence: verified
 Proof: one
 Test: none

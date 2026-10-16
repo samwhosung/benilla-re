@@ -29910,7 +29910,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fb870	163	DumpConstants		lua	boundary		Writes a prototype's constants and nested prototypes	verified	one	lua/chunks#dumping-a-function	
 0x6fb920	21	DumpNumber		lua	boundary		Writes an eight-byte number through the dump writer	verified	one	lua/chunks#dumping-a-function	
 0x6fb940	160	DumpHeader		lua	boundary		Writes a precompiled chunk's header	verified	one	lua/chunks#dumping-a-function	
-0x6fb9e0	40	luaG_inithooks		lua	boundary		Saves the pc of every active call record and marks the hooks initialized	verified	one	lua/runtime#hooks-and-locals	
+0x6fb9e0	40	luaG_inithooks		lua	boundary		Saves the pc of every call record above the base and marks the hooks initialized	verified	one	lua/runtime#hooks-and-locals	
 0x6fba10	42	currentpc		lua	boundary		Returns the index of the current instruction of a Lua call record, -1 for a C function	verified	one	lua/runtime#error-messages	
 0x6fba40	48	lua_sethook		lua	unreached		Sets the debug hook, its event mask and its count	verified	one	lua/runtime#hooks-and-locals	
 0x6fba70	4	lua_gethook		lua	unreached		Returns the debug hook function	verified	one	lua/runtime#hooks-and-locals	

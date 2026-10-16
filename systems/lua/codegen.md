@@ -80,7 +80,8 @@ returns the index it holds; a new constant is appended to the prototype's consta
 (`constant table overflow`), and its index stored in the table. The client stamps constants with
 the execution-context word (`ui/luastate`, The context word): `luaK_stringK`, `luaK_numberK` and
 `nil_constant` build the value with the current word `s_scriptContext`, and `addk` copies all 16
-bytes into the prototype, makes a nonzero word current while `s_scriptContextDepth` is above 0, and
+bytes into the prototype, makes a nonzero word current while `s_scriptContextDepth` is nonzero
+(`test ecx,ecx; je`, `0x700b54`), and
 gives the table's index entry the current word. A chunk's constants carry the word current when they
 were first added.
 
@@ -91,7 +92,7 @@ were first added.
 | `0x700b90` | `luaK_numberK` | tag 3 (`0x700bae`), word (`0x700b99`, `0x700ba4`), `addk` (`0x700bb8`) |
 | `0x701070` | `nil_constant` | nil value and the constant table as its key, each with the word (`0x701076`..`0x701099`), `addk` (`0x70109c`) |
 
-Addresses: `0x700ad0`, `0x700adc`, `0x700ae1`, `0x700ae9`, `0x700b18`, `0x700b30`, `0x700b43`, `0x700b46`, `0x700b58`, `0x700b64`, `0x700b7b`, `0x700aa0`, `0x700ab5`, `0x700aa6`, `0x700abc`, `0x700abf`, `0x700b90`, `0x700bae`, `0x700b99`, `0x700ba4`, `0x700bb8`, `0x701070`, `0x701076`, `0x701099`, `0x70109c`, `0xceeac0`, `0x700b4e`, `0x700b69`, `0xceeac4`
+Addresses: `0x700ad0`, `0x700adc`, `0x700ae1`, `0x700ae9`, `0x700b18`, `0x700b30`, `0x700b43`, `0x700b46`, `0x700b58`, `0x700b64`, `0x700b7b`, `0x700aa0`, `0x700ab5`, `0x700aa6`, `0x700abc`, `0x700abf`, `0x700b90`, `0x700bae`, `0x700b99`, `0x700ba4`, `0x700bb8`, `0x701070`, `0x701076`, `0x701099`, `0x70109c`, `0xceeac0`, `0x700b4e`, `0x700b69`, `0xceeac4`, `0x700b54`
 Confidence: verified
 Proof: one
 Test: none

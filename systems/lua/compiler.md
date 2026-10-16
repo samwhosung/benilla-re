@@ -238,8 +238,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`localfunc` is the 5.0 release text: it raises the free register with `inc` (`0x6fe7af`,
-`0x6fe7b2`) where 5.0.1 and later call `luaK_reserveregs`, so the function's stack size does not
+`localfunc` is the 5.0 release text: it raises the free register in place (`lea`/`mov`,
+`0x6fe7af`, `0x6fe7b2`) where 5.0.1 and later call `luaK_reserveregs`, so the function's stack size does not
 grow for the new local, and it does not set the local's first instruction again after the store. `retstat`
 sets the opcode of the call to 26 with `and 0xffffffda; or 0x1a`, which leaves the other fields.
 
