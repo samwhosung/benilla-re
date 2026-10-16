@@ -135,14 +135,16 @@ at or above the low bound, `jp` on `test ah,5` at or below the high one. Callers
 the scale; 0x42 `0x6c5e80` decodes a packed time with `0x642c30`, sets it with `force = 1`, runs the bridge
 `0x6c5f50` and sets the scale; 0x43 `0x6c6010` syncs without force; 0x45 `0x6c6120` sets it with `force = 1` and
 runs the bridge; 0x49 `0x6c6080` only prints. The bridge stores the minute of day, `0x643a70()` and the day
-number in the light state, calls `0x66ff60(1, 0)`, then four callbacks at `0xce85a8` with the hour in `ecx` and the minute in `edx`.
+number in the light state, calls `0x66ff60(1, 0)`, then four callbacks at `0xce85a8` with the hour in `ecx` and the minute in `edx`,
+and prints `Time set to <time>` to the console in class 0.
 
 Addresses: `0x6c5d70`, `0x6c5de0`, `0x6c5e80`, `0x6c6010`, `0x6c6080`, `0x6c6120`, `0x6c5f50`, `0xce85a8`
 Confidence: verified
 Proof: one
 Test: none
 
-The stores `0x6c5f70`, `0x6c5f77`, `0x6c5f91`, `0x6c5f94`. Nothing in this file reads the callbacks' table but the bridge
+The stores `0x6c5f70`, `0x6c5f77`, `0x6c5f91`, `0x6c5f94`. The text is `WowTime::FormatTime` of the clock
+into 128 bytes, formatted with `Time set to %s` (`0x6c5fe7`) and written by `ConsoleWrite` (`0x6c5ff7`). Nothing in this file reads the callbacks' table but the bridge
 (`0x6c5fa0`). Other users of the clock: `IsDaytime` (`0x60a0a4`, a range test of the clock), the sound frame
 (`0x457922`) and `StampLightState`, which stores the day phase each frame beside the minute of day and day number.
 

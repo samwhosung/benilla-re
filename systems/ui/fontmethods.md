@@ -123,3 +123,24 @@ Test: none
 
 `0x794f78` compares with `TOP` and `0x794f9a` with `BOTTOM`, each through `SStrCmpI` with the limit `0x7fffffff`. Both
 branches call `0x785ce0(frame, mode)`; the error text is pushed at `0x794fd2`.
+
+## Copying a font object
+
+`CopyFontObject(font)` on a `Font` sets that font object's font from argument 2: a font object
+table, whose `this` must be a `Font`, or the name of an existing font object. A table without
+`this` raises `%s:CopyFontObject(): Couldn't find 'this' in font object`, one of another type
+`... Wrong object type, expected font`, an unknown name `... Couldn't find font named %s`, and
+any other argument, a number included, `Usage: %s:CopyFontObject(font or "font")`, `%s` being the
+object's name or `<unnamed>`.
+
+Addresses: `0x7a01b0`, `0x7a024d`, `0x7a025f`, `0x79f0e0`, `0x79f0fb`, `0x79f10e`, `0x79f12f`, `0x79f149`, `0x79f167`, `0x79f18b`, `0x79f1a5`, `0x79f1bd`, `0x79f1db`, `0x79f1eb`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7a01b0` checks its own `this`, then calls `0x79f0e0(name, font, L)` with the name from slot `+0x4`
+(`0x7a024d`) or `<unnamed>` (`0x7a025f`). `0x79f0fb` tests for a table (type 5): `0x79f10e` reads index 0 as
+light userdata, `0x79f12f` errors on null, `0x79f149` takes the Font type id, assigned from
+`s_lastTypeId` on first use, and `0x79f167` asks the object's slot `+0x10`. `0x79f18b` tests for a string
+(type 4) and `0x79f1a5` calls `0x783870(name, 0)`; `0x79f1bd` errors on null. `0x79f1db` is
+`CSimpleFont::SetFontObject`; `0x79f1eb` is the usage error.

@@ -87,6 +87,27 @@ negates both (`0x78bcc2`, `0x78bcd1`) and anchors point 4 to the wheel's point 4
 
 `ui::geo_78bc20` runs `0x78bc20` whole, with the width getter replaced by an island and `0x767c70` stubbed to log the offset.
 
+## The value strip texture
+
+`ColorValueTexture` gets an 8 by 8 texture whose every texel is the colour at full value `+0x334`,
+shaded by a vertical gradient from black to white, so the strip's colour runs from black to the
+full colour. Setting a texture destroys the previous one, creates the 8 by 8 texture
+`ValueTexture` on the colour, sets the gradient and parents the texture to the frame. The wheel's
+texture update `0x78b760` and the portrait's `0x525ae0` are the same code: they hand the device the
+owner's pixel array unchanged.
+
+Addresses: `0x78b8a0`, `0x78b8b3`, `0x78b8c1`, `0x78b901`, `0x78b90b`, `0x78b92a`, `0x78b936`, `0x78b94e`, `0x78b960`, `0x78b973`, `0x78b9a6`, `0x78b9c1`, `0x78b760`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78b8a0(texture)` returns for the texture already set (`0x78b8b3`) and destroys the old region through
+its slot 0 (`0x78b8c1`). `0x78b901` is `TextureCreateWithCallback(8, 8, ..., 0x78b960, this + 0x334,
+"ValueTexture")`; `0x78b90b` sets the image and `0x78b92a` `SetGradient(1, 0xff000000, 0xffffffff)`.
+`0x78b960` clears its 64-dword buffer `0xcf4f98` on first use (`0x78b973`); mode 0 fills it with the
+owner's dword (`0x78b9c1`) and mode 1 returns the width times 4 and the buffer (`0x78b9a6`). Mode 1 of
+`0x78b760` returns `width · 4` and the owner's `+0x8`.
+
 ## A missing wheel faults
 
 Placing the value thumb tests that the strip and the value thumb exist, but not the wheel whose

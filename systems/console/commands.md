@@ -134,6 +134,62 @@ name and the pushes 1 and 0. `0x405220` tests `[0xb4b2bc]` and skips to `mov eax
 `0x5ec8c0` writes `sete` of the old flag into the flag and returns it in `eax`; `0x40522e` tests that
 value to pick the text.
 
+## Teleport commands
+
+`0x4049e0` registers `port`, `worldport`, `setrawpos` (category 0), `showplayer` (1), `togglehelm`
+and `togglecloak` (4), none with a help line. `port` and `setrawpos` need the active player. When
+the arguments begin with a digit or `-`, both read `x y [z] [facing]`: `x` and `y` are required
+(without them the handler returns 0), `z` defaults to 0 and `facing`, in degrees, to the player's
+own. The position must pass `0x404d10`, else `Coordinates out of range` is printed. `port` then
+sends opcode 0xc6 and `setrawpos` 0xe1, each with the four floats, facing in radians. Other text
+makes `port` send opcode 0x9 with the whole argument string and makes `setrawpos` return 0.
+
+Addresses: `0x4049e0`, `0x404a60`, `0x404ab8`, `0x404ac8`, `0x404aef`, `0x404b31`, `0x404b7d`, `0x404bca`, `0x404c11`, `0x404c3a`, `0x404c46`, `0x404cdc`, `0x405000`, `0x405055`, `0x40506d`, `0x405157`, `0x4051e4`, `0x404d10`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x404ab8` tests the first byte with `IsAsciiDigit` and `0x404ac8` against `-`; otherwise `0x404aef`
+starts opcode 0x9, `PutCString` adds the text and `0x404b31` sends. The tokens are split at tabs, line
+breaks, `"`, spaces and commas; `0x404b7d` returns 0 on a missing `x`.
+A missing `z` stores 0.0 (`0x404c11`), a given facing is scaled by π/180 (`0x404c3a`) and a missing one
+comes from the player's slot `+0x18` (`0x404c46`). `0x405000` repeats the parse; it returns 0 at
+`0x40506d` and starts opcode 0xe1 at `0x405157`.
+
+## Position range test
+
+`0x404d10(x, y, z, margin)` returns 1 when `x`, `y` and `z` are finite and, with H = 17066.666
+(`0x46855555`) and S = 34133.332, `margin ≤ H − x < S − margin` and `margin ≤ H − y < S − margin`;
+otherwise 0. `z` is only tested for being finite. Both callers pass `z` and `margin` as 0, so `x` and
+`y` must each lie in (−17066.666, 17066.666]. `H − x` is rounded to a float before its tests; `H − y`
+is not.
+
+Addresses: `0x404d10`, `0x404d1c`, `0x404d4a`, `0x404d6c`, `0x404d6f`, `0x404d85`, `0x404d92`, `0x404d9f`, `0x7ffab0`, `0x7ffab4`, `0x404bc6`
+Confidence: verified
+Proof: one
+Test: none
+
+`_finite` is called on each of the three (`0x404d1c` to `0x404d4a`). Both differences are
+`fsub H; fchs`; the one for `x` is stored as a float at `0x404d6c` and the one for `y` stays on the
+stack. `0x404d6f` fails `y` below the margin (`C0`), `0x404d85` compares it with `S − margin`, stored as a
+float, and passes only on `C0`; `0x404d92` and `0x404d9f` do the same for the stored `x`. `0x404bc6`
+pushes 0, 0, `y` and `x`.
+
+## Helm and cloak commands
+
+`togglehelm` sends opcode 0x2b9 and `togglecloak` 0x2ba, each with no body, whatever the arguments
+and whether or not a player exists, and returns 1. The client's flag is not consulted, unlike the
+interface's helm and cloak buttons (`objectlayer/inventory`, Helm and cloak).
+
+Addresses: `0x405250`, `0x405259`, `0x4052b2`, `0x4052f0`, `0x4052f9`, `0x405352`, `0x8827c8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x405259` and `0x4052f9` push the opcode for `PutUInt32` and nothing else is written; `0x4052b2` and
+`0x405352` call `NetClient::Send` on the connection at `+0x24` of the holder `0x8827c8`, which each creates
+with a 0x28-byte allocation when it is null.
+
 ## Screen commands
 
 The screen registers 13 commands in category 2. `fontcolor`, `bgcolor` and `highlightcolor` set colours (`screen#colour-classes`). `fontsize <n>` sets the font size to

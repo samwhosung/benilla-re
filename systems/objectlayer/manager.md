@@ -309,3 +309,23 @@ floats from a packet, and `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0` and `0x
 up or free small members. `0x47fea0(count)` stores the count at `this` and resizes the buffer at
 `this+8` to four bytes per element with `SMemReAlloc` (allocation tag 0x82f25c) when a buffer exists or the
 count is not 0; `0x47fd40` and the `ui` code at `0x4a96b0` call it.
+
+## Object heap teardown
+
+At shutdown `0x463bb0` first reports the heaps' use, then, under the heaps' lock, frees every
+heap's blocks and block array, frees the heap array and zeroes the three counters. The report
+walks the heaps and adds up the bytes the allocated objects use and the bytes the blocks hold, but
+every line it formats goes to the empty print `0x4420b0`, so nothing is shown.
+
+Addresses: `0x463bb0`, `0x463bb1`, `0x463bd8`, `0x463bff`, `0x463c04`, `0x463c30`, `0x463c56`, `0x463c75`, `0x463ce1`, `0x463d00`, `0x463d25`, `0x463d47`, `0x403688`, `0xb232a4`
+Confidence: verified
+Proof: one
+Test: none
+
+`ClientContextStop` calls `0x463bb0` at `0x403688`, and `0x463bb1` calls `0x463c30`. `0x463bd8` runs
+`0x463d00` on each 0x6c-byte heap of the array `0xb232a4` (count `+0x4`, data `+0x8`), `0x463bff` frees
+the data and `0x463c04` to `0x463c18` zero the first three words. `0x463d00` frees each 12-byte
+record's block (`0x463d25`) and then the records (`0x463d47`). `0x463c30` takes the lock, calls
+`CObjectHeapList::BlocksAllocated` (`0x463c75`) per heap and prints three formats (`0x463c56`,
+`0x463c90`, `0x463ce1`).
+

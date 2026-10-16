@@ -139,6 +139,52 @@ Test: none
 
 The shape is read from the child, balance and rotation stores (`0x72c06b`, `0x72c0cf`); the exact balance rules of the rotations and of `0x72bd20` (781 bytes, recursive at `0x72bd9d` and `0x72be05`) are not derived.
 
+## Screen layout loading
+
+`LcdInitialize` loads each `Screen` element of the layout file through `0x729d50`. A screen's `name`
+attribute gives its id: `WoWTitleScreen` 0, `PlayerInfoScreen` 1, `BattlefieldAlertScreen` 2,
+`BattlefieldStatusScreen` 3, `WaitQueueScreen` 4, `ChatAlertScreen` 5, `NotInBattlefieldScreen` 6,
+compared ignoring case; any other name gives −1 and is loaded all the same. Each child is an
+`LCDText` or an `LCDBitmap`. A screen with no name or an empty one, or a child of any other type,
+reports `Screen declared with no name` or `Unknown LCD Element: %s` and makes `LcdInitialize` shut
+the LCD layer down.
+
+Addresses: `0x729d50`, `0x729d65`, `0x729d79`, `0x729d95`, `0x729db0`, `0x729140`, `0x7291f0`, `0x729cc0`, `0x729ce3`, `0x729cf4`, `0x729d1c`, `0x729d2e`, `0x729ffc`, `0x72a005`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x729ffc` calls `0x729d50` for each child named `Screen` and `0x72a005` calls `LcdShutdown` on a 0
+answer. `0x729d65` reads `name` with `GetXMLAttribute`, `0x729d79` maps it with `0x729140`, and
+`0x729d95` loads each child; `0x729db0` reports through the log's slot `+0xc` at level 1. `0x729140`
+compares the names in the order above; the last, `ChatAlertScreen`, ends with `neg; sbb; and −6; add 5`
+(`0x7291f0`), 5 on a match and −1 otherwise. `0x729cc0` tests `LCDText` (`0x729ce3`) for
+`LcdLoadTextElement` (`0x729cf4`) and `LCDBitmap` for `0x7298b0` (`0x729d1c`), else reports at `0x729d2e`.
+
+## LCD text fonts
+
+The font face of an LCD text element is set by name. `FZXiHeiI-Z08`, `AR Heiti2 Medium B5` and
+`2002L`, matched ignoring case, are the bundled faces: the client loads `Fonts\FZXHLJW.ttf`,
+`Fonts\FZXHJW.ttf` or `Fonts\2002.ttf` from the archives, registers it with `AddFontMemResourceEx`
+from `gdi32.dll`, and falls back to `Microsoft Sans Serif` when the load or the registration fails.
+Any other name makes a GDI font from the element's current one with the new face. The choice of
+file compares the names case-sensitively, so a bundled name in other letter case formats the path
+from a buffer that holds no name.
+
+Addresses: `0x72f590`, `0x72f5b2`, `0x72f5bc`, `0x72f5de`, `0x72f5fb`, `0x72f611`, `0x72f669`, `0x72f686`, `0x72f698`, `0x72f6b3`, `0x72f6c5`, `0x72f6fb`, `0x72f712`, `0x72f71e`, `0x72f540`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x72f5b2` copies the name into the element's 32-byte `+0x170`; `0x72f5bc` asks `0x72f540`, which compares
+the three names with `SStrCmpI`. A 0 answer reads the current `LOGFONT` (`GetObjectA`, `0x72f5de`),
+copies the name into its face and calls slot `+0x6c` (`0x72f5fb`). Otherwise `0x72f611` and the next two
+compare with `SStrCmp`, and `0x72f669` tests `Arial Narrow` for `ARIALN.ttf`, a case `0x72f540` never lets
+through; with no match `0x72f686` uses the uninitialised stack buffer. `0x72f698` formats `Fonts\%s`,
+`0x72f6b3` loads it with `0x6485f0`, `0x72f6c5` and `0x72f72b` call slot `+0x70` with the fallback, and
+that slot of the vtable `0x8129d8`, which `0x72f310` stores, is `0x72f590` itself;
+`0x72f6fb` gets the entry point, `0x72f712` registers the bytes into `+0x134` and `0x72f71e` frees them.
+
 ## The device wrapper
 
 `0x72c630(title, type, flags)` constructs the wrapper object: it builds the base at `+0xc` (`0x72d810`), makes an empty list at `+0xe0`, stores the type at `+0x0`, the flags at `+0x4`, the title at `+0x8` (`World of Warcraft` when the title is empty), −1 in `+0xe8` and `+0xec`, 1 in `+0xb0` and the object's own address in `+0x80`.

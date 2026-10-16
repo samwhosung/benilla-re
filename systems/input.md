@@ -32,6 +32,25 @@ and at teardown. `0x5143c0` stores 0 at `+0x04`, `+0x14` and `+0x18` and `0x42c0
 `+0x00`. `0x5143e0` is `mov eax,[0xbe1148]; ret`. The source path is `0x850340`, passed with a
 line number at `0x51445d` in `0x514400` and at `0x514948` in `0x514840`.
 
+## Joystick setting
+
+Start-up registers `Joystick` (help `enable joystick control`, default `0`) before it creates the
+input control. When the new text begins with the character `1` and the handle `0x8500b4` is −1, its
+callback calls `0x7a71d0(0)` and keeps the result there; any other text, `2` and `true` included,
+closes a handle that is not −1 and stores −1. Closing calls `0x7a7320`, which only returns, so nothing is released. The
+callback returns 1 either way.
+
+Addresses: `0x5142a0`, `0x5142bc`, `0x5142cc`, `0x5142d7`, `0x5142f0`, `0x5142f6`, `0x5142fb`, `0x514306`, `0x514321`, `0x8500b4`, `0x7a71d0`, `0x7a7320`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5142bc` registers the setting with flags 5 and the callback `0x5142f0`; `0x5142cc` allocates the
+control and `0x5142d7` constructs it (Input state). `0x5142f6` compares the first byte with 0x31;
+`0x5142fb` tests the handle against −1 and `0x514306` calls `0x7a71d0` with `ecx` 0. The other path
+calls `0x7a7320` (`0x514321`) when the handle is not −1 and stores −1. `0x7a71d0` is not read past its
+start. `0x5142a0` is called from `WowClientInit` (`0x402b6a`).
+
 ## Mouse commands
 
 The binding table `0x8500b8` pairs each command's name with its handler. `TurnOrActionStart`

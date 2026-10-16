@@ -136,7 +136,9 @@ Test: none
 
 The triples are `0xce8918` (server), `0xce8924` (SpamMessages), `0xce8930` (NamesReserved), `0xce893c`
 (ChatProfanity) and `0xce8948` (NamesProfanity). The builders are `0x49e767`, `0x6c94c8`, `0x6c93e9`, `0x6c9309` and
-`0x6c9228`, each calling the compiler `0x71fba0`; on failure the slot is not advanced (`0x6c94e5`). The
+`0x6c9228`, each calling the compiler `0x71fba0`; on failure the slot is not advanced (`0x6c94e5`), and the
+warning each file builder formats, such as `Warning: invalid chat profanity filter expression`, goes to
+the empty print `0x4420b0` (`0x6c923d`), so nothing reports it. The
 loader runs from the start-up step at `0x402b7f`. The names `DBFilesClient\SpamMessages.dbc`,
 `ChatProfanity.dbc`, `NamesProfanity.dbc` and `NamesReserved.dbc` are literal, so a locale archive
 overrides them by the archive priority and not by a composed name.

@@ -153,6 +153,53 @@ is `|w − width| < 1e-5` against `0x768420`, or `+0xfc` when that is 0.0 (`0x77
 and `+0x100`. The shadow alpha is the parent's alpha byte `+0xc8` times `+0x107`, divided by 255 with `0x80808081`. The three tests run slices:
 `0x772515` to `0x77253a`, `0x77253a` to `0x77255c` (the `1/scale` live on the x87 across both legs) and the two compares at `0x7725fb`, `0x772632`.
 
+## Text block creation
+
+`TextBlockCreate(font, text, colour, position, size, width, height, word, extra, spacing)` makes an
+`HTEXTBLOCK` handle on a new engine string. It fails with error 0x57 and 0 for a null font or text.
+It unscales the position's x and y, divides the size, height and spacing by the y screen scale and
+the width and `extra` by the x screen scale, and passes the word on as three values:
+
+| word bits | engine value |
+|---|---|
+| 0x1, 0x2, 0x4, none | horizontal justification 0, 1, 2, 1 (0x4 first, then 0x2, then 0x1) |
+| 0x8, 0x20, 0x10, none | vertical justification 0, 2, 1, 1 (0x8 first, then 0x20, then 0x10) |
+| 0x40, 0x80, 0x100, 0x200, 0x400, 0x800 | flags 0x2, 0x800, 0x1, 0x4, 0x8, 0x10 |
+| 0x1000, 0x2000, 0x4000, 0x8000 | flags 0x40, 0x100, 0x200, 0x400 |
+
+Addresses: `0x44d420`, `0x44d437`, `0x44d451`, `0x44d494`, `0x44d49e`, `0x44d4f9`, `0x44d51a`, `0x44d53f`, `0x44d597`, `0x44d5a3`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x44d437` raises 0x57. `0x44d451` allocates 12 bytes tagged `HTEXTBLOCK` and stores its vtable.
+`0x44d494` is `UnscaleScreenXY` on the position's x and y; its z is passed as is. `0x44d49e` to `0x44d4f3`
+test the bits one by one into `edi`; `0x44d4f9` sets `ebx` (horizontal) and `0x44d51a` `esi` (vertical),
+each starting at 1. The size, height and spacing go through `DivideByScreenScaleY`, the width and
+`extra` through `DivideByScreenScaleX` (`0x44d53f`). `0x44d597` calls `GxuFontCreateString` with
+the font `+0x20` of the font handle, the string's handle stored at `+0x8`, and `0x44d5a3` wraps the
+object with `CreateHandle`. The one caller is `0x772693`.
+
+## Stock text block fonts
+
+At start-up, after the font library starts, `0x442b00` makes the two stock text-block fonts, 0 and
+1, both from `Fonts\FRIZQT__.TTF` at the height 0.01953125 (`0x3ca00000`), turned into the screen's
+device height and passed to `TextBlockGenerateFont`; each replaces and closes a font already in
+its slot. `0x442b50(i)` returns stock font `i` and `0x442bd0(i)` its height; both, and the maker
+`0x442b70`, raise error 0x57 for an index of 2 or more, the height getter then answering 0.0. The
+maker also refuses a null or empty file name. The system message layer takes stock font 1.
+
+Addresses: `0x442170`, `0x442184`, `0x442b00`, `0x442b09`, `0x442b1e`, `0x442b2b`, `0x442b3b`, `0x442b50`, `0x442b70`, `0x442b90`, `0x442ba9`, `0x442bb6`, `0x442bc3`, `0x442bd0`, `0x88562c`, `0x80258c`, `0x40906e`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x442184` is the tail of `0x442170`, which `0x402840` calls in start-up. `0x442b09` calls
+`GxuFontInitialize` and `0x442b1e` `FormatFontsPath`; `0x442b2b` and `0x442b3b` call `0x442b70` with 0 and 1,
+which jumps to `0x442b90` after its tests. `0x442b90` closes the old handle in `0x88562c + 4·i` (`0x442ba9`),
+converts the height from `0x80258c + 4·i` with `NDCToDDCHeight` (`0x442bb6`) and stores the new font
+(`0x442bc3`). The getters compare the index with 2 (`jl`), so a negative index reads before the tables.
+
 ## Korean escape
 
 In a text set from Lua, `|1` followed by a non-digit opens a two-way particle, `|1first;second;`, which becomes one part by the sound that

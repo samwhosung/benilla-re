@@ -1,7 +1,7 @@
 opcode	name	role	site	function	entries	basis
 0x008	CMSG_WORLD_TELEPORT	send	0x404fc8	0x404dc0	ui/worldmap#unreached-map-teleport	function
 0x008	CMSG_WORLD_TELEPORT	send	0x4a782b	0x4a76e0	ui/geometry#click-to-world|ui/worldmap#unreached-map-teleport	function
-0x009	CMSG_TELEPORT_TO_UNIT	send	0x404b31	0x404a60		unread
+0x009	CMSG_TELEPORT_TO_UNIT	send	0x404b31	0x404a60	console/commands#teleport-commands	opcode
 0x00a	CMSG_ZONE_MAP	send	0x6738d3	0x673850	terrain/overview#unreached-functions	function
 0x01b	SMSG_FORCEACTIONSHOW	handler	0x5e3638	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices	opcode
 0x020	CMSG_UNDRESSPLAYER	send	0x5e9983	0x5e9950	objectlayer/overview#unreached-functions	function
@@ -167,7 +167,7 @@ opcode	name	role	site	function	entries	basis
 0x0c3	MSG_MOVE_SET_WALK_MODE	handler	0x603480	0x603bb0	collision/selfmove#self-addressed-move|collision/walkmode#walk-mode-messages|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0c3	MSG_MOVE_SET_WALK_MODE	send	0x615fa2	0x615c30	collision/replay#replay-cases-0-to-19|collision/walkmode#walk-mode-wire	opcode
 0x0c5	MSG_MOVE_TELEPORT	handler	0x603490	0x603bb0	collision/selfmove#self-addressed-move|objectlayer/unitmovement#movement-message-handlers	opcode
-0x0c6	MSG_MOVE_TELEPORT_CHEAT	send	0x404cdc	0x404a60		unread
+0x0c6	MSG_MOVE_TELEPORT_CHEAT	send	0x404cdc	0x404a60	console/commands#teleport-commands	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	handler	0x6035d0	0x603f90	collision/teleport#near-teleport-acknowledgement|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x60308d	0x602fb0	collision/teleport#near-teleport-acknowledgement|objectlayer/unitmovement#relayed-move-events	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x60e2b5	0x60e0a0	collision/teleport#near-teleport-acknowledgement|net/server#formats-vmangos-reads|objectlayer/moveemitter#emitter-routing|objectlayer/moveemitter#emitter-tail|objectlayer/unitmovement#standing-on-a-movement-message	opcode
@@ -196,7 +196,7 @@ opcode	name	role	site	function	entries	basis
 0x0dd	SMSG_MONSTER_MOVE	handler	0x6035f0	0x603f00	collision/knockback#not-a-knockback-apply|collision/ride#transport-monster-moves|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0de	SMSG_MOVE_WATER_WALK	handler	0x603690	0x603f90	objectlayer/unitmovement#movement-message-handlers	opcode
 0x0df	SMSG_MOVE_LAND_WALK	handler	0x6036a0	0x603f90	objectlayer/unitmovement#movement-message-handlers	opcode
-0x0e1	CMSG_MOVE_SET_RAW_POSITION	send	0x4051e4	0x405000		unread
+0x0e1	CMSG_MOVE_SET_RAW_POSITION	send	0x4051e4	0x405000	console/commands#teleport-commands	opcode
 0x0e2	SMSG_FORCE_RUN_SPEED_CHANGE	handler	0x603610	0x603f90	objectlayer/unitmovement#movement-message-handlers	opcode
 0x0e3	CMSG_FORCE_RUN_SPEED_CHANGE_ACK	send	0x618133	0x618080	collision/events#forced-change-tags|collision/walkmode#walk-speed-families	opcode
 0x0e4	SMSG_FORCE_RUN_BACK_SPEED_CHANGE	handler	0x603620	0x603f90	objectlayer/unitmovement#movement-message-handlers	opcode
@@ -646,10 +646,10 @@ opcode	name	role	site	function	entries	basis
 0x2b4	SMSG_FEIGN_DEATH_RESISTED	handler	0x6e729f	0x6e9800	spell/handlers#small-spell-handlers	opcode
 0x2b7	SMSG_DUEL_COUNTDOWN	handler	0x4d474f	0x4d4ae0	ui/duel#countdown-and-result	opcode
 0x2b8	SMSG_AREA_TRIGGER_MESSAGE	handler	0x48f50f	0x48f690	ui/gameui#game-start-up	opcode
-0x2b9	CMSG_TOGGLE_HELM	send	0x4052b2	0x405250		unread
+0x2b9	CMSG_TOGGLE_HELM	send	0x4052b2	0x405250	console/commands#helm-and-cloak-commands	opcode
 0x2b9	CMSG_TOGGLE_HELM	send	0x5ee708	0x5ee660	objectlayer/inventory#helm-and-cloak	opcode
 0x2b9	CMSG_TOGGLE_HELM	send	0x5ee7c7	0x5ee740	objectlayer/inventory#helm-and-cloak	opcode
-0x2ba	CMSG_TOGGLE_CLOAK	send	0x405352	0x4052f0		unread
+0x2ba	CMSG_TOGGLE_CLOAK	send	0x405352	0x4052f0	console/commands#helm-and-cloak-commands	opcode
 0x2ba	CMSG_TOGGLE_CLOAK	send	0x5ee89a	0x5ee7f0	objectlayer/inventory#helm-and-cloak	opcode
 0x2ba	CMSG_TOGGLE_CLOAK	send	0x5ee958	0x5ee8d0	objectlayer/inventory#helm-and-cloak	opcode
 0x2bb	SMSG_MEETINGSTONE_JOINFAILED	handler	0x4c9ef6	0x4ca3c0	ui/meetingstone#the-status-messages	opcode

@@ -314,7 +314,7 @@ speed while the window is active; on deactivation and at shutdown the saved spee
 shutdown a Num Lock key-down is sent when `GetAsyncKeyState(VK_NUMLOCK)` differs from the saved
 value.
 
-Addresses: `0x42cf20`, `0x42cf60`, `0x42cd70`, `0x42cd60`, `0x42d0ae`, `0x884cb0`, `0x884cb4`, `0x884e08`, `0x801620`, `0x801624`, `0x801628`
+Addresses: `0x42cf20`, `0x42cf60`, `0x42cd70`, `0x42cd60`, `0x42d0ae`, `0x884cb0`, `0x884cb4`, `0x884e08`, `0x801620`, `0x801624`, `0x801628`, `0x402c7b`, `0x402ec0`
 Confidence: verified
 Proof: one
 Test: none
@@ -324,6 +324,8 @@ copying it to `0x884cb4`. `0x42cd70` takes 0.1 when `s < 0.1`, else `s` when `s 
 (also for NaN), times 10.0, through `__ftol`, and sets it when active. `WM_ACTIVATE` sets
 `SPI_SETMOUSESPEED` to `0x884cb4` or `0x884cb0` (`0x42d09c` to `0x42d0b2`). `0x42cf60` sends a
 Num Lock key-down through `SendInput` when the state differs. `0x42cd60` returns `0x884cb4 · 0.1`.
+`mouseSpeed` is registered at `0x402c7b` with that value printed `%1.1f` as its default; its callback
+`0x402ec0` converts the new text with `SStrToFloat` and passes it to `0x42cd70`, returning 1.
 
 ## Window frame
 

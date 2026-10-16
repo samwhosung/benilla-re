@@ -129,3 +129,46 @@ clear and two fields of its file are set; `0x4091a0` clears it; `0x4091c0` clear
 testing `bl` against 1 to 0x20 and its sign (`0x4031cd`, `jns`) for 0x80; nothing tests 0x40. It
 prints with `ConsolePrintf`. Its one caller is `0x4030f0`. The two callbacks are named for their
 settings, `ErrorsCallback` and `ShowErrorsCallback`, as `GammaCallback` is.
+
+## Error filter setting
+
+`ErrorFilter`, default `all`, is a list of filter names separated by tabs, line breaks, double
+quotes or spaces, compared ignoring case. Starting from an empty mask, `general`, `world`, `ui`,
+`animation`, `models`, `objects` and `movement` set the bits 0x1, 0x2, 0x4, 0x8, 0x10, 0x20 and 0x80,
+`all` sets every bit, and `except` makes each later name clear its bit, `all` then giving 0. The mask goes to `SysMsgSetSelected` and the filter is printed. A word that is
+none of these prints `Unknown filter %s` and three help lines, leaves the selection unchanged and
+vetoes the new value. No name reaches bit 0x40: the word picked for the letter `s` is `objects`,
+which a word starting with `s` never equals.
+
+Addresses: `0x4030f0`, `0x403200`, `0x403231`, `0x403257`, `0x40327c`, `0x4032ce`, `0x4033de`, `0x403423`, `0x403433`, `0x402d12`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x402d12` registers `0x4030f0` with the default text `all`. The callback returns 0 when `0x403200`
+does and otherwise calls `0x403110` and returns 1. `0x403231` tokenises with `SStrTokenize`;
+`0x403257` switches on the first character minus `A` through a byte table after the function, upper
+and lower case sharing a case. `all` computes `(except != 0) − 1` (`0x40327c`); `except` sets
+its flag (`0x4032ce`); the `s` case (`0x4033de`) compares `objects` and sets 0x40 on a match. The end of
+the list calls `SysMsgSetSelected` (`0x403423`); the fault path starts at `0x403433` and returns 0.
+
+## Display layer
+
+`0x409040` builds the on-screen layer once: a font batch, the font of stock text block 1 and that
+block's height, and a screen layer over the whole screen, `(0, 0)` to `(1, 1)`, at priority 10.0 with
+the paint function `0x4092c0`. It stops at the first of these that fails, and a height of exactly 0
+also stops it. With the layer made it passes `0x409200` to `0x44cd70` and sets its flag `0x8838f4`.
+`0x409100`, called from `DestroyClientSystems`, clears the flag, passes 0 to `0x44cd70`, destroys
+the batch and ten strings, and closes the layer's handle.
+
+Addresses: `0x409040`, `0x409057`, `0x40906e`, `0x409088`, `0x40909e`, `0x4090d5`, `0x8838f4`, `0x409100`, `0x409121`, `0x409147`, `0x40915d`, `0x442b50`, `0x442bd0`, `0x4092c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x409057` calls `GxuFontCreateBatch` and `0x40906e` `0x442b50(1)`, whose font `TextBlockGetFontPtr`
+takes; `0x409088` stores `0x442bd0(1)`. `0x40909e` is `jnp` after `test ah,0x44`, so
+equality (C3 alone) leaves and NaN (C3 and C2) goes on. `0x4090d5` calls `ScrnLayerCreate` with the
+rectangle, 10.0 (`0x41200000`), flags 0, the paint function and its out slot. `0x409121`
+calls `GxuFontDestroyBatch`, `0x409147` `GxuFontDestroyString` on each of ten 0x10c-byte string slots, and
+`0x40915d` jumps to `HandleClose`.

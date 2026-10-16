@@ -135,6 +135,47 @@ list does (`0x443e41`), else 0. `0x401570` calls
 `0x443620` before and after `0x66fbe0`, `0x48f480` for the interface and `0x4818f0` for the camera.
 The map open's forced synchronous read is `terrain`'s.
 
+## Waiting for one read
+
+`AsyncFileReadWait(read)` returns at once for a read whose done byte `+0x1c` is set. Otherwise it
+records the read as the one awaited and, unless it is the read in progress, its byte `+0x1d` is 0
+or its byte `+0x28` is set, moves it to the head of the queue `0x885688`. It then drains finished
+reads and sleeps 1 ms until the drain clears the awaited read. A depth count is held across the wait.
+Texture, map object, model and terrain loads call it.
+
+Addresses: `0x443bd0`, `0x443bd3`, `0x443be3`, `0x443bf5`, `0x443bfb`, `0x443c07`, `0x443c12`, `0x443c1d`, `0x443c93`, `0x443cd2`, `0x443ce3`, `0x443cf4`, `0x443d07`, `0x443d1e`, `0x443eda`, `0x443ee2`, `0x885684`, `0x885688`, `0x8856d0`, `0x8856e0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x443bd3` increments `0x8856e0` and `0x443d1e` decrements it. `0x443be3` tests `+0x1c` under the
+lock and leaves through `SCritSect::Leave`. `0x443bf5` compares the read with `0x8856d0` and `0x443bfb`
+stores it in `0x885684`. `0x443c1d` unlinks the read's link `+0x20`, the queue's link offset, and
+`0x443c93` to `0x443cd2` link it after the terminator. `0x443ce3` prints `AsyncFileReadWait()` to the
+empty print; `0x443cf4` calls `0x443e70(0, 0)` and `0x443d07` `OsSleep(1)`. In `0x443e70`, `0x443eda`
+compares a finished read with `0x885684` and `0x443ee2` clears it. The callers are `0x44ad50`, `0x6985d0`,
+`0x6a4a50`, `0x6a4a90`, `0x706900` and `0x710520`.
+
+## Waiting for every read
+
+`0x443d30` blocks until the asynchronous reader is idle. It first adds up the pending counts the
+registered counters of the array `0x885658` report into a total, then, while a load is pending, services the
+reader, reports progress through the callback `0x885668` when one is set, as
+`(total − c) / total` clamped to [0, 1], `c` being the dword `0x88567c` at that moment, which starts at
+the total, and sleeps 1 ms. It clears the callback when done.
+Its two diagnostic lines go to the empty print.
+
+Addresses: `0x443d30`, `0x443d55`, `0x443d72`, `0x443d84`, `0x443d9f`, `0x443da8`, `0x443dc1`, `0x443ddf`, `0x443de6`, `0x443df9`, `0x885658`, `0x885668`, `0x88567c`, `0x8856d8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x443d55` calls each counter of the array, its count at `+0x4` and its data at `+0x8`, and the sum is
+stored in `0x88567c` too. The loop tests `IsAsyncLoadPending` (`0x443d72`) and calls `0x443e70(0, 0)`
+(`0x443d84`). `0x443d9f` is `fild` of `total − [0x88567c]` divided by the total; `0x443da8` stores 0 for a
+value below 0 (`C0`) and `0x443dc1` stores 1.0 for one above 1.0, while NaN passes both. `0x443ddf`
+calls the callback with `ecx` from `0x8856d8`, and `0x443de6` is `OsSleep(1)`. `0x443df9` zeroes `0x885668`.
+
 ## Realmd link at entry
 
 `EnterWorld` closes the realmd link with `0x5b3320` (`0x46b70c`, asynchronous), and nothing in the

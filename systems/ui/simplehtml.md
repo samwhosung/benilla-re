@@ -124,3 +124,21 @@ Test: none
 The table holds pairs from `SetFontObject` (`0x795cb0`) to `GetHyperlinkFormat` (`0x796c30`);
 `0x796f50` calls `0x701d80` with 0x13. `0x795d80` compares a string argument with `P`, `H1`, `H2`
 and `H3` (`0x795db3` to `0x795e2e`) and removes it with `0x6f30d0` when it matches.
+
+## Hyperlink format
+
+The hyperlink format `+0x360` is a private copy of its text. The constructor sets `|H%s|h%s|h`,
+the XML attribute `hyperlinkFormat` replaces it when present, and `SetHyperlinkFormat(format)`
+replaces it when its argument is a string or a number; any other argument raises
+`Usage: %s:SetHyperlinkFormat("format")` with the frame's name or `<unnamed>`. Each replacement frees
+the old copy first.
+
+Addresses: `0x78a540`, `0x78a54e`, `0x78a570`, `0x789eb4`, `0x78a2c0`, `0x78a2d4`, `0x796b40`, `0x796bcc`, `0x796be5`, `0x796c02`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78a540(format)` frees `+0x360` when it is set (`0x78a54e`, `SMemFree`) and stores `SStrDupA(format)`
+(`0x78a570`). The constructor calls it at `0x789eb4` with `0x87a838`; `CSimpleHTML::LoadXML` reads the
+attribute at `0x78a2c0` and calls it at `0x78a2d4`. The method tests `lua_isstring` (`0x796bcc`) and calls
+it at `0x796be5`; the usage error is at `0x796c02`.

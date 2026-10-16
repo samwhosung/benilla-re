@@ -132,6 +132,25 @@ URL flag and string (`0x51db34`) written by `0x51dde0` (`0x51db6d`). It stores 1
 (`0x51db77`); state 2 sets `+0x29` (`0x51db84`), state 0 stores 2 (`0x51dc0a`); `0x6f10f0`'s 2 sets
 `+0x2a` (`0x51dc04`) and 3 stores 0 (`0x51dbfb`), with the digest at `+0x1c2`.
 
+## The add-on URL file
+
+`WriteAddOnURL` writes `Interface\AddOns\<name>\<name>.url` as an internet shortcut: the text
+`[InternetShortcut]`, a line break, `URL=<url>` and a line break, replacing the file. An empty or
+missing URL deletes the file instead. A file that cannot be created is skipped.
+
+Addresses: `0x51dde0`, `0x51ddf1`, `0x51de13`, `0x51de20`, `0x51de2d`, `0x51de49`, `0x51de56`, `0x51de88`, `0x51de8f`, `0x51de9a`, `0x42a460`, `0x42a4b2`, `0x42a4d0`, `0x42a5d0`, `0x42a601`, `0x42a910`, `0x42a94c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x51ddf1` formats the path with the add-on's name `+0x14` twice and `0x51de13` passes it and the URL
+`+0x30` to `0x51de20`. `0x51de2d` tests the URL for null or an empty first byte and `0x51de9a` deletes
+through `0x42a910`, which converts the path to UTF-16 and calls `DeleteFileW` (`0x42a94c`). `0x51de49`
+calls `0x42a460(path, 0x40000000, 0, 2, 0x80)`, which checks the path, the access and a disposition of
+1 to 5 and calls `CreateFileW` (`0x42a4b2`); −1 returns. `0x51de56` formats the text,
+`0x51de88` writes its length through `0x42a5d0`, a `WriteFile` wrapper that raises 0x57 for a null
+buffer or count pointer (`0x42a601`), and `0x51de8f` closes with `0x42a4d0`, `CloseHandle`.
+
 ## The auth packet's add-on block
 
 With any add-on registered, the auth packet gets a u32, the size of the block before compression,

@@ -426,6 +426,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
 0x8022cc	const float	s_float447a0000		unassigned	Holds the float 1000 (0x447a0000)	inferred	none	
+0x80258c	float[2]	s_stockFontHeights		unassigned	Holds the heights of the two stock text fonts in screen units, both 0.01953125	verified	one	ui/fonttext#stock-text-block-fonts
 0x80264c	uint32_t[8]	s_blockEdgeByType		gx	Holds the block edge in texels of each pixel type: 1, or 4 for the DXT types	inferred	none	gx/textures#texture-readiness-and-info
 0x802670	uint32_t[8]	s_blockBytesByType		gx	Holds the bytes per block of each pixel type, 0 for the unknown type	inferred	none	gx/textures#texture-readiness-and-info
 0x8026b4	void *[2]	CTexture::vftable		gx	Holds the vtable of CTexture: the deleting destructor and the name getter	verified	one	gx/textures#texture-objects
@@ -1136,6 +1137,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8120a8	const float[8]	s_shPackWeights		models	Holds the irradiance weights that pack the harmonic terms into seven constant vectors	verified	one	models/lights#harmonic-constants
 0x812330	const uint16_t			unassigned	Holds a word its object file's code reads; not read here	inferred	none	
 0x8126b4	void *[3]	s_minigameVtable		minigame	Holds the object's vtable: state read 0x728700, move check 0x728740, board push 0x728770	verified	one	minigame#the-object
+0x8129d8	void *[42]	s_lcdTextVtable		ui	Holds the vtable of the LCD text element, whose slot +0x70 is the font setter 0x72f590	verified	one	ui/lcd#lcd-text-fonts
 0x818878	const float[3]	s_saturationWeights		ui	Holds 0.7154, 0.0721 and 0.2125 that the x87 colour saturation routine 0x74d794 multiplies green, blue and red by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x818a28	const float[4]	s_saturationWeights3dnow		ui	Holds 0.2125, 0.7154 and 0.0721, then 0, as the pairs the 3DNow saturation code 0x75e12b multiplies by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x81c370	const float	s_infinityTop		unassigned	Holds +inf, 0x7f800000, the literal that TopInitInfinity copies at start-up	verified	one	ui/README#static-initializers
@@ -1798,6 +1800,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84fff8	char[15]	s_textCameraDistance		uicamera	Holds the string "cameraDistance", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
 0x85005c	char[22]	s_typeTagCFacet		unassigned	Holds the RTTI name of NTempest::CFacet, the allocation tag of facet arrays	verified	one	cmath/types#type-names
 0x8500a0	char[15]	s_textCameraViewS		unassigned	Holds the format "Camera view %s" that SetView prints with the view name	inferred	none	uicamera/driver#setting-a-view
+0x8500b4	uint32_t	s_joystickHandle		input	Holds the open joystick input control, -1 while none is open	verified	one	input#joystick-setting
 0x8500b8	void *[52]	s_bindingCommands		input	Pairs the 26 movement and mouse binding commands' names with their handlers	verified	one	input#mouse-commands
 0x850340	char[53]	s_inputControlSourcePath		input	Holds the source path the object file asserts with, ending InputControl.cpp	verified	one	input#input-state
 0x850378	char[51]	s_inputControlTag		input	Holds the path ending InputControl.h, the allocation tag of CInputControl	verified	one	input#input-state
@@ -2464,6 +2467,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
 0x88273c	uint32_t	s_dataLayout		client	Holds the data layout: 1 with both archives under ..\Data\, 2 with only model.MPQ there, 0 otherwise	verified	one	storm/mount#install-folder-and-data-path
 0x882748	const char[1]	s_emptyString		unassigned	Holds the empty string	verified	one	ui/tooltipcontent#localized-lines
+0x8827c8	void *	s_clientConnectionHolder		client	Points to the client's 0x28-byte holder made on first use: eight object slots, their count +0x20, the connection +0x24	verified	one	console/commands#helm-and-cloak-commands
 0x882894	float	s_progressUi		loadingscreen	Holds the interface load fraction	verified	one	loadingscreen/screen#progress-fraction
 0x8828a4	uint32_t	s_routeColor		loadingscreen	Holds the vertex colour of the route markers and revealed ribbon quads, white	verified	one	loadingscreen/overview#static-objects
 0x8828b0	float[12]	s_shipQuadOffsets		loadingscreen	Holds the ship quad corner offsets as four vectors	verified	one	loadingscreen/overview#static-objects
@@ -2491,6 +2495,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e10	const char *	s_tipText		loadingscreen	Holds the tip text to lay out, or 0	verified	one	loadingscreen/screen#tip-text
 0x882e14	uint32_t	s_tipBatch		loadingscreen	Holds the tip string batch handle	verified	one	loadingscreen/screen#tip-text
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
+0x8838f4	uint8_t	s_sysMsgDisplayMade		unassigned	Holds 1 while the system message display layer exists	verified	one	sysmsg#display-layer
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883c90	char[260]	s_cmdLineString		unassigned	Holds the string the last CmdLineGetString call read	verified	one	storm/scmd#the-clients-switch-readers
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
@@ -2558,6 +2563,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
 0x885604	uint32_t	s_presentSuppressed		unassigned	Holds the flag that skips the frame pass's present block while a movie plays	verified	one	gx/capture#capture-request-and-frame-order
 0x88560c	void *	s_screenshotCallback		unassigned	Holds the completion callback of the pending screenshot request, or 0	verified	one	gx/capture#capture-request-and-frame-order
+0x88562c	void *[2]	s_stockFonts		unassigned	Holds the handles of the two stock text fonts	verified	one	ui/fonttext#stock-text-block-fonts
+0x885658	uint32_t[4]	s_asyncWaitCounters		client	Holds the array of pending-read counters the async wait adds up: its capacity, count, data and growth step	verified	one	glue/enterworld#waiting-for-every-read
+0x885668	void *	s_asyncWaitProgressCallback		client	Points to the progress callback of the async wait, 0 when none is set	verified	one	glue/enterworld#waiting-for-every-read
+0x88567c	uint32_t	s_asyncWaitRemaining		client	Holds the reads still pending in the async wait, starting at the total	verified	one	glue/enterworld#waiting-for-every-read
+0x885684	void *	s_asyncAwaitedRead		client	Points to the asynchronous read being waited for, cleared when it finishes	verified	one	glue/enterworld#waiting-for-one-read
+0x885688	uint32_t[3]	s_asyncReadQueue		client	Holds the queue of asynchronous reads: link offset 0x20 and terminator	verified	one	glue/enterworld#waiting-for-one-read
+0x8856d0	void *	s_asyncReadInProgress		client	Points to the asynchronous read in progress	verified	one	glue/enterworld#waiting-for-one-read
+0x8856d8	void *	s_asyncWaitProgressArgument		client	Holds the argument the async wait passes to its progress callback	verified	one	glue/enterworld#waiting-for-every-read
+0x8856e0	uint32_t	s_asyncWaitDepth		client	Holds how many single-read waits are running	verified	one	glue/enterworld#waiting-for-one-read
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t	s_failedTextureColour		gx	Holds 0xff00ff00, the colour of the solid texture that replaces a texture that failed to load	verified	one	gx/textures#texture-creation
 0x905844	uint32_t[216]	s_mipBufferLists		gx	Holds the lists of free decoded mip buffers, one list per pixel type and size class	inferred	none	gx/textures#texture-readiness-and-info
@@ -2646,6 +2660,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb2306c	void *	s_mapWaterSoundsCVar		sound	Holds the MapWaterSounds CVar	verified	one	sound/ambience#water-sounds
 0xb230b8	uint32_t			unassigned	Holds data whose address InitializeWaterAmbiences, ClearAllSounds take; not read here	inferred	none	
 0xb2326c	uint32_t	s_waterSubmergeState		sound	Holds bit 0x2 while submerged and bit 0x1 for the restart without fade on surfacing	verified	one	sound/ambience#water-sound-placement
+0xb232a4	uint32_t[4]	s_objectHeaps		objectalloc	Holds the array of object heaps: its capacity, count, data and growth step	verified	one	objectlayer/manager#object-heap-teardown
 0xb232e8	void *[7]	s_objectPools		objectlayer	Holds the object pools of types 1 to 7, created at start-up	verified	one	objectlayer/classes#class-sizes-and-pools
 0xb23310	uint32_t[30768]	s_fieldWatcherLists		objectlayer	Holds 10,256 field watcher list heads of 12 bytes, one per type section and field index	verified	one	objectlayer/initializers#object-tables
 0xb41414	void *	s_objectManager		objectlayer	Holds the client object manager; its +0xd4 holds the movement manager	inferred	none	collision/mover#movement-manager
@@ -4623,6 +4638,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4e80	uint32_t[10]	s_fontTable		ui	Holds the hash table of font records by name, built on first lookup	verified	one	ui/containers#font-table
 0xcf4ea8	uint32_t			ui	Holds a dword that 0x77e4e0 compares an argument with; its writers are not read here	inferred	none	ui/editboxmembers#font-follower-slots
 0xcf4ecc	uint32_t	s_checkButtonTypeId		ui	Holds the script type id of CheckButton, assigned on first use	verified	one	ui/button#button-method-helper-and-type-test
+0xcf4f98	uint32_t[64]	s_valueStripPixels		ui	Holds the pixels of the colour select value strip, filled with the owner's colour	verified	one	ui/colorselect#the-value-strip-texture
 0xcf511c	uint32_t	s_divxInstanceCounter		ui	Counts the DivX decoder instances created for movie frames	verified	one	ui/movieframe#the-decoder
 0xcf53b4	uint32_t[10]	s_checkButtonMethodHash		ui	Holds the hash table of the 6 CheckButton methods: vtable, list, chain counter, bucket vector and mask	verified	one	ui/button#lua-methods
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
