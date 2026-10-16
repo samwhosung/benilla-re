@@ -2,8 +2,8 @@
 //!
 //! `tables/dbc_schemas.tsv` holds, for each table, the field count and record size from the sum of
 //! its `T::Read`'s typed-column reads (`call 0x648460`) and the string columns: the field indices
-//! read into a stack temporary and fixed up with `+stringBlockBase`. A run of 8 is a localized
-//! string; a single is a `char *`. Both tests check that table against the real
+//! read into a stack temporary and fixed up with `+stringBlockBase`, localized or not (`Read` does
+//! not tell them apart; `tables/README.md`). Both tests check that table against the real
 //! `DBFilesClient\*.dbc` read through the archive mount. The tables are a fixture
 //! (`common::data_fixture`): each test skips without them, and no row names these tests.
 

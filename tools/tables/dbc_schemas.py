@@ -13,9 +13,9 @@ three zeros pushed right to left). A function is found by its error message, the
     string_cols   the field indices read into a stack temporary rather than into the record.
                   Those are string-block offsets: on success each is rewritten as
                   stringBlockBase + offset (the loop of `add reg, base` after the error check,
-                  where base is the Read function's second argument [ebp+0xc]). A run of eight
-                  consecutive columns is a localized string, one per locale; the other columns
-                  are single strings or arrays of them.
+                  where base is the Read function's second argument [ebp+0xc]). Read treats
+                  a localized string's eight columns like any other, so the list does not
+                  mark one; tables/README.md gives the runs of eight that are not one.
     fixups        the count of those adds, an independent count of the same columns
 
 The two counts agree on all 151 tables. The scalar columns are untyped four-byte cells here: whether

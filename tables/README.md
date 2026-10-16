@@ -227,7 +227,7 @@ The record layout of each DBC type, read from the type's `Read` function (151 ro
 | `file` | The DBC file name without `.dbc`; the record type is `<file>Rec`. |
 | `field_count` | The number of four-byte fields (a byte-packed column counts one). |
 | `record_size` | The record size in bytes. |
-| `string_cols` | The field indices that are string-block offsets, comma-separated. A run of eight is a localized string, one per locale. |
+| `string_cols` | The field indices that are string-block offsets, comma-separated. `Read` treats every string column alike, so the list does not mark a localized string (`../systems/dbc.md`, Localized strings): eight columns, one per locale, then a flags column that is not a string. A run of eight is not always one: `ItemDisplayInfo` 14 to 21 are eight texture names and `SoundEntries` 2 to 12 a name and ten file names. A run of nine has a plain string before its block: `ChrClasses` 4, `FactionGroup` 2, `Startup_Strings` 1, `WorldStateUI` 3 and 25. In an English install the seven columns after a block's first are zero in every row. |
 | `fixups` | The number of string offsets `Read` rebases on the string block; equals the length of `string_cols`. |
 
 ## bindings.tsv
