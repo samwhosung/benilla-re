@@ -221,17 +221,22 @@ Test: none
 The template requests carry the callback `0x4e5b80`. When a record arrives with a nonzero ready flag
 it runs `0x4e5c70(entry)`, which recounts the entry and, for each item slot of that entry, stores the
 count and notifies with no send and the event on, so every such slot repaints and asks for the icon
-again. Container updates and item deactivation call `0x4e5c70` too.
+again. Fifteen more calls recount an entry: the container frames' slot changes, an item record applied, an item deactivated,
+and, for the active player's items, the stack count, spell charges, entry (old, then new), changed record, enchantment and
+visible item (old, then new) watchers.
 
-Addresses: `0x4e5b80`, `0x4e5b86`, `0x4e5c70`, `0x4e5c75`, `0x4e5caa`, `0x4e5cb1`, `0x4f8e3c`, `0x4f8e5e`, `0x4f8f5a`, `0x4f9153`, `0x4f9175`, `0x5d85ce`, `0x5d8798`
+Addresses: `0x4e5b80`, `0x4e5b86`, `0x4e5b8a`, `0x4e5c70`, `0x4e5c75`, `0x4e5caa`, `0x4e5cb1`, `0x4f8e3c`, `0x4f8e5e`, `0x4f8f5a`, `0x4f9153`, `0x4f9175`, `0x5d85ce`, `0x5d8798`, `0x5d94e1`, `0x5d9582`, `0x5d963e`, `0x5d9676`, `0x5d96bd`, `0x5d9afd`, `0x5dee9e`, `0x5deea9`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4e5b86` tests the ready flag and `0x4e5b8a` calls `0x4e5c70`. `0x4e5c75` calls `0x4e6d20`; `0x4e5caa`
-stores the count; `0x4e5cb1` calls `0x4e58e0` with `edx` 0 and the quiet argument 0. The callers of
-`0x4e5c70` are the container frame code (`0x4f8e3c`, `0x4f8e5e`, `0x4f8f5a`, `0x4f9153`, `0x4f9175`),
-the item record arrival (`0x5d85ce`) and item deactivation (`0x5d8798`).
+stores the count; `0x4e5cb1` calls `0x4e58e0` with `edx` 0 and the quiet argument 0. `tools/callers.py`
+finds 16 direct calls of `0x4e5c70` and no stored address, with `0x4e6d20` (3 calls) and `0x4e5b80` (3 pushes) as
+controls: `0x4e5b8a`; the backpack, bag and container slot handlers (`0x4f8e3c`, `0x4f8e5e`, `0x4f8f5a`,
+`0x4f9153`, `0x4f9175`); `CGItem_C::ApplyRecord` (`0x5d85ce`) and `CGItem_C::Deactivate` (`0x5d8798`); and
+the watchers of `objectlayer/items` and `objectlayer/inventory`: `0x5d94e1`, `0x5d9582`, `0x5d963e` (the old
+entry from the copy), `0x5d9676`, `0x5d96bd`, `0x5d9afd`, `0x5dee9e` and `0x5deea9`.
 
 ## Checked state
 

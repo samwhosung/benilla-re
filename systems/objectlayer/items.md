@@ -125,23 +125,24 @@ empties the icon cache. Each watcher finds the item by GUID and acts for the act
 
 | field | watcher | action |
 |---|---|---|
-| `ITEM_FIELD_STACK_COUNT` | `0x5d9400` | the record arrival's lock step and refreshes |
-| `ITEM_FIELD_SPELL_CHARGES`, 5 | `0x5d9540` | refresh, `BAG_UPDATE_COOLDOWN` |
-| `ITEM_FIELD_ENCHANTMENT`, 21 | `0x5d95a0` | `0x5d9a90` |
-| `OBJECT_FIELD_ENTRY` | `0x5d95e0` | asks for the new record |
+| `ITEM_FIELD_STACK_COUNT` | `0x5d9400` | the record arrival's lock step, refreshes, the action-bar recount `0x4e5c70` |
+| `ITEM_FIELD_SPELL_CHARGES`, 5 | `0x5d9540` | `0x4e5c70`, `BAG_UPDATE_COOLDOWN` |
+| `ITEM_FIELD_ENCHANTMENT`, 21 | `0x5d95a0` | `0x5d9a90`, which calls `0x4e5c70` |
+| `OBJECT_FIELD_ENTRY` | `0x5d95e0` | `0x4e5c70` for the old entry, asks for the new record, `0x4e5c70` for the new |
 | `ITEM_FIELD_FLAGS`, 2 bytes | `0x5d96e0` | bit 0x10 changed on an equipped item |
 | `ITEM_FIELD_DURABILITY` | `0x5d97c0` | the model's weapon and shield display |
 
-Addresses: `0x5d9360`, `0x5d9940`, `0x5d9400`, `0x5d9540`, `0x5d95a0`, `0x5d95e0`, `0x5d96b0`, `0x5d96e0`, `0x5d97c0`, `0x5d9a90`, `0x468070`, `0x468240`, `0x4f93d0`, `0x5ed8d0`, `0x47a310`, `0x5e13b0`, `0x5f0d60`, `0x5eedc0`
+Addresses: `0x5d9360`, `0x5d9940`, `0x5d9400`, `0x5d9540`, `0x5d95a0`, `0x5d95e0`, `0x5d96b0`, `0x5d96e0`, `0x5d97c0`, `0x5d9a90`, `0x4e5c70`, `0x5d94e1`, `0x5d9582`, `0x5d963e`, `0x5d9676`, `0x5d96bd`, `0x5d9afd`, `0x468070`, `0x468240`, `0x4f93d0`, `0x5ed8d0`, `0x47a310`, `0x5e13b0`, `0x5f0d60`, `0x5eedc0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x5d9360` calls `0x468070(section, offset, length, callback, 0, 0)` with (1, 0x20, 4), (1, 0x28,
 0x14), (1, 0x40, 0x54), (0, 0xc, 4), (1, 0x3c, 2), (1, 0xa0, 4); `0x5d9940` removes them with
-`0x468240`. `0x5d9400` is the arrival's step with flag 8 to `0x6221e0`, more refreshes, and
-0x4c7ee0 for inventory type 0x18. `0x5d9540` calls `0x4f93d0`.
-`0x5d95e0` asks with the callback `0x5d96b0`. `0x5d96e0` compares `[old] & 0x10` with the new
+`0x468240`. These recounts run only when the owner GUID that `[item+0x114]` points to is the active player's. `0x5d9400` is the arrival's step with flag 8 to `0x6221e0`, more refreshes,
+`0x4e5c70` of the entry (`0x5d94e1`) and 0x4c7ee0 for inventory type 0x18. `0x5d9540` calls `0x4e5c70` (`0x5d9582`) and `0x4f93d0`.
+`0x5d95e0` recounts the old entry from the copy (`0x5d963e`), asks with the callback `0x5d96b0`, and on a cached record recounts the new
+one (`0x5d9676`); `0x5d96b0` recounts on arrival (`0x5d96bd`). `0x5d9a90` recounts at `0x5d9afd`. `0x5d96e0` compares `[old] & 0x10` with the new
 flags and, for slots 0 to 18 of the owner's list, calls 0x4c7ee0. `0x5d97c0`: a broken or wrapped
 item (durability 0 or flags bit 0x8) maps list slot 15 or 16 to itself, 17 to 15 when the inventory
 type is 0x1a, else 16, and calls `0x47a310(model, slot, +0x31c, type == 0xe)`; otherwise
