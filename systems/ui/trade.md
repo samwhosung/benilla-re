@@ -52,8 +52,8 @@ four add a flag (0 or 1) to a base of 0x18d, 0xcb or 0x114 (`0x49211a`, `0x49495
 sites of `0x703f50`, 144 push an immediate; the rest take the glue id 4, the message route (0xe0 or 0xe1), the chat
 type table (ids 228 to 254, 358 and 441 to 474), the unit-event wrapper `0x515e50` (immediate ids and power-type
 offsets) and the field reflex `0x5de4b0` (registered for 0x196, 0xbd, 0x95, 0xc9, 0x20b, 0x20c and 0x174). The
-descriptor reflex `0x51bd50` passes a field index and is not traced. Of the 403 calls of the message display `0x496720`, 368 push an
-immediate id and none is 186; the other 35 are not traced.
+descriptor reflex `0x51bd50` passes a field index and is not traced. Of the 403 calls of the message display `0x496720`, none passes
+186 from a value the client supplies (`chatevents#catalogue-index-sources`).
 
 ## BlockTrades
 

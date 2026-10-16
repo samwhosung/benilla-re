@@ -140,13 +140,13 @@ and the chat message handler turns the type into 6 before a line can reach the e
 
 ## Sources of the chat type
 
-Every type that reaches `0x49b0b0` is 0 or more but one, which is open. The chat line function's
+Every type the client supplies to `0x49b0b0` is 0 or more. The chat line function's
 type is a constant from 10 to 86, the chat message's type byte zero-extended, a queued line's type
 (the same byte or a constant), or the message catalogue's chat type, 10 or 23 for an index from 0
 to 464. The combat log's type is a constant or a type helper's return, from 25 to 94, and 94
-sends nothing; the text emote passes 9. The open one: `0x496720` bounds the catalogue index only
-from above (`cmp eax,0x1d1; jge`), and not every caller's index is traced, so whether a negative
-index reads a negative type below the catalogue is not settled.
+sends nothing; the text emote passes 9. `0x496720` bounds the catalogue index only from above
+(`cmp eax,0x1d1; jge`), and the index is 0 to 465 from every value the client supplies ("Catalogue
+index sources"); an out-of-range `Spell.dbc` power type or an unwritten stack word can be negative.
 
 Addresses: `0x49a886`, `0x49ac9a`, `0x49d5af`, `0x49dbc6`, `0x49cae0`, `0x49cb74`, `0x49d7b5`, `0x49cfc1`, `0x49d432`, `0x496822`, `0x49672c`, `0x49b1b0`, `0x626850`, `0x62685d`, `0x626886`, `0x627a53`, `0x628242`, `0x629e17`, `0x62abf0`, `0x62cf3d`, `0x62dd3d`, `0x629a7c`, `0x49b48a`
 Confidence: verified
@@ -164,6 +164,45 @@ call, `0x626886`, passes `0x626850`'s first argument, which returns at 0x5e (`0x
 through `0x627d30`, `0x627d60` or `0x62b190`, or stored first (`0x627a53`, `0x628242`,
 `0x629e17`, `0x62abf0`, `0x62cf3d`, `0x62dd3d`, and a pending entry's `+0x28`, `0x629a7c`);
 each helper returns constants. No dword of the image holds any of these functions' addresses.
+
+## Catalogue index sources
+
+Of the 403 calls of `CGGameUI::DisplayError` (`0x496720`), 368 push a constant id from 0 to 463 and 35 a
+computed one. From the client's own values each computed id is 0 to 465, and 465 (0x1d1) shows nothing.
+Three sites take a value the client does not bound: both cast failure reporters index a power-type table
+by the spell's `Spell.dbc` power type, and `CGGameObject_C::TryUse` passes a word the static handler's
+slot 6 leaves unwritten.
+
+| sites | id |
+|---|---|
+| `0x4b29b7` | 0x37 or 0x38 |
+| `0x5dd255` | sell results 1 to 4 and 6: 0x17, 0x21, 0x22, 0x1b, 0xb |
+| `0x5e746c`, `0x5e748c`, `0x5e74a5`, `0x5e74b7` | 0x69 |
+| `0x5acadc`, `0x5acaf3`, `0x5acc76`, `0x5accbf`, `0x5accd6`, `0x5acced`, `0x5acd04`, `0x5acd74`, `0x5acd8b`, `0x5acde6`, `0x5ace08` | friend results, 0x104 to 0x114 |
+| `0x5acf27`, `0x5acfe2` | the friend id a name lookup stored, or 0x1d1, which they skip |
+| `0x4cd1c3` | the auction id an item lookup stored, 0x17a to 0x17e |
+| `0x5de52c`, `0x5e3fad`, `0x5e711b`, `0x5ec6f3`, `0x5ec713`, `0x5ed1f7` | a bounded entry of `0x80af50`, `0x80af14`, `0x85fe88`, `0x85fea0`, `0x85fecc`, `0x85fedc`: 0xaa to 0x15b, or 0x1d1 |
+| `0x4ae962`, `0x5e3a2b`, `0x5e3a3d`, `0x4bf88e` | `0x622630`, 0 to 0x1d1, or `0x4bfd70`: 0xc0 to 0xc3, 0xd3, 0x1d1 or `0x622630` |
+| `0x6e2a71` | 0x2c, 0xd1 or 0xd2 |
+| `0x6e8f39`, `0x6e21dd` | 0x30 or 0x31 from the spell's attribute bit 0x10; `0x6e21dd` also a constant or `0x8118dc`[power type] |
+| `0x6e8f95` | `0x8118f0`[power type], after −2 gives 0x123 |
+| `0x5f874b` | slot 6's refusal: 0x7e, 0x7f, 0x169, 0x19f to 0x1a1, 0xe1, 0xe3, 0xe5 or the handler's 0xdb to 0xdd |
+
+Addresses: `0x496720`, `0x49672c`, `0x4b29b3`, `0x5dd22c`, `0x5acacf`, `0x5acb82`, `0x5ace96`, `0x5acf1d`, `0x5acfd8`, `0x4ccf87`, `0x4cd409`, `0x4cd4fb`, `0x5e7104`, `0x5e745a`, `0x622630`, `0x622794`, `0x4bfd70`, `0x6e1adc`, `0x6e20ee`, `0x6e2109`, `0x6e8f6a`, `0x6e8f8d`, `0x8118dc`, `0x8118f0`, `0x5f3130`, `0x5f4360`, `0x5f5670`, `0x5f3700`, `0x5f86b0`, `0x60faa4`
+Confidence: verified
+Proof: one
+Test: none
+
+`tools/callers.py` finds 403 direct calls and no stored address, with `0x4e5c70` and `0x4e5b80` as controls;
+the id is the last `push` before each call. `0x4b29b3` adds 0x37 to a `setne`; the switches at `0x5dd22c` and
+`0x5acacf` load constants, and `0x5e745a` loads 0x69 above four calls. Every path to `0x5acb82` sets `ebx`, the
+data `0x55f080` hands the callbacks, read at `0x5ace96`, `0x5acf1d` and `0x5acfd8`; the other registrations pass 0x1d1.
+`0x4ccf87`, `0x4cd409` and `0x4cd4fb` store the auction ids. Each table index is bounded both ways (`jae`, or
+`jl` and `jge` at `0x5e7104`), and each `.data` table's address occurs once in the image, at its load. Every case of
+`0x622630` and its default return a constant; `0x4bfd70` maps results 4, 0x11 and 0x1c and tail-jumps to it. The
+reporters load `[record+0x7c]` (`0x6e20ee`, `0x6e8f6a`) and index with no bound (`0x6e2109`, `0x6e8f8d`); the
+install's `Spell.dbc` holds −2 and 0 to 3 there. `0x5f3130`, `0x5f4360` and `0x5f5670` write the error on every
+refusal. `0x5f3700` returns 0 alone; `0x5f86b0` reaches it only from `0x60faa4`, for the object whose 0xe1 began the walk.
 
 ## Addon messages
 
