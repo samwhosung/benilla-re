@@ -29715,49 +29715,49 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f4660	120	lua_getupvalue		lua	unreached		Pushes the nth upvalue of the function at an index and returns its name	verified	one	lua/api#state-and-upvalues	
 0x6f46e0	204	aux_upvalue		lua	unreached		Finds the nth upvalue of a function and returns its name	verified	one	lua/api#state-and-upvalues	
 0x6f47b0	91	lua_setupvalue		lua	unreached		Pops a value into the nth upvalue of the function at an index and returns its name	verified	one	lua/api#state-and-upvalues	
-0x6f4810	143			lua	boundary		Runs its object file code that calls 0x6fbaa0, 0x6fbc70, luaL_error; not read here	inferred	none		
-0x6f48a0	58			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f3480, lua_pushfstring and 1 more; not read here	inferred	none		
-0x6f48e0	88			lua	boundary		Runs its object file code that calls 0x6fbaa0, 0x6fbc70, lua_pushfstring and 1 more; not read here	inferred	none		
+0x6f4810	143	luaL_argerror		lua	boundary		Raises a bad argument error naming the called function, or a bad self for a method	verified	one	lua/auxlib#argument-checks	
+0x6f48a0	58	luaL_typerror		lua	boundary		Raises an argument error saying which type was expected and which was found	verified	one	lua/auxlib#argument-checks	
+0x6f48e0	88	luaL_where		lua	boundary		Pushes the source name and current line of a call level, or an empty string	verified	one	lua/auxlib#argument-checks	
 0x6f4940	55	luaL_error	idb	lua	boundary		Raises a formatted message prefixed by the caller's position, never returning	verified	one	ui/luastate#the-c-function-contract	
-0x6f4980	85			lua	unreached		Runs its object file code not read here	inferred	none		
-0x6f49e0	133			lua	unreached		Runs its object file code that calls lua_pushstring, 0x6f3b00, 0x6f3400 and 4 more; not read here	inferred	none		
-0x6f4a70	21			lua	unreached		Runs its object file code that calls lua_pushstring; not read here	inferred	none		
-0x6f4a90	141			lua	unreached		Runs its object file code that calls 0x6f3cf0, 0x6f3b00, lua_tostring and 2 more; not read here	inferred	none		
-0x6f4b20	38			lua	boundary		Runs its object file code that calls 0x6f2f30, luaL_error; not read here	inferred	none		
-0x6f4b50	37			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f4b80; not read here	inferred	none		
-0x6f4b80	33			lua	boundary		Runs its object file code that calls 0x6f3480, 0x6f48a0; not read here	inferred	none		
-0x6f4bb0	33			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f4810; not read here	inferred	none		
-0x6f4be0	62			lua	boundary		Runs its object file code that calls lua_tostring, 0x6f4b80, 0x6f36e0; not read here	inferred	none		
-0x6f4c20	85			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f4be0; not read here	inferred	none		
-0x6f4c80	68			lua	boundary		Runs its object file code that calls 0x6f3620, 0x6f34d0, 0x6f4b80; not read here	inferred	none		
-0x6f4cd0	42			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f4c80; not read here	inferred	none		
-0x6f4d00	95			lua	boundary		Runs its object file code that calls 0x6f3cf0, lua_pushstring, 0x6f3b00 and 3 more; not read here	inferred	none		
-0x6f4d60	87			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f4d00, 0x6f3350 and 1 more; not read here	inferred	none		
+0x6f4980	85	luaL_findstring		lua	unreached		Returns the index of a string in a null-ended list of strings, or -1	verified	one	lua/auxlib#metatables-and-fields	
+0x6f49e0	133	luaL_newmetatable		lua	unreached		Creates the metatable of a type name in the registry unless it exists	verified	one	lua/auxlib#metatables-and-fields	
+0x6f4a70	21	luaL_getmetatable		lua	unreached		Pushes the registry entry of a type name	verified	one	lua/auxlib#metatables-and-fields	
+0x6f4a90	141	luaL_checkudata		lua	unreached		Returns the block of a userdata whose metatable is registered under a given name	verified	one	lua/auxlib#metatables-and-fields	
+0x6f4b20	38	luaL_checkstack		lua	boundary		Grows the stack by a number of slots or raises stack overflow with a message	verified	one	lua/auxlib#argument-checks	
+0x6f4b50	37	luaL_checktype		lua	boundary		Raises an argument error unless the value at an index has a given type	verified	one	lua/auxlib#argument-checks	
+0x6f4b80	33	tag_error		lua	boundary		Raises a type error for an argument with the name of a type tag	verified	one	lua/auxlib#argument-checks	
+0x6f4bb0	33	luaL_checkany		lua	boundary		Raises value expected when an argument is absent	verified	one	lua/auxlib#argument-checks	
+0x6f4be0	62	luaL_checklstring		lua	boundary		Returns the string of an argument and its length, raising for a non-string	verified	one	lua/auxlib#argument-checks	
+0x6f4c20	85	luaL_optlstring		lua	boundary		Returns the string of an argument or a default for an absent one	verified	one	lua/auxlib#argument-checks	
+0x6f4c80	68	luaL_checknumber		lua	boundary		Returns the number of an argument, raising for a non-number	verified	one	lua/auxlib#argument-checks	
+0x6f4cd0	42	luaL_optnumber		lua	boundary		Returns the number of an argument or a default for an absent one	verified	one	lua/auxlib#argument-checks	
+0x6f4d00	95	luaL_getmetafield		lua	boundary		Pushes a field of the metatable of a value, returning 0 when there is none	verified	one	lua/auxlib#metatables-and-fields	
+0x6f4d60	87	luaL_callmeta		lua	boundary		Calls a metatable field of a value with the value as argument	verified	one	lua/auxlib#metatables-and-fields	
 0x6f4dc0	224	luaL_openlib		lua	boundary		Sets the functions of a name and function table into a global table of a name	verified	one	ui/luastate#what-a-new-state-holds	
-0x6f4ea0	219			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f3840, 0x6f3b00 and 6 more; not read here	inferred	none		
-0x6f4f80	61			lua	boundary		Runs its object file code that calls 0x6f3620, __ftol, 0x6f34d0 and 1 more; not read here	inferred	none		
-0x6f4fc0	136			lua	boundary		Runs its object file code that calls lua_rawgeti, 0x6f3400, lua_settop and 6 more; not read here	inferred	none		
-0x6f5050	200			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f3840, 0x6f3b00 and 6 more; not read here	inferred	none		
-0x6f5120	24			lua	boundary		Runs its object file code that calls 0x6f5140, 0x6f5170; not read here	inferred	none		
-0x6f5140	48			lua	boundary		Runs its object file code that calls 0x6f3840; not read here	inferred	none		
-0x6f5170	122			lua	boundary		Runs its object file code that calls 0x6f36e0, 0x6f44e0; not read here	inferred	none		
-0x6f51f0	58			lua	boundary		Runs its object file code that calls 0x6f5120; not read here	inferred	none		
-0x6f5230	27			lua	unreached		Runs its object file code that calls 0x6f51f0; not read here	inferred	none		
-0x6f5250	28			lua	boundary		Runs its object file code that calls 0x6f5140, 0x6f44e0; not read here	inferred	none		
-0x6f5270	144			lua	boundary		Runs its object file code that calls 0x6f36e0, lua_tostring, lua_settop and 3 more; not read here	inferred	none		
-0x6f5300	16			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f5310	226			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f3400, lua_settop and 6 more; not read here	inferred	none		
-0x6f5400	143			lua	boundary		Runs its object file code that calls lua_gettop, lua_rawgeti, 0x6f3f60 and 1 more; not read here	inferred	none		
-0x6f5490	383			lua	unreached		Runs its object file code that calls lua_gettop, 0x6f3840, _getc and 10 more; not read here	inferred	none		
-0x6f5610	56			lua	unreached		Runs its object file code that calls 0x740c97; not read here	inferred	none		
-0x6f5650	62			lua	unreached		Runs its object file code that calls lua_tostring, __errno, _strerror and 2 more; not read here	inferred	none		
+0x6f4ea0	219	luaL_setn		lua	boundary		Sets the length of a table, in its n field or in the weak size table	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f4f80	61	checkint		lua	boundary		Reads an integer from the top value, -1 when it is not a number, then pops values	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f4fc0	136	getsizes		lua	boundary		Pushes the weak-key table of table sizes at registry reference 2, creating it	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f5050	200	luaL_getn		lua	boundary		Returns the length of a table from its n field, the size table, or by counting	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f5120	24	luaL_prepbuffer		lua	boundary		Empties a full buffer into a pushed string and returns the buffer area	verified	one	lua/auxlib#string-buffers	
+0x6f5140	48	emptybuffer		lua	boundary		Pushes the buffer contents as a string and resets the fill pointer	verified	one	lua/auxlib#string-buffers	
+0x6f5170	122	adjuststack		lua	boundary		Merges pushed buffer pieces with lua_concat while they are small enough	verified	one	lua/auxlib#string-buffers	
+0x6f51f0	58	luaL_addlstring		lua	boundary		Adds a block of bytes to a buffer, a byte at a time	verified	one	lua/auxlib#string-buffers	
+0x6f5230	27	luaL_addstring		lua	unreached		Adds a null-ended string to a buffer	verified	one	lua/auxlib#string-buffers	
+0x6f5250	28	luaL_pushresult		lua	boundary		Pushes the buffer contents and concatenates every pushed piece into one string	verified	one	lua/auxlib#string-buffers	
+0x6f5270	144	luaL_addvalue		lua	boundary		Adds the string on the stack top to a buffer and pops it	verified	one	lua/auxlib#string-buffers	
+0x6f5300	16	luaL_buffinit		lua	boundary		Initializes a buffer for a state	verified	one	lua/auxlib#string-buffers	
+0x6f5310	226	luaL_ref		lua	boundary		Stores the top value in the table at an index and returns a number that names it	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f5400	143	luaL_unref		lua	boundary		Releases a reference made by luaL_ref into the free list of the table	verified	one	lua/auxlib#table-sizes-and-references	
+0x6f5490	383	luaL_loadfile		lua	unreached		Loads a file or standard input as a chunk, reopening a binary file in binary mode	verified	one	lua/auxlib#loading-chunks	
+0x6f5610	56	getF		lua	unreached		Reads up to 512 bytes of a file for the loader	verified	one	lua/auxlib#loading-chunks	
+0x6f5650	62	errfile		lua	unreached		Pushes a cannot read error for a file and removes the file name	verified	one	lua/auxlib#loading-chunks	
 0x6f5690	67	luaL_loadbuffer		lua	primitive		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x6f56e0	32			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f5700	18			lua	unreached		Runs its object file code that calls 0x6f5490; not read here	inferred	none		
-0x6f5720	34			lua	unreached		Runs its object file code that calls lua_pcall, 0x6f5750; not read here	inferred	none		
-0x6f5750	109			lua	unreached		Runs its object file code that calls lua_pushstring, lua_gettable, 0x6f3400 and 4 more; not read here	inferred	none		
-0x6f57c0	35			lua	unreached		Runs its object file code that calls 0x6f5690, 0x6f5720; not read here	inferred	none		
-0x6f57f0	28			lua	unreached		Runs its object file code that calls 0x6f57c0; not read here	inferred	none		
+0x6f56e0	32	getS		lua	boundary		Returns the block of a string loader once and then an empty size	verified	one	lua/auxlib#loading-chunks	
+0x6f5700	18	lua_dofile		lua	unreached		Loads a file and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
+0x6f5720	34	aux_do		lua	unreached		Runs a loaded chunk in protected mode and calls the alert function on failure	verified	one	lua/auxlib#loading-chunks	
+0x6f5750	109	callalert		lua	unreached		Calls the global _ALERT with the error message, or prints it when none is set	verified	one	lua/auxlib#loading-chunks	
+0x6f57c0	35	lua_dobuffer		lua	unreached		Loads a buffer as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
+0x6f57f0	28	lua_dostring		lua	unreached		Loads a null-ended string as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f5810	22			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f5830	113			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f58b0	60			lua	boundary		Runs its object file code not read here	inferred	none		
