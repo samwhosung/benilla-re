@@ -29758,14 +29758,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5750	109	callalert		lua	unreached		Calls the global _ALERT with the error message, or prints it when none is set	verified	one	lua/auxlib#loading-chunks	
 0x6f57c0	35	lua_dobuffer		lua	unreached		Loads a buffer as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f57f0	28	lua_dostring		lua	unreached		Loads a null-ended string as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
-0x6f5810	22			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f5830	113			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f58b0	60			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f5900	132			lua	boundary		Runs its object file code that calls _strtod, __isctype; not read here	inferred	none		
-0x6f5990	452	luaO_pushvfstring	idb	lua	boundary		Runs its object file code that calls 0x6f5bc0, _strchr, 0x6f9d00 and 2 more; not read here	inferred	none		
-0x6f5bc0	93			lua	boundary		Runs its object file code that calls 0x6f9d00, luaD_growstack; not read here	inferred	none		
-0x6f5c20	20			lua	boundary		Runs its object file code that calls luaO_pushvfstring; not read here	inferred	none		
-0x6f5c40	311			lua	boundary		Runs its object file code that calls _strncpy, _strcspn, _strncat; not read here	inferred	none		
+0x6f5810	22	luaO_int2fb		lua	primitive		Encodes an integer as a 5-bit mantissa and a 3-bit exponent byte	verified	one	lua/object#basic-object-functions	
+0x6f5830	113	luaO_log2		lua	primitive		Returns floor(log2(x)) of an unsigned integer by byte table, -1 for 0	verified	one	lua/object#basic-object-functions	
+0x6f58b0	60	luaO_rawequalObj		lua	primitive		Compares two values by tag, then by number or by payload	verified	one	lua/object#basic-object-functions	
+0x6f5900	132	luaO_str2d		lua	primitive		Converts a string to a number with strtod, allowing trailing spaces	verified	one	lua/object#basic-object-functions	
+0x6f5990	452	luaO_pushvfstring	idb	lua	boundary		Pushes a string formatted from a format and an argument list with %s, %c, %d, %f and %%	verified	one	lua/object#basic-object-functions	
+0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer	verified	one	lua/object#basic-object-functions	
+0x6f5c20	20	luaO_pushfstring		lua	boundary		Pushes a string formatted from a format and its arguments	verified	one	lua/object#basic-object-functions	
+0x6f5c40	311	luaO_chunkid		lua	primitive		Writes the short name of a chunk source for messages	verified	one	lua/object#basic-object-functions	
 0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	one	ui/luastate#the-c-function-contract	
 0x6f5db0	108	luaD_rawrunprotected		lua	boundary		Runs a function under setjmp, checking its address first	verified	one	ui/luastate#the-c-function-contract	
 0x6f5e20	71	luaD_reallocstack	idb	lua	boundary		Runs ldo.c code that calls luaM_irealloc; not read here	inferred	none		
@@ -29847,39 +29847,39 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f9900	210			lua	boundary		Runs its object file code that calls 0x6f5f80, 0x6fb9e0; not read here	inferred	none		
 0x6f99e0	159			lua	boundary		Runs its object file code that calls 0x6f82a0, 0x6f8210, 0x6fc730; not read here	inferred	none		
 0x6f9a80	399			lua	boundary		Runs its object file code that calls 0x6f7c20, luaH_getstr, 0x6fc870 and 3 more; not read here	inferred	none		
-0x6f9c30	28			lua	boundary		Runs lstring.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f9c50	166			lua	boundary		Runs lstring.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f9d00	132			lua	boundary		Runs lstring.c code that calls 0x6f9d90; not read here	inferred	none		
-0x6f9d90	153			lua	boundary		Runs lstring.c code that calls luaM_irealloc, 0x6f9c50; not read here	inferred	none		
-0x6f9e30	63			lua	unreached		Runs lstring.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f9e70	56			lua	boundary		Runs lfunc.c code that calls luaM_irealloc, 0x6f7b20; not read here	inferred	none		
-0x6f9eb0	91			lua	boundary		Runs lfunc.c code that calls luaM_irealloc, 0x6f7b20; not read here	inferred	none		
-0x6f9f10	71			lua	boundary		Runs lfunc.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f9f60	115			lua	boundary		Runs lfunc.c code that calls 0x6f7b20; not read here	inferred	none		
-0x6f9fe0	97			lua	boundary		Runs lfunc.c code that calls luaM_irealloc, 0x6f7b20; not read here	inferred	none		
-0x6fa050	186			lua	boundary		Runs lfunc.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6fa110	54			lua	boundary		Runs lfunc.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6fa150	69			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fa1a0	163			lua	boundary		Runs its object file code that calls 0x6fa260; not read here	inferred	none		
-0x6fa260	60			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f9c30	28	luaS_freeall		lua	boundary		Frees the string hash vector	verified	one	lua/object#strings	
+0x6f9c50	166	luaS_resize		lua	boundary		Rehashes every string into a string vector of a new power-of-two size	verified	one	lua/object#strings	
+0x6f9d00	132	luaS_newlstr		lua	primitive		Returns the interned string of a block of bytes, creating it when absent	verified	one	lua/object#strings	
+0x6f9d90	153	newlstr		lua	boundary		Allocates a new string, copies the bytes and links it into its hash bucket	verified	one	lua/object#strings	
+0x6f9e30	63	luaS_newudata		lua	unreached		Allocates a full userdata of a size with the default metatable and links it for the collector	verified	one	lua/object#strings	
+0x6f9e70	56	luaF_newCclosure		lua	boundary		Allocates a C closure for a number of upvalues and links it for the collector	verified	one	lua/object#closures-and-prototypes	
+0x6f9eb0	91	luaF_newLclosure		lua	boundary		Allocates a Lua closure with the given environment and links it for the collector	verified	one	lua/object#closures-and-prototypes	
+0x6f9f10	71	luaF_findupval		lua	boundary		Finds or creates the open upvalue of a stack slot in the sorted list	verified	one	lua/object#closures-and-prototypes	
+0x6f9f60	115	luaF_close		lua	boundary		Closes the open upvalues at or above a stack level by copying their values in	verified	one	lua/object#closures-and-prototypes	
+0x6f9fe0	97	luaF_newproto		lua	boundary		Allocates a zeroed function prototype and links it for the collector	verified	one	lua/object#closures-and-prototypes	
+0x6fa050	186	luaF_freeproto		lua	boundary		Frees the seven blocks of a function prototype	verified	one	lua/object#closures-and-prototypes	
+0x6fa110	54	luaF_freeclosure		lua	boundary		Frees a C or Lua closure by its size	verified	one	lua/object#closures-and-prototypes	
+0x6fa150	69	luaF_getlocalname		lua	boundary		Returns the name of the nth local variable that is alive at an instruction, or null	verified	one	lua/object#closures-and-prototypes	
+0x6fa1a0	163	luaH_mainposition		lua	boundary		Returns the node where the hash of a key places it	verified	one	lua/object#table-access	
+0x6fa260	60	hashnum		lua	primitive		Hashes a number to a node by adding 1, summing the two words and taking a modulo	verified	one	lua/object#table-access	
 0x6fa2a0	379	luaH_next		lua	boundary		Answers the entry after a key: the array part by index, then the nodes by slot	verified	one	ui/luastate#lua-50-behaviour-kept	
-0x6fa420	117			lua	boundary		Runs its object file code that calls 0x6fa4a0, 0x6fa7a0, 0x6fc870; not read here	inferred	none		
-0x6fa4a0	70			lua	boundary		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x6fa4f0	103			lua	boundary		Runs ltable.c code that calls luaM_irealloc, 0x6f7b20, 0x6fa560 and 1 more; not read here	inferred	none		
-0x6fa560	100			lua	boundary		Runs ltable.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6fa5d0	181			lua	boundary		Runs ltable.c code that calls 0x6fc870, luaM_irealloc; not read here	inferred	none		
-0x6fa690	104			lua	boundary		Runs ltable.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6fa700	95			lua	boundary		Runs ltable.c code that calls 0x6fa260; not read here	inferred	none		
-0x6fa760	59	luaH_getstr	idb	lua	boundary		Runs ltable.c code not read here	inferred	none		
-0x6fa7a0	90			lua	boundary		Runs ltable.c code that calls luaH_getstr, __ftol, 0x6fa700 and 1 more; not read here	inferred	none		
-0x6fa800	50			lua	boundary		Runs ltable.c code that calls 0x6fa1a0, 0x6f58b0; not read here	inferred	none		
-0x6fa840	94			lua	boundary		Runs ltable.c code that calls 0x6fa7a0, 0x6fc870, 0x6fa8a0; not read here	inferred	none		
-0x6fa8a0	274			lua	boundary		Runs ltable.c code that calls 0x6fa1a0, 0x6fa9c0, 0x6fa7a0; not read here	inferred	none		
-0x6fa9c0	55			lua	boundary		Runs ltable.c code that calls 0x6faa00, 0x6f5830, 0x6fab90; not read here	inferred	none		
-0x6faa00	245			lua	boundary		Runs ltable.c code that calls 0x6fa4a0, 0x6f5830, 0x6fab00; not read here	inferred	none		
-0x6fab00	143			lua	boundary		Runs ltable.c code not read here	inferred	none		
-0x6fab90	493			lua	boundary		Runs ltable.c code that calls 0x6fa560, 0x6fa5d0, 0x6fad80 and 2 more; not read here	inferred	none		
-0x6fad80	71			lua	boundary		Runs its object file code that calls 0x6fa700, 0x6fa8a0; not read here	inferred	none		
+0x6fa420	117	luaH_index		lua	boundary		Returns the traversal position of a key for next, raising for a key that is not in the table	verified	one	lua/object#table-access	
+0x6fa4a0	70	arrayindex		lua	primitive		Returns the integer value of a number key when it is a valid array index, else -1	verified	one	lua/object#table-access	
+0x6fa4f0	103	luaH_new		lua	boundary		Allocates a table with given array and node sizes and the default metatable	verified	one	lua/object#table-creation-and-growth	
+0x6fa560	100	setarrayvector		lua	boundary		Resizes the array part of a table and fills new slots with nil	verified	one	lua/object#table-creation-and-growth	
+0x6fa5d0	181	setnodevector		lua	boundary		Allocates the node vector of a table for a log2 size, all nodes empty	verified	one	lua/object#table-creation-and-growth	
+0x6fa690	104	luaH_free		lua	boundary		Frees the node vector, the array and the record of a table	verified	one	lua/object#table-creation-and-growth	
+0x6fa700	95	luaH_getnum		lua	boundary		Returns the value of an integer key, from the array part or the node chain	verified	one	lua/object#table-access	
+0x6fa760	59	luaH_getstr	idb	lua	boundary		Returns the value stored under an interned string key, the shared nil object when absent	verified	one	lua/object#table-access	
+0x6fa7a0	90	luaH_get		lua	boundary		Returns the value stored under a key, the shared nil object when absent	verified	one	lua/object#table-access	
+0x6fa800	50	luaH_getany		lua	boundary		Walks the chain of the main position of a key and compares by raw equality	verified	one	lua/object#table-access	
+0x6fa840	94	luaH_set		lua	boundary		Returns the slot for a key, creating the key when absent and refusing nil and NaN keys	verified	one	lua/object#table-access	
+0x6fa8a0	274	newkey		lua	boundary		Inserts a new key, moving a colliding node out of its main position when needed	verified	one	lua/object#table-access	
+0x6fa9c0	55	rehash		lua	boundary		Recounts a table and resizes it to the best array and node sizes	verified	one	lua/object#table-creation-and-growth	
+0x6faa00	245	numuse		lua	boundary		Counts the live keys of a table per power-of-two slice and computes the new sizes	verified	one	lua/object#table-creation-and-growth	
+0x6fab00	143	computesizes		lua	boundary		Chooses the array size so that more than half of its slots are in use	verified	one	lua/object#table-creation-and-growth	
+0x6fab90	493	resize		lua	boundary		Rebuilds a table with new array and node sizes and reinserts its entries	verified	one	lua/object#table-creation-and-growth	
+0x6fad80	71	luaH_setnum		lua	boundary		Returns the slot for an integer key, creating the key when absent	verified	one	lua/object#table-access	
 0x6fadd0	5			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fade0	11			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fadf0	1			lua	unreached		Runs its object file code not read here	inferred	none		
