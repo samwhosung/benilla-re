@@ -37626,90 +37626,90 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fa9c0	37			unassigned			Runs its object file code not read here	inferred	none		
 0x7fa9f0	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7faa10	51			unassigned	unreached		Runs its object file code that calls 0x7f9b70; not read here	inferred	none		
-0x7faa50	62			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
-0x7faa90	116			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4c80, __ftol and 1 more; not read here	inferred	none		
-0x7fab10	116			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4c80, __ftol and 1 more; not read here	inferred	none		
-0x7fab90	116			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4c80, __ftol and 1 more; not read here	inferred	none		
-0x7fac10	85			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
-0x7fac70	85			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
-0x7facd0	76			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
-0x7fad20	66			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, 0x6f3620 and 1 more; not read here	inferred	none		
-0x7fad70	75			unassigned			Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
+0x7faa50	62	bit_bnot		lua	primitive	int __fastcall (lua_State *L)	Pushes the bitwise complement of its argument as an unsigned number	verified	one	lua/libs#bit-library	
+0x7faa90	116	bit_band		lua	primitive	int __fastcall (lua_State *L)	Pushes the bitwise AND of all its arguments	verified	one	lua/libs#bit-library	
+0x7fab10	116	bit_bor		lua	primitive	int __fastcall (lua_State *L)	Pushes the bitwise OR of all its arguments	verified	one	lua/libs#bit-library	
+0x7fab90	116	bit_bxor		lua	primitive	int __fastcall (lua_State *L)	Pushes the bitwise XOR of all its arguments	verified	one	lua/libs#bit-library	
+0x7fac10	85	bit_lshift		lua	primitive	int __fastcall (lua_State *L)	Pushes argument 1 shifted left by argument 2, as an unsigned number	verified	one	lua/libs#bit-library	
+0x7fac70	85	bit_rshift		lua	primitive	int __fastcall (lua_State *L)	Pushes argument 1 shifted right logically by argument 2	verified	one	lua/libs#bit-library	
+0x7facd0	76	bit_arshift		lua	primitive	int __fastcall (lua_State *L)	Pushes argument 1 shifted right arithmetically by argument 2, as a signed number	verified	one	lua/libs#bit-library	
+0x7fad20	66	bit_mod		lua	primitive	int __fastcall (lua_State *L)	Pushes the remainder of two integers, or 1 over the divisor for a divisor of 0	verified	one	lua/libs#bit-library	
+0x7fad70	75	bit_mod_remainder		lua	primitive		Pushes the signed integer remainder of two arguments, the tail of bit_mod	verified	one	lua/libs#bit-library	
 0x7fadc0	23	luaopen_bit		lua	orchestration		Opens the bit library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
-0x7fade0	35			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fae10	35			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fae40	35			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fae70	37			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7faea0	38			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIasin, lua_pushnumber; not read here	inferred	none		
-0x7faed0	38			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIacos, lua_pushnumber; not read here	inferred	none		
-0x7faf00	37			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7faf30	64			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
+0x7fade0	35	math_abs		lua	boundary	int __fastcall (lua_State *L)	Pushes the absolute value of its argument	verified	one	lua/libs#math-functions	
+0x7fae10	35	math_sin		lua	boundary	int __fastcall (lua_State *L)	Pushes the sine of an angle in radians	verified	one	lua/libs#math-functions	
+0x7fae40	35	math_cos		lua	boundary	int __fastcall (lua_State *L)	Pushes the cosine of an angle in radians	verified	one	lua/libs#math-functions	
+0x7fae70	37	math_tan		lua	boundary	int __fastcall (lua_State *L)	Pushes the tangent of an angle in radians	verified	one	lua/libs#math-functions	
+0x7faea0	38	math_asin		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc sine of its argument	verified	one	lua/libs#math-functions	
+0x7faed0	38	math_acos		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc cosine of its argument	verified	one	lua/libs#math-functions	
+0x7faf00	37	math_atan		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc tangent of its argument	verified	one	lua/libs#math-functions	
+0x7faf30	64	math_atan2		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc tangent of the quotient of two arguments	verified	one	lua/libs#math-functions	
 0x7faf70	41	math_ceil		lua	boundary	int __fastcall (lua_State *L)	Pushes the ceiling of argument 1, as math.ceil	verified	one	ui/luastate#mathceil	
-0x7fafa0	41			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, floor, lua_pushnumber; not read here	inferred	none		
-0x7fafd0	67			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIfmod, lua_pushnumber; not read here	inferred	none		
-0x7fb020	35			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb050	67			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __CIpow, lua_pushnumber; not read here	inferred	none		
-0x7fb0a0	39			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb0d0	39			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb100	55			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb140	39			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb170	39			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb1a0	71			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, _frexp, lua_pushnumber; not read here	inferred	none		
-0x7fb1f0	62			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c80, __ftol, _ldexp and 1 more; not read here	inferred	none		
-0x7fb230	106			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4c80, lua_pushnumber; not read here	inferred	none		
-0x7fb2a0	106			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4c80, lua_pushnumber; not read here	inferred	none		
+0x7fafa0	41	math_floor		lua	boundary	int __fastcall (lua_State *L)	Pushes the largest integer value not above its argument	verified	one	lua/libs#math-functions	
+0x7fafd0	67	math_mod		lua	boundary	int __fastcall (lua_State *L)	Pushes the floating remainder of two arguments	verified	one	lua/libs#math-functions	
+0x7fb020	35	math_sqrt		lua	boundary	int __fastcall (lua_State *L)	Pushes the square root of its argument	verified	one	lua/libs#math-functions	
+0x7fb050	67	math_pow		lua	boundary	int __fastcall (lua_State *L)	Pushes the first argument raised to the second	verified	one	lua/libs#math-functions	
+0x7fb0a0	39	math_log		lua	boundary	int __fastcall (lua_State *L)	Pushes the natural logarithm of its argument	verified	one	lua/libs#more-math-functions	
+0x7fb0d0	39	math_log10		lua	boundary	int __fastcall (lua_State *L)	Pushes the base-10 logarithm of its argument	verified	one	lua/libs#more-math-functions	
+0x7fb100	55	math_exp		lua	boundary	int __fastcall (lua_State *L)	Pushes e raised to its argument	verified	one	lua/libs#more-math-functions	
+0x7fb140	39	math_deg		lua	boundary	int __fastcall (lua_State *L)	Pushes an angle in radians converted to degrees	verified	one	lua/libs#more-math-functions	
+0x7fb170	39	math_rad		lua	boundary	int __fastcall (lua_State *L)	Pushes an angle in degrees converted to radians	verified	one	lua/libs#more-math-functions	
+0x7fb1a0	71	math_frexp		lua	boundary	int __fastcall (lua_State *L)	Pushes the mantissa and the binary exponent of its argument and returns 2	verified	one	lua/libs#more-math-functions	
+0x7fb1f0	62	math_ldexp		lua	boundary	int __fastcall (lua_State *L)	Pushes the first argument times two to the power of the second	verified	one	lua/libs#more-math-functions	
+0x7fb230	106	math_min		lua	boundary	int __fastcall (lua_State *L)	Pushes the smallest of its arguments	verified	one	lua/libs#more-math-functions	
+0x7fb2a0	106	math_max		lua	boundary	int __fastcall (lua_State *L)	Pushes the largest of its arguments	verified	one	lua/libs#more-math-functions	
 0x7fb310	317	math_random		lua	primitive	int __fastcall (lua_State *L)	Returns a Lua random number drawn from rand	inferred	none	random#the-c-runtime-rand	
 0x7fb450	27	math_randomseed		lua	orchestration	int __fastcall (lua_State *L)	Seeds rand from its first Lua argument, truncated	verified	one	random#the-c-runtime-rand	
 0x7fb470	110	luaopen_math		lua	orchestration		Opens the math library of 24 functions, math.pi and the global __pow	verified	one	ui/luastate#the-library-scripts-see	
-0x7fb4e0	174			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f5050, 0x6f3350 and 5 more; not read here	inferred	none		
-0x7fb590	155			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, lua_pushnil, 0x6f4450 and 4 more; not read here	inferred	none		
-0x7fb630	60			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f5050, lua_pushnumber; not read here	inferred	none		
-0x7fb670	49			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f4c80, __ftol and 1 more; not read here	inferred	none		
-0x7fb6b0	178			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f4b50, 0x6f5050 and 6 more; not read here	inferred	none		
-0x7fb770	184			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f5050, 0x6f4cd0 and 5 more; not read here	inferred	none		
-0x7fb830	239			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4c20, 0x6f4cd0, __ftol and 9 more; not read here	inferred	none		
-0x7fb920	107			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f5050, 0x6f4b20 and 3 more; not read here	inferred	none		
-0x7fb990	648			unassigned			Runs its object file code that calls lua_rawgeti, 0x7fbc50, 0x7fbc20 and 4 more; not read here	inferred	none		
-0x7fbc20	38			unassigned			Runs its object file code that calls 0x6f3f60; not read here	inferred	none		
-0x7fbc50	123			unassigned			Runs its object file code that calls 0x6f3400, 0x6f3350, 0x6f4180 and 3 more; not read here	inferred	none		
+0x7fb4e0	174	luaB_foreachi		lua	boundary	int __fastcall (lua_State *L)	Calls a function on each index of a table up to its length, stopping at a non-nil result	verified	one	lua/libs#table-library	
+0x7fb590	155	luaB_foreach		lua	boundary	int __fastcall (lua_State *L)	Calls a function on each key and value of a table, stopping at a non-nil result	verified	one	lua/libs#table-library	
+0x7fb630	60	luaB_getn		lua	boundary	int __fastcall (lua_State *L)	Pushes the length of a table	verified	one	lua/libs#table-library	
+0x7fb670	49	luaB_setn		lua	boundary	int __fastcall (lua_State *L)	Sets the length of a table	verified	one	lua/libs#table-library	
+0x7fb6b0	178	luaB_tinsert		lua	boundary	int __fastcall (lua_State *L)	Inserts a value into a table at a position, shifting later values up	verified	one	lua/libs#table-library	
+0x7fb770	184	luaB_tremove		lua	boundary	int __fastcall (lua_State *L)	Removes the value at a position from a table, shifting later values down	verified	one	lua/libs#table-library	
+0x7fb830	239	str_concat		lua	boundary	int __fastcall (lua_State *L)	Joins the strings of a table range with a separator	verified	one	lua/libs#table-library	
+0x7fb920	107	luaB_sort		lua	boundary	int __fastcall (lua_State *L)	Sorts a table in place, with an optional order function	verified	one	lua/libs#table-library	
+0x7fb990	648	auxsort		lua	boundary		Sorts a range of a table by quicksort with median of three	verified	one	lua/libs#table-library	
+0x7fbc20	38	set2		lua	boundary		Stores the top two values into two indices of the table	verified	one	lua/libs#table-library	
+0x7fbc50	123	sort_comp		lua	boundary		Compares two values with the order function or lua_lessthan	verified	one	lua/libs#table-library	
 0x7fbcd0	23	luaopen_table		lua	orchestration		Opens the table library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
-0x7fbcf0	62			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, lua_pushnumber; not read here	inferred	none		
-0x7fbd30	162			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f4c80, __ftol and 3 more; not read here	inferred	none		
-0x7fbde0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7fbdf0	183			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f5300, 0x7fbeb0 and 4 more; not read here	inferred	none		
-0x7fbeb0	256			unassigned			Runs its object file code not read here	inferred	none		
-0x7fbfb0	234			unassigned			Runs its object file code not read here	inferred	none		
-0x7fc0a0	30			unassigned			Runs its object file code not read here	inferred	none		
-0x7fc0c0	183			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f5300, 0x7fbeb0 and 4 more; not read here	inferred	none		
-0x7fc180	30			unassigned			Runs its object file code not read here	inferred	none		
-0x7fc1a0	109			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f4c80, __ftol and 3 more; not read here	inferred	none		
-0x7fc210	111			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f4cd0, __ftol and 2 more; not read here	inferred	none		
-0x7fc280	162			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls lua_gettop, 0x6f5300, 0x6f4c80 and 4 more; not read here	inferred	none		
-0x7fc330	95			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4b50, 0x6f5300, 0x6f4370 and 2 more; not read here	inferred	none		
-0x7fc390	24			unassigned			Runs its object file code that calls 0x6f51f0; not read here	inferred	none		
-0x7fc3b0	435			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f4cd0, __ftol and 8 more; not read here	inferred	none		
-0x7fc570	564			unassigned			Runs its object file code that calls __isctype, 0x7fcde0, luaL_error and 9 more; not read here	inferred	none		
-0x7fc820	107			unassigned			Runs its object file code that calls luaL_error; not read here	inferred	none		
-0x7fc890	150			unassigned			Runs its object file code that calls 0x7fc930; not read here	inferred	none		
-0x7fc930	529			unassigned			Runs its object file code that calls tolower, __isctype; not read here	inferred	none		
-0x7fcb90	67			unassigned			Runs its object file code that calls 0x7fc890, 0x7fc930; not read here	inferred	none		
-0x7fcbe0	111			unassigned			Runs its object file code that calls luaL_error; not read here	inferred	none		
-0x7fcc50	97			unassigned			Runs its object file code that calls 0x7fcb90, 0x7fc570; not read here	inferred	none		
-0x7fccc0	87			unassigned			Runs its object file code that calls 0x7fc570, 0x7fcb90; not read here	inferred	none		
-0x7fcd20	77			unassigned			Runs its object file code that calls luaL_error, 0x7fc570; not read here	inferred	none		
-0x7fcd70	61			unassigned			Runs its object file code that calls 0x7fcdb0, 0x7fc570; not read here	inferred	none		
-0x7fcdb0	47			unassigned			Runs its object file code that calls luaL_error; not read here	inferred	none		
-0x7fcde0	63			unassigned			Runs its object file code that calls 0x7fce20; not read here	inferred	none		
-0x7fce20	37			unassigned			Runs its object file code that calls luaL_error; not read here	inferred	none		
-0x7fce50	134			unassigned			Runs its object file code that calls _memchr; not read here	inferred	none		
-0x7fcee0	95			unassigned			Runs its object file code that calls 0x6f4b20, 0x6f3840, 0x7fcf40; not read here	inferred	none		
-0x7fcf40	96			unassigned			Runs its object file code that calls luaL_error, 0x6f3840, lua_pushnumber; not read here	inferred	none		
-0x7fcfa0	73			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, lua_settop, lua_pushnumber and 1 more; not read here	inferred	none		
-0x7fcff0	232			unassigned			Runs its object file code that calls lua_tostring, 0x6f36e0, 0x6f3620 and 5 more; not read here	inferred	none		
-0x7fd0e0	438			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f4cd0, __ftol and 11 more; not read here	inferred	none		
-0x7fd2a0	293			unassigned			Runs its object file code that calls lua_isstring, lua_tostring, 0x6f36e0 and 9 more; not read here	inferred	none		
-0x7fd3d0	691			unassigned		int __fastcall (lua_State *L)	Runs its object file code that calls 0x6f4be0, 0x6f5300, 0x6f5120 and 12 more; not read here	inferred	none		
-0x7fd6d0	211			unassigned			Runs its object file code that calls 0x6f4be0, 0x6f5120, 0x6f51f0; not read here	inferred	none		
+0x7fbcf0	62	str_len		lua	boundary	int __fastcall (lua_State *L)	Pushes the length of a string	verified	one	lua/libs#string-basics	
+0x7fbd30	162	str_sub		lua	boundary	int __fastcall (lua_State *L)	Pushes the substring between two positions, counted from either end	verified	one	lua/libs#string-basics	
+0x7fbde0	11	posrelat		lua	boundary		Turns a negative string position into one counted from the end	verified	one	lua/libs#string-basics	
+0x7fbdf0	183	str_lower		lua	boundary	int __fastcall (lua_State *L)	Pushes a string with its UTF-8 code points mapped to lower case	verified	one	lua/libs#case-mapping	
+0x7fbeb0	256	Utf8DecodeChar		lua	primitive		Decodes one UTF-8 sequence of up to six bytes and returns its code and length	verified	one	lua/libs#case-mapping	
+0x7fbfb0	234	Utf8EncodeChar		lua	primitive		Writes a code point as UTF-8 of up to six bytes and returns the end pointer	verified	one	lua/libs#case-mapping	
+0x7fc0a0	30	LowerCodepoint		lua	primitive		Maps a code point to lower case for A to Z and the Latin-1 capitals	verified	one	lua/libs#case-mapping	
+0x7fc0c0	183	str_upper		lua	boundary	int __fastcall (lua_State *L)	Pushes a string with its UTF-8 code points mapped to upper case	verified	one	lua/libs#case-mapping	
+0x7fc180	30	UpperCodepoint		lua	primitive		Maps a code point to upper case for a to z and the Latin-1 smalls	verified	one	lua/libs#case-mapping	
+0x7fc1a0	109	str_rep		lua	boundary	int __fastcall (lua_State *L)	Pushes a string repeated a number of times	verified	one	lua/libs#string-basics	
+0x7fc210	111	str_byte		lua	boundary	int __fastcall (lua_State *L)	Pushes the code of the byte at a position, nothing outside the string	verified	one	lua/libs#string-basics	
+0x7fc280	162	str_char		lua	boundary	int __fastcall (lua_State *L)	Pushes a string made of the byte values of its arguments	verified	one	lua/libs#string-basics	
+0x7fc330	95	str_dump		lua	boundary	int __fastcall (lua_State *L)	Pushes the compiled form of a Lua function as a string	verified	one	lua/libs#string-basics	
+0x7fc390	24	writer		lua	boundary		Appends a block written by lua_dump to the buffer	verified	one	lua/libs#string-basics	
+0x7fc3b0	435	str_find		lua	boundary	int __fastcall (lua_State *L)	Pushes the start, end and captures of the first match of a pattern, or nil	verified	one	lua/libs#search-and-replace	
+0x7fc570	564	match		lua	boundary		Matches a pattern at a subject position and returns the end of the match or null	verified	one	lua/libs#pattern-matching	
+0x7fc820	107	luaI_classend		lua	boundary		Finds the end of the single-character class that starts a pattern	verified	one	lua/libs#pattern-classes	
+0x7fc890	150	matchbracketclass		lua	boundary		Tests a character against a bracketed class with ranges and negation	verified	one	lua/libs#pattern-classes	
+0x7fc930	529	match_class		lua	boundary		Tests a character against a % class letter, negated by a capital	verified	one	lua/libs#pattern-classes	
+0x7fcb90	67	luaI_singlematch		lua	boundary		Tests one character against the class at a pattern position	verified	one	lua/libs#pattern-classes	
+0x7fcbe0	111	matchbalance		lua	boundary		Matches a %b pair of delimiters with nesting	verified	one	lua/libs#pattern-classes	
+0x7fcc50	97	max_expand		lua	boundary		Matches as many repetitions of a class as possible, then backs off for the rest	verified	one	lua/libs#pattern-matching	
+0x7fccc0	87	min_expand		lua	boundary		Matches as few repetitions of a class as possible for the rest of the pattern	verified	one	lua/libs#pattern-matching	
+0x7fcd20	77	start_capture		lua	boundary		Opens a capture at a subject position and matches the rest, undoing it on failure	verified	one	lua/libs#pattern-matching	
+0x7fcd70	61	end_capture		lua	boundary		Closes the open capture and matches the rest, reopening it on failure	verified	one	lua/libs#pattern-matching	
+0x7fcdb0	47	capture_to_close		lua	boundary		Returns the index of the innermost capture that is still open	verified	one	lua/libs#pattern-matching	
+0x7fcde0	63	match_capture		lua	boundary		Matches the text of an earlier capture again at a subject position	verified	one	lua/libs#pattern-matching	
+0x7fce20	37	check_capture		lua	boundary		Validates a %n capture index and returns its position	verified	one	lua/libs#pattern-matching	
+0x7fce50	134	lmemfind		lua	boundary		Finds a block inside another block with memchr	verified	one	lua/libs#search-and-replace	
+0x7fcee0	95	push_captures		lua	boundary		Pushes every capture of a match, or the whole match when there is none	verified	one	lua/libs#search-and-replace	
+0x7fcf40	96	push_onecapture		lua	boundary		Pushes one capture as a string or a position	verified	one	lua/libs#search-and-replace	
+0x7fcfa0	73	gfind		lua	boundary	int __fastcall (lua_State *L)	Returns an iterator over the matches of a pattern in a string	verified	one	lua/libs#search-and-replace	
+0x7fcff0	232	gfind_aux		lua	boundary		Returns the next match of a gfind iterator and advances its position upvalue	verified	one	lua/libs#search-and-replace	
+0x7fd0e0	438	str_gsub		lua	boundary	int __fastcall (lua_State *L)	Pushes a string with the matches of a pattern replaced, and the replacement count	verified	one	lua/libs#search-and-replace	
+0x7fd2a0	293	add_s		lua	boundary		Adds the replacement for a match to the buffer, from a string with %n or a function result	verified	one	lua/libs#search-and-replace	
+0x7fd3d0	691	str_format		lua	boundary	int __fastcall (lua_State *L)	Pushes a string formatted from a format and arguments, as C sprintf with the Lua conversions	verified	one	lua/libs#formatting	
+0x7fd6d0	211	luaI_addquoted		lua	boundary		Adds a string to the buffer in double quotes, escaping quote, backslash, newline and NUL	verified	one	lua/libs#formatting	
 0x7fd810	23	luaopen_string		lua	orchestration		Opens the string library of 12 functions	verified	one	ui/luastate#what-a-new-state-holds	
 0x7fd830	31	__EH_prolog	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd84f	140	_bsearch	idb	crt	boundary		Runs its object file code not read here	inferred	none		

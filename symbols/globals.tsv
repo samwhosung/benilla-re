@@ -1249,6 +1249,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81df88	float	s_plateLowHealthFraction		ui	Holds 0.2, the fill fraction at or below which the auto-colour is red	verified	one	ui/nameplates#bar-colour-and-values
 0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
+0x822d28	double	s_degreesPerRadian		lua	Holds 180 over pi, the factor math.deg multiplies by	verified	one	lua/libs#more-math-functions
+0x822d30	double	s_radiansPerDegree		lua	Holds pi over 180, the factor math.rad multiplies by	verified	one	lua/libs#more-math-functions
 0x822d40	luaL_reg[9]	tab_funcs		lua	Pairs the table library names concat to remove with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822d88	luaL_reg[13]	strlib		lua	Pairs the string library names len to gsub with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x827000	void (*[7180])(void)	__xc_a		crt	Lists the C++ static initializers __cinit runs in ascending order, up to __xc_z	verified	one	random#static-initializers
