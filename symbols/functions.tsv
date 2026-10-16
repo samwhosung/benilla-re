@@ -29945,75 +29945,75 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fc900	114			lua	boundary		Runs lmem.c code that calls 0x6fc870, luaM_irealloc; not read here	inferred	none		
 0x6fc980	46	luaM_irealloc	idb	lua	boundary		Runs its object file code that calls luaM_reallocPool; not read here	inferred	none		
 0x6fc9b0	139	luaY_parser		lua	boundary		Compiles a chunk from source	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x6fca40	73			lua	boundary		Runs its object file code that calls 0x6ff610; not read here	inferred	none		
-0x6fca90	100			lua	boundary		Runs its object file code that calls 0x6f9fe0, 0x6fa4f0; not read here	inferred	none		
-0x6fcb00	325			lua	boundary		Runs lparser.c code that calls 0x6fcc50, 0x7018e0, luaM_irealloc; not read here	inferred	none		
-0x6fcc50	52			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fcc90	88			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fcd10, 0x6fcd60 and 1 more; not read here	inferred	none		
-0x6fccf0	19			lua	boundary		Runs its object file code that calls 0x6fca40; not read here	inferred	none		
-0x6fcd10	34			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fcd60	232			lua	boundary		Runs its object file code that calls 0x6fe6a0, 0x6fcfd0, 0x6fca40 and 11 more; not read here	inferred	none		
-0x6fce90	95			lua	boundary		Runs its object file code that calls 0x6fccf0, 0x6fcef0, 0x6ff550 and 2 more; not read here	inferred	none		
-0x6fcef0	36			lua	boundary		Runs its object file code that calls 0x6ff550, 0x6f5c20; not read here	inferred	none		
-0x6fcf20	45			lua	boundary		Runs its object file code that calls 0x6fcf50, 0x6fcc90, 0x6fcf80; not read here	inferred	none		
-0x6fcf50	41			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fcf80	68			lua	boundary		Runs its object file code that calls 0x6fcc50, 0x7018e0; not read here	inferred	none		
-0x6fcfd0	364			lua	boundary		Runs its object file code that calls 0x6fca40, 0x700810, 0x700850 and 12 more; not read here	inferred	none		
-0x6fd140	29			lua	boundary		Runs its object file code that calls 0x6fccf0; not read here	inferred	none		
-0x6fd160	8			lua	boundary		Runs its object file code that calls 0x6fd170; not read here	inferred	none		
-0x6fd170	208			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fe0a0, 0x6fca40 and 6 more; not read here	inferred	none		
-0x6fd240	213			lua	boundary		Runs its object file code that calls 0x700b90, 0x6fd3e0, 0x6fd400 and 2 more; not read here	inferred	none		
-0x6fd3e0	24			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fd400	35			lua	boundary		Runs its object file code that calls 0x700aa0, 0x6fd3e0; not read here	inferred	none		
-0x6fd430	334			lua	boundary		Runs its object file code that calls 0x7018e0, 0x6fd3e0, 0x700cf0 and 10 more; not read here	inferred	none		
-0x6fd580	16			lua	boundary		Runs its object file code that calls 0x6ff610; not read here	inferred	none		
-0x6fd590	162			lua	boundary		Runs its object file code that calls 0x6ff440, 0x6fd640, 0x6fd690 and 4 more; not read here	inferred	none		
-0x6fd640	24			lua	boundary		Runs its object file code that calls 0x6fd660, 0x6fd400; not read here	inferred	none		
-0x6fd660	38			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fca40; not read here	inferred	none		
-0x6fd690	44			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6fd160, 0x700ff0; not read here	inferred	none		
-0x6fd6c0	72			lua	boundary		Runs its object file code that calls 0x700cf0, 0x701910; not read here	inferred	none		
-0x6fd710	114			lua	boundary		Runs its object file code that calls 0x700bd0, 0x701910, 0x700cf0; not read here	inferred	none		
-0x6fd790	48			lua	boundary		Runs its object file code that calls 0x6fd160, 0x6ff440; not read here	inferred	none		
-0x6fd7c0	144			lua	boundary		Runs its object file code that calls 0x6fca90, 0x6fd140, 0x6fd850 and 5 more; not read here	inferred	none		
-0x6fd850	23			lua	boundary		Runs its object file code that calls 0x6fd8b0; not read here	inferred	none		
-0x6fd870	50			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fd8b0	47			lua	boundary		Runs its object file code that calls 0x6f9d00, 0x6fd8e0; not read here	inferred	none		
-0x6fd8e0	69			lua	boundary		Runs its object file code that calls 0x6ff440, 0x6fd930; not read here	inferred	none		
-0x6fd930	73			lua	boundary		Runs its object file code that calls 0x6fc900; not read here	inferred	none		
-0x6fd980	174			lua	boundary		Runs its object file code that calls 0x6fc900, 0x701910, 0x6fd3e0 and 1 more; not read here	inferred	none		
-0x6fda30	118			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fd660, 0x6fd8e0 and 3 more; not read here	inferred	none		
-0x6fdab0	80			lua	boundary		Runs its object file code that calls 0x6fd870, 0x6ff440, 0x6fd850 and 1 more; not read here	inferred	none		
-0x6fdb00	163			lua	boundary		Runs its object file code that calls 0x6fde40, 0x6fdcb0, 0x700fb0 and 7 more; not read here	inferred	none		
-0x6fdcb0	60			lua	boundary		Runs its object file code that calls 0x700fb0, 0x6fca40, 0x6fd640 and 1 more; not read here	inferred	none		
-0x6fdcf0	254			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fd400, 0x6fca40 and 8 more; not read here	inferred	none		
-0x6fddf0	75			lua	boundary		Runs its object file code that calls 0x6fd160, 0x6fccf0, 0x700cf0; not read here	inferred	none		
-0x6fde40	91			lua	boundary		Runs its object file code that calls 0x6fdea0, 0x6fca40, 0x6fd160 and 1 more; not read here	inferred	none		
-0x6fdea0	41			lua	boundary		Runs its object file code that calls 0x6fd660, 0x6fded0; not read here	inferred	none		
-0x6fded0	164			lua	boundary		Runs its object file code that calls 0x6fd3e0, 0x6fe050, 0x6fe080 and 3 more; not read here	inferred	none		
-0x6fdf80	208			lua	boundary		Runs its object file code that calls 0x6ff440, 0x6fc900; not read here	inferred	none		
-0x6fe050	44			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fe080	27			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fe0a0	18			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fe0c0	111			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fe260	108			lua	boundary		Runs its object file code that calls 0x700850, 0x6fcf50, 0x6fca40 and 5 more; not read here	inferred	none		
-0x6fe2d0	45			lua	boundary		Runs its object file code that calls 0x6fd160, 0x7011d0; not read here	inferred	none		
-0x6fe300	128			lua	boundary		Runs its object file code that calls 0x6fcf50, 0x6fca40, 0x6fd660 and 5 more; not read here	inferred	none		
-0x6fe380	208			lua	boundary		Runs its object file code that calls 0x6fd8e0, 0x6fd8b0, 0x6fd140 and 8 more; not read here	inferred	none		
-0x6fe450	40			lua	boundary		Runs its object file code that calls 0x6fd160, 0x700cf0; not read here	inferred	none		
-0x6fe480	181			lua	boundary		Runs its object file code that calls 0x6fd870, 0x6fd140, 0x6fcf50 and 9 more; not read here	inferred	none		
-0x6fe540	217			lua	boundary		Runs its object file code that calls 0x6fd8b0, 0x6fd8e0, 0x6fccf0 and 7 more; not read here	inferred	none		
-0x6fe620	121			lua	boundary		Runs its object file code that calls 0x700bd0, 0x700a80, 0x700cf0 and 1 more; not read here	inferred	none		
-0x6fe6a0	189			lua	boundary		Runs its object file code that calls 0x6fe760, 0x700810, 0x7009f0 and 4 more; not read here	inferred	none		
-0x6fe760	41			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6fe2d0, 0x6fd140; not read here	inferred	none		
-0x6fe790	99			lua	boundary		Runs its object file code that calls 0x6fd660, 0x6fd8e0, 0x6fd3e0 and 3 more; not read here	inferred	none		
-0x6fe800	118			lua	boundary		Runs its object file code that calls 0x6fd660, 0x6fd8e0, 0x6fccf0 and 3 more; not read here	inferred	none		
-0x6fe880	70			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6fe8d0, 0x6fd7c0 and 2 more; not read here	inferred	none		
-0x6fe8d0	78			lua	boundary		Runs its object file code that calls 0x6fdea0, 0x6fdcb0; not read here	inferred	none		
-0x6fe920	70			lua	boundary		Runs its object file code that calls 0x6fdb00, 0x700bd0, 0x6fe970; not read here	inferred	none		
-0x6fe970	246			lua	boundary		Runs its object file code that calls 0x6ff4d0, 0x6fccf0, 0x6fdb00 and 8 more; not read here	inferred	none		
-0x6fea70	104			lua	boundary		Runs its object file code that calls 0x7018e0, 0x700a80; not read here	inferred	none		
-0x6feae0	148			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6fcd10, 0x6fddf0 and 4 more; not read here	inferred	none		
-0x6feb80	114			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6ff4d0, 0x7018e0 and 2 more; not read here	inferred	none		
+0x6fca40	73	next		lua	boundary		Moves the lexer to the next token, taking the lookahead token when one is held	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fca90	100	open_func		lua	boundary		Starts the state of a function being compiled with a new prototype and constant table	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcb00	325	close_func		lua	boundary		Ends a compiled function with a return and trims its prototype's vectors to their used sizes	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcc50	52	removevars		lua	boundary		Ends the scope of the active locals above a level, recording their last instruction	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fcc90	88	chunk		lua	boundary		Parses statements until a block end, freeing registers after each, under the nesting limit	verified	one	lua/compiler#function-states-and-blocks	
+0x6fccf0	19	testnext		lua	boundary		Skips the current token when it is the given one and answers whether it was	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fcd10	34	block_follow		lua	boundary		Answers whether a token ends a block: else, elseif, end, until or the end of the chunk	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcd60	232	statement		lua	boundary		Parses one statement by its first token and answers whether it must be the last of its block	verified	one	lua/compiler#function-states-and-blocks	
+0x6fce90	95	check_match		lua	boundary		Requires a closing token, naming the opening token and its line when they differ	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fcef0	36	error_expected		lua	boundary		Raises a syntax error that a token was expected	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fcf20	45	block		lua	boundary		Parses a block in a scope of its own	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcf50	41	enterblock		lua	boundary		Opens a block scope, breakable or not, on the function state	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcf80	68	leaveblock		lua	boundary		Closes a block scope: ends its locals, closes upvalues when needed and patches its breaks	verified	one	lua/compiler#function-states-and-blocks	
+0x6fcfd0	364	whilestat		lua	boundary		Compiles a while loop, moving the condition's code after the body	verified	one	lua/compiler#loops-and-conditionals	
+0x6fd140	29	check		lua	boundary		Requires the given token and skips it	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd160	8	expr		lua	boundary		Parses a whole expression	verified	one	lua/compiler#expressions	
+0x6fd170	208	subexpr		lua	boundary		Parses an expression of operators above a priority limit and answers the first operator left	verified	one	lua/compiler#expressions	
+0x6fd240	213	simpleexp		lua	boundary		Parses a number, string, nil, true, false, table constructor, function or primary expression	verified	one	lua/compiler#expressions	
+0x6fd3e0	24	init_exp		lua	boundary		Fills an expression descriptor with a kind and an index and no jump lists	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd400	35	codestring		lua	boundary		Makes an expression of a string constant	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd430	334	constructor		lua	boundary		Compiles a table constructor and sets the new table's initial array and hash sizes	verified	one	lua/compiler#table-constructors	
+0x6fd580	16	lookahead		lua	boundary		Reads the token after the current one into the lookahead slot	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd590	162	recfield		lua	boundary		Compiles a keyed field of a table constructor into a table store	verified	one	lua/compiler#table-constructors	
+0x6fd640	24	checkname		lua	boundary		Makes a string-constant expression of a required name	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd660	38	str_checkname		lua	boundary		Requires a name token and returns its string	verified	one	lua/compiler#parser-tokens-and-checks	
+0x6fd690	44	luaY_index		lua	boundary		Parses a bracketed index expression	verified	one	lua/compiler#expressions	
+0x6fd6c0	72	closelistfield		lua	boundary		Puts a pending list item of a constructor in a register and flushes every 32 items	verified	one	lua/compiler#table-constructors	
+0x6fd710	114	lastlistfield		lua	boundary		Stores a constructor's pending list items, all results of a final call included	verified	one	lua/compiler#table-constructors	
+0x6fd790	48	listfield		lua	boundary		Parses a positional field of a table constructor and counts it	verified	one	lua/compiler#table-constructors	
+0x6fd7c0	144	body		lua	boundary		Compiles a function body into a new prototype and a closure expression	verified	one	lua/compiler#function-states-and-blocks	
+0x6fd850	23	create_local		lua	boundary		Declares a local of a given name and brings it into scope	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fd870	50	adjustlocalvars		lua	boundary		Brings declared locals into scope, recording their first instruction	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fd8b0	47	new_localvarstr		lua	boundary		Declares a local named by a C string	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fd8e0	69	new_localvar		lua	boundary		Declares a local not yet in scope, under the limit of 200 locals	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fd930	73	luaI_registerlocalvar		lua	boundary		Adds a variable to a prototype's local variable records and returns its index	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fd980	174	pushclosure		lua	boundary		Adds a compiled prototype to its parent and emits the closure with its upvalue moves	verified	one	lua/compiler#function-states-and-blocks	
+0x6fda30	118	parlist		lua	boundary		Parses a function's parameter names and an optional vararg mark	verified	one	lua/compiler#function-states-and-blocks	
+0x6fdab0	80	code_params		lua	boundary		Brings parameters into scope, sets the counts and declares arg for a vararg function	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fdb00	163	primaryexp		lua	boundary		Parses a prefix expression and its field, index, method and call suffixes	verified	one	lua/compiler#expressions	
+0x6fdcb0	60	luaY_field		lua	boundary		Compiles a dotted or colon field access	verified	one	lua/compiler#expressions	
+0x6fdcf0	254	funcargs		lua	boundary		Parses call arguments and emits the call	verified	one	lua/compiler#expressions	
+0x6fddf0	75	explist1		lua	boundary		Parses a comma-separated expression list and answers its length	verified	one	lua/compiler#expressions	
+0x6fde40	91	prefixexp		lua	boundary		Parses a name or a parenthesized expression	verified	one	lua/compiler#expressions	
+0x6fdea0	41	singlevar		lua	boundary		Parses a name and resolves it as a local, upvalue or global	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fded0	164	singlevaraux		lua	boundary		Resolves a name through the enclosing function states as a local, upvalue or global	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fdf80	208	indexupvalue		lua	boundary		Returns a function's upvalue index for a variable, adding it under the limit of 32	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fe050	44	searchvar		lua	boundary		Returns the active local of a name, innermost first, or -1	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fe080	27	markupval		lua	boundary		Marks the block of a local as holding an upvalue	verified	one	lua/compiler#local-variables-and-upvalues	
+0x6fe0a0	18	getunopr		lua	boundary		Returns the unary operator of a token, or none	verified	one	lua/compiler#expressions	
+0x6fe0c0	111	getbinopr		lua	boundary		Returns the binary operator of a token, or none	verified	one	lua/compiler#expressions	
+0x6fe260	108	repeatstat		lua	boundary		Compiles a repeat until loop	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe2d0	45	cond		lua	boundary		Compiles a condition that jumps when it is false	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe300	128	forstat		lua	boundary		Compiles a for statement as the numeric or the generic form	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe380	208	fornum		lua	boundary		Compiles a numeric for loop's control locals, start, limit and step	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe450	40	exp1		lua	boundary		Compiles an expression into the next register and answers its kind	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe480	181	forbody		lua	boundary		Compiles the body of a for loop and its loop instruction	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe540	217	forlist		lua	boundary		Compiles a generic for loop's names, expressions and preparation	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe620	121	adjust_assign		lua	boundary		Adjusts the values of an expression list to a number of variables	verified	one	lua/compiler#statements-and-assignments	
+0x6fe6a0	189	ifstat		lua	boundary		Compiles an if statement with its elseif and else parts	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe760	41	test_then_block		lua	boundary		Compiles a condition and the block after then	verified	one	lua/compiler#loops-and-conditionals	
+0x6fe790	99	localfunc		lua	boundary		Compiles a local function, the 5.0 form without raising the stack size	verified	one	lua/compiler#statements-and-assignments	
+0x6fe800	118	localstat		lua	boundary		Compiles a local declaration with its optional values	verified	one	lua/compiler#statements-and-assignments	
+0x6fe880	70	funcstat		lua	boundary		Compiles a function statement and stores the closure in its name	verified	one	lua/compiler#statements-and-assignments	
+0x6fe8d0	78	funcname		lua	boundary		Parses a function statement's dotted name and answers whether it has a method colon	verified	one	lua/compiler#statements-and-assignments	
+0x6fe920	70	exprstat		lua	boundary		Compiles a call statement or an assignment	verified	one	lua/compiler#statements-and-assignments	
+0x6fe970	246	assignment		lua	boundary		Compiles a multiple assignment from its targets and values	verified	one	lua/compiler#statements-and-assignments	
+0x6fea70	104	check_conflict		lua	boundary		Copies a local that an earlier table target of an assignment uses before it is overwritten	verified	one	lua/compiler#statements-and-assignments	
+0x6feae0	148	retstat		lua	boundary		Compiles a return statement, turning a lone call into a tail call	verified	one	lua/compiler#statements-and-assignments	
+0x6feb80	114	breakstat		lua	boundary		Compiles a break out of the innermost loop	verified	one	lua/compiler#statements-and-assignments	
 0x6fec00	68	luaU_undump		lua	boundary		Loads a precompiled chunk; its one caller never reaches it	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fec50	18			lua	boundary		Runs its object file code that calls 0x6ff210; not read here	inferred	none		
 0x6fec70	165			lua	boundary		Runs its object file code that calls 0x6f9fe0, 0x6fee40, 0x6fed80 and 8 more; not read here	inferred	none		
@@ -30035,20 +30035,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ff360	71			unassigned			Runs its object file code that calls 0x6fed20, 0x6fc870; not read here	inferred	none		
 0x6ff3b0	53			unassigned			Runs its object file code that calls 0x6fed20, 0x6fc870; not read here	inferred	none		
 0x6ff3f0	6			unassigned			Runs its object file code not read here	inferred	none		
-0x6ff400	55			unassigned			Runs its object file code that calls 0x6f9d00; not read here	inferred	none		
-0x6ff440	49			unassigned			Runs its object file code that calls 0x6f5c20, 0x6ff4d0; not read here	inferred	none		
-0x6ff480	76			unassigned			Runs its object file code that calls 0x6f5c40, 0x6f5c20, luaD_throw; not read here	inferred	none		
-0x6ff4d0	88			unassigned			Runs its object file code that calls 0x6ff530, 0x6ff550; not read here	inferred	none		
-0x6ff530	20			unassigned			Runs its object file code that calls 0x6ff480; not read here	inferred	none		
-0x6ff550	35			unassigned			Runs its object file code that calls 0x6f5c20; not read here	inferred	none		
+0x6ff400	55	luaX_init		lua	boundary		Interns the 21 reserved words as fixed strings that carry their token index	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ff440	49	luaX_checklimit		lua	boundary		Raises a syntax error when a count passes its limit	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ff480	76	luaX_errorline		lua	boundary		Throws a syntax error with the chunk name, the line and the token near it	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ff4d0	88	luaX_syntaxerror		lua	boundary		Raises a syntax error near the current token	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ff530	20	luaX_error		lua	boundary		Throws a syntax error at the current line	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ff550	35	luaX_token2str		lua	boundary		Returns the text of a token: the character itself or the reserved word or symbol	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ff580	135	luaX_setinput		lua	boundary		Starts the lexer on a chunk, skipping a first line that begins with #	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x6ff610	1366			unassigned			Runs its object file code that calls 0x6ffc20, 0x6fb480, 0x700010 and 7 more; not read here	inferred	none		
-0x6ffc20	65			unassigned			Runs its object file code that calls 0x6fb480, 0x6ff440; not read here	inferred	none		
-0x6ffc70	167			unassigned			Runs its object file code that calls 0x6fb5c0, 0x6fb480, __isctype; not read here	inferred	none		
-0x6ffd20	673			unassigned			Runs its object file code that calls 0x6fb5c0, __isctype, 0x6fb480 and 2 more; not read here	inferred	none		
-0x6fffd0	63			unassigned			Runs its object file code that calls 0x6ff550, 0x6ff530; not read here	inferred	none		
-0x700010	527			unassigned			Runs its object file code that calls 0x6fb5c0, 0x6fb480, 0x6ffc20 and 2 more; not read here	inferred	none		
-0x7002a0	1093			unassigned			Runs its object file code that calls 0x6fb5c0, 0x6fb480, 0x6ffc20 and 3 more; not read here	inferred	none		
+0x6ff610	1366	luaX_lex		lua	boundary		Reads the next token, skipping blanks and comments, and fills its value	verified	one	lua/compiler#reading-tokens	
+0x6ffc20	65	inclinenumber		lua	boundary		Moves past a newline and counts the line	verified	one	lua/compiler#lexer-errors-and-limits	
+0x6ffc70	167	readname		lua	boundary		Reads a name into the buffer and returns its length	verified	one	lua/compiler#reading-tokens	
+0x6ffd20	673	read_numeral		lua	boundary		Reads a number into the buffer and converts it	verified	one	lua/compiler#reading-tokens	
+0x6fffd0	63	luaX_lexerror		lua	boundary		Raises a lexical error near the buffer text, or near end of file	verified	one	lua/compiler#lexer-errors-and-limits	
+0x700010	527	read_long_string		lua	boundary		Reads a long string or long comment, counting nested brackets	verified	one	lua/compiler#reading-tokens	
+0x7002a0	1093	read_string		lua	boundary		Reads a quoted string, decoding its escapes	verified	one	lua/compiler#reading-tokens	
 0x700790	124			unassigned			Runs its object file code that calls 0x7018e0; not read here	inferred	none		
 0x700810	58			unassigned			Runs its object file code that calls 0x701910, 0x7009f0; not read here	inferred	none		
 0x700850	7			unassigned			Runs its object file code not read here	inferred	none		

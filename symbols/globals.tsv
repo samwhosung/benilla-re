@@ -1115,6 +1115,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
+0x811d4c	uint8_t[28]	priority		lua	Holds the left and right priority of each of the 14 binary operators of the parser	verified	one	lua/compiler#expressions
+0x811d68	char *[31]	token2string		lua	Holds the text of each token from 257, the reserved words to <eof>	verified	one	lua/compiler#lexer-errors-and-limits
 0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	one	ui/luastate#the-library-scripts-see
 0x811f4c	void *[5]	s_scriptObjectVtable		ui	Holds the script object vtable the constructor 0x701ae0 stores	verified	one	ui/script#the-script-object
 0x811f8c	uint32_t[7]	s_m2StageCombineByBlend		models	Holds the texture stage combine value of each blend mode	verified	one	models/render#texture-stages
@@ -2237,7 +2239,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8719b0	char[5]	s_nextName		unassigned	Holds next	verified	one	ui/luastate#lua-50-behaviour-kept
 0x871c10	char[25]	s_textAttemptToSASValue		lua	Holds the string "attempt to %s a %s value"	inferred	none	
 0x871c2c	char[35]	s_textAttemptToSSSASValue		lua	Holds the string "attempt to %s %s `%s' (a %s value)"	inferred	none	
-0x87217c	char[20]	s_textSDSNearS		unassigned	Holds the string "%s:%d: %s near `%s'"	inferred	none	
+0x87217c	char[20]	s_textSDSNearS		lua	Holds the string "%s:%d: %s near `%s'"	verified	one	lua/compiler#lexer-errors-and-limits
 0x8722c8	int32_t	s_errorHandlerRef		ui	Holds the registry reference of the script error handler	verified	one	ui/script#running-a-handler
 0x8722cc	int32_t	s_userErrorHandlerRef		ui	Holds the registry reference of the function seterrorhandler set, -1 for none	verified	one	ui/luastate#error-handlers
 0x8722d0	uint32_t	s_openTableMark		ui	Holds 1, the light userdata the serializer marks open tables with	verified	one	ui/luastate#what-a-new-state-holds
