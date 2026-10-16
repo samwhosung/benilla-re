@@ -127,18 +127,24 @@ The absences are of the readers named: callees past them were not read. Column m
 
 A localized string is eight offset columns followed by a flags column, nine dwords. `Read` stores the eight offsets as pointers at the
 column's first eight cells and the flags at the ninth. A consumer picks one with the locale index: `record + base·4 + locale·4`.
-The locale index is the position of the configured country in the eight names `enUS`, `koKR`, `frFR`, `deDE`, `zhCN`, `zhTW`,
-`esES`, `xxYY`; no match leaves it 0.
+Start-up loads `Wow.ini`, reads `Language` and then `Country` from `[WoW Config]`, and joins them Language first into a tag of at most
+four characters: `en` and `GB` give `enGB`. The tag's bytes are packed into `0xc2a2a4`, and the locale index is the tag's position
+among `enUS`, `koKR`, `frFR`, `deDE`, `zhCN`, `zhTW`, `esES`, `xxYY`, compared ignoring case; no match, as for `enGB`, leaves it 0.
+Without the file or either key neither word is written.
 
-Addresses: `0x574070`, `0x57435c`, `0x8558a4`, `0xc0e080`, `0xc2a2a4`, `0x402540`, `0x402562`
+Addresses: `0x574070`, `0x57435c`, `0x8558a4`, `0xc0e080`, `0xc2a2a4`, `0x402496`, `0x4024a4`, `0x4024d6`, `0x4024f7`, `0x402513`, `0x402528`, `0x402537`, `0x402540`, `0x402551`, `0x402562`, `0x444460`, `0x4455d0`
 Confidence: verified
 Proof: one
 Test: none
 
 `AreaTable`'s `Read` reads eight offsets into temporaries (`0x5741ec` and before) and the flags into `+0x4c` (`0x574211`), then `0x57436d`
-to `0x5743a0` store the eight pointers at `+0x2c` to `+0x48`. The names are the eight `char *` at `0x8558a4`; the loop at `0x402540`
-compares the configured country (`0x64a4c0`) and stores the index at `0xc0e080` (`0x402562`); with no match nothing is stored and the word stays 0. The four packed
-bytes of the country and language are stored at `0xc2a2a4` (`0x402537`).
+to `0x5743a0` store the eight pointers at `+0x2c` to `+0x48`. `0x402496` opens `Wow.ini` through `0x444460`, which loads it with `SFile::LoadByName`; a
+zero return skips to `0x402568` (`0x4024a4`). `0x4024d6` and `0x4024f7` call `0x4455d0` with `WoW Config` and `Language`, then `Country`,
+into 16-byte buffers, each zero return skipping too. `0x402513` is `SStrPrintf(tag, 5, "%s%s", language, country)`. `0x402528` packs
+up to four bytes as `eax = (eax << 8) + byte`, each byte sign-extended, the first byte highest, and `0x402537` stores it. The loop at
+`0x402540` calls `SStrCmpI(tag, name, 0x7fffffff)` (`0x402551`) over the eight `char *` at `0x8558a4` and stores the first match's
+index at `0xc0e080` (`0x402562`); with no match nothing is stored. `0x402562` is the one store to `0xc0e080`: of the 397
+instructions that name it, the others read it.
 
 ## Startup strings
 

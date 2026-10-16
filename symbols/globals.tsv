@@ -1919,7 +1919,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85544c	const char[38]	s_errCraftSpell		ui	Holds the error text Invalid craft in SetCraftSpell(index) of SetCraftSpell	verified	one	ui/tooltipbuff#craft-spells
 0x855808	int32_t	s_physicalResistIndex		ui	Holds the index of the damage class row marked physical, −1 until the table is checked	verified	one	ui/tooltipunitstatus#the-studied-creature-lines
 0x85580c	char[23]	s_pathWowClientDbH		dbc	Holds ..\..\DB/WowClientDB.h, the tag of the allocations in the table loaders	verified	one	dbc#the-loader
-0x8558a4	uint32_t			unassigned	Holds a dword that InitializeGlobal, Script::GetLocale read; not read here	inferred	none	
+0x8558a4	char *[8]	s_localeNames		unassigned	Holds the eight locale tags enUS to xxYY the locale index counts through	verified	one	dbc#localized-strings
 0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	one	dbcache#name-cache-node
 0x856450	uint32_t			unassigned	Holds a dword that SendBugReport reads; not read here	inferred	none	
 0x85645c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -3656,7 +3656,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e054	uint32_t[5]	s_areaPoiStore		dbc	Holds the AreaPOI.dbc store: records of 0x74 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-landmarks
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
-0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index that picks a localized string column	inferred	none	spell/handlers#channel-start-and-update
+0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	one	dbc#localized-strings
 0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
 0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
 0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
@@ -3750,7 +3750,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/who#who-list-reply
 0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/who#who-list-reply
 0xc2a1a0	uint8_t[24]	s_downloadLock		net	Holds the lock a download file's release and feed take	verified	one	net/download#releasing-a-download
-0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the four bytes of the configured country and language packed into a dword	verified	one	dbc#localized-strings
+0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the Wow.ini Language and Country tag packed into a dword, first byte highest	verified	one	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
 0xc2a354	uint8_t[24]	s_socketBitmapLock		net	Holds the lock over the open-socket bitmap	verified	one	net/threads#socket-bitmap-and-callback-bracket

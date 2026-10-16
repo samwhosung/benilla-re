@@ -281,7 +281,7 @@ over every length to 40, the 1023-byte cap and a fuzz.
 ## Start-up order
 
 The start-up routine `0x402350` runs, in order: the mount, the console command registry, the CVar machinery, the
-CVar `disableOptionalSpeech`, the command line, `Wow.ini` for the country and language, the opening and parsing of
+CVar `disableOptionalSpeech`, the command line, `Wow.ini` for the region, language and country, the opening and parsing of
 `Startup_Strings.dbc`, the console device, the event library, the clock, the random seed `0x44ea80` and the start
 handler `0x402840`. The handler runs the object heaps, the font and texture caches and the M2 cache, then `0x402ad0`,
 which opens with the system message state, text drawing, the client's console commands, the `DBFilesClient` tables, the
