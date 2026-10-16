@@ -93,7 +93,7 @@ smaller. Without a fitting view the load fails. A material with blend 5 or above
 With vertex or pixel shaders the view's batches get their shader ids, and every texture with a
 name is created with its wrap flags.
 
-Addresses: `0x71d6c0`, `0x71de50`, `0x71df30`, `0x449d90`
+Addresses: `0x71d6c0`, `0x71df30`, `0x449d90`
 Confidence: verified
 Proof: one
 Test: none
@@ -105,6 +105,40 @@ lowered to the view's bone count divided by each submesh's `+0xc`, at least 1. M
 name length `+0x8` exceeds 1 calls `TextureCreate` (`0x449d90`) with its flag bits 1 and 2 moved to
 bits 8 and 0x10 of the cache's texture settings and flag 2 of `+0x8` as the open flag, so the textures may come
 from loose files exactly when the model file could (`0x71da5e`).
+
+## Vertex shader id
+
+A batch's vertex shader id is `5·(3·(3·Z + t0) + t1)` with `Z = G + 2·L + 4·B + 20·P`: `G` is 1 when
+material flag 2 is clear, `L` 1 when flag 1 is clear, `B` the submesh's word `+0x10` and `P` 1 when
+the cache grants pixel shaders (bit 0x10). The digit `t_k` of stage `k` is 0 from the batch's
+texture count `+0xe` on; else 2 when the coordinate lookup entry (header `+0xa0`, unit `+0x12 + k`)
+is above 2; else 1 when the transform lookup entry (header `+0xb0`, unit `+0x16 + k`) is below the
+transform count `+0x74`; else 0. The scene adds the nearest-light count to a lit element's id and
+may rewrite `B`.
+
+Addresses: `0x71de50`, `0x71de93`, `0x71dea5`, `0x71deaa`, `0x71debe`, `0x71deeb`, `0x71df18`, `0x71d909`, `0x711695`, `0x707cf6`, `0x707cfe`, `0x70aff0`, `0x70b040`
+Confidence: verified
+Proof: one
+Test: `models::vertex_shader_id_difftest`
+
+`0x71de93` shifts bit 4 of the cache's features `[[this+4]+4]` into `P`. The loop `0x71dea5` runs `k` below 2: `jae` to digit 0 at the count, `cmp word,2; jbe` at `0x71deaa` to digit 2, `0x71debe` compares the transform entry with `+0x74` to digit 1. `0x71deeb` is `not ax` on the material's flags word; the `lea` chain to `0x71df18` builds `Z`, then `3·x + t` twice and `5·x`. `0x70aff0` splits an id into `id mod 5`, `mod 3` twice, `& 1` twice, `mod 5` and the quotient, so `t1`, `t0`, `G`, `L`, `B` and `P` are digits 5 to 0 and digit 6 is the light count. `0x71d909` and `0x711695` call it with the unit and its submesh; `0x707cf6` adds `[collector + 0x180]` (`lights`) to the stored id when the material's flag 1 is clear, before `0x70b040`. A word `B` above 4 selects the programs of the other `P`, and `B + 5·P` above 9 an id past the 1800 slots. `vertex_shader_id_difftest` runs `0x71de50` whole.
+
+## Model vertex programs
+
+`Shaders\Vertex\Model2.bls` holds 1800 programs per level, one per vertex shader id: bytecode for
+Direct3D vertex shader 2.0 (level 1), ARB text for OpenGL (level 2). A program reads the vertex
+constants c6 to c9 only as stage matrices: c6 and c7 when `t0` is 1, c8 and c9 when `t1` is 1;
+digits 0 and 2 read none. Digit 2 writes coordinate set `k` as `0.5 + 0.5·R.xy/|R|` with `R = P −
+2(P·N)N`: `P` is the position and `N` the normalized normal, in the space `c2` to `c5` project from;
+the 0.5 is a literal. Digit 0 passes coordinate set `k` through; digit 1 writes the dots of the two
+constants with `(u, v, 0, 1)`.
+
+Addresses: `0x706510`, `0x71de50`, `0x595130`, `0x5951e6`, `0x595211`, `0x598320`, `0x5990a7`, `0x5990ae`, `0x5990b6`, `0x58e6b1`, `0x58e6c7`, `0x70b8d0`, `0x70cd16`, `0x70cd34`, `0x58b330`
+Confidence: verified
+Proof: one
+Test: `models::model2_program_constants`
+
+`0x595211` calls slot 0 of the shaders in array order, so record `i` of the level's set is slot `i` of the 1800 that `0x706510` loads, and its index is its id. Level 1 is set at `0x5990a7` (vertex shader 2.0 or later; 1.1 sets 0, an empty table entry) and level 2 at `0x58e6b1`. The rows c31 to c33 of the bone matrix take `P` and the 3 by 3 part `N`. Over the 1800 records of each level, by index digits: every program of a pair `(t0, t1)` reads the constants above and no other of c6 to c9, 200 programs a pair; relative addressing has only c31 to c33 as base, and `def` sets only c0. The generated stage: Direct3D takes `dp3` of position and normal, `mad` with `-N`, `dp3` and `rsq` of `R`, `mul` of `R.xy`, then `mad` by `def c0.y = 0.5`; ARB the same with `RSQ`, `MAD` and `c1.x = 0.5`, and writes (0, 1) to z and w. `0x70b8d0` still writes (0.5, 0, 0, 0.5) and (0, 0.5, 0, 0.5) to c(6 + 2k), c(7 + 2k), and `0x70cd16` to `0x70cd34` sends them. `model2_program_constants` checks the census over the install.
 
 ## Device buffers
 

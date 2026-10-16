@@ -305,9 +305,10 @@ count `+0x14`, texture indices `+0x18`. Other kinds compare equal.
 
 ## Vertex shader id remap
 
-A vertex shader id is seven mixed-radix digits, most significant first with radices 5, 2, 2, 3, 3,
-5 after a leading digit. When the cache mode has bit 8 or 0x10, the scene rewrites digit 1: to 4
-under bit 8; under 0x10, to 4 when it was nonzero and 0 otherwise. The result is memoized per id.
+A vertex shader id is seven mixed-radix digits (`shared`, Vertex shader id), most significant first
+with radices 5, 2, 2, 3, 3, 5 after a leading digit. When the cache mode has bit 8 or 0x10, the
+scene rewrites digit 1, the submesh's bone-weight count: to 4 under bit 8; under 0x10, to 4 when it
+was nonzero and 0 otherwise. The result is memoized per id.
 
 Addresses: `0x70aff0`, `0x70b040`
 Confidence: verified

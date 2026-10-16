@@ -23,6 +23,7 @@ pub mod portal;
 pub mod render;
 pub mod ribbons;
 pub mod scene;
+pub mod shared;
 pub mod wmo;
 pub mod wmo_query;
 mod x87;

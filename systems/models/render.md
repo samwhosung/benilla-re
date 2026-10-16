@@ -39,12 +39,12 @@ Of `0x70cf70`, `decal_texgen_pack_difftest` runs `0x70d07e`–`0x70d2d0`; of `0x
 An element of kind 0 to 2 binds a stage per texture of its unit. Stage `k` binds the instance
 texture `+0xa4[i]`, `i` the header's texture lookup entry at unit `+0x10 + k`, or 0 for a null
 handle, combine `0x811f8c` by blend mode (0, 1, 1, 1, 1, 5, 5), or for version 0x101 the array
-`+0x148` at `k`, and the scene float `+0x14`. Stages from the count up to 1 bind 0; other kinds bind
-0 with combine 1 on stages 0 and 1. A lookup entry of 0x8000 or more is inverted into a texture
-frame state index, but zero-extended first, so the word read lies 0x100014 to 0x1ffff4 bytes before
-those states and indexes `+0xa4` unbounded.
+`+0x148` at `k`, and the scene float `+0x14`. Stages from the count up to 1 bind 0;
+other kinds bind 0 with combine 1 on stages 0 and 1. A lookup entry of 0x8000 or more is inverted
+into a texture frame state index, but zero-extended first, so the word read lies 0x100014 to
+0x1ffff4 bytes before those states and indexes `+0xa4` unbounded.
 
-Addresses: `0x70b740`, `0x811f8c`, `0x70b750`, `0x70b777`, `0x70b78c`, `0x70b794`, `0x70b7bd`, `0x70b7c2`, `0x70b7ed`, `0x70b823`, `0x70ba91`
+Addresses: `0x70b740`, `0x811f8c`, `0x70b750`, `0x70b777`, `0x70b78c`, `0x70b794`, `0x70b7bd`, `0x70b7c2`, `0x70b7cb`, `0x70b7d1`, `0x70b7ed`, `0x70b823`, `0x70ba91`, `0x71d284`, `0x71e160`
 Confidence: verified
 Proof: one
 Test: none
@@ -53,33 +53,41 @@ Test: none
 eax; shl eax,5` (`0x70b78c`) and `movzx eax,word [eax+edx+0xc]` (`0x70b794`) with `edx` the
 instance's `+0xac`, the 32-byte texture frame states whose word `+0xc` the animate pass sets
 (`0x715eb0`). A nonzero handle resolves through `0x44acf0`, else `0x70b7bd` passes 0. The states are
-`0x17 + k` (texture, `0x70b7ed`), `0x1f + k` (combine) and `0x27 + k` (the float); `0x70b7c2`
-compares the version with 0x101. `0x70b823` binds 0 while `k < 2`. A kind above 2 (`0x70b750`) takes
-`0x70ba91`: states `0x17`, `0x1f`, `0x27`, `0x2f` and `0x37` plus `k` get 0, 1, the float, 0 and 0,
-and `0x58b230(k)` loads identity.
+`0x17 + k` (texture, `0x70b7ed`), `0x1f + k` (combine) and `0x27 + k` (the float). `0x70b7c2`
+compares the version with 0x101; `0x70b7cb` loads the pointer `+0x148` and `0x70b7d1` the word, with
+no test against the count `+0x144`. The 0x101 load makes that pointer from the offset at `0x71d284`
+through `0x71e160`, 0 for an empty array, which the draw then reads through. `0x70b823` binds 0
+while `k < 2`. A kind above 2 (`0x70b750`) takes `0x70ba91`: states `0x17`, `0x1f`, `0x27`, `0x2f`
+and `0x37` plus `k` get 0, 1, the float, 0 and 0, and `0x58b230(k)` loads identity.
 
 ## Texture coordinates
 
 A stage takes generated coordinates when the header's coordinate lookup `+0xa0` at unit `+0x12 + k`
-is above 2: on the vertex shader lane its two constants are (0.5, 0, 0, 0.5) and (0, 0.5, 0, 0.5),
-else texture generation mode 6. Otherwise a transform lookup `+0xb0` at unit `+0x16 + k` below the
-header's transform count selects the instance's matrix `+0xb4[i]`: the shader lane takes its columns
-0 and 1 as the two constants, the fixed lane loads the whole matrix. Any other stage gets identity.
-The setup is skipped when the element's kind, shared model, unit `+0x12` and `+0x16` equal the
-previous element's and its texture count is not above the last one.
+is above 2. Otherwise a transform lookup `+0xb0` at unit `+0x16 + k` below the header's transform
+count selects the instance's matrix `+0xb4[i]`; any other stage gets identity. The vertex shader
+lane writes the stage's two constants (0.5, 0, 0, 0.5) and (0, 0.5, 0, 0.5), the matrix's columns 0
+and 1, or the identity pair; only a transform stage's program reads them. The fixed lane takes
+texture generation mode 6, the whole matrix, or the identity. The setup is skipped when the
+element's kind, shared model, unit `+0x12` and `+0x16` equal the previous element's and its texture
+count is not above the last.
 
-Addresses: `0x70b833`, `0x70b8bd`, `0x70b8d0`, `0x70b8f1`, `0x70b90b`, `0x70b91f`, `0x70b9b4`, `0x70b9e8`, `0x70ba0e`, `0x70ba47`
+Addresses: `0x70b833`, `0x70b8bd`, `0x70b8c4`, `0x70b8d0`, `0x70b8f1`, `0x70b90b`, `0x70b91f`, `0x70b9b4`, `0x70b9e8`, `0x70ba0e`, `0x70ba47`, `0x71deaa`, `0x58b230`, `0x58b240`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x70b8bd` is `cmp word [lookup],2; jbe`. The shader constants are stage `k`'s pair at `+0xb0 +
-32k`, vertex constants c(6 + 2k) and c(7 + 2k) (`0x70ba47` keeps the window from c6 to c(6 +
-2·count)). `0x70b91f` copies matrix offsets 0x0, 0x10, 0x20, 0x30, then 0x4, 0x14, 0x24, 0x34: with
-a row-major matrix and the row vector `(u, v, 0, 1)` these give `u'` and `v'`. The fixed lane sets
-state `0x2f + k` (generation) to 0 or 6 and `0x37 + k` (matrix on) to 1 with `0x58b240(k, matrix)`
-(`0x70b9b4`), or to 0 with `0x58b230(k)` (`0x70ba0e`). `0x70b9e8` writes the identity pair (1, 0, 0,
-0) and (0, 1, 0, 0). The animated matrix itself is `animation`, `Texture transforms`.
+`0x70b8bd` is `cmp word [lookup],2; jbe`, and `0x71deaa` makes the same test for the program choice, which reads
+the constants only for a transform stage (`shared`, Model vertex programs).
+`0x70b8c4` tests the lane flag `+0x32f0`: zero goes to `0x70b8f1` (mode 6), nonzero falls to
+`0x70b8d0`, which stores the pair at `+0xb0 + 32k`, vertex constants c(6 + 2k) and c(7 + 2k)
+(`0x70ba47` keeps the window from c6 to c(6 + 2·count)). `0x70b91f` copies matrix offsets 0x0, 0x10,
+0x20, 0x30, then 0x4, 0x14, 0x24, 0x34: with a row-major matrix and the row vector `(u, v, 0, 1)`
+these give `u'` and `v'`. The fixed lane sets state `0x2f + k` (generation) to 0 or 6 and `0x37 + k`
+(matrix kind) to 1 with `0x58b240(k, matrix)` (`0x70b9b4`), or to 0 with `0x58b230(k)` (`0x70ba0e`).
+`0x58b230` loads the identity into the stage's user matrix stack, which kind 0 does not read, so a
+generated stage keeps the matrix that mode 6 stores (`renderstate`, Texture coordinate modes).
+`0x70b9e8` writes the identity pair (1, 0, 0, 0) and (0, 1, 0, 0). The animated matrix itself is
+`animation`, `Texture transforms`.
 
 ## Lighting and fog
 

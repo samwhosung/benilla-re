@@ -16445,7 +16445,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b200	13			gx	orchestration		Runs its object file code that calls 0x592770; not read here	inferred	none		
 0x58b210	14			gx	orchestration		Runs its object file code that calls 0x592790; not read here	inferred	none		
 0x58b220	13			gx	orchestration		Runs its object file code that calls 0x5927d0; not read here	inferred	none		
-0x58b230	13			gx	orchestration		Runs its object file code that calls 0x5927f0; not read here	inferred	none		
+0x58b230	13	GxXformSetIdentity		gx	orchestration		Loads the identity into the matrix stack of a transform slot through 0x5927f0	verified	one	models/render#texture-coordinates	
 0x58b240	14	GxXformSetTexture		gx	orchestration		Sets the matrix of a transform slot through 0x592810	verified	one	gx/renderstate#texture-transform-kinds	
 0x58b250	14			gx	orchestration		Runs its object file code that calls 0x592850; not read here	inferred	none		
 0x58b260	14			gx	orchestration		Runs its object file code that calls 0x592880; not read here	inferred	none		
@@ -30299,7 +30299,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x70aa30	977	M2ElementCompareOpaque		models	primitive		Orders opaque elements by kind, shader, model, material and textures to minimize state changes	verified	one	models/scene#batch-grouping	
 0x70ae10	467	M2ElementCompareTransparent		models	primitive		Orders transparent elements by priority, depth, sort keys, instance, kind and batch, then the opaque order	verified	one	models/scene#batch-grouping	
 0x70aff0	80	M2DecodeVertexShaderId		models	primitive		Splits a vertex shader id into its seven mixed-radix digits	verified	one	models/scene#vertex-shader-id-remap	
-0x70b040	145	M2SceneRemapVertexShaderId		models	primitive		Rewrites a vertex shader id's lighting digit for the cache's shader mode, memoized per scene	verified	one	models/scene#vertex-shader-id-remap	
+0x70b040	145	M2SceneRemapVertexShaderId		models	primitive		Rewrites a vertex shader id's bone-weight digit for the cache's shader mode, memoized per scene	verified	one	models/scene#vertex-shader-id-remap	
 0x70b0e0	548	M2DrawStateInitialize		models	primitive		Clears a draw state: identity matrix, scene and cache pointers, unset previous-element keys	verified	one	models/render#list-draw	
 0x70b310	5	InitM2SceneInfinityThunk		models	orchestration		Jumps to 0x70b320; a static initializer	verified	one	models/overview#shared-header-constants	
 0x70b320	11	InitM2SceneInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
@@ -30558,7 +30558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71d6c0	1004	CM2Shared::InitializeView		models	primitive		Picks the richest view the bone palette fits, sets batch limits, shader ids and loads textures	verified	one	models/shared#view-selection	
 0x71dab0	459	CM2Shared::CreateIndexBuffer		models	primitive		Fills a shared model's device index buffer with its view's triangles for each instance copy	verified	one	models/shared#device-buffers	
 0x71dc80	450	CM2Shared::CreateVertexBuffer		models	host		Fills a shared model's device vertex buffer with its view's vertices for each instance copy	verified	one	models/shared#device-buffers	
-0x71de50	210	CM2Shared::GetVertexShaderId		models	primitive		Computes the vertex shader id of a batch from its bones, texture units and lighting	verified	one	models/shared#view-selection	
+0x71de50	210	CM2Shared::GetVertexShaderId		models	primitive		Computes a batch's vertex shader id from its flags, bone weights, pixel shader grant and stage digits	verified	one	models/shared#vertex-shader-id	models::vertex_shader_id_difftest
 0x71df30	98	CM2Shared::GetPixelShaderId		models	primitive		Computes the pixel shader id of a batch from its texture units' blend modes	verified	one	models/shared#view-selection	
 0x71dfa0	69	CM2Shared::CreateBuffers		models	primitive		Raises a shared model's instance copies for a batched run and frees its buffers to be rebuilt	verified	one	models/shared#device-buffers	
 0x71dff0	93	CM2Shared::FreeBuffers		models	host		Frees a shared model's device index and vertex buffers	verified	one	models/shared#device-buffers	
