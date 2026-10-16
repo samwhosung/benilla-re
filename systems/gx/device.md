@@ -1,6 +1,6 @@
 # gx: the device
 
-`CGxDevice` and its two backends, `CGxDeviceD3d` (Direct3D 9) and `CGxDeviceOpenGl`. The backend is chosen at start-up; the client then talks to one global device through the `Gx*` facade (`0x589ca0` to `0x58b740`), a run of thin functions that load the device from `0xc0ed38` and call a base-class method or a virtual slot. The device object has 62 virtual slots (`+0` to `+0xf4`).
+`CGxDevice` and its two backends, `CGxDeviceD3d` (Direct3D 9) and `CGxDeviceOpenGl`. The backend is chosen at start-up; the client then talks to one global device through the `Gx*` facade (`0x589ca0` to `0x58b740`), a run of thin functions that load the device from `0xc0ed38` and call a base-class method or a virtual slot. The device object has 62 virtual slots (`+0` to `+0xf4`, `slots.md`).
 
 Roots: `0x589ac0`, `0x589a00`, `0x589ca0`, `0x58b740`, `0x58bc90`, `0x5899f0`, `0x5899c0`, `0x58b5e0`
 
@@ -19,12 +19,12 @@ Test: none
 
 The base constructor `0x5916e0` zeroes the object, stores vtable `0x809da0` (whose unimplemented slots point at the pure-call stub `0x40a2d7`) and tag 2 at `+0x1fc`; `CGxDeviceD3d::CGxDeviceD3d` (`0x598ce0`) then stores vtable `0x809ef8`, tag 1 and `0` at `+0x258`, and `CGxDeviceOpenGl` (`0x58dda0`) vtable `0x809af8`, tag 0 and `1` at `+0x258`. The accessor `0x589ca0` returns the tag. Fields: `+0x204` a 14-dword copy of the format record, `+0x23c` the capability block, `+0x2824` the render state entries, `+0x328` and `+0x928` the two gamma ramps, `+0x24fc` four light records, `+0x2864` the capture flag. Direct3D adds `+0x3894` the window, `+0x38a4` the `IDirect3D9`, `+0x38a8` the `IDirect3DDevice9` and `+0x38ac` its caps.
 
-Addresses: `0x5916e0`, `0x598ce0`, `0x58dda0`, `0x589ca0`, `0x592120`, `0x809da0`, `0x809ef8`, `0x809af8`, `0x40a2d7`
+Addresses: `0x5916e0`, `0x598ce0`, `0x58dda0`, `0x589ca0`, `0x592120`, `0x809da0`, `0x809ef8`, `0x809af8`, `0x40a2d7`, `0x591c90`, `0x58dfb0`, `0x598de0`
 Confidence: verified
 Proof: one
 Test: none
 
-`+0x258` is the colour component order flag the emitters read (`draw.md`): 1 for OpenGl, 0 for Direct3D. The stores are `0x58df39` and `0x598d31`; `0x5916e0` clears the block first. Slot 0 is the deleting destructor in each table (`0x594c80` base, `0x59f5b0`, `0x5a0d70`).
+`+0x258` is the colour component order flag the emitters read (`draw.md`): 1 for OpenGl, 0 for Direct3D. The stores are `0x58df39` and `0x598d31`; `0x5916e0` clears the block first. Slot `+0x18` is the deleting destructor in each table (`0x591c90` base, `0x58dfb0`, `0x598de0`); slot 0 uploads a texture (`textures.md`). `slots.md` lists every slot.
 
 ## Base format setter
 
@@ -156,7 +156,7 @@ Test: none
 
 ## Direct3D present
 
-`0x5a1910(mask)`, slot `+0x68`, presents: it ends the scene (`0x5a17a0`), flushes (slot `+0x14`), optionally waits for the GPU, captures if armed (`0x592140`), calls `Present(0, 0, 0, 0)` and clears `[dev+0xf2c]` on failure. It then runs `0x5a1680(mask)`: a lost device that reports not-reset is reset with new present parameters; `mask` clears the targets when capability bit 6 is set; `BeginScene` starts the next frame and sets `[dev+0x3a38]`.
+`0x5a1910(mask)`, slot `+0x68`, presents: it ends the scene (`0x5a17a0`), draws the cursor (slot `+0x14`), optionally waits for the GPU, captures if armed (`0x592140`), calls `Present(0, 0, 0, 0)` and clears `[dev+0xf2c]` on failure. It then runs `0x5a1680(mask)`: a lost device that reports not-reset is reset with new present parameters; `mask` clears the targets when capability bit 6 is set; `BeginScene` starts the next frame and sets `[dev+0x3a38]`.
 
 Addresses: `0x5a1910`, `0x5a17a0`, `0x5a1680`, `0x592140`, `0x599900`, `0x599790`
 Confidence: verified
