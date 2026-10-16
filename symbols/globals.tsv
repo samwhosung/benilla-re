@@ -3035,16 +3035,28 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb714a8	uint32_t	s_petExpiryTick		ui	Holds the tick when the pet's possession ends, 0 for none	verified	one	ui/petbar#pet-state
 0xb714b0	uint32_t	s_petAttackLatch		ui	Holds 1 while the pet attack command is active, 0 at load	verified	one	ui/petbar#pet-state
 0xb714b8	uint32_t[7]	s_targetTradeSuffixIds		ui	Holds the random suffix ids of the partner's seven trade slot items	verified	one	ui/tradelootverbs#describing-a-trade-slot
+0xb714d8	uint32_t[7]	s_targetTradeRecordWord28		ui	Holds the dword +0x28 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
 0xb714f4	uint32_t[6]	s_targetTradeEntries		ui	Holds the item entries of the partner's first six trade slots, 0 for empty	verified	one	ui/tradelootverbs#describing-a-trade-slot
 0xb7150c	uint32_t	s_targetTradeSlot7Entry		ui	Holds the item entry of the partner's seventh trade slot, which the trade will not carry out	verified	one	ui/tradelootverbs#describing-a-trade-slot
+0xb71520	uint32_t[7]	s_targetTradeRecordWord38		ui	Holds the dword +0x38 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
+0xb7153c	uint32_t[7]	s_targetTradeRecordWord18		ui	Holds the dword +0x18 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
+0xb71558	uint64_t[7]	s_targetTradeRecordQword20		ui	Holds the qword +0x20 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
+0xb71590	uint8_t[7]	s_tradeOfferBagSlots		ui	Holds the bag-relative slot byte of each own trade slot item	verified	one	ui/trade#the-own-offer
 0xb715a0	uint32_t[7]	s_targetTradeUniqueIds		ui	Holds the unique ids of the partner's seven trade slot items	verified	one	ui/tradelootverbs#trade-links-and-money
 0xb715c0	uint32_t[6]	s_targetTradeEnchantIds		ui	Holds the permanent enchant ids of the partner's first six trade slot items	verified	one	ui/tradelootverbs#trade-links-and-money
 0xb715d8	uint32_t	s_targetTradeEnchantId		ui	Holds the enchantment id of the item in the target's seventh trade slot	verified	one	ui/popups#the-trade-enchant-clash
+0xb715e8	uint64_t[7]	s_tradeOfferContainers		ui	Holds the container GUID of each own trade slot item	verified	one	ui/trade#the-own-offer
+0xb71628	uint32_t[7]	s_targetTradeRecordWord34		ui	Holds the dword +0x34 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
+0xb71650	uint32_t[7]	s_targetTradeRecordWord3c		ui	Holds the dword +0x3c of the partner trade slot records	verified	one	ui/trade#the-partners-offer
+0xb71680	uint64_t[7]	s_targetTradeRecordQword10		ui	Holds the qword +0x10 of the partner trade slot records	verified	one	ui/trade#the-partners-offer
 0xb716d0	uint64_t[7]	s_tradeOfferGuids		ui	Holds the GUIDs of the items the player has offered, one per trade slot	verified	one	ui/trade#a-refused-offer-slot
 0xb71708	uint32_t[7]	s_targetTradeCounts		ui	Holds the item counts of the partner's seven trade slots	verified	one	ui/tradelootverbs#describing-a-trade-slot
 0xb71728	uint64_t	s_tradeWindowPartner		ui	Holds the GUID of the player the open trade window belongs to, 0 for none	verified	one	ui/trade#opening-and-closing-the-window
 0xb71730	uint32_t[2]	s_tradeAccepted		ui	Holds the accept flags of the trade: the player's, then the partner's	verified	one	ui/trade#accept-flags
+0xb71738	int32_t	s_tradeOwnHeaderCache		ui	Holds the own side header word last signalled as partner slot 7	verified	one	ui/trade#the-partners-offer
+0xb7173c	int32_t	s_tradeTargetHeaderCache		ui	Holds the partner side header word last signalled as own slot 7	verified	one	ui/trade#the-partners-offer
 0xb71740	uint32_t	s_tradeOwnMoney		ui	Holds the copper the player has put into the trade window	verified	one	ui/trade#a-refused-offer-slot
+0xb71744	uint32_t	s_tradeTargetMoney		ui	Holds the partner money offer last signalled as TRADE_MONEY_CHANGED	verified	one	ui/trade#the-partners-offer
 0xb71748	uint32_t	s_tradeDone		ui	Holds 1 when the closing trade completed	verified	one	ui/trade#opening-and-closing-the-window
 0xb71760	uint32_t	s_screenFadeLayer		ui	Holds the handle of the fade layer	verified	one	ui/screenfade#fade-state
 0xb71770	void *	s_screenFadeTexture		ui	Holds the 8 by 8 texture of the fade quad	verified	one	ui/screenfade#fade-state

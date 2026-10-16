@@ -5,7 +5,7 @@ messages each status prints, the window and accept-flag changes, and the Lua fun
 messages and the trade state are `objectlayer/trade`; the status handler `0x5d47c0` calls the dispatcher `0x4bf720`
 once per status, after it has updated that state.
 
-Roots: `0x4bf720`, `0x4bf4e0`, `0x4bf230`, `0x4bf280`, `0x4bfbd0`, `0x4bfcf0`, `0x4bfd70`, `0x4bfdc0`, `0x48a120`, `0x48aa60`, `0x48aa70`
+Roots: `0x4bf720`, `0x4bf4e0`, `0x4bf230`, `0x4bf280`, `0x4bf2b0`, `0x4bfb10`, `0x4bfb60`, `0x4bfbd0`, `0x4bfcf0`, `0x4bfd20`, `0x4bfd70`, `0x4bfdc0`, `0x48a120`, `0x48aa60`, `0x48aa70`
 
 ## Answering a trade request
 
@@ -176,6 +176,68 @@ Test: none
 `0x4bfbd0` is also called for the slots of the extended status message (`0x5d4ad3`, `0x5d4b33`). Only the low byte of the
 status's trailing dword is used (`0x4bf9f6 movzx ecx,byte ptr [ebp+0x10]`). The only bound is the compare with 0xff
 (`0x4bfbd3`).
+
+## The own offer
+
+The own offer is three arrays over slots 0 to 6: the item GUID (`0xb716d0`), its container's GUID (`0xb715e8`) and its
+bag-relative slot byte (`0xb71590`). `0x4bfa70(slot, bagSlot, item, container)` returns 0 for a slot outside 0 to 6. A
+zero item sends `CMSG_CLEAR_TRADE_ITEM` (`0x5d4480`); any other sends `CMSG_SET_TRADE_ITEM` (`0x5d4380`) and returns 0
+when that refuses. It then stores the three values, signals `TRADE_PLAYER_ITEM_CHANGED` (324) with `slot + 1` and
+returns 1. It tests neither an open trade nor whether another slot holds the item.
+
+Addresses: `0x4bfa70`, `0x4bfa7e`, `0x4bfa87`, `0x4bfa93`, `0x4bfa95`, `0x4bfaac`, `0x4bfab3`, `0x4bfac1`, `0x4bfacf`, `0x4bfadd`, `0x4bfaef`, `0x5d4380`, `0x5d4480`, `0xb716d0`, `0xb715e8`, `0xb71590`
+Confidence: verified
+Proof: one
+Test: none
+
+`ecx` is the slot, `dl` the slot byte, then the item and container GUIDs on the stack (`ret 0x10`). `0x4bfa7e` (`jl`) and
+`0x4bfa87` (`cmp esi,7; jge`) bound the slot. `0x4bfa93` tests the item for zero; `0x4bfa95` calls the clear with the slot
+in `ecx` and ignores its result, and `0x4bfaac` calls the set with the slot byte in `ecx` and the slot in `edx`;
+`0x4bfab3` returns 0 on its zero. `0x4bfac1` to `0x4bfadd` store at `8·slot` and `slot`, and `0x4bfaef` pushes 0x144
+with `%d` and the slot plus one.
+
+## Placing and finding offered items
+
+`0x4bfb10(item)` clears the own slot that holds the item through `0x4bfa70`; an item being deactivated calls it.
+`0x4bfb60(item)` places it again from its stored container and slot byte, which sends `CMSG_SET_TRADE_ITEM` anew; the stack
+count and enchantment watchers call it. Both do nothing for a zero GUID or an item not offered. `0x4bfc50(bound)` offers
+the cursor's item: with `bound`, slot 6 when it is empty; without, nothing when slots 0 to 5 hold the item, else the first
+empty of them. On success it clears the cursor, leaving the item locked. Both callers pass `CGItem_C::IsBound` of the
+cursor item. `0x4bfd20(item)` answers 1 when a trade window is open and one of the seven slots holds the item, else 0.
+
+Addresses: `0x4bfb10`, `0x4bfb22`, `0x4bfb4d`, `0x4bfb60`, `0x4bfb93`, `0x4bfbb9`, `0x4bfc50`, `0x4bfc65`, `0x4bfc7b`, `0x4bfc7d`, `0x4bfca6`, `0x4bfcaf`, `0x4bfccd`, `0x4bfcdd`, `0x4bfd20`, `0x4bfd23`, `0x4bfd40`, `0x4bfd57`, `0x5d87a7`, `0x5d94f0`, `0x5d9b0c`, `0x48da50`, `0x49276b`, `0x5e1897`, `0x622229`, `0x5da2c0`, `0x494c80`, `0x495190`, `0xb71700`, `0xb71728`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4bfb22` and `0x4bfb72` scan the seven GUIDs; `0x4bfb4d` passes the slot, a zero byte and zero GUIDs, and `0x4bfbb9` the
+stored ones. `0x4bfc65` is `GetCursorItemInfo`; a zero GUID returns. `0x4bfc7b` tests `bound` and `0x4bfc7d` the slot 6 GUID
+`0xb71700`. The scan returns at a match (`0x4bfca6`) and keeps the first empty slot (`0x4bfcaf`); `0x4bfccd` calls
+`0x4bfa70` and `0x4bfcdd` `ClearCursor(0, 1)`. Before `0x48da50` and `0x49276b` the argument is `0x5da2c0`'s result.
+`0x4bfd23` tests the partner GUID `0xb71728`; `0x4bfd40` to `0x4bfd57` scan 0x38 bytes. `tools/callers.py` finds one call of
+`0x4bfb10`, two of `0x4bfb60`, `0x4bfc50` (`0x48da50`, `0x49276b`) and `0x4bfd20` (`0x5e1897`, `0x622229`), and no stored address.
+
+## The partner's offer
+
+After each partner-side extended status, `0x4bf2b0(records)` takes the partner's seven 64-byte records. It clears the
+player's accept flag, then the partner's. For each slot it compares the record's dwords at `+0x00`, `+0x08` to `+0x18`
+and `+0x20` to `+0x3c` with the partner's cache, and on any difference copies them all and signals
+`TRADE_TARGET_ITEM_CHANGED` (323) with `slot + 1`; the dwords at `+0x04` and `+0x1c` are neither compared nor kept. Then four
+cached words, each stored before its signal: the own side's header word signals 323 with 7 and the partner's 324 with 7,
+the own money `PLAYER_TRADE_MONEY` (326) then `PLAYER_MONEY` (200), and the partner's money `TRADE_MONEY_CHANGED` (325).
+
+Addresses: `0x4bf2b0`, `0x4bf2b6`, `0x4bf2bd`, `0x4bf2ca`, `0x4bf378`, `0x4bf37e`, `0x4bf414`, `0x4bf42b`, `0x4bf452`, `0x4bf45f`, `0x4bf487`, `0x4bf48f`, `0x4bf4ab`, `0x4bf4ba`, `0x4bf4d6`, `0x5d4b67`, `0x5d3fa0`, `0x5d4760`, `0x5d4770`, `0xb714b8`, `0xb714d8`, `0xb714f4`, `0xb71520`, `0xb7153c`, `0xb71558`, `0xb715a0`, `0xb715c0`, `0xb71628`, `0xb71650`, `0xb71680`, `0xb71708`, `0xb71738`, `0xb7173c`, `0xb71740`, `0xb71744`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5d4b67` passes `0xc4bc78`, side 1's records. `0x4bf2b6` and `0x4bf2bd` call `0x4bf230` and `0x4bf280` with `ecx` 0. With
+`edi` at the record plus 0xc, `0x4bf2ca` to `0x4bf378` compare thirteen dwords and two qwords: `+0x00` with `0xb714f4`,
+`+0x08` `0xb71708`, `+0x0c` `0xb715c0`, `+0x10` `0xb71680`, `+0x18` `0xb7153c`, `+0x20` `0xb71558`, `+0x28` `0xb714d8`, `+0x2c`
+`0xb715a0`, `+0x30` `0xb714b8`, `+0x34` `0xb71628`, `+0x38` `0xb71520`, `+0x3c` `0xb71650`; `0x4bf37e` on copies them and
+`0x4bf414` pushes 0x143. `0x4bf42b` reads `0x5d3fa0(0)` against `0xb71738` and signals 0x143 with 7 (`0x4bf452`); `0x4bf45f`
+`0x5d3fa0(1)` against `0xb7173c`, 0x144 (`0x4bf487`). `0x4bf48f` and `0x4bf4ab` handle `0xb71740` with 0x146 and 0xc8;
+`0x4bf4ba` and `0x4bf4d6` `0xb71744` with 0x145.
 
 ## Inventory refusals
 

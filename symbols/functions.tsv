@@ -8461,16 +8461,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bf220	5	LeaveWorldCancelTrade		ui	orchestration	void __cdecl ()	Jumps to the trade module's leave-world hook 0x5d4310	verified	one	ui/trade#starting-a-trade	
 0x4bf230	73	CGTradeInfo::PlayerAccept	idb	ui	orchestration	void __thiscall (CGTradeInfo *this)	Sets the player's accept flag, signals TRADE_ACCEPT_UPDATE on a change and sends accept or unaccept	verified	one	ui/trade#accept-flags	
 0x4bf280	40	CGTradeInfo::TargetAccept	idb	ui	orchestration	void __thiscall (CGTradeInfo *this)	Sets the partner's accept flag and signals TRADE_ACCEPT_UPDATE on a change	verified	one	ui/trade#accept-flags	
-0x4bf2b0	556	TradeInfoSetTargetItems		ui	orchestration		Takes the partner's trade item records for the interface	inferred	none		
+0x4bf2b0	556	TradeInfoSetTargetItems		ui	primitive	void __thiscall (void *this)	Clears both accept flags, caches the partner slot records, header words and money and signals each change	verified	one	ui/trade#the-partners-offer	
 0x4bf4e0	563	CGTradeInfo::SetTradePartner	idb	ui	primitive	void __thiscall (CGTradeInfo *this, uint64_t guid)	Opens the trade window for a partner GUID or closes it for 0, signals TRADE_SHOW or TRADE_CLOSED, sends the cancel	verified	one	ui/trade#opening-and-closing-the-window	
 0x4bf720	743	CGTradeInfo::HandleTradeMessage	idb	ui	orchestration	void __fastcall (uint32_t status, uint32_t inventoryResult, uint32_t sideByte, uint32_t unused, uint32_t slotByte)	Answers a trade request, prints the status message and opens, closes or updates the trade window	verified	one	ui/trade#answering-a-trade-request	
-0x4bfa70	160			ui	primitive		Runs TradeFrame.cpp code that calls TradeClearItem, TradeSetItem, FrameScript_SignalEvent2; not read here	inferred	none		
-0x4bfb10	71			ui	primitive		Runs TradeFrame.cpp code that calls 0x4bfa70; not read here	inferred	none		
-0x4bfb60	99			ui	primitive		Runs TradeFrame.cpp code that calls 0x4bfa70; not read here	inferred	none		
+0x4bfa70	160	TradeInfoSetPlayerItem		ui	primitive	uint32_t __fastcall (uint32_t slot, uint8_t bagSlot, uint64_t item, uint64_t container)	Sends the set or clear of an own trade slot, stores its item, container and slot byte and signals the change	verified	one	ui/trade#the-own-offer	
+0x4bfb10	71	TradeInfoRemovePlayerItem		ui	orchestration	void __stdcall (uint64_t item)	Clears the own trade slot that holds an item	verified	one	ui/trade#placing-and-finding-offered-items	
+0x4bfb60	99	TradeInfoRefreshPlayerItem		ui	orchestration	void __stdcall (uint64_t item)	Places an offered item again in its own trade slot from the stored container and slot byte	verified	one	ui/trade#placing-and-finding-offered-items	
 0x4bfbd0	121	TradeInfoClearPlayerItem		ui	orchestration	void __thiscall (void *this)	Clears the own offer slot, or the offered money for 0xff, and signals the change	verified	one	ui/trade#a-refused-offer-slot	
-0x4bfc50	153			ui	primitive		Runs TradeFrame.cpp code that calls 0x494c80, 0x4bfa70, 0x495190; not read here	inferred	none		
+0x4bfc50	153	TradeInfoAddCursorItem		ui	orchestration	void __fastcall (uint32_t bound)	Offers the cursor item in slot 6 when bound, else in the first empty of slots 0 to 5, and clears the cursor	verified	one	ui/trade#placing-and-finding-offered-items	
 0x4bfcf0	37	CGTradeInfo::UnlockTradeItems	idb	ui	primitive	void __cdecl ()	Unlocks each item GUID of the own offer without clearing it	verified	one	ui/trade#opening-and-closing-the-window	
-0x4bfd20	77			ui	primitive		Runs TradeFrame.cpp code not read here	inferred	none		
+0x4bfd20	77	TradeInfoIsPlayerItem		ui	orchestration	uint32_t __stdcall (uint64_t item)	Returns 1 when a trade window is open and an own trade slot holds the item, else 0	verified	one	ui/trade#placing-and-finding-offered-items	
 0x4bfd70	65	CGTradeInfo::GetGameError	idb	ui	primitive	uint32_t __fastcall (uint32_t inventoryResult, uint32_t sideByte)	Maps a trade refusal result and wire byte to a message id	verified	one	ui/trade#inventory-refusals	
 0x4bfdc0	33	Script::CloseTrade	idb	ui	orchestration	int __fastcall (lua_State *L)	Signals PLAYER_TRADE_MONEY unless the trade completed, then closes the trade window	verified	one	ui/trade#opening-and-closing-the-window	
 0x4bfdf0	644	Script::ClickTradeButton	idb	ui	primitive	int __fastcall (lua_State *L)	Adds cursor money to the offer or puts the cursor item in a trade slot	verified	one	ui/tradelootverbs#clicking-a-trade-slot	
