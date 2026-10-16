@@ -19539,7 +19539,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ec700	31	ShowDismountResult		objectlayer	orchestration		Shows the dismount error for results below 4	verified	one	objectlayer/playermessages#error-notices	
 0x5ec720	361	CGPlayer_C::GetIndexedSpellSkill		objectlayer	primitive		Returns the skill total of the spell at 0xb700ac's index for the active player	verified	one	objectlayer/playercombat#skills	
 0x5ec890	42	CGPlayer_C::GetRaceField20		objectlayer	orchestration		Returns the race's ChrRaces row +0x20, else 0	verified	one	objectlayer/interaction#other-units	
-0x5ec8c0	19	ToggleShowOwnModel		objectlayer	orchestration	void __cdecl (void)	Toggles the flag 0xc4d74c	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ec8c0	19	ToggleShowOwnModel		objectlayer	orchestration	uint32_t __cdecl (void)	Toggles the flag 0xc4d74c and returns its new value	verified	one	objectlayer/players#the-players-virtual-slots	
 0x5ec8e0	12	SetShowOwnModel		objectlayer	orchestration	uint32_t __fastcall (uint32_t value)	Sets the flag 0xc4d74c and returns its old value	verified	one	objectlayer/players#the-players-virtual-slots	
 0x5ec8f0	91	CGPlayer_C::OnModelUpdate		objectlayer	orchestration		Updates the model unless displays are pending, hiding the active player's while 0xc4d74c is clear (slot 16)	verified	one	objectlayer/players#the-players-virtual-slots	
 0x5ec950	129	CGPlayer_C::Update		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t time)	Updates the unit, then repeats the active player's attack error every 4 s (vtable slot 14)	verified	one	objectlayer/players#attack-error-repeat	
