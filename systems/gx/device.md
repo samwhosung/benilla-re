@@ -156,9 +156,9 @@ Test: none
 
 ## Direct3D present
 
-`0x5a1910(mask)`, slot `+0x68`, presents: it ends the scene (`0x5a17a0`), draws the cursor (slot `+0x14`), optionally waits for the GPU, captures if armed (`0x592140`), calls `Present(0, 0, 0, 0)` and clears `[dev+0xf2c]` on failure. It then runs `0x5a1680(mask)`: a lost device that reports not-reset is reset with new present parameters; `mask` clears the targets when capability bit 6 is set; `BeginScene` starts the next frame and sets `[dev+0x3a38]`.
+`0x5a1910(mask)`, slot `+0x68`, presents: it counts the frame through the base (`0x592430`), ends the scene (`0x5a17a0`), draws the cursor (slot `+0x14`), optionally waits for the GPU, captures if armed (`0x592140`), calls `Present(0, 0, 0, 0)` and clears `[dev+0xf2c]` on failure. It then runs `0x5a1680(mask)`: a lost device that reports not-reset is reset with new present parameters; `mask` clears the targets when capability bit 6 is set; `BeginScene` starts the next frame and sets `[dev+0x3a38]`.
 
-Addresses: `0x5a1910`, `0x5a17a0`, `0x5a1680`, `0x592140`, `0x599900`, `0x599790`
+Addresses: `0x5a1910`, `0x592430`, `0x5a17a0`, `0x5a1680`, `0x592140`, `0x599900`, `0x599790`
 Confidence: verified
 Proof: one
 Test: none

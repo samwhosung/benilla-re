@@ -16691,8 +16691,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5923f0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x592400	16	CGxDevice::SetClearColor		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t color)	Stores the clear colour at +0x324	verified	one	gx/slots#capture-window-and-frame-slots	
 0x592410	18			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x592430	35	CGxDevice::ScenePresent		gx	primitive	void __thiscall (CGxDevice *this, uint32_t mask)	Counts the frame, measures the frame rate, clears the capture request and rolls the frame counters	verified	one	gx/slots#frame-counters	
-0x592460	191	MeasureFrameRate		gx	primitive		Returns the frame rate over the last 64 presents from time-stamp counter steps, or 99 before 1024 ticks	verified	one	gx/slots#frame-counters	
+0x592430	35	CGxDevice::PresentFrame		gx	primitive	void __thiscall (CGxDevice *this, uint32_t mask)	Counts the frame, measures the frame rate, clears the capture request and rolls the frame counters	verified	one	gx/slots#frame-counters	
+0x592460	191	MeasureFrameRate		gx	primitive	uint32_t __cdecl (void)	Returns the frame rate over the last 64 presents from time-stamp counter steps, or 99 before 1024 ticks	verified	one	gx/slots#frame-counters	
 0x592520	3	CGxDevice::Clear		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t mask)	Returns at once	verified	one	gx/slots#capture-window-and-frame-slots	
 0x592530	167	GxSetViewport		gx	orchestration	void __thiscall (void *this, float x0, float x1, float y0, float y1, float near, float far)	Stores the viewport fractions and sets the dirty flag when any differs	verified	one	ui/modelview#clip-and-depth-clear	
 0x5925e0	43	CGxDevice::SetProjection		gx	primitive	void __thiscall (CGxDevice *this, const float *matrix)	Copies 16 floats to the projection record at +0xf50	verified	one	gx/draw#projection-matrix	
@@ -16807,8 +16807,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x595c90	23			gx	unreached		Runs its object file code not read here	inferred	none		
 0x595cb0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x595cc0	44	CGxDevice::RollFrameCounters		gx	primitive	void __thiscall (CGxDevice *this)	Copies the frame counters to the previous frame's and zeroes them, keeping the frame and texture counts	verified	one	gx/slots#frame-counters	
-0x595cf0	136	MeasureCounterRate		gx	host		Measures the time-stamp counter's ticks per second over a 250 ms sleep once and returns it as a float	verified	one	gx/slots#frame-counters	
-0x595d80	3	ReadTimeStampCounter		gx	orchestration		Returns the time-stamp counter	verified	one	gx/slots#frame-counters	
+0x595cf0	136	MeasureCounterRate		gx	host	float __cdecl (void)	Measures the time-stamp counter's ticks per second over a 250 ms sleep once and returns it as a float	verified	one	gx/slots#frame-counters	
+0x595d80	3	ReadTimeStampCounter		gx	host	uint64_t __cdecl (void)	Returns the time-stamp counter	verified	one	gx/slots#frame-counters	
 0x595d90	49	OpenGxLogFile		gx	orchestration	void __cdecl (void)	Creates the Logs folder and opens Logs\gx.log once, zeroing its byte count	verified	one	gx/device#device-log	
 0x595dd0	26			gx	orchestration		Runs its object file code that calls SLogClose; not read here	inferred	none		
 0x595df0	128	CGxDevice::Log		gx	primitive	void __fastcall (const char *format, va_list args)	Formats a line and writes it to gx.log while under 2 MiB have been written, then passes it to the empty debug output	verified	one	gx/device#device-log	
@@ -16922,10 +16922,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x598de0	43	CGxDeviceD3d::DeletingDestructor		gx	orchestration	CGxDeviceD3d * __thiscall (CGxDeviceD3d *this, uint32_t flags)	Destroys the Direct3D device and frees it when bit 0 of flags is set	verified	one	gx/slots#life-cycle-slots	
 0x598e10	42	CGxDeviceD3d::~CGxDeviceD3d		gx	orchestration	void __thiscall (CGxDeviceD3d *this)	Frees the Direct3D device's vertex declarations, then runs the base destructor	verified	one	gx/slots#life-cycle-slots	
 0x598e40	110	CGxDeviceD3d::LoadD3d		gx	host	uint32_t __fastcall (void **module, void **d3d)	Loads d3d9.dll, calls Direct3DCreate9 with 32 and returns whether it got an interface	verified	one	gx/device#direct3d-device-start	
-0x598eb0	46			gx	host		Runs its object file code not read here	inferred	none		
+0x598eb0	46			gx	host	void __fastcall (void **module, void **direct3d)	Releases the interface behind a pointer and frees the module behind another, clearing each	verified	one	gx/slots#life-cycle-slots	
 0x598ee0	956	CGxDeviceD3d::FillCaps		gx	primitive	void __thiscall (CGxDeviceD3d *this)	Fills the capability block from the D3DCAPS9 copy and from CheckDeviceFormat probes	verified	one	gx/device#capability-block	
 0x5992a0	139	CGxDeviceD3d::LoadAdapter		gx	host	uint32_t __thiscall (CGxDeviceD3d *this)	Loads Direct3D and reads the adapter's caps and display mode into the device	verified	one	gx/device#direct3d-device-start	
-0x599330	26			gx	orchestration		Runs its object file code that calls 0x599720; not read here	inferred	none		
+0x599330	26			gx	orchestration		Runs 0x599720, then releases the IDirect3D9 and frees d3d9.dll through 0x598eb0	verified	one	gx/slots#life-cycle-slots	
 0x599350	47	CGxDeviceD3d::CheckTextureFormat		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, uint32_t usage, uint32_t format)	Returns whether CheckDeviceFormat accepts a texture format for the current display format	verified	one	gx/device#capability-block	
 0x599380	90			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5993e0	98			gx	primitive		Runs its object file code not read here	inferred	none		
@@ -16987,7 +16987,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59b850	53	IsWglExtensionListed		gx	host	bool __fastcall (const char *name)	Returns whether a WGL extension is listed in the cached wglGetExtensionsStringARB string	verified	one	gx/opengl#extension-tests	
 0x59b890	126			gx	orchestration		Runs its object file code that calls 0x592640, GxSetViewport; not read here	inferred	none		
 0x59b910	242	CGxDeviceOpenGl::Clear		gx	host	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Applies the viewport and scissor, then clears the colour and depth buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
-0x59ba10	89	CGxDeviceOpenGl::ScenePresent		gx	host	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Counts the frame, draws the cursor, swaps or finishes, captures if armed and starts the next frame	verified	one	gx/slots#capture-window-and-frame-slots	
+0x59ba10	89	CGxDeviceOpenGl::PresentFrame		gx	host	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Counts the frame, draws the cursor, swaps or finishes, captures if armed and starts the next frame	verified	one	gx/slots#capture-window-and-frame-slots	
 0x59ba70	40			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x59baa0	1422	CGxDeviceOpenGl::SetCachedState		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, uint32_t index, uint32_t value, uint32_t force)	Issues an OpenGL state call for one internal index when the value differs from the shadow copy or force is set	verified	one	gx/renderstate#render-state-ids	gx::scale_neg_65536_matches_binary
 0x59c100	1213	CGxDeviceOpenGl::FlushAttributes		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this)	Sets the current colour and enables, disables and points the vertex attribute arrays that changed	verified	one	gx/draw#opengl-draw-preparation	gx::color_norm_matches_binary
@@ -17089,7 +17089,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a1680	277	CGxDeviceD3d::BeginFrame		gx	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Resets a lost device, clears with the mask when capability bit 6 is set and begins the scene	verified	one	gx/device#direct3d-present	
 0x5a17a0	40	CGxDeviceD3d::EndScene		gx	host	void __thiscall (CGxDeviceD3d *this)	Ends the scene when one is begun and clears the flag	verified	one	gx/device#direct3d-present	
 0x5a17d0	317	CGxDeviceD3d::Clear		unassigned	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Clears the target and depth buffers the mask names with the device clear colour after applying the viewport	verified	one	gx/device#direct3d-clear-and-viewport	
-0x5a1910	287	CGxDeviceD3d::ScenePresent		gx	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Ends the scene, flushes, captures if armed, presents, then recovers a lost device and begins the next scene	verified	one	gx/device#direct3d-present	
+0x5a1910	287	CGxDeviceD3d::PresentFrame		gx	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Counts the frame, ends the scene, draws the cursor, captures if armed, presents, recovers a lost device, begins a scene	verified	one	gx/device#direct3d-present	
 0x5a1a30	37	CGxDeviceD3d::GetDrawRect		gx	orchestration	void __thiscall (CGxDeviceD3d *this, float *rect)	Copies the draw rectangle	verified	one	gx/slots#capture-window-and-frame-slots	
 0x5a1a60	180	CGxDeviceD3d::GetScreenRect		gx	host	void __thiscall (CGxDeviceD3d *this, float *rect)	Returns the draw rectangle in screen coordinates when windowed, else the draw rectangle	verified	one	gx/slots#capture-window-and-frame-slots	
 0x5a1b20	60	CGxDeviceD3d::PrepareDraw		gx	orchestration	void __thiscall (CGxDeviceD3d *this)	Flushes render state, lights, fill mode, material source, texture matrices, clip planes and vertex setup before a draw	verified	one	gx/draw#lighting-at-draw-time	

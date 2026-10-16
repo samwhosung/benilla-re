@@ -7,7 +7,8 @@ The 62 virtual slots of the device, `+0` to `+0xf4`, in the three tables the con
 address (base). A slot has one method name across the three classes. The `Gx*` facade
 (`device.md`) reaches every slot from `+0x18` on through the device at `0xc0ed38`; slots `+0` to
 `+0x14` are called by the device's own code. Each table ends at `+0xf4`: the dword after it starts
-another table that other code stores.
+other data; after the Direct3D table, `0x809ff0` is the exception scope table that the buffer lock
+pushes (`0x59a4e5`, `draw.md`, Stream locks).
 
 Roots: `0x589ac0`, `0x589ba0`
 
@@ -59,7 +60,7 @@ The device is made with slot `+0x20` (`GxDevCreate`) and torn down with slots `+
 | `+0x38` | `SetFullColorTextures` | `0x5920a0` | `0x58d280` | `0x599e60` | stores whether textures are made 32-bit and recreates every texture |
 | `+0x3c` | `GetWindow` | pure | `0x58d2a0` | `0x599e80` | returns the window, `+0x39e4` or `+0x3894` |
 
-Addresses: `0x591c90`, `0x591c9b`, `0x591d00`, `0x58dfb0`, `0x58dfe0`, `0x598de0`, `0x598e10`, `0x591fa0`, `0x58cce0`, `0x599bc0`, `0x591f80`, `0x58cbb0`, `0x599a60`, `0x591fc0`, `0x58cda0`, `0x599c30`, `0x599720`, `0x592050`, `0x58d060`, `0x599da0`, `0x59f980`, `0x5a0700`, `0x6890c2`, `0x58d0c0`, `0x58d080`, `0x5920a0`, `0x58d280`, `0x599e60`, `0x59f467`, `0x5a0963`, `0x599129`, `0x589c30`, `0x58d2a0`, `0x599e80`, `0x589ba0`
+Addresses: `0x591c90`, `0x591c9b`, `0x591d00`, `0x58dfb0`, `0x58dfe0`, `0x598de0`, `0x598e10`, `0x591fa0`, `0x58cce0`, `0x599bc0`, `0x591f80`, `0x58cbb0`, `0x599a60`, `0x591fc0`, `0x58cda0`, `0x599c30`, `0x599720`, `0x592050`, `0x58d060`, `0x599da0`, `0x59f980`, `0x5a0700`, `0x6890c2`, `0x58d0c0`, `0x58d080`, `0x5920a0`, `0x58d280`, `0x599e60`, `0x59f467`, `0x5a0963`, `0x599129`, `0x589c30`, `0x58d2a0`, `0x599e80`, `0x589ba0`, `0x599330`, `0x598eb0`
 Confidence: verified
 Proof: one
 Test: none
@@ -67,8 +68,9 @@ Test: none
 `0x591c9b` tests bit 0 before `SMemFree(this, "delete")`; the destructors are `0x591d00`, which stores
 `0x809da0` back, and `0x58dfe0` and `0x598e10`, which end in it. `0x589ba0` calls slot `+0x24`, then
 slot `+0x18` with 1. Both creates store whether the window is the device's own (`+0x39e8`,
-`+0x389c`); destroy removes only an own window. Direct3D's destroy (`0x599720`) frees the cursor,
-the resources, the query, the default texture and the device, then the `IDirect3D9` and `d3d9.dll`.
+`+0x389c`); destroy removes only an own window. Direct3D's destroy runs `0x599330`, which calls
+`0x599720` (the cursor, the resources, the query, the default texture and the device), then
+`0x598eb0` (the `IDirect3D9` and `d3d9.dll`).
 `0x599a60` logs `CGxDeviceD3d::DeviceCreate()`. Texture recreation (`0x59f980`, `0x5a0700` with 1)
 releases each API texture and marks the record for creation and a full upload through
 `0x594b90`. The base mip option calls slot `+0x2c` (`0x6890c2`). OpenGL's gamma slots send the ramp
@@ -93,7 +95,7 @@ Rectangles of floats are `{top, left, bottom, right}`.
 | `+0x5c` | `GetDrawRect` | pure | `0x5a0180` | `0x5a1a30` | copies the draw rectangle `+0x1ec` |
 | `+0x60` | `GetScreenRect` | pure | `0x58d970` | `0x5a1a60` | returns the draw rectangle in screen coordinates when windowed |
 | `+0x64` | `SetClearColor` | `0x592400` | base | base | stores the clear colour at `+0x324` |
-| `+0x68` | `ScenePresent` | `0x592430` | `0x59ba10` | `0x5a1910` | draws the cursor and shows the frame; the base counts it (Frame counters) |
+| `+0x68` | `PresentFrame` | `0x592430` | `0x59ba10` | `0x5a1910` | draws the cursor and shows the frame; the base counts it (Frame counters) |
 | `+0x6c` | `Clear` | `0x592520` | `0x59b910` | `0x5a17d0` | clears the buffers a mask names; the base does nothing |
 
 Addresses: `0x592130`, `0x5921a0`, `0x58e0c0`, `0x599e90`, `0x58e220`, `0x58e2b2`, `0x59a130`, `0x58ca60`, `0x59a1c0`, `0x592230`, `0x58f5e0`, `0x58d100`, `0x58f270`, `0x58f620`, `0x59a2e0`, `0x59a3df`, `0x592370`, `0x58e320`, `0x59a440`, `0x5a0180`, `0x5a1a30`, `0x58d970`, `0x5a1a60`, `0x592400`, `0x592430`, `0x59ba10`, `0x59ba2b`, `0x5a1910`, `0x5a1943`, `0x592520`, `0x59b910`, `0x5a17d0`
@@ -244,7 +246,7 @@ textured quad whose top left is the pointer minus the hot spot, which Direct3D m
 left and up. A hardware cursor gets its image at the present after the hot spot is set: the 32
 rows go into its surface and to `SetCursorProperties`.
 
-Addresses: `0x595640`, `0x595651`, `0x5991b0`, `0x58e759`, `0x595be0`, `0x5956f0`, `0x595720`, `0x5957f0`, `0x595a50`, `0x595bad`, `0x59a870`, `0x59a8e4`, `0x59a93f`, `0x595c40`, `0x58acd0`, `0x59a840`, `0x59891d`
+Addresses: `0x595640`, `0x595651`, `0x5991b0`, `0x58e759`, `0x595be0`, `0x5956f0`, `0x595720`, `0x5957f0`, `0x595a50`, `0x595bad`, `0x59a870`, `0x59a885`, `0x59a89d`, `0x5a193a`, `0x59a8e4`, `0x59a93f`, `0x595c40`, `0x58acd0`, `0x59a840`, `0x59891d`
 Confidence: verified
 Proof: one
 Test: none
@@ -256,6 +258,8 @@ reads the pointer with `OsInputGetCursorPos` (`0x595720`), binds the texture as 
 (`0x5957f0`) and draws one record (`0x595bad`) between a render state push and pop. The corners
 are `(px - hx) / width` and `1 - (py - hy) / height`, and their sums with 32 pixels; for tag 1
 (`0x595a50`) it subtracts 0.5 / width from x and adds 0.5 / height to y. Direct3D's `DrawCursor`
+draws the software cursor in a scene of its own, between `0x5a1680(0)` (`0x59a885`) and
+`0x5a17a0` (`0x59a89d`), after the frame's `EndScene` (`0x5a193a`) and before `Present`. It
 copies the rows under `LockRect` flags `0x810` (`0x59a8e4`) when `+0x3a5c` is set, then calls
 `SetCursorProperties` (`0x59a93f`) and clears the flag. Its window procedure hides the system
 cursor over the client area and calls `ShowCursor` with shown-and-hardware (`0x59891d`).
@@ -295,7 +299,7 @@ rate is `__ftol(f * 64.0 / s)`, where `s` is the sum of the last 64 steps of the
 between presents and `f` its ticks per second, and 99 when `s` is at most 1024. `f` is measured once:
 the counter's advance over `Sleep(250)`, started at a `GetTickCount` change, times 4.
 
-Addresses: `0x592430`, `0x592433`, `0x59243d`, `0x592440`, `0x59244a`, `0x592460`, `0x595d80`, `0x59248f`, `0x5924a5`, `0x5924cc`, `0x5924d9`, `0x5924e2`, `0x5924f7`, `0x592504`, `0x59250e`, `0x595cc0`, `0x595cf0`, `0x595d45`, `0x808de4`
+Addresses: `0x592430`, `0x592433`, `0x59243d`, `0x592440`, `0x59244a`, `0x592460`, `0x595d80`, `0x59248f`, `0x5924a5`, `0x5924cc`, `0x5924d9`, `0x5924e2`, `0x5924f7`, `0x592504`, `0x59250e`, `0x595cc0`, `0x595cf0`, `0x595d45`, `0x595d6e`, `0x5924c8`, `0x808de4`
 Confidence: verified
 Proof: one
 Test: none
@@ -307,7 +311,10 @@ Test: none
 `0x59250e` makes it the last. The stamps and the ring lie in `.data`
 past its file bytes and only `0x592460` writes them, so the first step is the whole counter value
 and the rate reads far low until it leaves the ring 64 presents later. `0x595cf0` keeps `f` as a
-float at `0xc0f228` and returns it once non-zero; `0x595d45` is the `Sleep`.
+float at `0xc0f228` and returns that float once it is non-zero; `0x595d45` is the `Sleep`. The
+measuring call stores with `fst` (`0x595d6e`) and returns the integer `fild` loaded, unrounded,
+so the first rate uses the unrounded `f` and later rates the float. A sum that is negative as a
+signed 64-bit integer also gives 99 (`0x5924c8`).
 
 ## Shader files
 

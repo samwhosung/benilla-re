@@ -67,6 +67,8 @@ address	method	tier	held
 0x591fd0	calls	B	yes
 0x592370	string	B	yes
 0x592430	calls	C	yes
+0x5925e0	calls	C	no
+0x592610	calls	C	no
 0x594730	string	A	yes
 0x595240	calls	C	no
 0x595240	string	C	yes

@@ -6,7 +6,7 @@ Roots: `0x589cb0`, `0x589cc0`, `0x589ce0`, `0x592130`, `0x592140`
 
 ## Capture request and frame order
 
-The Lua bindings `Screenshot` (glue `0x46d3d0`, world `0x4893d0`) each load a completion callback (`0x46c520`, `0x4930b0`) into `ecx` and call `0x442a10`, which stores it in the one-slot request at `0x88560c`. The frame pass `0x442350`, registered on event category `0x11` (post-update), ends with the present block: if `0x885604` is non-zero the whole block is skipped and the request stays armed; if the slot is empty it calls `GxScenePresent(3)` (`0x58a960`); otherwise it arms the device (`0x589cb0`), presents (`0x58a960`, which reads the pixels back), runs `0x4426f0` (fetch, encode, write), calls the stored callback with `ecx` set to whether a buffer existed, frees the buffer (`0x589ce0`) and clears the slot.
+The Lua bindings `Screenshot` (glue `0x46d3d0`, world `0x4893d0`) each load a completion callback (`0x46c520`, `0x4930b0`) into `ecx` and call `0x442a10`, which stores it in the one-slot request at `0x88560c`. The frame pass `0x442350`, registered on event category `0x11` (post-update), ends with the present block: if `0x885604` is non-zero the whole block is skipped and the request stays armed; if the slot is empty it presents through the facade `0x58a960` with mask 3; otherwise it arms the device (`0x589cb0`), presents (`0x58a960`, which reads the pixels back), runs `0x4426f0` (fetch, encode, write), calls the stored callback with `ecx` set to whether a buffer existed, frees the buffer (`0x589ce0`) and clears the slot.
 
 Addresses: `0x442a10`, `0x442350`, `0x46d3d0`, `0x4893d0`, `0x46c520`, `0x4930b0`, `0x442a00`, `0x58a960`, `0x589cb0`, `0x589ce0`, `0x4426f0`, `0x88560c`, `0x885604`
 Confidence: verified

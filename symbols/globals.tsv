@@ -672,6 +672,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809ec0	uint32_t[10]	s_d3dFormatCodes		gx	Holds D3DFMT codes by index: R5G6B5, X8R8G8B8, A8R8G8B8, A2R10G10B10, then depth D16, D24X8, D24S8, D32, and 4, 8	verified	one	gx/device#present-parameters
 0x809ef4	uint32_t[1]	s_d3dQueryTypes		gx	Holds the Direct3D query type by query type: D3DQUERYTYPE_OCCLUSION (9) for type 0	verified	one	gx/slots#query-slots
 0x809ef8	void *[62]	CGxDeviceD3d::vftable		gx	Holds the Direct3D device vtable of 62 slots	verified	one	gx/device#device-object
+0x809ff0	const int32_t[3]	s_d3dBufLockScope		gx	Holds the Direct3D buffer lock's exception scope: -1, the filter 0x59a5f6 and the handler 0x59a5fc	verified	one	gx/draw#stream-locks
 0x809ffc	float	s_glColourScale		gx	Holds 1/255, the scale of a colour byte to a unit float in the OpenGL paths	verified	one	gx/draw#opengl-draw-preparation
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
 0x80a004	uint32_t[6]	s_glMinFilter		gx	Holds the OpenGL minification filter of each filter mode 0 to 5	verified	one	gx/renderstate#stage-sampler-state
