@@ -30049,54 +30049,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fffd0	63	luaX_lexerror		lua	boundary		Raises a lexical error near the buffer text, or near end of file	verified	one	lua/compiler#lexer-errors-and-limits	
 0x700010	527	read_long_string		lua	boundary		Reads a long string or long comment, counting nested brackets	verified	one	lua/compiler#reading-tokens	
 0x7002a0	1093	read_string		lua	boundary		Reads a quoted string, decoding its escapes	verified	one	lua/compiler#reading-tokens	
-0x700790	124			unassigned			Runs its object file code that calls 0x7018e0; not read here	inferred	none		
-0x700810	58			unassigned			Runs its object file code that calls 0x701910, 0x7009f0; not read here	inferred	none		
-0x700850	7			unassigned			Runs its object file code not read here	inferred	none		
-0x700860	42			unassigned			Runs its object file code that calls 0x7009e0, 0x700890; not read here	inferred	none		
-0x700890	112			unassigned			Runs its object file code that calls 0x700950, 0x700980, 0x7009b0 and 1 more; not read here	inferred	none		
-0x700900	75			unassigned			Runs its object file code that calls 0x6ff4d0; not read here	inferred	none		
-0x700950	34			unassigned			Runs its object file code not read here	inferred	none		
-0x700980	37			unassigned			Runs its object file code not read here	inferred	none		
-0x7009b0	36			unassigned			Runs its object file code not read here	inferred	none		
-0x7009e0	15			unassigned			Runs its object file code that calls 0x700850, 0x7009f0; not read here	inferred	none		
-0x7009f0	81			unassigned			Runs its object file code that calls 0x700950, 0x700900; not read here	inferred	none		
-0x700a50	48			unassigned			Runs its object file code that calls 0x6ff4d0; not read here	inferred	none		
-0x700a80	22			unassigned			Runs its object file code that calls 0x700a50; not read here	inferred	none		
-0x700aa0	40			unassigned			Runs its object file code that calls 0x700ad0; not read here	inferred	none		
-0x700ad0	189			unassigned			Runs its object file code that calls 0x6fa7a0, __ftol, 0x6fc900 and 1 more; not read here	inferred	none		
-0x700b90	51			unassigned			Runs its object file code that calls 0x700ad0; not read here	inferred	none		
-0x700bd0	79			unassigned			Runs its object file code not read here	inferred	none		
-0x700c20	139			unassigned			Runs its object file code that calls 0x701910, 0x700cd0, 0x7018e0 and 1 more; not read here	inferred	none		
-0x700cd0	17			unassigned			Runs its object file code not read here	inferred	none		
-0x700cf0	49			unassigned			Runs its object file code that calls 0x700c20, 0x700d30, 0x700a80 and 1 more; not read here	inferred	none		
-0x700d30	14			unassigned			Runs its object file code not read here	inferred	none		
-0x700d40	240			unassigned			Runs its object file code that calls 0x700eb0, 0x7009f0, 0x700e30 and 5 more; not read here	inferred	none		
-0x700e30	88			unassigned			Runs its object file code that calls 0x700980, 0x700950; not read here	inferred	none		
-0x700e90	31			unassigned			Runs its object file code that calls 0x700850, 0x7018e0; not read here	inferred	none		
-0x700eb0	219			unassigned			Runs its object file code that calls 0x700c20, 0x700790, 0x701910 and 1 more; not read here	inferred	none		
-0x700fb0	63			unassigned			Runs its object file code that calls 0x700c20, 0x700d40, 0x700cf0; not read here	inferred	none		
-0x700ff0	18			unassigned			Runs its object file code not read here	inferred	none		
-0x701010	89			unassigned			Runs its object file code that calls 0x700ff0, 0x701070; not read here	inferred	none		
-0x701070	53			unassigned			Runs its object file code that calls 0x700ad0; not read here	inferred	none		
-0x7010b0	176			unassigned			Runs its object file code that calls 0x700d30, 0x700d40, 0x700fb0 and 3 more; not read here	inferred	none		
-0x701170	91			unassigned			Runs its object file code that calls 0x700fb0, 0x700d30, 0x700a80 and 2 more; not read here	inferred	none		
-0x7011d0	117			unassigned			Runs its object file code that calls 0x700c20, 0x7009f0, 0x700810 and 2 more; not read here	inferred	none		
-0x701270	36			unassigned			Runs its object file code that calls 0x700980; not read here	inferred	none		
-0x7012a0	113			unassigned			Runs its object file code that calls 0x701350, 0x700d30, 0x701320; not read here	inferred	none		
-0x701320	37			unassigned			Runs its object file code that calls 0x7018e0, 0x700810; not read here	inferred	none		
-0x701350	38			unassigned			Runs its object file code that calls 0x700a80, 0x700eb0; not read here	inferred	none		
-0x701380	113			unassigned			Runs its object file code that calls 0x700c20, 0x7009f0, 0x700810 and 1 more; not read here	inferred	none		
-0x701410	28			unassigned			Runs its object file code that calls 0x701010; not read here	inferred	none		
-0x701430	137			unassigned			Runs its object file code that calls 0x700ff0, 0x700b90, 0x700fb0 and 3 more; not read here	inferred	none		
-0x7014c0	161			unassigned			Runs its object file code that calls 0x700c20, 0x701270, 0x701350 and 2 more; not read here	inferred	none		
-0x701590	116			unassigned			Runs its object file code that calls 0x701010, 0x701380, 0x7009e0 and 2 more; not read here	inferred	none		
-0x701610	372			unassigned			Runs its object file code that calls 0x701010, 0x700d30, 0x701790 and 5 more; not read here	inferred	none		
-0x701790	116			unassigned			Runs its object file code that calls 0x7018e0, 0x701320; not read here	inferred	none		
-0x701810	13			unassigned			Runs its object file code not read here	inferred	none		
-0x701820	136			unassigned			Runs its object file code that calls 0x7018b0, 0x6fc900; not read here	inferred	none		
-0x7018b0	36			unassigned			Runs its object file code that calls 0x700890; not read here	inferred	none		
-0x7018e0	47			unassigned			Runs its object file code that calls 0x701820; not read here	inferred	none		
-0x701910	39			unassigned			Runs its object file code that calls 0x701820; not read here	inferred	none		
+0x700790	124	luaK_nil		lua	boundary		Emits a load of nil into registers, joining a preceding load of nil when it can	verified	one	lua/codegen#registers	
+0x700810	58	luaK_jump		lua	boundary		Emits a jump and moves the pending jumps to here onto it	verified	one	lua/codegen#jump-lists	
+0x700850	7	luaK_getlabel		lua	boundary		Marks the current instruction as a jump target and returns its index	verified	one	lua/codegen#jump-lists	
+0x700860	42	luaK_patchlist		lua	boundary		Points every jump of a list at a target	verified	one	lua/codegen#jump-lists	
+0x700890	112	luaK_patchlistaux		lua	boundary		Points the jumps of a list at targets chosen by each test's sense, setting test registers	verified	one	lua/codegen#jump-lists	
+0x700900	75	luaK_fixjump		lua	boundary		Sets a jump's offset to a destination, refusing one out of range	verified	one	lua/codegen#jump-lists	
+0x700950	34	luaK_getjump		lua	boundary		Returns the destination of a jump in a list, or -1 at the list's end	verified	one	lua/codegen#jump-lists	
+0x700980	37	getjumpcontrol		lua	boundary		Returns the test instruction that controls a jump, or the jump itself	verified	one	lua/codegen#jump-lists	
+0x7009b0	36	patchtestreg		lua	boundary		Sets the register of a test, its own operand when none is given	verified	one	lua/codegen#jump-lists	
+0x7009e0	15	luaK_patchtohere		lua	boundary		Adds a jump list to the jumps pending to the next instruction	verified	one	lua/codegen#jump-lists	
+0x7009f0	81	luaK_concat		lua	boundary		Appends one jump list to another	verified	one	lua/codegen#jump-lists	
+0x700a50	48	luaK_checkstack		lua	boundary		Raises a function's stack size for more registers, under the limit of 250	verified	one	lua/codegen#registers	
+0x700a80	22	luaK_reserveregs		lua	boundary		Reserves registers above the free one	verified	one	lua/codegen#registers	
+0x700aa0	40	luaK_stringK		lua	boundary		Returns the constant index of a string, stamping it with the current context word	verified	one	lua/codegen#constants-and-the-context-word	
+0x700ad0	189	addk		lua	boundary		Returns a constant's index, adding the value with its context word when it is new	verified	one	lua/codegen#constants-and-the-context-word	
+0x700b90	51	luaK_numberK		lua	boundary		Returns the constant index of a number, stamping it with the current context word	verified	one	lua/codegen#constants-and-the-context-word	
+0x700bd0	79	luaK_setcallreturns		lua	boundary		Sets how many results an open call returns	verified	one	lua/codegen#discharging-expressions	
+0x700c20	139	luaK_dischargevars		lua	boundary		Emits the loads that turn a variable expression into a value	verified	one	lua/codegen#discharging-expressions	
+0x700cd0	17	freereg		lua	boundary		Frees a temporary register	verified	one	lua/codegen#registers	
+0x700cf0	49	luaK_exp2nextreg		lua	boundary		Puts an expression's value in the next free register	verified	one	lua/codegen#discharging-expressions	
+0x700d30	14	freeexp		lua	boundary		Frees the register of an expression held in a temporary register	verified	one	lua/codegen#registers	
+0x700d40	240	luaK_exp2reg		lua	boundary		Puts an expression's value in a register, resolving its jump lists to boolean loads	verified	one	lua/codegen#discharging-expressions	
+0x700e30	88	need_value		lua	boundary		Answers whether a jump list has a jump that is no value test of the given sense	verified	one	lua/codegen#jump-lists	
+0x700e90	31	code_label		lua	boundary		Emits a boolean load at a jump target	verified	one	lua/codegen#discharging-expressions	
+0x700eb0	219	discharge2reg		lua	boundary		Puts the value of an expression without jumps in a given register	verified	one	lua/codegen#discharging-expressions	
+0x700fb0	63	luaK_exp2anyreg		lua	boundary		Puts an expression's value in some register and returns it	verified	one	lua/codegen#discharging-expressions	
+0x700ff0	18	luaK_exp2val		lua	boundary		Makes an expression a value, in a register when it has jumps	verified	one	lua/codegen#discharging-expressions	
+0x701010	89	luaK_exp2RK		lua	boundary		Returns an expression as a constant operand when it fits, else as a register	verified	one	lua/codegen#discharging-expressions	
+0x701070	53	nil_constant		lua	boundary		Returns the constant index of nil, keyed by the function's constant table	verified	one	lua/codegen#constants-and-the-context-word	
+0x7010b0	176	luaK_storevar		lua	boundary		Stores an expression into a local, upvalue, global or table field	verified	one	lua/codegen#conditions-and-operators	
+0x701170	91	luaK_self		lua	boundary		Emits a method lookup that puts the method and its object in two registers	verified	one	lua/codegen#conditions-and-operators	
+0x7011d0	117	luaK_goiftrue		lua	boundary		Makes an expression jump when it is false	verified	one	lua/codegen#conditions-and-operators	
+0x701270	36	invertjump		lua	boundary		Inverts the sense of the comparison that controls a jump	verified	one	lua/codegen#conditions-and-operators	
+0x7012a0	113	jumponcond		lua	boundary		Emits a test and jump on an expression, folding a preceding not	verified	one	lua/codegen#conditions-and-operators	
+0x701320	37	luaK_condjump		lua	boundary		Emits an instruction and the jump after it	verified	one	lua/codegen#jump-lists	
+0x701350	38	discharge2anyreg		lua	boundary		Puts an expression's value in a register unless it is in one	verified	one	lua/codegen#discharging-expressions	
+0x701380	113	luaK_goiffalse		lua	boundary		Makes an expression jump when it is true	verified	one	lua/codegen#conditions-and-operators	
+0x701410	28	luaK_indexed		lua	boundary		Makes a table field expression from a table and a key operand	verified	one	lua/codegen#conditions-and-operators	
+0x701430	137	luaK_prefix		lua	boundary		Compiles a unary minus, folding a number constant, or a not	verified	one	lua/codegen#conditions-and-operators	
+0x7014c0	161	codenot		lua	boundary		Compiles a not, folding constants and swapping the jump lists	verified	one	lua/codegen#conditions-and-operators	
+0x701590	116	luaK_infix		lua	boundary		Prepares the left operand of a binary operator	verified	one	lua/codegen#conditions-and-operators	
+0x701610	372	luaK_posfix		lua	boundary		Compiles a binary operator from its two operands	verified	one	lua/codegen#conditions-and-operators	
+0x701790	116	codebinop		lua	boundary		Emits an arithmetic instruction or a comparison and jump	verified	one	lua/codegen#conditions-and-operators	
+0x701810	13	luaK_fixline		lua	boundary		Sets the line of the last emitted instruction	verified	one	lua/codegen#emitting-instructions	
+0x701820	136	luaK_code		lua	boundary		Appends an instruction and its line, resolving the jumps pending to it	verified	one	lua/codegen#emitting-instructions	
+0x7018b0	36	luaK_dischargejpc		lua	boundary		Points the jumps pending to the next instruction at it	verified	one	lua/codegen#emitting-instructions	
+0x7018e0	47	luaK_codeABC		lua	boundary		Emits an instruction of the A, B and C format at the last line read	verified	one	lua/codegen#emitting-instructions	
+0x701910	39	luaK_codeABx		lua	boundary		Emits an instruction of the A and Bx format at the last line read	verified	one	lua/codegen#emitting-instructions	
 0x701940	5	FrameScriptInitTwoPiThunk		ui	orchestration		Jumps to 0x701950; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x701950	15	FrameScriptInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x701960	5	FrameScriptInitInvTwoPiThunk		ui	orchestration		Jumps to 0x701970; a static initializer	verified	one	ui/README#static-initializers	

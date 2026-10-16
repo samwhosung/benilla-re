@@ -1117,6 +1117,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
 0x811d4c	uint8_t[28]	priority		lua	Holds the left and right priority of each of the 14 binary operators of the parser	verified	one	lua/compiler#expressions
 0x811d68	char *[31]	token2string		lua	Holds the text of each token from 257, the reserved words to <eof>	verified	one	lua/compiler#lexer-errors-and-limits
+0x811de4	uint8_t[35]	luaP_opmodes		lua	Holds the mode byte of each of the 35 opcodes: format, operand kinds, sets A and test	verified	one	lua/codegen#jump-lists
+0x811e08	int32_t[6]	ops		lua	Holds the comparison opcode of each operator from ~= to >= for the code generator	verified	one	lua/codegen#conditions-and-operators
 0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	one	ui/luastate#the-library-scripts-see
 0x811f4c	void *[5]	s_scriptObjectVtable		ui	Holds the script object vtable the constructor 0x701ae0 stores	verified	one	ui/script#the-script-object
 0x811f8c	uint32_t[7]	s_m2StageCombineByBlend		models	Holds the texture stage combine value of each blend mode	verified	one	models/render#texture-stages
