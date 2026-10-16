@@ -7,10 +7,10 @@ environments, iteration, conversion, raw access, the collector pair and the date
 `debug` stubs, the error-handler pair, `loadstring` and `debugstack` are in `luastate`. Each is a `lua_CFunction`:
 the state in `ecx`, the number of results in `eax`.
 
-The Lua API calls are named by the role the Lua 5.0 sources give them, read here from their call shapes:
-`lua_type` `0x6f3400`, `lua_settop` `0x6f3080`, `lua_pushvalue` `0x6f3350`, `lua_pushnumber` `0x6f3810`,
-`lua_pushstring` `0x6f3890`, `lua_rawget` `0x6f3b00`, `lua_rawgeti` `0x6f3bc0`, `luaL_checktype` `0x6f4b50`,
-`luaL_checkany` `0x6f4bb0`, `luaL_error` `0x6f4940`. The library rows hold those roles at proof `none`.
+The Lua API calls are Lua 5.0's, derived in `lua/api` and `lua/auxlib`: `lua_type` `0x6f3400`,
+`lua_settop` `0x6f3080`, `lua_pushvalue` `0x6f3350`, `lua_pushnumber` `0x6f3810`, `lua_pushstring` `0x6f3890`,
+`lua_rawget` `0x6f3b00`, `lua_rawgeti` `0x6f3bc0`, `luaL_checktype` `0x6f4b50`, `luaL_checkany` `0x6f4bb0`,
+`luaL_error` `0x6f4940`.
 
 Roots: `0x702970`, `0x7029f0`, `0x702a40`, `0x702ac0`, `0x702be0`, `0x702c90`, `0x702cd0`, `0x702da0`, `0x702df0`, `0x702e30`,
 `0x702f40`, `0x7030a0`, `0x7030f0`, `0x703130`, `0x703160`, `0x7031a0`, `0x703200`, `0x703250`, `0x7032f0`, `0x703340`,

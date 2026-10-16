@@ -168,21 +168,22 @@ for tags 5 and 7 and answers the nil object otherwise.
 
 ## Function names from globals
 
-The client changed `lua_getinfo`'s name lookup: when the calling instruction does not name a
-function, it scans the globals table's hash part from its last slot down and, at the first string
-key whose value is the function, answers that key with the kind `global`. So `debugstack`, error
-messages and the saved variables writer name a function by a global that holds it, the last such
-key in the hash part.
+When the calling instruction does not name a function, `lua_getinfo`'s `n` option scans the
+globals table's hash part from its last slot down (`travglobals`, as in stock Lua 5.0) and, at the
+first string key whose value is the function, answers that key with the kind `global`. So
+`debugstack`, error messages and the saved variables writer name a function by a global that holds
+it, the last such key in the hash part.
 
 Addresses: `0x6fbd70`, `0x6fbdf8`, `0x6fbe11`, `0x6fbe22`, `0x6fbe2b`, `0x6fbf90`, `0x6fbfc6`, `0x6fbfcf`, `0x6fbfd8`, `0x864a48`
 Confidence: verified
 Proof: one
 Test: none
 
-In `0x6fbd70`'s `n` case (`0x6fbdf8`) a null answer from `0x6fc460` leads to `0x6fbf90`
-(`0x6fbe11`), which walks `1 << [t+7]` nodes of `[L+0x48]` downward (`0x6fbfc6`), compares each
-value with `luaO_rawequalObj` (`0x6fbfcf`) and requires a string key (`0x6fbfd8`). A hit stores
-`global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores `""` (`0x6fbe2b`).
+In `auxgetinfo`'s (`0x6fbd70`) `n` case (`0x6fbdf8`) a null answer from `getfuncname` (`0x6fc460`)
+leads to `travglobals` (`0x6fbf90`, call at `0x6fbe11`), which walks `1 << [t+7]` nodes of `[L+0x48]`
+downward (`0x6fbfc6`), compares each value with `luaO_rawequalObj` (`0x6fbfcf`) and requires a
+string key (`0x6fbfd8`). A hit stores `global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores
+`""` (`0x6fbe2b`).
 
 ## math.ceil
 
