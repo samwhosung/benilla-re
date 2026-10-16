@@ -136,11 +136,11 @@ too. `auxsort` raises `invalid order function for sorting` when a scan passes th
 
 ## String basics
 
-Seven string functions are plain: `len`, `sub` (indices from either end through `posrelat`, the
+Six string functions are plain: `len`, `sub` (indices from either end through `posrelat`, the
 last index defaulting to -1), `rep` (a count of copies), `byte` (the code at one position,
 default 1, one result), `char` (a string from codes, `invalid value` above 255) and `dump` (a Lua
-function with no upvalues as a string through `lua_dump` and the writer). `posrelat` turns a
-negative position into one counted from the end.
+function with no upvalues as a string through `lua_dump`). `posrelat` turns a negative position
+into one counted from the end, and `writer` is the callback `lua_dump` calls.
 
 | function | name | decided by |
 |---|---|---|
@@ -213,7 +213,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`match_class` tests the lowered class letter, then inverts the answer when the letter was a
+`match_class` tests the lowered class letter, then inverts the answer when the letter is a
 capital (a final `_pctype` test for lower case). `0x7fc930` takes the character in `ecx` and the
 class letter in `edx`. The `%f` frontier of `match` uses `matchbracketclass` twice (`0x7fc62e`, `0x7fc641`).
 

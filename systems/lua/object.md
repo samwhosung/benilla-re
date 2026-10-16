@@ -130,7 +130,7 @@ Proof: one
 Test: none
 
 `resize` keeps the old node vector, or copies the dummy node into a temporary when the old size
-was 0 (`rep movs` at `0x6fabe1`), grows the array first (`0x6fac1f`) and shrinks it after the new
+is 0 (`rep movs` at `0x6fabe1`), grows the array first (`0x6fac1f`) and shrinks it after the new
 node vector exists, reinserting the vanishing array slice with `luaH_setnum` and then the old nodes
 with `luaH_set`. `newkey` calls `rehash` when no free node is left (`0x6fa98c`). The array part is
 the largest `2^n` for which more than `2^(n-1)` of the keys `1` to `2^n` are in use, as in

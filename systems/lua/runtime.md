@@ -137,8 +137,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`luaC_collectgarbage` (`0x6f7340`, `ui/luastate`) calls the marking at `0x6f73e0`, `luaC_sweep`,
-`checkSizes` and a tail `jmp` to `luaC_callGCTM` (`0x6f734a`, `0x6f7353`, `0x6f735a`, `0x6f7362`). Where
+`luaC_collectgarbage` (`0x6f7340`, `ui/luastate`) calls the marking at `0x6f73e0` (`0x6f734a`),
+`luaC_sweep` (`0x6f7353`) and `checkSizes` (`0x6f735a`), then jumps to `luaC_callGCTM` (`0x6f7362`). Where
 upstream 5.0 ends `checkSizes` with a threshold of twice the block count, the client jumps to
 `0x6fae00`. That function takes the headroom `[G+0x24] - [G+0x28]`, lowers it to the least free
 space among the six block pools at `[G+0]`, and stores the block count plus the larger of that and

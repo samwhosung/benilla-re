@@ -42,8 +42,7 @@ The index walk is `0x6f3363` to `0x6f33ad` in `lua_pushvalue`: `idx > 0` gives `
 (`0xffffd8f0`) gives `[G+0x30]` with `G = [L+0x10]`, and any other negative `idx` indexes the running
 function's upvalues from `closure+0x10` when `0xffffd8ef - idx` does not exceed the byte at
 `closure+7`. The same walk is inlined at `0x6f30e1`, `0x6f31b9`, `0x6f32c8`. Upstream `lua_remove`,
-`lua_insert`, `lua_replace`, `lua_pushvalue` and `lua_xmove` are these loops. Every copy of a
-value also runs the context-word rule of `luastate`.
+`lua_insert`, `lua_replace`, `lua_pushvalue` and `lua_xmove` are these loops.
 
 ## Index lookup and tests
 
