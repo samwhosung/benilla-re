@@ -194,6 +194,22 @@ One defect to an issue. A pull request that fixes it says `Fixes #N`.
 One row per address. If the address already has a row in another system, the owner stays; your
 finding can live in your system's doc and the row can link there.
 
+### Leads from a later client
+
+A decompilation of a later client can say where to look. `tools/namelead.py PATH` reads a local
+checkout of one whose functions carry their later-build address in an `// OFFSET:` comment, and
+writes `dumps/namelead.tsv`: for each row, the decompiled function its string literals, its
+registrations (a name beside a function address), its named callers and callees, or its one
+unmatched neighbour pair it with, with a tier and the evidence. `--measure` runs the methods again
+with a fifth of the named rows hidden and prints each method's precision per tier.
+
+A lead is never a finding. Read the function at the bytes and name it by the steps above only when
+the reading supports the name on its own; a class still needs the image or the community database
+(`symbols/README.md`, Names), and a lead's name in the later build's style is rewritten in this
+repo's. Tier C is a list of candidates, not a lead. The decompilation is a third party's work: the
+checkout stays outside the repo, the leads file stays under `dumps/`, and no name, address, string
+or file from it is committed.
+
 ## Adding a finding
 
 1. Pick the system doc, or start one from the shape in `systems/README.md`.

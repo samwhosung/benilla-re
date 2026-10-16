@@ -6,7 +6,8 @@
 *.mpq
 *.MPQ
 
-# Disassembly and decompiler dumps are regenerated from your own exe, never committed.
+# Disassembly and decompiler dumps are regenerated from your own exe, and leads derived from a
+# third party's work (tools/namelead.py, tools/idb-names.py) are written here: never committed.
 /dumps/
 
 .DS_Store
