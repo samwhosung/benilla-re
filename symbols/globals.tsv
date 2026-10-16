@@ -3088,7 +3088,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71c08	uint32_t[4]	s_lotteryPrizeDisplayIds		ui	Holds the display ids of the four lottery prize slots	verified	one	ui/lottery#query-result
 0xb71c38	float			ui	Holds 30.864195, the squared range 0x4c3eb0 passes to SetInteractionTarget	verified	one	ui/lottery#buying
 0xb71c48	uint32_t[24]	s_lotteryDrawRecords		ui	Holds four draw records of 0x18 bytes: age, stamp, then four numbers	verified	one	ui/lottery#query-result
-0xb71df0	uint32_t	s_lotteryVendorActive		ui	Holds the vendor dword IsVendorActive returns once the clock has passed 0xb71bd4	verified	one	ui/lottery#query-result
+0xb71df0	uint32_t	s_lotteryVendorActive		ui	Holds the vendor dword IsVendorActive pushes once the clock has passed 0xb71bd4	verified	one	ui/lottery#query-result
 0xb71e5c	void *	s_minigameObject		ui	Points to the active minigame object, or null	verified	one	ui/lottery#the-minigame
 0xb71e74	uint32_t[4]	s_worldStateUiList		ui	Holds the always-visible world state row ids: capacity, count, data and chunk size	verified	one	ui/worldstate#the-list-builder
 0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state
