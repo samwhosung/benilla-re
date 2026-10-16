@@ -10,7 +10,9 @@ publish = false
 # The MPQ format and its codecs; the client's mount order is what this crate adds.
 wow-mpq = "=0.6.4"
 # zlib, which the `.bz` loose file holds after its header. The zlib-rs backend reports a damaged
-# stream where zlib does, when the output reaches the damage; miniz_oxide reports it earlier.
+# stream when the output reaches the damage, as the client's zlib 1.2.2 does; miniz_oxide reports
+# it earlier. One known gap: zlib-rs fails a dynamic block that codes no end-of-block at its header,
+# which zlib 1.2.2 does not test (`0x731994`, `0x7319c9`) and decodes on (`systems/storm/bz.md`).
 flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 
 [dev-dependencies]

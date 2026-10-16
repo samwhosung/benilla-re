@@ -435,3 +435,84 @@ fn bz_open_header_difftest() {
         b"1.1.3\0".to_vec()
     );
 }
+
+/// Deflate's bit order: values least significant bit first.
+struct Bits {
+    out: Vec<u8>,
+    acc: u32,
+    n: u32,
+}
+
+impl Bits {
+    fn put(&mut self, value: u32, count: u32) {
+        for i in 0..count {
+            self.acc |= ((value >> i) & 1) << self.n;
+            self.n += 1;
+            if self.n == 8 {
+                self.out.push(self.acc as u8);
+                self.acc = 0;
+                self.n = 0;
+            }
+        }
+    }
+}
+
+/// A zlib stream of one final dynamic block whose literal/length code gives only `a` and `b` a
+/// code (one bit each) and end-of-block none, then `symbols` one-bit codes alternating `a`, `b`.
+fn no_eob_stream(symbols: usize) -> Vec<u8> {
+    let mut b = Bits {
+        out: vec![0x78, 0x01],
+        acc: 0,
+        n: 0,
+    };
+    b.put(1, 1); // BFINAL
+    b.put(2, 2); // BTYPE dynamic
+    b.put(0, 5); // HLIT: 257 codes
+    b.put(0, 5); // HDIST: 1 code
+    b.put(14, 4); // HCLEN: 18 code-length code lengths
+                  // In the order 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1: symbols 18 and 1
+                  // have one bit each, so 1 is code 0 and 18 is code 1.
+    for len in [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1] {
+        b.put(len, 3);
+    }
+    let zeros = |b: &mut Bits, n: u32| {
+        b.put(1, 1); // symbol 18
+        b.put(n - 11, 7);
+    };
+    zeros(&mut b, 97); // literals 0 to 96
+    b.put(0, 1); // 97 'a': length 1
+    b.put(0, 1); // 98 'b': length 1
+    zeros(&mut b, 138); // 99 to 236
+    zeros(&mut b, 20); // 237 to 256: end-of-block gets no code
+    b.put(0, 1); // distance code 0: length 1
+    for k in 0..symbols {
+        b.put((k % 2) as u32, 1); // 'a' is code 0, 'b' code 1
+    }
+    b.put(0, 7);
+    b.out
+}
+
+/// The known divergence of the reimplementation's zlib-rs backend: the client's zlib 1.2.2 has no
+/// end-of-block test after the code lengths (`0x731994`, then `inflate_table` at `0x7319c9`), so it
+/// decodes the block above, while zlib-rs fails it at its header. The test holds both answers.
+#[test]
+fn bz_missing_eob_divergence() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let file = bz_file(4000, &no_eob_stream(4000));
+    let mut rig = Rig::new(&wow, file.clone());
+    let h = rig.open().expect("magic");
+    let want: Vec<u8> = (0..1000)
+        .map(|k| if k % 2 == 0 { b'a' } else { b'b' })
+        .collect();
+    assert_eq!(
+        rig.read(1000),
+        (1, Some(1000), want),
+        "the client decodes on"
+    );
+    let mut bz = BzFile::new(own_disk(&file), h);
+    let mut out = vec![0u8; 1000];
+    let r = bz.read(&mut out);
+    assert_eq!((r.ok, r.read), (false, None), "zlib-rs fails the header");
+}

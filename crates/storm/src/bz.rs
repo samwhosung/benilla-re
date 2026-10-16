@@ -4,6 +4,10 @@
 //! reads. `SFile::OpenEx` (`0x6477c0`) keeps the size for `SFile::GetFileSize`; `0x6476e0` inflates the
 //! stream through 4 KiB of input at a time; `SFile::SetFilePointer` (`0x648a60`) moves forward by
 //! reading and backward by starting the stream again.
+//!
+//! The inflate is flate2's zlib-rs backend, which matches the client's zlib 1.2.2 on every stream
+//! but one kind: a dynamic block whose code lengths give end-of-block no code fails here at its
+//! header, while the client decodes it (`storm::bz_missing_eob_divergence`).
 
 use flate2::{Decompress, FlushDecompress, Status};
 
@@ -145,7 +149,7 @@ impl<S: BzSource> BzFile<S> {
                     self.pos = 0;
                     distance
                 } else {
-                    distance - self.pos as i32
+                    distance.wrapping_sub(self.pos as i32)
                 }
             }
             1 => distance,

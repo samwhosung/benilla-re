@@ -16,20 +16,26 @@ Roots: `0x6477c0`, `0x648460`, `0x648a60`, `0x6487f0`, `0x648730`
 `+0x14`, `+0x20` and `+0x44` to `+0x50`, which keep what the allocation held. A kind-1
 open fills the `FILE *` (`+0x04`), the path and name copies (`+0x0c`, `+0x10`), the inflated size
 (`+0x14`), the input buffer (`+0x18`), the zlib stream (`+0x1c`), the position (`+0x20`) and 16 header
-bytes (`+0x44`, flagged at `+0x54`). `0x6472d0` ends the inflate and frees the stream, the copies and
+bytes (`+0x44`, flagged at `+0x54`). Other kinds use `+0x08`, `+0x3c` and `+0x40`; `+0x58` and
+`+0x5c` serve overlapped reads. `0x6472d0` ends the inflate and frees the stream, the copies and
 the buffer, and deletes the lock; it does not close the `FILE *`, which only `SFile::Close` does first.
 
-Addresses: `0x647290`, `0x6472a1`, `0x647299`, `0x647817`, `0x6472d0`, `0x6472da`, `0x648730`, `0x648743`, `0x648790`, `0x648f60`
+Addresses: `0x647290`, `0x6472a1`, `0x647299`, `0x647817`, `0x647a45`, `0x647ab2`, `0x648674`, `0x647617`, `0x64749f`, `0x655210`, `0x647b10`, `0x647b2a`, `0x6472d0`, `0x6472da`, `0x648730`, `0x648743`, `0x648790`, `0x648f60`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6472a1` stores the argument and `0x6472a5` to `0x6472c3` zero `+0x04` to `+0x10`, `+0x18`, `+0x1c`,
 `+0x3c`, `+0x40` and `+0x54` to `+0x5c`; `0x647299` constructs the lock. `SFile::OpenEx` allocates it with
 flags 0, so unzeroed (`0x647817`). `0x6472da` is `inflateEnd(+0x1c)`, then four `SMemFree`
 and the lock's destructor as a tail jump. `0x648743` is `fclose(+0x04)` before `0x648790` calls the
-destructor. The 16 bytes are read only by `0x648f60`, for kinds 1 to 4 with `+0x54` set; `tools/callers.py`
-finds no call and no stored address of it, with `0x4e6d20` (3 calls) and `0x4e5b80` (3 pushes) as controls.
+destructor. `0x647a45` stores kind 2's block at `+0x08`, whose `+0x04` the archive open fills; `0x647a7e` and `0x647ab2`
+pass `+0x3c` to the archive file open; kind 4 keeps an `SZip.cpp` handle at `+0x40`. `SFile::Close` closes
+all three. `SFile::Load` sets `+0x58` for an overlapped read
+(`0x648674`), which `0x647350` tests to close the file; `0x647617` and `0x64749f` count `+0x5c` up and down.
+For kinds 2 and 3 opened with flag 0x10000, `0x655210` fills `+0x44` and the open reads it (`0x647b10` to
+`0x647b2a`), setting `+0x54` only when it is not all zero. A kind-1 file's `+0x44` is read only by `0x648f60`,
+which `tools/callers.py` finds no call or stored address of, with `0x4e6d20` and `0x4e5b80` as controls.
 
 ## Opening a .bz file
 
@@ -44,12 +50,12 @@ without testing it, and returns 3.
 |---|---|---|
 | 0 | 4 | the inflated size, little-endian; `SFile::GetFileSize` answers it |
 | 4 | 4 | `BZ00` |
-| 8 | 16 | kept at `+0x44`; no live code reads them |
+| 8 | 16 | kept at `+0x44`; no live code reads them for a `.bz` file |
 | 24 | to the end | a zlib stream: a 2-byte header, deflate data, an Adler-32 |
 
 Addresses: `0x6477c0`, `0x64783d`, `0x647894`, `0x6478a4`, `0x6478b5`, `0x6478e6`, `0x64791d`, `0x647935`, `0x64794e`, `0x647964`, `0x647966`, `0x647993`, `0x64799e`, `0x6479ba`, `0x6479cd`, `0x6479d0`, `0x6479e7`, `0x647a1d`, `0x647a24`, `0x647db0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::bz_open_header_difftest`
 
 `0x64783d` jumps to `0x647894` for kind 1; `0x6478a4` calls `0x647db0(path, "rb")` and `0x6478b5` tests the
@@ -72,7 +78,7 @@ So a stream that ends early, or damage the output reaches, fails the read in whi
 
 Addresses: `0x6476e0`, `0x6476ed`, `0x6476fe`, `0x647703`, `0x647716`, `0x647725`, `0x647730`, `0x64773b`, `0x64773f`, `0x647744`, `0x647757`, `0x647759`, `0x647779`, `0x64778a`, `0x647795`, `0x648460`, `0x648505`, `0x647610`, `0x647350`, `0x6473e7`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::bz_read_difftest`, `storm::bz_damaged_difftest`
 
 `0x6476ed` stores `avail_out` and `next_out`; `0x6476fe` tests `avail_in`, `0x647703` stores `next_in`,
@@ -86,6 +92,7 @@ request's offset when it is nonzero, reads (`0x6473e7`) and seeks back. The test
 ## Size and seeking
 
 `SFile::GetFileSize` answers kind 1 with the header's size and leaves the high word unwritten.
+`SetFilePointer`'s `&high` is neither read nor written for kind 1.
 `SFile::SetFilePointer(file, distance, &high, method)` for kind 1: method 0 below the position ends the
 inflate, starts it again, empties the input, seeks the file to offset 24 and skips `distance` bytes, and
 at or above it skips `distance - position`; method 1 skips `distance`; any other method moves nothing. A
@@ -94,7 +101,7 @@ read; a failed read returns 0, else the function returns the position.
 
 Addresses: `0x6487f0`, `0x64883f`, `0x648a60`, `0x648ad9`, `0x648ae6`, `0x648aff`, `0x648b06`, `0x648b23`, `0x648b2f`, `0x648b37`, `0x648b3c`, `0x648b40`, `0x648b45`, `0x648b4b`, `0x648b64`, `0x648b6b`, `0x648b72`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::bz_seek_difftest`, `storm::bz_damaged_difftest`, `storm::bz_read_difftest`
 
 The size table at `0x648874` sends kind 1 to `0x64883f`, `mov eax,[eax+0x14]`. `0x648a60`'s table sends kind
@@ -111,9 +118,10 @@ The tests run both functions whole on kind-1 objects.
 the version's first character against `1.2.2` and the stream size against 0x38, defaults the allocator
 to `0x7348f0` and `0x734910`, allocates a 0x1ba8-byte state and, for 15 bits, sets the wrapper to 1 and the window to 2^15: a zlib
 header and an Adler-32 check. `0x732320` is `inflateEnd`. `0x730ea0` opens as zlib 1.2.2's `inflate`
-does; the rest of its 4,816 bytes is not read here, and the tests run it on every stream they use.
+does; the rest of its 4,816 bytes is not read here, and the tests run it on every stream they use. Unlike
+later zlib it does not require a dynamic block to code end-of-block, so such a block decodes on.
 
-Addresses: `0x730e80`, `0x730e88`, `0x730d60`, `0x730d79`, `0x730d85`, `0x730da7`, `0x730db6`, `0x730dc0`, `0x730deb`, `0x730dfc`, `0x732320`, `0x732347`, `0x730ea0`, `0x730ee0`
+Addresses: `0x730e80`, `0x730e88`, `0x731994`, `0x7319c9`, `0x730d60`, `0x730d79`, `0x730d85`, `0x730da7`, `0x730db6`, `0x730dc0`, `0x730deb`, `0x730dfc`, `0x732320`, `0x732347`, `0x730ea0`, `0x730ee0`
 Confidence: verified
 Proof: one
 Test: none
@@ -123,4 +131,6 @@ client passes `1.1.3`, which passes. `0x730d85` is `cmp [ebp+0xc],0x38`; `0x730d
 the defaults; `0x730dc0` pushes 0x1ba8. `0x730deb` to `0x730df7` compute `(bits >> 4) + 1` into the state's
 `+0x8`, and `0x730dfc` bounds the bits to 8 to 15. `0x732347` frees the state through `zfree`. `0x730ea6` to
 `0x730eda` reject a null stream, state or `next_out`, or a null `next_in` with input; `0x730ee0` turns mode
-11 into 12, inflate's `TYPE` into `TYPEDO`.
+11 into 12, inflate's `TYPE` into `TYPEDO`. After the code lengths `0x731994` tests only for mode 27 (bad) and
+`0x7319c9` builds the length table; the image holds no `missing end-of-block` message. A current zlib, and
+zlib-rs, fail that block at its header; `storm::bz_missing_eob_divergence` shows the client decoding it.
