@@ -29,8 +29,9 @@ first node is its `+0x8`, a node with bit 0 set or 0 ends the list, and `+0x4` i
 pushes 0x57 for `SErrSetLastError`. `0x64f2e0` loads `+0x3c`, `0x64f2ea` copies, and the found path
 returns 1 whether or not a string was there. `0x64f200` turns the number into 0 or 1 with
 `neg; sbb; neg`. The registrar `0x64fe20` puts a switch with either flag bit of
-0x3000000 on `0xc53f24` and any other on `0xc53f30` (`0x64fe5b`, `0x64fead`). The names `SCmdGetNum` and `SCmdGetBool` are the community's; `0x64f270` is the
-string reader beside them and takes Storm's name for it.
+0x3000000 on `0xc53f24` and any other on `0xc53f30` (`0x64fe5b`, `0x64fead`). The names `SCmdGetNum` and `SCmdGetBool` are the community's; `0x64f270` sits beside
+them, shares their lookup and is the string reader `CmdLineGetString` wraps as `CmdLineGetBool`
+wraps `SCmdGetBool`, so it takes the same `SCmdGet` form.
 
 ## The client's switch readers
 

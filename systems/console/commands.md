@@ -188,7 +188,8 @@ Test: none
 
 `0x405259` and `0x4052f9` push the opcode for `PutUInt32` and nothing else is written; `0x4052b2` and
 `0x405352` call `NetClient::Send` on the connection at `+0x24` of the holder `0x8827c8`, which each creates
-with a 0x28-byte allocation when it is null.
+with a 0x28-byte allocation when it is null. That allocation passes the flags 0, so it is not zeroed: only `+0x20`
+is set, and `+0x24` is written only at `0x4016cf`, in `ClientInitializeGame`.
 
 ## Screen commands
 

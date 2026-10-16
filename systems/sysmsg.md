@@ -137,7 +137,7 @@ quotes or spaces, compared ignoring case. Starting from an empty mask, `general`
 `animation`, `models`, `objects` and `movement` set the bits 0x1, 0x2, 0x4, 0x8, 0x10, 0x20 and 0x80,
 `all` sets every bit, and `except` makes each later name clear its bit, `all` then giving 0. The mask goes to `SysMsgSetSelected` and the filter is printed. A word that is
 none of these prints `Unknown filter %s` and three help lines, leaves the selection unchanged and
-vetoes the new value. No name reaches bit 0x40: the word picked for the letter `s` is `objects`,
+vetoes the new value. Only `all` sets 0x40: the word picked for the letter `s` is `objects`,
 which a word starting with `s` never equals.
 
 Addresses: `0x4030f0`, `0x403200`, `0x403231`, `0x403257`, `0x40327c`, `0x4032ce`, `0x4033de`, `0x403423`, `0x403433`, `0x402d12`

@@ -42,7 +42,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x59b7a4` calls the C runtime's locked `getenv` (`0x414e94`) and `0x59b7b1` `SStrToInt`; a zero
+`0x59b7a4` calls the C runtime's `_getenv` (`0x414e94`: `__lock(0xc)`, `__getenv_lk` `0x414eb5`, `__unlock`) and `0x59b7b1` `SStrToInt`; a zero
 returns 0. `0x59b7c7` pushes `0x1f03`. `0x59b85a` returns 0 for a null `0xc0f2ec`, and `0x59b869`
 passes `wglGetCurrentDC()` to it. `0x59b7f0(list, name)` calls `SStrCmpI(position, name,
 strlen(name))` (`0x59b813`), then skips to the next space and over a run of spaces (`0x59b822` to

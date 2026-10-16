@@ -851,8 +851,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x414d70	104	__aulldiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x414de0	117	__aullrem	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x414e60	52	__allmul	idb	crt	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
-0x414e94	33			crt	boundary		Runs its object file code that calls __lock, _getenv, __unlock; not read here	inferred	none		
-0x414eb5	125	_getenv	idb	crt	boundary		Runs its object file code that calls ___wtomb_environ, _strlen, __mbsnbicoll; not read here	inferred	none		
+0x414e94	33	_getenv	idb	crt	boundary	char * __cdecl (const char *name)	Returns the value of an environment variable, calling __getenv_lk under the environment lock 0xc	verified	one	gx/opengl#extension-tests	
+0x414eb5	125	__getenv_lk		crt	boundary		Returns the value of an environment variable without taking the lock	inferred	none		
 0x414f32	63	__mbsnbicoll	idb	crt	boundary		Runs its object file code that calls ___crtCompareStringA; not read here	inferred	none		
 0x414f71	110	___wtomb_environ	idb	crt	boundary		Runs its object file code that calls _malloc, ___crtsetenv; not read here	inferred	none		
 0x414fdf	637	___crtCompareStringA	idb	crt	boundary		Runs its object file code that calls 0x41525c, __alloca_probe; not read here	inferred	none		
@@ -18353,7 +18353,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c1be0	12			unassigned			Runs its object file code not read here	inferred	none		
 0x5c1bf0	14	GxuFontGetFlags		unassigned	primitive	uint32_t __thiscall (void *this)	Returns the font flags, or 0 for a null font	verified	one	font/api#font-object	
 0x5c1c00	41	GxuFontDestroyFont		unassigned	orchestration	void __thiscall (void *this)	Destroys the font a pointer names and clears the pointer	verified	one	font/api#destroying-a-font	
-0x5c1c30	199	GxuFontCreateString	idb	unassigned	orchestration	int __fastcall (void *arg1, void *font, const char *text, float size, const float *p, float w, float h, float gap, void **out, int jv, int jh, uint32_t fl, void *c)	Creates a string in a font	verified	one	font/api#creating-a-string	
+0x5c1c30	199	GxuFontCreateString	idb	unassigned	orchestration	int __fastcall (void *font, const char *text, float size, const float *pos, float width, float height, float spacing, void **out, int vjust, int hjust, uint32_t flags, const void *colour, float extra)	Creates a string in a font	verified	one	font/api#creating-a-string	
 0x5c1d00	83	GxuFontDestroyString	idb	unassigned	orchestration	void __thiscall (void *this)	Unlinks a string from its lists and recycles it	verified	one	font/api#destroying-a-string	
 0x5c1d60	243	GxuFontCreateBatch	idb	unassigned	orchestration	void * __fastcall (uint8_t world, uint8_t clear)	Takes a batch from the free list or allocates one and sets its two flags	verified	one	font/api#batches	
 0x5c1e60	23	GxuFontBatchAdd		unassigned	orchestration	int __fastcall (void *arg1, void *string)	Adds a string to a batch; 0 when either is null	verified	one	font/api#batches	

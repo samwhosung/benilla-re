@@ -81,9 +81,9 @@ The internals of `0x5caa20`, `0x5cb0e0` and `0x58ad60` are not read here.
 `GxuFontCreateString` makes a string in a font. Its arguments are the font in `ecx`, the text in
 `edx`, then `size`, a pointer to the position (3 floats), the box width and height, the line
 spacing, a pointer for the handle, the vertical and horizontal justification (each 0 to 2), the
-flags and a pointer to the colour.
+flags, a pointer to the colour and an eleventh float, `extra`, that it pops and never reads.
 
-Addresses: `0x5c1c30`, `0x5c1c44`, `0x5c1c57`, `0x5c1c7c`, `0x5c1c9c`, `0x5c1ca1`, `0x5c1cd1`, `0x5c1cdf`, `0x5cd6d0`, `0x5cd830`
+Addresses: `0x5c1c30`, `0x5c1c44`, `0x5c1c57`, `0x5c1c7c`, `0x5c1c99`, `0x5c1c9c`, `0x5c1ca1`, `0x5c1cd1`, `0x5c1cdf`, `0x5c1cf4`, `0x5cd6d0`, `0x5cd830`, `0x44d597`
 Confidence: verified
 Proof: one
 Test: none
@@ -92,7 +92,9 @@ The call fails (error `0x57`, result 0) when the font or text is null; when the 
 bit 2 is clear; when the box width or height is 0; and when either justification is 3 or more. It then takes
 a string from the pool (`0x5cd830`, argument 1), calls `0x5cd6d0` with the flags with bit 0
 cleared and stores the handle; if that fails it destroys the string (`0x5c1cdf`). The result is
-what `0x5cd6d0` returns.
+what `0x5cd6d0` returns. Both returns are `ret 0x2c` (`0x5c1c99`, `0x5c1cf4`), eleven stack
+arguments; `extra` is `[ebp+0x30]`, which no instruction reads. The caller `0x44d597` pushes it
+first, a float, and passes the font in `ecx` and the text in `edx`.
 
 ## Destroying a string
 

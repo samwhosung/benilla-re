@@ -210,18 +210,18 @@ pushes four zeros; `0x473f66` passes `s_surveyArchiveKey`.
 ## Compression codecs
 
 The table `0x80f9ec` pairs each codec bit with its compressor in the order `0x40`, `0x80`, `0x20`,
-`0x01`, `0x02`, `0x10`; only `0x6614f0`, which nothing reaches, reads it. The compressor of bit
+`0x01`, `0x02`, `0x10`; only `0x6614f0`, reached only from the unreached `0x661a30`, reads it. The compressor of bit
 `0x10` is bzip2: `0x660b80(dest, &destSize, source, sourceSize, &flag, unused)` calls `0x738cd0` with
 the block size 9, verbosity 0 and work factor 0. An answer of −8, output too small, sets `destSize`
 to `sourceSize`; any other non-zero answer raises the error `0x85100083` with the text
 `bzip2Compress:%d`. The flag is set to 0 on every path.
 
-Addresses: `0x80f9ec`, `0x6614f0`, `0x6615dd`, `0x660b80`, `0x660b9d`, `0x660ba2`, `0x660baa`, `0x660bef`, `0x660bf8`, `0x738cd0`
+Addresses: `0x80f9ec`, `0x6614f0`, `0x661a30`, `0x661a51`, `0x6615dd`, `0x660b80`, `0x660b9d`, `0x660ba2`, `0x660baa`, `0x660bef`, `0x660bf8`, `0x738cd0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6615dd` loads the table; `0x6614f0` has no call, jump or stored address. `0x660b9d` pushes `0, 0, 9`,
+`0x6615dd` loads the table; `0x6614f0` is reached only from the unreached `0x661a30`, which calls it at `0x661a51`. `0x660b9d` pushes `0, 0, 9`,
 the source size, the source, `edx` and `ecx`; `0x660ba2` compares with `0xfffffff8` and `0x660baa` stores
 the source size. `0x660bef` calls `0x64d100` with `0x85100083`, `<unknown>` and the formatted text.
 `0x660b80` is stored in the table, its last pair, and nowhere else.

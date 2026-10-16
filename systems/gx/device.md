@@ -218,11 +218,11 @@ The flag at `0xc0f2a0` is 1 when the GL version at `0xc0f3ec` is at least 2.0 (`
 ## Device log
 
 The device logs to `Logs\gx.log`. The console's device start calls `0x58b5e0`, which opens the log
-once, after creating `Logs`. Every line is formatted with `vsnprintf` into 2 KiB and
-written only while the log is open and fewer than 2 MiB (0x200000 bytes) have gone to it; it is
-also passed with the prefix `CGxDevice::Log(): ` to `0x590630`, which only returns. The console's
-device start and the hardware detection print through `0x58b600`; the device's own print,
-`0x595e70`, writes only when the log is open. The device logs its caps (`0x595e90`) and each format
+once, after creating `Logs`. Without the log a line is dropped; otherwise it is formatted with `vsnprintf` into 2 KiB and
+written while fewer than 2 MiB (0x200000 bytes) have gone to it, and passed with the prefix
+`CGxDevice::Log(): ` to `0x590630`, which only returns. The console's device start and the
+hardware detection print through `0x58b600` and the device through `0x595e70`; both reach
+`0x595df0`, so they act alike. The device logs its caps (`0x595e90`) and each format
 it sets (`0x595f40`), as `Format: W x H Window` or `Format W x H @ R Fullscreen`, with the colour and
 depth names and the sample count.
 
@@ -235,7 +235,8 @@ Test: none
 (`0x595da0`) and `SLogCreate` (`0x595db1`) into `0xc0ef80` and zeroes the count `0xc0ef7c`.
 `0x595df0(format, args)` returns at `0x595e00` without a log, formats at `0x595e10`, compares the count
 with 0x200000 (`0x595e1d`, `jae`), writes with `SLogWrite` (`0x595e33`) and adds the line's length.
-`0x58b600` passes its own argument list without the open test; the line still needs the handle.
+`0x58b600` passes its own argument list without an open test and `0x595e70` tests the handle first;
+`0x595df0` makes the same test at `0x595e00`, so neither prints without the log.
 `0x595f40` picks the windowed form on byte `+7`, the names from `0x85ad54` by `+0x24` and `+0xc`.
 
 ## Device overrides
