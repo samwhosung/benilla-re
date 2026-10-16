@@ -2,8 +2,8 @@
 
 The C functions of the libraries `luaopen_math`, `luaopen_table`, `luaopen_string` and
 `luaopen_bit` register (`ui/luastate`), laid out between `0x7faa50` and `0x7fd6d0`. The math,
-table and string libraries are the Lua 5.0 ones, `lmathlib.c`, `ltablib.c` and `lstrlib.c`; the bit
-library is the client's own. A C function takes the state in `ecx` and answers its result count in
+table and string libraries are the Lua 5.0 ones, `lmathlib.c`, `ltablib.c` and `lstrlib.c`, except
+`string.format`, which is Lua 4.0's; the bit library is the client's own. A C function takes the state in `ecx` and answers its result count in
 `eax`. The registration tables pair a name with each function: `bitlib` (`0x822c18`), `mathlib`
 (`0x822c60`), `tab_funcs` (`0x822d40`) and `strlib` (`0x822d88`). The names are upstream's, except
 the bit library's, which follow the same `<library>_<name>` rule, and the client's own helpers,
@@ -13,12 +13,13 @@ Roots: `0x7faa50`, `0x7faa90`, `0x7fab10`, `0x7fab90`, `0x7fac10`, `0x7fac70`, `
 
 ## Bit library
 
-The client's `bit` library works on 32-bit integers made by `__ftol` (truncation toward zero).
+The client's `bit` library works on the low 32 bits of `__ftol`, a truncation toward zero to a
+64-bit integer (`eax` is read, `edx` ignored).
 `bnot` inverts, `band`, `bor` and `bxor` combine every argument, `lshift`, `rshift` and `arshift`
 shift argument 1 by the count in argument 2 (masked to five bits), `mod` takes the remainder of
 argument 1 by argument 2. The results are pushed as unsigned numbers, except `arshift` and the
-remainder, which are signed. `mod` with a divisor that truncates to 0 answers 1 divided by argument
-2.
+remainder, which are signed. `mod` tests only the low dword of the divisor, so 0, 0.5 and 2^32 all answer 1
+divided by argument 2.
 
 | function | name | decided by |
 |---|---|---|
@@ -32,15 +33,18 @@ remainder, which are signed. `mod` with a divisor that truncates to 0 answers 1 
 | `0x7fad20` | `bit_mod` | divisor from `__ftol` (`0x7fad2d`) tested (`0x7fad32`); zero divides `1.0` by `lua_tonumber` (`0x7fad42`) |
 | `0x7fad70` | `bit_mod_remainder` | `cdq; idiv edi` (`0x7fad9a`, `0x7fad9b`), remainder `edx` pushed (`0x7fadab`) |
 
-Addresses: `0x7faa50`, `0x7faa63`, `0x7faa68`, `0x7faa6d`, `0x7faa90`, `0x7faac0`, `0x7faad1`, `0x7faae1`, `0x7fab10`, `0x7fab90`, `0x7fac10`, `0x7fac18`, `0x7fac29`, `0x7fac3e`, `0x7fac40`, `0x7fac70`, `0x7fac9e`, `0x7faca0`, `0x7facd0`, `0x7facfc`, `0x7fad06`, `0x7fad20`, `0x7fad2d`, `0x7fad32`, `0x7fad42`, `0x7fad70`, `0x7fad9a`, `0x7fad9b`, `0x7fadab`, `0x822c18`, `0x7fad5d`
+Addresses: `0x7faa50`, `0x7faa63`, `0x7faa68`, `0x7faa6d`, `0x7faa90`, `0x7faac0`, `0x7faad1`, `0x7faae1`, `0x7fab10`, `0x7fab90`, `0x7fac10`, `0x7fac18`, `0x7fac29`, `0x7fac3e`, `0x7fac40`, `0x7fac70`, `0x7fac9e`, `0x7faca0`, `0x7facd0`, `0x7facfc`, `0x7fad06`, `0x7fad20`, `0x7fad2d`, `0x7fad32`, `0x7fad42`, `0x7fad70`, `0x7fad9a`, `0x7fad9b`, `0x7fadab`, `0x822c18`, `0x7fadc0`, `0x7fad5d`
 Confidence: verified
 Proof: one
 Test: none
 
-`bitlib` pairs `bnot` through `mod` with these (`0x822c18`). Each function reads its arguments with
-`luaL_checknumber`. A shift count goes through `cl`, which the processor masks to five bits. The
-census of references finds one to `bit_mod_remainder`, the `jmp` at `0x7fad5d` in `bit_mod`. A
-divisor of 0.5 truncates to 0, so `bit.mod(7, 0.5)` pushes 2.
+The names come from this client's own evidence: `bitlib` (`0x822c18`) pairs the strings `bnot`,
+`band`, `bor`, `bxor`, `lshift`, `rshift`, `arshift` and `mod` with these addresses, and
+`luaopen_bit` (`0x7fadc0`) registers the table as the library `bit`. They take the form upstream
+gives `mathlib`'s functions, `math_abs` for `abs`: `bit_bnot` for `bnot`. Each function reads its arguments
+with `luaL_checknumber`. A shift count goes through `cl`, which the processor masks to five bits.
+One reference reaches `bit_mod_remainder`, the `jmp` at `0x7fad5d`. `bit.mod(7, 0.5)` pushes 2.
+`bit.mod(-2^31, -1)` raises a divide error in `idiv` (`0x7fad9b`).
 
 ## Math functions
 
@@ -169,7 +173,7 @@ their own bounds.
 and answers its length, `LowerCodepoint` or `UpperCodepoint` maps it, `Utf8EncodeChar` writes it
 back. Lowering maps `A` to `Z` and `0xc0` to `0xde` up by 32, raising maps `a` to `z` and `0xe0` to
 `0xfe` down by 32. A byte that is not valid UTF-8 decodes to `0x80000000`, which encodes to no
-bytes; the end of a string and a NUL byte decode to -1 and consume nothing.
+bytes, so it is dropped. A NUL byte decodes to -1 and consumes nothing, and the call never returns.
 
 | function | name | decided by |
 |---|---|---|
@@ -180,16 +184,19 @@ bytes; the end of a string and a NUL byte decode to -1 and consume nothing.
 | `0x7fc0a0` | `LowerCodepoint` | ranges `0x41`..`0x5a` and `0xc0`..`0xde` (`0x7fc0a2`..`0x7fc0b3`), plus 32 |
 | `0x7fc180` | `UpperCodepoint` | ranges `0x61`..`0x7a` and `0xe0`..`0xfe` (`0x7fc182`..`0x7fc193`), minus 32 |
 
-Addresses: `0x7fbdf0`, `0x7fbe2d`, `0x7fbe34`, `0x7fbe3e`, `0x7fbe8a`, `0x7fc0c0`, `0x7fc104`, `0x7fbeb0`, `0x7fbef2`, `0x7fbf4e`, `0x7fbf7c`, `0x7fbfb0`, `0x7fbfb6`, `0x7fc05a`, `0x7fc0a0`, `0x7fc0a2`, `0x7fc0b3`, `0x7fc180`, `0x7fc182`, `0x7fc193`, `0x7fbebb`, `0x7fbeda`, `0x7fbee8`, `0x7fbfa4`
+Addresses: `0x7fbdf0`, `0x7fbe2d`, `0x7fbe34`, `0x7fbe3e`, `0x7fbe8a`, `0x7fc0c0`, `0x7fc104`, `0x7fbeb0`, `0x7fbef2`, `0x7fbf4e`, `0x7fbf7c`, `0x7fbfb0`, `0x7fbfb6`, `0x7fc05a`, `0x7fc0a0`, `0x7fc0a2`, `0x7fc0b3`, `0x7fc180`, `0x7fc182`, `0x7fc193`, `0x7fbebb`, `0x7fbeda`, `0x7fbee8`, `0x7fc15a`, `0x7fbfa4`, `0x7fbf75`
 Confidence: verified
 Proof: one
 Test: none
 
 Stock `str_lower` calls C `tolower` per byte. Here the decoder starts with the count at 0
 (`0x7fbebb`) and a byte of 0 returns -1 at `0x7fbeda` before the count is raised
-(`0x7fbee8`), so a NUL inside the length leaves `str_lower`'s advance `ebx += count`
-(`0x7fbe8a`) at 0 and the loop re-reads it. A lone continuation byte `0x80` to `0xbf` takes the path
-to `0x7fbfa4`, returning `0x80000000`. `str_upper` is the same code with `UpperCodepoint`.
+(`0x7fbee8`), so a NUL inside the length leaves the advance `ebx += count` of `str_lower`
+(`0x7fbe8a`) and of `str_upper` (`0x7fc15a`) at 0, and the loop re-reads the NUL for ever: the call
+never returns. A lone continuation byte `0x80` to `0xbf` takes the path to `0x7fbfa4`, returning
+`0x80000000`. After a lead byte, each following byte is counted (`0x7fbf75`) before the continuation
+test (`0x7fbf7c`), so an invalid one is consumed with the sequence: `"\xC9a"` loses both bytes.
+`str_upper` is the same code with `UpperCodepoint` (the call at `0x7fc104`).
 
 ## Pattern classes
 
@@ -286,15 +293,16 @@ precision has more than two digits. The conversion letter selects `sprintf` with
 
 | function | name | decided by |
 |---|---|---|
-| `0x7fd3d0` | `str_format` | the pattern (`0x7fd4dd`), `match` (`0x7fd4fa`), width test `0x12` (`0x7fd51c`), switch on the letter (`0x7fd54f`), `sprintf` (`0x7fd586`) |
+| `0x7fd3d0` | `str_format` | the pattern (`0x7fd4dd`), `match` (`0x7fd4fa`), width and precision tests against 2 (`0x7fd50c`, `0x7fd510`), spec length limit 18 (`0x7fd51c`), switch on the letter (`0x7fd54f`), `sprintf` (`0x7fd586`) |
 | `0x7fd6d0` | `luaI_addquoted` | quote (`0x7fd716`), the escapes, the text `\000` through `luaL_addlstring` (`0x7fd75c`) |
 
-Addresses: `0x7fd3d0`, `0x7fd4dd`, `0x7fd4fa`, `0x7fd51c`, `0x7fd54f`, `0x7fd586`, `0x7fd6d0`, `0x7fd716`, `0x7fd75c`, `0x7fc570`, `0x7fd507`
+Addresses: `0x7fd3d0`, `0x7fd4dd`, `0x7fd4fa`, `0x7fd50c`, `0x7fd510`, `0x7fd51c`, `0x7fd54f`, `0x7fd586`, `0x7fd6d0`, `0x7fd716`, `0x7fd75c`, `0x7fc570`
 Confidence: verified
 Proof: one
 Test: none
 
-The client's `str_format` scans the specification with `match` where upstream 5.0.x uses a
-hand scanner: `0x7fd4fa` calls `0x7fc570` with the pattern string, and the two capture lengths
-are compared with 2 from `0x7fd507`. A NUL in a `%q` argument is written as the four bytes
+The client's `str_format` is Lua 4.0's, not 5.0's hand scanner: `lstrlib.c` of 4.0.1 (lines 549 to
+559) has the `n$` argument number, `src_end` at the format length plus 1, the same pattern, and the
+limit `MAX_FORMAT-2`, 18. `0x7fd4fa` calls `0x7fc570` with the pattern string, and the two capture
+lengths are compared with 2 (`0x7fd50c`, `0x7fd510`). A NUL in a `%q` argument is written as the four bytes
 `\000`. Upstream's `scanformat` has no function of its own here.

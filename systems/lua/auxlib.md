@@ -76,7 +76,7 @@ scheme, where the registry maps a metatable to its name (the second `lua_rawset`
 length is held in a weak-key table at registry reference 2 (`getsizes`), keyed by the table, and
 `luaL_getn` counts upward from index 1 when neither exists. `checkint` reads an
 integer and answers -1 for a non-number. `luaL_ref` stores the top value in a table and returns
-a number for it, reusing freed numbers from slot 0; `luaL_unref` returns one.
+a number for it, reusing freed numbers from slot 1; `luaL_unref` returns one.
 
 | function | name | decided by |
 |---|---|---|
@@ -84,19 +84,21 @@ a number for it, reusing freed numbers from slot 0; `luaL_unref` returns one.
 | `0x6f4f80` | `checkint` | `lua_tonumber`, `__ftol` (`0x6f4f8f`), `lua_isnumber` (`0x6f4f9f`), -1 (`0x6f4fa8`), `lua_settop` (`0x6f4fb2`) |
 | `0x6f4fc0` | `getsizes` | `lua_rawgeti` 2 (`0x6f4fca`), the `__mode` field `k` (`0x6f5008`), `lua_rawseti` (`0x6f5041`) |
 | `0x6f5050` | `luaL_getn` | `lua_rawget` of `n` (`0x6f507d`), `getsizes` (`0x6f5098`), `lua_rawgeti` probe loop (`0x6f50cd`) |
-| `0x6f5310` | `luaL_ref` | nil returns -1 (`0x6f534a`), free list at slot 0 (`0x6f5374`), else `luaL_getn` (`0x6f53b1`) at least 2, plus 1 (`0x6f53b8`) |
-| `0x6f5400` | `luaL_unref` | a negative reference returns at once (`0x6f5410`); slot 0 read (`0x6f544a`), relinked (`0x6f5454`, `0x6f546f`) |
+| `0x6f5310` | `luaL_ref` | nil returns -1 (`0x6f534a`), free list at slot 1 (`push 1` at `0x6f536e`, read `0x6f5374`), else `luaL_getn` (`0x6f53b1`) at least 2, plus 1, so the first number is 3 (`0x6f53b8`) |
+| `0x6f5400` | `luaL_unref` | a negative reference returns at once (`0x6f5410`); slot 1 read (`0x6f5444`, `0x6f544a`), relinked (`0x6f5454`, `0x6f5469`, `0x6f546f`) |
 
-Addresses: `0x6f4ea0`, `0x6f4ed1`, `0x6f4edd`, `0x6f4f2f`, `0x6f4f54`, `0x6f4f80`, `0x6f4f8f`, `0x6f4f9f`, `0x6f4fa8`, `0x6f4fb2`, `0x6f4fc0`, `0x6f4fca`, `0x6f5008`, `0x6f5041`, `0x6f5050`, `0x6f507d`, `0x6f5098`, `0x6f50cd`, `0x6f5310`, `0x6f534a`, `0x6f5374`, `0x6f53b1`, `0x6f53b8`, `0x6f5400`, `0x6f5410`, `0x6f544a`, `0x6f5454`, `0x6f546f`, `0x6f5423`, `0x6f5480`
+Addresses: `0x6f4ea0`, `0x6f4ed1`, `0x6f4edd`, `0x6f4f2f`, `0x6f4f54`, `0x6f4f80`, `0x6f4f8f`, `0x6f4f9f`, `0x6f4fa8`, `0x6f4fb2`, `0x6f4fc0`, `0x6f4fca`, `0x6f5008`, `0x6f5041`, `0x6f5050`, `0x6f507d`, `0x6f5098`, `0x6f50cd`, `0x6f5310`, `0x6f534a`, `0x6f536e`, `0x6f5374`, `0x6f53b1`, `0x6f53b8`, `0x6f5400`, `0x6f5410`, `0x6f5444`, `0x6f544a`, `0x6f5454`, `0x6f5469`, `0x6f546f`, `0x6f5363`, `0x6f53e0`, `0x6f5423`, `0x6f5480`, `0x6f4f23`, `0x6f4f6e`, `0x6f4f11`
 Confidence: verified
 Proof: one
 Test: none
 
 `getsizes` is the 5.0 mechanism that lets `table.setn` work on tables that carry no `n`
-field. `luaL_ref` and `luaL_unref` follow upstream: slot 0 holds the head of the free list and a
-reference is the index of the slot that holds the value. The client's versions of `luaL_ref`,
-`luaL_unref` and `luaL_setn` also clear the context word while the nesting count is nonzero and
-restore it afterwards (`0x6f5423`, `0x6f5480`).
+field. `luaL_ref` and `luaL_unref` follow upstream: slot 1 (`FREELIST_REF`) holds the head of the
+free list, the numbers 1 and 2 are reserved, and a reference is the index of the slot that holds the
+value. The client's `luaL_ref` and `luaL_unref` clear the context word while the nesting count is
+nonzero and restore it afterwards: `luaL_ref` only for a non-nil value (`0x6f5363`, `0x6f53e0`),
+`luaL_unref` at `0x6f5423` and `0x6f5480`. `luaL_setn` does so only on the size-table path
+(`0x6f4f23` to `0x6f4f6e`); the path that stores the `n` field returns at `0x6f4f11`.
 
 ## String buffers
 

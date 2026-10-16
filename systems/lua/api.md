@@ -70,7 +70,7 @@ Test: none
 
 `luaA_indexAcceptable` is the walk of `Stack moves` plus the positive-index bound: the positive
 arm builds `base + idx*16 - 16` and masks it to 0 when it is not below the top, where the
-checked `luaA_index` of upstream aborts. `lua_type` (`0x6f3400`) calls it and answers `-1` for a
+checked `luaA_index` of upstream only asserts (`api_check`, compiled out by default). `lua_type` (`0x6f3400`) calls it and answers `-1` for a
 null slot (`0x6f3409`), the value `lua_typename` names `no value`.
 
 ## Reading values

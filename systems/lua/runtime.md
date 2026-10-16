@@ -71,9 +71,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`resume` raises its two messages itself with `luaG_runerror`, as the original 5.0 release does;
-the later 5.0.1 and 5.0.2 sources return them from a separate `resume_error`. The two messages
-are those of the original 5.0 release.
+`resume` raises its two messages itself with `luaG_runerror`; the 5.0.1 and later sources return
+them from a separate `resume_error`.
 
 ## State open and close
 
@@ -82,8 +81,8 @@ state and stores `default_panic` in it, calls `stack_init` (a stack of 45 slots 
 records), makes the default metatable (its own metatable), the globals table and the registry,
 sizes the string table at 32, runs `luaT_init` and `luaX_init`, fixes the `not enough memory`
 string and sets the first threshold to four times the block count. `luaE_newthread` makes a
-coroutine state. `close_state` closes the upvalues, sweeps every object and frees the stacks and the
-global state. `mallocstate`, `freestate`, `freestack` and `luaE_freethread` allocate and free the
+coroutine state. `close_state` closes the upvalues, sweeps every object, frees the stacks, calls the
+client's memory-pool teardown `0x6fb2f0` (`0x6f6f54`) and frees the global state. `mallocstate`, `freestate`, `freestack` and `luaE_freethread` allocate and free the
 records, and `callallgcTM` is the protected function that runs the last finalizers.
 
 | function | name | decided by |
@@ -96,17 +95,18 @@ records, and `callallgcTM` is the protected function that runs the last finalize
 | `0x6f6ce0` | `freestack` | two `luaM_irealloc` in `lstate.c` (`0x6f6cfd`, `0x6f6d17`) |
 | `0x6f6d70` | `f_luaopen` | allocates 0xc0 bytes (`0x6f6d88`), panic store (`0x6f6ddd`), three `luaH_new` (`0x6f6e3b`, `0x6f6e62`, `0x6f6e87`), `luaS_resize` 32 (`0x6f6e96`), `luaT_init` (`0x6f6e9d`), threshold `shl 2` (`0x6f6ec8`) |
 | `0x6f6ee0` | `default_panic` | three bytes: `xor eax,eax; ret` |
-| `0x6f6ef0` | `close_state` | `luaF_close` (`0x6f6ef6`), `luaC_sweep` (`0x6f6f09`), `luaS_freeall` (`0x6f6f10`), `freestack` (`0x6f6f46`), `freestate` (`0x6f6f79`) |
+| `0x6f6ef0` | `close_state` | `luaF_close` (`0x6f6ef6`), `luaC_sweep` (`0x6f6f09`), `luaS_freeall` (`0x6f6f10`), `freestack` (`0x6f6f46`), pool teardown `0x6fb2f0` (`0x6f6f54`), `freestate` (`0x6f6f79`) |
 | `0x6f6fe0` | `callallgcTM` | tail `jmp` to `luaC_callGCTM` (`0x6f6fe0`) |
 | `0x6f7b40` | `luaT_init` | loop over the name table (`0x6f7b72`), `luaS_newlstr`, limit `0xbc` (`0x6f7b8c`), the fixed bit `0x10` |
 
-Addresses: `0x6f6b10`, `0x6f6b14`, `0x6f6b21`, `0x6f6b28`, `0x6f6b37`, `0x6f6b80`, `0x6f6b8d`, `0x6f6ba0`, `0x6f6bb8`, `0x6f6be4`, `0x6f6c90`, `0x6f6c9b`, `0x6f6ca4`, `0x6f6caf`, `0x6f6cc0`, `0x6f6ccb`, `0x6f6ce0`, `0x6f6cfd`, `0x6f6d17`, `0x6f6d70`, `0x6f6d88`, `0x6f6ddd`, `0x6f6e3b`, `0x6f6e62`, `0x6f6e87`, `0x6f6e96`, `0x6f6e9d`, `0x6f6ec8`, `0x6f6ee0`, `0x6f6ef0`, `0x6f6ef6`, `0x6f6f09`, `0x6f6f10`, `0x6f6f46`, `0x6f6f79`, `0x6f6fe0`, `0x6f7b40`, `0x6f7b72`, `0x6f7b8c`, `0x6f6e0b`, `0x6f6d63`, `0x6f6fc5`, `0x6f6fa9`
+Addresses: `0x6fb2f0`, `0x6f6f54`, `0x6f6b10`, `0x6f6b14`, `0x6f6b21`, `0x6f6b28`, `0x6f6b37`, `0x6f6b80`, `0x6f6b8d`, `0x6f6ba0`, `0x6f6bb8`, `0x6f6be4`, `0x6f6c90`, `0x6f6c9b`, `0x6f6ca4`, `0x6f6caf`, `0x6f6cc0`, `0x6f6ccb`, `0x6f6ce0`, `0x6f6cfd`, `0x6f6d17`, `0x6f6d70`, `0x6f6d88`, `0x6f6ddd`, `0x6f6e3b`, `0x6f6e62`, `0x6f6e87`, `0x6f6e96`, `0x6f6e9d`, `0x6f6ec8`, `0x6f6ee0`, `0x6f6ef0`, `0x6f6ef6`, `0x6f6f09`, `0x6f6f10`, `0x6f6f46`, `0x6f6f79`, `0x6f6fe0`, `0x6f7b40`, `0x6f7b72`, `0x6f7b8c`, `0x6f6f1e`, `0x6f6f5c`, `0x6f6e0b`, `0x6f6d63`, `0x6f6fc5`, `0x6f6fa9`
 Confidence: verified
 Proof: one
 Test: none
 
-The line numbers `lstate.c` passes are one above upstream's: 50, 66, 70, 82, 83 and 92 against
-49, 65, 69, 81, 82 and 91. The initial block count is 296 (`0x6f6e0b`, `0x128`), the sum of the two
+The line numbers `lstate.c` passes in the allocating functions are one above upstream's: 50, 66, 70,
+82, 83 and 92 against 49, 65, 69, 81, 82 and 91. `close_state` passes 154 (`0x6f6f1e`) and 160
+(`0x6f6f5c`) against upstream's 151 and 156. The initial block count is 296 (`0x6f6e0b`, `0x128`), the sum of the two
 records' sizes in upstream. The stack size 45 is `BASIC_STACK_SIZE + EXTRA_STACK`, 40 plus 5, and
 the record count 8 is `BASIC_CI_SIZE`. `close_state` is called at `0x6f6d63` when
 `lua_open` fails and at `0x6f6fc5` in `lua_close`, which hands `0x6f6fe0` to
@@ -132,7 +132,7 @@ string table and work buffer, and then sets the next threshold in a function the
 | `0x6f7370` | `checkSizes` | string count under a quarter and size over 64 (`0x6f738c`), `luaS_resize` (`0x6f739c`), buffer realloc in `lgc.c` (`0x6f73c1`), tail `jmp` to the threshold update (`0x6f73d6`) |
 | `0x6f7b20` | `luaC_link` | old head stored in the object (`0x6f7b29`), object stored in `[G+0x10]` (`0x6f7b31`), mark 0 (`0x6f7b34`), tag from the argument (`0x6f7b38`) |
 
-Addresses: `0x6f7080`, `0x6f7099`, `0x6f70aa`, `0x6f70da`, `0x6f7120`, `0x6f712a`, `0x6f7146`, `0x6f71bd`, `0x6f71d0`, `0x6f71da`, `0x6f71e8`, `0x6f71f1`, `0x6f71ff`, `0x6f7210`, `0x6f7229`, `0x6f722e`, `0x6f723e`, `0x6f7260`, `0x6f7267`, `0x6fa050`, `0x6f7273`, `0x6fa110`, `0x6f7278`, `0x6fa690`, `0x6f7291`, `0x6f6c90`, `0x6f7296`, `0x6f72f0`, `0x6f7317`, `0x6f731c`, `0x6f7370`, `0x6f738c`, `0x6f739c`, `0x6f73c1`, `0x6f73d6`, `0x6f7b20`, `0x6f7b29`, `0x6f7b31`, `0x6f7b34`, `0x6f7b38`, `0x6f7340`, `0x6f73e0`, `0x6f734a`, `0x6f7353`, `0x6f735a`, `0x6f7362`, `0x6fae00`, `0x6fae67`, `0x6fae83`
+Addresses: `0x6f7080`, `0x6f7099`, `0x6f70aa`, `0x6f70da`, `0x6f7120`, `0x6f712a`, `0x6f7146`, `0x6f71bd`, `0x6f71d0`, `0x6f71da`, `0x6f71e8`, `0x6f71f1`, `0x6f71ff`, `0x6f7210`, `0x6f7229`, `0x6f722e`, `0x6f723e`, `0x6f7260`, `0x6f7267`, `0x6fa050`, `0x6f7273`, `0x6fa110`, `0x6f7278`, `0x6fa690`, `0x6f7291`, `0x6f6c90`, `0x6f7296`, `0x6f72f0`, `0x6f7317`, `0x6f731c`, `0x6f7370`, `0x6f738c`, `0x6f739c`, `0x6f73c1`, `0x6f73d6`, `0x6f7b20`, `0x6f7b29`, `0x6f7b31`, `0x6f7b34`, `0x6f7b38`, `0x6f7340`, `0x6f73e0`, `0x6f734a`, `0x6f7353`, `0x6f735a`, `0x6f7362`, `0x6fae00`, `0x6fae67`, `0x6fae83`, `0x6f727d`, `0x6f729e`, `0x6f72b7`, `0x6f73af`
 Confidence: verified
 Proof: one
 Test: none
@@ -142,7 +142,10 @@ Test: none
 upstream 5.0 ends `checkSizes` with a threshold of twice the block count, the client jumps to
 `0x6fae00`. That function takes the headroom `[G+0x24] - [G+0x28]`, lowers it to the least free
 space among the six block pools at `[G+0]`, and stores the block count plus the larger of that and
-a quarter of the block count (`0x6fae67`..`0x6fae83`).
+a quarter of the block count (`0x6fae67`..`0x6fae83`). The allocation lines `freeobj` and
+`checkSizes` pass (345, 353 and 357 at `0x6f727d`, `0x6f729e` and `0x6f72b7`, 399 at `0x6f73af`) are
+5.0's 344, 352, 356 and 398 plus 1; 5.0.1 and 5.0.2 have 347, 355, 359 and 401, so the client's
+`lgc.c` descends from the 5.0 release.
 
 ## Metamethod access
 

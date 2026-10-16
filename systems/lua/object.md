@@ -7,8 +7,9 @@ pass the path of their own file (`lstring.c`, `lfunc.c`, `ltable.c`) and a line 
 a link, a type tag at `+4` and the collector's mark byte at `+5`; a string is `+8` hash, `+0xc`
 length and the bytes from `+0x10`; a table has its metatable at `+8`, array at `+0xc`, node
 vector at `+0x10`, a log2 node count at `+7` and an array size at `+0x1c`, with 40-byte nodes
-(value, key, next). The line numbers the allocating functions pass are those of the Lua 5.0 source
-for `lstring.c` and `lfunc.c` and, in `ltable.c`, for the two vector allocators. The names are
+(key, value, next). The line numbers the allocating functions pass are those of the Lua 5.0 source
+for `lstring.c` and `lfunc.c` and, in `ltable.c`, for the two vector allocators (5.0.1 and 5.0.2 have
+the same lines, so they do not tell the releases apart). The names are
 upstream's.
 
 Roots: `0x6f5810`, `0x6f5830`, `0x6f58b0`, `0x6f5900`, `0x6f5990`, `0x6f5c20`, `0x6f5c40`, `0x6f9c30`, `0x6f9c50`, `0x6f9d00`, `0x6f9e30`, `0x6f9e70`, `0x6f9eb0`, `0x6f9f10`, `0x6f9f60`, `0x6f9fe0`, `0x6fa050`, `0x6fa110`, `0x6fa150`, `0x6fa420`, `0x6fa4f0`, `0x6fa690`, `0x6fa700`, `0x6fa760`, `0x6fa7a0`, `0x6fa840`, `0x6fad80`
@@ -21,7 +22,8 @@ or by address. `luaO_str2d` reads a number with `strtod` and accepts trailing sp
 `luaO_chunkid` builds the short source name used in messages, from `=name`, `@file` or a
 string chunk (`[string "first line..."]`). `luaO_pushvfstring` joins the literal text and the converted arguments of a `%s`, `%c`, `%d`, `%f`
 or `%%` format by `luaV_concat`; `luaO_pushfstring` calls it on its own arguments, and `pushstr`
-pushes one string, `(null)` for none.
+pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0x6f5bc8`); upstream's
+(`lobject.c`, lines 104 to 107) has no such check.
 
 | function | name | decided by |
 |---|---|---|
@@ -34,7 +36,7 @@ pushes one string, `(null)` for none.
 | `0x6f5c20` | `luaO_pushfstring` | calls `luaO_pushvfstring` with the address of its own arguments (`0x6f5c2d`) |
 | `0x6f5c40` | `luaO_chunkid` | `=` (`0x6f5c49`), `@` (`0x6f5c6b`), else `[string "` (`0x6f5ceb`), first line by `strcspn` (`0x6f5cd7`), `..."]` (`0x6f5d5d`) |
 
-Addresses: `0x6f5810`, `0x6f5812`, `0x6f5818`, `0x6f5820`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bc8`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
+Addresses: `0x6f5bc8`, `0x6f5810`, `0x6f5812`, `0x6f5818`, `0x6f5820`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
 Confidence: verified
 Proof: one
 Test: none

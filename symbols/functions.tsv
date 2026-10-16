@@ -29763,7 +29763,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f58b0	60	luaO_rawequalObj		lua	primitive		Compares two values by tag, then by number or by payload	verified	one	lua/object#basic-object-functions	
 0x6f5900	132	luaO_str2d		lua	primitive		Converts a string to a number with strtod, allowing trailing spaces	verified	one	lua/object#basic-object-functions	
 0x6f5990	452	luaO_pushvfstring	idb	lua	boundary		Pushes a string formatted from a format and an argument list with %s, %c, %d, %f and %%	verified	one	lua/object#basic-object-functions	
-0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer	verified	one	lua/object#basic-object-functions	
+0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer, which upstream does not	verified	one	lua/object#basic-object-functions	
 0x6f5c20	20	luaO_pushfstring		lua	boundary		Pushes a string formatted from a format and its arguments	verified	one	lua/object#basic-object-functions	
 0x6f5c40	311	luaO_chunkid		lua	primitive		Writes the short name of a chunk source for messages	verified	one	lua/object#basic-object-functions	
 0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	one	ui/luastate#the-c-function-contract	
