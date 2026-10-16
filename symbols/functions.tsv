@@ -6910,7 +6910,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f440	10	SignalPartyInviteCancel		ui	orchestration		Signals the cancelled group invitation	inferred	none	objectlayer/party#group-notices	
 0x48f450	21	SignalGuildInviteRequest		ui	orchestration		Signals GUILD_INVITE_REQUEST with an inviter and a guild	verified	one	objectlayer/party#guild-notices	
 0x48f470	10	SignalGuildInviteCancel		ui	orchestration		Signals GUILD_INVITE_CANCEL; no caller and no stored address	verified	one	ui/guild#roster-events	
-0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Registers the game handlers and arms the billing warning timer	verified	one	ui/billing#the-warning-timer	
+0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Registers the game handlers and arms the billing warning timer	verified	one	ui/billing#the-warning-timer	ui::billing_arm
 0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	ui::glue_48fbf0_finite_diff
 0x4901e0	98	GetConfiguredAspect		ui	primitive	float __cdecl ()	Returns the gxResolution width over height when widescreen is on, else 4/3	verified	one	ui/uiscale#the-automatic-scale	ui::glue_4901e0_aspect_ratio
@@ -7025,7 +7025,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4953e0	62	LockItem		ui	primitive	void __stdcall (uint64_t guid)	Sets an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
 0x495420	62	UnlockItem		ui	primitive	void __stdcall (uint64_t guid)	Clears an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
 0x495460	297	UnlockAllItems		ui	primitive	void __cdecl (void)	Clears the lock of every item the player holds and signals ITEM_LOCK_CHANGED once	verified	one	ui/cursor#the-item-lock	
-0x495590	696	CGGameUI::Update		ui	primitive		Runs the game interface frame update, first zeroing the context nesting count	verified	one	ui/luastate#the-context-word	ui::glue_geom_480_495590_tick_scale
+0x495590	696	CGGameUI::Update		ui	primitive		Runs the interface frame update: zeroes the context count, reloads on request, polls the play-time warning	verified	one	ui/billing#the-play-time-poll	ui::billing_minutes_left, ui::billing_poll, ui::glue_geom_480_495590_tick_scale
 0x495850	72	SignalDeathState		ui	orchestration		Signals PLAYER_DEAD and clears the cursor at no health, else PLAYER_ALIVE	verified	one	ui/deathui#dead-and-alive	
 0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
@@ -31279,7 +31279,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fd73	8	___toascii	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x73fd7b	61	___iscsymf	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdb8	61	___iscsym	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x73fdf5	207	ceil		crt		double __cdecl (double x)	Returns the smallest integer not less than a double	inferred	none	models/ribbons#ribbon-ring	
+0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	
 0x73fec4	82	_sprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
 0x73ff20	31	__allshl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	

@@ -333,7 +333,7 @@ Each reads `0x5ab490()`. `0x46dc0a` `test byte [eax+0x1afc],2; je` keeps the tim
 `0x46dc5e` `and eax,0x16`, then the compares with 2, 4, 0 and 0x10; the plan starts at 0.
 `0x46dca8` `shr cl,5; and cl,1`, `0x46dcc5` `shr bl,3; and bl,1`. The writer is net's
 `0x5b41b0`: after result 0x0c or 0x1b with at least 5 bytes left, it reads a dword into `+0x1af4`,
-a byte into `+0x1afc` and a dword into `+0x1af8` (`0x5b41fe` to `0x5b4223`).
+a byte into `+0x1afc` and a dword into `+0x1af8`, the last only with 9 bytes (`0x5b41fe` to `0x5b4223`).
 
 ## Screenshot, patch and survey
 

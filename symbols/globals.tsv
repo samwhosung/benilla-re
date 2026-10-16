@@ -524,6 +524,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804584	const float	s_float3f23d70a		ui	Holds the float 0.64 (0x3f23d70a)	inferred	none	
 0x804588	float	s_rangeStopFraction		objectlayer	Holds 0.9, the fraction of a range at which a mode 7 or 9 auto-move stops	verified	one	objectlayer/unitmovement#auto-move-modes
 0x80458c	const float	s_float768		ui	Holds 768.0, the interface height the automatic scale divides by	verified	one	ui/uiscale#the-automatic-scale
+0x804590	const float	s_minutesPerMs		ui	Holds 1.6666667e-5 (0x378bcf65), the factor from milliseconds to minutes in the play-time poll	verified	one	ui/billing#the-minutes-reading
 0x804594	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	ui/loot#the-row-widget
 0x8045c0	void *[40]	s_guiButtonVtable		ui	Holds the 40 virtual function slots of a CSimpleButton subclass the game interface creates	verified	one	ui/hover#the-notifies-by-class
 0x8046d8	const uint32_t[14]	s_profanityChatTypes		ui	Holds the 14 chat types whose lines are profanity masked	verified	one	ui/chatfilter#which-lines-are-filtered
@@ -1579,6 +1580,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8432f0	const char[26]	s_soundFriendlyUnit		ui	Holds the interface sound name GAMEHIGHLIGHTFRIENDLYUNIT played for a friendly hover target	verified	one	ui/tooltipobject#the-publisher
 0x84330c	const char[25]	s_soundHostileUnit		ui	Holds the interface sound name GAMEHIGHLIGHTHOSTILEUNIT played for a hostile hover target	verified	one	ui/tooltipobject#the-publisher
 0x84333c	const char[11]	s_unitCombatFormat		ui	Holds the UNIT_COMBAT event format %s%s%s%d%d	verified	one	objectlayer/playercombat#the-unit-combat-event
+0x8433f0	char[20]	s_billingNagWarning		ui	Holds the string BILLING_NAG_WARNING, the key of the play-time warning line	verified	one	ui/billing#the-warning-lines
 0x843414	char[11]	s_textLootButton		ui	Holds the string "LootButton"	inferred	none	
 0x8435fc	uint32_t	s_chatDisplayHold		ui	Holds 1 while chat lines are queued instead of shown, from start-up to world entry	verified	one	ui/chatevents#the-display-latch
 0x843600	uint32_t	s_profanityFilterOn		unassigned	Holds the profanityFilter value, 1 in the file	verified	one	ui/chatfilter#the-two-options
@@ -2883,8 +2885,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e354	int32_t	s_summonZone		ui	Holds the AreaTable id of the summon's destination	verified	one	ui/summon#the-request
 0xb4e358	uint64_t	s_summonerGuid		ui	Holds the GUID of the player who summoned, 0 before the first request	verified	one	ui/summon#the-request
 0xb4e360	uint32_t	s_playTimeWarnDeadline		ui	Holds the clock value at which the remaining billing time ends, 0 when not armed	verified	one	ui/billing#the-warning-timer
-0xb4e364	uint32_t	s_playTimeWarnA		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
-0xb4e368	uint32_t	s_playTimeWarnB		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
+0xb4e364	uint32_t	s_playTimeNextLine		ui	Holds the clock value from which the next warning line is due, 0 before the first poll	verified	one	ui/billing#the-play-time-poll
+0xb4e368	uint32_t	s_playTimeDialogShown		ui	Holds 1 once the poll has signalled the play-time dialog, 0 after an arm	verified	one	ui/billing#the-play-time-poll
 0xb4e36c	uint32_t	s_gameUiReady		ui	Holds 1 once the game interface is built, cleared at shutdown	verified	one	ui/cvarverbs#performance-display-and-screenshots
 0xb4e370	uint32_t	s_lastInstanceLeftAt		ui	Holds the Unix time the player left the last type-1 map	verified	one	ui/groupverbs#instances
 0xb4e374	uint32_t	s_lastInstanceMapId		ui	Holds the id of the last type-1 map the player left	verified	one	ui/groupverbs#instances

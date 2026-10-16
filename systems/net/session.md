@@ -100,7 +100,7 @@ the client seed, the server seed and 40 bytes at `+0x48`; the 20 bytes are put a
 
 `SMSG_AUTH_RESPONSE` (`0x1ee`) starts with a result byte. `AUTH_OK` (`0x0c`) and
 `AUTH_WAIT_QUEUE` (`0x1b`) may carry 9 more bytes when at least 5 remain: a dword, a byte and a
-dword. `AUTH_WAIT_QUEUE` then carries the queue position, a dword. The client reports the
+dword, the last only when all 9 are there. `AUTH_WAIT_QUEUE` then carries the queue position, a dword. The client reports the
 result through the session, which sets the status with it.
 
 Addresses: `0x5b41b0`, `0x5b41e2`, `0x5b41e6`, `0x5b41f9`, `0x5b422b`, `0x5b424a`, `0x5ab2b8`
