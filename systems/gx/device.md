@@ -120,7 +120,7 @@ Test: none
 `DesktopGamma` stores its record (`tables/cvars.tsv`), and skips on null; `0x4034e8` reads the
 record's `+0x28`, the value as an integer (`cvar/registry`), and skips on non-zero. The float is
 stored back over the callback's own argument and pushed. `0x589c00` loads `[0xc0ed38]` into `ecx`
-and calls `[vtable+0x34]` with the one argument, `ret 4`.
+and calls `[vtable+0x34]` with the one argument, `ret 4`. `GammaCallback` is named for the setting.
 
 ## Direct3D clear and viewport
 

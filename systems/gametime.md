@@ -148,10 +148,10 @@ The stores `0x6c5f70`, `0x6c5f77`, `0x6c5f91`, `0x6c5f94`. Nothing in this file 
 
 ## Day number and time text
 
-`WowTime::GetDaysSinceEpoch` (`0x642320`) returns 0 when the year, month or day field is negative.
+`WowTime::GetDayNumber` (`0x642320`) returns 0 when the year, month or day field is negative.
 Otherwise it builds a `tm` with day `day + 1`, month `month`, year `year mod 100 + 100`, daylight
 saving −1 and every other field 0, and returns `(mktime(tm) + 0x6423b0()) / 86400`, truncated
-toward zero; `0x6423b0` returns 0. `WowTime::WowGetTimeString(time, buffer, size)` (`0x642c80`)
+toward zero; `0x6423b0` returns 0. `WowTime::FormatTime(time, buffer, size)` (`0x642c80`)
 writes `Not Set` when `0x642c10` gives 0 for the time, else `%s/%s/%s (%s) %s:%s` of month + 1,
 day + 1, year + 2000, the weekday's `Sun` to `Sat` (`Any` when negative), hour and the minute as
 two digits; any other negative field prints `A`. It returns `buffer`.

@@ -132,10 +132,9 @@ Test: `objectlayer::player_cast_time_difftest`, `objectlayer::player_cast_time_s
 
 Read from the dwords of `0x80af78`. `0x5ec8f0` returns 0 while `+0xccc` and `+0x1d20` are both set;
 otherwise it runs `CGUnit_C::OnModelUpdate` and, for the active player, returns its result only
-while `0xc4d74c` is set (`0x5ec8c0` toggles it and returns
-the new value, `0x5ec8e0` sets it). The tags test `PLAYER_FLAGS`
-(`[+0xe68]+8`) bits 0x2, 0x4 and 0x8; the AFK tag also shows for the active player while
-`0xb6e5cc` is set.
+while `0xc4d74c` is set (`0x5ec8c0` toggles it and returns the new value, `0x5ec8e0` sets it).
+The tags test `PLAYER_FLAGS` (`[+0xe68]+8`) bits 0x2, 0x4 and 0x8; the AFK tag also shows for the
+active player while `0xb6e5cc` is set.
 
 ## Attack error repeat
 

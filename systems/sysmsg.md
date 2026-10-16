@@ -127,4 +127,5 @@ new text at `[ebp+8]` and returns with `mov al,1; ret 8`. `0x409170` sets a byte
 clear and two fields of its file are set; `0x4091a0` clears it; `0x4091c0` clears a second flag and
 `0x4091e0` sets it. `0x403110` packs the names into an 80-byte buffer with `SStrPack` (limit 0x50),
 testing `bl` against 1 to 0x20 and its sign (`0x4031cd`, `jns`) for 0x80; nothing tests 0x40. It
-prints with `ConsolePrintf`. Its one caller is `0x4030f0`.
+prints with `ConsolePrintf`. Its one caller is `0x4030f0`. The two callbacks are named for their
+settings, `ErrorsCallback` and `ShowErrorsCallback`, as `GammaCallback` is.

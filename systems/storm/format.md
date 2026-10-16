@@ -162,4 +162,5 @@ Test: none
 
 `0x648700` pushes 0, `0x4ee` and the path `E:\build\buildWoW\Storm\Source\SFile2.cpp`, then the
 buffer, and calls `SMemFree` (`0x648713`); `ret 4`. In `0x6f1200` the buffer `SFile::Load` wrote at
-`0x6f1238` is passed to it at `0x6f1254`.
+`0x6f1238` is passed to it at `0x6f1254`. The name pairs it with `SFile::Load`, a community name,
+whose class it takes.
