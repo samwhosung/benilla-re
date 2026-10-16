@@ -9,6 +9,9 @@ publish = false
 [dependencies]
 # The MPQ format and its codecs; the client's mount order is what this crate adds.
 wow-mpq = "=0.6.4"
+# zlib, which the `.bz` loose file holds after its header. The zlib-rs backend reports a damaged
+# stream where zlib does, when the output reaches the damage; miniz_oxide reports it earlier.
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 
 [dev-dependencies]
 benilla-re-difftest.workspace = true

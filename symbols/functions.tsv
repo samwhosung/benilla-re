@@ -23326,25 +23326,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6471b0	34			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
 0x6471e0	12			storm	boundary		Runs SFile2.cpp code that calls _atexit; not read here	inferred	none		
 0x6471f0	145			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
-0x647290	61			storm	boundary		Runs SFile2.cpp code that calls SCritSect::SCritSect; not read here	inferred	none		
-0x6472d0	120			storm	boundary		Runs SFile2.cpp code that calls 0x732320, SMemFree; not read here	inferred	none		
+0x647290	61	ConstructFileObject		storm	orchestration	void * __thiscall (SFileObject *this, uint32_t kind)	Stores a file object's kind, constructs its lock and zeroes its other fields but +0x14, +0x20 and +0x44	verified	one	storm/bz#the-file-object	
+0x6472d0	120	DestroyFileObject		storm	orchestration	void __thiscall (SFileObject *this)	Ends a file object's inflate and frees its stream, path and name copies and input buffer, leaving the file open	verified	one	storm/bz#the-file-object	
 0x647350	377			storm	boundary		Runs SFile2.cpp code that calls SCritSect::Enter, _ftell, _fseek and 11 more; not read here	inferred	none		
 0x6474e0	242			storm	boundary		Runs SFile2.cpp code that calls SEventWait, SCritSect::Enter, SCritSect::Leave and 4 more; not read here	inferred	none		
 0x6475e0	36			storm	boundary		Runs SFile2.cpp code that calls SThread::Create; not read here	inferred	none		
 0x647610	203			storm	boundary		Runs SFile2.cpp code that calls SCritSect::Enter, 0x6475e0, SMemAlloc and 2 more; not read here	inferred	none		
-0x6476e0	191			storm	boundary		Runs SFile2.cpp code that calls 0x740c97, 0x730ea0; not read here	inferred	none		
+0x6476e0	191	ReadBzFile		storm	orchestration	uint32_t __fastcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read)	Inflates up to a size of a .bz file, refilling 4 KiB of input, and returns 1 when it delivered bytes	verified	one	storm/bz#reading-a-bz-file	storm::bz_read_difftest, storm::bz_damaged_difftest
 0x6477a0	24	SFile::Open	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx; not read here	inferred	none		
-0x6477c0	1498	SFile::OpenEx	idb	storm	boundary		Runs SFile2.cpp code that calls 0x647e60, SMemAlloc, 0x647290 and 18 more; not read here	inferred	none		
+0x6477c0	1498	SFile::OpenEx	idb	storm	boundary		Runs SFile2.cpp code that calls 0x647e60, SMemAlloc, 0x647290 and 18 more; not read here	inferred	none	storm/bz#opening-a-bz-file	storm::bz_open_header_difftest
 0x647db0	163			storm	boundary		Runs SFile2.cpp code that calls SUniConvertUTF8to16, 0x646e50, __wfopen and 1 more; not read here	inferred	none		
 0x647e60	796	SFileResolveOpen		storm	orchestration	int32_t __fastcall (const char *name, char *out, uint32_t size, uint32_t flags, uint32_t *kind, void **archive)	Resolves an open name through the disk-path builder, or the loose-file index and then the archives	verified	two	storm/mount#loose-files	storm::resolve_matches_index, storm::index_hit_has_no_fallback
 0x648180	725			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrPack, 0x646d90 and 3 more; not read here	inferred	none		
-0x648460	373	SFile::Read	idb	storm	boundary		Reads bytes from an open archive file	inferred	none		
+0x648460	373	SFile::Read	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read, void *overlapped, uint32_t unused)	Reads from an open file by its kind, the .bz inflater for kind 1, or queues an overlapped read	verified	one	storm/bz#reading-a-bz-file	
 0x6485f0	36	SFile::LoadByName		storm	boundary	uint32_t __stdcall (const char *name, void **buffer, uint32_t *size, uint32_t extra, void *overlapped)	Calls SFile::Load with no archive and open flags 0	verified	one	storm/format#loading-a-whole-file	
 0x648620	210	SFile::Load	idb	storm	boundary	uint32_t __stdcall (void *archive, const char *name, void **buffer, uint32_t *size, uint32_t extra, uint32_t flags, void *overlapped)	Reads a whole file into a new buffer with extra zero bytes after it, closing it unless overlapped	verified	one	storm/format#loading-a-whole-file	
 0x648700	33	SFile::Unload		storm	boundary	int __stdcall (void *buffer)	Frees a buffer that SFile::Load returned and returns 1	verified	one	storm/format#freeing-a-loaded-file	
-0x648730	126	SFile::Close	idb	storm	boundary		Runs SFile2.cpp code that calls _fclose, 0x653900, 0x668610 and 3 more; not read here	inferred	none		
+0x648730	126	SFile::Close	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file)	Closes an open file's FILE, archive file and kind-4 handle, destroys the object and frees it	verified	one	storm/bz#the-file-object	
 0x6487b0	59	SFileGetFileName		storm	orchestration		Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
-0x6487f0	129	SFile::GetFileSize	idb	storm	boundary		Runs SFile2.cpp code that calls __fstat, SFileGetFileSize, ZipFileGetFileSize; not read here	inferred	none		
+0x6487f0	129	SFile::GetFileSize	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file, uint32_t *sizeHigh)	Returns an open file's size by its kind: fstat, a .bz header's size, or the archive or kind-4 size	verified	one	storm/bz#size-and-seeking	storm::bz_read_difftest
 0x648890	30	SFile::GetBasePath	idb	storm	boundary		Runs SFile2.cpp code that calls SStrCopy; not read here	inferred	none		
 0x6488b0	106	SFileSetBasePath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the base path with a trailing backslash and passes the path to 0x6571d0	verified	two	storm/mount#loose-file-index	
 0x648920	98	SFileSetDataPath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the data folder name with a trailing backslash	verified	two	storm/mount#loose-file-index	
@@ -23352,7 +23352,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6489a0	98	SFileSetExtraIndexPath		storm	unreached	int32_t __stdcall (const char *path)	Stores a third folder for the loose-file index; nothing calls it	verified	two	storm/mount#loose-file-index	
 0x648a10	18	SFileExists		storm	orchestration	int32_t __stdcall (const char *name)	Resolves a name with open flags 0, the archives only, and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
 0x648a30	44	SFileExistsEx		storm	orchestration	int32_t __stdcall (const char *name, uint32_t flags)	Resolves a name with open flags without opening it and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
-0x648a60	359			storm	boundary		Runs SFile2.cpp code that calls __alloca_probe, SCritSect::Enter, _fseek and 7 more; not read here	inferred	none		
+0x648a60	359	SFile::SetFilePointer		storm	orchestration	uint32_t __stdcall (SFileObject *file, int32_t distance, int32_t *distanceHigh, uint32_t method)	Moves an open file's position by its kind; a .bz file skips by reading and restarts its stream to go back	verified	one	storm/bz#size-and-seeking	storm::bz_seek_difftest, storm::bz_damaged_difftest
 0x648be0	56	SFileSetExtraOpenFlags		storm	orchestration	int32_t __stdcall (uint32_t flags)	Sets the flags every resolve adds from argument bits 0 and 1, then passes the argument to 0x654850	verified	two	storm/mount#loose-files	
 0x648c20	8	SFileClearKeepLooseFlags		storm	orchestration	void __cdecl (void)	Clears the byte that lets the archive walk keep open flag bits 0 and 1	verified	two	storm/mount#loose-files	
 0x648c30	59			storm	boundary		Runs SFile2.cpp code that calls SMemAlloc, 0x659a70; not read here	inferred	none		
@@ -23365,7 +23365,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648e80	106	SFileOpenChild		storm	orchestration		Creates a child archive record for a prefix under a parent archive	verified	one	storm/mount#base-and-speech-archives	
 0x648ef0	57			storm	boundary		Runs SFile2.cpp code that calls 0x668440, 0x653780, SMemFree; not read here	inferred	none		
 0x648f30	38			storm	unreached		Runs SFile2.cpp code that calls 0x6550b0; not read here	inferred	none		
-0x648f60	67			storm	unreached		Runs SFile2.cpp code not read here	inferred	none		
+0x648f60	67	GetFileObjectExtraBytes		storm	unreached	uint32_t __stdcall (SFileObject *file, uint8_t *out)	Copies the 16 bytes at +0x44 of a kind 1 to 4 file object when +0x54 is set; nothing reaches it	verified	one	storm/bz#the-file-object	
 0x648fb0	239	EnumerateArchiveListfile		storm	boundary		Calls a callback for each line of an archive's (listfile) not ending in .md5	verified	one	ui/addons#finding-add-ons	
 0x6490a0	23			storm	unreached		Runs SFile2.cpp code that calls 0x655010; not read here	inferred	none		
 0x6490c0	114			storm	boundary		Runs SFile2.cpp code that calls SMemFree, 0x41c120, 0x649380 and 1 more; not read here	inferred	none		
@@ -31129,11 +31129,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x730c50	149			unassigned	unreached		Runs its object file code that calls 0x732a50, 0x733040, 0x733650; not read here	inferred	none		
 0x730cf0	17			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x730d10	76			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x730d60	277			unassigned			Runs its object file code not read here	inferred	none		
-0x730e80	22			unassigned			Runs its object file code that calls 0x730d60; not read here	inferred	none		
-0x730ea0	4816			unassigned			Runs its object file code that calls 0x7327a0, 0x735160, 0x734d50 and 2 more; not read here	inferred	none		
+0x730d60	277	inflateInit2_		zlib	boundary	int32_t __fastcall (void *strm, int32_t windowBits, const char *version, int32_t streamSize)	Checks the version and stream size, allocates the 0x1ba8-byte inflate state and sets its wrapper and window	verified	one	storm/bz#the-zlib-it-links	
+0x730e80	22	inflateInit_		zlib	boundary	int32_t __fastcall (void *strm, const char *version, int32_t streamSize)	Starts an inflate with 15 window bits through inflateInit2_	verified	one	storm/bz#the-zlib-it-links	
+0x730ea0	4816	inflate		zlib	boundary	int32_t __fastcall (void *strm, int32_t flush)	Inflates a zlib stream as zlib 1.2.2 does: its entry checks match and the bz tests run it	inferred	none	storm/bz#the-zlib-it-links	storm::bz_read_difftest, storm::bz_damaged_difftest
 0x732200	288			unassigned			Runs its object file code not read here	inferred	none		
-0x732320	60			unassigned			Runs its object file code not read here	inferred	none		
+0x732320	60	inflateEnd		zlib	boundary	int32_t __fastcall (void *strm)	Frees an inflate state and its window through the stream's zfree	verified	one	storm/bz#the-zlib-it-links	
 0x732360	231			unassigned	unreached		Runs its object file code that calls 0x735160, 0x732200; not read here	inferred	none		
 0x732450	452			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x732620	38			unassigned	unreached		Runs its object file code not read here	inferred	none		

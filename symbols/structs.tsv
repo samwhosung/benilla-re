@@ -106,6 +106,7 @@ PlayerPendingItemExpiration		24		objectlayer	Holds an enchantment time waiting f
 RACECLASSINFO		32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
 RealmCategory		28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
 RealmInfo		308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
+SFileObject		96		storm	Holds an open Storm file: its kind, C runtime file, names, .bz inflate state and lock	verified	one	storm/bz#the-file-object
 SKILLCOSTSINFO		32		spell	Holds a skill-cost index node: cost-set id, two links, and a run of SkillCostsData rows	verified	one	spell/tables#startup-build-of-the-indexes
 SKILLLINEREC		28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race
 SOUNDDEFINITION		152		sound	Holds a SoundEntries row's sound definition: ten file slots, volume, flags, distances, weights and picks	verified	one	sound/entries#sound-definitions

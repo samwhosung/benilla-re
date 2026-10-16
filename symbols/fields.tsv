@@ -1187,6 +1187,17 @@ RealmInfo	0x0009	256	char[256]	m_name	net	Holds the realm name	verified	one	glue
 RealmInfo	0x012c	4	float	m_population	net	Holds the population, the sentinels 600, 200 and 400 replaced by 0, 0.001 and 8	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0130	1	uint8_t	m_characters	net	Counts the account's characters on the realm	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0131	1	uint8_t	m_category	net	Holds the realm's category id, 0 meaning the first category	verified	one	glue/realms#the-realm-record
+SFileObject	0x0000	4	uint32_t	m_kind	storm	Holds the loose-file index kind the open resolved	verified	one	storm/bz#the-file-object
+SFileObject	0x0004	4	void *	m_file	storm	Holds the C runtime FILE of a loose or .bz file	verified	one	storm/bz#the-file-object
+SFileObject	0x000c	4	char *	m_path	storm	Holds a copy of the full path, without a final .bz	verified	one	storm/bz#the-file-object
+SFileObject	0x0010	4	char *	m_name	storm	Holds a copy of the name the open was given	verified	one	storm/bz#the-file-object
+SFileObject	0x0014	4	uint32_t	m_bzSize	storm	Holds the inflated size from a .bz header	verified	one	storm/bz#the-file-object
+SFileObject	0x0018	4	uint8_t *	m_bzInput	storm	Holds the 0x1000-byte input buffer of a .bz file	verified	one	storm/bz#the-file-object
+SFileObject	0x001c	4	void *	m_bzStream	storm	Holds the 0x38-byte zlib stream of a .bz file	verified	one	storm/bz#the-file-object
+SFileObject	0x0020	4	uint32_t	m_bzPosition	storm	Holds the bytes successful reads delivered since the .bz stream began	verified	one	storm/bz#the-file-object
+SFileObject	0x0024	24	uint8_t[24]	m_lock	storm	Holds the critical section reads and seeks take	verified	one	storm/bz#the-file-object
+SFileObject	0x0044	16	uint8_t[16]	m_extraBytes	storm	Holds 16 bytes, for kind 1 from .bz header offset 8, that no live code reads	verified	one	storm/bz#the-file-object
+SFileObject	0x0054	4	uint32_t	m_extraBytesSet	storm	Holds 1 when +0x44 is filled	verified	one	storm/bz#the-file-object
 SKILLCOSTSINFO	0x0000	4	uint32_t	m_hashVal	spell	Holds the hash, the cost-set id of the run	verified	one	spell/tables#startup-build-of-the-indexes
 SKILLCOSTSINFO	0x0004	8	void *[2]	m_linkToSlot	spell	Holds the link in the node's slot list, offset 4	verified	one	spell/tables#hash-table-layout
 SKILLCOSTSINFO	0x000c	8	void *[2]	m_linkToFull	spell	Holds the link in the table's node list, offset 0x0c	verified	one	spell/tables#hash-table-layout

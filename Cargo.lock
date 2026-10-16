@@ -337,6 +337,7 @@ name = "benilla-re-storm"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",
+ "flate2",
  "wow-mpq",
 ]
 

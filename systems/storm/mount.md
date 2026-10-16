@@ -204,7 +204,7 @@ mask 0xffffffff at `0x646782`) and freed at exit by `0x6467a0`, which `0x646790`
 A probe finds an entry whose `SStrHashHT` hash and key equal the name's, the key compared by `SStrCmpI`; the hash
 reads `/` as `\` and the compare does not, so a name with `/` never matches. Flag bit 1 first probes the part after the last backslash, a file directly in the base folder or
 `Data\`; then bit 0 or 1 probes the whole name. A hit returns the full path and the kind. `SFile::OpenEx` opens
-kind 0 with `fopen(path, "rb")`, kind 1 the same way and checks `BZ00` in its 24-byte header, kind 2 as an
+kind 0 with `fopen(path, "rb")`, kind 1 the same way and checks `BZ00` in its 24-byte header (`bz`), kind 2 as an
 archive holding the name's last component. A failed open returns 0 without the archives. A third probe never
 changes the result.
 
