@@ -9,8 +9,8 @@ build (the 3.3.5a decompilation at github.com/SatyPardus/wowdecomp is one), read
 in it is built or run. Beside it, symbols/functions.tsv, tables/calls.tsv, the exe (its strings
 and data tables) and the listing, dumps/disasm.txt (options --exe and --disasm).
 
-Writes: dumps/namelead.tsv (-o, refused inside the repo but outside dumps/), one line per lead.
-With --measure, also dumps/namelead-measure.tsv, the leads of the measured run below.
+Writes: dumps/namelead.tsv (-o, refused anywhere but under dumps/), one line per lead. With
+--measure, also dumps/namelead-measure.tsv, the leads of the measured run below.
 
 The output is leads, never findings (docs/METHOD.md, The binary decides). A name enters symbols/
 only through a reading at the bytes, under docs/CONTRIBUTING.md, Adding a name, and a lead is a
@@ -35,7 +35,8 @@ Four methods pair a row with a decompiled function:
             two B, three A.
 
 The string and register leads, and then the calls and align leads, at tier A or B are fed back as
-names and pairs, and calls and align run again until no new pair comes. A lead's tier is A or B
+names and pairs, and calls and align run again until a round adds no pair (a guard of 100 rounds
+says so when it stops the loop). A lead's tier is A or B
 when the measure below supports it, C otherwise; C is a list of candidates, not a lead to read.
 
 --measure takes a fifth of the named rows (by a hash of the address), runs every method as if
@@ -44,7 +45,9 @@ their names: in full (`Script::Name` against `Script_Name`), by the last part (`
 against `Script_Name`), or not. Since this repo's names and the later build's differ in style, it
 also counts the rows whose name is exactly one decompiled function's and how often the lead is
 that function: the precision. Names this repo makes mechanically (initializers, thunks, exception
-code) are left out. Those rows are easier than the unnamed ones, so the measure is an upper bound.
+code) are left out, and so are the rows tools/namelead-read.tsv lists, named from a lead: their
+names would confirm their own leads. The rows measured are easier than the unnamed ones, so the
+measure is an upper bound.
 
 What it cannot see: a function with no string, no registration and no named neighbour (most small
 helpers and unreached code); code the later build inlined, split or rewrote, where a string or a
@@ -712,6 +715,8 @@ def by_align(client, dec, names, anchors):
 
 
 METHODS = ('string', 'register', 'calls', 'align')
+ROUNDS = 100   # a guard: each round adds a pair or ends the loop, so it is never reached
+READ = ROOT / 'tools' / 'namelead-read.tsv'
 
 
 def run(client, dec, names, calls):
@@ -726,7 +731,12 @@ def run(client, dec, names, calls):
     named = dict(names)
     methods['calls'], methods['align'] = {}, {}
     rows = [r['address'] for r in client.rows]
-    for rnd in range(1, 9):
+    rnd = 0
+    while True:
+        rnd += 1
+        if rnd > ROUNDS:
+            note('namelead: stopped after %d rounds with pairs still coming' % ROUNDS)
+            break
         new = 0
         for m in METHODS:
             for a, ld in methods[m].items():
@@ -767,10 +777,8 @@ def main():
     ap.add_argument('--measure', action='store_true',
                     help='print the agreement of each method with the names the rows have')
     args = ap.parse_args()
-    out = Path(args.out).resolve()
-    if out.is_relative_to(ROOT) and not out.is_relative_to(ROOT / 'dumps'):
-        sys.exit('namelead: the leads go under dumps/ or outside the repo, never where git '
-                 'tracks them')
+    if not Path(args.out).resolve().is_relative_to((ROOT / 'dumps').resolve()):
+        sys.exit('namelead: the leads go under dumps/, which git ignores')
     if Path(args.decomp).resolve().is_relative_to(ROOT):
         sys.exit('namelead: the decompilation is read from a checkout outside the repo')
 
@@ -788,13 +796,15 @@ def main():
         return
     # The measure: a fifth of the named rows lose their names, the methods run again, and the
     # leads for those rows are checked against the names they had.
-    hidden = {a for a in names if zlib.crc32(addr(a).encode()) % 5 == 0}
+    # A row named from a lead would confirm its own lead, so the rows read from leads are left out.
+    read = {int(r['address'], 16) for r in read_tsv(READ)}
+    hidden = {a for a in names if zlib.crc32(addr(a).encode()) % 5 == 0 and a not in read}
     visible = {a: n for a, n in names.items() if a not in hidden}
     h_out, h_ks = table(run(client, dec, visible, calls), client, dec)
     hid = {addr(a) for a in hidden}
     write(Path(args.out).with_name(Path(args.out).stem + '-measure.tsv'),
           [r for r in h_out if r[0] in hid])
-    measure(h_out, h_ks, client, dec, {addr(a) for a in hidden})
+    measure(h_out, h_ks, client, dec, hid, {addr(a) for a in read})
 
 
 HEADER = ['address', 'name', 'method', 'tier', 'score', 'margin', 'shared', 'lead', 'lead_file',
@@ -830,12 +840,14 @@ def table(methods, client, dec):
     return [out[i] for i in order], [ks[i] for i in order]
 
 
-def known_pairs(client, dec):
+def known_pairs(client, dec, read):
     """The rows whose own name, normalized, is the name of exactly one decompiled function: the
-    pairs a method's lead can be checked against whatever the naming style."""
+    pairs a method's lead can be checked against whatever the naming style. The rows named from a
+    lead (`read`) are not among them."""
     out = {}
     for r in client.rows:
-        if r['name'] and not MECHANICAL.search(r['name']):
+        if (r['name'] and not MECHANICAL.search(r['name'])
+                and addr(r['address']) not in read):
             ks = dec.by_full.get(norm(r['name']), [])
             if len(ks) == 1:
                 out[addr(r['address'])] = ks[0]
@@ -860,8 +872,8 @@ def coverage(out):
         print('  %-9s %s' % (m, '  '.join(cells)))
 
 
-def measure(out, ks, client, dec, hidden):
-    known = known_pairs(client, dec)
+def measure(out, ks, client, dec, hidden, read):
+    known = known_pairs(client, dec, read)
     stats = defaultdict(lambda: defaultdict(int))
     for r, k in zip(out, ks):
         a, name, m, tier = r[0], r[1], r[2], r[3]

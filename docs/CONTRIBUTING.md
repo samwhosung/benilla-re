@@ -198,17 +198,20 @@ finding can live in your system's doc and the row can link there.
 
 A decompilation of a later client can say where to look. `tools/namelead.py PATH` reads a local
 checkout of one whose functions carry their later-build address in an `// OFFSET:` comment, and
-writes `dumps/namelead.tsv`: for each row, the decompiled function its string literals, its
-registrations (a name beside a function address), its named callers and callees, or its one
-unmatched neighbour pair it with, with a tier and the evidence. `--measure` runs the methods again
-with a fifth of the named rows hidden and prints each method's precision per tier.
+writes `dumps/namelead.tsv`, which pairs each row with a decompiled function by its string
+literals, its registrations (a name beside a function address), its named callers and callees, or
+its one unmatched neighbour, with a tier and the evidence. `--measure` runs the methods again with
+a fifth of the named rows hidden and prints each method's precision per tier.
 
 A lead is never a finding. Read the function at the bytes and name it by the steps above only when
-the reading supports the name on its own; a class still needs the image or the community database
-(`symbols/README.md`, Names), and a lead's name in the later build's style is rewritten in this
-repo's. Tier C is a list of candidates, not a lead. The decompilation is a third party's work: the
-checkout stays outside the repo, the leads file stays under `dumps/`, and no name, address, string
-or file from it is committed.
+the reading supports a name on its own. The name comes from this client's evidence (its strings,
+its setting and command names, the community names around it) by the rules of
+`symbols/README.md`, never in the lead's spelling, and a class still needs the image or the
+community database. Tier C is a list of candidates, not a lead. Every row read from a lead gets a
+line in `tools/namelead-read.tsv` with the lead's method and tier and whether the bytes held it;
+the measure leaves those rows out, since their names would confirm their own leads. The
+decompilation is a third party's work: the checkout stays outside the repo, the leads file stays
+under `dumps/`, and no name, address, string or file from it is committed.
 
 ## Adding a finding
 
