@@ -221,17 +221,16 @@ bone's id (`ebp-0x5c`) and `0x5feb7e` 1 in its blend field.
 `ApplyEffectAnimation` (`0x5fde80`) runs unless the request is a death id. It walks the unit's effect list `+0xb4` and reads the
 unit's movement flags `+0x9e8 & 0x20000f` once. For a unit that is not moving or swimming, an effect whose kit id `[kit+8]` is positive
 and whose flags `+0x2c` have bit 0x1000 makes the working states play that id with variation −1, and drops the request; the key bone's
-state only when it is armed. An effect with flag 0x4 instead sets the three working speeds to 0 and a variation of −1 to 0, and the pass
-goes on. The hit enables bone 0's arm, and the key arm when it is armed.
+state only when it is armed. An effect with flag 0x4 and no pin sets the three working speeds to 0 and a variation of −1 to 0 and ends the walk, so a pin behind it does not apply; the play goes on with its working states.
 
-Addresses: `0x5fde80`, `0x5fde96`, `0x5fde9c`, `0x5fdebd`, `0x5fdec2`, `0x5fded6`, `0x5fdee5`, `0x5fdef3`, `0x5fdf3a`, `0x5fdf43`, `0x5feab5`, `0x5feac4`, `0x5feacf`, `0x60eecd`, `0x60edf0`
+Addresses: `0x5fde80`, `0x5fde96`, `0x5fde9c`, `0x5fdebd`, `0x5fdec2`, `0x5fded6`, `0x5fdee5`, `0x5fdef3`, `0x5fdf3a`, `0x5fdf43`, `0x5fdf6b`, `0x5feab5`, `0x5feaba`, `0x5feac4`, `0x5feacf`, `0x60eecd`, `0x60edf0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x5fde9c and edi,0x20000f` is read outside the node loop. `0x5fdebd test ch,0x10` is bit 12. `0x5fdec2 test [eax+0x2c],bl` with `bl = 4`
-takes the freeze. The hit copies the three current states to the working states, then stores `[[node+0x1c]+8]` at offset 0 and −1 at offset 4
-of each. `0x60eecd or ecx,0x1000` is in the kit attach routine `0x60edf0`, case 2 of its jump table.
+jumps to the freeze at `0x5fdf3a`, which falls to the `xor eax,eax` at `0x5fdf6b`: the walk returns 0 and `0x5feaba` plays the working states. A moving unit reaches the freeze test for every effect, since `0x5fdeac` jumps past the pin test. The hit copies the three current states to the working states, then stores `[[node+0x1c]+8]` at offset 0 and −1 at offset 4
+of each. The hit enables bone 0's arm, and the key arm when it is armed. `0x60eecd or ecx,0x1000` is in the kit attach routine `0x60edf0`, case 2 of its jump table.
 
 ## Sequence end
 
