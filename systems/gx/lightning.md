@@ -32,12 +32,14 @@ The arrays are the centre-line points (count `+0x34`, data `+0x38`, 12 bytes eac
 
 ## Bolt shape
 
-`0x7af6d0(points)` fills `points` with the bolt's centre line. With `d = end - start` and `n = ftol(|d| / segment + 2.0)`, it makes `n + 1` points: the first is `start`, the last is `end`, and point `i` from 1 to `n - 1` is `start + d * (i * (1 / n)) + (r1, r2, r3) * (jitter / n)`, each `r` drawn from `0x4531e0` on the file's generator: the low 23 bits of the draw ORed into `0x3f800000` give a float in `[1, 2)`, which becomes `f - 2.0` when the draw is non-negative and `2.0 - f` when it is negative. Every bolt shares the generator, which starts from seed 0.
+`0x7af6d0(points)` fills `points` with the bolt's centre line. With `d = end - start`, `n = ftol(|d| / segment + 2.0)` and `s = |d| * jitter` (`[bolt+0x24]`), it makes `n + 1` points: the first is `start`, the last is `end`, and point `i` from 1 to `n - 1` is `(start + (d * i) * (1 / n)) + (r1, r2, r3) * s`, each `r` drawn from `0x4531e0` on the file's generator: the low 23 bits of the draw ORed into `0x3f800000` give a float in `[1, 2)`, which becomes `f - 2.0` when the draw is non-negative and `2.0 - f` when it is negative. Every bolt shares the generator, which starts from seed 0.
 
-Addresses: `0x7af6d0`, `0x4531e0`, `0x4549a0`, `0x4549f0`, `0xcf57b0`, `0x7af5d0`, `0x801628`
+Addresses: `0x7af6d0`, `0x7af70f`, `0x7af71c`, `0x7af745`, `0x7af748`, `0x7af8cc`, `0x7af91e`, `0x7af935`, `0x7af94b`, `0x4531e0`, `0x4549a0`, `0x4549f0`, `0xcf57b0`, `0x7af5d0`, `0x801628`
 Confidence: verified
 Proof: one
-Test: none
+Test: `gx::lightning_segment_subdivide_difftest`
+
+The jitter scale grows with the bolt: `fsqrt` (`0x7af70f`) leaves `|d|` on the stack, a copy becomes `n` through `__ftol` (`0x7af71c`), `1 / n` goes to `[ebp-0x4]` (`0x7af745`) and `|d|` times `[bolt+0x24]` to `[ebp-0x8]` (`0x7af748`). Each draw is multiplied by `[ebp-0x8]` (`0x7af91e`, `0x7af935`, `0x7af94b`); `[ebp-0x4]` only scales the step along the centre line (`0x7af8cc` to `0x7af8e3`), whose product `d * i` is stored as a float before it, as is every later product. The test runs the whole function.
 
 The three draws per point are consumed in the order x, y, z of the jitter vector (`[ebp-0x14]`, `[ebp-0x10]`, `[ebp-0xc]` stored to `[esp]`, `[esp+4]`, `[esp+8]`). The segment count has no upper clamp. The generator's state is a global object that only `0x7af5d0` seeds.
 
