@@ -86,8 +86,9 @@ subclass.
 
 `0x45cb00` fills a 3 × 2 table from WeaponSwingSounds2 (type below 3, critical below 2).
 `0x457f60(type, critical, pos, quiet)` plays it on bus 6 (cap 2) at volume 0.5 when `quiet`, else
-1.0. `0x459250(oneHanded, pos)` plays `Combat Miss 1H` or `2H`; `0x457f20(pos)` plays
-`ShieldWoodImpact` and `0x458610(pos)` `AbsorbGetHit`, those two 2.0 yards higher. All three are on
+1.0. `0x459250(oneHanded, pos)` plays the row named `(DONOTRENAME)Combat Miss 1H` or
+`(DONOTRENAME)Combat Miss 2H`; `0x457f20(pos)` plays `(DONOTRENAME)ShieldWoodImpact` and
+`0x458610(pos)` `(DONOTRENAME)AbsorbGetHit`, those two 2.0 yards higher. All three are on
 bus 0.
 
 Addresses: `0x45cb00`, `0x45cb36`, `0x45cb3d`, `0x45cb4f`, `0x457f60`, `0x457f63`, `0x457f74`, `0x457f91`, `0x459250`, `0x457f20`, `0x458610`, `0xb06bd4`

@@ -147,9 +147,9 @@ compare `SStrCmpI`. `0x458f50` is `inc dword [0xb05fa0]`, `0x458f60` the `dec`; 
 ## Item sounds
 
 `SndInterfacePlayItemSound(kind, item)` plays a live item's sound of kind 0, 1 or 2. Only the
-wrapped-item names label a kind; the callers pass 0 when an item goes onto the cursor and 1 when it
-leaves it. A wrapped item (flag 0x8 in its fields' `+0x3c`) plays WrappedItemDrop for kind 1 and
-WrappedItemPickup otherwise; any other item plays column `kind + 1` of its cached ItemGroupSounds
+wrapped-item rows label a kind; the callers pass 0 when an item goes onto the cursor and 1 when it
+leaves it. A wrapped item (flag 0x8 in its fields' `+0x3c`) plays the row named `(DONOTRENAME)WrappedItemDrop`
+for kind 1 and `(DONOTRENAME)WrappedItemPickup` otherwise; any other item plays column `kind + 1` of its cached ItemGroupSounds
 row, or nothing without one. `0x457ff0(kind, displayId)` reaches the same row through
 ItemDisplayInfo column 11.
 
@@ -202,15 +202,17 @@ race ≥ 10 or gender ≥ 2 are skipped (`0x457c7f`, `0x457c87`).
 ## Named sounds
 
 `0x4575b0` scans SoundEntries rows for six fixed names and keeps the id of the last row with each:
-`(DONOTRENAME)AbsorbGetHit`, `ShieldWoodImpact`, `WrappedItemPickup`, `WrappedItemDrop`,
-`Combat Miss 1H` and `Combat Miss 2H`.
+`(DONOTRENAME)AbsorbGetHit` (`0x835eac`), `(DONOTRENAME)ShieldWoodImpact` (`0x835e8c`),
+`(DONOTRENAME)WrappedItemPickup` (`0x835e6c`), `(DONOTRENAME)WrappedItemDrop` (`0x835e4c`),
+`(DONOTRENAME)Combat Miss 1H` (`0x835e30`) and `(DONOTRENAME)Combat Miss 2H` (`0x835e14`).
 
 Addresses: `0x4575b0`, `0xb05fb4`, `0xb05fb8`, `0xb05fa8`, `0xb05fa4`, `0xb05fb0`, `0xb05fac`, `0x835eac`, `0x835e8c`, `0x835e6c`, `0x835e4c`, `0x835e30`, `0x835e14`
 Confidence: verified
 Proof: one
 Test: none
 
-The compares are `SStrCmp` on the row's name `+0x8`, case-sensitive; a match stores the row's id.
+The compares are `SStrCmp` on the row's name `+0x8` with the length 0x7fffffff, case-sensitive and
+whole-string, so a bare `ShieldWoodImpact` matches none; a match stores the row's id.
 
 ## State the other files read
 
