@@ -76,11 +76,11 @@ Test: none
 `0x76b7d0` and `0x76bba0` each decode the code with their own copy of the table, as the chord builder `0x4b66b0` does.
 The jump table of the codes `0x206` to `0x212` is not in arm order: code `0x20e` reaches the arm that pushes `CAPSLOCK`
 and `0x20f` the arm for `NUMLOCK`.
-`0x41abb0` (code in `ecx`, buffer in `edx`) encodes any code, with no range of its own: a null buffer returns at once
+`0x41abb0` (code in `ecx`, buffer in `edx`) has no 0x21 to 0xff range of its own: a null buffer returns at once
 (`0x41abb4`); below 0x80 it writes one byte, below 0x800 two, below 0x10000 three, below 0x200000 four
 (`0x41ac0c`), below 0x400000 five (`0x41ac2c`, where UTF-8 would bound at 0x4000000) and below 0x80000000 six
-(`0x41ac5a`); anything above writes the terminator alone (`0x41ac60`). The `0x21` to `0xff` bound is the chord
-builder's arm (`0x4b66f3`), and `OnChar` encodes with it without a range test (`0x76b78d`).
+(`0x41ac5a`); 0x80000000 and above get the terminator alone (`0x41ac60`). The `0x21` to `0xff` bound is the callers': the
+chord builder (`0x4b66f3`, `0x4b66f8`), `OnKeyDown` (`0x76b809`, `0x76b80e`) and `OnKeyUp` (`0x76bbcf`, `0x76bbd4`); `OnChar` encodes with it without a range test (`0x76b78d`).
 
 
 ## The edit box in the walk

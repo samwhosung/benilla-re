@@ -129,12 +129,12 @@ The key name by code: 0 `SHIFT`, 1 `CTRL`, 2 `ALT`; 0x20 `SPACE`; 0x21 to 0xff t
 0x300 to 0x30b `F1` to `F12`; 0x30c `NUMPADEQUALS`; 0x30d `F16`. Every other code is `UNKNOWN`, so Scroll Lock
 and Pause cannot be bound.
 
-Addresses: `0x4b66b0`, `0x4b66f3`, `0x4b66fd`, `0x41abb0`
+Addresses: `0x4b66b0`, `0x4b66f3`, `0x4b66f8`, `0x4b6707`, `0x41abb0`
 Confidence: verified
 Proof: one
 Test: none
 
-The arm for 0x21 to 0xff (`0x4b66f3`, `0x4b66fd`) sends the code to the UTF-8 encoder `0x41abb0`; the rest is decoded
+The arm for 0x21 to 0xff (`0x4b66f3`, `0x4b66f8`) sends the code to the UTF-8 encoder `0x41abb0`; the rest is decoded
 from the byte tables at 0x4b693c and 0x4b6968 with the jump tables at 0x4b6930, 0x4b6948 and 0x4b6a60.
 
 ## Mouse names
