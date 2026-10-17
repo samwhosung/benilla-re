@@ -1563,7 +1563,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41a830	226			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x41a930	360			unassigned			Runs its object file code not read here	inferred	none		
 0x41aab0	256	sgetu8	idb	unassigned			Decodes the UTF-8 code point at a string, storing the bytes read; -1 at a NUL, 0x80000000 for a bad sequence	verified	one	net/who#who-filter-decoding	
-0x41abb0	234			unassigned			Runs its object file code not read here	inferred	none		
+0x41abb0	234	EncodeUtf8		ui	primitive	void __fastcall (uint32_t code, char *dst)	Writes a code as one to six UTF-8 bytes and a terminator	verified	one	ui/keyscripts#key-names	
 0x41aca0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41acb0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41acc0	5			unassigned			Runs its object file code not read here	inferred	none		
