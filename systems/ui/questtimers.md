@@ -51,18 +51,20 @@ registered by `0x4de390` (`mov ecx,0x1cf`, `0x4de3e5`). A resync is only tried f
 
 `GetQuestTimers()` returns one number for each timed quest that is still running, in list order, and no
 value when there are none. A quest is skipped when its row is a header, its slot is empty, its timer is
-0, its state byte has bit 1 (failed) or its expiry latch is set. A negative time is not returned: for a row whose quest cannot yet be turned in, it sets the latch, calls `0x5eb070` with the player and,
+0, its state byte has bit 1 (failed) or its expiry latch is set. A negative time is not returned: for a row whose quest cannot yet be turned in, it sets the latch, calls `0x5eb070` and,
 when the quest is cached, prints the quest-failed line (message 0x8b with the quest's title); a quest that
-can be turned in is left unlatched. A time of 0 is returned. The function fires `QUEST_LOG_UPDATE` when it ends.
+can be turned in is left unlatched. A time of 0 is returned. `QUEST_LOG_UPDATE` fires once after the walk, only when a quest latched.
 
-Addresses: `0x4e13d0`, `0x4e13f7`, `0x4e1417`, `0x4e1433`, `0x4e1439`, `0x4e1460`, `0x4e1475`, `0x4e148a`, `0x4e1493`, `0x4e149f`, `0x4e14a7`, `0x4e14c5`, `0x4e14cd`, `0x4e14d8`, `0x4e14dd`, `0x4e14e8`, `0x4e14ef`, `0x4e1515`, `0x4e1524`, `0x4e1554`, `0x4e155e`, `0x4df480`, `0x4df4f0`, `0x4df50d`, `0x5eb070`, `0x4df580`, `0x496720`
+Addresses: `0x4e13d0`, `0x4e13f7`, `0x4e1417`, `0x4e1433`, `0x4e1439`, `0x4e1460`, `0x4e1475`, `0x4e148a`, `0x4e1493`, `0x4e149f`, `0x4e14a7`, `0x4e14c5`, `0x4e14cd`, `0x4e14d8`, `0x4e14dd`, `0x4e14e8`, `0x4e14ef`, `0x4e1515`, `0x4e1524`, `0x4e1430`, `0x4e14f8`, `0x4e1531`, `0x4e154d`, `0x4e1554`, `0x4e155e`, `0x4df480`, `0x4df4f0`, `0x4df50d`, `0x5eb070`, `0x4df580`, `0x496720`
 Confidence: verified
 Proof: one
 Test: none
 
 The skips are the compares in that order (`0x4e1460` to `0x4e14a7`); `js` at `0x4e14c5` takes the
-expired branch, which calls `0x4df4f0(row)`: unless the turn-in test `0x4df580` passes it stores 1 at `[row+0xc]` (`0x4df50d`), calls `0x5eb070` and returns 1, and on a true result the function looks the
-quest up with `0x562a40` (callback `0x4e1580`) and calls `0x496720` with 0x8b. The count is the accumulator
+expired branch, which calls `0x4df4f0(row)`: unless the turn-in test `0x4df580` passes it stores 1 at `[row+0xc]` (`0x4df50d`), calls `0x5eb070` when there is a player and returns 1, and on a true result the function looks the
+quest up with `0x562a40` (callback `0x4e1580`) and calls `0x496720` with 0x8b. The flag `[ebp-0xc]` is
+cleared at `0x4e1430` and set at `0x4e1531` alone, which both legs of the lookup reach and a false
+result skips (`0x4e14f8`); `0x4e154d` tests it before `mov ecx,0x134` and `FrameScript_SignalEvent` (`0x4e1554`). The count is the accumulator
 initialised at `0x4e13f7`. The value is an exact integer pushed with `fild` and `lua_pushnumber` (`0x4e14dd`,
 `0x4e14e8`). Neither this function nor `GetQuestIndexForTimer` tests `G`, so before the first response every timed
 quest reads as expired.

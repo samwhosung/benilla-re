@@ -9983,8 +9983,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4df4b0	64	IsQuestIdExpiryLatched		ui	primitive		Answers whether the quest has a non-header display row with its expiry latch set; 0 when the quest is not listed	inferred	none	objectlayer/quests#quest-updates	
 0x4df4f0	81	LatchQuestExpiry		ui	primitive		Sets a row's expiry latch unless its quest can be turned in, calls 0x5eb070 and returns 1; else returns 0	verified	one	ui/questtimers#getquesttimers	
 0x4df550	42	LatchQuestExpiryByQuest		ui	primitive		Finds the quest's display row and sets its expiry latch through 0x4df4f0; returns 0 when the quest is not listed	inferred	none	objectlayer/quests#quest-updates	
-0x4df580	560	CanTurnInQuest		ui	primitive		Tells whether a quest can be handed in, from its complete bit and its objectives	verified	one	ui/questobjectives#the-turn-in-test	
-0x4df7b0	194			ui	primitive		Runs its object file code that calls 0x562a40, FrameScript_SignalEvent and 3 more; not read here	inferred	none		
+0x4df580	560	CanTurnInQuest		ui	primitive	int32_t __fastcall (uint32_t row)	Tells whether a row's quest can be handed in: complete bit when flagged, objectives, standing and money	verified	one	ui/questobjectives#the-turn-in-test	
+0x4df7b0	194	SignalQuestLogForItem		ui	orchestration	void __fastcall (uint32_t entry)	Signals QUEST_LOG_UPDATE once when a cached quest in the display list requires an item entry	verified	one	ui/questobjectives#items-a-quest-needs	
 0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based position of a quest among the 40 log entries, headers counted and skipped, or 0	verified	one	objectlayer/quests#quest-updates	
 0x4df8b0	127	Script::GetNumQuestLogEntries	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the number of rows and of quest rows in the quest log	verified	one	ui/questlog#visible-rows	
 0x4df930	422	Script::GetQuestLogTitle	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes a list row's title, level, tag, isHeader, isCollapsed and isComplete	verified	one	ui/questtitle#the-six-returns	
@@ -10000,7 +10000,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e0110	1727	Script::GetQuestLogLeaderBoard	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the text, type and finished flag of a quest objective line	verified	one	ui/questobjectives#asking-for-a-line	
 0x4e07d0	40	OnQuestCreatureRecord		ui	orchestration	void __fastcall (uint32_t arg1, void *arg2, void *, uint32_t status)	Signals QUEST_LOG_UPDATE when a quest's creature record arrives, or logs the refusal	verified	one	ui/questobjectives#cache-query-callbacks	
 0x4e0800	40	OnQuestGameObjectRecord		ui	orchestration	void __fastcall (uint32_t arg1, void *arg2, void *, uint32_t status)	Signals QUEST_LOG_UPDATE when a quest's game object record arrives, or logs the refusal	verified	one	ui/questobjectives#cache-query-callbacks	
-0x4e0830	24			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
+0x4e0830	24	OnQuestItemRecord		ui	orchestration	void __fastcall (uint32_t arg1, void *arg2, void *, uint32_t status)	Signals QUEST_LOG_UPDATE when a quest log item record arrives; does nothing on a refusal	verified	one	ui/questobjectives#cache-query-callbacks	
 0x4e0850	5	InitDouble4e0860Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e0860, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e0860	15	InitDouble4e0860		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4e0870	5	InitQuotient4e0880Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e0880, a static initializer	verified	one	ui/initthunks#jump-thunks	

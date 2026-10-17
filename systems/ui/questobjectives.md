@@ -4,10 +4,11 @@ The lines under a quest in the log and the watch tracker: how many there are, wh
 each count comes from, the text and the finished flag, and the test that a quest can be handed in.
 The inventory walk they use is `objectlayer/inventory`; the quest list is `questlog`.
 
-The code is `QuestLog.cpp`: `GetNumQuestLeaderBoards` `0x4e0000`, `GetQuestLogLeaderBoard` `0x4e0110`
-and the turn-in test `0x4df580`.
+The code is `QuestLog.cpp`: `GetNumQuestLeaderBoards` `0x4e0000`, `GetQuestLogLeaderBoard` `0x4e0110`,
+the cache callbacks `0x4e07d0`, `0x4e0800` and `0x4e0830`, the turn-in test `0x4df580` and the item trigger
+`0x4df7b0`.
 
-Roots: `0x4e0000`, `0x4e0110`, `0x4df580`
+Roots: `0x4e0000`, `0x4e0110`, `0x4df580`, `0x4df7b0`, `0x4e07d0`, `0x4e0800`, `0x4e0830`
 
 ## The lines of a quest
 
@@ -67,21 +68,27 @@ arrives; it logs `Invalid creature in quest` or `Invalid object in quest` on fai
 
 ## Cache query callbacks
 
-`GetQuestLogLeaderBoard` passes `0x4e07d0` with a creature lookup and `0x4e0800` with a game object
-lookup. A cache calls each with its status: on 1 (the record arrived) it signals event 308,
-`QUEST_LOG_UPDATE`; on 0 (refused) it writes `Invalid creature in quest` or `Invalid object in
-quest` to the console in class 0. Only the status's low byte is read.
+`GetQuestLogLeaderBoard` passes `0x4e07d0` with a creature lookup, `0x4e0800` with a game object
+lookup and `0x4e0830` with an item lookup; `GetQuestLogRewardInfo` and `GetQuestLogChoiceInfo` pass
+`0x4e0830` too. A cache calls each with its status: on 1 (the record arrived) it signals event 308,
+`QUEST_LOG_UPDATE`; on 0 (refused) the creature and object callbacks write `Invalid creature in quest`
+or `Invalid object in quest` to the console in class 0, and the item callback does nothing. Only the
+status's low byte is read.
 
-Addresses: `0x4e07d0`, `0x4e0800`, `0x4e044c`, `0x4e0461`, `0x4e0387`, `0x4e039c`, `0x556aa0`, `0x558560`, `0x556e20`, `0x556f91`, `0x556f05`, `0x5588e0`, `0x558a63`, `0x5589cf`
+Addresses: `0x4e07d0`, `0x4e0800`, `0x4e0830`, `0x4e0836`, `0x4e0838`, `0x4e083a`, `0x4e044c`, `0x4e0461`, `0x4e0387`, `0x4e039c`, `0x4e05d1`, `0x4e05e0`, `0x4e0b9e`, `0x4e0d8e`, `0x556aa0`, `0x558560`, `0x55ba30`, `0x556e20`, `0x556f91`, `0x556f05`, `0x5588e0`, `0x558a63`, `0x5589cf`, `0x55bdb0`, `0x55bf39`, `0x55bea8`
 Confidence: verified
 Proof: one
 Test: none
 
-The pushes `0x4e044c` and `0x4e0387` pass the callbacks to `0x556aa0` on `s_creatureCache`
-(`0x4e0461`) and to `0x558560` on `s_gameObjectCache` (`0x4e039c`). Each cache's receive pushes the
-status, then the data: the creature cache's `0x556e20` at `0x556f91` (1) and `0x556f05` (0), the game
-object cache's `0x5588e0` at `0x558a63` (1) and `0x5589cf` (0). So the status is `[ebp+0xc]`; each
-callback tests its low byte and returns with `ret 8`. Event 308 is `mov ecx,0x134` before `FrameScript_SignalEvent`.
+The pushes `0x4e044c` and `0x4e0387` pass the creature and object callbacks to `0x556aa0` on `s_creatureCache`
+(`0x4e0461`) and to `0x558560` on `s_gameObjectCache` (`0x4e039c`); `0x4e05d1` passes the item callback to
+`0x55ba30` on `s_itemCache` (`0x4e05e0`), and `0x4e0b9e` and `0x4e0d8e` do the same. A scan of the image for
+every little-endian copy of `0x4e0830` finds those three pushes alone; the same scan finds `0x4e07d0` once,
+at `0x4e044c`. Each cache's receive pushes the status, then the data: the creature cache's `0x556e20` at
+`0x556f91` (1) and `0x556f05` (0), the game object cache's `0x5588e0` at `0x558a63` (1) and `0x5589cf` (0),
+the item cache's `0x55bdb0` at `0x55bf39` (1) and `0x55bea8` (0). So the status is `[ebp+0xc]`; each callback
+tests its low byte (`0x4e0836` in the item callback, whose `je 0x4e0844` at `0x4e0838` skips the signal at
+`0x4e083a`) and returns with `ret 8`. Event 308 is `mov ecx,0x134` before `FrameScript_SignalEvent`.
 
 ## Item counts
 
@@ -121,15 +128,50 @@ compare (`0x4e064c`) and `cmp edi,[esi+0x18]` (`0x4e0787`). `0x4d63a0(faction)` 
 
 ## The turn-in test
 
-`0x4df580` tells whether a quest can be handed in: its slot's complete bit is set; every objective is met by the
-rules above; the two reputation conditions (`+0x14` and `+0x1c`, with `+0x18` and `+0x20`) hold; and for a quest
-that requires money (`+0x28` negative) the player's coinage covers it. The log shows such a quest as complete.
+`0x4df580(row)` returns 1 when a display row's quest can be handed in. A bad or header row,
+no player, an uncached template, no slot, a failed slot or a set expiry latch fail. When the template's
+flags `+0x38 & 6` are non-zero, the slot's complete bit must be set; with them zero and no reputation id at `+0x14` or
+`+0x1c`, a quest whose `ReqCreatureOrGOId` and `ReqItemId` are all 0 is never complete. Then standing with
+`+0x14` must be at least `+0x18`, with `+0x1c` at most `+0x20`; a negative `+0x28` needs
+`-[+0x28]` coinage; each creature or object count and the live count of each non-zero `ReqItemId`, the source item
+included, must reach its required count. A pass fires tutorial 0x21.
 
-Addresses: `0x4df580`, `0x4df6bd`, `0x4df6c7`, `0x4df6dc`, `0x4df6e8`, `0x4df6f1`, `0x4df72e`, `0x4df74a`, `0x4df74f`, `0x4df77d`, `0x4df65b`, `0x4df778`
+Addresses: `0x4df580`, `0x4df5a4`, `0x4df5b7`, `0x4df628`, `0x4df642`, `0x4df64e`, `0x4df65b`, `0x4df661`, `0x4df66a`, `0x4df690`, `0x4df6a3`, `0x4df6b0`, `0x4df6b6`, `0x4df6bd`, `0x4df6c7`, `0x4df6d6`, `0x4df6eb`, `0x4df70b`, `0x4df72e`, `0x4df74a`, `0x4df778`, `0x4df780`, `0x4df792`, `0x4df270`, `0x4df480`, `0x4b5390`, `0x4d6370`, `0x622130`
 Confidence: verified
 Proof: one
 Test: none
 
-`test byte [eax+7],1; je` is `0x4df6bd`; creature counts use `shr edi,cl; and edi,0x3f; cmp edi,[eax]`
-(`0x4df74a`); items use the live count (`0x4df778`, mask 8) against `[esi+0x10]`; the money test reads
-`PLAYER_FIELD_COINAGE` at `*(player+0xe68)+0xf70`. `0x4df65b` reads the template's flags `+0x38` and 0x6.
+The row checks are `0x4df5a4` and `0x4df5b7`; the template comes from `0x562a40` with the callback `0x4df270`
+(`0x4df628`); failed is `test byte [eax+7],2` (`0x4df642`) and the latch `0x4df480` (`0x4df64e`), both ahead of
+the flags. `0x4df65b` loads `+0x38` and `and edi,6`; non-zero jumps over the scan to `0x4df6b6`, where
+`test edi,edi; je 0x4df6c7` skips the complete-bit test `test byte [eax+7],1` (`0x4df6bd`) for zero. The scan
+(`0x4df66a` to `0x4df6b0`) sets `edx` to 1 for a non-zero creature id (`0x4df690`), leaves for `0x4df6b6` on a
+non-zero item id (`0x4df6a3`) and with `edx` 0 returns 0. The standings are `0x4d6370` with `jl` (`0x4df6d6`)
+and `jg` (`0x4df6eb`). Coinage is `PLAYER_FIELD_COINAGE` at `*(player+0xe68)+0xf70` (0 for an object that is
+not the active player, `0x4df70b`), compared unsigned (`0x4df72e`). Creatures use `shr edi,cl; and edi,0x3f;
+cmp edi,[eax]` with `jb` (`0x4df74a`); items `0x622130(player+0x1d38, id, 8)` (`0x4df778`) against `[esi+0x10]`
+with `jl` (`0x4df780`), with no source-item test. `0x4df792` calls `0x4b5390` with 0x21 and delay 0.
+
+## Items a quest needs
+
+`0x4df7b0(entry)` signals one `QUEST_LOG_UPDATE` when a quest in the display list needs an item entry. It
+walks every row in order, headers included, looks the row's id up in the quest cache without a callback, so an
+uncached quest is skipped and no query is sent, and compares the entry with the four `ReqItemId` (`+0x14bc`).
+At the first match it signals event 308, calls `0x5eb070` when there is a player, and returns. Three item paths
+call it with the item's `OBJECT_FIELD_ENTRY`, each for an item the active player owns: the record's arrival
+`0x5d8440`, the stack count watcher `0x5d9400` and deactivation `0x5d8660`.
+
+Addresses: `0x4df7b0`, `0x4df7da`, `0x4df7f0`, `0x4df7f4`, `0x4df805`, `0x4df818`, `0x4df830`, `0x4df83b`, `0x4df840`, `0x4df864`, `0x5d85d9`, `0x5d9519`, `0x5d87b2`, `0x5d8506`, `0x5d8521`, `0x5d944b`, `0x5d877f`, `0x5eb070`, `0x562a40`
+Confidence: verified
+Proof: one
+Test: none
+
+The walk is `0x4df7f0` to `0x4df830` over `0xbb71c0`, stride 0x10, against the count `0xbb7478`; it reads no
+header flag, so a header's zone or sort id is looked up as a quest id. The lookup `0x562a40` (`0x4df805`) gets a
+null callback (`0x4df7f4`), and a miss without one returns null and sends nothing (`dbcache#asking-for-a-record`).
+`cmp [eax],edx` at `0x4df818` compares `ReqItemId[i]` with the entry, so an entry of 0 matches any cached quest
+with an empty item slot. A match leaves the walk for `0x4df83b`: `mov ecx,0x134` and `FrameScript_SignalEvent`
+(`0x4df840`), then `0x468460` with mask 0x10 and `0x5eb070` (`0x4df864`). The callers `0x5d85d9`, `0x5d9519` and
+`0x5d87b2` load `ecx` from `[descriptor+0xc]`, the entry, behind the owner compares with the active player's
+GUID (`0x5d8521`, `0x5d944b`, `0x5d877f`); the arrival also needs the byte at 0xb4b424 (`0x5d8506`). The image
+holds three `call 0x4df7b0`, no `jmp` to it and no copy of its address; the same scan finds `0x4e07d0` once.
