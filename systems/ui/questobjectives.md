@@ -128,29 +128,29 @@ compare (`0x4e064c`) and `cmp edi,[esi+0x18]` (`0x4e0787`). `0x4d63a0(faction)` 
 
 ## The turn-in test
 
-`0x4df580(row)` returns 1 when a display row's quest can be handed in. A bad or header row,
+`0x4df580(row)` returns 1 when a row's quest can be handed in. A bad or header row,
 no player, an uncached template, no slot, a failed slot or a set expiry latch fail. When the template's
 flags `+0x38 & 6` are non-zero, the slot's complete bit must be set; with them zero and no reputation id at `+0x14` or
 `+0x1c`, a quest whose `ReqCreatureOrGOId` and `ReqItemId` are all 0 is never complete. Then standing with
 `+0x14` must be at least `+0x18`, with `+0x1c` at most `+0x20`; a negative `+0x28` needs
 `-[+0x28]` coinage; each creature or object count and the live count of each non-zero `ReqItemId`, the source item
-included, must reach its required count. A pass fires tutorial 0x21.
+included, must reach its required count. A pass calls `0x4b5390` with 0x21.
 
-Addresses: `0x4df580`, `0x4df5a4`, `0x4df5b7`, `0x4df628`, `0x4df642`, `0x4df64e`, `0x4df65b`, `0x4df661`, `0x4df66a`, `0x4df690`, `0x4df6a3`, `0x4df6b0`, `0x4df6b6`, `0x4df6bd`, `0x4df6c7`, `0x4df6d6`, `0x4df6eb`, `0x4df70b`, `0x4df72e`, `0x4df74a`, `0x4df778`, `0x4df780`, `0x4df792`, `0x4df270`, `0x4df480`, `0x4b5390`, `0x4d6370`, `0x622130`
+Addresses: `0x4df580`, `0x4df5a4`, `0x4df5b7`, `0x4df628`, `0x4df642`, `0x4df64e`, `0x4df65b`, `0x4df661`, `0x4df668`, `0x4df66a`, `0x4df671`, `0x4df690`, `0x4df6a3`, `0x4df6b0`, `0x4df6b6`, `0x4df6bd`, `0x4df6c7`, `0x4df6cc`, `0x4df6d6`, `0x4df6e1`, `0x4df6eb`, `0x4df70b`, `0x4df72e`, `0x4df74a`, `0x4df778`, `0x4df780`, `0x4df792`, `0x4df270`, `0x4df480`, `0x4b5390`, `0x4d6370`, `0x622130`
 Confidence: verified
 Proof: one
 Test: none
 
-The row checks are `0x4df5a4` and `0x4df5b7`; the template comes from `0x562a40` with the callback `0x4df270`
+The row checks are `0x4df5a4` and `0x4df5b7`; the template comes from `0x562a40`, which on a miss queries it with the callback `0x4df270`
 (`0x4df628`); failed is `test byte [eax+7],2` (`0x4df642`) and the latch `0x4df480` (`0x4df64e`), both ahead of
 the flags. `0x4df65b` loads `+0x38` and `and edi,6`; non-zero jumps over the scan to `0x4df6b6`, where
-`test edi,edi; je 0x4df6c7` skips the complete-bit test `test byte [eax+7],1` (`0x4df6bd`) for zero. The scan
-(`0x4df66a` to `0x4df6b0`) sets `edx` to 1 for a non-zero creature id (`0x4df690`), leaves for `0x4df6b6` on a
-non-zero item id (`0x4df6a3`) and with `edx` 0 returns 0. The standings are `0x4d6370` with `jl` (`0x4df6d6`)
+`test edi,edi; je 0x4df6c7` skips the complete-bit test `test byte [eax+7],1` (`0x4df6bd`) for zero. After the reputation ids (`0x4df668`, `0x4df66a`), the scan
+(`0x4df671` to `0x4df6b0`) sets `edx` to 1 for a non-zero creature id (`0x4df690`), leaves for `0x4df6b6` on a
+non-zero item id (`0x4df6a3`) and with `edx` 0 returns 0. The standings, each read only for a non-zero id (`0x4df6cc`, `0x4df6e1`), are `0x4d6370` with signed `jl` (`0x4df6d6`)
 and `jg` (`0x4df6eb`). Coinage is `PLAYER_FIELD_COINAGE` at `*(player+0xe68)+0xf70` (0 for an object that is
 not the active player, `0x4df70b`), compared unsigned (`0x4df72e`). Creatures use `shr edi,cl; and edi,0x3f;
 cmp edi,[eax]` with `jb` (`0x4df74a`); items `0x622130(player+0x1d38, id, 8)` (`0x4df778`) against `[esi+0x10]`
-with `jl` (`0x4df780`), with no source-item test. `0x4df792` calls `0x4b5390` with 0x21 and delay 0.
+with `jl` (`0x4df780`), with no source-item test. `0x4df792` calls the tutorial trigger `0x4b5390` with 0x21 and delay 0, which does nothing when tutorials are off or 0x21 already fired (`tutorials#the-tutorial-trigger`).
 
 ## Items a quest needs
 
