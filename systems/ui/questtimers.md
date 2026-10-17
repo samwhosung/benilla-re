@@ -52,7 +52,8 @@ registered by `0x4de390` (`mov ecx,0x1cf`, `0x4de3e5`). A resync is only tried f
 
 Until the first time response `G` is 0. `GetQuestTimers`, `GetQuestIndexForTimer` and the rebuild add it
 without a test, so they count the server's expiry against the machine clock alone: a skew between the two
-clocks moves every time left by its size, and a quest whose expiry the machine clock has passed latches.
+clocks moves every time left by its size, and the rebuild and `GetQuestTimers` latch a quest whose expiry the
+machine clock has passed, unless it can be turned in.
 `GetQuestLogTimeLeft` tests `G` and returns nil until the sync.
 
 Addresses: `0x4de390`, `0x4de393`, `0x4de3d3`, `0x48f5bd`, `0x4e1424`, `0x4e14b4`, `0x4e14c1`, `0x4e14c5`, `0x4e166c`, `0x4e16c4`, `0x4e16d1`, `0x4e16d7`, `0x4de5f0`, `0x4de6b1`, `0x4de6be`, `0x4de6bf`, `0x4de6ca`, `0x4e08f6`, `0x4e08fc`, `0x4e08fe`
@@ -70,7 +71,7 @@ The 0 is `edx`, cleared at `0x4de393` and stored at `0x4de3d3` by `0x4de390`, wh
 ## GetQuestTimers
 
 `GetQuestTimers()` returns one number for each timed quest that is still running, in list order, and no
-value when there are none. A quest is skipped when its row is a header, its slot is empty, its timer is
+value when there are none. A quest is skipped when its row is a header, its slot is out of range, its timer is
 0, its state byte has bit 1 (failed) or its expiry latch is set. A negative time is not returned: for a row whose quest cannot yet be turned in, it sets the latch, calls `0x5eb070` and,
 when the quest is cached, prints the quest-failed line (message 0x8b with the quest's title); a quest that
 can be turned in is left unlatched. A time of 0 is returned. `QUEST_LOG_UPDATE` fires once after the walk, only when a quest latched.
@@ -92,8 +93,8 @@ machine clock alone.
 ## GetQuestIndexForTimer
 
 `GetQuestIndexForTimer(n)` returns the 1-based list index of the n-th timed quest that is still running, or
-nil. Its index is the space `GetQuestLogTitle` and `SelectQuestLogEntry` take. It skips a header, an empty
-slot, a timer of 0, a failed quest and a time left below 0, as `GetQuestTimers` does, but not a set expiry
+nil. Its index is the space `GetQuestLogTitle` and `SelectQuestLogEntry` take. It skips a header, a slot
+index outside 0 to 0x14, a timer of 0, a failed quest and a time left below 0, as `GetQuestTimers` does, but not a set expiry
 latch, and it sets no latch.
 
 Addresses: `0x4e15f0`, `0x4e1603`, `0x4e1612`, `0x4e162a`, `0x4e162f`, `0x4e1634`, `0x4e1694`, `0x4e16c2`, `0x4e16c4`, `0x4e16d7`, `0x4e16df`, `0x4e170b`, `0x4e1716`, `0x4e171f`, `0x4e16f7`, `0x4e16fe`
@@ -109,23 +110,29 @@ A non-number raises `Usage: GetQuestIndexForTimer(index)` (`0x4e1612`). The argu
 
 ## Where the two lists split
 
-The two lists differ while a row is latched with its failed bit clear and its time left at 0 or more:
-`GetQuestTimers` leaves that quest out and `GetQuestIndexForTimer` counts it, so from its place on the n-th time
-and the n-th index belong to different quests, and the last index has no time. Only
-`SMSG_QUESTUPDATE_FAILEDTIMER` (0x197) latches such a row, for a quest that cannot be turned in. The split
-lasts until the time left falls below 0, the failed bit is set or a rebuild clears every latch.
+A row latched with its failed bit clear and its time left at 0 or more is counted by `GetQuestIndexForTimer`
+and left out by `GetQuestTimers`: from its place on, the n-th index and the n-th time belong to different quests,
+and the last index has no time. Two things make such a row:
+`SMSG_QUESTUPDATE_FAILEDTIMER` (0x197), latching a quest that cannot be turned in whatever its time left,
+and a rise in the time left of a row latched while negative, from a sync that raises `G` (the world-enter
+rebuild runs before the first answer) or the machine clock stepping back. It lasts until the
+time left falls below 0, the failed bit is set or a rebuild clears the latches.
 
-Addresses: `0x4df50d`, `0x4df4f0`, `0x4df4fc`, `0x4df550`, `0x4df575`, `0x5e5cd6`, `0x5e5cd9`, `0x5e5ea0`, `0x4e14a7`, `0x4e14f1`, `0x4de6ca`, `0x4de39f`, `0x4de5e2`
+Addresses: `0x4df50d`, `0x4df4f0`, `0x4df4fc`, `0x4df550`, `0x4df562`, `0x4df575`, `0x5e5cd6`, `0x5e5cd9`, `0x5e5cde`, `0x5e5ea0`, `0x4e14a7`, `0x4e14f1`, `0x4de6ca`, `0x4de39f`, `0x4de5e2`, `0x4de488`, `0x4de498`, `0x4deefa`, `0x4def20`, `0x4de713`, `0x4de719`, `0x4dea63`
 Confidence: verified
 Proof: one
 Test: none
 
-The latch has one setter, `mov [row*0x10+0xbb71cc],1` at `0x4df50d` in `0x4df4f0`, which runs only when the
-turn-in test (`0x4df4fc`) fails; the `rep stos` at `0x4de39f` (start-up) and `0x4de5e2` (the rebuild) zero it. `0x4df4f0` has three
-callers: `GetQuestTimers` (`0x4e14f1`) and the rebuild (`0x4de6ca`) call it for a negative time only, and
-`0x4df550` (`jmp` at `0x4df575`), which finds the row of a quest id, is called by the 0x197 case of the quest
-update handler (`0x5e5cd9`; the jump table `0x5e5ea0` holds `0x5e5cd6` in its 0x197 slot alone) with no time
-test. `GetQuestTimers` skips a latched row at `0x4e14a7`.
+The latch has one setter, `mov [row*0x10+0xbb71cc],1` at `0x4df50d` in `0x4df4f0`, run only when the turn-in
+test (`0x4df4fc`) fails; the `rep stos` at `0x4de39f` (start-up) and `0x4de5e2` (the rebuild) zero it, and the
+rebuild's `qsort` (`0x4dea63`, element 0x10) moves it with its row. `0x4df4f0` has three callers: `GetQuestTimers`
+(`0x4e14f1`) and the rebuild (`0x4de6ca`) for a negative time only, and `0x4df550` (`jmp` at `0x4df575`), called by
+the 0x197 slot of the quest update jump table `0x5e5ea0` (`0x5e5cd6`, `0x5e5cd9`) with no time test; 0x196 enters
+at `0x5e5cde`, past that call. `0x4df550` takes the first row whose `+0` equals the id (`0x4df562`) and reads no
+header flag; a header stores its own number there (`0x4de713`, `0x4de719`), so a header holding the quest's id
+ahead of the quest's row takes the latch and the quest stays unlatched. The world-enter set-up sends 0x1ce
+(`0x4de488`) and rebuilds at once (`0x4de498`); the setter stores `G` (`0x4deefa`) and signals `QUEST_LOG_UPDATE`
+(`0x4def20`) without a rebuild. `GetQuestTimers` skips a latched row at `0x4e14a7`.
 
 ## GetQuestLogTimeLeft
 
