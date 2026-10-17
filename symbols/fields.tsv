@@ -981,6 +981,8 @@ M2Header	0x0134	4	uint32_t	m_nRibbons	models	Holds the count of the ribbon emitt
 M2Header	0x0138	4	void *	m_ribbons	models	Holds the ribbon emitters, 0xdc bytes each, a pointer after the fixup	verified	one	models/shared#header-fixup
 M2Header	0x013c	4	uint32_t	m_nParticles	models	Holds the count of the particle emitters, 0x1f8 bytes each	verified	one	models/shared#header-fixup
 M2Header	0x0140	4	void *	m_particles	models	Holds the particle emitters, 0x1f8 bytes each, a pointer after the fixup	verified	one	models/shared#header-fixup
+M2Header	0x0144	4	uint32_t	m_nCombiners	models	Holds the count of the version-0x101 combine words	verified	one	models/render#texture-stages
+M2Header	0x0148	4	uint16_t *	m_combiners	models	Holds the version-0x101 combine words, one per stage, a pointer after the fixup	verified	one	models/render#texture-stages
 M2Light	0x0000	4	M2Scene *	m_scene	models	Holds the scene the light belongs to	verified	one	models/lights#light-object
 M2Light	0x0004	4	uint32_t	m_frame	models	Holds the scene frame the light was last placed in; a grid light with an older stamp is disabled	verified	one	models/lights#scene-light-grid
 M2Light	0x0008	4	uint32_t	m_type	models	Holds the light type, 1 for a point light	verified	one	models/lights#light-object
@@ -1053,6 +1055,7 @@ M2Submesh	0x0000	4	uint32_t	m_id	models	Holds the id SetGeosetRange compares	ver
 M2Submesh	0x0004	4	uint16_t[2]	m_vertices	models	Holds the first vertex and the vertex count	verified	one	models/records#submesh-record
 M2Submesh	0x0008	4	uint16_t[2]	m_indices	models	Holds the first index and the index count	verified	one	models/records#submesh-record
 M2Submesh	0x000c	4	uint16_t[2]	m_bones	models	Holds the bone count and the first bone lookup	verified	one	models/records#submesh-record
+M2Submesh	0x0010	2	uint16_t	m_boneWeights	models	Holds the bone-weight count, the vertex shader id's digit B	verified	two	models/shared#vertex-shader-id
 M2Submesh	0x0012	2	uint16_t	m_centerBone	models	Holds the bone the depth key centre rides	verified	one	models/records#submesh-record
 M2Submesh	0x0014	12	float[3]	m_center	models	Holds the depth key centre	verified	one	models/records#submesh-record
 M2TextureUnit	0x0000	1	uint8_t	m_flags	models	Holds the flags: 4 a special batch when the scene has a special callback, 0x10 may join the grouped list	verified	one	models/records#texture-unit-record

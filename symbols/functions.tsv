@@ -16445,8 +16445,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b200	13			gx	orchestration		Runs its object file code that calls 0x592770; not read here	inferred	none		
 0x58b210	14			gx	orchestration		Runs its object file code that calls 0x592790; not read here	inferred	none		
 0x58b220	13			gx	orchestration		Runs its object file code that calls 0x5927d0; not read here	inferred	none		
-0x58b230	13	GxXformSetIdentity		gx	orchestration		Loads the identity into the matrix stack of a transform slot through 0x5927f0	verified	one	models/render#texture-coordinates	
-0x58b240	14	GxXformSetTexture		gx	orchestration		Sets the matrix of a transform slot through 0x592810	verified	one	gx/renderstate#texture-transform-kinds	
+0x58b230	13	GxXformSetIdentity		gx	orchestration	void __fastcall (uint32_t index)	Loads the identity into the matrix stack of a transform slot through 0x5927f0	verified	one	models/render#texture-coordinates	
+0x58b240	14	GxXformSetTexture		gx	orchestration	void __fastcall (uint32_t index, const float *matrix)	Sets the matrix of a transform slot through 0x592810	verified	one	gx/renderstate#texture-transform-kinds	
 0x58b250	14			gx	orchestration		Runs its object file code that calls 0x592850; not read here	inferred	none		
 0x58b260	14			gx	orchestration		Runs its object file code that calls 0x592880; not read here	inferred	none		
 0x58b270	14			gx	orchestration		Runs its object file code that calls 0x5928b0; not read here	inferred	none		
@@ -16641,7 +16641,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5912e0	9			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x5912f0	107			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591360	1			gx	unreached		Runs its object file code not read here	inferred	none		
-0x591370	91	MatrixStackSetIdentity		gx	primitive	void __thiscall (void *this)	Writes the identity into a stack's top matrix and marks its level identity, unless it already is	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
+0x591370	91	MatrixStackSetIdentity		gx	primitive	void __thiscall (void *this)	Writes the identity into a stack's top matrix, marks its level identity and the stack dirty, unless already so marked	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
 0x5913d0	81			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591430	14			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591440	26	MatrixStackTopForWrite		gx	primitive	float * __thiscall (void *this)	Marks a stack dirty and its top level not identity, and returns the top matrix	verified	one	gx/renderstate#texture-coordinate-modes	gx::tex_coord_mode_difftest
@@ -17085,7 +17085,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a11d0	629	CGxDeviceD3d::SetProjection		gx	host	void __thiscall (CGxDeviceD3d *this, const float *matrix)	Stores a projection matrix, rescales it by element 11, remaps its depth terms and sets it as the projection transform	verified	one	gx/draw#projection-matrix	
 0x5a1450	40	CGxDeviceD3d::SetView		gx	orchestration	void __thiscall (CGxDeviceD3d *this, const float *matrix)	Records a view matrix and sets it as the Direct3D view transform	verified	one	gx/draw#projection-matrix	
 0x5a1480	96			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5a14e0	416	CGxDeviceD3d::FlushTextureTransform		gx	primitive		Sets the Direct3D transform and transform flags of a stage from the kind in state 0x37 plus the stage	verified	one	gx/renderstate#texture-transform-kinds	
+0x5a14e0	416	CGxDeviceD3d::FlushTextureTransform		gx	primitive	void __thiscall (CGxDeviceD3d *this, uint32_t stage)	Sets the Direct3D transform and transform flags of a stage from the kind in state 0x37 plus the stage	verified	one	gx/renderstate#texture-transform-kinds	
 0x5a1680	277	CGxDeviceD3d::BeginFrame		gx	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Resets a lost device, clears with the mask when capability bit 6 is set and begins the scene	verified	one	gx/device#direct3d-present	
 0x5a17a0	40	CGxDeviceD3d::EndScene		gx	host	void __thiscall (CGxDeviceD3d *this)	Ends the scene when one is begun and clears the flag	verified	one	gx/device#direct3d-present	
 0x5a17d0	317	CGxDeviceD3d::Clear		unassigned	host	void __thiscall (CGxDeviceD3d *this, uint32_t mask)	Clears the target and depth buffers the mask names with the device clear colour after applying the viewport	verified	one	gx/device#direct3d-clear-and-viewport	
@@ -30558,7 +30558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71d6c0	1004	CM2Shared::InitializeView		models	primitive		Picks the richest view the bone palette fits, sets batch limits, shader ids and loads textures	verified	one	models/shared#view-selection	
 0x71dab0	459	CM2Shared::CreateIndexBuffer		models	primitive		Fills a shared model's device index buffer with its view's triangles for each instance copy	verified	one	models/shared#device-buffers	
 0x71dc80	450	CM2Shared::CreateVertexBuffer		models	host		Fills a shared model's device vertex buffer with its view's vertices for each instance copy	verified	one	models/shared#device-buffers	
-0x71de50	210	CM2Shared::GetVertexShaderId		models	primitive		Computes a batch's vertex shader id from its flags, bone weights, pixel shader grant and stage digits	verified	one	models/shared#vertex-shader-id	models::vertex_shader_id_difftest
+0x71de50	210	CM2Shared::GetVertexShaderId		models	primitive		Computes a batch's vertex shader id from its flags, bone weights, pixel shader grant and stage digits	verified	two	models/shared#vertex-shader-id	models::vertex_shader_id_difftest
 0x71df30	98	CM2Shared::GetPixelShaderId		models	primitive		Computes the pixel shader id of a batch from its texture units' blend modes	verified	one	models/shared#view-selection	
 0x71dfa0	69	CM2Shared::CreateBuffers		models	primitive		Raises a shared model's instance copies for a batched run and frees its buffers to be rebuilt	verified	one	models/shared#device-buffers	
 0x71dff0	93	CM2Shared::FreeBuffers		models	host		Frees a shared model's device index and vertex buffers	verified	one	models/shared#device-buffers	

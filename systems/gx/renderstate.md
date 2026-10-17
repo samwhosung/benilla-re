@@ -178,9 +178,10 @@ and `0x591440` whole.
 
 The device sets a stage's transform from the state `0x37 + stage`, its kind. Kind 0 passes the
 stage's mode matrix to `SetTransform` and sets `TEXTURETRANSFORMFLAGS` to 0 when the matrix's level
-is marked identity, else 3 (two coordinates). Kinds 1 and 2 combine the stage's user matrix, which
-`0x58b240` stores at `+0xfd0 + 0x118·stage`, with the mode matrix and set the flags 3 and `0x103`.
-Kind 0 never reads the user matrix.
+is marked identity, else 3 (`D3DTTFF_COUNT3`: three coordinates out, of which a 2D texture reads u
+and v). Kinds 1 and 2 combine the stage's user matrix, which `0x58b240` stores at `+0xfd0 +
+0x118·stage`, with the mode matrix and set the flags 3 and `0x103` (`COUNT3 | PROJECTED`, which
+divides by the third). Kind 0 never reads the user matrix.
 
 Addresses: `0x5a14e0`, `0x5a14f1`, `0x5a15f4`, `0x5a1617`, `0x5a1633`, `0x5a1639`, `0x5a164a`, `0x5a1650`, `0x5a1561`, `0x5a15c8`, `0x5a15d5`, `0x58b240`, `0x592810`, `0x58b230`, `0x5927f0`
 Confidence: verified
@@ -190,7 +191,7 @@ Test: none
 `0x5a14e0` reads the state at `0x5a14f1` and branches on the kind. Kind 0 (`0x5a15f4`) tests bit 0
 of the level's flags (`0x5a1617`) and calls `SetTransform` with state `0x10 + stage` (`0x5a1633`,
 `0x5a164a`): when the bit is set it jumps past the load of 3 (`0x5a1639`), so the flags stay 0; else
-`0x5a1650` loads 3. Kind 1 reaches `0x5a1650`; kind 2 loads `0x103` (`0x5a1561`). In kind 1, when
+`0x5a1650` loads 3 (`COUNT3`). Kind 1 reaches `0x5a1650`; kind 2 loads `0x103`, `COUNT3 | PROJECTED` (`0x5a1561`). In kind 1, when
 the stage's mode is 0 (`0x5a15c8`), entries 12 and 13 of the product are copied to 8 and 9
 (`0x5a15d5`). `0x58b240` reaches `0x592810`, which copies the matrix into the top of the user stack, and `0x58b230` reaches
 `0x5927f0`, which loads the identity there.
@@ -265,23 +266,33 @@ Direct3D sets only the colour and alpha operation of a stage and never an argume
 runs with the Direct3D 9 defaults: argument 1 the texture, argument 2 the previous stage's result
 (the vertex colour on stage 0). On stage 0 preset 1 multiplies texture and vertex colour, colour and
 alpha; preset 2 blends the texture with the vertex colour by the texture's alpha, and preset 5 by
-the vertex colour's alpha, both keeping the vertex alpha. A stage's operations apply while it has a
-texture: binding one applies its stored preset, and unbinding sets both operations to disable.
+the vertex colour's alpha, both keeping the vertex alpha.
 
-Addresses: `0x5a04e3`, `0x5a04fc`, `0x5a0515`, `0x5a052e`, `0x5a268e`, `0x5a26d6`, `0x5a26fa`, `0x5a271e`, `0x5a2dd0`, `0x5a29d0`, `0x5a2ab7`, `0x5a2ad0`, `0x5a2b15`, `0x5a2b1d`, `0x5a2b2a`
+Addresses: `0x5a04e3`, `0x5a04fc`, `0x5a0515`, `0x5a052e`, `0x5a268e`, `0x5a26d6`, `0x5a26fa`, `0x5a271e`, `0x5a2dd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `SetTextureStageState` is the device slot `+0x10c`. Every instruction in the image that calls
 through `+0x10c` is one of eight in the device code: `0x5a04e3`, `0x5a04fc`, `0x5a0515` and
 `0x5a052e` push types 7 to 10 (the bump matrix), `0x5a268e` type 0x18 (transform flags), `0x5a26d6`
 type 0xb (coordinate index), `0x5a26fa` type 1 and `0x5a271e` type 4 (the operations, the control).
-No site pushes type 2, 3, 5, 6 or 0x1a to 0x1c, the arguments. `0x5a2dd0` writes the tables only
-when the byte `[dev + 0x3bfc + stage]` is set. The texture bind `0x5a29d0` sets it (`0x5a2ab7`) and
-calls `0x5a2dd0` with the stored preset (`0x5a2ad0`); its null path clears it (`0x5a2b15`) and sets
-types 1 and 4 to 1 (`0x5a2b1d`, `0x5a2b2a`). `D3DTOP` 3 is select argument 2, 4 modulate, 12 blend
-diffuse alpha, 13 blend texture alpha.
+No site pushes type 2, 3, 5, 6 or 0x1a to 0x1c, the arguments. `D3DTOP` 3 is select argument 2, 4
+modulate, 12 blend diffuse alpha, 13 blend texture alpha.
+
+## Combine binding
+
+A stage's operations apply while it has a texture: binding one applies its stored preset, and
+unbinding sets both operations to disable.
+
+Addresses: `0x5a2dd0`, `0x5a29d0`, `0x5a2ab7`, `0x5a2ad0`, `0x5a2b15`, `0x5a2b1d`, `0x5a2b2a`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5a2dd0` writes the tables only when the byte `[dev + 0x3bfc + stage]` is set. The texture bind
+`0x5a29d0` sets it (`0x5a2ab7`) and calls `0x5a2dd0` with the stored preset (`0x5a2ad0`); its null
+path clears it (`0x5a2b15`) and sets types 1 and 4 to 1 (`0x5a2b1d`, `0x5a2b2a`).
 
 ## Stage sampler state
 
