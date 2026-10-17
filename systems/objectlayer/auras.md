@@ -75,9 +75,12 @@ ranged spell (Attributes 0x2) draws the ranged weapon. Outside kind 2 the animat
 
 ## The state kit's animation
 
-A kit played as a state (kind 2) does not play its animation. It only checks whether the unit
-already plays it and, if not, picks the base animation again. The stun animation is therefore
-named by the stun spells' state kits and never played by them.
+A kit played as a state (kind 2) does not play its animation itself. It checks whether the unit
+already plays it and, if not, picks the base animation again. The animation still plays for a unit
+that is not moving or swimming: the kit's effect carries flag 0x1000, and the stationary kit pin
+(`animation/units#stationary-kit-pin`) puts the kit's animation in place of the base one, so a
+still stunned unit plays Stun. An effect the kit spawns pins from that play; a kit that spawns none
+links a bare effect after the play and pins from the next.
 
 Addresses: `0x60edf0`, `0x60f361`, `0x60f366`, `0x60f383`, `0x60f38b`, `0x60f390`, `0x60f399`, `0x60f3c5`, `0x5fdb50`, `0x5fd9e0`, `0x5ff4c6`, `0x612b31`, `0x61da65`, `0x61dced`, `0x612990`, `0x5fd2e0`, `0x5fd31f`, `0x612a05`, `0x5fda20`, `0x5fd951`, `0x5fda03`, `0x6129e4`, `0x6129e9`
 Confidence: verified
@@ -91,6 +94,26 @@ the call that plays a kit's animation for the other kinds. A precast or channel 
 `0x5fd9e0` calls the selector `0x5fd8b0` (`0x5fda03`), which calls the resolver `0x5fd2e0` (`0x5fd951`); that calls `0x612990` (`0x5fd31f`), which returns the animation `+0x8` of a kit row (`0x612a05`), and `0x5fda20`, inside `0x5fd9e0`, plays it through `0x5fe2f0`. The four calls with kind 2 are `0x5ff4c6`,
 `0x612b31`, `0x61da65` and `0x61dced`; the first and last read the visual's state kit, `0x612b31` its channel
 kit. The kit row of `0x612990` comes from the table `0xc0d74c` by the spell's visual: its field `+0x4` when the unit holds a precast spell `+0xc8c`, else its field `+0x14` for the spell in `+0x228` of the field block (`0x6129e4`, `0x6129e9`).
+
+## State kit effect order
+
+A state kit's effect is linked at the head of the unit's `+0xb4` list with the kit at `+0x1c` and the
+flag word, 0x1000 included, at `+0x2c`. An effect made for an attachment or at the position is linked
+before the base animation is picked again; with none made, a bare effect is linked after it, so its
+pin applies from the next play.
+
+Addresses: `0x60edf0`, `0x60eecd`, `0x60f399`, `0x60f3d4`, `0x60f424`, `0x60f106`, `0x61fcf0`, `0x61fd45`, `0x61fd68`, `0x61fdbf`, `0x61fdd0`, `0x61fe58`, `0x61fe5b`, `0x61feaf`, `0x61ffa0`, `0x620360`, `0x5fd9e0`, `0x5fe2f0`, `0x5feab5`, `0x5fde80`
+Confidence: verified
+Proof: one
+Test: none
+
+Case 2 of the kind switch ORs 0x1000 into the flag word (`0x60eecd`). `0x61fdd0` stores the kit
+(`0x61fe58`) and the word (`0x61fe5b`) and links the effect (`0x61feaf`, `0x620360`); `0x60f011`
+reaches it before the compare at `0x60f390`, and `0x60f106` reaches `0x61fcf0`, which stores the
+words too (`0x61fd45`, `0x61fd68`) and links (`0x61fdbf`). `[ebp-0x1c]` is nonzero after an effect is made, and
+`0x60f3cd` then skips the rest; else `0x60f3d4` tests 0x1000 and `0x60f424` calls `0x61ffa0`, which
+sets the same two words and links. `0x5fd9e0` plays through `0x5fe2f0`, which reaches `0x5fde80` at
+`0x5feab5`.
 
 ## Stopping a spell's kits
 
