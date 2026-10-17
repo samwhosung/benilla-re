@@ -572,7 +572,7 @@ fn monster_move_arc_length_difftest() {
     let buf = e.alloc(0x400);
     let mut s = 0x601e_da00u32;
 
-    let case = |e: &mut Emu, pts: &[[f32; 3]], r9count: u32, ctx: &str| {
+    let case = |e: &mut Emu, pts: &[[f32; 3]], move_ms: u32, ctx: &str| {
         let n = pts.len();
         assert!(n >= 4, "need N>=4 points");
         for (k, p) in pts.iter().enumerate() {
@@ -580,7 +580,7 @@ fn monster_move_arc_length_difftest() {
             e.write_u32(buf + (12 * k + 4) as u64, p[1].to_bits());
             e.write_u32(buf + (12 * k + 8) as u64, p[2].to_bits());
         }
-        e.write_u32(ebp - 0xc, r9count);
+        e.write_u32(ebp - 0xc, move_ms);
         e.write_u32(ebx + 0x118, pos as u32);
         e.write_u32(pos + 0x8c, 1.0f32.to_bits());
         e.write_u32(ebp - 0x8, 0);
@@ -593,7 +593,7 @@ fn monster_move_arc_length_difftest() {
 
         let bin = e.read_f32(ebp - 0x24);
         let acc = arc_length(&pts[1..n - 1]);
-        let ours = (acc / (f64::from(r9count) * f64::from(f32::from_bits(0x3a83_126f)))) as f32;
+        let ours = (acc / (f64::from(move_ms) * f64::from(f32::from_bits(0x3a83_126f)))) as f32;
         assert_f32(bin, ours, &format!("{ctx} (acc={acc})"));
     };
 
@@ -615,8 +615,8 @@ fn monster_move_arc_length_difftest() {
             })
             .collect();
 
-        let r9count = 1 + (next(&mut s) >> 8) % 10000;
-        case(&mut e, &pts, r9count, &format!("fuzz{it}"));
+        let move_ms = 1 + (next(&mut s) >> 8) % 10000;
+        case(&mut e, &pts, move_ms, &format!("fuzz{it}"));
     }
 }
 
@@ -639,7 +639,7 @@ fn monster_move_speed_duration_difftest() {
     let mut seen_speed_win = false;
 
     let mut case =
-        |e: &mut Emu, pts: &[[f32; 3]], speed: f32, alt_scale: bool, count: u32, ctx: &str| {
+        |e: &mut Emu, pts: &[[f32; 3]], speed: f32, alt_scale: bool, move_ms: u32, ctx: &str| {
             let n = pts.len();
             for (k, p) in pts.iter().enumerate() {
                 e.write_u32(buf + (12 * k) as u64, p[0].to_bits());
@@ -650,7 +650,7 @@ fn monster_move_speed_duration_difftest() {
             e.write_u32(ebx + 0x118, pos as u32);
 
             e.write_u32(ebp - 0x8, if alt_scale { 0x200 } else { 0 });
-            e.write_u32(ebp - 0xc, count);
+            e.write_u32(ebp - 0xc, move_ms);
             e.set_reg(RegisterX86::EDX, n as u64);
             e.set_reg(RegisterX86::EDI, buf);
             e.set_reg(RegisterX86::EBX, ebx);
@@ -661,7 +661,7 @@ fn monster_move_speed_duration_difftest() {
             let bin_1c = e.read_f32(ebp - 0x1c);
             let bin_24 = e.read_f32(ebp - 0x24);
             let acc = arc_length(&pts[1..n - 1]);
-            let ours = arc_speed_duration(acc, speed, alt_scale, count);
+            let ours = arc_speed_duration(acc, speed, alt_scale, move_ms);
             assert_f32(bin_1c, ours, &format!("{ctx} [ebp-0x1c]"));
             assert_f32(bin_24, ours, &format!("{ctx} [ebp-0x24]"));
 
@@ -672,8 +672,8 @@ fn monster_move_speed_duration_difftest() {
             }
             let scale = if alt_scale { 10.0 } else { 4.0 };
             let speed_scaled = f64::from(speed) * scale;
-            let arc_speed = acc / (f64::from(count) * f64::from(f32::from_bits(0x3a83_126f)));
-            if count != 0 && arc_speed < speed_scaled {
+            let arc_speed = acc / (f64::from(move_ms) * f64::from(f32::from_bits(0x3a83_126f)));
+            if move_ms != 0 && arc_speed < speed_scaled {
                 seen_arc_win = true;
             } else {
                 seen_speed_win = true;
@@ -685,10 +685,10 @@ fn monster_move_speed_duration_difftest() {
     case(&mut e, &pts, 0.001, false, 500, "arc-win default scale");
     case(&mut e, &pts, 0.001, true, 500, "arc-win alt scale");
 
-    case(&mut e, &pts, 100.0, false, 1, "speed-win (count=1)");
+    case(&mut e, &pts, 100.0, false, 1, "speed-win (move_ms=1)");
     case(&mut e, &pts, 50.0, true, 2, "speed-win alt");
 
-    case(&mut e, &pts, 1.0, false, 0, "count==0 → speed_scaled");
+    case(&mut e, &pts, 1.0, false, 0, "move_ms==0 → speed_scaled");
     for it in 0..2500u32 {
         let n = 4 + (next(&mut s) >> 8) as usize % 16;
         let pts: Vec<[f32; 3]> = (0..n)
@@ -706,11 +706,11 @@ fn monster_move_speed_duration_difftest() {
             _ => frand(&mut s, 0.001, 10.0),
         };
         let alt = (next(&mut s) >> 8).is_multiple_of(2);
-        let count = match it % 3 {
+        let move_ms = match it % 3 {
             0 => 1 + (next(&mut s) >> 8) % 20,
             _ => 1 + (next(&mut s) >> 8) % 20000,
         };
-        case(&mut e, &pts, speed, alt, count, &format!("fuzz{it}"));
+        case(&mut e, &pts, speed, alt, move_ms, &format!("fuzz{it}"));
     }
     assert!(seen_alt && seen_default, "both speed scales exercised");
     assert!(

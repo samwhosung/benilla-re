@@ -26,7 +26,7 @@ pub const ARC_FLOOR: f32 = f32::from_bits(0x3e2a_aaab);
 /// `[0x80306c]`: 4.0, the speed scale.
 pub const SPEED_SCALE_DEFAULT: f32 = f32::from_bits(0x4080_0000);
 
-/// `[0x801624]`: 10.0, the speed scale when bit 2 of the flags is set.
+/// `[0x801624]`: 10.0, the speed scale when flag `0x200` (bit 9) is set.
 pub const SPEED_SCALE_ALT: f32 = f32::from_bits(0x4120_0000);
 
 /// `[0x801360]`: 0.001, milliseconds to seconds.
@@ -123,19 +123,19 @@ pub fn arc_length(pts: &[[f32; 3]]) -> f64 {
     acc
 }
 
-/// `0x601f3d`: the speed times 4 (or 10), and with points, the path speed `length/(count·0.001)`
-/// stored as `f32` when it is the smaller.
-pub fn select_speed(acc: f64, speed: f32, alt_scale: bool, count: u32) -> f64 {
+/// `0x601f3d`: the speed times 4 (or 10), and with a nonzero duration (the packet's `[ebp-0xc]`, in
+/// milliseconds), the path speed `length/(move_ms·0.001)` stored as `f32` when it is the smaller.
+pub fn select_speed(acc: f64, speed: f32, alt_scale: bool, move_ms: u32) -> f64 {
     let scale = if alt_scale {
         f(SPEED_SCALE_ALT)
     } else {
         f(SPEED_SCALE_DEFAULT)
     };
     let speed_scaled = f(speed) * scale;
-    if count == 0 {
+    if move_ms == 0 {
         return speed_scaled;
     }
-    let arc_speed = acc / (f64::from(count) * f(MS_TO_S));
+    let arc_speed = acc / (f64::from(move_ms) * f(MS_TO_S));
     let arc_speed_f32 = arc_speed as f32;
 
     if arc_speed < speed_scaled {
@@ -151,7 +151,7 @@ pub fn duration_ms(acc: f64, selected: f64) -> f32 {
 }
 
 /// The speed choice and the duration together.
-pub fn arc_speed_duration(acc: f64, speed: f32, alt_scale: bool, count: u32) -> f32 {
-    let selected = select_speed(acc, speed, alt_scale, count);
+pub fn arc_speed_duration(acc: f64, speed: f32, alt_scale: bool, move_ms: u32) -> f32 {
+    let selected = select_speed(acc, speed, alt_scale, move_ms);
     duration_ms(acc, selected)
 }
