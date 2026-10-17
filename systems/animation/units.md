@@ -229,7 +229,7 @@ Proof: one
 Test: none
 
 `0x5fde9c and edi,0x20000f` is read outside the node loop. `0x5fdebd test ch,0x10` is bit 12. `0x5fdec2 test [eax+0x2c],bl` with `bl = 4`
-jumps to the freeze at `0x5fdf3a`, which falls to the `xor eax,eax` at `0x5fdf6b`: the walk returns 0 and `0x5feaba` plays the working states. A moving unit reaches the freeze test for every effect, since `0x5fdeac` jumps past the pin test. The hit copies the three current states to the working states, then stores `[[node+0x1c]+8]` at offset 0 and −1 at offset 4
+jumps to the freeze at `0x5fdf3a`, which falls to the `xor eax,eax` at `0x5fdf6b`: the walk returns 0 and `0x5feaba` plays the working states. A moving unit reaches the freeze test for every effect it walks, since `0x5fdeac` jumps past the pin test. The hit copies the three current states to the working states, then stores `[[node+0x1c]+8]` at offset 0 and −1 at offset 4
 of each. The hit enables bone 0's arm, and the key arm when it is armed. `0x60eecd or ecx,0x1000` is in the kit attach routine `0x60edf0`, case 2 of its jump table.
 
 ## Sequence end

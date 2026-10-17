@@ -3932,7 +3932,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457dc0	179	PlayWeaponImpactOnItem		sound	primitive		Plays a weapon's impact sound for the struck item's kind 2.0 yards above a position	verified	one	sound/objects#weapon-impact-sounds	sound::sound_emit_pos_z2
 0x457e80	58	GetWeaponImpactKey		sound	primitive		Returns a weapon's impact subclass and type, or the unarmed subclass and type 0	verified	one	sound/objects#weapon-impact-sounds	
 0x457ec0	95	PlayWeaponImpact		sound	orchestration		Plays the impact table's sound for a weapon, kind and critical flag on bus 10	verified	one	sound/objects#weapon-impact-sounds	
-0x457f20	60	PlayShieldImpact		sound	primitive		Plays ShieldWoodImpact 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
+0x457f20	60	PlayShieldImpact		sound	primitive		Plays (DONOTRENAME)ShieldWoodImpact 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
 0x457f60	70	PlayWeaponSwing		sound	orchestration		Plays the swing table's sound for a type and critical flag on bus 6, at 0.5 when quiet	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound	orchestration		Plays a live item's ItemGroupSounds or wrapped-item sound of a kind	verified	one	sound/interface#item-sounds	
 0x457ff0	62	PlayItemDisplaySound		sound	orchestration		Plays the ItemGroupSounds sound of a kind for an item display id	verified	one	sound/interface#item-sounds	
@@ -3947,7 +3947,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458450	142	GetFootstepSound		sound	primitive		Returns the footstep table's dry or wet sound for a footstep id and terrain type, or 0	verified	one	sound/objects#footstep-table	
 0x4584e0	79	PlayMaterialSound		sound	primitive		Plays a Material row's sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	sound::sound_emit_pos_z2
 0x458530	216	PlaySheatheSound		sound	primitive		Plays an item's sheathe or unsheathe sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	sound::sound_emit_pos_z2
-0x458610	60	PlayAbsorbSound		sound	primitive		Plays AbsorbGetHit 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
+0x458610	60	PlayAbsorbSound		sound	primitive		Plays (DONOTRENAME)AbsorbGetHit 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
 0x458650	38	SetSoundSubmerged		sound	orchestration		Stores the submerged state and on a change swaps the ambience, water sounds and reverb	verified	one	sound/interface#state-the-other-files-read	
 0x458680	33	SetSoundGhost		sound	orchestration		Stores the ghost state and on a change restarts the zone music and refreshes the ambience	verified	one	sound/interface#state-the-other-files-read	
 0x4586b0	20	SetWeatherAmbience		sound	orchestration		Keeps the weather message's ambience sound and refreshes the ambience when it changes	verified	one	sound/interface#state-the-other-files-read	
@@ -3988,7 +3988,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x459120	198	AddServerSoundSlot		sound	primitive		Fills the last empty server sound slot, or grows the slot array, with a sound and GUID	verified	one	sound/objects#server-object-sounds	
 0x4591f0	54	HasServerSound		sound	orchestration		Returns whether a unit holds a server sound slot	verified	one	sound/objects#server-object-sounds	
 0x459230	32	PlaySoundAtPositionKept2		sound	orchestration		Plays a sound id at a position on bus 0 and keeps its record	verified	one	sound/entries#playing-at-a-position	
-0x459250	29	PlayCombatMiss		sound	orchestration		Plays Combat Miss 1H or 2H at a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
+0x459250	29	PlayCombatMiss		sound	orchestration		Plays (DONOTRENAME)Combat Miss 1H or 2H at a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
 0x459270	52	GetEmoteSound		sound	orchestration		Returns the emote sound for an emote, race and gender, or 0	verified	one	sound/interface#emote-sounds	
 0x4592b0	52	GetEmoteSoundFileIndex		sound	orchestration		Returns a random file index of an emote sound's definition, or -1	verified	one	sound/interface#emote-sounds	
 0x4592f0	107	FreeFootstepNode		sound	orchestration		Frees a footstep table node: its two dword arrays, both links and the node	verified	one	sound/overview#hash-tables	

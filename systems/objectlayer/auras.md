@@ -79,7 +79,7 @@ A kit played as a state (kind 2) does not play its animation itself. It checks w
 already plays it and, if not, picks the base animation again. The animation still plays for a unit
 that is not moving or swimming: the kit's effect carries flag 0x1000, and the stationary kit pin
 (`animation/units#stationary-kit-pin`) puts the kit's animation in place of the base one, so a
-still stunned unit plays Stun. An effect the kit spawns pins from that play; a kit that spawns none
+still stunned unit plays Stun, unless a newer flag-0x4 effect ahead of it on `+0xb4` ends the walk first. An effect the kit spawns pins from that play; a kit that spawns none
 links a bare effect after the play and pins from the next.
 
 Addresses: `0x60edf0`, `0x60f361`, `0x60f366`, `0x60f383`, `0x60f38b`, `0x60f390`, `0x60f399`, `0x60f3c5`, `0x5fdb50`, `0x5fd9e0`, `0x5ff4c6`, `0x612b31`, `0x61da65`, `0x61dced`, `0x612990`, `0x5fd2e0`, `0x5fd31f`, `0x612a05`, `0x5fda20`, `0x5fd951`, `0x5fda03`, `0x6129e4`, `0x6129e9`

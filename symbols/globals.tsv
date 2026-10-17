@@ -1382,8 +1382,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835e30	char[28]	s_nameCombatMiss1H		sound	Holds "(DONOTRENAME)Combat Miss 1H"	verified	one	sound/interface#named-sounds
 0x835e4c	char[29]	s_nameWrappedItemDrop		sound	Holds "(DONOTRENAME)WrappedItemDrop"	verified	one	sound/interface#named-sounds
 0x835e6c	char[31]	s_nameWrappedItemPickup		sound	Holds "(DONOTRENAME)WrappedItemPickup"	verified	one	sound/interface#named-sounds
-0x835e8c	char[30]	s_textDONOTRENAMEShieldWoodImpact		sound	Holds the string "(DONOTRENAME)ShieldWoodImpact"	inferred	none	
-0x835eac	char[26]	s_textDONOTRENAMEAbsorbGetHit		sound	Holds the string "(DONOTRENAME)AbsorbGetHit"	inferred	none	
+0x835e8c	char[30]	s_nameShieldWoodImpact		sound	Holds "(DONOTRENAME)ShieldWoodImpact"	verified	one	sound/interface#named-sounds
+0x835eac	char[26]	s_nameAbsorbGetHit		sound	Holds "(DONOTRENAME)AbsorbGetHit"	verified	one	sound/interface#named-sounds
 0x835f60	char[26]	s_textUsagePlaySoundSound		sound	Holds the string "Usage: PlaySound("sound")"	inferred	none	
 0x835f7c	char[26]	s_textUsagePlayMusicMusic		sound	Holds the string "Usage: PlayMusic("music")"	inferred	none	
 0x835f98	char[34]	s_textUsagePlaySoundFileSoundfile		sound	Holds the string "Usage: PlaySoundFile("soundfile")"	inferred	none	
@@ -2622,12 +2622,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05f78	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0xb05f88	float	s_duckStartVolume		sound	Holds the SoundVolume the duck ramps from	verified	one	sound/objects#the-duck
 0xb05fa0	uint32_t	s_interfaceSoundSuppression		sound	Counts the open suppressions of interface sounds	verified	one	ui/framexml#sound-while-loading
-0xb05fa4	uint32_t	s_wrappedItemDropSound		sound	Holds the SoundEntries id of WrappedItemDrop	verified	one	sound/interface#item-sounds
-0xb05fa8	uint32_t	s_wrappedItemPickupSound		sound	Holds the SoundEntries id of WrappedItemPickup	verified	one	sound/interface#item-sounds
-0xb05fac	uint32_t	s_combatMiss2HSound		sound	Holds the SoundEntries id of Combat Miss 2H	verified	one	sound/interface#named-sounds
-0xb05fb0	uint32_t	s_combatMiss1HSound		sound	Holds the SoundEntries id of Combat Miss 1H	verified	one	sound/interface#named-sounds
-0xb05fb4	uint32_t	s_absorbGetHitSound		sound	Holds the SoundEntries id of AbsorbGetHit	verified	one	sound/interface#named-sounds
-0xb05fb8	uint32_t	s_shieldWoodImpactSound		sound	Holds the SoundEntries id of ShieldWoodImpact	verified	one	sound/interface#named-sounds
+0xb05fa4	uint32_t	s_wrappedItemDropSound		sound	Holds the SoundEntries id of (DONOTRENAME)WrappedItemDrop	verified	one	sound/interface#item-sounds
+0xb05fa8	uint32_t	s_wrappedItemPickupSound		sound	Holds the SoundEntries id of (DONOTRENAME)WrappedItemPickup	verified	one	sound/interface#item-sounds
+0xb05fac	uint32_t	s_combatMiss2HSound		sound	Holds the SoundEntries id of (DONOTRENAME)Combat Miss 2H	verified	one	sound/interface#named-sounds
+0xb05fb0	uint32_t	s_combatMiss1HSound		sound	Holds the SoundEntries id of (DONOTRENAME)Combat Miss 1H	verified	one	sound/interface#named-sounds
+0xb05fb4	uint32_t	s_absorbGetHitSound		sound	Holds the SoundEntries id of (DONOTRENAME)AbsorbGetHit	verified	one	sound/interface#named-sounds
+0xb05fb8	uint32_t	s_shieldWoodImpactSound		sound	Holds the SoundEntries id of (DONOTRENAME)ShieldWoodImpact	verified	one	sound/interface#named-sounds
 0xb05fbc	uint32_t	s_weatherAmbienceSound		sound	Holds the weather message's ambience sound, 0 for none	verified	one	sound/ambience#zone-ambience-choice
 0xb05fc0	uint32_t	s_duckRampStart		sound	Holds the duck ramp's start time, 0 while no ramp runs	verified	one	sound/objects#the-duck
 0xb06028	int32_t	s_surfaceReverbId		sound	Holds the world reverb's SoundProviderPreferences id above water	verified	one	sound/ambience#world-reverb
