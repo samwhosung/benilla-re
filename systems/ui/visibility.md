@@ -193,7 +193,7 @@ effective scale, `+0xbc · +0xb8` rounded to a float. When that differs from the
 2⁻²² or more, or when forced, it becomes the layout scale of the frame, is passed as the layout
 scale of each region, and as the parent scale of each child.
 
-Addresses: `0x76ac10`, `0x76ac1a`, `0x76ac3b`, `0x76ac44`, `0x76ac50`, `0x76ac7b`, `0x76ac90`, `0x76ac97`, `0x76aca2`, `0x76aca8`, `0x76acad`, `0x76acd5`, `0x76ad06`, `0x76ad31`, `0x775140`
+Addresses: `0x76ac10`, `0x76ac1a`, `0x76ac3b`, `0x76ac44`, `0x76ac50`, `0x76ac7b`, `0x76ac90`, `0x76ac97`, `0x76aca2`, `0x76aca8`, `0x76acad`, `0x76acd5`, `0x76ad06`, `0x76ad31`, `0x775140`, `0x7751e1`, `0x7751e9`, `0x7751f1`, `0x77520b`
 Confidence: verified
 Proof: one
 Test: `ui::effective_scale`, `ui::glue769_76ac50_setter_delta_abs`, `ui::glue_767_76ac10_rsub_change_detect`
@@ -203,7 +203,9 @@ Test: `ui::effective_scale`, `ui::glue769_76ac50_setter_delta_abs`, `ui::glue_76
 `0x76ac90` computes `fld [esi+0xbc]; fmul [esi+0xb8]; fstp` (`0x76ac97` to `0x76aca8`), compares
 it with the layout scale `+0x7c` (`0x76acad`), calls `0x768360(scale, force)` (`0x76acd5`), slot
 0x10 of each region's layout part (`0x76ad06`) and `0x76ac50(scale, force)` for each child
-(`0x76ad31`). The Lua `SetScale` refuses a scale that is not above 0.
+(`0x76ad31`). The Lua `SetScale` (`0x775140`) reads its argument as a double (`0x7751e1`) and
+compares it with 0.0 (`0x7751e9`); `0x7751f1` tests C0 alone, so a value below 0 or a NaN raises
+an error (`0x77520b`), and 0 is stored through `0x76ac10`.
 
 `ui::effective_scale` runs `0x76ac90` whole, with the layout scale setter `0x768360` stubbed and empty child lists.
 
