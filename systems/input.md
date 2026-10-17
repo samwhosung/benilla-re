@@ -216,14 +216,14 @@ Writer 2 tests the mask being set, not the key: strafe, turn and mouse presses m
 ## What a press latches
 
 The first primary command to go down (`0x514840` with no primary held before and bit 0x1 or 0x2 now) zeroes the two travel sums, stores the press time at `+0x14` and enters the camera's freelook (`0x50f930`, a jump to `0x50fe30`). A second primary pressed while the first is held does none of this.
-The world pick under the cursor is made once, at the press, by `0x514810` (its only caller `0x51482d`), and the release replays it; nothing re-picks on a move or on the release, and no cursor position is stored. A press of any command bits other than the held primary channel alone clears the armed click mode (`0x514ac1`).
+The world pick under the cursor is made once, at the press, by `0x514810` (its only caller `0x51482d`), and the release replays it; nothing re-picks, and no cursor position is stored. A press without a mouse bit leaves the armed click mode alone (`0x514ab1`); one with a mouse bit clears it (`0x514ac1`) unless the held mouse bits equal the pressed word (`0x514abf`).
 
-Addresses: `0x514840`, `0x5148f4`, `0x514905`, `0x514910`, `0x514919`, `0x51491f`, `0x514ab4`, `0x514ac1`, `0x514810`, `0x514822`, `0x51482d`, `0x481f00`, `0x50f930`, `0x50fe30`
+Addresses: `0x514840`, `0x5148f4`, `0x514905`, `0x514910`, `0x514919`, `0x51491f`, `0x514ab1`, `0x514ab4`, `0x514abf`, `0x514ac1`, `0x514810`, `0x514822`, `0x51482d`, `0x481f00`, `0x50f930`, `0x50fe30`
 Confidence: verified
 Proof: one
 Test: none
 
-The pick result is held in the world frame (`+0x350`, `+0x358`, `+0x35c`). The chord clear means that holding both mouse buttons, or pressing a movement key while one is down, leaves the release without a click.
+The pick result is held in the world frame (`+0x350`, `+0x358`, `+0x35c`). The held bits (`+0x04 & 3`) are read after the OR at `0x5148f4`, compared at `0x514ab4` with the whole pressed word. The second mouse button going down while the first is held clears the mode, so that release gets no click; a movement key pressed during a drag leaves it armed and the release still clicks.
 
 ## Orbit and mouselook
 
