@@ -372,8 +372,8 @@ opcode	name	role	site	function	entries	basis
 0x192	SMSG_QUESTGIVER_QUEST_FAILED	handler	0x5e324d	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
 0x194	CMSG_QUESTLOG_REMOVE_QUEST	send	0x5eaf82	0x5eaf40	objectlayer/quests#quest-messages-sent	opcode
 0x195	SMSG_QUESTLOG_FULL	handler	0x5e326f	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
-0x196	SMSG_QUESTUPDATE_FAILED	handler	0x5e34e4	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers	opcode
-0x197	SMSG_QUESTUPDATE_FAILEDTIMER	handler	0x5e34f5	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers	opcode
+0x196	SMSG_QUESTUPDATE_FAILED	handler	0x5e34e4	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers|ui/questtimers#where-the-two-lists-split	opcode
+0x197	SMSG_QUESTUPDATE_FAILEDTIMER	handler	0x5e34f5	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers|ui/questtimers#where-the-two-lists-split	opcode
 0x198	SMSG_QUESTUPDATE_COMPLETE	handler	0x5e3506	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers	opcode
 0x199	SMSG_QUESTUPDATE_ADD_KILL	handler	0x5e3517	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers	opcode
 0x19a	SMSG_QUESTUPDATE_ADD_ITEM	handler	0x5e3528	0x5e5ad0	objectlayer/quests#quest-updates|objectlayer/quests#status-query-triggers	opcode

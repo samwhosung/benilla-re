@@ -3220,7 +3220,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbb7488	uint32_t	s_questWatchCount		ui	Holds the number of watched quests	verified	one	ui/questlog#quest-watches
 0xbb748c	uint32_t	s_questHeaderExpanded		ui	Holds a bit per header, set while the header is expanded	verified	one	ui/questlog#the-collapse-state
 0xbb7490	uint32_t	s_questVisibleRows		ui	Holds the number of rows shown, the row count minus quests under collapsed headers	verified	one	ui/questlog#visible-rows
-0xbb7494	int32_t	s_questClockOffset		ui	Holds the local clock minus the server's at the last sync, 0 until synced	verified	one	ui/questtimers#the-clock
+0xbb7494	int32_t	s_questClockOffset		ui	Holds the local clock minus the server's at the last sync, 1 for a zero difference, 0 until synced	verified	one	ui/questtimers#the-clock
 0xbb7498	uint32_t	s_questTemplatesPending		ui	Holds the number of quest templates asked for and not yet arrived	verified	one	ui/questlog#the-rebuild
 0xbb749c	uint32_t	s_queryTimeDeadline		ui	Holds the local time after which the next time query may be sent, 0 while one is in flight	verified	one	ui/questtimers#the-time-sync
 0xbb74c0	uint8_t[32][524]	s_gossipQuests		ui	Holds the 32 gossip quest rows: id, level, icon and title	verified	one	ui/gossip#the-gossip-message

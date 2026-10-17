@@ -134,7 +134,7 @@ flags `+0x38 & 6` are non-zero, the slot's complete bit must be set; with them z
 `+0x1c`, a quest whose `ReqCreatureOrGOId` and `ReqItemId` are all 0 is never complete. Then standing with
 `+0x14` must be at least `+0x18`, with `+0x1c` at most `+0x20`; a negative `+0x28` needs
 `-[+0x28]` coinage; each creature or object count and the live count of each non-zero `ReqItemId`, the source item
-included, must reach its required count. A pass calls `0x4b5390` with 0x21.
+included, must reach its required count. A pass fires a tutorial (below).
 
 Addresses: `0x4df580`, `0x4df5a4`, `0x4df5b7`, `0x4df628`, `0x4df642`, `0x4df64e`, `0x4df65b`, `0x4df661`, `0x4df668`, `0x4df66a`, `0x4df671`, `0x4df690`, `0x4df6a3`, `0x4df6b0`, `0x4df6b6`, `0x4df6bd`, `0x4df6c7`, `0x4df6cc`, `0x4df6d6`, `0x4df6e1`, `0x4df6eb`, `0x4df70b`, `0x4df72e`, `0x4df74a`, `0x4df778`, `0x4df780`, `0x4df792`, `0x4df270`, `0x4df480`, `0x4b5390`, `0x4d6370`, `0x622130`
 Confidence: verified
@@ -150,7 +150,27 @@ non-zero item id (`0x4df6a3`) and with `edx` 0 returns 0. The standings, each re
 and `jg` (`0x4df6eb`). Coinage is `PLAYER_FIELD_COINAGE` at `*(player+0xe68)+0xf70` (0 for an object that is
 not the active player, `0x4df70b`), compared unsigned (`0x4df72e`). Creatures use `shr edi,cl; and edi,0x3f;
 cmp edi,[eax]` with `jb` (`0x4df74a`); items `0x622130(player+0x1d38, id, 8)` (`0x4df778`) against `[esi+0x10]`
-with `jl` (`0x4df780`), with no source-item test. `0x4df792` calls the tutorial trigger `0x4b5390` with 0x21 and delay 0, which does nothing when tutorials are off or 0x21 already fired (`tutorials#the-tutorial-trigger`).
+with `jl` (`0x4df780`), with no source-item test. The pass leaves through `0x4df78b` (below).
+
+## The tutorial on a pass
+
+On a pass, before it returns 1, the turn-in test fires tutorial 0x21, which the interface sees as 34:
+`TUTORIAL_TITLE34`, "Quest Completion" in the stock strings. So each caller fires it on a quest that can be handed
+in, once per fire-once set: `GetQuestLogTitle`'s isComplete (`questtitle#complete-failed-and-neither`) and the
+latch `0x4df4f0`, which the expired branch of `GetQuestTimers`, the log rebuild and the 0x197 handler reach
+(`questtimers#where-the-two-lists-split`).
+
+Addresses: `0x4df78b`, `0x4df78d`, `0x4df792`, `0x4df797`, `0x4b5390`, `0x4dfa8d`, `0x4df4fc`, `0x4e14f1`, `0x4de6ca`, `0x4df575`
+Confidence: verified
+Proof: one
+Test: none
+
+`xor edx,edx` (`0x4df78b`) and `mov ecx,0x21` (`0x4df78d`) set up `0x4b5390(0x21, delay 0)` (`0x4df792`), which does
+nothing when tutorials are off or 0x21 already fired (`tutorials#the-tutorial-trigger`); then `mov eax,1`
+(`0x4df797`). The event carries 34, and the stock `TutorialFrame` reads `TUTORIAL_TITLE34` for the alert's tooltip and
+the frame's title, and `TUTORIAL34` for its text. The image holds two `call 0x4df580`, at `0x4dfa8d` and in `0x4df4f0` (`0x4df4fc`), no
+`jmp` to it and no copy of its address; `0x4df4f0` is called at `0x4e14f1` and `0x4de6ca` and reached by the
+`jmp` at `0x4df575`.
 
 ## Items a quest needs
 
