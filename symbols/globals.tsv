@@ -1318,9 +1318,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	one	ui/regions#layout-space-and-units
-0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
-0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
-0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	screencoord#screen-scale-state
+0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	two	screencoord#screen-scale-state
+0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	two	screencoord#screen-scale-state
+0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	two	screencoord#screen-scale-state
 0x832b00	char[24]	s_pathStplH		ui	Holds the source path of Storm's stpl.h, passed to the allocator as the file	verified	one	ui/containers#font-records
 0x832cc0	int32_t	s_schedulerCallGuard		core	Holds -1 plus the number of scheduler calls in flight	verified	one	core/scheduler#load-accounting
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats

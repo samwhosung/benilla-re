@@ -30,12 +30,12 @@ Roots: `0x41ad10`, `0x41ad70`, `0x41ad80`, `0x41ade0`, `0x41ae40`, `0x41ae50`, `
 
 `(K1, K2)` is the unit vector along `(a, 1)`, so the screen's diagonal is one layout unit. The
 file holds 4/3's values except `K2`: `a` 1.3333334, `K1` 0.8 (`0x3f4ccccd`), `K2` 0.6
-(`0x3f19999a`), `A` 1.0; a call with `RN24(4/3)` stores `K2` as `0x3f199999`. `0x41ad60` returns
-`a` and `0x41ad70` returns `A` in `st0`.
+(`0x3f19999a`), `A` 1.0; a call with `RN24(4/3)` stores `K2` as `0x3f199999`. `0x41ad70` returns
+`A` in `st0`.
 
-Addresses: `0x41ad10`, `0x41ad60`, `0x41ad70`, `0x832a40`, `0x832a44`, `0x832a48`, `0x832a4c`, `0x46a828`, `0x48fe2b`
+Addresses: `0x41ad10`, `0x41ad70`, `0x832a40`, `0x832a44`, `0x832a48`, `0x832a4c`, `0x46a828`, `0x48fe2b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `screencoord::sc_41ad10_set_scale`
 
 `0x41ad13` to `0x41ad24`: `fld a; mov eax,a; fmul 0.75; mov [0x832a40],eax; fstp dword [0x832a4c]`.
@@ -43,7 +43,7 @@ Test: `screencoord::sc_41ad10_set_scale`
 `fst dword [0x832a48]` (`0x41ad3e`) stores without popping, so `fmul a; fstp dword [0x832a44]`
 multiplies the 53-bit `L`, not `K2`. `a²` and `0.75·a` of a float are exact at 53 bits. The test
 runs `0x41ad10` whole over exact ratios, zero, a negative aspect, +∞, NaN and random floats; NaN
-results are compared as NaN. The getters `0x41ad60` and `0x41ad70` are one `fld dword` and `ret`.
+results are compared as NaN. `0x41ad70` is one `fld dword` and `ret`.
 
 ## When the cells change
 
@@ -108,28 +108,44 @@ float extremes; NaN results are compared as NaN. The pointer tests keep the divi
 
 ## Script units and layout units
 
-The script functions convert between a script number and a layout length through `A` and `K1`
-alone, on both axes. A getter answers `RN24(1024·A·l) / K1`, the quotient at 53 bits pushed as a
-double. A setter stores `RN24(K1 · RN24(RN24(v) / (1024·A)))`. One layout unit is
+A script getter answers a layout length `l` as `RN24(1024·A·l) / K1`, the quotient at 53 bits
+pushed as a double, and a setter stores a script number `v` as `RN24(K1 · RN24(RN24(v) /
+(1024·A)))`, on both axes, as `GetWidth` and `SetWidth` do. One layout unit is
 `1024·A/K1 ≈ 768·√(a²+1)` script units, so the screen, `K1` by `K2` layout units, is about `768·a`
 by 768. At `a = RN24(4/3)` a getter of `K2` answers 767.9999427795418 and of `K1` 1024.0 (with the
-file's cells, 768.0000190734861 and 1024.0). `K2` enters no script conversion, and a round trip
-is not the identity: at 4:3 a stored 100 reads back as 99.99999850988391.
+file's cells, 768.0000190734861 and 1024.0), and a stored 100 reads back as 99.99999850988391.
+Every step runs at the 53-bit precision the client sets at start-up.
 
-Addresses: `0x41ad70`, `0x7ffd68`, `0x41ae40`, `0x41ae60`, `0x41ae50`, `0x41ae70`, `0x832a4c`, `0x832a44`, `0x764284`, `0x7a1ef4`, `0x7a1efe`, `0x7a1f01`, `0x7a1fda`, `0x7a1fdd`, `0x7a1fe0`
+Addresses: `0x41ad70`, `0x7ffd68`, `0x41ae40`, `0x41ae60`, `0x832a4c`, `0x832a44`, `0x7a1e00`, `0x7a1f20`, `0x7a1ef4`, `0x7a1efe`, `0x7a1f01`, `0x7a1fcb`, `0x7a1fda`, `0x7a1fdd`, `0x7a1fe0`, `0x40410c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::region_size_getters_whole`, `ui::region_size_setters_whole`, `ui::ui_screen_size_whole`
 
-`0x41ad70` has 162 call sites. Each is followed by `fmul dword [0x7ffd68]` (1024.0, `00 00 80 44`),
-exact on `A`. At 67 the next steps are `fmul m32` (or `fld e; fdiv s; fmulp`), `fstp dword [esp]`
-and `call 0x41ae40`, as `GetWidth` at `0x7a1ef4` to `0x7a1f01`. At 91 they are `fdivr m32` (`d8 7d`,
-`st0 = m32 / st0`), `fstp dword [esp]` and `call 0x41ae60`, as `SetWidth` at `0x7a1fda` to
-`0x7a1fe0`; the operand is the script number already stored with `fstp dword`, or a constant. The
-other four, in the loading screen, `SetupFullscreenScale` and the movie frame, use `A` alone. No
-site pairs `A` with `0x41ae50` or `0x41ae70`. The screen root's rectangle is `K1` by `K2`
-(`0x764284`, `ui/regions#layout-space-and-units`). The values above apply the formulas; the tests
-run the methods whole over six aspects.
+`GetWidth` (`0x7a1ef4` to `0x7a1f01`): `call 0x41ad70; fmul dword [0x7ffd68]` (1024.0, `00 00 80
+44`, exact on `A`); `fmul [ebp-4]`; `fstp dword [esp]`; `call 0x41ae40`, which divides by `K1` and
+returns `st0`; `fstp qword` for the push. `SetWidth`: `fstp dword [ebp-4]` of the number
+(`0x7a1fcb`); `call 0x41ad70; fmul [0x7ffd68]`; `fdivr [ebp-4]` (`d8 7d`, `st0 = m32 / st0`,
+`0x7a1fda`); `fstp dword [esp]`; `call 0x41ae60` (`0x7a1fe0`); `fstp dword`. The precision is
+`0x40410c`'s `__control87` (`METHOD#the-harness`). The screen root's rectangle is `K1` by `K2`
+(`0x764284`, `ui/regions#layout-space-and-units`). The values apply the formulas; the tests run
+the methods whole over six aspects.
+
+## The script conversion census
+
+The steps above are the only way the script functions combine `A` with 1024: every such site
+divides or multiplies by `K1`, so `K2` enters no script conversion and the y axis converts as x
+does.
+
+Addresses: `0x41ad70`, `0x7ffd68`, `0x41ae40`, `0x41ae60`, `0x41ae50`, `0x41ae70`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x41ad70` has 162 call sites, each followed by `fmul dword [0x7ffd68]`. At 67 the next steps are
+`fmul m32` (or `fld e; fdiv s; fmulp`), `fstp dword [esp]` and `call 0x41ae40`; at 91 they are
+`fdivr m32`, `fstp dword [esp]` and `call 0x41ae60`, the operand a script number already stored
+with `fstp dword`, or a constant. The other four, in the loading screen, `SetupFullscreenScale`
+and the movie frame, use `A` alone. No site pairs `A` with `0x41ae50` or `0x41ae70`.
 
 ## Layout units in the resolver
 
