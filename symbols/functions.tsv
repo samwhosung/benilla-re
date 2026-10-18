@@ -1580,7 +1580,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41ae40	16	DivideByScreenScaleX		screencoord	primitive	float __stdcall (float x)	Returns a float argument divided by the float at 0x832a44, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae40_unscale_x
 0x41ae50	16	DivideByScreenScaleY		screencoord	primitive	float __stdcall (float y)	Returns a float argument divided by the float at 0x832a48, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae50_unscale_y
 0x41ae60	16	MultiplyByScreenScaleX		screencoord	primitive	float __stdcall (float x)	Returns the float at 0x832a44 times a float argument, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae60_scale_x
-0x41ae70	16	NDCToDDCHeight		screencoord	primitive	float __stdcall (float y)	Returns the float at 0x832a48 times a float argument, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae70_scale_y
+0x41ae70	16	MultiplyByScreenScaleY		screencoord	primitive	float __stdcall (float y)	Returns the float at 0x832a48 times a float argument, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae70_scale_y
 0x41ae80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41ae90	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41aea0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -6755,7 +6755,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b710	3	OnSummonerNameArrived		ui	orchestration		Does nothing when the summoner's name arrives	verified	one	ui/summon#the-lua-functions	
 0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the name of the summon's zone, or the empty string	verified	one	ui/summon#the-lua-functions	
 0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
-0x48b820	135	GetCursorPositionLua		ui	primitive	int __fastcall (lua_State *L)	Pushes the cursor x and y in interface units, 768·a·x and 768·y for the top frame dwords x and y	verified	two	ui/methods#screen-size-and-cursor-globals	
+0x48b820	135	GetCursorPositionLua		ui	primitive	int __fastcall (lua_State *L)	Pushes the cursor x and y in interface units, 768·a·x and 768·y for the top frame dwords x and y	verified	two	ui/methods#screen-size-and-cursor-globals	ui::ui_cursor_position_whole
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration	int __fastcall (lua_State *L)	Asks the server to sit, or to stand when the player is not standing	verified	one	ui/groupverbs#small-sends	
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration	int __fastcall (lua_State *L)	Stops the cinematic narration	verified	one	ui/groupverbs#small-sends	

@@ -72,14 +72,15 @@ with kinds 1 and 0.
 ## Coordinates the methods convert
 
 `GetWidth` answers `G(w) = RN24(1024·A·w) / K1` (`screencoord#script-units-and-layout-units`), `w`
-the size the layout part's slot 0x1c answers (`+0x50`); a `w` equal to 0 becomes `RN24(right −
-left)` when the rectangle is valid, after a pending region is laid out. `GetLeft` lays out a
-pending region and answers `E(left) = RN24(1024·A·(left/s)) / K1`, `s` the region's layout scale
-`+0x7c`, or nil for an invalid rectangle. Each quotient is at 53 bits and pushed as a double. The
-span `GetWidth` reads is not divided by `s`: a region sized only by its anchors answers its width
-times its effective scale.
+the answer of the layout part's slot 0x1c rounded to a float: a frame's is `+0x50` (`0x768420`);
+textures and font strings override it (next entry). A `w` equal to 0 becomes `RN24(right − left)`
+when the rectangle is valid, after a pending region is laid out. `GetLeft` lays out a pending
+region and answers `E(left) = RN24(1024·A·(left/s)) / K1`, `s` the region's layout scale `+0x7c`,
+or nil for an invalid rectangle. Each quotient is at 53 bits and pushed as a double. The span
+`GetWidth` reads is not divided by `s`: a frame sized only by its anchors answers its width times
+its effective scale.
 
-Addresses: `0x7a1e00`, `0x7a1980`, `0x768420`, `0x768310`, `0x7680e0`, `0x768320`, `0x7a1e99`, `0x7a1ee6`, `0x7a1a4e`, `0x7a1a63`, `0x7a1a88`, `0x6f3810`, `0x6f37f0`
+Addresses: `0x7a1e00`, `0x7a1980`, `0x81c400`, `0x768420`, `0x768310`, `0x7680e0`, `0x768320`, `0x7a1e99`, `0x7a1ee6`, `0x7a1a4e`, `0x7a1a63`, `0x7a1a88`, `0x6f3810`, `0x6f37f0`
 Confidence: verified
 Proof: two
 Test: `ui::region_size_getters_whole`, `ui::region_edge_getters_whole`
@@ -99,17 +100,25 @@ The other size and position getters take the same steps:
 | method | answers |
 |---|---|
 | `GetHeight` | as `GetWidth`, with slot 0x20 (`+0x54`) and `top − bottom` |
+| `GetWidth`, `GetHeight` of a texture | slot 0x1c or 0x20 is `0x770720` or `0x770790`: `+0x50` or `+0x54`, or when that is 0 and an image is set, the image's width or height in texels as `S` stores it, at 53 bits; a texture without an image, or with a zero-sized one, falls back to the span |
+| `GetWidth`, `GetHeight` of a font string | slot 0x1c or 0x20 is `0x772930` or `0x772a60`: `+0x50` or `+0x54`, or when that is 0 the text's width or height, raised to `S(1)` when not above it; never 0, so never the span |
 | `GetRight`, `GetTop`, `GetBottom` | as `GetLeft`, with the right, top or bottom edge |
 | `GetCenter` | `E((right − left)·0.5 + left)`, then `E((top − bottom)·0.5 + bottom)`, the midpoints at 53 bits; two nils for an invalid rectangle |
 | `GetPoint` | `G` of the point's x and y offsets |
 | `GetHitRectInsets` | `G` of the four insets, in the order `SetHitRectInsets` takes them |
 
-Addresses: `0x7a2030`, `0x7a1aa0`, `0x7a1bc0`, `0x7a1ce0`, `0x7a1810`, `0x7a2340`, `0x775bf0`, `0x768410`, `0x76b1e0`, `0x76b1b0`, `0x7a18f7`, `0x7a2483`
+Addresses: `0x7a2030`, `0x7a1aa0`, `0x7a1bc0`, `0x7a1ce0`, `0x7a1810`, `0x7a2340`, `0x775bf0`, `0x768410`, `0x81c6ec`, `0x81c74c`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `0x770739`, `0x770743`, `0x77074e`, `0x772890`, `0x772971`, `0x77297a`, `0x76b1e0`, `0x76b1b0`, `0x7a18f7`, `0x7a2483`
 Confidence: verified
 Proof: one
 Test: `ui::region_size_getters_whole`, `ui::region_edge_getters_whole`, `ui::luabind_7a1_get_point`, `ui::luabind_775_get_hit_rect_insets`
 
 `GetHeight` uses `[ebp-0xc]` minus `[ebp-0x14]`; right, top and bottom read `+0xc`, `+0x8`, `+0x0`.
+The layout vtables `0x81c6ec` and `0x81c74c` hold the texture and font string slots at 0x1c and
+0x20. `0x770720` keeps `+0x50` unless it equals 0 (`jp` at `0x770739`) and an image is set
+(`0x770743`), then converts `0x44b3b0`'s width (`0x77074e`) with `fild; fstp dword` and the setter
+steps, returning `st0`. `0x772930` takes `0x772890`'s text width for a 0, then `fcomp` of `S(1)`
+against it (`0x772971`); `test ah,5; jp` (`0x77297a`) keeps the width only when it is above
+`S(1)`, so NaN gives `S(1)`. The `0x770790` and `0x772a60` bodies are the same on the height.
 `GetCenter` is `fld far; fsub near; fmul 0.5; fadd near; fdiv s` (`0x7a18f7`). `GetPoint` takes
 `[edi+4]` and `[edi+8]` (`0x7a2483`). `GetHitRectInsets` reads the four through `0x76b1e0`, which
 writes the fields `0x76b1b0` stores, argument for argument. The first three rows run whole as
@@ -169,7 +178,7 @@ At `a = RN24(4/3)` the height is 767.9999427795418 in glue and in the game with 
 Addresses: `0x48b480`, `0x48b4d0`, `0x46dd30`, `0x46dd80`, `0x48b820`, `0x46dad0`, `0x494590`, `0x48b499`, `0x48b4e9`, `0x48b850`, `0x48b867`, `0x48b88b`, `0xb4b44c`, `0xcf0bd8`
 Confidence: verified
 Proof: two
-Test: `ui::ui_screen_size_whole`, `ui::luabind_48b_screen_getters`, `glue::lua_model_scale_difftest`
+Test: `ui::ui_screen_size_whole`, `ui::ui_cursor_position_whole`, `ui::luabind_48b_screen_getters`, `glue::lua_model_scale_difftest`
 
 The game pair pushes 1.0 to `0x41ae60` or `0x41ae70`, stores the product as a float, divides it
 by `0x494590` with `fdivr [ebp-4]` (`0x48b499`, `0x48b4e9`) and stores it again before the getter
@@ -177,21 +186,25 @@ steps. `0x494590` loads `[[0xb4b44c]+0x7c]` or 1.0. The glue pair has no divisio
 functions pass `[[0xcf0bd8]+0x1118]` and `+0x111c` to `0x41ad80` (`0x48b850`), which stores
 `K1·fx` and `K2·fy` as floats, then take the getter steps for each, both through `0x41ae40`
 (`0x48b867`, `0x48b88b`). `ui_screen_size_whole` runs the game pair whole over six aspects and six
-scales and without `UIParent`.
+scales and without `UIParent`, and `ui_cursor_position_whole` runs `0x48b820` whole. The glue
+functions have only `lua_model_scale_difftest`, which runs the steps from the `call 0x41ad70`,
+replaced by a load of `A`, to before the `call 0x41ae40`, for `0x46dd30`, `0x46dd80` and the first axis of `0x46dad0`.
 
 ## Other methods that convert
 
-The census of `0x41ad70`'s sites finds the getter step `G` and the setter step `S` in these
-methods as well, each value through `K1`; which stored field or argument each one converts is in
-its own topic.
+The census of `0x41ad70`'s sites finds the getter step `G` and the setter step `S` at 158 sites,
+each value through `K1`: 113 in the functions of these entries and of the table's first three
+rows, 45 in the 20 functions of its last row. Which stored field or argument each converts is in its own
+topic.
 
 | shape | functions |
 |---|---|
 | `G` | `Frame:GetMinResize`, `GetMaxResize`, `GetBackdrop`; `Button:GetPushedTextOffset`, `GetTextWidth`, `GetTextHeight`; the four `ScrollFrame` scroll getters; `EditBox:GetTextInsets`; `FontString:GetFont`, `GetShadowOffset`, `GetSpacing`, `GetStringWidth`; the `Font` methods `GetFont`, `GetShadowOffset`, `GetSpacing` |
 | `S` | `Frame:SetMinResize`, `SetMaxResize`, `SetBackdrop`; `Button:SetPushedTextOffset`; `ScrollFrame:SetHorizontalScroll`, `SetVerticalScroll`; `EditBox:SetTextInsets`; `FontString:SetFont`, `SetShadowOffset`, `SetSpacing`, `SetTextHeight`; the `Font` methods `SetShadowOffset`, `SetSpacing`; `0x79f210`; `GameTooltip:SetOwner`, `SetPadding`; `PingLocation`, `PositionWorldMapArrowFrame`, `PositionMiniWorldMapArrowFrame` |
 | `S` from XML | `0x6f1d60` (`val`, `AbsValue`), `0x6f1eb0` (`x`, `y`, `AbsDimension`), `0x6f20a0`; `RelValue` and `RelDimension` are stored as parsed |
+| internal | the XML loaders `0x770f40` and `0x783c30`; the layout cache `0x4905e0` and `0x490e60`; the tooltip `0x530050`, `0x5303d0`, `0x530640`; the chat bubble `0x4b0940`, `0x4b1600`; the edit box `0x77b8c0`, `0x77da80`; the scroll frame `0x786d30`, `0x786db0`, `0x786e30`; `0x78ab40`; the texture and font string size slots `0x770720`, `0x770790`, `0x772930`, `0x772a60`; the loading screen `0x406640` |
 
-Addresses: `0x41ad70`, `0x775f20`, `0x7761a0`, `0x777370`, `0x782180`, `0x782290`, `0x782390`, `0x791530`, `0x791610`, `0x7916f0`, `0x7917d0`, `0x798c30`, `0x79d400`, `0x79df60`, `0x79e1d0`, `0x79e510`, `0x79f3b0`, `0x79fad0`, `0x79fbe0`, `0x776020`, `0x7762a0`, `0x7776e0`, `0x782030`, `0x7912f0`, `0x791400`, `0x798a60`, `0x79d4f0`, `0x79e070`, `0x79e2b0`, `0x79e3c0`, `0x79f9c0`, `0x79fb40`, `0x79f210`, `0x5310d0`, `0x530f10`, `0x4eeca0`, `0x4a8d20`, `0x4a8f20`, `0x6f1d60`, `0x6f1eb0`, `0x6f20a0`, `0x6f1d91`, `0x6f1e72`, `0x6f1ee8`, `0x6f2060`
+Addresses: `0x41ad70`, `0x775f20`, `0x7761a0`, `0x777370`, `0x782180`, `0x782290`, `0x782390`, `0x791530`, `0x791610`, `0x7916f0`, `0x7917d0`, `0x798c30`, `0x79d400`, `0x79df60`, `0x79e1d0`, `0x79e510`, `0x79f3b0`, `0x79fad0`, `0x79fbe0`, `0x776020`, `0x7762a0`, `0x7776e0`, `0x782030`, `0x7912f0`, `0x791400`, `0x798a60`, `0x79d4f0`, `0x79e070`, `0x79e2b0`, `0x79e3c0`, `0x79f9c0`, `0x79fb40`, `0x79f210`, `0x5310d0`, `0x530f10`, `0x4eeca0`, `0x4a8d20`, `0x4a8f20`, `0x6f1d60`, `0x6f1eb0`, `0x6f20a0`, `0x6f1d91`, `0x6f1e72`, `0x6f1ee8`, `0x6f2060`, `0x770f40`, `0x783c30`, `0x4905e0`, `0x490e60`, `0x530050`, `0x5303d0`, `0x530640`, `0x4b0940`, `0x4b1600`, `0x77b8c0`, `0x77da80`, `0x786d30`, `0x786db0`, `0x786e30`, `0x78ab40`, `0x406640`
 Confidence: verified
 Proof: one
 Test: none

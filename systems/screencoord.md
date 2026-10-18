@@ -56,7 +56,7 @@ or more requests. `widescreen` has no change callback, and nothing on the `uiSca
 cell. The in-game size path caches the new aspect after asking for the reload, whether or not the
 protected-action gate let the reload through.
 
-Addresses: `0x41ad10`, `0x46a7b0`, `0x46a81c`, `0x46a828`, `0x48fbf0`, `0x48fe1e`, `0x48fe2b`, `0x46ab40`, `0x4901e0`, `0x63a74f`, `0x46a505`, `0x46b99d`, `0x402069`, `0x46c613`, `0x48f681`, `0x495669`, `0x492f33`, `0x492f38`, `0x49303a`, `0x49303f`, `0x491380`, `0xb4e30c`
+Addresses: `0x41ad10`, `0x46a7b0`, `0x46a81c`, `0x46a828`, `0x48fbf0`, `0x48fe1e`, `0x48fe2b`, `0x46ab40`, `0x4901e0`, `0x63a74f`, `0x46a505`, `0x46b99d`, `0x402069`, `0x46c613`, `0x48f681`, `0x495669`, `0x492f31`, `0x492f33`, `0x492f38`, `0x493038`, `0x49303a`, `0x49303f`, `0x491380`, `0xb4e30c`
 Confidence: verified
 Proof: one
 Test: none
@@ -68,9 +68,10 @@ the float that `0x46ab40` or `0x4901e0` returned and the caller stored with `fst
 `0x46a7b0` is called at `0x46a505` (start-up), `0x46b99d` (`glue/manager#rebuild-requests`),
 `0x402069` and `0x46c613`; `0x48fbf0` at `0x48f681`, the tail of `0x48f480`, and `0x495669`
 (`ui/bindings#reloading-the-interface`). `0x63a720` registers `widescreen` with a null callback
-(the `push 0` before the default `1`, then `0x63a74f`). `0x492e90` and `0x492f70` call `0x491380`
-and then store the new aspect at `0xb4e30c` unconditionally (`0x492f33`, `0x492f38`; `0x49303a`,
-`0x49303f`).
+(the `push 0` before the default `1`, then `0x63a74f`). `0x492e90` and `0x492f70` test `|cached − new|` against 0.001 (`jnp 0x492f61` at
+`0x492f31`, `jnp 0x493048` at `0x493038`, which skip on less); past it they call `0x491380` and
+then store the new aspect at `0xb4e30c`, whatever the call did (`0x492f33`, `0x492f38`;
+`0x49303a`, `0x49303f`).
 
 ## Scaling and unscaling
 
@@ -136,16 +137,18 @@ The steps above are the only way the script functions combine `A` with 1024: eve
 divides or multiplies by `K1`, so `K2` enters no script conversion and the y axis converts as x
 does.
 
-Addresses: `0x41ad70`, `0x7ffd68`, `0x41ae40`, `0x41ae60`, `0x41ae50`, `0x41ae70`
+Addresses: `0x41ad70`, `0x7ffd68`, `0x41ae40`, `0x41ae60`, `0x41ae50`, `0x41ae70`, `0x490e60`, `0x7a18e8`, `0x7a1923`, `0x4066b9`, `0x406ac4`, `0x48c306`, `0x78d1ad`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x41ad70` has 162 call sites, each followed by `fmul dword [0x7ffd68]`. At 67 the next steps are
-`fmul m32` (or `fld e; fdiv s; fmulp`), `fstp dword [esp]` and `call 0x41ae40`; at 91 they are
-`fdivr m32`, `fstp dword [esp]` and `call 0x41ae60`, the operand a script number already stored
-with `fstp dword`, or a constant. The other four, in the loading screen, `SetupFullscreenScale`
-and the movie frame, use `A` alone. No site pairs `A` with `0x41ae50` or `0x41ae70`.
+`0x41ad70` has 162 call sites; 158 are followed by `fmul dword [0x7ffd68]`. At 67 the next steps
+end in `fstp dword [esp]` and `call 0x41ae40`: `fmul m32` at 57, `fld e; fdiv s; fmulp` at 5,
+`fld m32; fsub m32; fdiv m32; fmulp` at 3 (all in `0x490e60`) and the centre's `fld far; fsub
+near; fmul 0.5; fadd near; fdiv s; fmulp` at 2 (`0x7a18e8`, `0x7a1923`). At 91 they are `fdivr
+m32`, `fstp dword [esp]` and `call 0x41ae60`, the operand a script number already stored with
+`fstp dword`, or a constant. The other four, `0x4066b9`, `0x406ac4`, `0x48c306` and `0x78d1ad`,
+use `A` alone. No site pairs `A` with `0x41ae50` or `0x41ae70`.
 
 ## Layout units in the resolver
 

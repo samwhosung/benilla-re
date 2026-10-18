@@ -197,7 +197,7 @@ Test: none
 `0x442184` is the tail of `0x442170`, which `0x402840` calls in start-up. `0x442b09` calls
 `GxuFontInitialize` and `0x442b1e` `FormatFontsPath`; `0x442b2b` and `0x442b3b` call `0x442b70` with 0 and 1,
 which jumps to `0x442b90` after its tests. `0x442b90` closes the old handle in `0x88562c + 4·i` (`0x442ba9`),
-converts the height from `0x80258c + 4·i` with `NDCToDDCHeight` (`0x442bb6`) and stores the new font
+converts the height from `0x80258c + 4·i` with `MultiplyByScreenScaleY` (`0x442bb6`) and stores the new font
 (`0x442bc3`). The getters compare the index with 2 (`jl`), so a negative index reads before the tables.
 
 ## Korean escape

@@ -1,7 +1,8 @@
-//! The Region size and edge methods and the game's screen-size globals against the exe, each run
-//! whole: `GetWidth` (`0x7a1e00`), `GetHeight` (`0x7a2030`), `SetWidth` (`0x7a1f20`), `SetHeight`
-//! (`0x7a2150`), `GetLeft`, `GetRight`, `GetTop`, `GetBottom` (`0x7a1980` to `0x7a1ce0`),
-//! `GetCenter` (`0x7a1810`), and `GetScreenWidth` and `GetScreenHeight` (`0x48b480`, `0x48b4d0`).
+//! The Region size and edge methods and the game's screen-size and cursor globals against the exe,
+//! each run whole: `GetWidth` (`0x7a1e00`), `GetHeight` (`0x7a2030`), `SetWidth` (`0x7a1f20`),
+//! `SetHeight` (`0x7a2150`), `GetLeft`, `GetRight`, `GetTop`, `GetBottom` (`0x7a1980` to
+//! `0x7a1ce0`), `GetCenter` (`0x7a1810`), `GetScreenWidth` and `GetScreenHeight` (`0x48b480`,
+//! `0x48b4d0`) and `GetCursorPosition` (`0x48b820`).
 //!
 //! Each case first runs `SetScreenAspect` (`0x41ad10`) on the aspect, so the cells are the
 //! client's own. The exe's code runs from the method's entry to its `ret`: the screen helpers, the
@@ -10,18 +11,20 @@
 //! reads (`lua_type` answers a table, `lua_rawgeti` and `lua_settop` do nothing, `lua_touserdata`
 //! answers the region, `lua_isnumber` answers 1, `lua_tonumber` answers the case's number), the
 //! region's type test (slot 0x10 answers 1), the layout's size setters (slots 0x14 and 0x18, which
-//! the test reads the argument of), `CLayoutFrame::Resize` and `luaL_error`, which no case reaches.
+//! the test reads the argument of), `CLayoutFrame::Resize`, which the test checks is called for a
+//! pending layout, and `luaL_error`, which no case reaches.
 //!
-//! Probes: the aspects 4:3, 16:9, 16:10, 5:4 and 21:9; layout scales 1, the floor 0.64, 0.9 and
-//! 1.5; zero and negative sizes, a NaN size, an invalid rectangle, a pending layout; and random
-//! values.
+//! Probes: six aspects (4:3, 16:9, 16:10, 5:4, 2560:1080 and 1); the layout scales 1, the floor
+//! 0.64, 0.9, 1.5 and 0.3, and for the edge getters also 0, ±∞ and NaN; zero, negative and NaN
+//! sizes, NaN and infinite edges, an invalid rectangle, a pending layout; and random values.
 
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, Wow};
 use benilla_re_screencoord::{set_scale, ScaleState};
 use benilla_re_ui::region_units::{
-    get_center, get_edge, get_height, get_width, set_size, ui_screen_size, LayoutPart, RECT_VALID,
+    cursor_position, get_center, get_edge, get_height, get_width, set_size, ui_screen_size,
+    LayoutPart, RECT_VALID,
 };
 
 const LUA_TYPE: u64 = 0x6f3400;
@@ -211,6 +214,20 @@ fn parts(seed: &mut u32, scale: f32) -> Vec<LayoutPart> {
         part(RECT_VALID, [0.0; 4], 0.0, 0.0, scale),
         part(
             RECT_VALID,
+            [f32::NAN, f32::INFINITY, f32::NEG_INFINITY, f32::NAN],
+            0.0,
+            0.0,
+            scale,
+        ),
+        part(
+            RECT_VALID,
+            [f32::NEG_INFINITY, 2.0, f32::INFINITY, f32::INFINITY],
+            0.0,
+            0.0,
+            scale,
+        ),
+        part(
+            RECT_VALID,
             [1.0e-30, -1.0e30, 3.0e30, 2.0e-30],
             0.0,
             0.0,
@@ -274,9 +291,15 @@ fn region_edge_getters_whole() {
     let mut rig = Rig::new(&wow);
     let mut seed = 0x7a19_8001u32;
     let mut total = 0u32;
+    // The edge getters divide by the scale: zero, the infinities and NaN as well.
+    let scales =
+        SCALES
+            .iter()
+            .copied()
+            .chain([0.0, -0.0, f32::INFINITY, f32::NEG_INFINITY, f32::NAN]);
     for a in ASPECTS {
         let st = rig.aspect(a);
-        for scale in SCALES {
+        for scale in scales.clone() {
             for l in parts(&mut seed, scale) {
                 rig.layout(&l);
                 for (f, index) in [(0x7a1980, 1), (0x7a1aa0, 3), (0x7a1bc0, 2), (0x7a1ce0, 0)] {
@@ -391,4 +414,44 @@ fn ui_screen_size_whole() {
     assert_eq!(rig.call(0x48b4d0)[0], Some(767.999_942_779_541_8));
     assert_eq!(ui_screen_size(st, Some(1.0), true), 767.999_942_779_541_8);
     eprintln!("ui_screen_size_whole: {total} bit-exact");
+}
+
+#[test]
+fn ui_cursor_position_whole() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut rig = Rig::new(&wow);
+    let top = rig.emu.alloc(0x1200);
+    rig.emu.write_u32(0xcf0bd8, top as u32);
+    let mut seed = 0x48b8_2001u32;
+    let mut total = 0u32;
+    for a in ASPECTS {
+        let st = rig.aspect(a);
+        let fixed = [
+            (0.0f32, 0.0f32),
+            (1.0, 1.0),
+            (0.5, 0.25),
+            (-0.0, 1.0e-30),
+            (f32::INFINITY, f32::NAN),
+            (-1.0, 2.0),
+        ];
+        let cases: Vec<(f32, f32)> = fixed
+            .into_iter()
+            .chain((0..500).map(|_| (rng(&mut seed, -0.5, 1.5), rng(&mut seed, -0.5, 1.5))))
+            .collect();
+        for (fx, fy) in cases {
+            rig.emu.write_u32(top + 0x1118, fx.to_bits());
+            rig.emu.write_u32(top + 0x111c, fy.to_bits());
+            let got = rig.call(0x48b820);
+            let (x, y) = cursor_position(st, fx, fy);
+            let (gx, gy) = (got[0].expect("x"), got[1].expect("y"));
+            assert!(
+                same(gx, x) && same(gy, y),
+                "GetCursorPosition a={a} {fx} {fy}"
+            );
+            total += 2;
+        }
+    }
+    eprintln!("ui_cursor_position_whole: {total} bit-exact");
 }

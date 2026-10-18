@@ -83,7 +83,7 @@ impl ScaleState {
 pub fn scale_x(g44: f32, v: f32) -> f64 {
     f64::from(g44) * f64::from(v)
 }
-/// `NDCToDDCHeight` (`0x41ae70`): `K2·v` in `st0` at 53 bits.
+/// `MultiplyByScreenScaleY` (`0x41ae70`): `K2·v` in `st0` at 53 bits.
 pub fn scale_y(g48: f32, v: f32) -> f64 {
     f64::from(g48) * f64::from(v)
 }

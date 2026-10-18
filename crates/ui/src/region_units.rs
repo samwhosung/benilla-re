@@ -6,7 +6,7 @@
 //! stores `RN24(K1·RN24(RN24(v)/(1024·A)))`, on both axes. This module adds what each method reads
 //! from the region's layout part and what it divides first.
 
-use benilla_re_screencoord::ScaleState;
+use benilla_re_screencoord::{scale_xy, ScaleState};
 
 /// Flag 1 of the layout part's `+0x3c`: the resolved rectangle is valid.
 pub const RECT_VALID: u32 = 1;
@@ -83,4 +83,12 @@ pub fn ui_screen_size(st: ScaleState, ui_parent_scale: Option<f32>, height: bool
     let s = ui_parent_scale.unwrap_or(1.0); // 0x494590
     let u = (f64::from(extent) / f64::from(s)) as f32; // fdivr [ebp-4]; fstp
     st.to_script(u)
+}
+
+/// The game's `GetCursorPosition()` (`0x48b820`): the screen root's cursor dwords `fx` and `fy`
+/// (`+0x1118`, `+0x111c`) through `ScaleScreenDelta`, `RN24(K1·fx)` and `RN24(K2·fy)`, then each
+/// as a getter, both over `K1`.
+pub fn cursor_position(st: ScaleState, fx: f32, fy: f32) -> (f64, f64) {
+    let (x, y) = scale_xy(st.g44, st.g48, fx, fy);
+    (st.to_script(x), st.to_script(y))
 }
