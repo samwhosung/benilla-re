@@ -1,7 +1,8 @@
 //! The screen aspect scale against the exe. Each function runs whole: it calls nothing and reads
 //! its `.data` globals, which each case writes. `SetScreenAspect` is checked through the four
-//! globals it sets. Fixed cases (4/3, the default, and other exact ratios), then random ones; a
-//! divisor is kept at least 0.05 from 0.
+//! globals it sets. Fixed cases (4/3, the default, and other exact ratios), then random ones. The
+//! single-value functions are read at 53 bits and probed at zero, the infinities and NaN, the
+//! divisor included; the pair and rect functions keep a divisor at least 0.05 from 0.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, Wow};
@@ -43,10 +44,12 @@ fn sc_41ad10_set_scale() {
     let check = |emu: &mut Emu, s: f32| {
         let (s40, g44, g48, s4c) = run(emu, s);
         let w = set_scale(s);
-        assert_eq!(s40.to_bits(), w.s.to_bits(), "s40 s={s}");
-        assert_eq!(g44.to_bits(), w.g44.to_bits(), "g44 s={s}");
-        assert_eq!(g48.to_bits(), w.g48.to_bits(), "g48 s={s}");
-        assert_eq!(s4c.to_bits(), w.s075.to_bits(), "s4c s={s}");
+        // Equal bits, or both NaN (the x87's default NaN is negative, the host's positive).
+        let same = |a: f32, b: f32| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan());
+        assert!(same(s40, w.s), "s40 s={s}");
+        assert!(same(g44, w.g44), "g44 s={s}");
+        assert!(same(g48, w.g48), "g48 s={s}");
+        assert!(same(s4c, w.s075), "s4c s={s}");
     };
     for s in [
         4.0f32 / 3.0, // default aspect
@@ -59,6 +62,14 @@ fn sc_41ad10_set_scale() {
         3.0,
         100.0,
         0.01,
+        1.25,
+        1.6,
+        2560.0 / 1080.0,
+        0.0,
+        -0.0,
+        -4.0 / 3.0,
+        f32::INFINITY,
+        f32::NAN,
     ] {
         check(&mut emu, s);
         total += 1;
@@ -73,48 +84,75 @@ fn sc_41ad10_set_scale() {
     );
 }
 
-/// One of the single-value functions, which return in `st0`.
-fn leaf(name: &str, addr: u64, gva: u64, refn: fn(f32, f32) -> f32) {
+/// Equal bits, or both NaN: the x87 makes the negative default NaN where the host makes the
+/// positive one, and an input NaN's payload passes through both.
+fn same64(a: f64, b: f64) -> bool {
+    a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan())
+}
+
+/// One of the single-value functions, which return in `st0`: read back at 53 bits through an
+/// `fstp qword`, as a caller that keeps the result unrounded sees it.
+fn leaf(name: &str, addr: u64, gva: u64, refn: fn(f32, f32) -> f64) {
     let Some(wow) = Wow::load() else {
         return;
     };
     let mut emu = Emu::new(&wow);
-    let run = |emu: &mut Emu, g: f32, v: f32| -> f32 {
+    let run = |emu: &mut Emu, g: f32, v: f32| -> f64 {
         emu.write_u32(gva, g.to_bits());
-        emu.call_f32(addr, 0, 0, &[v.to_bits()])
+        emu.call_f64(addr, 0, 0, &[v.to_bits()])
     };
     let mut total = 0u32;
-    let probes = [1.0f32, 0.6, 0.8, 2.0, 0.5, -3.0, 1024.0, 0.1, 1.0e6, -1.0e6];
-    for &g in &[0.6f32, 0.8, 1.0, 1.3333334, -0.5, 2.5] {
+    let probes = [
+        1.0f32,
+        0.6,
+        0.8,
+        2.0,
+        0.5,
+        -3.0,
+        1024.0,
+        0.1,
+        1.0e6,
+        -1.0e6,
+        0.0,
+        -0.0,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        f32::NAN,
+        f32::MIN_POSITIVE,
+        f32::MAX,
+    ];
+    // The scales the client stores at 4:3 and 16:9, the file's defaults, and the zero, infinite and
+    // NaN scales nothing guards against.
+    let scales = [
+        0.6f32,
+        0.8,
+        f32::from_bits(0x3f19_9999),
+        f32::from_bits(0x3f5f_1f93),
+        f32::from_bits(0x3efb_0385),
+        1.0,
+        1.3333334,
+        -0.5,
+        2.5,
+        0.0,
+        f32::INFINITY,
+        f32::NAN,
+    ];
+    for &g in &scales {
         for &v in &probes {
-            assert_eq!(
-                run(&mut emu, g, v).to_bits(),
-                refn(g, v).to_bits(),
-                "{name} g={g} v={v}"
-            );
+            let (got, want) = (run(&mut emu, g, v), refn(g, v));
+            assert!(same64(got, want), "{name} g={g} v={v}: {got:e} != {want:e}");
             total += 1;
         }
     }
     let mut st = (addr as u32).wrapping_mul(0x1000);
     for _ in 0..4000 {
-        // |g| at least 0.05: two of these divide by it
-        let g = {
-            let x = rng(&mut st, -5.0, 5.0);
-            if x.abs() < 0.05 {
-                0.05f32.copysign(x)
-            } else {
-                x
-            }
-        };
+        let g = rng(&mut st, -5.0, 5.0);
         let v = rng(&mut st, -50000.0, 50000.0);
-        assert_eq!(
-            run(&mut emu, g, v).to_bits(),
-            refn(g, v).to_bits(),
-            "{name} fuzz g={g} v={v}"
-        );
+        let (got, want) = (run(&mut emu, g, v), refn(g, v));
+        assert!(same64(got, want), "{name} fuzz g={g} v={v}");
         total += 1;
     }
-    eprintln!("{name}: {total} bit-exact");
+    eprintln!("{name}: {total} bit-exact at 53 bits");
 }
 
 #[test]
