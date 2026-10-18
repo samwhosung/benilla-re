@@ -95,8 +95,9 @@ floor (`0x804588`) is `v > 0.9` keeps, else `0x3f666666` (`0x493005` to `0x49301
 ## Reading the scale
 
 `UIParent`'s effective scale is returned by one reader that the screen-size functions use; it is 1.0 when
-`UIParent` does not exist. `GetScreenHeight()` is `768 / uiScale` at every aspect and `GetScreenWidth()`
-is `768·a / uiScale`.
+`UIParent` does not exist. `GetScreenHeight()` is about 768 over that scale at every aspect and
+`GetScreenWidth()` about `768·a` over it, the applied `uiScale` or the automatic scale; the exact
+float steps are in `methods#screen-size-and-cursor-globals`.
 
 Addresses: `0x494590`, `0x494595`, `0x494599`, `0x49459d`, `0x48b480`, `0x48b4d0`, `0x490065`, `0x49006a`, `0x490077`, `0x76c760`
 Confidence: verified

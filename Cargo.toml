@@ -15,6 +15,7 @@ benilla-re-difftest = { path = "crates/difftest" }
 benilla-re-fastmath = { path = "crates/fastmath" }
 benilla-re-objectlayer = { path = "crates/objectlayer" }
 benilla-re-random = { path = "crates/random" }
+benilla-re-screencoord = { path = "crates/screencoord" }
 benilla-re-storm = { path = "crates/storm" }
 
 # The profile `cargo xtask check --exe` runs the tests with: optimized as a release build is, with

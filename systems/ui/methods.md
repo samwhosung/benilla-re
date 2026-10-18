@@ -71,22 +71,118 @@ with kinds 1 and 0.
 
 ## Coordinates the methods convert
 
-Methods that take or return sizes and positions convert between the units scripts use and the
-layout's own: a value read from a script is multiplied through the screen scale, a value returned
-is divided by it. `GetLeft`, `GetCenter` and the other edge methods first lay out a frame that is
-pending and answer nil for an invalid rectangle; `SetWidth` and `SetHeight` call layout slots 0x14
-and 0x18.
+The size and position getters answer, with `G(l) = RN24(1024·A·l) / K1` and
+`E(e) = RN24(1024·A·(e/s)) / K1` (`screencoord#script-units-and-layout-units`), `s` the region's
+layout scale `+0x7c`, every quotient at 53 bits and pushed as a double:
 
-Addresses: `0x7a1810`, `0x7a1980`, `0x7a1aa0`, `0x7a1bc0`, `0x7a1ce0`, `0x7a1e00`, `0x7a1f20`, `0x7a2030`, `0x7a2150`, `0x775bf0`, `0x775d50`, `0x776020`, `0x7762a0`
-Confidence: inferred
-Proof: none
-Test: `ui::luabind_775_get_hit_rect_insets`, `ui::luabind_775_set_hit_rect_insets`, `ui::luabind_7a1_get_center`, `ui::luabind_7a1_get_width_height`, `ui::luabind_7a1_getters`, `ui::luabind_7a1_setters`
+| method | answers |
+|---|---|
+| `GetWidth` | `G(w)`, `w` the size slot 0x1c answers (`+0x50`); a `w` equal to 0 becomes `RN24(right − left)` when the rectangle is valid |
+| `GetHeight` | the same with slot 0x20 (`+0x54`) and `top − bottom` |
+| `GetLeft`, `GetRight`, `GetTop`, `GetBottom` | `E` of the edge, or nil for an invalid rectangle |
+| `GetCenter` | `E((right − left)·0.5 + left)`, then `E((top − bottom)·0.5 + bottom)`, the midpoints at 53 bits; two nils for an invalid rectangle |
+| `GetPoint` | `G` of the point's x and y offsets |
+| `GetHitRectInsets` | `G` of the four insets, in the order `SetHitRectInsets` takes them |
 
-Each of these calls the screen-coordinate pair `GetScaledScreenAspect` and `DivideByScreenScaleX`
-or `MultiplyByScreenScaleX` per value; the edge getters call `0x768310`, `0x7680e0` and
-`0x768320`. The exact conversion belongs to the screen-coordinate system and is not derived here.
+The edge getters lay out a pending region first; `GetWidth` and `GetHeight` only when the size is
+0. The span they read is not divided by `s`: a region sized only by its anchors answers its
+width times its effective scale.
 
-Bit-exact coverage: `ui::luabind_775_get_hit_rect_insets` covers `0x775caa` to `0x775d35` of `0x775bf0`; `ui::luabind_775_set_hit_rect_insets` covers 4 ranges from `0x775e3b` to `0x775ee2` of `0x775d50`; `ui::luabind_7a1_get_center` covers `0x7a18e8` to `0x7a1918`, `0x7a1923` to `0x7a1953` of `0x7a1810`; `ui::luabind_7a1_get_width_height` covers `0x7a1ee6` to `0x7a1f0e` of `0x7a1e00`; `ui::luabind_7a1_get_width_height` covers `0x7a2116` to `0x7a213e` of `0x7a2030`; `ui::luabind_7a1_getters` covers `0x7a1a54` to `0x7a1a78` of `0x7a1980`; `ui::luabind_7a1_getters` covers `0x7a1b74` to `0x7a1b98` of `0x7a1aa0`; `ui::luabind_7a1_getters` covers `0x7a1c94` to `0x7a1cb8` of `0x7a1bc0`; `ui::luabind_7a1_getters` covers `0x7a1db4` to `0x7a1dd8` of `0x7a1ce0`; `ui::luabind_7a1_setters` covers `0x7a1fce` to `0x7a1feb` of `0x7a1f20`; `ui::luabind_7a1_setters` covers `0x7a21fe` to `0x7a221b` of `0x7a2150`.
+Addresses: `0x7a1e00`, `0x7a2030`, `0x7a1980`, `0x7a1aa0`, `0x7a1bc0`, `0x7a1ce0`, `0x7a1810`, `0x7a2340`, `0x775bf0`, `0x768420`, `0x768410`, `0x768310`, `0x7680e0`, `0x768320`, `0x76b1e0`, `0x7a1e99`, `0x7a1ee6`, `0x7a1a4e`, `0x7a1a63`, `0x7a18f7`, `0x7a2483`, `0x7a1a88`, `0x6f3810`, `0x6f37f0`
+Confidence: verified
+Proof: one
+Test: `ui::region_size_getters_whole`, `ui::region_edge_getters_whole`, `ui::luabind_7a1_get_point`, `ui::luabind_775_get_hit_rect_insets`
+
+`GetWidth` calls slot 0x1c of `+0x24` and `fst [ebp-4]`; `fcomp 0.0; test ah,0x44; jp` (`0x7a1e99`)
+falls through only for an equal value, so NaN keeps the size. Then `0x768310`, `0x7680e0(1)` when
+pending, `0x768320` and, when valid, `fld [ebp-8]; fsub [ebp-0x10]; fstp [ebp-4]` (`0x7a1ee6`):
+right `+0xc` minus left `+0x4` of `{bottom, left, top, right}`. `GetHeight` uses `[ebp-0xc]` minus
+`[ebp-0x14]`. `GetLeft` reads `s` from `[edi+0x7c]` (`0x7a1a4e`), `fld left; fdiv s; fmulp`
+(`0x7a1a63`), and pushes nil on failure (`0x7a1a88`); right, top and bottom read `+0xc`, `+0x8`, `+0x0`.
+`GetCenter` is `fld far; fsub near; fmul 0.5; fadd near; fdiv s` (`0x7a18f7`). `GetPoint` takes `[edi+4]`
+and `[edi+8]` (`0x7a2483`). `GetHitRectInsets` reads the four through `0x76b1e0`, which writes the
+fields `0x76b1b0` stores, argument for argument. The tests run the first four rows' methods whole over
+six aspects, five scales, NaN, zero, pending and invalid rectangles; the other two are slices
+`0x7a2483` to `0x7a24c6`, `0x7a24e7` to `0x7a252a` and `0x775caa` to `0x775d35`, at 4:3.
+
+## Script numbers the setters store
+
+The size and position setters store `S(v) = RN24(K1 · RN24(RN24(v) / (1024·A)))` of each script
+number `v`, on both axes and with no layout scale:
+
+| method | stores |
+|---|---|
+| `SetWidth`, `SetHeight` | `S(v)` through the layout part's slot 0x14 or 0x18; a non-number raises `Usage: %s:SetWidth(width)` or `Usage: %s:SetHeight(height)` |
+| `SetPoint` | `S(x)` and `S(y)` as the point's offsets when both are numbers, else 0 and 0 |
+| `SetHitRectInsets` | `S` of each of its four numbers, through `0x76b1b0`; a missing number raises `Usage: %s:SetHitRectInsets(left, right, top, bottom)` |
+
+The layout part scales the stored values by the layout scale only when it resolves.
+
+Addresses: `0x7a1f20`, `0x7a2150`, `0x7a2540`, `0x775d50`, `0x7a1fb0`, `0x7a1fcb`, `0x7a1fda`, `0x7a1fe0`, `0x7a1feb`, `0x7a221b`, `0x7a263c`, `0x7a2888`, `0x7a2898`, `0x7a28a6`, `0x7a28ff`, `0x775e38`, `0x775ee2`, `0x76b1b0`, `0x767c70`, `0x6f34d0`, `0x6f3620`
+Confidence: verified
+Proof: one
+Test: `ui::region_size_setters_whole`, `ui::luabind_7a1_setters`, `ui::luabind_775_set_hit_rect_insets`
+
+`SetWidth` tests argument 2 with `0x6f34d0` (`0x7a1fb0`), reads it with `0x6f3620` and stores it
+with `fstp dword [ebp-4]` (`0x7a1fcb`); `fdivr [ebp-4]` (`d8 7d`, `0x7a1fda`) divides it by
+`1024·A`; `fstp dword [esp]` and `0x41ae60` (`0x7a1fe0`); `fstp dword` and `call [ebx+0x14]`
+(`0x7a1feb`). `SetHeight` is the same with `0x41ae60` again and slot 0x18 (`0x7a221b`). `SetPoint`
+zeroes both offsets (`0x7a263c`), converts them only after both `lua_isnumber` tests pass
+(`0x7a2888`, `0x7a2898`) and passes them to `0x767c70` (`0x7a28ff`). `SetHitRectInsets` converts
+arguments 2 to 5 from `0x775e38` and calls `0x76b1b0` (`0x775ee2`). `region_size_setters_whole`
+runs `SetWidth` and `SetHeight` whole over six aspects, ±0, ±∞, NaN, doubles that round to a
+float tie and random numbers; the other two are the 4:3 slices `0x7a28a6` to `0x7a28ff` and
+`0x775e3b` to `0x775ee2`.
+
+## Screen size and cursor globals
+
+With `s_U` the layout scale of `UIParent` (`+0x7c`, 1.0 when it does not exist), `fx` and `fy` the
+cursor fractions the screen root keeps at `+0x1118` and `+0x111c`:
+
+| function | answers |
+|---|---|
+| game `GetScreenWidth`, `GetScreenHeight` | `G(RN24(K1/s_U))`, `G(RN24(K2/s_U))` |
+| glue `GetScreenWidth`, `GetScreenHeight` | `G(K1)`, `G(K2)` |
+| `GetCursorPosition`, game and glue | `G(RN24(K1·fx))`, `G(RN24(K2·fy))` |
+
+At `a = RN24(4/3)` the height is 767.9999427795418 in glue and in the game with `s_U` 1;
+`uiScale` enters only through `s_U`.
+
+Addresses: `0x48b480`, `0x48b4d0`, `0x46dd30`, `0x46dd80`, `0x48b820`, `0x46dad0`, `0x494590`, `0x48b499`, `0x48b4e9`, `0xb4b44c`
+Confidence: verified
+Proof: one
+Test: `ui::ui_screen_size_whole`, `ui::luabind_48b_screen_getters`, `glue::lua_model_scale_difftest`
+
+The game pair pushes 1.0 to `0x41ae60` or `0x41ae70`, stores the product as a float, divides it
+by `0x494590` with `fdivr [ebp-4]` (`0x48b499`, `0x48b4e9`) and stores it again before the getter
+steps. `0x494590` loads `[[0xb4b44c]+0x7c]` or 1.0. The glue pair has no division. The cursor
+functions are `glue/script#cursor-and-screen-size` and `gameui#cursor-and-camera`.
+`ui_screen_size_whole` runs the game pair whole over six aspects and six scales and without
+`UIParent`.
+
+## Other methods that convert
+
+The census of `0x41ad70`'s sites finds the getter step `G` and the setter step `S` in these
+methods as well, each value through `K1`; which stored field or argument each one converts is in
+its own topic.
+
+| shape | functions |
+|---|---|
+| `G` | `Frame:GetMinResize`, `GetMaxResize`, `GetBackdrop`; `Button:GetPushedTextOffset`, `GetTextWidth`, `GetTextHeight`; the four `ScrollFrame` scroll getters; `EditBox:GetTextInsets`; `FontString:GetFont`, `GetShadowOffset`, `GetSpacing`, `GetStringWidth`; the `Font` methods `GetFont`, `GetShadowOffset`, `GetSpacing` |
+| `S` | `Frame:SetMinResize`, `SetMaxResize`, `SetBackdrop`; `Button:SetPushedTextOffset`; `ScrollFrame:SetHorizontalScroll`, `SetVerticalScroll`; `EditBox:SetTextInsets`; `FontString:SetFont`, `SetShadowOffset`, `SetSpacing`, `SetTextHeight`; the `Font` methods `SetShadowOffset`, `SetSpacing`; `0x79f210`; `GameTooltip:SetOwner`, `SetPadding`; `PingLocation`, `PositionWorldMapArrowFrame`, `PositionMiniWorldMapArrowFrame` |
+| `S` from XML | `0x6f1d60` (`val`, `AbsValue`), `0x6f1eb0` (`x`, `y`, `AbsDimension`), `0x6f20a0`; `RelValue` and `RelDimension` are stored as parsed |
+
+Addresses: `0x41ad70`, `0x775f20`, `0x7761a0`, `0x777370`, `0x782180`, `0x782290`, `0x782390`, `0x791530`, `0x791610`, `0x7916f0`, `0x7917d0`, `0x798c30`, `0x79d400`, `0x79df60`, `0x79e1d0`, `0x79e510`, `0x79f3b0`, `0x79fad0`, `0x79fbe0`, `0x776020`, `0x7762a0`, `0x7776e0`, `0x782030`, `0x7912f0`, `0x791400`, `0x798a60`, `0x79d4f0`, `0x79e070`, `0x79e2b0`, `0x79e3c0`, `0x79f9c0`, `0x79fb40`, `0x79f210`, `0x5310d0`, `0x530f10`, `0x4eeca0`, `0x4a8d20`, `0x4a8f20`, `0x6f1d60`, `0x6f1eb0`, `0x6f20a0`, `0x6f1d91`, `0x6f1e72`, `0x6f1ee8`, `0x6f2060`
+Confidence: verified
+Proof: one
+Test: none
+
+Each site was read as the instructions from the `call 0x41ad70` to the next call: `G` is `fmul
+[0x7ffd68]; fmul m32; fstp dword; call 0x41ae40`, `S` is `fmul [0x7ffd68]; fdivr m32; fstp dword;
+call 0x41ae60`. The XML readers parse with `0x64aaa0` and store with `fstp dword` before the step
+(`0x6f1d91`, `0x6f1ee8`); the relative children's values are stored straight from the parse
+(`0x6f1e72`, `0x6f2060`). The step proves the conversion only; which operand each method loads is
+not read here.
 
 ## Region parent and anchor methods
 

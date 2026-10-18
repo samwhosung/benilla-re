@@ -244,11 +244,12 @@ Proof: one
 Test: `ui::glue_6f1_metric_scale_divide`, `ui::luabind_48b_screen_getters`
 
 A FrameXML size N becomes `N / (0.75a · 1024)` times the x scale G44 (`0x6f1eeb` to `0x6f1efd`), which is
-`N / (768·√(a²+1))` layout units; `Frame:GetWidth` (`0x7a1e00`) is the inverse. The screen root's
+`N / (768·√(a²+1))` layout units; `Frame:GetWidth` (`0x7a1e00`) converts back, up to its float
+roundings (`screencoord#script-units-and-layout-units`). The screen root's
 rectangle is G44 by G48 layout units (`0x764284`). A layout unit is therefore `768·√(a²+1)` FrameXML units
 and the ortho maps one model unit to one layout unit after the root scale: `s · 768·√(a²+1)` = `768 · 5/3 ·
 modelScale · layoutScale`. `GetScreenHeight` (`0x48b4d0`) composes the same two scales and returns
-`768 / uiScale` at every aspect. `0x7bdca0(M, (1, 1, −1))` scales rows 0 to 2 only.
+about 768 over `UIParent`'s layout scale at every aspect (`methods#screen-size-and-cursor-globals`). `0x7bdca0(M, (1, 1, −1))` scales rows 0 to 2 only.
 
 Bit-exact coverage: `ui::luabind_48b_screen_getters` covers `0x48b485` to `0x48b4be` of `0x48b480`; `ui::luabind_48b_screen_getters` covers `0x48b4d5` to `0x48b50e` of `0x48b4d0`.
 

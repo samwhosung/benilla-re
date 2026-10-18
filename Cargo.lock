@@ -367,6 +367,7 @@ dependencies = [
  "benilla-re-cmath",
  "benilla-re-dbc",
  "benilla-re-difftest",
+ "benilla-re-screencoord",
  "benilla-re-storm",
 ]
 

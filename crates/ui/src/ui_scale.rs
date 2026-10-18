@@ -1,9 +1,11 @@
 //! The layout scale the scripts apply to lengths, and the widget methods that convert through it
 //! (`systems/ui/uiscale.md#reading-the-scale`, `systems/ui/methods.md#coordinates-the-methods-convert`).
 //!
-//! A script length is in layout units, 1024 to the screen width; the widgets keep device lengths.
-//! Three leaf helpers carry the factors: `0x41ad70` pushes the aspect base 1.0 (`0x832a4c`),
-//! `0x41ae40` divides its argument by the X scale 0.8 (`0x832a44`) and `0x41ae60` multiplies by it.
+//! A script length is in script units, 1024 across a 4:3 screen; the widgets keep layout lengths.
+//! These functions hold the cells `0x41ad10` stores for 4:3, the file's values for the two used
+//! here; [`crate::region_units`] takes any aspect. Three leaf helpers carry the factors: `0x41ad70`
+//! pushes `A`, 1.0 (`0x832a4c`), `0x41ae40` divides its argument by `K1`, 0.8 (`0x832a44`), and
+//! `0x41ae60` multiplies by it.
 //! A getter multiplies the base by 1024 and the device length, narrows to `f32` as the argument of
 //! `0x41ae40`, and pushes the quotient as an f64. A setter divides the script value by the base times
 //! 1024, narrows to `f32` as the argument of `0x41ae60`, and stores the product as an `f32`.
@@ -12,7 +14,7 @@
 pub const LOGICAL_BASE: f32 = f32::from_bits(0x3f80_0000);
 /// The X scale `0x832a44` that `0x41ae40` divides by and `0x41ae60` multiplies by, 0.8.
 pub const UI_SCALE: f32 = f32::from_bits(0x3f4c_cccd);
-/// `0x7ffd68`, 1024.0: the layout units across the screen.
+/// `0x7ffd68`, 1024.0: the factor every script conversion applies to `A`.
 pub const LOGICAL_WIDTH: f32 = f32::from_bits(0x4480_0000);
 /// `0x7ffa24`, 0.5: the midpoint factor of `GetCenter`.
 const HALF: f32 = f32::from_bits(0x3f00_0000);

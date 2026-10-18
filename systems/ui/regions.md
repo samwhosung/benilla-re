@@ -17,8 +17,9 @@ Roots: `0x7701c0`, `0x771480`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `
 The layout is measured in a space whose screen is the rectangle `[0, K1] × [0, K2]`, with `K1 = a /
 √(a² + 1)` and `K2 = 1 / √(a² + 1)` for the configured aspect `a`, so the screen diagonal is 1. The
 root's rectangle is set to exactly that when the top is built. A length in interface units `u` is `u ·
-K1 / (0.75·a·1024)`, so the screen is 768 units tall and `768·a` wide at any aspect, and one unit is
-the screen height over 768 in device pixels.
+K1 / (0.75·a·1024)`, so the screen is about 768 units tall and `768·a` wide at any aspect, and one
+unit is about the screen height over 768 in device pixels; the float steps are
+`screencoord#script-units-and-layout-units`.
 
 Addresses: `0x764180`, `0x764284`, `0x764287`, `0x76428f`, `0x41ad10`, `0x41ad80`, `0x41ae40`, `0x41ae50`, `0x41ae60`, `0x41ae70`, `0x41ad70`, `0x832a44`, `0x832a48`, `0x832a4c`, `0x7ffd68`, `0x6f1eb0`, `0x6f1eeb`, `0x6f1efd`
 Confidence: verified
