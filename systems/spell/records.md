@@ -357,8 +357,8 @@ Test: none
 The history is `0xcecaec + 24·pet` (`0x6e2e67`). The ten pushes before `0x6e2e72` are, from the
 first argument, id, 0, time, 0, 0, time, 0, `([+0x18] >> 25) & 1`, `[+0x274]`, the modified time;
 `0x6e12c0` stores them at `+0x08` to `+0x2c` of a new entry (`cooldowns`). `0x4b31b0` signals
-`ACTIONBAR_UPDATE_COOLDOWN` (216) then `SPELL_UPDATE_COOLDOWN` (262); `0x4b31c0` re-tests a
-list of spells with `0x6e3d60` and signals `SPELL_UPDATE_USABLE` (263); `0x4bce90` signals
+`ACTIONBAR_UPDATE_COOLDOWN` (216) then `SPELL_UPDATE_COOLDOWN` (262); `0x4b31c0` refreshes the
+action bar flags, retests the reactive spells with `0x6e3d60` and signals `SPELL_UPDATE_USABLE` (263); `0x4bce90` signals
 `PET_BAR_UPDATE_COOLDOWN` (354) (`tables/event_sites.tsv`). Callers: the cast send at `0x6e58fb`,
 in `0x6e54f0`, with `pet` 0, and the pet bar's press, `0x4bd1d0`, at `0x4bd36e` with 1.
 

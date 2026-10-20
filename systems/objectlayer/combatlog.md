@@ -141,9 +141,10 @@ empty callback `0x626620`; a record's name is its `+0x0`. `0x6264b0` reads the r
 Each line about the player also raises `COMBAT_TEXT_UPDATE` with a type name from `0x862920`
 (`INTERRUPT` to `HONOR_GAINED`, 47 names) and up to two further arguments: a number, a name, or
 both. Most formatters raise it when the player, class 0, is the line's target or its one unit; the
-faction line always does. Which lines raise which is `combatlogmessages`.
+faction line always does. Which lines raise which is `combatlogmessages`. One type comes from no log
+line: `SPELL_ACTIVE` (0x26), raised by the usable refresh `0x4b31c0` (`ui/reactivespells#usable-refresh`).
 
-Addresses: `0x626890`, `0x6268f0`, `0x626960`, `0x6269b0`, `0x6269d0`, `0x862920`
+Addresses: `0x626890`, `0x6268f0`, `0x626960`, `0x6269b0`, `0x6269d0`, `0x862920`, `0x4b31c0`, `0x4b3221`
 Confidence: verified
 Proof: one
 Test: none
@@ -151,7 +152,8 @@ Test: none
 All five call `FrameScript_SignalEvent2(0x21e, …)` with the type's name first: `0x6269d0(type)`
 with `%s`; `0x6269b0(type, text)` with `%s%s`; `0x626960(type, n)` with `%s%s` and `%d` of `n`;
 `0x626890(type, text, n)` with `%s%s%s`, the text then `%d` of `n`; `0x6268f0(type, n, m)` with
-`%s%s%s` and both as `%d`. 0x21e is `COMBAT_TEXT_UPDATE` (542).
+`%s%s%s` and both as `%d`. 0x21e is `COMBAT_TEXT_UPDATE` (542). Index 0x26 of `0x862920` is
+`SPELL_ACTIVE`; of the callers of the five, only `0x4b3221` loads 0x26 into `ecx`.
 
 ## Trailers
 

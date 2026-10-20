@@ -86,20 +86,22 @@ each an instruction operand in `dumps/disasm.txt`; three are stores, `0x4958ea` 
 The bars cache `0x6e3d60`'s answers. `0x4e5050(slot, &noPower)` computes an action slot's pair and
 runs `0x6e3d60` for a spell. `0x4e5c00` recomputes all 120 slots into two caches and signals
 `ACTIONBAR_UPDATE_USABLE` (215), without arguments, when any slot changed; Lua `IsUsableAction`
-reads the caches. `0x4b31c0` runs `0x4e5c00`, then recomputes each form-bar entry with
-`0x6e3d60` and signals `SPELL_UPDATE_USABLE` (263). Lua `GetShapeshiftFormInfo` (`0x4b45c0`)
-returns `0x6e3d60`'s answer as the castable value of a form whose active value is unset.
+reads the caches. `0x4b31c0` runs `0x4e5c00`, retests the reactive spells with `0x6e3d60` and
+signals `SPELL_UPDATE_USABLE` (263); it recomputes no form-bar entry (`ui/reactivespells#usable-refresh`).
+Lua `GetShapeshiftFormInfo` (`0x4b45c0`) calls `0x6e3d60` on each query, for the castable value of a
+form whose active value is unset.
 
-Addresses: `0x4e5050`, `0x4e5221`, `0x4e5c00`, `0x4e5c15`, `0x4e5c53`, `0x4b31c0`, `0x4b31fd`, `0x4b3246`, `0x4b45c0`, `0x4b479c`
+Addresses: `0x4e5050`, `0x4e5221`, `0x4e5c00`, `0x4e5c15`, `0x4e5c53`, `0x4b31c0`, `0x4b31d7`, `0x4b31fd`, `0x4b3246`, `0x4b45c0`, `0x4b479c`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4e5221 call 0x6e3d60` with the record in `ecx` and the caller's out pointer in `edx`. `0x4e5c00`
 loops `esi` to 0x78 (`0x4e5c43`), compares both results with the cached pair, sets a changed flag,
-and calls `0x703e50(0xd7)` at `0x4e5c53`. `0x4b31c5 call 0x4e5c00`; the form loop at `0x4b31fd`
-stores `movzx al` per entry and `0x4b3246` signals 0x107. `0x4b479c call 0x6e3d60` returns
-1.0 when nonzero. `tables/event_sites.tsv` lists `0x4e5c53` and `0x4b3246`.
+and calls `0x703e50(0xd7)` at `0x4e5c53`. `0x4b31c5 call 0x4e5c00`; the loop `0x4b31d7` to `0x4b323d`
+walks the reactive list and `0x4b31fd` calls `0x6e3d60` on each entry's record; no instruction of
+`0x4b31c0` reads the form list. `0x4b3246` signals 0x107. `0x4b479c call 0x6e3d60` returns 1.0 when
+nonzero. `tables/event_sites.tsv` lists `0x4e5c53` and `0x4b3246`.
 
 ## Totems and reagents
 

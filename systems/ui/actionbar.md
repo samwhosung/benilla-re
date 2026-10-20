@@ -155,8 +155,8 @@ test.
 ## Refreshing the flags
 
 `0x4e5c00` recomputes all 120 slots with `0x4e5050`, stores any pair that changed and signals
-`ACTIONBAR_UPDATE_USABLE` (215), without arguments, once if any did. `0x4b31c0` runs it and then
-signals `SPELL_UPDATE_USABLE` (263). Callers include the active player's unit-flags change when bits
+`ACTIONBAR_UPDATE_USABLE` (215), without arguments, once if any did. `0x4b31c0` runs it, retests the reactive spells
+(`ui/reactivespells#usable-refresh`) and then signals `SPELL_UPDATE_USABLE` (263). Callers include the active player's unit-flags change when bits
 0x01c20000 or the combat bit 0x80000 change, the second call coming before `PLAYER_REGEN_DISABLED`
 (190) or `PLAYER_REGEN_ENABLED` (191) is signalled (`objectlayer/units#unit-flags-and-bytes`), the
 combo-point byte change `0x5ddff0`, and cooldown and cast changes

@@ -281,12 +281,13 @@ the player's guid and `0x6e9757` calls `0x6e9700(0)`; `0x6e9767` compares with `
 
 ## Cooldown events fired
 
-The cooldown events take no arguments. Each path fires, in order:
+The cooldown and usable events take no arguments, except the `COMBAT_TEXT_UPDATE` of `0x4b31c0`, which
+carries `SPELL_ACTIVE` and a spell name. Each path fires, in order:
 
 | path | events (id) |
 |---|---|
 | `0x4b31b0` | `ACTIONBAR_UPDATE_COOLDOWN` (216), `SPELL_UPDATE_COOLDOWN` (262) |
-| `0x4b31c0` | `ACTIONBAR_UPDATE_USABLE` (215) when an action's usable state changed, then `SPELL_UPDATE_USABLE` (263) |
+| `0x4b31c0` | `ACTIONBAR_UPDATE_USABLE` (215) when an action's usable state changed, `COMBAT_TEXT_UPDATE` (542) `SPELL_ACTIVE` for each reactive spell that became usable, then `SPELL_UPDATE_USABLE` (263) |
 | `0x4bce90` | `PET_BAR_UPDATE_COOLDOWN` (354) |
 | `0x4f93d0` | `BAG_UPDATE_COOLDOWN` (330) |
 | spell cooldown packet | `0x4b31b0`, then `0x4bce90` for the pet |
@@ -295,15 +296,16 @@ The cooldown events take no arguments. Each path fires, in order:
 | cheat | `0x4b31b0`, then `0x4bce90` for the pet, else `0x4f93d0` |
 | global cooldown cleared | `0x4b31b0` |
 
-Addresses: `0x4b31b0`, `0x4e5c60`, `0x4b31c0`, `0x4b3246`, `0x4bce90`, `0x4f93d0`, `0x703e50`
+Addresses: `0x4b31b0`, `0x4e5c60`, `0x4b31c0`, `0x4b3226`, `0x4b3246`, `0x4bce90`, `0x4f93d0`, `0x703e50`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4b31b0` calls `0x4e5c60`, which jumps to `FrameScript_SignalEvent` (`0x703e50`) with `ecx =
 0xd8`, and then jumps there with `0x106`. `0x4b31c0` refreshes the action slots' usable cache,
-which signals `0xd7` only on a change, updates the usable flag of each spell it tracks, and
-signals `0x107` at `0x4b3246`. `0x4bce90` and `0x4f93d0` jump there with `0x162` and `0x14a`. The
+which signals `0xd7` only on a change, retests each reactive spell and raises `0x21e` with `SPELL_ACTIVE`
+for one that became usable (`0x4b3226`, `ui/reactivespells#usable-refresh`), and signals `0x107`
+at `0x4b3246`. `0x4bce90` and `0x4f93d0` jump there with `0x162` and `0x14a`. The
 names are `tables/events.tsv`'s. `0x6e2c60`, `0x6e1910` and `0x6e1880` fire nothing.
 
 ## Spell id by name

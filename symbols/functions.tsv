@@ -7918,7 +7918,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b2190	47	InitZero4b2160Exit		ui	primitive	void __cdecl (void)	Frees the CombatFeedbackSpell block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4b21c0	288	InitSpellBook		ui	orchestration		Sizes the known-spell bit array and the indexed spell array from two global counts, then calls 0x4b23a0 and 0x4b2f70	verified	one	ui/gameui#start-up-display-and-chat	
 0x4b22e0	188	ShutdownSpellBook		ui	orchestration		Frees the book tabs and their array, the known-spell bit array and the indexed spells and zeroes the counts	verified	one	ui/gameui#start-up-display-and-chat	
-0x4b23a0	333			ui	primitive		Runs its object file code that calls SMemFree, 0x4b4b90, 0x4088f0; not read here	inferred	none		
+0x4b23a0	333	ResetSpellBook		ui	orchestration	void __cdecl (void)	Empties the book, the known-spell bits and the lists a learned spell feeds, freeing their storage	verified	one	ui/reactivespells#resetting-the-book	
 0x4b24f0	130	GetSpellTabPosition		ui	primitive	uint32_t __fastcall (uint32_t spellId)	Returns the position of a spell's tab in the tab list, or the tab count when absent	verified	one	ui/spellbook#tabs	
 0x4b2580	46	CountBookSpellsBeforeTab		ui	primitive	uint32_t __fastcall (uint32_t tab)	Sums the spell counts of the tabs before a tab, 0 for tab 0 or a tab past the count	verified	one	ui/spellbook#tabs	
 0x4b25b0	1535	AddSpellToBook		ui	primitive	void __fastcall (uint32_t spellId, bool live, uint32_t oldId)	Marks a spell known, prints its learn line and enters it in its tab of the book	verified	one	ui/spellbook#adding-a-spell	
@@ -7931,7 +7931,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b3040	121	CompareBookTabs		ui	primitive	int __cdecl (void **a, void **b)	Orders two tab nodes: General first, then by SkillLine name	verified	one	ui/spellbook#book-order	
 0x4b30c0	228	CompareBookSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two book spells by tab position, name, numeric rank and rank string	verified	one	ui/spellbook#book-order	ui::sortcmp_4b30c0
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
-0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
+0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action bar flags, retests the reactive spells raising SPELL_ACTIVE, then signals SPELL_UPDATE_USABLE	verified	one	ui/reactivespells#usable-refresh	
 0x4b3250	15	SignalCurrentSpellCastChanged		ui	orchestration		Fires ACTIONBAR_UPDATE_STATE through 0x4e5bf0, then CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	verified	one	ui/spellbook#picking-up-a-book-spell	
 0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
@@ -8015,7 +8015,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b4f20	5	InitSquare4b4f30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b4f30, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4b4f30	19	InitSquare4b4f30		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
 0x4b4f50	133	SetArrayCapacity4b4f50		ui	primitive		Sets an array's capacity exactly, keeping the smaller of capacity and count when it must move	verified	one	ui/containers#arrays	
-0x4b4fe0	57			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4b4fe0	57	Quantum324b4fe0		ui	primitive	uint32_t __thiscall (void *this, uint32_t count)	Returns the grow quantum for a count: the largest power of two not above it below 32, else 32	verified	one	ui/reactivespells#reactive-spell-list	
 0x4b5020	31	RoundUp4b5020		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
 0x4b5040	144	ResizeArray4b5040		ui	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	ui/containers#arrays	
 0x4b50d0	5	InitSquare4b50e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b50e0, a static initializer	verified	one	ui/initthunks#jump-thunks	

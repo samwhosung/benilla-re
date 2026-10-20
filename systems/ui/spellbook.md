@@ -72,7 +72,8 @@ Test: none
 `0x4b25b0(id, live, old)` adds a learned spell to the book. It rejects an id outside the Spell table and
 sets the id's bit in the known set. It records a few spells by their first effect (effects 83, 84, 95
 and 116 in four globals, 39 into a table by misc value, 33 into a list) and updates three more lists
-(at 0xb71110, 0xb7114c and 0xb71104). Past that, a spell with `Attributes & 0x80` goes no further. A spell with
+(dispel types `0xb71110`, `ui/reactivespells`, `ui/petbar#form-list`). Past that, a spell with
+`Attributes & 0x80` goes no further. A spell with
 `Attributes & 0x20` (a trade skill spell) prints its learn line when `live` is set and goes no
 further. Any other prints its line when `live` is set, and enters the book unless its `CastUI`
 field (`+0xc`) is above 0.
