@@ -188,7 +188,7 @@ value over 5, unsigned.
 
 `0x5ecb70(guid)` starts the active player's attack on a unit it can attack, unless
 `UNIT_FIELD_FLAGS` has 0x20000, the player lacks control, is dead or is mounted; a target that fails
-stops a running attack. It cancels a cast with Attributes 0x2, stands up, selects the target, sends
+stops a running attack. It cancels the cast when its precast spell has Attributes 0x2, stands up, selects the target, sends
 0x141 with the GUID unless already attacking, draws the weapons, ends the precast and auto-repeat,
 and refreshes the animation. `0x5ecac0` stops it: raises the low-health (0xa) and low-mana (0xb) tutorials below one half, sends
 0x142, and cancels the next-swing spells. On the active player's own attacker state (`0x6259b6`), `0x5ea800` clears the attack

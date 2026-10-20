@@ -52,12 +52,12 @@ Each caller passes (`failed`, `send`, reason). `CMSG_CANCEL_CAST` goes out only 
 | `0x6e6900` | 0, 0, 0x17 | after its own send |
 | `Script::Jump`, `0x515090` | 0, 1, 0x1c | the in-flight spell's `InterruptFlags` bit 0 |
 | `Script::UseSoulstone`, `0x495920`, `0x5e99b0` | 1, 1, 0x1c | on their own paths |
-| `0x5ecb70` | 1, 1, 0x1c | the in-flight spell has `Attributes` 0x2 |
+| `0x5ecb70` | 1, 1, 0x1c | the caster's precast spell `+0xc8c` has `Attributes` 0x2 |
 | `0x605860` | 1, 1, 0x65 | the unit is the record's target |
 | `0x5d8660` | 1, 0, 0x1c | the item is the record's |
 | `0x5e38c0` | 1, 0, 0x17 | the in-flight item guid matches |
 
-Addresses: `0x6e4900`, `0x6e4920`, `0x6e6e80`, `0x6e6ec3`, `0x6e6f68`, `0x6e741a`, `0x6e2218`, `0x6e695a`, `0x513bd0`, `0x513c43`, `0x515090`, `0x51512a`, `0x48ad70`, `0x48ae6b`, `0x495920`, `0x495932`, `0x5e99b0`, `0x5e9a6c`, `0x5ecb70`, `0x5ecc85`, `0x605860`, `0x6058e0`, `0x5d8660`, `0x5d86c4`, `0x5e38c0`, `0x5e3ab3`, `0x6e5aed`
+Addresses: `0x6e4900`, `0x6e4920`, `0x6e6e80`, `0x6e6ec3`, `0x6e6f68`, `0x6e741a`, `0x6e2218`, `0x6e695a`, `0x513bd0`, `0x513c43`, `0x515090`, `0x51512a`, `0x48ad70`, `0x48ae6b`, `0x495920`, `0x495932`, `0x5e99b0`, `0x5e9a6c`, `0x5ecb70`, `0x5ecc56`, `0x5ecc85`, `0x605860`, `0x6058e0`, `0x5d8660`, `0x5d86c4`, `0x5e38c0`, `0x5e3ab3`, `0x6e5aed`
 Confidence: verified
 Proof: one
 Test: none
@@ -65,7 +65,9 @@ Test: none
 The census is every `e8` or `e9` in the image whose target is `0x6e4940`: 18 sites, the 17 above
 and the unreached `0x6e5aed`; the control is the same scan finding the three calls of `0x6e9b70`.
 The arguments are the `mov cl`, `mov dl` and `push` before each. `0x513c43` and `0x51512a` test
-`[record+0x54] & 1`; `0x5ecc85` follows `test [record+0x18],0x2` on the in-flight spell; `0x6058e0`
+`[record+0x54] & 1`; `0x5ecc85` follows `test [record+0x18],0x2` on the record of the precast spell `0x5ecc56` loads
+from `[unit+0xc8c]`, bounded against the Spell store, and a nonzero id with no row reads address
+0x18; `0x6058e0`
 compares the unit's guid with `[0xceac60]`; `0x5d86c4` with `[0xceac48]`; `0x5e3ab3` with
 `[0xcecab0]`. Reason keys: 0x1c ERROR, 0x17 DONT_REPORT, 0x65 TARGETS_DEAD. The callers' own
 purposes outside spell are not read.
