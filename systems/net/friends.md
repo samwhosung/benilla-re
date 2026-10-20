@@ -2,20 +2,20 @@
 
 The friend and ignore lists. The `/who` query and its results, kept in the same object file, are in `who`.
 
-`FriendList.cpp` holds one object, `0xc28168`, of `0x728` bytes, built once at start-up. It keeps 50 friend slots and 25 ignore guids, filled by server packets, and the list of who results the `/who` reply fills. The Lua functions that read them (`GetFriendInfo`, `GetWhoInfo`, `SortWho` and the rest) are in the same file and are registered as 19 pairs of name and function in the table `0x85d830`. Names of players come from the name cache (`0xc0e228`): a slot or ignore that waits for a name is counted in `+0x640` and `+0x718`, and the lists sort and signal their update event when the count reaches zero.
+`FriendList.cpp` holds one object, `0xc28168`, of `0x728` bytes, built at each world entry and freed at teardown. It keeps 50 friend slots and 25 ignore guids, filled by server packets, and the list of who results the `/who` reply fills. The Lua functions that read them (`GetFriendInfo`, `GetWhoInfo`, `SortWho` and the rest) are in the same file and are registered as 19 pairs of name and function in the table `0x85d830`. Names of players come from the name cache (`0xc0e228`): a slot or ignore that waits for a name is counted in `+0x640` and `+0x718`, and the lists sort and signal their update event when the count reaches zero.
 
 Roots: `0x5adc50`, `0x5ad000`, `0x5ad060`, `0x5ad260`, `0x5ae5a0`, `0x5ae670`, `0x5ae810`, `0x5ae490`, `0x5ae510`, `0x5ae550`, `0x5ae5f0`, `0x5ae630`
 
 ## Friend list object
 
-The object is cleared by `0x5aca10`. Friend slot `k` is 32 bytes at `+0x20·k`: byte `+0` online, byte `+1` status flags (2 is away, 4 is busy), `+4` the name string pointer, `+8` the guid, `+0x10` level, `+0x14` class id, `+0x18` area id. `+0x640` counts friend names pending, `+0x648` is the selected friend's guid, the ignore guids are 8 bytes each from `+0x650`, `+0x718` counts ignore names pending and `+0x720` is the selected ignore's guid. `0x5adc50` creates the object once, registers handlers for opcodes `0x63`, `0x65`, `0x1fe`, `0x67`, `0x68` and `0x6b`, registers the console command `whois`, and sets the who sort chain and counts.
+The object is cleared by `0x5aca10`. Friend slot `k` is 32 bytes at `+0x20·k`: byte `+0` online, byte `+1` status flags (2 is away, 4 is busy), `+4` the name string pointer, `+8` the guid, `+0x10` level, `+0x14` class id, `+0x18` area id. `+0x640` counts friend names pending, `+0x648` is the selected friend's guid, the ignore guids are 8 bytes each from `+0x650`, `+0x718` counts ignore names pending and `+0x720` is the selected ignore's guid. `0x5adc50` creates the object, registers handlers for opcodes `0x63`, `0x65`, `0x1fe`, `0x67`, `0x68` and `0x6b` and the console command `whois`, and sets the who sort chain and counts. `0x5ae2d0` removes them, destroys the object and zeroes `0xc28168`; the two run at world entry and teardown.
 
-Addresses: `0x5adc50`, `0x5aca10`, `0x85d830`, `0x5adc7b`, `0x5adc98`, `0x5adca8`, `0x5adcb8`, `0x5adcc8`, `0x5adcd8`, `0x5adce8`, `0x5adcfd`, `0xc28168`
+Addresses: `0x5adc50`, `0x5aca10`, `0x85d830`, `0x5adc7b`, `0x5adc98`, `0x5adca8`, `0x5adcb8`, `0x5adcc8`, `0x5adcd8`, `0x5adce8`, `0x5adcfd`, `0xc28168`, `0x5ae2d0`, `0x5ae340`, `0x401666`, `0x401fc6`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5adc50` returns when `0xc28168` is set; it allocates `0x728` (`0x5adc6b`) and calls `0x5aca10`. The handlers are `0x5adf60` (`0x63`), `0x5adda0` (`0x65`), `0x5adde0` (`0x1fe`), `0x5add80` (`0x67`), `0x5add30` (`0x68`) and `0x5ae2b0` (`0x6b`), each through `0x5ab650`; `0x5adee0` is the handler of `whois` (`0x5adcfd`, `0x63f9e0`). `0x5adc50` has one caller, `0x401666`, and no stored address. A scan of `call` and `jmp` for `0x5adc50` and of the image for its address as a dword finds that one site; the control is `0x5ab1a0`, which finds its four.
+`0x5adc50` returns when `0xc28168` is set; it allocates `0x728` (`0x5adc6b`) and calls `0x5aca10`. The handlers are `0x5adf60` (`0x63`), `0x5adda0` (`0x65`), `0x5adde0` (`0x1fe`), `0x5add80` (`0x67`), `0x5add30` (`0x68`) and `0x5ae2b0` (`0x6b`), each through `0x5ab650`; `0x5adee0` is the handler of `whois` (`0x5adcfd`, `0x63f9e0`). `0x5adc50` has one caller, `0x401666`, and no stored address; `0x5ae2d0` has one, `0x401fc6`, and `0x5ae340` is its store of 0 to `0xc28168`. A scan of `call` and `jmp` for `0x5adc50` and of the image for its address as a dword finds that one site; the control is `0x5ab1a0`, which finds its four.
 
 ## Friend list packet
 
