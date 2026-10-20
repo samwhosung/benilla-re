@@ -8,6 +8,10 @@
 //! bit-exact for the conversion's own arithmetic and grammar, and `pow` is not under test. The
 //! inputs keep every step a normal double: at most 60 digits on either side of the point and an
 //! exponent within ±99. `SErrSetLastError` (`0x64e850`) is stubbed, since it calls `SetLastError`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sstrtofloat_whole` runs `fyl2x` at `0x73f9af` and
+//! `f2xm1` at `0x744b0a`. The emulator computes each in host `double`, so where its result reaches
+//! a compared value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

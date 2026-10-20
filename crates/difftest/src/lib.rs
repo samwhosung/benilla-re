@@ -324,8 +324,10 @@ impl X87Value {
 
 /// Whether the operands of `mnemonic`, about to run, lie where the emulator's answer differs
 /// from the x87's beyond rounding (`docs/METHOD.md#the-harness`): ±∞, or ±2^63 once rounded to
-/// `double`, for the trigonometric four, a NaN or an operand outside the domain for the logarithms and `f2xm1`, and
-/// an infinite or NaN dividend or a NaN or zero divisor for the remainders.
+/// `double`, for the trigonometric four, a NaN or an operand outside the domain for the logarithms
+/// and `f2xm1`, and for the remainders an infinite or NaN dividend, a NaN or zero divisor, or
+/// exponents 53 or more apart, where the emulator's partial remainder is its own and its scale can
+/// overflow to a NaN.
 fn x87_edge(uc: &Unicorn<'_, EmuState>, mnemonic: &str) -> bool {
     let Some(st0) = X87Value::read(uc, RegisterX86::ST0) else {
         return false;
@@ -340,7 +342,13 @@ fn x87_edge(uc: &Unicorn<'_, EmuState>, mnemonic: &str) -> bool {
         "f2xm1" => st0.is_nan() || st0.value().abs() > 1.0,
         "fprem" | "fprem1" => {
             let st1 = X87Value::read(uc, RegisterX86::ST1);
-            st0.is_infinite() || st0.is_nan() || st1.is_some_and(|d| d.is_nan() || d.is_zero())
+            st0.is_infinite()
+                || st0.is_nan()
+                || st1.is_some_and(|d| {
+                    d.is_nan()
+                        || d.is_zero()
+                        || i32::from(st0.exponent) - i32::from(d.exponent) >= 53
+                })
         }
         _ => false,
     }

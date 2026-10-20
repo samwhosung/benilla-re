@@ -193,9 +193,12 @@ convert back, so a result carries 53 significant bits where the x87 rounds at 64
 remainders are computed in `double`, not exactly. Their edges differ too: `fsin`, `fcos`,
 `fsincos` and `fptan` reduce an operand that rounds to ±2^63 as a `double`, which the x87 reports
 out of range, and
-give ±∞ back unchanged with C2 set where the x87 returns the indefinite; `fyl2x` and `fyl2xp1`
-of an operand outside their domain, or of a NaN, set C2 and pop nothing; `fprem` and `fprem1` of
-an infinite or NaN operand, or with a zero divisor, return the host's positive NaN. Beyond these,
+give ±∞ back unchanged with C2 set where the x87 returns the indefinite. `fyl2x` of 0 or less
+and `fyl2xp1` of −1 or less, or of a NaN, set C2 and pop nothing, and `fyl2xp1` outside
+`|x| < 1 − √2/2`, where the x87's result is undefined, gives the host's logarithm. `fprem` and
+`fprem1` return the host's positive NaN for an infinite or NaN operand, a zero divisor, or
+exponents so far apart that their scale `2^(gap − N)` overflows a double, as `fmod(5, 5e-320)`
+does, and with exponents 53 or more apart their partial remainder is not the x87's. Beyond these,
 a signalling NaN loaded from memory or stored to it stays signalling where the x87 quiets it, and
 a read of an empty register returns what the register last held: there is no stack fault and no
 indefinite. A test whose compared values pass through one of these shows the code around the
