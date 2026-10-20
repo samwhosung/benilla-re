@@ -12,6 +12,7 @@
 mod fpkit;
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
+use benilla_re_screencoord::set_scale;
 use benilla_re_ui::color::{normalize_channel, pack_color, scaled_byte, unpack_color};
 use benilla_re_ui::fontstring::{set_scaled_changed, set_scaled_changed_spilled};
 use benilla_re_ui::ui_scale::{get_point, logical_to_device, point_to_logical, set_point};
@@ -752,4 +753,78 @@ fn color_byte_79f420() {
         assert_eq!(bin, scaled_byte(lua), "79f420 lua={lua}");
     }
     eprintln!("color_byte_79f420: 5012 bit-exact");
+}
+
+/// Whether two pushed values agree: the same bits, or both NaN (the x87 and the host may give a NaN
+/// a different sign).
+fn same_f64(a: f64, b: f64) -> bool {
+    a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan())
+}
+
+/// `0x79fad0` whole, the shared `GetShadowOffset`, at the cells `0x41ad10` writes for 4:3 and 16:9
+/// (the exe's own code sets them). Probes: the `<Shadow>` default `(0x3a83126f, 0xba83126f)`, which
+/// must answer the values the finding publishes; an `<Offset>` of `(1, -1)` as `0x6f1eb0` stores it;
+/// `±0`, the float extremes, the smallest subnormal, `±∞` and NaN; then random values.
+#[test]
+fn shadow_offset_default_79fad0() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    emu.stub(0x6f3810, 0, 2); // lua_pushnumber: the f64 is its two stack dwords
+    let font = emu.alloc(0x100);
+    let default = (f32::from_bits(0x3a83_126f), f32::from_bits(0xba83_126f));
+    let mut count = 0;
+    for (aspect, published) in [
+        ((4.0f64 / 3.0) as f32, 1.280_000_041_723_250_7f64),
+        ((16.0f64 / 9.0) as f32, 1.566_511_890_386_744f64),
+    ] {
+        emu.call(0x41ad10, 0, 0, &[aspect.to_bits()]);
+        let st = set_scale(aspect);
+        assert_eq!(emu.read_u32(0x832a44), st.g44.to_bits(), "K1 at {aspect}");
+        assert_eq!(emu.read_u32(0x832a4c), st.s075.to_bits(), "A at {aspect}");
+        let mut run = |emu: &mut Emu, v0: f32, v1: f32| -> (f64, f64) {
+            emu.write_u32(font + 0x60, v0.to_bits());
+            emu.write_u32(font + 0x64, v1.to_bits());
+            emu.clear_calls();
+            let ret = emu.call(0x79fad0, 0, font as u32, &[0x1234]);
+            assert_eq!(ret, 2, "79fad0 returns two values");
+            let p = pushes(emu);
+            assert_eq!(p.len(), 2, "79fad0: expected 2 pushes, got {}", p.len());
+            count += 1;
+            (p[0], p[1])
+        };
+        let (x, y) = run(&mut emu, default.0, default.1);
+        assert_eq!(
+            x.to_bits(),
+            published.to_bits(),
+            "default x at {aspect}: {x}"
+        );
+        assert_eq!(
+            y.to_bits(),
+            (-published).to_bits(),
+            "default y at {aspect}: {y}"
+        );
+        let offset = (st.to_layout(1.0), st.to_layout(-1.0));
+        let mut probes = vec![
+            default,
+            offset,
+            (0.0, -0.0),
+            (f32::MAX, f32::MIN),
+            (f32::MIN_POSITIVE, f32::from_bits(1)),
+            (f32::INFINITY, f32::NEG_INFINITY),
+            (f32::NAN, -f32::NAN),
+        ];
+        let mut s = 0x79fa_d0a5u32 ^ aspect.to_bits();
+        for _ in 0..2000 {
+            probes.push((rng(&mut s, -2.0, 2.0), rng(&mut s, -0.01, 0.01)));
+        }
+        for (v0, v1) in probes {
+            let (x, y) = run(&mut emu, v0, v1);
+            let (mx, my) = (st.to_script(v0), st.to_script(v1));
+            assert!(same_f64(x, mx), "79fad0 x v={v0} at {aspect}: {x} vs {mx}");
+            assert!(same_f64(y, my), "79fad0 y v={v1} at {aspect}: {y} vs {my}");
+        }
+    }
+    eprintln!("shadow_offset_default_79fad0: {count} bit-exact");
 }

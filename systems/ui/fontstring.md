@@ -134,6 +134,32 @@ and offset to `0x44d3b0` (`0x772231`).
 
 Bit-exact coverage: `ui::textglue_scale_mul` covers `0x7721e0` to `0x772223` of `0x772180`.
 
+## Shadow default and units
+
+A `<Shadow>` element, in a `FontString` or a `Font`, presets the colour `0xff000000`, opaque black, and the
+offset (0.001, −0.001) before it reads its children; a `FontString` then sets its shadow bit whatever the
+offset, zero included. `<Color>` replaces the colour. `<Offset>` replaces the offset through `0x6f1eb0`, which divides `x` and `y` by
+`1024·A` and multiplies by `K1`. The default skips that conversion: it is 0.001 layout units, `0.768·√(a²+1)`
+FrameXML units at aspect a, 1.28 at 4:3. The draw multiplies the stored offset by the string's scale `+0x7c`,
+rounds each part to a float, and divides x by `K1` and y by `K2`. `GetShadowOffset` answers `float(1024·A·v) /
+K1` for each part: ±1.2800000417232507 for the default at 4:3, ±1.566511890386744 at 16:9.
+
+Addresses: `0x770f40`, `0x7713e4`, `0x7713f2`, `0x7713f9`, `0x77142d`, `0x771449`, `0x783c30`, `0x78405f`, `0x78406d`, `0x7840e3`, `0x7840fa`, `0x6f1eb0`, `0x6f1ee3`, `0x6f1ef7`, `0x6f1efd`, `0x6f1f36`, `0x7722a0`, `0x7722e8`, `0x7726af`, `0x7721e0`, `0x44d3b0`, `0x44d3de`, `0x44d3ed`, `0x41ade0`, `0x5c27a0`, `0x79df60`, `0x79fad0`, `0x79fae8`, `0x79faf5`
+Confidence: verified
+Proof: one
+Test: `ui::get_scaled_pair_79fad0`, `ui::shadow_offset_default_79fad0`, `ui::textglue_scale_mul`
+
+`CSimpleFontString::LoadXML` stores `0xff000000`, `0x3a83126f` and `0xba83126f` into its locals (`0x7713e4` to
+`0x7713f2`) before it looks up `Color` (`0x7713f9`) and `Offset`, which `0x6f1eb0` reads (`0x77142d`), and then calls
+`0x7722a0` (`0x771449`). `CFontObject::LoadXML` presets the same (`0x78405f` to `0x78406d`) and stores the colour and
+offset at `+0x5c` to `+0x64` with the flags 0x808 (`0x7840e3` to `0x7840fa`). `0x6f1eb0` reads `x` with `SStrToFloat`
+(`0x6f1ee3`), divides it by `A·1024` with `fdivr` (`0x6f1ef7`), stores a float and calls `0x41ae60` (`0x6f1efd`);
+`y` takes `0x41ae60` too (`0x6f1f36`). `0x7722a0` sets bit 0x100 of `+0x120` (`0x7722e8`) and stores `+0x104` to
+`+0x10c`. It, `0x772180` (`0x7721e0`) and `0x7724a0` (`0x7726af`) multiply by `+0x7c`, store floats and call
+`0x44d3b0`, which divides through `0x41ade0` (`0x44d3de`) and hands the result to `0x5c27a0` (`0x44d3ed`).
+`0x79df60` and `0x79fad0` store `1024·A·v` as a float and call `0x41ae40` (`0x79fae8` to `0x79faf5`). The test runs
+`0x79fad0` whole at the cells `0x41ad10` writes for 4:3 and 16:9.
+
 ## Following a font
 
 A string, an edit box, a message frame or a `Font` follows one `Font` object, which keeps a list

@@ -3601,7 +3601,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44d340	18	TextBlockGetFontPtr	idb	unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x44d360	18			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x44d380	38			unassigned	unreached		Runs its object file code that calls GxuFontGetOneToOneHeight, ScaleScreenDelta; not read here	inferred	none		
-0x44d3b0	73			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ade0, 0x5c27a0; not read here	inferred	none		
+0x44d3b0	73	TextBlockSetShadow		unassigned	orchestration	void __fastcall (void *block, const float *offset, uint32_t color)	Sets a text block's shadow colour and its offset divided by the screen scales; error 0x57 for no block	verified	one	ui/fontstring#shadow-default-and-units	
 0x44d400	20			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x44d420	401	TextBlockCreate		unassigned		void * __fastcall (void *font, const char *text, const void *colour, const float *position, float size, float width, float height, uint32_t word, float extra, float spacing)	Creates an HTEXTBLOCK handle on an engine string, unscaling its geometry and splitting its word into flags	verified	one	ui/fonttext#text-block-creation	
 0x44d5c0	54			unassigned			Runs its object file code that calls GxuFontDestroyString, SMemFree; not read here	inferred	none		
@@ -34778,7 +34778,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79f730	466	FontMethods::SetShadowColor		ui	primitive		Sets the shadow colour of a font object from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
 0x79f910	175	FontMethods::GetShadowColor		ui	primitive		Returns the red, green, blue and alpha of the shadow colour as unrounded doubles	verified	one	ui/fontmethods#reading-colours	
 0x79f9c0	261	FontMethods::SetShadowOffset		ui	primitive		Stores the shadow offset converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
-0x79fad0	106	FontMethods::GetShadowOffset		ui	primitive		Returns the shadow offset converted from layout units to Lua units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79fad0	106	FontMethods::GetShadowOffset		ui	primitive		Returns the shadow offset converted from layout units to Lua units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	ui::get_scaled_pair_79fad0, ui::shadow_offset_default_79fad0
 0x79fb40	157	FontMethods::SetSpacing		ui	primitive		Stores the line spacing converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
 0x79fbe0	58	FontMethods::GetSpacing		ui	primitive		Returns the line spacing converted from layout units to Lua units	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x79fc20	136			ui	primitive		Runs its object file code that calls lua_isstring, lua_tostring, 0x6f1990 and 1 more; not read here	inferred	none		
