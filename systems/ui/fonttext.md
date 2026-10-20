@@ -274,7 +274,7 @@ Test: none
 the source's `+0x6c` into its own, merges the source's block into its own with `FontBlockMerge`,
 ANDs its block word with that `+0x6c`, copies the source's follow mask `+0x2c`, follows the font the
 source follows (`+0x28`), or none when that chain reaches itself, moving between the two fonts'
-follower lists, and runs slot 5, `PushChanges`. `+0x6c` is 0 in every font, so the copy keeps the
+follower lists, and runs slot 5, `PushChanges`. `+0x6c` is 0 in every font (Writers of Font +0x6c), so the copy keeps the
 merged values under a block word of 0: `PushChanges` sends nothing, and a follower that links to the
 copy later takes nothing either, until a setter or a push from its new font sets a group again.
 
@@ -286,9 +286,33 @@ Test: none
 `0x7841e7` stores the source's `+0x6c` (`0x7841d8`), and `0x7841f4` ANDs the word after `0x770ad0`
 (`0x7841ea`); `0x7841fb` stores `+0x2c`. The chain walk from the source's `+0x28` (`0x78420b`) clears
 the new font when it reaches `this`; slot 5 is `call [eax+0x14]` (`0x7842d0`), `0x784180` at
-`0x81cb3c`, which returns at once for a block word of 0 (`0x78418c`). The census of `+0x6c` is every
-store to `[reg+0x6c]` in the listing, 110 of them sorted by the function holding each, and to `+0x3a8`,
-`+0x424` and `+0x4a0`, a Button's three embedded fonts (`+0x33c`, `+0x3b8`, `+0x434`) plus `0x6c`, which
-only other frames' code stores: a font's are the constructor's 0 (`0x783aca`) and `0x7841e7`. Neither merge stores past the block,
-and the follower slot `0x77e4b0` merges under `+0x2c`. `0x770c60` ORs only the changed bits 0x1f
+`0x81cb3c`, which returns at once for a block word of 0 (`0x78418c`). Neither merge stores past the
+block, and the follower slot `0x77e4b0` merges under `+0x2c`. `0x770c60` ORs only the changed bits 0x1f
 into the font's word before its follower reads it (`0x770d0c`).
+
+## Writers of Font +0x6c
+
+The word `+0x6c` of a `Font` is 0 from construction (`0x783aca`), and the one later store to it is
+`SetFontObject` copying another font's (`0x7841e7`), so it is 0 in every font. A font exists only through the
+constructor `0x783a40`, the one place that stores its vtable `0x81cb28` outside the destructor. The census is the
+destination operand `[reg+0x6c]`, with or without a scaled index, of `mov`, `fst`, `fstp` and `movq` over the whole
+listing: 112 stores in 89 functions; and the same at `+0x3a8`, `+0x424` and `+0x4a0`, where a Button's three
+embedded fonts (`+0x33c`, `+0x3b8`, `+0x434`) keep it: 18 stores in 15 functions. Within the `ui` rows `lea` and
+`rep movs` add no writer.
+
+Addresses: `0x783a40`, `0x783aca`, `0x783acd`, `0x783b27`, `0x7841e7`, `0x7786e6`, `0x757b04`, `0x757f5c`, `0x72dd78`, `0x72df59`, `0x4eb9d7`, `0x7676c2`, `0x788079`, `0x767733`, `0x76d6a1`, `0x7786a0`, `0x5adf60`, `0x6d30e0`, `0x81cb28`
+Confidence: verified
+Proof: one
+Test: none
+
+The 112 are 95 `mov`, 13 `fstp`, 2 `fst` and 2 `movq`; six are `[esp+0x6c]` locals, the `movq` pair (`0x757b04`,
+`0x757f5c`) among them. The constructor's and `SetFontObject`'s stores are in the count, its control. No arithmetic or
+logic instruction has such a destination. Seven holders are `ui` rows: the two font writers, `CLayoutFrame`'s constructor
+(`0x7676c2`), `MinimapBuildBlipQuad` (`0x4eb9d7`), the scroll frame's array pointer (`0x788079`) and two LCD objects
+(`0x72dd78`, `0x72df59`). The 82 others are movement, model, lighting, record, sound, network, terrain, text and C-runtime
+code (one in a `__finally` block with no row); `OnWhoList` and `OverblendAreaLight` call `ui` code, none a font function.
+The 18 at `+0x3a8`, `+0x424` and `+0x4a0` are in other classes' constructors and in image, storm and cache code, none a
+Button or built on its constructor (`0x7786a0`). The `ui` rows' `lea` of the four offsets is two, `CLayoutFrame`'s own list
+(`0x767733`) and a model's field (`0x76d6a1`); their 76 `rep movs` (58 `DWORD`, 18 `BYTE`) copy into globals, locals,
+array and text buffers and the fields of the world frame, the top frame, models and the LCD, none a font. `0x783a40` has 8
+callers: the Button's three (`0x7786e6` to `0x7786fc`) and five on heap blocks.
