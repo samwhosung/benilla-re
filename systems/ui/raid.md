@@ -2,10 +2,10 @@
 
 `RaidInfo.cpp` keeps the raid roster, answers the ready check opcode and the raid target opcode, and registers 16 Lua
 functions (`tables/bindings.tsv`). The roster is rebuilt by the group list message (`objectlayer/party#the-group-list`); the leader
-cell and the party side are `party`. This doc covers the roster record, the three query functions, the ready check
+cell and the party side are `party`. This doc covers the roster record and its rebuild, the three query functions, the ready check
 and the raid targets.
 
-Roots: `0x4ba0b0`, `0x4ba220`, `0x4ba360`, `0x4bb1d0`, `0x4bb310`, `0x4bbec0`
+Roots: `0x4ba0b0`, `0x4ba140`, `0x4ba220`, `0x4ba360`, `0x4ba5f0`, `0x4bb1d0`, `0x4bb310`, `0x4bbec0`
 
 ## The roster record
 
@@ -24,6 +24,101 @@ Test: none
 `SMemAlloc(0x160, ...)`: `cmp esi,0xa0` at 4 bytes a step gives 40. `0x4ba5f0` copies the 0x148-byte block into `+0x10` (`rep movs`, 0x52 dwords) and
 rewrites bit 0 of `+0x18` after it. The dead bit and the level and zone offsets are those of `objectlayer/party#the-party-member-record`
 shifted by 0x10. A member present before a list keeps its `+0x158` word; a new member starts at 0.
+
+## Rebuilding the roster
+
+`0x4ba5f0(guids, flags, online, count)` replaces the roster with the group list's raid members, in list order. A GUID already on the
+roster keeps its 0x148-byte block and ready check word; a new one gets a zeroed block whose u16 health, maximum, power and maximum power
+are 1, and the word 0. Each row takes the GUID, subgroup, rank and online bit; rows past the new count keep what they held
+(`#rows-past-the-count`). In order: tutorial 45 for a list with members; the notices (`#roster-change-notices`); `ERR_RAID_YOU_JOINED`
+when the roster was empty; the rows and their name requests (`#pending-roster-names`); the token flags (`#unit-tokens-after-a-rebuild`);
+`RAID_ROSTER_UPDATE` when no name is pending; and, when the roster was empty, opcode 0x321 with the byte 0xff.
+
+Addresses: `0x4ba5f0`, `0x4ba60d`, `0x4ba612`, `0x4ba6c7`, `0x4ba6e4`, `0x4ba70f`, `0x4ba716`, `0x4ba721`, `0x4ba838`, `0x4ba83a`, `0x4ba870`, `0x4ba89e`, `0x4ba8a4`, `0x4ba8d3`, `0x4ba8ea`, `0x4ba90c`, `0x4ba920`, `0x4ba929`, `0x4ba945`, `0x4ba960`, `0x4ba978`, `0x4ba993`, `0x4baa91`, `0x4babef`, `0x4bac01`, `0x4bac33`, `0x5e6eb4`, `0xb713e0`, `0xbc75f8`
+Confidence: verified
+Proof: one
+Test: `ui::raid_rebuild_difftest`
+
+It is `__fastcall(ecx = guids, edx = flags, online, count)` with `ret 8`, over the 8-byte GUIDs, flag dwords and online bytes of
+`objectlayer/party#the-group-list`. `0x4ba60d` is `FireTutorial(0x2d)` under `test ebx,ebx; jbe`, and `0x4ba612` keeps `count == 0` of the
+old count `0xb713e0` at `ebp−0x28`. The first loop matches each new GUID against the old rows below the old count (`0x4ba6c7`): a match
+copies the old block into a stack buffer (`0x4ba6e4`), a miss zeroes one (`0x4ba70f`) and stores 1 in the words at block `+0x0a` to `+0x10`
+(`0x4ba716` to `0x4ba721`). `0x4ba838` passes message 404 (`0x4ba83a`) only for an old count of 0. The old GUIDs and ready words are saved
+(`0x4ba870`), `0x4ba89e` zeroes the pending count and `0x4ba8a4` stores the new count. Per row: GUID `0x4ba8d3`, subgroup `0x4ba8ea`, rank
+`0x4ba90c` to `0x4ba929`, block `0x4ba945`, online `0x4ba960`, and the word found by GUID in the saved list (`0x4ba978`, `0x4baa91`) or 0
+(`0x4ba993`). The event is `0x4babef`; the request is built at `0x4bac01` and sent at `0x4bac33` under the flag at `ebp−0x28`, the full
+target list request of `#setting-a-raid-target`. The test runs `0x4ba5f0` whole.
+
+## Unit tokens after a rebuild
+
+After the rows, each member gone and then each new member has its unit token flags changed (`objectlayer/units#reactions-tokens-and-groups`).
+A member gone whose player object is held loses flag 0x100; its pet, `UNIT_FIELD_CHARM` or else `UNIT_FIELD_SUMMON`, first loses 0x200 when
+its object is held, or gets `ReleaseTarget(1, pet)` when the GUID is nonzero and the object missing. A member gone with no object gets
+`ReleaseTarget(1, guid)`. A new member whose object is held gains 0x100, then its pet 0x200 when the pet's object is held; one with no object
+is asked for with opcode 0x27f and its GUID (`party#asking-for-stats`). Then the leader's running ready check ends when a member left and
+no row below the count is unanswered and online (`#ending-a-ready-check`).
+
+Addresses: `0x4baa00`, `0x4baa18`, `0x4baa2d`, `0x4baa3c`, `0x4baa64`, `0x4baa74`, `0x4baa80`, `0x4baab8`, `0x4baac4`, `0x4baad9`, `0x4bab18`, `0x4bab2a`, `0x4bab55`, `0x4bab65`, `0x4bab6e`, `0x4babac`, `0x4bac5a`, `0x4bac62`, `0x4bac6d`, `0x4bac90`, `0x4bacb4`, `0x4bacb9`, `0x468460`, `0x60c4f0`, `0x60c4a0`, `0x493910`, `0x5ab630`, `0xb713f4`
+Confidence: verified
+Proof: one
+Test: `ui::raid_rebuild_difftest`
+
+The first two loops list the new members (`0x4ba75b`) and the members gone (`0x4ba805`). For one gone, `0x4baa18` looks the GUID up with
+mask 0x10 and the pet is read from the descriptor `+0x110`: the CHARM pair, or the SUMMON pair at `+8` when CHARM is 0 (`0x4baa2d`).
+`0x4baa3c` skips a pet GUID of 0 and `0x4baa64` looks the pet up with mask 8. `0x4baa74` and `0x4baa80` are
+`RemoveUnitTokenFlags(0x200)` on the pet and `(0x100)` on the player; `0x4baab8` releases a missing pet before `0x4baac4`, and `0x4baad9`
+releases a missing player. For one new, `0x4bab18` looks it up, `0x4bab2a` adds 0x100 before the pet is read, `0x4bab55` looks the pet up
+with no zero test and `0x4bab65` adds 0x200; with no object `0x4bab6e` puts opcode 0x27f and the GUID and `0x4babac` sends them. The
+ready check end tests the deadline `0xb713f4` (`0x4bac5a`), the count of members gone at `ebp−8` (`0x4bac62`), the active player against
+the leader cell (`0x4bac6d`) and the rows (`0x4bac90`); with none open it stores `OsGetAsyncTimeMs() − 1` (`0x4bacb4`) and runs
+`0x4bb310` (`0x4bacb9`). The test runs these inside `0x4ba5f0` with the callees stubbed.
+
+## Pending roster names
+
+The rebuild asks the name cache for each row with a nonzero GUID, with `0x4ba1b0` as the callback, and counts the misses in `0xb713f0`.
+With none it signals `RAID_ROSTER_UPDATE` itself; otherwise each answer runs `0x4bad90`, which lowers the count and at 0, or when it
+already was 0, signals `RAID_ROSTER_UPDATE` and then `PARTY_MEMBERS_CHANGED`. A rebuild while names are pending first cancels that
+callback on every old row's GUID and restarts the count at 0. On entering the world `0x4ba140` gives the first row below the count with
+GUID 0, the own row the group list appends while `ClntObjMgrGetActivePlayer` returns 0, the active player's GUID and asks for its name
+the same way; a cached name signals `RAID_ROSTER_UPDATE` alone.
+
+Addresses: `0x4ba9ab`, `0x4ba9c7`, `0x4ba9d0`, `0x4ba622`, `0x4ba631`, `0x4ba64b`, `0x4babdf`, `0x4ba1b0`, `0x4bad90`, `0x4bad97`, `0x4bad9f`, `0x4bada6`, `0x4badb0`, `0x4ba140`, `0x4ba165`, `0x4ba193`, `0x4ba1a2`, `0x4ba1a7`, `0x490a0f`, `0x55f870`, `0x55f080`, `0x5e6e73`, `0xb713f0`
+Confidence: verified
+Proof: one
+Test: `ui::raid_pending_names_difftest`, `ui::raid_rebuild_difftest`
+
+`0x4ba9ab` skips GUID 0; `0x4ba9c7` is `GetRecord(guid, row, 0x4ba1b0, 0, 0)` and a null return raises the count (`0x4ba9d0`). `0x4ba622`
+tests the count, and `0x4ba631` to `0x4ba64b` call `0x55f870(guid, 0x4ba1b0, 0)` for each old row. `0x55f870` compares each callback
+waiting on the GUID's request with the function and data (`0x55f934`, `0x55f93f`) and frees a match with `SMemFree` (`0x55f97f`); for a
+record already loaded it prints `DBCache::CancelCallback ignored for id`. `0x4babdf` signals only for a count of 0. `0x4ba1b0` is `call
+0x4bad90; ret 8`, so it ignores the answer's GUID and found byte; its address is pushed at `0x4ba187`, `0x4ba640` and `0x4ba9bb`, and no
+instruction calls it. In `0x4bad90`, `0x4bad97` goes to the signal for a count of 0 and `0x4bad9f` returns while the decrement leaves it
+nonzero; `0x4bada6` signals event 499 and `0x4badb0` tail-jumps with 218. `0x4ba140` has one caller, `EnterWorldUI` (`0x490a0f`);
+`0x4ba165` reads the GUID, `0x4ba193` asks, `0x4ba1a2` tail-jumps to the signal and `0x4ba1a7` raises the count. The group list's own row
+is `0x5e6e73`. The tests run `0x4ba1b0` and `0x4ba140` whole.
+
+## Rows past the count
+
+Nothing clears a row at or past the member count. The rebuild writes the rows below its new count, the other writers stop at the count, and
+`ClearRaidRoster` (`0x4ba550`) only zeroes it. Membership (`0x4baee0`, and so `UnitInRaid`) stops at the count too, but `0x4bb0f0` returns
+the block of the first of all 40 rows holding a GUID, and `0x4bb130` the pet block of the first online row of the 40 whose pet GUID
+matches. So once the roster shrinks, or the player leaves the raid, a GUID that left still finds its old row: the record getters fall back
+to it (`party#reading-a-member-without-its-object`), and a stats message for it writes into it (`objectlayer/party#party-member-stats`).
+
+Addresses: `0x4bb0f0`, `0x4bb0fb`, `0x4bb115`, `0x4bb127`, `0x4bb130`, `0x4bb149`, `0x4bb14e`, `0x4bb169`, `0x4bb17b`, `0x4baee0`, `0x4baeee`, `0x4ba550`, `0x4ba571`, `0x4ba173`, `0x4bb24c`, `0x4bb264`, `0x4ba40e`, `0x4ba3e8`, `0x4bae1d`, `0x4bae03`, `0x49640f`, `0x49642f`, `0x5e5166`, `0x5f0bcc`, `0x4ba0a5`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4bb0f0` returns 0 for GUID 0 (`0x4bb0fb`), compares the GUIDs of rows 0 to 39 (`cmp ecx,0x28`, `0x4bb115`) with no status test, and
+returns `row + 0x10` (`0x4bb127`). `0x4bb130` skips a row with GUID 0 (`0x4bb149`) or with bit 0 of `+0x18` clear (`0x4bb14e`), stops at
+0x28 (`0x4bb169`) and returns `row + 0x90` (`0x4bb17b`). `0x4baee0` stops at `0xb713e0` (`0x4baeee`). Of the 37 functions that name the
+table or the count, those that store through a row pointer are the rebuild, `0x4ba140` (`0x4ba173`), the ready check's start (`0x4bb24c`,
+bound `0x4bb264`) and answer (`0x4ba40e`, bound `0x4ba3e8`), and `0x4badc0`, which rebuilds a found member's block through `0x5f0880`
+(`0x4bae1d`, bound `0x4bae03`); the rebuild's stores are the control. `0x4ba550` stores the count (`0x4ba571`) and the target table only.
+The scans' callers are `GPartyInfo::GetRemoteStats` (`0x49640f`) after the party record, `GetPartyPetRecord` (`0x49642f`),
+`ReadPartyMemberStats` (`0x5e5166`), which writes the block it gets, and `CGPlayer_C::ComparePartyRecord` (`0x5f0bcc`), which copies it.
+A 41st list entry (`objectlayer/party#the-group-list`) takes its row pointer from the dword after the table, which `0x4ba0a5` sets to 0x7f800000.
 
 ## Group leader and membership
 
@@ -93,7 +188,7 @@ store ignores it. The line is `AddChatLine(text, 10, ten zeros)`, type 10 being 
 
 ## Ending a ready check
 
-The check ends when the leader's client has no unanswered online member, when a roster change leaves none, or at the deadline. `0x4ba491` tests every record
+The check ends when an answer leaves the leader's client no unanswered online member, when a roster change that removes a member leaves none, or at the deadline. `0x4ba491` tests every record
 for `+0x158 == 1` and bit 0 of `+0x18`; reaching the end of the roster, or an empty roster, without one sets the deadline to `now - 1` and runs the summary `0x4bb310`
 (`0x4ba4ce`). `0x4bb310` runs for the leader once the deadline has passed (`CheckReadyCheckTime` calls it too): it clears the deadline and shows `RAID_MEMBERS_AFK` with the names of
 all records whose `+0x158` is nonzero, joined by a comma, or `READY_CHECK_NO_AFK` when there are none.
@@ -103,8 +198,9 @@ Confidence: verified
 Proof: one
 Test: none
 
-An offline member who never answered does not hold the check open but is listed as away: the summary tests only `+0x158`. The scan also runs at the end of the group list
-handler (`0x4bacb9`), so a pending member who leaves or goes offline ends the check at the next roster message. The list buffer is 0x200 bytes joined with `SStrPack`.
+An offline member who never answered does not hold the check open but is listed as away: the summary tests only `+0x158`. The scan also runs at the end of the roster rebuild
+when a member left (`0x4bacb9`, `#unit-tokens-after-a-rebuild`), so a pending member who leaves ends the check at that roster message, and one who only goes offline
+holds it until the next answer, a departure or the deadline. The list buffer is 0x200 bytes joined with `SStrPack`.
 `0x4ba4b6` leaves the scan early only when a pending online member and the answering member's record (the second flag, `[ebp-2]`, set at `0x4ba417`) have both been seen, to the plain return `0x4ba53f`.
 
 ## Setting a raid target
@@ -121,7 +217,7 @@ Test: none
 
 The tests run raid roster `0x4bafd0` first, then party `0x4e8fa0`, then the two objects (`0x468460` with mask 0x10 for the player and 8 for the target); a missing object or a player
 that cannot be cooperated with fails. `0x606ba0` compares the faction groups of the two objects. The clear path jumps over all of these to `0x4bbfea`, where a slot of 8 or more returns.
-Nothing is written locally: the table changes only when the server echoes opcode 0x321. The roster rebuild `0x4ba5f0` also sends the opcode with the byte 0xff and no GUID (`0x4bac01`, under a condition on a local flag), the full-list request.
+Nothing is written locally: the table changes only when the server echoes opcode 0x321. The roster rebuild `0x4ba5f0` also sends the opcode with the byte 0xff and no GUID (`0x4bac01`) when the roster was empty on entry (`0x4ba612`), the full-list request.
 
 ## The raid target table
 
@@ -141,12 +237,18 @@ the mode clear and the entry stores of `0x4ba220`, and the clear of `0x4ba550`; 
 
 ## Roster change notices
 
-When the group list adds or removes a raid member, the roster asks the name cache for the member's name and passes `0x4bacd0` (added) or `0x4bad30` (removed) as the completion callback. Each takes the GUID and a found byte; with the byte set and the name record found it shows `ERR_RAID_MEMBER_ADDED_S` (message 406) or `ERR_RAID_MEMBER_REMOVED_S` (407) with the record's name through `CGGameUI::DisplayError`, and otherwise shows nothing.
+When a rebuild adds a raid member to a roster that was not empty, or removes one, it asks the name cache for the member's name with
+`0x4bacd0` (added) or `0x4bad30` (removed) as the completion callback. A cached name shows the notice at once: `ERR_RAID_MEMBER_ADDED_S`
+(message 406), or `ERR_RAID_MEMBER_REMOVED_S` (407) when `ClntObjMgrGetActivePlayer` returns a GUID. Otherwise the callback shows it when
+the cache answers: each takes the GUID and a found byte, and with the byte set and the name record found it shows its message with the
+record's name through `CGGameUI::DisplayError`, else nothing. Members added to an empty roster get no notice and no request.
 
-Addresses: `0x4bacd0`, `0x4bad30`, `0x55f080`, `0x496720`, `0x4ba738`, `0x4ba7d7`
+Addresses: `0x4bacd0`, `0x4bad30`, `0x55f080`, `0x496720`, `0x4ba725`, `0x4ba738`, `0x4ba744`, `0x4ba74e`, `0x4ba7d7`, `0x4ba7e3`, `0x4ba7ee`, `0x4ba7f8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::raid_rebuild_difftest`
 
-`0x4ba738` and `0x4ba7d7` push the callbacks. Each looks the GUID up with `GetRecord` on the name cache `0xc0e228` and pushes message id 0x196 or 0x197 (`0x4bad15`, `0x4bad75`) and the record, whose first bytes are the name.
+`0x4ba725` skips the request for an old count of 0. `0x4ba738` and `0x4ba7d7` push the callbacks, and the requests are `0x4ba744` and
+`0x4ba7e3`; a record goes straight to `DisplayError` (`0x4ba74e`, `0x4ba7f8`), for a member gone only after `0x4ba7ee` finds an active
+player GUID. The test runs that path inside `0x4ba5f0`; the callbacks run in no test. Each callback looks the GUID up with `GetRecord` on the name cache `0xc0e228` and pushes message id 0x196 or 0x197 (`0x4bad15`, `0x4bad75`) and the record, whose first bytes are the name.
 

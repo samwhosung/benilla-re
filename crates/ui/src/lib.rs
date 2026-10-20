@@ -52,6 +52,7 @@ pub mod minimap_ping;
 pub mod movieframe;
 pub mod moving_sizing;
 pub mod nameplates;
+pub mod raid_roster;
 pub mod region_units;
 pub mod resize_bounds;
 pub mod screen_rect;

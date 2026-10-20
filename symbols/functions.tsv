@@ -8240,25 +8240,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ba090	5	InitInfinity4ba0a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ba0a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4ba0a0	11	InitInfinity4ba0a0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x4ba0b0	136	CGRaidInfo::InitializeGame	idb	ui	primitive		Registers the raid target and ready check handlers, clears the target table and allocates the 40 roster records	verified	one	ui/raid#the-roster-record	
-0x4ba140	111			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrGetActivePlayer, DBCache::NameCache::GetRecord; not read here	inferred	none		
-0x4ba1b0	8			ui	orchestration		Runs RaidInfo.cpp code that calls 0x4bad90; not read here	inferred	none		
+0x4ba140	111	FillOwnRaidRow		ui	primitive	void __cdecl (void)	Gives the first zero-GUID roster row below the count the active player GUID and asks for its name	verified	one	ui/raid#pending-roster-names	ui::raid_pending_names_difftest
+0x4ba1b0	8	RaidRosterNameCallback		ui	orchestration		Runs 0x4bad90 as the name cache callback of a roster name request, ignoring its arguments	verified	one	ui/raid#pending-roster-names	ui::raid_pending_names_difftest
 0x4ba1c0	1			ui	orchestration		Runs RaidInfo.cpp code not read here	inferred	none		
 0x4ba1d0	71	ShutdownRaid		ui	orchestration		Clears the handlers for opcodes 0x321 and 0x322 and frees the 40 raid roster records	verified	one	ui/gameui#start-up-services-and-events	
 0x4ba220	313	HandleRaidTargetUpdatePacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the raid target message into the icon table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
 0x4ba360	495	HandleRaidReadyCheckPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles a ready check message: the leader stores an answer, a member starts the check	verified	one	ui/raid#answering-a-ready-check	
 0x4ba550	150	ClearRaidRoster		ui	primitive		Leaves the raid roster, clears the raid target table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
-0x4ba5f0	1754	RebuildRaidRoster		ui	primitive		Rebuilds the raid roster from member GUIDs, flags and online bytes	inferred	none	objectlayer/party#the-group-list	
+0x4ba5f0	1754	RebuildRaidRoster		ui	primitive	void __fastcall (const uint64_t *guids, const uint32_t *flags, const uint8_t *online, uint32_t count)	Rebuilds the raid roster from the group list, keeping blocks and ready words by GUID, and fixes the token flags	verified	one	ui/raid#rebuilding-the-roster	ui::raid_rebuild_difftest
 0x4bacd0	91	OnRaidMemberNameAdded		ui	orchestration		Shows ERR_RAID_MEMBER_ADDED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
 0x4bad30	91	OnRaidMemberNameRemoved		ui	orchestration		Shows ERR_RAID_MEMBER_REMOVED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
-0x4bad90	38			ui	primitive		Runs RaidInfo.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
+0x4bad90	38	OnRaidRosterName		ui	primitive	void __cdecl (void)	Lowers the pending roster name count and at 0 signals RAID_ROSTER_UPDATE, then PARTY_MEMBERS_CHANGED	verified	one	ui/raid#pending-roster-names	ui::raid_pending_names_difftest
 0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
 0x4bae90	65			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
 0x4baee0	72	IsRaidMember		ui	primitive	int32_t __thiscall (void *this)	Returns 1 when a GUID is on the raid roster, 0 for a zero GUID	verified	one	ui/raid#group-leader-and-membership	
 0x4baf30	151			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4bafd0	164	CGRaidInfo::IsMemberOrPet	idb	ui	primitive		Answers 1 when a GUID is a raid member or the pet of one, 0 for a null GUID or no match	verified	one	ui/raid#setting-a-raid-target	
 0x4bb080	106	IsRaidLeaderOrAssistant		ui	primitive		Returns whether a GUID is a raid member of rank above 0 or the group leader	verified	one	ui/chatsend#group-and-channel-checks	
-0x4bb0f0	60	GetRaidMemberByGuid		ui	primitive		Returns the raid member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
-0x4bb130	82	FindRaidPetBlock		ui	primitive		Returns the pet block at +0x90 of the online raid record whose pet GUID matches, or 0	verified	one	ui/party#tables-and-the-party-functions	
+0x4bb0f0	60	GetRaidMemberByGuid		ui	orchestration	void * __thiscall (uint64_t *this)	Returns the member block of the first of all 40 raid rows holding a GUID, past the count too, or 0	verified	one	ui/raid#rows-past-the-count	
+0x4bb130	82	FindRaidPetBlock		ui	orchestration	void * __thiscall (uint64_t *this)	Returns the pet block at +0x90 of the first online raid row of all 40 whose pet GUID matches, or 0	verified	one	ui/raid#rows-past-the-count	
 0x4bb190	54	FindRaidTargetSlot		ui	primitive	int32_t __stdcall (uint64_t guid)	Returns the raid target slot a GUID holds, or 8	verified	one	ui/raid#the-raid-target-table	
 0x4bb1d0	288	StartReadyCheck		ui	primitive		Marks the members unanswered, sends opcode 0x322 and starts the 30 second ready check	verified	one	ui/raid#starting-a-ready-check	
 0x4bb2f0	28	GetReadyCheckMsLeft		ui	primitive		Returns the milliseconds left of the running ready check, 0 when none	verified	one	ui/raid#starting-a-ready-check	
@@ -10444,7 +10444,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4e7fc0	210			ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	orchestration	int32_t __thiscall (uint64_t *this)	Returns 1 when a GUID is the active player, a party member or the pet of either, 0 for a zero GUID	verified	one	ui/party#member-or-pet	
 0x4e81a0	43	GetPartyMemberGuid		ui	orchestration		Returns the GUID of party slot 0 to 3, 0 with no object manager or out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4e81d0	116	GetPartyMemberPetGuid		ui	primitive		Returns the pet GUID of a party slot from its member or its record, with no index bound	verified	one	ui/unittokens#indexed-tokens	
 0x4e8250	124	SetGroupLeader		ui	primitive	void __stdcall (uint64_t guid)	Stores the group leader GUID, finds its party slot and signals PARTY_LEADER_CHANGED	verified	one	ui/party#the-group-leader	
@@ -14484,7 +14484,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55f310	393	NameCacheStore		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, uint32_t arg3, uint32_t arg4)	Writes a name record into the names cache, sets its valid byte and runs the callbacks	verified	one	dbcache#name-cache-writers	
 0x55f4a0	580	NameCacheReadFile		dbcache	unreached		Reads the names cache from its file; nothing calls it	inferred	none	dbcache#name-cache-writers	
 0x55f6f0	369	NameCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Runs a name's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache#name-and-guild-responses	
-0x55f870	281			dbcache	primitive		Runs DBCache.cpp code that calls 0x55ec50, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
+0x55f870	281	DBCache::NameCache::CancelCallback		dbcache	primitive		Frees the callbacks waiting on a GUID's name request that match a function and data	inferred	none	ui/raid#pending-roster-names	
 0x55f990	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x55fa50	1164	NameCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Name cache from its file, or returns at once for a cache that is not saved	verified	one	dbcache#caches-that-are-not-saved	
 0x55fee0	647	NameCacheWriteFile		dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache#name-cache-node	

@@ -3038,7 +3038,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71368	uint64_t[8]	s_raidTargetGuids		ui	Holds the GUID of the unit carrying each of the eight raid target icons	verified	one	ui/raid#the-raid-target-table
 0xb713e0	uint32_t	s_raidMemberCount		ui	Holds the number of raid members, 0 outside a raid	verified	one	ui/minimap#a-click-on-the-map
 0xb713e8	uint64_t	s_raidSelectionGuid		ui	Holds the GUID of the selected raid roster member, 0 for none	verified	one	ui/groupverbs#the-raid-roster-verbs
-0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
+0xb713f0	uint32_t	s_raidPendingNames		ui	Holds the number of roster names asked for and not yet answered	verified	one	ui/raid#pending-roster-names
 0xb713f4	uint32_t	s_readyCheckDeadline		ui	Holds the clock value at which the running ready check ends, 0 when none	verified	one	ui/raid#starting-a-ready-check
 0xb71428	uint32_t	s_petBarSpellCount		ui	Holds the raw spell count of the pet bar, which ClearPetBar zeroes	verified	one	ui/petbar#pet-state
 0xb71438	uint32_t[10]	s_petBar		ui	Holds the ten pet bar slot words	verified	one	ui/petbar#pet-state

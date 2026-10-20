@@ -1,8 +1,8 @@
 # ui: the party, its leader and its members' records
 
 `PartyFrame.cpp` keeps the four other party members, the group leader cell that the raid shares, and a record of each member that
-outlives the member's object. This doc is the ui side: the tables, the leader functions, how a member's record is created and refreshed, and
-the Lua getters that fall back to the record. The group messages and the record's fields are `objectlayer/party`; the
+outlives the member's object. This doc is the ui side: the tables, the leader functions, how a member's record is created and refreshed,
+the Lua getters that fall back to the record, and the member-or-pet test. The group messages and the record's fields are `objectlayer/party`; the
 looking-for-group half of the file is `lfg`.
 
 Roots: `0x4e8250`, `0x4e82d0`, `0x4e84a0`, `0x4e85d0`, `0x4e9100`, `0x4e9130`, `0x516210`
@@ -111,3 +111,24 @@ Test: none
 
 The mana getters divide the record's words by `0x6e7130(type)` exactly as the live path does (`1` for a negative type, else the table entry). The same chain serves `UnitName`'s pet leg, `UnitBuff`, `UnitDebuff`, `SetPortraitTexture` and the tooltips.
 `UnitIsConnected` for a pet record only tests that the pet was found (`test eax,eax` before the shared `jmp 0x517dd7`), and `0x4e8860` finds a pet only while the owner's online bit is set. The predicates push the literal double 1.0 (`push 0x3ff00000; push 0`) or nil, one value.
+
+## Member or pet
+
+`0x4e80a0(&guid)` returns 1 when a nonzero GUID is the active player's, the active player's pet (`UNIT_FIELD_CHARM`, else
+`UNIT_FIELD_SUMMON`), a party slot's, or a party member's pet, else 0. The active player is matched by GUID before any object is looked
+up, and the pet only while the player's object is held. A slot holding 0 is skipped. A member whose player object is held answers by the
+object's CHARM, else SUMMON; one without answers, only while bit 0 (online) of its record's status is set, by the record's pet GUID
+`+0x80`. `IsRaidMemberOrPet` (`0x491900`), its one caller, tries it before the raid's `0x4bafd0`.
+
+Addresses: `0x4e80a0`, `0x4e80aa`, `0x4e80b7`, `0x4e80c0`, `0x4e80e1`, `0x4e80f5`, `0x4e80fc`, `0x4e8118`, `0x4e8128`, `0x4e812a`, `0x4e8144`, `0x4e815d`, `0x4e816b`, `0x4e8171`, `0x4e8188`, `0x491903`, `0xbc6f48`, `0xbc70b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4e80aa` returns 0 for GUID 0; `0x4e80b7` and `0x4e80c0` compare it with `ClntObjMgrGetActivePlayer`. `0x4e80e1` looks the active
+player up with mask 0x10, and its descriptor `+0x110` gives CHARM at `+0`, or SUMMON at `+8` when CHARM is 0 (`0x4e80f5`), compared at
+`0x4e80fc`. The loop `0x4e8118` to `0x4e8188` steps 8 bytes through the slots `0xbc6f48` up to 0x20 and 0x148 through the records
+`0xbc70b0` from their pet GUIDs at `0xbc70b0 + 0x80`; `0x4e8128` skips a zero slot and `0x4e812a` matches the slot. `0x4e8144` looks the
+member up with mask 0x10: held, its pet is compared (`0x4e815d`) and a miss goes on to the next slot; missing, `0x4e816b` tests bit 0 of
+the status `+0x08` (`[ebx−0x78]`) and `0x4e8171` compares the record's pet GUID. The census of calls and stored addresses finds one call,
+`0x491903`, with `GetRecord`'s callers as the control.

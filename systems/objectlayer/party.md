@@ -51,15 +51,16 @@ and returns for results 9 and up without a call.
 
 ## The group list
 
-0x7d reads a raid byte, the player's own flags and a count, then per member a name, a GUID, an
-online byte and a flags byte, into 40-entry stack arrays. The previous party's members and records
-are copied first. A party member whose flags match the player's own in the low 7 bits takes a
+0x7d reads a raid byte, the player's own flags and a count, then per member a name, GUID,
+online byte and flags byte, into stack arrays. The previous party's members and records
+are copied first. A member whose flags match the player's own in the low 7 bits takes a
 party slot; a new member shows `ERR_JOINED_GROUP_S` when the player already has a group. Then
 `PARTY_MEMBERS_CHANGED`, the leader, the invite-accept sound, `ERR_LEFT_GROUP_S` for those gone,
-the loot method, and for a raid the list with the player appended. The count is unbounded: above
-40 the entries run on through the frame, and a raid of 40 others appends a 41st.
+the loot method, and the raid roster: rebuilt, with the player appended to a list with members, or
+cleared without the raid flag (`ui/raid#rebuilding-the-roster`). The count is unbounded: past 40
+entries run on through the frame, and a raid of 40 others appends a 41st.
 
-Addresses: `0x5e6a40`, `0x5e6a9f`, `0x5e6ea1`, `0x5e6ea8`, `0x4e82d0`, `0x4e86f0`, `0x4ba5f0`, `0x4ba550`
+Addresses: `0x5e6a40`, `0x5e6a9f`, `0x5e6e6b`, `0x5e6e6f`, `0x5e6e9c`, `0x5e6ea1`, `0x5e6ea8`, `0x5e6eb4`, `0x5e6ebb`, `0x4e82d0`, `0x4e86f0`, `0x4ba5f0`, `0x4ba550`
 Confidence: verified
 Proof: one
 Test: none
@@ -67,9 +68,11 @@ Test: none
 The arrays are GUIDs at `ebp−0x2b0`, flags dwords at `ebp−0x170` and online bytes at `ebp−0xa0`,
 40 apart. Each kept member calls `0x4e82d0(online, old record, guid)`; the leader goes to
 `0x4e8250`; the sound is `igPlayerInviteAccept`; a gone member's units get `0x493910(1, guid)`. With
-members, a u8 method, a GUID and a u8 threshold go to `0x4e86f0`. A raid calls `0x4ba5f0(guids,
-flags, online, count + 1)`, a party `0x4ba550()`; a change between the two refreshes quest-giver
-statuses.
+members, a u8 method, a GUID and a u8 threshold go to `0x4e86f0`. With the raid flag set
+(`0x5e6e6b`) and a count above 0 (`0x5e6e6f`), `ClntObjMgrGetActivePlayer`'s GUID, the player's own
+flags byte and an online byte of 1 are appended (`0x5e6e73` to `0x5e6e9c`); then `0x4ba5f0(guids,
+flags, online, count)` runs with the count as it stands (`0x5e6eb4`). Without the flag `0x4ba550()`
+runs (`0x5e6ebb`). A change between the two refreshes quest-giver statuses.
 
 ## The party member record
 
