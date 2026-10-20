@@ -175,17 +175,28 @@ freed at `0x556fa0` to `0x556fc4`. A callback is `call [record+8]` with the key 
 A lookup takes a key, a pointer to the caller's 64-bit id, a callback, its data and a flag. A zero key returns null. A node that is valid
 returns its record, with nothing touched. Otherwise, with no callback it returns null and sends nothing. With one, a node is made if absent, the callback is added unless the flag is set and an
 equal one (same function and data) is there, and for a new node the query is sent: the cache's opcode, the key and, when the owner flag `+0x38` is set, the caller's id. A
-pending node leaves the query to the first caller.
+pending node leaves the query to the first caller. Eleven lookups share one body; the table gives their node offsets.
 
-Addresses: `0x560e30`, `0x562a40`, `0x564730`, `0x55f080`, `0x55ba30`, `0x5ab630`
+| lookup | cache | owner flag | key copy | valid byte | callback list |
+|---|---|---|---|---|---|
+| creature `0x556aa0` | `0xc0e354` | 1 | `+0x4c` | `+0x50` | `+0x5c` |
+| game object `0x558560` | `0xc0e318` | 1 | `+0x94` | `+0x98` | `+0xa4` |
+| item name `0x559fe0` | `0xc0e2dc` | 1 | `+0x1c` | `+0x20` | `+0x2c` |
+| item `0x55ba30` | `0xc0e2a0` | 1 | `+0x1ec` | `+0x1f0` | `+0x1fc` |
+| NPC text `0x55d530` | `0xc0e264` | 1 | `+0x158` | `+0x15c` | `+0x168` |
+| guild `0x560e30` | `0xc0e1ec` | 0 | `+0x310` | `+0x314` | `+0x320` |
+| quest `0x562a40` | `0xc0e1b0` | 0 | `+0x18f4` | `+0x18f8` | `+0x1904` |
+| page text `0x564730` | `0xc0e174` | 1 | `+0x41c` | `+0x420` | `+0x42c` |
+| pet name `0x566240` | `0xc0e138` | 1 | `+0x70` | `+0x74` | `+0x80` |
+| petition `0x567d60` | `0xc0e0fc` | 1 | `+0x13e0` | `+0x13e4` | `+0x13f0` |
+| item text `0x569980` | `0xc0e0c0` | 1 | `+0x1f58` | `+0x1f5c` | `+0x1f68` |
+
+Addresses: `0x558560`, `0x556aa0`, `0x559fe0`, `0x55ba30`, `0x55d530`, `0x560e30`, `0x562a40`, `0x564730`, `0x566240`, `0x567d60`, `0x569980`, `0x55f080`, `0x5ab630`, `0x558160`, `0x557d80`, `0x558572`, `0x558582`, `0x5585b8`, `0x5585cf`, `0x5585dc`, `0x5585ea`, `0x5586ca`, `0x5586e3`, `0x558708`, `0x558710`, `0x55876c`, `0x557dfa`, `0x558648`, `0x558698`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x560e30` is the guild lookup (`ret 0x14`: key, owner pointer, callback, data, flag): the zero key `0x560e3d`; the hit and valid byte `[node+0x314]` (`0x560f9a`) returning `node + 0x18`
-(`0x56103c`); the pending hit with the dedupe scan `0x560fbd` to `0x560fe3`; the miss without a callback `0x560eac`; the new node `0x560eba`; the query `0x560f18`
-to `0x560f68` (`PutUInt32` of the opcode and the key, `PutGuid` when `+0x38` is set, then `ClientServices::Send`). `0x562a40` (quests, 48 callers) and `0x564730` have the same
-form; the names cache `0x55f080` takes a 64-bit key and its record is at `node + 0x20`, valid byte `+0x170`.
+`0x558560` (`ret 0x14`: key, owner pointer, callback, data, flag) is the model. The other ten key-dword lookups run the same instructions with their own offsets and helper addresses (compared with those masked; the creature, item name and pet name lookups differ also in short displacement encodings, and the pet name one in a loop-alignment filler). The zero key returns at `0x558572`; an empty cache (mask −1) goes to the miss (`0x558582`); the chain walk calls the next-link accessor `0x558160` (`0x5585cf`) and compares the key at `node+0` (`0x5585b8`). A hit with the valid byte `[node+0x98]` set (`0x5586ca`) returns `node + 0x18` (`0x55876c`). The pending hit scans the list at `+0xa4` for the same function (`0x558708`) and data (`0x558710`) when the flag is set (`0x5586e3`). The miss without a callback returns at `0x5585dc`. The new node (`0x5585ea`) comes from the cache's vtable slot 1, `0x557d80`, which clears the valid byte (`0x557dfa`). The query is `0x558648` to `0x558698`: `PutUInt32` of `[cache+0x30]` and of the key, `PutGuid` of the owner id when `[cache+0x38]` is set, then `ClientServices::Send`. The names cache `0x55f080` takes a 64-bit key; its record is at `node + 0x20`, valid byte `+0x170`.
 
 ## Record decoders
 
