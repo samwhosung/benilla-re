@@ -78,8 +78,8 @@ Test: `ui::glue_4dc_4dc3d0_fade_step`
 
 The discount is left on the FPU stack by `0x612b80`; `fsubr` with the constant 1.0 (`0x4dc462`) leaves the factor, `fild`
 loads the price (`0x4dc47b` for a direct path, `0x4dc4ad` for the sum) and the product is stored as a float
-(`0x4dc480`) before `fistp` (`0x4dc488`). The direct test is a table read (`0x4dc44f`); without it the route flag byte
-(`0x4dc495`) decides. A slot with no direct path that was never routed carries the start fare 999999, so its fare is that figure less the
+(`0x4dc480`) before `fistp` (`0x4dc488`). The direct test is a table read (`0x4dc44f`); without it the slot's no-path
+byte `+0x0c` (`0x4dc495`, `[edi+0xbb4f1c]`) decides. A slot with no direct path that was never routed carries the start fare 999999, so its fare is that figure less the
 discount.
 
 ## Taking a node
