@@ -6,14 +6,14 @@ Roots: `0x5d1120`, `0x5d1110`, `0x5d13d0`, `0x5d13f0`
 
 ## Glyph bitmap load
 
-`0x5d1120(face, maxRows, char, maxWidth, out, flag, pad)` returns 0 for a null face, face size or `out` (error `0x57`), or when loading fails; otherwise 1. It loads and renders the glyph (`0x5d1300`): `0x7ce960` first, then `0x7cdb40` with the load flags `0x208a`, or `0x20c2` when `flag` is non-zero, then `0x7cec20` with render mode 0, or 1 when `flag` is set. It then reads the glyph slot's bitmap (`+0x4c` rows, `+0x50` width, `+0x54` pitch, `+0x58` pixels) and allocates a zeroed buffer of rows times pitch bytes under `IGxuFontGlyph.cpp` (line `0x93`), copying the pixels in; the rows are clipped to `maxRows`. A glyph with no bitmap gets a blank buffer of `maxRows` rows and `(maxRows + 3) / 4` columns.
+`0x5d1120(face, em, char, ascender, out, flag, pad)` returns 0 for a null face, face size or `out` (error `0x57`), or when loading fails; otherwise 1. It loads and renders the glyph (`0x5d1300`): `0x7ce960` first, then `0x7cdb40` with the load flags `0x208a`, or `0x20c2` when `flag` is non-zero, then `0x7cec20` with render mode 0, or 1 when `flag` is set. It then reads the glyph slot's bitmap (`+0x4c` rows, `+0x50` width, `+0x54` pitch, `+0x58` pixels) and allocates a zeroed buffer of rows times pitch bytes under `IGxuFontGlyph.cpp` (line `0x93`), copying the pixels in; the record's rows are clipped to `em`. A glyph with no bitmap gets a blank buffer of `em` rows and `(em + 3) / 4` columns.
 
 Addresses: `0x5d1120`, `0x5d1300`, `0x5d1360`, `0x7ce960`, `0x7cdb40`, `0x7cec20`
 Confidence: verified
 Proof: one
 Test: none
 
-The record fills `out`: `+0` the buffer, `+4` its size, `+8` the width, `+0xc` the rows, `+0x10` the width plus `pad`, `+0x1c` the pitch (width rounded up to 8 when `flag` is set and the glyph is blank), `+0x14` the advance in whole pixels plus 1.0 (`metrics.horiAdvance / 64`, truncated toward zero) and `+0x18` the bearing `metrics.horiBearingX * (1 / 64)`. `0x5d1360(out + 0x24, maxWidth, bitmap_top, maxRows)` computes the clipping offsets of the glyph against the line (the slot's `+0x68`), and runs only for a real bitmap.
+The record fills `out`: `+0` the buffer, `+4` its size, `+8` the width, `+0xc` the rows, `+0x10` the width plus `pad`, `+0x1c` the pitch (width rounded up to 8 when `flag` is set and the glyph is blank), `+0x14` the advance in whole pixels plus 1.0 (`metrics.horiAdvance / 64`, truncated toward zero) and `+0x18` the bearing `metrics.horiBearingX * (1 / 64)`. `em` is the font's pixel size and `ascender` its `+0x17c`. `0x5d1360(out + 0x20, out + 0x24, em, ascender, rows)` seats the glyph in its cell from the slot's bitmap top `+0x68` (`font/glyphs#placing-the-bitmap`), and runs only for a real bitmap.
 
 ## Static initializers
 

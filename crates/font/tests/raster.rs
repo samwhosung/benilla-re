@@ -506,7 +506,10 @@ fn cell_free_before_difftest() {
 
 /// `glyph_vplace` (0x5d1360): seat the glyph so `baseline = cellTop + ascender`. The ascender is the
 /// `[ebp+0x10]` stack arg (= `CGxFont+0x17c` load_param); `[[ctx+0x54]+0x68]` is the per-glyph FT
-/// `bitmap_top`, which the emulator writes into the synthesized slot at +0x68.
+/// `bitmap_top`, which the emulator writes into the synthesized slot at +0x68. Deterministic probes
+/// first: rows a step below, at and a step above the cell height (the unsigned `jbe` at `0x5d1371`),
+/// rows far above it and a negative cell, each with the bitmap top below, at and above the ascender;
+/// rows above the cell must give `gap = pad = cell − rows`. Then a fuzz.
 #[test]
 fn glyph_vplace_difftest() {
     let Some(wow) = Wow::load() else {
@@ -518,12 +521,7 @@ fn glyph_vplace_difftest() {
     let out_a = e.alloc(0x10) as u32;
     let out_b = e.alloc(0x10) as u32;
     e.write_u32(u64::from(ctx) + 0x54, slot);
-    let mut s: u32 = 0x5d13_6001;
-    for _ in 0..4000u32 {
-        let bitmap_top = pick_i32(&mut s, -40, 120); // [[ctx+0x54]+0x68], per-glyph FT bitmap_top
-        let p4 = pick_i32(&mut s, -10, 200); // requested cell height
-        let ascender = pick_i32(&mut s, -40, 120); // [ebp+0x10] stack arg = CGxFont+0x17c load_param
-        let p6 = pick_i32(&mut s, -10, 200); // glyph rows
+    let mut run = |bitmap_top: i32, p4: i32, ascender: i32, p6: i32| -> (i32, i32) {
         e.write_u32(u64::from(slot) + 0x68, bitmap_top as u32);
         e.write_u32(u64::from(out_a), 0);
         e.write_u32(u64::from(out_b), 0);
@@ -533,17 +531,36 @@ fn glyph_vplace_difftest() {
             out_a,
             &[out_b, p4 as u32, ascender as u32, p6 as u32],
         );
+        let got = (
+            e.read_u32(u64::from(out_a)) as i32,
+            e.read_u32(u64::from(out_b)) as i32,
+        );
         let (ea, eb) = glyph_vplace(bitmap_top, p4, ascender, p6);
         assert_eq!(
-            e.read_u32(u64::from(out_a)) as i32,
-            ea,
+            got.0, ea,
             "vplace.out top={bitmap_top} p4={p4} asc={ascender} p6={p6}"
         );
         assert_eq!(
-            e.read_u32(u64::from(out_b)) as i32,
-            eb,
+            got.1, eb,
             "vplace.rows top={bitmap_top} p4={p4} asc={ascender} p6={p6}"
         );
+        got
+    };
+    for (p4, p6) in [(12, 11), (12, 12), (12, 13), (12, 40), (0, 1), (-3, 5)] {
+        for (bitmap_top, ascender) in [(5, 9), (9, 9), (14, 9), (-4, 9)] {
+            let (gap, pad) = run(bitmap_top, p4, ascender, p6);
+            if (p6 as u32) > (p4 as u32) {
+                assert_eq!((gap, pad), (p4 - p6, p4 - p6), "rows above the cell");
+            }
+        }
+    }
+    let mut s: u32 = 0x5d13_6001;
+    for _ in 0..4000u32 {
+        let bitmap_top = pick_i32(&mut s, -40, 120); // [[ctx+0x54]+0x68], per-glyph FT bitmap_top
+        let p4 = pick_i32(&mut s, -10, 200); // requested cell height
+        let ascender = pick_i32(&mut s, -40, 120); // [ebp+0x10] stack arg = CGxFont+0x17c load_param
+        let p6 = pick_i32(&mut s, -10, 200); // glyph rows
+        run(bitmap_top, p4, ascender, p6);
     }
 }
 

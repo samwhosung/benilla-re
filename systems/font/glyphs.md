@@ -132,21 +132,27 @@ two passes dilate by one (mask 1 to 2; thick: mask 3 to 4). Each cell's alpha ni
 ## Placing the bitmap
 
 The rasterizer seats the bitmap vertically in its cell and converts the face's 26.6 values to
-pixels. Both functions are in the glyph file of `gx`.
+pixels. Both functions are in the glyph file of `gx`. The cell height is the font's rendered pixel
+size, its em: a glyph's record keeps at most em rows of its bitmap, from the top, so a glyph taller
+than the em loses its bottom rows.
 
-Addresses: `0x5d1360`, `0x5d1120`
+Addresses: `0x5d1360`, `0x5d1371`, `0x5d1376`, `0x5d1393`, `0x5d13a1`, `0x5d1120`, `0x5d1195`, `0x5d11a2`, `0x5d11da`, `0x5d12eb`, `0x5ca1b5`, `0x5ca1be`, `0x5cae90`, `0x5cf27f`, `0x5ce96c`, `0x5ce490`, `0x5ceaa0`
 Confidence: verified
 Proof: one
 Test: `font::glyph_vplace_difftest`, `font::rasterize_glyph_difftest`
 
-`0x5d1360(bitmapTop, cellHeight, ascender, rows)` returns the gap and the top padding. With `rows` above the cell height
-(unsigned) both are 0. Otherwise a `bitmapTop` above the ascender gives `gap = bitmapTop − ascender` and no pad; else
-`pad = ascender − bitmapTop` (at least 0), so that the baseline falls `ascender` rows below the cell top. If
-`cellHeight − rows < pad` then `gap = cellHeight − pad − rows` and `pad = cellHeight − rows`. The `ascender`
-is `[font + 0x17c]`, the glyph's own bearing is read from the face's slot. `0x5d1120` drives the
-face and fills the bitmap record: `clippedRows = min(code, rows)`; the advance metric is
-`(float)((advance + (advance >> 31 & 0x3f)) >> 6) + 1.0` and the bearing `bearing · 1/64`; a blank glyph has width `(code + 3) >> 2`.
-The face's calls are not read here.
+`0x5d1360(gap, pad, cellHeight, ascender, rows)` reads `bitmapTop` from the face's slot (`+0x68`).
+Rows above the cell height, unsigned (`0x5d1371`), zero the pad (`0x5d1376`); otherwise a `bitmapTop`
+above the ascender gives `gap = bitmapTop − ascender` and no pad, else `pad = ascender − bitmapTop`,
+at least 0 (`0x5d1393`). Then if `cellHeight − rows < pad`, signed (`0x5d13a1`), `gap = cellHeight −
+pad − rows` and `pad = cellHeight − rows`, so rows above the cell give both `cellHeight − rows`, below
+0. The `ascender` is `[font + 0x17c]`. `0x5d1120(face, em, code, ascender, out, flag, pad)` takes `em`
+from `0x5cae90`, `[font + 0x24c]` (`0x5ca1b5` to `0x5ca1be`). Its record holds `min(em, rows)` rows
+(`0x5d1195` to `0x5d11a2`), which is what reaches `0x5d1360` as `rows`, with `em` as the cell height
+(`0x5d12eb`), so `0x5d1120` never takes the over-tall branch. The advance is
+`(float)((advance + (advance >> 31 & 0x3f)) >> 6) + 1.0` and the bearing `bearing · 1/64`; a blank
+glyph has `em` rows and `(em + 3) >> 2` columns (`0x5d11da`). Each bake loops the record's rows from
+the buffer's start (`0x5cf27f`, `0x5ce96c`, `0x5ce490`, `0x5ceaa0`). The face's calls are not read here.
 
 ## Glyph vertical terms
 
