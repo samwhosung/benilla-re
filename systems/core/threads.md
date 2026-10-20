@@ -205,12 +205,15 @@ conversion reads it for fractional digits.
 Addresses: `0x64a670`, `0x64a680`, `0x73f940`, `0xc52560`, `0xc52ba0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `storm::sstrtofloat_whole`
 
 `0x64a68c` sets the destination to `0xc52560`. The exponent counts down from -1 and the loop ends
 when it passes -20 (`0x64a6c7`, `jg`). `fild` of the exponent and `fld` of the double 10.0 feed
 `0x73f940` (`0x64a694` to `0x64a6a2`); the inner loop `fild k; fmul st,st(1); fstp qword` runs 10
-times per row (`0x64a6b0` to `0x64a6c2`). The table ends at the guard `0xc52ba0`, 1600 bytes on.
+times per row (`0x64a6b0` to `0x64a6c2`). The table ends at the guard `0xc52ba0`, 1600 bytes on. The test
+runs `0x64a680` whole inside `0x64aaa0` and compares the 200 cells bit for bit with the reimplementation, whose
+powers of ten come from the exe's own `pow`; it checks the guard clear before the first call and set after it.
+It does not tell a second build from a skip.
 
 ## Empty diagnostic print
 
