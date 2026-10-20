@@ -288,6 +288,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x63c794	uint32_t[8]	s_keyJumpTable		console	Holds the jump targets of the keys 0x206 to 0x20d in the key-down handler	verified	one	console/screen#keys
 0x63c938	uint32_t[12]	s_keyRepeatJumpTable		console	Holds the jump targets of the keys 0x202 to 0x20d in the key-repeat handler	verified	one	console/screen#keys
 0x6485d8	uint32_t[5]	s_fileReadKinds		storm	Holds the five cases of SFile::Read by file kind: 0x6484c0, 0x6484fb, 0x64851c twice, 0x648568	verified	one	dbc#record-reads
+0x64ec4c	void *[13]	s_getStormOptionCases		storm	Holds the 13 case addresses of 0x64ead0's switch on the option id less one	verified	one	storm/printf#storm-options
+0x64ee8c	void *[13]	s_setStormOptionCases		storm	Holds the 13 case addresses of 0x64ec80's switch on the option id less one, 8 the failure	verified	one	storm/printf#storm-options
+0x669a80	void *[4]	s_vsnoprintfReadCases		storm	Holds the four cases that read an argument by kind in 0x6697d0's second pass	verified	one	storm/printf#ordered-conversions
+0x669a90	void *[5]	s_vsnoprintfPushCases		storm	Holds the five cases that push an argument by kind to _snprintf in 0x6697d0's third pass	verified	one	storm/printf#ordered-conversions
+0x669bb8	void *[7]	s_formatClassCases		storm	Holds the seven cases of 0x669ab0's switch on a conversion byte's class	verified	one	storm/printf#parsing-a-conversion
+0x669bd4	uint8_t[121]	s_formatClassIndex		storm	Maps the bytes 0 to 0x78 to the seven classes of 0x669ab0's switch	verified	one	storm/printf#parsing-a-conversion
 0x67b8e8	void *[4]	s_cases67b870		lighting	Holds the 4 case addresses of the switch in 0x67b870	inferred	none	
 0x680ba4	uint32_t[4]	s_cameraLiquidCases		terrain	Holds the case addresses of the liquid type switch, indexed by the type's low two bits	verified	one	terrain/camstate#camera-environment
 0x68a738	uint8_t[15]	s_liquidMeshCases		terrain	Holds the case a template of n picks, indexed by n minus 1: 0 for n = 1, 1 for 3, 7 and 15, else 2	verified	one	terrain/liquid#liquid-mesh-templates
@@ -2098,6 +2104,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x866844	char[13]	s_textHashTable		storm	Holds the string (hash table), whose type 3 hash decrypts the hash table	verified	one	storm/format#hash-and-block-tables
 0x866aa0	char[28]	s_textUU02u02u02u03u		storm	Holds the string "%u/%u %02u:%02u:%02u.%03u  "	inferred	none	
 0x866bd8	const uint32_t[256]	s_crc32Table		storm	Holds the CRC-32 table of the reflected polynomial 0xedb88320, 0x77073096 at index 1	verified	one	ui/addons#the-auth-packets-add-on-block
+0x8670e0	char[4]	s_int64LengthModifier		storm	Holds I64, the length FixUpLongLongFormatSpecifier writes over ll	verified	one	storm/printf#parsing-a-conversion
 0x867918	float[16]	s_liquidScrollDirections		terrain	Holds the eight (x, y) steps the liquid texture offsets add each frame, the compass directions	verified	one	terrain/world#world-frame
 0x867958	float	s_detailDoodadHorizon		terrain	Holds 70.0, the detail doodad distance	inferred	none	
 0x86795c	float	s_textureLodDistance		terrain	Holds the texture detail distance setting nothing reads	verified	one	terrain/world#distance-settings
@@ -4070,7 +4077,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc53d48	char[128]	s_errorLogTitle		storm	Holds the title line of the error log	verified	one	storm/errorlog#client-registration
 0xc53dc8	void *	s_errorLogHeaderCallback		storm	Holds the callback that writes the error log's header	verified	one	storm/errorlog#client-registration
 0xc53dd0	char[260]	s_lastErrorLogPath		storm	Holds the path of the last error log written, empty before one	verified	one	storm/errorlog#client-registration
-0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
+0xc53ee8	uint32_t	s_stormOption6High		storm	Holds the second dword of Storm option 6, 0 at load	verified	one	storm/printf#storm-options
+0xc53ef0	uint32_t	s_stormOption6Low		storm	Holds the first dword of Storm option 6, 0 at load	verified	one	storm/printf#storm-options
+0xc53ef4	uint32_t	s_stormOption3		storm	Holds Storm option 3, 0 at load	verified	one	storm/printf#storm-options
+0xc53ef8	uint32_t	s_stormOption1		storm	Holds Storm option 1, 0 at load	verified	one	storm/printf#storm-options
+0xc53efc	uint32_t	s_stormOption2		storm	Holds Storm option 2, a power of two, 0 at load	verified	one	storm/printf#storm-options
+0xc53f00	uint32_t	s_stormOption4		storm	Holds Storm option 4, 0 at load	verified	one	storm/printf#storm-options
+0xc53f04	uint32_t	s_stormOption5		storm	Holds Storm option 5, 0 at load	verified	one	storm/printf#storm-options
+0xc53f08	uint32_t	s_stormOption7		storm	Holds Storm option 7, 0 at load	verified	one	storm/printf#storm-options
+0xc53f0c	uint32_t	s_stormOption9		storm	Holds Storm option 9 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
+0xc53f10	uint32_t	s_formatterMode		storm	Holds Storm option 10: 1 selects the ordered formatter vsnoprintf, set at start-up, 0 at load	verified	one	storm/printf#storm-options
+0xc53f14	uint32_t	s_stormWideCalls		storm	Holds Storm option 11: 1 runs the file, folder and registry calls through UTF-16, set at start-up	verified	one	storm/printf#storm-options
+0xc53f18	uint32_t	s_stormOption12		storm	Holds Storm option 12 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
+0xc53f1c	uint32_t	s_stormOption13		storm	Holds Storm option 13 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
 0xc53f24	uint32_t[3]	s_flaggedSwitchList		storm	Holds the list of switches with a flag bit of 0x3000000: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id
 0xc53f30	uint32_t[3]	s_switchList		storm	Holds the list of the other switches: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id
 0xc53fbc	uint32_t *	s_cryptTable		storm	Holds the crypt table, 0x500 dwords built at first use	verified	one	storm/format#name-hash

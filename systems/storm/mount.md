@@ -176,7 +176,7 @@ the new value (`0x646d66`). `0x6488b0` stores the base path with a trailing back
 command-line value of `0x419c20(1)`, or the exe's folder (`0x42b2e0`: `GetModuleFileNameW` cut after its last
 backslash) when that is empty (`0x402226` to `0x402255`). `0x648920` stores `Data\` (`0x40228c`, `0x4022a7`).
 Folders are listed through `FindFirstFileW` and `FindNextFileW`, since Storm's wide option `0xc53f14` is set at
-start-up (`0x402141`), and entries are stated through `_wstat` or `_stat`.
+start-up (`0x402151`), and entries are stated through `_wstat` or `_stat`.
 
 ## Index lifetime
 

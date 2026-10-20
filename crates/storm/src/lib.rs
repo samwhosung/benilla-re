@@ -9,8 +9,9 @@
 //! The crate also holds two of Storm's routines whose output the client sends or checks: MD5
 //! ([`md5`]) and CRC-32 ([`crc32`]); the string hash of Storm's hash tables ([`str_hash_ht`]); and
 //! the loose-file index the open path asks before the archives ([`LooseIndex`]); the `.bz` loose
-//! file the index serves as kind 1 ([`BzFile`]); and the string-to-number conversions
-//! ([`str_to_float`], [`str_to_int`]).
+//! file the index serves as kind 1 ([`BzFile`]); the string-to-number conversions
+//! ([`str_to_float`], [`str_to_int`]); and the ordered printf the client formats its strings with
+//! ([`printf`]), which a Storm option selects ([`options`]).
 
 #![forbid(unsafe_code)]
 
@@ -18,6 +19,8 @@ mod bz;
 mod crc32;
 mod looseindex;
 mod md5;
+pub mod options;
+pub mod printf;
 mod strconv;
 mod strhash;
 
