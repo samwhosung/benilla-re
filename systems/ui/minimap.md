@@ -188,6 +188,29 @@ sets the file on the child at `+0x338` through slot 0x94 (`0x4ee269`), `0x76cce0
 empty name (`0x76ccf0`) and otherwise calls `0x707350`; it returns 0 when the child's `+0x318` is then 0
 (`0x4ee284`). `0x4ee2b0` logs on a 0 from either (`0x4ee2e4`, `0x4ee315`).
 
+## Draw order against the children
+
+The minimap draws its map, icons and dots in one render callback that its layer hook adds to the layer-0 batch of its
+own level L, after that batch's quads and text. Its nine model frames sit above L: the player arrow at L + 1, the five
+of `+0x320` at L + 2, and the three rim arrows of `+0x314` from L + 1 to L + 5, set by the render. Each draws its model
+as a callback of its own layer 2. A stratum's levels are submitted in ascending order, so everything the render
+callback draws lies under every arrow at these levels.
+
+Addresses: `0x807ac4`, `0x4ebe70`, `0x4ebe80`, `0x4ebe87`, `0x4ebe91`, `0x4ebea0`, `0x4ec950`, `0x4ed7b7`, `0x4ebc00`, `0x773110`, `0x76fc2e`, `0x4edee0`, `0x76ab6d`, `0x4ed335`, `0x4ed344`, `0x76d160`, `0x81c64c`, `0x7657d0`
+Confidence: verified
+Proof: one
+Test: none
+
+Slot 0x44 of the vtable `0x807a80`, at `0x807ac4`, is `0x4ebe70(batch, layer)`: it emits the frame's regions of the
+layer through `0x76b3a0` (`0x4ebe80`) and, for layer 0 alone (`0x4ebe87`), adds `0x4ebea0` with the frame as its
+context through `0x773110` (`0x4ebe91`). `0x4ebea0` jumps to `0x4ec950` for a nonzero context, and `0x4ec950` calls
+the dot draw `0x4ebc00` last (`0x4ed7b7`). The census is every call, jump and stored address of each, with
+`0x4ee170` as the control: `0x4ec950` is reached only from `0x4ebea0`, and `0x4ebea0` only from the push in
+`0x4ebe70`. A batch calls its callbacks after its quads and text (`0x76fc2e`), and `0x7657d0` submits levels
+ascending (`draworder#layer-batches`). The levels come from `SetParent` (`0x76ab6d`), the constructor's relevel
+(`0x4edee0`) and the render's `[+0x334]` plus the slot, −2 to 2 (`0x4ed335` to `0x4ed344`). The model frame's slot
+0x44, `0x81c64c`, is `0x76d160`, which adds its draw on layer 2 (`ui/model#where-the-scene-draws`).
+
 ## Two small helpers
 
 `0x4ef370` stores its four float arguments in order in a 16-byte record and returns it. `0x4ead90(out, i, a, b, c, d)` takes the pair of floats

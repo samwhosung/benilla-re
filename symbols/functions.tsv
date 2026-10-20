@@ -10615,8 +10615,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4ebc00_gradient
 0x4ebe50	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ebe60	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ebe70	45			ui	orchestration		Runs MinimapFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
-0x4ebea0	10			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
+0x4ebe70	45	CGMinimapFrame::RegisterLayer		ui	orchestration	void __thiscall (void *this, void *batch, uint32_t layer)	Registers the frame's layer and, for layer 0, the minimap render callback 0x4ebea0	verified	one	ui/minimap#draw-order-against-the-children	
+0x4ebea0	10	MinimapFrameRenderCallback		ui	orchestration	void __thiscall (void *this)	Runs the minimap render 0x4ec950 for a nonzero context	verified	one	ui/minimap#draw-order-against-the-children	
 0x4ebeb0	108	SortInteriorTiles		ui	primitive	void __thiscall (void *this)	Links the drawable interior tile records into a list by ascending distance	verified	one	minimap/draw#tile-order	
 0x4ebf20	367	DrawInteriorTile		ui	primitive	void __fastcall (void *record, const uint32_t *colour)	Draws one interior tile as a strip on its box corners with texture coordinates inset by half a texel	verified	one	minimap/draw#interior-tile-quad	
 0x4ec090	929	CompositeInteriorTiles		ui	primitive	void __thiscall (void *this)	Renders the sorted interior tiles into the bound target through an orthographic view of 1.5 radii	verified	one	minimap/draw#composite-pass	
