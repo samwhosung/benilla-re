@@ -7013,7 +7013,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494e10	6	GetCursorSpell		ui	orchestration		Returns a ui global dword the unlearn compares with the spell	verified	one	objectlayer/playercombat#unlearning-a-spell	
 0x494e20	285	SetCursorPetAction		ui	primitive	void __thiscall (void *this)	Puts a pet action on the cursor with its icon as the picture	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494f60	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
-0x494f80	107	SetCursorMacro		ui	orchestration	void __fastcall (uint32_t macroId)	Puts a macro on the cursor when it has an icon	verified	one	ui/cursor#payload-pictures-by-kind	
+0x494f80	107	SetCursorMacro		ui	orchestration	void __fastcall (uint32_t macroId)	Puts a macro on the cursor with its icon path, returning for an id with no macro	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494ff0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
 0x495010	190	SetCursorStablePet		ui	primitive	void __fastcall (int32_t stableIndex)	Puts a stabled pet on the cursor with its family icon	verified	one	ui/cursor#payload-pictures-by-kind	
 0x4950d0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
@@ -10744,7 +10744,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f0ee0	91	FindMacroByName		ui	orchestration	MACRONODE * __fastcall (const char *name)	Returns the first macro in list order whose name matches without case	verified	one	ui/macros#macro-records	
 0x4f0f40	84	FindMacroById		ui	primitive	MACRONODE * __fastcall (uint32_t id)	Returns the macro with an id from the hash table, null for none	verified	one	ui/macros#macro-records	
 0x4f0fa0	35	GetMacroPositionByName		ui	primitive	int __fastcall (const char *name)	Returns the position of the first macro of a name, -1 for none	verified	one	ui/macros#macro-order	
-0x4f0fd0	55	FormatMacroIconPath		ui	primitive	void __fastcall (uint32_t id, char *dest, uint32_t size)	Formats the icon directory and a macro's basename into a buffer	verified	one	ui/macros#macro-order	
+0x4f0fd0	55	FormatMacroIconPath		ui	primitive	void __fastcall (uint32_t id, char *dest, uint32_t size)	Formats the icon directory and a macro's basename into a buffer, empty for an id with no macro	verified	one	ui/macros#macro-order	
 0x4f1010	613	CreateMacroRecord		ui	primitive	uint32_t __fastcall (const char *name, const char *icon, const char *body, uint32_t local, uint32_t scope)	Creates a macro and returns its id, 0 when refused	verified	one	ui/macros#macro-records	
 0x4f1280	186	EditMacroRecord		ui	primitive	void __fastcall (uint32_t id, const char *name, const char *icon, const char *body, uint32_t local)	Replaces the given fields of a macro and sets its local flag	verified	one	ui/macros#editing-a-macro	
 0x4f1340	281	DeleteMacroRecord		ui	primitive	void __fastcall (uint32_t id)	Removes a macro, clears the action slots holding it and rebuilds the order	verified	one	ui/macros#macro-functions	

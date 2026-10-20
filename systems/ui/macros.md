@@ -44,7 +44,7 @@ and 18 to 35 character macros, each group sorted by name without case, unused en
 macro is its position plus 1, so the first character macro is index 19 however few account macros there are.
 Any create, edit or delete rebuilds the table and signals `UPDATE_MACROS` (393).
 
-Addresses: `0x4f0d30`, `0x4f0e10`, `0x4f0e40`, `0x4f0eb0`, `0x4f0ec0`, `0x4f0fa0`, `0x4f0fd0`, `0x84c988`, `0xbdcc60`
+Addresses: `0x4f0d30`, `0x4f0e10`, `0x4f0e40`, `0x4f0eb0`, `0x4f0ec0`, `0x4f0fa0`, `0x4f0fd0`, `0x4f0ff3`, `0x4f0ffa`, `0x4f17c1`, `0x84c988`, `0xbdcc60`
 Confidence: verified
 Proof: one
 Test: none
@@ -54,7 +54,8 @@ Test: none
 arguments. `0x4f0e40(position)` returns the record or null for 36 and up. `0x4f0eb0(position)` returns the id
 or 0. `0x4f0ec0(id)` returns the position or -1; the id 0 matches the first empty entry. `0x4f0fa0(name)` returns
 the position of the first named record or -1. `0x4f0fd0(id, dest, size)` formats `"%s%s"` of the icon directory
-string and the record's basename, or leaves an empty string.
+string and the record's basename, and leaves an empty string only for an id with no record: a record with an
+empty basename gives the directory alone (`0x4f0ff3` to `0x4f0ffa`), where `GetMacroInfo` answers nil for it.
 
 ## Macro functions
 

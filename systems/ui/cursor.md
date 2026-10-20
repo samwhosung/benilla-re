@@ -78,17 +78,21 @@ Test: none
 The spell setter `0x494d20(spell)` takes the picture from the spell: the attack icon (`0x4e6870`) when its first
 effect is 0x4e, the ranged icon (`0x4e6990`) when its attributes carry the ranged flags, else the name of its
 spell icon record (`ui/actionbar#attack-and-ranged-icons`). It does nothing for a spell with no such name. The macro
-setter `0x494f80(id)` needs the macro's icon path from `0x4f0fd0` to be nonempty (`ui/macros#macro-order`). The
+setter `0x494f80(id)` returns only for an id with no macro (`ui/macros#macro-order`). The
 stabled pet setter `0x495010(index)` reads a stable index, where a negative one means the summoned pet, and needs a
 creature family row with an icon. The pet action setter `0x494e20(word)` uses the spell's icon for the five spell
 kinds and the global named `PET_<name>_TEXTURE` for the two command kinds.
 
-Addresses: `0x494d20`, `0x494df0`, `0x494e20`, `0x494f80`, `0x495010`, `0x4e6870`, `0x4e6990`, `0x4f0fd0`, `0x4bce50`, `0x4bce60`
+Addresses: `0x494d20`, `0x494df0`, `0x494e20`, `0x494f80`, `0x494fa4`, `0x495010`, `0x4e6870`, `0x4e6990`, `0x4f0fd0`, `0x4f0f40`, `0x4f0ff3`, `0x4f0ffa`, `0x4bce50`, `0x4bce60`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x494df0` drops the cursor when it holds a spell, which the unlearn path uses. `0x494d51` tests the effect for 0x4e, `0x494d5d` and `0x494d63` the attribute bits, `0x494d79` the fallback.
+`0x494df0` drops the cursor when it holds a spell, which the unlearn path uses. `0x494f80` passes the id to
+`0x4f0fd0` and returns on an empty buffer (`0x494fa4`). The buffer is empty only when `0x4f0f40` finds no macro; for
+any macro `0x4f0fd0` fills it, a missing basename giving the icon directory alone (`0x4f0ff3` to `0x4f0ffa`), and that
+path goes on the cursor.
+`0x494d51` tests the effect for 0x4e, `0x494d5d` and `0x494d63` the attribute bits, `0x494d79` the fallback.
 `0x494e39` takes the kind from the word's top byte; `0x494e49` jumps through the table at 0x494f40, where entries 0 to 4
 go to the spell arm `0x494e50`, entry 5 to `0x494eaa` and entry 6 to `0x494ec5`, which format `PET_%s_TEXTURE`
 (`0x4bce50`, `0x4bce60` give the names) and read it as a script global.
