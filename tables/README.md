@@ -84,7 +84,7 @@ For each handler registration and each send, the entries of `../systems/` that c
 | `site` | The registration call or the send call. |
 | `function` | The handler, or the function that holds the send. |
 | `entries` | The covering entries as `<doc>#<anchor>`, `\|`-separated, the doc relative to `systems/` without `.md`; empty for `unread`. |
-| `basis` | `opcode`: the listed entries cover the function and name the opcode; `function`: they cover the function and none names the opcode; `unread`: no entry covers the function. |
+| `basis` | `opcode`: the listed entries cover the function and name the opcode, by its value or by its whole name; `function`: they cover the function and none names the opcode; `unread`: no entry covers the function. |
 
 ## spell_failed.tsv
 

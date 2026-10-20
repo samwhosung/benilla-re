@@ -10,9 +10,13 @@ the symbol table, and the two tables beside it (--tables DIR, default tables/).
 
 `entries` lists the covering entries as `<doc>#<anchor>`, `|`-separated, the doc relative to
 systems/ without `.md`. `basis` says how they were chosen: `opcode` when an entry's text names
-the message (`CMSG_...`, as in the name column) or the opcode (as `0x12e`, in any case, with or without leading zeros) and only those are listed;
+the message (`CMSG_...`, as in the name column, with no identifier character either side, so
+`SMSG_QUESTUPDATE_FAILED` does not match inside `SMSG_QUESTUPDATE_FAILEDTIMER`) or the opcode (as
+`0x12e`, in any case, with or without leading zeros) and only those are listed;
 `function` when entries cover the function but none names the opcode; `unread` when no entry
-covers it and `entries` is empty. A `function` row may be only a census listing: an entry that lists the function's address without describing what it sends. A `function` row may be only a census listing: an entry that lists the function's address without describing what it sends. A match of a small value is a lead: the text may use the same
+covers it and `entries` is empty. A `function` row may be only a census listing: an entry that
+lists the function's address without describing what it sends. A match of a small value is a lead:
+the text may use the same
 number for something else, except after a `+` or `-` (a field offset). A send whose opcode is `?` has no opcode to match, so its basis
 is `function` or `unread`. Rows are sorted by opcode (`?` last), role, then site.
 """
@@ -58,6 +62,12 @@ def names_opcode(text, opcode):
     return any(re.search(r'(?<![0-9a-z+-])%s(?![0-9a-z])' % re.escape(f), text) for f in forms)
 
 
+def names_message(text, name):
+    """Whether the entry's text names the message: the name with no identifier character on
+    either side, so a name that is another's prefix does not match the longer one."""
+    return re.search(r'(?<![0-9a-z_])%s(?![0-9a-z_])' % re.escape(name.lower()), text) is not None
+
+
 def main():
     args = parse_args(__doc__)
     fns = Functions()
@@ -80,7 +90,7 @@ def main():
     for opcode, role, site, function, name in rows:
         found = cover.get(int(function, 16), [])
         named = [e for e in found if (opcode != '?' and names_opcode(e[2], opcode))
-                 or (name and name.lower() in e[2])]
+                 or (name and names_message(e[2], name))]
         chosen, basis = (named, 'opcode') if named else (found, 'function' if found else 'unread')
         links = []
         for doc, anchor, _ in chosen:
