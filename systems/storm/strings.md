@@ -114,13 +114,13 @@ digits, the wrap, signs, other stops and a fuzz.
 
 ## Tokenizer
 
-`SStrTokenize(&cursor, out, size, delims, quoted)` (`0x64ae50`, `__stdcall`) copies the next token
-of the string `*cursor` into `out` and advances `*cursor`. It skips leading delimiters, then takes
-bytes to the first delimiter, which it consumes, or to the end of the string. A byte is stored
-while the stored count plus 1 is below `size`: a token is cut at `size − 1` bytes, the rest is
-skipped, and a NUL follows when `size` is above 0. `*quoted`, when given, is 1 if a `"` opened or
+`SStrTokenize(&cursor, out, size, delims, quoted)` (`0x64ae50`) copies the next token of the string
+`*cursor` into `out` and advances `*cursor`. It skips leading delimiters, then takes bytes to the
+first delimiter, which it consumes (a `"` aside; below), or to the end of the string. A byte is
+stored while the stored count plus 1 is below `size`: a token is cut at `size − 1` bytes, the rest
+skipped, and a NUL follows if `size` is above 0. `*quoted`, when given, is 1 if a `"` opened or
 closed a quote in the call, else 0. A null cursor, `*cursor` or delimiters, or a null `out` with a
-nonzero `size`, sets error 0x57 and writes nothing. `eax` is not a result.
+nonzero `size`, sets error 0x57 and writes nothing. `eax` is no result.
 
 Addresses: `0x64ae50`, `0x64ae5b`, `0x64ae5f`, `0x64ae77`, `0x64ae79`, `0x64ae8d`, `0x64aeb0`, `0x64aeda`, `0x64af00`, `0x64af46`, `0x64af4b`, `0x64af4e`, `0x64af66`, `0x64af6a`, `0x64af73`, `0x64af77`, `0x64af7f`, `0x64af86`, `0x64a3c0`, `0x64e850`
 Confidence: verified
@@ -145,7 +145,7 @@ A `"` is special only when it is one of the delimiters. A `"` among the leading 
 quote and ends the skip. Inside a quote every byte, delimiters included, is token text until a
 `"`, which closes the quote, is consumed and ends the token. Outside a quote a `"` after at least
 one stored byte ends the token and is left in the string. The test is the stored count, not the
-token's length, so with `size` 1 every `"` toggles the quote. An unclosed quote runs to the end of
+token's length, so with `size` 0 or 1 every `"` toggles the quote. An unclosed quote runs to the end of
 the string, and `""` gives an empty token with `*quoted` set.
 
 Addresses: `0x64ae50`, `0x64aebf`, `0x64aece`, `0x64af04`, `0x64af09`, `0x64af10`, `0x64af12`, `0x64af14`, `0x64af2a`, `0x64af30`

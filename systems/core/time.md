@@ -135,13 +135,14 @@ function at `0x702860` takes `rdtsc` (`0x702869`) less the start `0x702840` latc
 ## Processor frequency
 
 `OsGetCpuFrequency` (`0x42c060`) returns the processor's frequency in hertz as a 64-bit integer.
-Its first call runs `QueryCpuMaxMhz` (`0x42c0e0`), and `0x42c0b0` keeps only whether it succeeded.
-On success the answer is `MaxMhz` of the first processor record the power call returns, times 10⁶.
-Otherwise every call returns the largest counter rate the calibration has stored (`0x884060`),
-sleeping 500 ms while that is 0, with no limit. The query fails when `powrprof.dll` will not load,
-`CallNtPowerInformation` is missing or the call returns a nonzero status. Its output buffer is 0x60
-bytes, four 24-byte records; whether a host with more logical processors fails is the OS's answer,
-which the exe does not decide.
+The first call runs `QueryCpuMaxMhz` (`0x42c0e0`); `0x42c0b0` keeps only whether it succeeded.
+On success the answer is `MaxMhz` of the first processor record, times 10⁶. Otherwise every call
+returns the largest counter rate the calibration has stored (`0x884060`), sleeping 500 ms while that
+is 0, without limit. The query fails when `powrprof.dll` will not load, `CallNtPowerInformation` is
+missing or the call returns a nonzero status. The output buffer is four 24-byte records. Per
+Microsoft's documentation (one record per logical processor, `STATUS_BUFFER_TOO_SMALL` for a short
+buffer), a host with more than four logical processors fails it and takes the fallback; that rests
+on the documentation, not the exe.
 
 Addresses: `0x42c060`, `0x42c069`, `0x42c075`, `0x42c095`, `0x42c0a6`, `0x42c0b0`, `0x42c0be`, `0x42c0e0`, `0x42c0ef`, `0x42c0f9`, `0x42c101`, `0x42c109`, `0x42c115`, `0x42c119`, `0x42c11b`, `0x42c123`, `0x42c125`, `0x42c12a`, `0x42c130`, `0x42c135`, `0x415611`, `0x42bf42`, `0x42bf67`, `0x42bf6c`, `0x42bf7b`, `0x42bf9c`, `0x42bfa2`, `0x65aea0`, `0x884058`, `0x884060`, `0x884c70`, `0x884c90`, `0x884c94`, `0x8332c0`
 Confidence: verified
@@ -160,8 +161,9 @@ calibration thread copies `0x8332c0` to `0x884058` (`0x42bf6c`, atomically throu
 raises `0x884060` when the new rate is larger (`0x42bf7b` to `0x42bfa2`) after every non-negative
 pick (`0x42bf42`), after `0x42b8b0` (`0x42bf67`) has returned early for the multi-core gate. A
 scan finds `0x884060` written at `0x42bf9c` and `0x42bfa2` only, and `0x42c060` called once, at
-`0x6414ac`. Microsoft documents one record per processor and `STATUS_BUFFER_TOO_SMALL` for a short
-buffer; the exe does not show either.
+`0x6414ac`. The failure for more than four logical processors rests on Microsoft's documentation of
+one record per processor and `STATUS_BUFFER_TOO_SMALL`; the exe passes the 0x60 bytes and shows
+neither.
 
 ## Calendar time
 

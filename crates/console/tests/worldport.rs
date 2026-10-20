@@ -358,7 +358,7 @@ fn worldport_whole_difftest() {
         missing.set(false);
         let maps = Maps {
             largest_id: if unloaded { -1 } else { LARGEST },
-            has_row: if unloaded { &[] } else { &has_row },
+            has_row: &has_row,
         };
         let want = worldport(&text, present.then_some(&player), &maps, to_float);
         if missing.get() {
