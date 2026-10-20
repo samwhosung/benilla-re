@@ -12892,7 +12892,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523bf0	25	RestoreCursorModePicture		ui	orchestration	void __cdecl (void)	Ends the payload picture and sends the mode's image again	verified	one	ui/cursor#clearing-the-cursor	
 0x523c10	6	GetCursorMode		ui	unreached	uint32_t __cdecl (void)	Returns the shown cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523c20	20	SetCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Shows a cursor mode and sends its image when it changes	verified	one	ui/worldcursor#setting-the-mode	
-0x523c40	207	SetCustomCursor		ui	orchestration	uint32_t __fastcall (const char *name)	Loads a named 32 by 32 cursor as mode 41, returning 1 when it is shown	verified	one	ui/worldcursor#custom-cursors	
+0x523c40	207	SetCustomCursor		ui	orchestration	uint32_t __fastcall (const char *name)	Loads the 32 by 32 texture at a path, as given, as the mode 41 cursor, returning 1 when it is shown	verified	one	ui/worldcursor#custom-cursors	
 0x523d10	6	GetBaseCursorMode		ui	orchestration	uint32_t __cdecl (void)	Returns the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523d20	7	SetBaseCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Stores the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523d30	11	ShowBaseCursor		ui	orchestration	void __cdecl (void)	Shows the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	

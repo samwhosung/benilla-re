@@ -84,19 +84,18 @@ custom loader and `0x48959c` pushes nil on failure.
 
 ## Custom cursors
 
-`0x523c40(name)` loads `Interface\Cursor\<name>.blp` as the mode 41 cursor. It returns 1 at once when the shown
+`0x523c40(name)` loads the texture at the path `name`, as given, as the mode 41 cursor: `SetCursor` passes the script's string, and a game object its formatted `Interface\Cursor\<name>.blp`. It returns 1 at once when the shown
 mode is already 41 and the name equals the last one, without case. Otherwise it loads the texture, which must
 be 32 by 32, copies it to image slot 41 (`0xc0bd80`), stores mode 41 and sends it, remembers the name in `0xbe2c70`,
-and returns 1. A texture that cannot be loaded or has another size returns 0 and changes nothing. A game
-object with a cursor name uses it for the pointer. `0x523d40(name)` maps a name back to a mode: the first mode
+and returns 1. A texture that cannot be loaded or has another size returns 0 and changes nothing. `0x523d40(name)` maps a name back to a mode: the first mode
 from 1 up whose table name matches without case, or 0.
 
-Addresses: `0x523c40`, `0x523d40`, `0xbe2c70`, `0xc0bd80`
+Addresses: `0x523c40`, `0x523c54`, `0x523c86`, `0x449610`, `0x523d40`, `0xbe2c70`, `0xc0bd80`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x523c52` compares the mode with 0x29 and `0x523c66` the name. `0x523cb9` and `0x523cbd` test both sizes against 0x20.
+`0x523c54` keeps the name in `ebx`, and `0x523c86` passes it unchanged as the path of `0x449610` (format 2, loose 1; `gx/textures#texture-file-creation`); no path is formatted here. `0x523c52` compares the mode with 0x29 and `0x523c66` the name. `0x523cb9` and `0x523cbd` test both sizes against 0x20.
 `0x523cc9` stores the mode and `0x523cdb` the image slot. The only caller of `0x523d40` is the game object
 cursor-name path (`objectlayer/gameobjects#cursor`); `0x523d68` ends the scan below 0x2a.
 
