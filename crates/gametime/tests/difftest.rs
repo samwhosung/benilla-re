@@ -179,3 +179,56 @@ fn gametime_643ad0_advance_offset() {
     }
     eprintln!("gametime_643ad0_advance_offset: {total} bit-exact (fild + fadd offset)");
 }
+
+/// A NaN scale poisons the minute fraction: `0x6435a0` stores NaN in `[+0x30]` and advances no
+/// minute, scales that are valid afterwards leave it NaN, and `0x643a70` returns NaN for the NaN
+/// scale. Both functions run whole, `0x643ad0` recording its calls and the tick fixed.
+#[test]
+fn gametime_6435a0_nan_accumulator() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    emu.stub(0x643ad0, 0, 0);
+    emu.stub(0x42c010, 1000, 0);
+    let this = emu.alloc(0x80);
+    let mut total = 0u32;
+    for pending in [0u32, 5] {
+        emu.clear_calls();
+        emu.write_u32(this + 0x2c, 0x7fc0_0000);
+        emu.write_u32(this + 0x30, 0.3f32.to_bits());
+        emu.write_u32(this + 0x34, pending);
+        emu.call(0x6435a0, this as u32, 0, &[1.0f32.to_bits()]);
+        assert!(
+            emu.read_f32(this + 0x30).is_nan(),
+            "NaN scale, pending {pending}"
+        );
+        for scale in [1.0f32, 60.0, 1.0 / 60.0, 0.0] {
+            emu.write_u32(this + 0x2c, scale.to_bits());
+            emu.call(0x6435a0, this as u32, 0, &[5.0f32.to_bits()]);
+            assert!(
+                emu.read_f32(this + 0x30).is_nan(),
+                "scale {scale}, pending {pending}"
+            );
+            assert_eq!(
+                emu.read_u32(this + 0x34),
+                pending,
+                "the skip count is untouched"
+            );
+            total += 1;
+        }
+        assert!(
+            emu.calls().iter().all(|c| c.addr != 0x643ad0),
+            "no minute advances while the fraction is NaN"
+        );
+        emu.write_u32(this + 0x2c, 0x7fc0_0000);
+        emu.write_u32(this + 0x38, 0);
+        emu.write_u32(this + 0x3c, 0.0f32.to_bits());
+        assert!(
+            emu.call_f64(0x643a70, this as u32, 0, &[]).is_nan(),
+            "day phase"
+        );
+        total += 1;
+    }
+    eprintln!("gametime_6435a0_nan_accumulator: {total} checks (NaN scale and fraction)");
+}

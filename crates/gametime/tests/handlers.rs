@@ -9,8 +9,8 @@
 use benilla_re_difftest::RegisterX86::{ECX, EDX};
 use benilla_re_difftest::{Emu, StubIo, Wow};
 use benilla_re_gametime::{
-    game_speed_set, game_time_set_packet, game_time_update, Call, Outcome, Time, SCALE_MAX_BITS,
-    SCALE_MIN_BITS,
+    game_speed_set, game_time_set_packet, game_time_update, server_time, Call, Outcome, Time,
+    SCALE_MAX_BITS, SCALE_MIN_BITS,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -26,6 +26,8 @@ const BRIDGE: u64 = 0x6c5f50;
 const VT_STORE: u32 = 0x7ff9e4;
 const MALFORMED: u32 = 0x86c4d0;
 const SPEED_LINE: u32 = 0x86c4ac;
+const SERVER_TIME_LINE: u32 = 0x86c51c;
+const FORMAT_TIME: u64 = 0x642c80;
 
 struct Lcg(u32);
 impl Lcg {
@@ -85,21 +87,46 @@ impl<'a> Rig<'a> {
             });
             0
         });
-        // `0x64a7f0(buffer, size, format, old, new)`: cdecl, the two doubles on the stack.
+        // `0x642c80(time, buffer, size)`: fastcall with the size on the stack, returns the buffer.
+        let (c, p) = (calls.clone(), problems.clone());
+        let formatted = Rc::new(RefCell::new(0u32));
+        let f = formatted.clone();
+        emu.stub_fn(FORMAT_TIME, 1, move |io| {
+            if io.arg(0) != 0x80 {
+                p.borrow_mut().push("format size".into());
+            }
+            let buffer = io.reg(EDX) as u32;
+            *f.borrow_mut() = buffer;
+            let time = read_time(io, io.reg(ECX));
+            c.borrow_mut().push(Call::FormatTime { time });
+            buffer
+        });
+        // `0x64a7f0(buffer, size, format, …)`: cdecl. The speed line passes the two doubles on the
+        // stack; the server-time line passes the formatter's buffer.
         let (c, p) = (calls.clone(), problems.clone());
         let last = Rc::new(RefCell::new(0u32));
         let l = last.clone();
         emu.stub_fn(SPRINTF, 0, move |io| {
             let dbl =
                 |i: u64| f64::from_bits(u64::from(io.arg(i)) | u64::from(io.arg(i + 1)) << 32);
-            if (io.arg(1), io.arg(2)) != (0x100, SPEED_LINE) {
-                p.borrow_mut().push("printf size or format".into());
+            if io.arg(1) != 0x100 {
+                p.borrow_mut().push("printf size".into());
             }
             *l.borrow_mut() = io.arg(0);
-            c.borrow_mut().push(Call::SpeedLine {
-                old: dbl(3),
-                new: dbl(5),
-            });
+            match io.arg(2) {
+                SPEED_LINE => c.borrow_mut().push(Call::SpeedLine {
+                    old: dbl(3),
+                    new: dbl(5),
+                }),
+                SERVER_TIME_LINE => {
+                    if io.arg(3) != *formatted.borrow() {
+                        p.borrow_mut()
+                            .push("server time text is not the formatter's buffer".into());
+                    }
+                    c.borrow_mut().push(Call::TimeLine);
+                }
+                other => p.borrow_mut().push(format!("printf format {other:#x}")),
+            }
             0
         });
         // `0x63cb50(text, class)`: fastcall.
@@ -315,4 +342,35 @@ fn gametime_6c6120_game_time_set() {
         total += 1;
     }
     eprintln!("gametime_6c6120_game_time_set: {total} cases (read, decode, set, bridge)");
+}
+
+/// `0x6c6080` on packed dates: the dword decoded and formatted into a 128-byte buffer, written as
+/// `Server game time is %s` in class 0, the clock untouched; or the malformed line.
+#[test]
+fn gametime_6c6080_server_time() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut rig = Rig::new(&wow);
+    let mut g = Lcg(0x6c60_8000);
+    let mut total = 0u32;
+    for i in 0..6000u32 {
+        let packed = match i {
+            0 => 0,
+            1 => 0xffff_ffff,
+            _ => g.next(),
+        };
+        rig.emu.write_u32(CLOCK + 0x2c, SCALE_MIN_BITS);
+        let b = body(&mut g, packed);
+        let opcode = if g.below(3) == 0 {
+            g.next() & 0xffff
+        } else {
+            0x49
+        };
+        let got = rig.run(0x6c6080, opcode, &b, &mut g);
+        let want = server_time(opcode, &b, f32::from_bits(SCALE_MIN_BITS));
+        rig.check(got, &want, &format!("body {b:x?} opcode {opcode:#x}"));
+        total += 1;
+    }
+    eprintln!("gametime_6c6080_server_time: {total} cases (read, decode, format, line)");
 }

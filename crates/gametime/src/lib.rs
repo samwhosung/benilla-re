@@ -287,6 +287,10 @@ pub enum Call {
     SyncTime { time: Time, force: bool },
     /// `0x6c5f50()`.
     Bridge,
+    /// `0x642c80(time, buffer, 0x80)` on the decoded date, returning the buffer.
+    FormatTime { time: Time },
+    /// `0x64a7f0(buffer, 0x100, "Server game time is %s", text)`, the text being the formatter's buffer.
+    TimeLine,
 }
 
 impl PartialEq for Call {
@@ -317,6 +321,8 @@ impl PartialEq for Call {
                 (a, b) == (c, d)
             }
             (Call::Bridge, Call::Bridge) => true,
+            (Call::FormatTime { time: a }, Call::FormatTime { time: b }) => a == b,
+            (Call::TimeLine, Call::TimeLine) => true,
             _ => false,
         }
     }
@@ -396,6 +402,27 @@ pub fn game_time_set_packet(opcode: u32, body: &[u8], scale: f32) -> Outcome {
                 force: true,
             },
             Call::Bridge,
+        ],
+        scale,
+    }
+}
+
+/// `0x6c6080`, opcode `0x49`: a packed date, decoded, formatted and written to the console; the
+/// clock is untouched.
+pub fn server_time(opcode: u32, body: &[u8], scale: f32) -> Outcome {
+    let mut s = Store::new(body.len());
+    let packed = s.get_u32(body);
+    let Some(packed) = packed.filter(|_| s.is_read()) else {
+        return malformed(opcode, s, scale);
+    };
+    Outcome {
+        eax: 1,
+        calls: vec![
+            Call::FormatTime {
+                time: decode_time(packed),
+            },
+            Call::TimeLine,
+            Call::ConsoleWrite { class: 0 },
         ],
         scale,
     }
