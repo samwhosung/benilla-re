@@ -272,17 +272,21 @@ slot 34 kind 2, then `0x624f30(2, 0, 0, 0)`: the fall kit with no line.
 ## Honor
 
 `0x625270(guid, rank, honor)` writes the honor line: with a victim, `COMBATLOG_HONORGAIN` with its
-name and `PVP_RANK_n_s` rank title for positive honor, `COMBATLOG_DISHONORGAIN` with
+name and `PVP_RANK_n_s` rank title for positive honor, the side `s` from the victim's faction
+template, `COMBATLOG_DISHONORGAIN` with
 `PVP_RANK_CIVILIAN` otherwise, then floats `HK` or `DK`; without one, `COMBATLOG_HONORAWARD`. Each
 raises `COMBAT_TEXT_UPDATE` `HONOR_GAINED`.
 
-Addresses: `0x625270`, `0x6252de`, `0x62530c`, `0x625370`, `0x6253bb`
+Addresses: `0x625270`, `0x6252de`, `0x6252e4`, `0x62530c`, `0x625370`, `0x6253bb`, `0xc0dd34`, `0x540489`, `0x545470`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6252de` reads the victim's `ChrRaces` row by its race byte; `0x62530c`: flag 0x4 gives side 0,
-else 0x2 gives 1, otherwise none, and a race with neither writes nothing. The rank text goes through
+`0x6252de` loads the victim's unit block and `0x6252e4` its `UNIT_FIELD_FACTIONTEMPLATE` dword
+(`+0x74`), bounded by the FactionTemplate store's largest id and indexed through its id map: the
+store `0xc0dd34`, which `0x540489` passes to `FactionTemplateLoad`. `0x62530c` reads the row's
+faction group mask `+0xc`: 0x4 gives side 0, else 0x2 gives 1, and a template with neither, or with
+no row, writes nothing. The rank text goes through
 `CGUnit_C::GetGenderedText`. The line is chat type 0x51 through `0x626850`; `0x626960(0x2e, honor)`
 raises the event; `CGUnit_C::ShowHonorKill(honor, sign, title)` floats it.
 

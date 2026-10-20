@@ -3617,7 +3617,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dcf8	uint32_t[5]	s_gameObjectArtKitStore		dbc	Holds the GameObjectArtKit.dbc store	verified	one	objectlayer/gameobjecttypes#art-kits
 0xc0dd0c	uint32_t[5]	s_footstepTerrainLookupStore		dbc	Holds the FootstepTerrainLookup table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0dd20	uint32_t[5]	s_footprintTexturesStore		terrain	Holds the FootprintTextures.dbc store: rows of id and name, their count and the id bound	verified	one	terrain/footprints#texture-table
-0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id map, largest id and loaded flag	verified	one	objectlayer/unitcombat#honor
 0xc0dd48	uint32_t[2]	s_factionRecords		ui	Holds the Faction.dbc records and their count	verified	one	ui/reputation#faction-rows
 0xc0dd50	uint32_t	s_factionIdMap		dbc	Holds the Faction.dbc rows by id	verified	one	ui/tooltipitemreq#the-reputation-line
 0xc0dd54	uint32_t	s_factionMaxId		dbc	Holds the highest Faction.dbc id	verified	one	ui/tooltipitemreq#the-reputation-line
