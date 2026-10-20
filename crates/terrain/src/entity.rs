@@ -34,6 +34,79 @@ pub fn defvol_classify(plane: [f32; 4], point: [f32; 3]) -> f32 {
     (((c * pz + a * px) + b * py) + d) as f32
 }
 
+/// What `CWorld::IsPointInEntity` (`0x670a70`) reads of an entity, by the tag bits of its `+0x8`.
+#[derive(Clone, Copy, Debug)]
+pub enum EntityVolume<'a> {
+    /// Bit 0x8, a map object definition: its root's loaded byte `+0x1d4` and the `MCVP` planes
+    /// (`nx, ny, nz, d`) at `+0x15c`, which `PointInsidePlanes` (`0x6a4990`) walks.
+    MapObject {
+        loaded: bool,
+        planes: &'a [[f32; 4]],
+    },
+    /// Bit 0x40 without 0x8, a doodad definition: whether its model `+0x88` is set and loaded
+    /// (`CM2Model::IsLoaded(model, 0, 0)`), and the model file's box from `GetBoundingBox`, min
+    /// x, y, z then max.
+    Model {
+        present: bool,
+        loaded: bool,
+        bbox: [f32; 6],
+    },
+    /// Neither bit.
+    Other,
+}
+
+/// `CWorld::IsPointInEntity` (`0x670a70`) whole: whether `point` lies in the entity's volume.
+///
+/// A map object answers by its convex planes, `((ny·py + nz·pz) + nx·px) + d <= 0` for each, an
+/// unloaded root answering false. A model answers false when absent or unloaded, else by the six
+/// planes of its box: normals `+x, +y, +z, −x, −y, −z`, `d = −DotVector3(n, corner)` stored as
+/// `f32` (the last plane's `d` copied from the box), each tested as `((nx·px + nz·pz) + ny·py) + d
+/// <= 0` at 53 bits. A NaN distance passes. Any other entity answers true.
+#[must_use]
+pub fn is_point_in_entity(volume: &EntityVolume<'_>, point: [f32; 3]) -> bool {
+    let [px, py, pz] = point.map(f64::from);
+    match *volume {
+        EntityVolume::MapObject { loaded, planes } => {
+            loaded
+                && planes.iter().all(|&[nx, ny, nz, d]| {
+                    let dist = ((f64::from(ny) * py + f64::from(nz) * pz) + f64::from(nx) * px)
+                        + f64::from(d);
+                    dist <= 0.0 || dist.is_nan()
+                })
+        }
+        EntityVolume::Model {
+            present,
+            loaded,
+            bbox,
+        } => {
+            if !present || !loaded {
+                return false;
+            }
+            let [min_x, min_y, min_z, max_x, max_y, max_z] = bbox;
+            // `DotVector3` is `(a.z·b.z + a.y·b.y) + a.x·b.x`; each corner has one nonzero lane.
+            let offset = |n: [f32; 3], c: [f32; 3]| -> f32 {
+                let [ax, ay, az] = n.map(f64::from);
+                let [bx, by, bz] = c.map(f64::from);
+                defvol_neg_offset(((az * bz + ay * by) + ax * bx) as f32)
+            };
+            let planes: [[f32; 4]; 6] = [
+                [1.0, 0.0, 0.0, offset([1.0, 0.0, 0.0], [max_x, 0.0, 0.0])],
+                [0.0, 1.0, 0.0, offset([0.0, 1.0, 0.0], [0.0, max_y, 0.0])],
+                [0.0, 0.0, 1.0, offset([0.0, 0.0, 1.0], [0.0, 0.0, max_z])],
+                [-1.0, 0.0, 0.0, offset([-1.0, 0.0, 0.0], [min_x, 0.0, 0.0])],
+                [0.0, -1.0, 0.0, offset([0.0, -1.0, 0.0], [0.0, min_y, 0.0])],
+                [0.0, 0.0, -1.0, min_z],
+            ];
+            planes.iter().all(|&[nx, ny, nz, d]| {
+                let dist =
+                    ((f64::from(nx) * px + f64::from(nz) * pz) + f64::from(ny) * py) + f64::from(d);
+                dist <= 0.0 || dist.is_nan()
+            })
+        }
+        EntityVolume::Other => true,
+    }
+}
+
 /// `0x6a8ed0` at `0x6a8f00`: the entity's height less 1000, stored as `f32`.
 pub fn floordrop_down_probe(z: f32) -> f32 {
     z - FLOOR_PROBE

@@ -24578,7 +24578,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6709a0	71	CWorld::SetEntityTransform		terrain	orchestration	void __fastcall (void *entity, const NTempest::C3Vector *a, const float *b, uint32_t arg4)	Repositions an entity by its type	inferred	none		
 0x6709f0	63	CWorld::PlayEntityAnimation		terrain	orchestration	void __fastcall (void *entity, uint32_t anim, uint32_t arg3)	Plays an animation on an entity's model or groups by its type	inferred	none		
 0x670a30	60	CWorld::SetEntityCallback		terrain	orchestration	void __fastcall (void *entity, void *a, void *b, uint32_t arg4)	Sets a done callback on an entity's model or groups by its type	inferred	none		
-0x670a70	627	CWorld::IsPointInEntity		terrain	primitive	uint32_t __fastcall (void *entity, const float *point)	Tests a point against an entity's map object or its model's box planes	inferred	none		terrain::defvol_classify_difftest
+0x670a70	627	CWorld::IsPointInEntity		terrain	primitive	bool __fastcall (void *entity, const float *point)	Returns whether a point lies in a map object's convex volume or a loaded model's file box, true for other entities	verified	one	collision/world#point-inside-a-transport	terrain::point_in_entity_difftest, terrain::defvol_classify_difftest
 0x670cf0	68	CWorld::GetEntityBox		terrain	orchestration	void __fastcall (void *entity, float *out)	Copies an entity's box from its map object or model	inferred	none		
 0x670d40	14	CWorld::SetEntityFlag		terrain	orchestration	void __fastcall (void *entity, uint32_t on)	Sets or clears bit 0 of an entity's +0xd	inferred	none		
 0x670d50	79	CWorld::DestroyMapEntity		terrain	orchestration	void __thiscall (CWorld *this)	Unlinks an entity's nodes and destroys it by its type	inferred	none		

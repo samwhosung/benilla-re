@@ -116,11 +116,37 @@ Test: none
 Each looks the GUID up with `0x468460` and the mask 0x20, passing the Movement_C.cpp path and a
 line. `0x630b90 call [edx+0x18]` leaves the facing in st0 through `ret 8`. `0x630aa4` reads
 `[eax+0x110]`, then `shr eax,3; and eax,1` on its +0xc. `0x630bc4 call [edx+0x84]` passes ecx's
-point; the object's slot +0x84 calls `[handler+0x54]`, which for both transport handlers returns 1
-without a model and otherwise a model test not read here. `0x6309d1` returns 0 on a null object;
+point; the object's slot +0x84 calls `[handler+0x54]`, which is "Point inside a transport", below. `0x6309d1` returns 0 on a null object;
 `0x6309e1 call [edx+0x4c]` on the handler at +0x210. Both transport handlers' slot +0x4c unlink the
 argument's +0x08 link and link it at the handler's list (link offset at +0x14, terminator +0x18).
 That the bit tested by `0x630a80` is the game object's transport flag is inferred.
+
+## Point inside a transport
+
+Both transport handlers answer slot +0x54 with one body: 1 without a world entity at `+0x10`, else
+`CWorld::IsPointInEntity`. A map object definition (tag 0x8 of its `+0x8`) answers by its root's
+convex volume planes, `PointInsidePlanes`, and false while the root is unloaded. A doodad
+definition (tag 0x40) answers false without a model at `+0x88` or while it is unloaded, else whether the point lies in
+the model file's bounding box, faces included and a NaN inside. Any other entity answers 1. The
+point `0x6173b0` passes is the mover's position, which on a transport is in transport space; the
+planes and the box are in the file's own frame, so nothing scales or moves them.
+
+Addresses: `0x5f6540`, `0x5f55c0`, `0x80ba58`, `0x80b798`, `0x670a70`, `0x670a80`, `0x670a98`, `0x670ab7`, `0x670aca`, `0x670ae2`, `0x670b37`, `0x670c7a`, `0x670cbd`, `0x670cc8`, `0x6a4990`, `0x7103d0`, `0x713640`, `0x602630`, `0x6173d5`, `0x617170`
+Confidence: verified
+Proof: one
+Test: `terrain::point_in_entity_difftest`, `terrain::defvol_classify_difftest`
+
+Slot 21 of the type 11 vtable `0x80ba58` is `0x5f6540` and of the type 15 vtable `0x80b798`
+`0x5f55c0`; each loads `[ecx+0x10]`, returns 1 on null and else calls `0x670a70(entity, point)`.
+`0x670a80` tests 0x8 and calls `0x6a4990` on `[entity+0x118]`; `0x670a98` tests 0x40, else 1.
+`0x670ab7` needs `CM2Model::IsLoaded(model, 0, 0)`; `0x670aca` copies the header box at `+0xb4`
+(min x, y, z, then max) through `0x713640`. Six planes take the normals ±x, ±y, ±z (`0x670ae2`
+clears them) with `d = −DotVector3(n, corner)` stored as a float (`0x670b37`); the −z plane copies
+min z (`0x670c7a`). Each distance is `((nx·px + nz·pz) + ny·py) + d` at 53 bits against 0.0
+(`0x670cbd`), `test ah,0x41; je` failing only above it (`0x670cc8`). `0x6173d5` passes
+`[mover+0x10]`, and `0x617170` moves it into transport space on boarding. The test runs
+`0x670a70` whole with `IsLoaded` answered by a stub; `defvol_classify_difftest` runs `0x670ca6` to
+`0x670cba`.
 
 ## Camera notices
 
