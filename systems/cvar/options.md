@@ -56,7 +56,7 @@ Each parses with `0x64ac60` and writes the line with `0x63cb50`; the flag writes
 
 ## Float range settings
 
-Seven settings take a number in a range. A value outside it writes a line and returns 0, so the setting keeps its old value; the bounds are inclusive.
+Seven settings take a number in a range, the bounds inclusive. Out of range, `lodDist` writes a line and runs its setter at 77.0, whose 1 it returns, so the set is kept: the record holds the typed value and the setting runs at 77. The other six write a line and return 0, so the setting keeps its old value.
 The terrain callbacks are described in `terrain/world#distance-settings` and `terrain/render`.
 
 | setting | callback | accepts | stores or calls |
@@ -69,14 +69,14 @@ The terrain callbacks are described in `terrain/world#distance-settings` and `te
 | `unitDrawDist` | `0x689000` | 100 to 300 | float `0x86796c` |
 | `footstepBias` | `0x689450` | 0 to 1 | nothing |
 
-Addresses: `0x688ab0`, `0x688b10`, `0x688b70`, `0x688c90`, `0x688fb0`, `0x689000`, `0x689450`, `0x672680`, `0x672640`, `0x7adfb0`, `0x868620`, `0x868624`, `0x86796c`, `0x688ac8`, `0x688adb`, `0x688af4`, `0x688b28`, `0x688b3b`, `0x688b89`, `0x688b96`, `0x688c9f`, `0x688caf`, `0x6894a0`
+Addresses: `0x688ab0`, `0x688b10`, `0x688b70`, `0x688c90`, `0x688fb0`, `0x689000`, `0x689450`, `0x672680`, `0x672640`, `0x7adfb0`, `0x868620`, `0x868624`, `0x86796c`, `0x688ac8`, `0x688adb`, `0x688af4`, `0x688aff`, `0x688b05`, `0x6726ab`, `0x63df83`, `0x688b28`, `0x688b3b`, `0x688b89`, `0x688b96`, `0x688c9f`, `0x688caf`, `0x6894a0`
 Confidence: verified
 Proof: one
 Test: none
 
 The float settings compare in both directions: `fcomp` then `test ah,5; jnp` rejects a value below the lower bound (`0x688ac8`, `0x688b28`, `0x688c9f`), and `fcomp` then `test ah,0x41; je` rejects one above the upper
 (`0x688adb`, `0x688b3b`, `0x688caf`). `SmallCull` reads its value with `sscanf` and compares with the double 0.001 and the bound 2.0; `DistCull` writes its error line with the double `888.888916` (`0x688b89`, `0x688b96`).
-`lodDist`'s error line is followed by the value 77.0 (`0x429a0000`, `0x688af4`) and the call. `footstepBias` accepts 0 to 1 and prints `Footstep bias set to %f` (`0x6894a0`) but stores nothing. Nothing reads the globals `0x868620`, `0x868624` and `0x86796c`.
+`lodDist`'s error line is followed by the value 77.0 (`0x429a0000`, `0x688af4`) and the call to `0x672680` (`0x688aff`), whose `al` it returns (`0x688b05`); `0x672680` tests the same range, stores the value and answers 1 (`0x6726ab`), and `Set` keeps a set whose callback answers a nonzero `al` (`0x63df83`, `cvar/registry`). `footstepBias` accepts 0 to 1 and prints `Footstep bias set to %f` (`0x6894a0`) but stores nothing. Nothing reads the globals `0x868620`, `0x868624` and `0x86796c`.
 
 ## Integer range settings
 

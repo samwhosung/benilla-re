@@ -138,13 +138,15 @@ and `0x68136c` 0x200000. `0x6849e1`, `0x684e3f`, `0x6821f6` and `0x6702f9` test 
 
 ## Distance settings
 
-Four registered settings bound the world's distances, each rejecting a value outside its range with a message.
+Four registered settings bound the world's distances. `farclip`, `nearclip` and `horizonfarclip` refuse a value
+outside the range with a message; `textureLodDist` writes its message, runs at 80.0 instead and keeps the set, its
+record holding the typed value.
 `farclip` (default 350) takes 177 to 777 and sets the world far clip. `horizonfarclip` (2112) takes the far
 clip plus 528 up to 2112 and sets the far plane of the low-detail projection. `nearclip` (0.1) takes 0.01 to
 0.33 and `textureLodDist` (777.0) takes 80 to 777; their world copies are never read. The camera takes its
 near and far planes from the `nearclip` and `farclip` records, not from the world copies. `lodDist` is in `lod`.
 
-Addresses: `0x688470`, `0x688d40`, `0x689250`, `0x688d90`, `0x6891f0`, `0x6725c0`, `0x6726c0`, `0x6725d0`, `0x672630`, `0x6830d9`, `0x684240`, `0x511bd4`, `0x511be5`, `0x50b708`, `0x50b728`, `0xc7b498`, `0xc7b49c`, `0xc7b480`, `0x86795c`, `0xbe0cc0`, `0xbe1078`
+Addresses: `0x688470`, `0x688d40`, `0x689250`, `0x688d90`, `0x6891f0`, `0x689234`, `0x68923f`, `0x689245`, `0x6726eb`, `0x6725c0`, `0x6726c0`, `0x6725d0`, `0x672630`, `0x6830d9`, `0x684240`, `0x511bd4`, `0x511be5`, `0x50b708`, `0x50b728`, `0xc7b498`, `0xc7b49c`, `0xc7b480`, `0x86795c`, `0xbe0cc0`, `0xbe1078`
 Confidence: verified
 Proof: one
 Test: none
@@ -154,8 +156,8 @@ Test: none
 inclusive bounds (`test ah,5` then `test ah,0x41`): `0x81021c` 177.0 and `0x80fed8` 777.0, `0x8029d0` 0.01
 and `0x808300` 0.33, `0x80fedc` 80.0 and 777.0, and the far clip `0xc7b498` plus `0x810228` (528.0) to
 `0x810224` (2112.0). A pass calls the setter (`0x6725d0`, `0x6725c0`, `0x6726c0`, `0x672630`) and returns 1;
-`farclip`, `nearclip` and `horizonfarclip` print their range and return 0, while `textureLodDist` prints
-and stores 80.0. `0x6725c0` stores `0xc7b480` and `0x6726c0` stores `0x86795c`, each referenced
+`farclip`, `nearclip` and `horizonfarclip` print their range and return 0, while `textureLodDist` prints,
+substitutes 80.0 (`0x689234`) and returns the setter's `al`, 1 (`0x68923f` to `0x689245`, `0x6726eb`). `0x6725c0` stores `0xc7b480` and `0x6726c0` stores `0x86795c`, each referenced
 nowhere else. `0xc7b49c` is read at `0x6830d9` and `0x684240`. `0x511bd4` and `0x511be5` copy
 the cached `nearclip` and `farclip` records' value at +0x24 (`0xbe1078`, `0xbe0cc0`, looked up at
 `0x50b708` and `0x50b728`) into the camera's +0x38 and +0x3c every frame.
