@@ -3,8 +3,8 @@
 The spells the interface retests for usability, and the reset that empties the spell book. A learned
 spell whose record has `AttributesEx4` bit 0x200 enters the reactive list when `AddSpellToBook` runs
 (`ui/spellbook`). The usable refresh `0x4b31c0` retests the list after the action bar's flags and raises
-`SPELL_ACTIVE` for a spell that became usable. The reset `0x4b23a0` empties the book and every list a
-learned spell feeds, when the interface starts and when the active player arrives.
+`SPELL_ACTIVE` for a spell that became usable. The reset `0x4b23a0` empties the book, its tabs and the opener, form,
+dispel and reactive lists, when the interface starts and when the active player arrives.
 
 The code sits among the spell book's: the reset `0x4b23a0` after its start-up and shutdown functions
 (`0x4b21c0`, `0x4b22e0`), the refresh `0x4b31c0` among its event functions (`0x4b31b0`, `0x4b3250`).
@@ -17,13 +17,14 @@ Roots: `0x4b23a0`, `0x4b31c0`
 
 The reactive list at `0xb71148` holds 8-byte entries `{spell id, usable}`, one per name among the
 learned spells whose record has `AttributesEx4` (`+0x28`) bit 0x200. `AddSpellToBook` tests the bit for
-every learned spell, before its `Attributes` and `CastUI` gates. An entry with the same name (`SStrCmp` of the locale name,
-case counted) takes the new id only when `ParseSpellRank` of the new record is strictly higher,
-keeping its `usable` word; a new name is appended as `{id, 0}`. Outside `AddSpellToBook`, only
-`FireUsableEvents` reads the list (`Usable refresh`). No code removes an entry: unlearning (`0x4b2c50`) leaves it, and the reset
-(`Resetting the book`) frees the whole list.
+every learned spell, before its `Attributes` and `CastUI` gates. An entry with the same name (`SStrCmp`
+of the locale name, case counted) takes the new id only when `ParseSpellRank` of the new record is
+strictly higher, keeping its `usable` word; a new name is appended as `{id, 0}`. Outside `AddSpellToBook`,
+only `FireUsableEvents` reads its entries (`Usable refresh`). No code removes an entry: unlearning
+(`0x4b2c50`) leaves it, and the reset (`Resetting the book`) and the exit callback `0x4b2190` free the
+whole list.
 
-Addresses: `0x4b25b0`, `0x4b2705`, `0x4b2708`, `0x4b270b`, `0x4b2720`, `0x4b275f`, `0x4b2776`, `0x4b2792`, `0x4b279e`, `0x4b27a9`, `0x4b27b3`, `0x4b27c7`, `0x4b2828`, `0x4b2838`, `0x4b2844`, `0x4b2911`, `0x4b3c30`, `0x64a480`, `0x4b4fe0`, `0x4b5020`, `0x4b5040`, `0xb71148`, `0xb7114c`, `0xb71150`, `0xb71154`, `0xb71104`, `0x4b2c50`, `0x4b31c0`
+Addresses: `0x4b25b0`, `0x4b2705`, `0x4b2708`, `0x4b270b`, `0x4b2720`, `0x4b275f`, `0x4b2776`, `0x4b2792`, `0x4b279e`, `0x4b27a9`, `0x4b27b3`, `0x4b27c7`, `0x4b2828`, `0x4b2838`, `0x4b2844`, `0x4b2911`, `0x4b3c30`, `0x64a480`, `0x4b4fe0`, `0x4b4fe6`, `0x4b4feb`, `0x4b4ff9`, `0x4b5000`, `0x4b5009`, `0x4b5020`, `0x4b5040`, `0xb71148`, `0xb7114c`, `0xb71150`, `0xb71154`, `0xb71104`, `0x4b2c50`, `0x4b2190`, `0x4b21b9`, `0x4b31c0`
 Confidence: verified
 Proof: one
 Test: none
@@ -34,9 +35,12 @@ compares the names at `+0x1e0 + 4·[0xc0e080]` with `0x64a480(a, b, 0x7fffffff)`
 `0x4b2828`, which ranks the held record, then the new one with `0x4b3c30`; `0x4b283a jbe` keeps the
 entry unless the new rank is greater, and `0x4b2844` stores the id alone. No match reaches `0x4b2776`:
 a count past the capacity grows the array through `0x4b4fe0`, `0x4b5020` and `0x4b5040`, then
-`0x4b27b3` to `0x4b27c7` store `{id, 0}`. Census of the four dwords `0xb71148` to `0xb71154`
+`0x4b27b3` to `0x4b27c7` store `{id, 0}`. `0x4b4fe0` at `0x4b4fe6` sends 32 and up to `0x4b5009`, which
+stores 0x20 at `[ecx+0xc]` and returns it; below, `0x4b4feb` to `0x4b4ff9` clear the lowest set bit
+until one is left, and `0x4b5000` returns 1 for 0. Census of the four dwords `0xb71148` to `0xb71154`
 (`tools/callers.py`; control `0xb71104`, whose removal in `0x4b2c50` it finds): the static initializer
-and its exit, `0x4b23a0`, `AddSpellToBook` and `FireUsableEvents`. `Spell.dbc` column 10 has the bit in
+and its exit callback (it frees the block at `0x4b21b9`), `0x4b23a0`, `AddSpellToBook` and
+`FireUsableEvents`. `Spell.dbc` column 10 has the bit in
 26 of 22357 records, of seven names: Mongoose Bite, Execute, Revenge, Overpower, Riposte, Counterattack
 and Hammer of Wrath.
 
@@ -69,20 +73,22 @@ skips an unchanged answer, `0x4b3213` skips the event for 0, and `0x4b3231` stor
 `0x4b3221 mov ecx,0x26` and `0x4b3226 call 0x6269b0` pass the name at `+0x1e0 + 4·[0xc0e080]`; index 0x26
 of the table `0x862920` is `SPELL_ACTIVE`. `0x4b3246` signals 0x107. Census of `0x4b31c0`
 (`tools/callers.py`; controls `0x4b31b0`, 12 sites, and `0x4b2bb0`, a stored address): 14 `call` and `jmp`
-sites in these functions, no stored address. The five combat text signals have 68 call sites, none stored,
-each loading its type into `ecx` as an immediate; 0x26 occurs once, at `0x4b3221`.
+sites in these functions, no stored address. The five combat text signals have 68 call sites, none
+stored, each loading its type into `ecx` with a `mov` of an immediate (`xor ecx,ecx` at `0x626b67`, type
+0); 0x26 occurs once, at `0x4b3221`.
 
 ## Resetting the book
 
-`0x4b23a0` empties the player's book and the lists a learned spell feeds, and signals nothing. It
+`0x4b23a0` empties the player's book and its lists, and signals nothing. It
 clears the known-spell bitset in place when `0xb710f0` is nonzero, the 1024 book slots and the book
 count, frees the tab nodes and their array and zeroes the tab list and the tab count, zeroes the four
 effect-spell globals, clears the indexed spell array in place, then frees and zeroes the opener list,
-the form list, the dispel types and the reactive list. The pet book is untouched. `InitSpellBook` calls
+the form list, the dispel types and the reactive list. The pet book and the spell-history record that
+`AddSpellToBook` adds for `AttributesEx2` & 0x8100 (`0x6e2c60`, `0x4b27ef`) stay. `InitSpellBook` calls
 it at both of its exits and `CGPlayer_C::OnActiveArrival` calls it before it learns the player's
 initial spells; no other code does.
 
-Addresses: `0x4b23a0`, `0x4b21c0`, `0x4b2244`, `0x4b22d3`, `0x5dea50`, `0x5dea86`, `0xb710f0`, `0xb710f4`, `0xb710fc`, `0xb700f0`, `0xb7116c`, `0xb71158`, `0xb71160`, `0xb71170`, `0xb71130`, `0xb70098`, `0xb700e4`, `0xb700e8`, `0xb700a4`, `0xb700ac`, `0xb700b0`, `0xb71100`, `0xb71104`, `0xb71108`, `0xb71110`, `0xb71148`, `0x4b4b90`, `0x4088f0`, `0x646430`
+Addresses: `0x4b23a0`, `0x4b21c0`, `0x4b2244`, `0x4b22d3`, `0x4b27ef`, `0x6e2c60`, `0x5dea50`, `0x5dea86`, `0xb710f0`, `0xb710f4`, `0xb710fc`, `0xb700f0`, `0xb7116c`, `0xb71158`, `0xb71160`, `0xb71170`, `0xb71130`, `0xb70098`, `0xb700e4`, `0xb700e8`, `0xb700a4`, `0xb700ac`, `0xb700b0`, `0xb71100`, `0xb71104`, `0xb71108`, `0xb71110`, `0xb71148`, `0x4b4b90`, `0x4088f0`, `0x646430`
 Confidence: verified
 Proof: one
 Test: none

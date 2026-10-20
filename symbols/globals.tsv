@@ -3021,15 +3021,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb710f4	uint32_t[2]	s_knownSpellBitsSize		ui	Holds the capacity and dword count of the known-spell bitset	verified	one	ui/reactivespells#resetting-the-book
 0xb710fc	uint32_t *	s_knownSpellBits		unassigned	Points at the bitset of every known spell id	verified	one	ui/spellbook#spell-book-lists
 0xb71100	uint32_t	s_formSpellCapacity		ui	Holds the capacity of the form bar's spell id list	verified	one	ui/reactivespells#resetting-the-book
-0xb71104	uint32_t	s_formSpellCount		unassigned	Holds the number of spells on the form bar	verified	one	ui/petbar#form-list
-0xb71108	uint32_t *	s_formSpells		unassigned	Points at the form bar's sorted spell ids	verified	one	ui/petbar#form-list
+0xb71104	uint32_t	s_formSpellCount		ui	Holds the number of spells on the form bar	verified	one	ui/petbar#form-list
+0xb71108	uint32_t *	s_formSpells		ui	Points at the form bar's sorted spell ids	verified	one	ui/petbar#form-list
 0xb71110	uint32_t[3]	s_dispelTypes		ui	Holds capacity, count and data of the dispel types of the player's known dispel spells	verified	one	ui/auradisplay#the-per-slot-display-test
 0xb71130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	ui/spellbook#adding-a-spell
 0xb71148	uint32_t[4]	s_reactiveSpells		ui	Holds the capacity, count, data pointer and growth quantum of the reactive list of 8-byte spell id and usable entries	verified	one	ui/reactivespells#reactive-spell-list
 0xb71158	uint32_t[2]	s_bookTabNodesSize		ui	Holds the capacity and count of the array of tab node pointers	verified	one	ui/reactivespells#resetting-the-book
-0xb71160	void **	s_bookTabs		unassigned	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
-0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
-0xb71170	uint32_t	s_bookTabCount		unassigned	Holds the number of tabs in the book	verified	one	ui/spellbook#spell-book-lists
+0xb71160	void **	s_bookTabs		ui	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
+0xb7116c	uint32_t	s_bookSpellCount		ui	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
+0xb71170	uint32_t	s_bookTabCount		ui	Holds the number of tabs in the book	verified	one	ui/spellbook#spell-book-lists
 0xb71174	uint32_t	s_petBookSpellCount		ui	Holds the number of spells in the pet's book	verified	one	ui/spellbook#spell-book-lists
 0xb71178	uint32_t[3]	s_tutorialTimers		ui	Holds the list of delayed tutorial prompts, each a node with a number and a deadline	verified	one	ui/tutorials#the-delayed-trigger
 0xb711b8	uint32_t	s_tutorialFiredBits		ui	Holds the bit count of the fire-once tutorial set, 0 until the server sends it	verified	one	ui/tutorials#the-two-bit-sets

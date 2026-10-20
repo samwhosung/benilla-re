@@ -153,7 +153,8 @@ All five call `FrameScript_SignalEvent2(0x21e, …)` with the type's name first:
 with `%s`; `0x6269b0(type, text)` with `%s%s`; `0x626960(type, n)` with `%s%s` and `%d` of `n`;
 `0x626890(type, text, n)` with `%s%s%s`, the text then `%d` of `n`; `0x6268f0(type, n, m)` with
 `%s%s%s` and both as `%d`. 0x21e is `COMBAT_TEXT_UPDATE` (542). Index 0x26 of `0x862920` is
-`SPELL_ACTIVE`; of the callers of the five, only `0x4b3221` loads 0x26 into `ecx`.
+`SPELL_ACTIVE`; of the 68 call sites of the five, only the one at `0x4b3226` has 0x26, loaded at
+`0x4b3221`.
 
 ## Trailers
 
