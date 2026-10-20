@@ -23417,10 +23417,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64aaa0	434	SStrToFloat	idb	storm	primitive	float __stdcall (const char *string)	Reads a decimal float: an optional minus, digits, a fraction and an exponent at 53 bits; 0.0 and error 0x57 for null	verified	one	storm/strings#float-grammar	storm::sstrtofloat_whole
 0x64ac60	98	SStrToInt	idb	storm	primitive	int32_t __stdcall (const char *string)	Reads an optional minus and decimal digits in wrapping 32-bit arithmetic; 0 and error 0x57 for null	verified	one	storm/strings#string-to-integer	net::who_string_helpers, storm::sstrtoint_whole
 0x64acd0	269			storm	unreached		Runs its object file code that calls SErrSetLastError, __CIpow, __ftol and 1 more; not read here	inferred	none		
-0x64ade0	70	SStrToUnsigned	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x64ade0	70	SStrToUnsigned	idb	storm	primitive	uint32_t __stdcall (const char *string)	Reads leading decimal digits as a wrapping 32-bit value; 0 for no digit, and error 0x57 for null	verified	one	storm/strings#string-to-unsigned	storm::sstrtounsigned_whole
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ae40	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64ae50	320	SStrTokenize	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, SStrChr; not read here	inferred	none		
+0x64ae50	320	SStrTokenize	idb	storm	primitive	void __stdcall (const char **cursor, char *out, uint32_t size, const char *delims, int32_t *quoted)	Copies the next token of a string cursor into a buffer, split at delimiters and quotes, and advances the cursor	verified	one	storm/strings#tokenizer	storm::sstrtokenize_whole
 0x64af90	199	SStrHash	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64b060	362			storm	unreached		Runs its object file code that calls SErrSetLastError, __allmul; not read here	inferred	none		
 0x64b1d0	493	bjhash	idb	storm	primitive	uint32_t __fastcall (const uint8_t *key, uint32_t length, uint32_t initval)	Hashes bytes with Bob Jenkins' lookup2 from an initial value	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht

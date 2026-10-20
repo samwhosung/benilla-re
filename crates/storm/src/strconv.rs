@@ -1,6 +1,6 @@
-//! Storm's string-to-number conversions, `SStrToFloat` (`0x64aaa0`) and `SStrToInt` (`0x64ac60`),
-//! and the power table `0x64a680` fills for the float's fraction digits
-//! (`systems/storm/strings.md`).
+//! Storm's string-to-number conversions, `SStrToFloat` (`0x64aaa0`), `SStrToInt` (`0x64ac60`) and
+//! `SStrToUnsigned` (`0x64ade0`), and the power table `0x64a680` fills for the float's fraction
+//! digits (`systems/storm/strings.md`).
 //!
 //! The float conversion runs at the client's 53-bit x87 precision, so every multiply and add here
 //! is one `f64` operation. Its powers of ten come from the C runtime's `pow` (`0x73f940`), whose
@@ -49,6 +49,19 @@ pub fn str_to_int(s: &[u8]) -> i32 {
     } else {
         v
     }
+}
+
+/// `SStrToUnsigned` (`0x64ade0`) of a non-null string: decimal digits only, in wrapping 32-bit
+/// arithmetic; 0 when the first byte is not a digit. No sign is read, so `-5` gives 0.
+pub fn str_to_unsigned(s: &[u8]) -> u32 {
+    let s = &s[..s.iter().position(|&b| b == 0).unwrap_or(s.len())];
+    let mut i = 0;
+    let mut v: u32 = 0;
+    while let Some(d) = digit(s, i) {
+        v = v.wrapping_mul(10).wrapping_add(d);
+        i += 1;
+    }
+    v
 }
 
 /// `SStrToFloat` (`0x64aaa0`) of a non-null string, as the double the x87 holds in `st0`.

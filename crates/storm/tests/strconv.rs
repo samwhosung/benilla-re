@@ -1,6 +1,6 @@
-//! Storm's `SStrToFloat` (`0x64aaa0`), the power table it builds on first use (`0x64a680`) and
-//! `SStrToInt` (`0x64ac60`), each run whole in the emulator against `str_to_float`, `pow10_table`
-//! and `str_to_int`.
+//! Storm's `SStrToFloat` (`0x64aaa0`), the power table it builds on first use (`0x64a680`),
+//! `SStrToInt` (`0x64ac60`) and `SStrToUnsigned` (`0x64ade0`), each run whole in the emulator
+//! against `str_to_float`, `pow10_table`, `str_to_int` and `str_to_unsigned`.
 //!
 //! `SStrToFloat` runs with its own callees: `0x64a670` and the table builder, `SStrToInt`, and the C
 //! runtime's `pow` (`0x73f940`), whose `fyl2x` and `f2xm1` Unicorn computes. The reimplementation
@@ -16,7 +16,7 @@
 mod common;
 
 use benilla_re_difftest::Emu;
-use benilla_re_storm::{pow10_table, str_to_float, str_to_int};
+use benilla_re_storm::{pow10_table, str_to_float, str_to_int, str_to_unsigned};
 use common::Wow;
 use std::cell::Cell;
 use std::collections::HashMap;
@@ -260,4 +260,69 @@ fn sstrtoint_whole() {
         (0x64e850, 0x57)
     );
     eprintln!("sstrtoint_whole: {} strings bit-exact", inputs.len());
+}
+
+/// `0x64ade0` whole over every length to 12 digits, the 32-bit wrap, signs and other stops, a
+/// leading non-digit, and a fuzz; a null pointer.
+#[test]
+fn sstrtounsigned_whole() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    emu.stub(0x64e850, 0, 1);
+    let buf = emu.alloc(0x100);
+    let mut inputs: Vec<Vec<u8>> = [
+        &b""[..],
+        b"-",
+        b"-5",
+        b"+5",
+        b" 5",
+        b"5 ",
+        b"05",
+        b"00",
+        b"abc",
+        b"0x10",
+        b"2147483647",
+        b"2147483648",
+        b"4294967295",
+        b"4294967296",
+        b"4294967297",
+        b"99999999999",
+        b"12x3",
+        b"1\x802",
+        b"\x80",
+        b"\xff1",
+    ]
+    .iter()
+    .map(|t| t.to_vec())
+    .collect();
+    for len in 1..=12usize {
+        inputs.push(b"1234567890987".iter().copied().take(len).collect());
+        inputs.push(vec![b'9'; len]);
+    }
+    let mut s = 0x64ad_e011u32;
+    for _ in 0..3000 {
+        inputs.push(scrambled(&mut s));
+    }
+    for text in &inputs {
+        let mut z = text.clone();
+        z.push(0);
+        emu.write(buf, &z);
+        let got = emu.call(0x64ade0, 0, 0, &[buf as u32]);
+        assert_eq!(
+            got,
+            str_to_unsigned(text),
+            "{:?}",
+            String::from_utf8_lossy(text)
+        );
+    }
+    assert!(emu.calls().is_empty(), "a string raises no error");
+    emu.clear_calls();
+    assert_eq!(emu.call(0x64ade0, 0, 0, &[0]), 0, "null answers 0");
+    assert_eq!(
+        (emu.calls()[0].addr, emu.calls()[0].args[0]),
+        (0x64e850, 0x57)
+    );
+    eprintln!("sstrtounsigned_whole: {} strings bit-exact", inputs.len());
 }

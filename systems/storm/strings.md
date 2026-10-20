@@ -3,11 +3,13 @@
 Storm's string-to-number functions, which the client calls for the numbers in XML attributes, many
 settings and console arguments; the C runtime's `_sscanf` (`0x73fb5d`, 32 direct calls, formats `%d`
 and `%f` among them) reads others, as the `lodDist` setting does (`0x688ac0`). `SStrToFloat` reads a
-decimal float and `SStrToInt` a decimal integer; the float's fraction digits come from a table of
-powers of ten that `0x64a670` fills on first use (`core/threads#string-conversion-table`), and its
-other powers from the C runtime's `pow`. Both answer 0 for a null string and set error 0x57.
+decimal float, `SStrToInt` a signed decimal integer and `SStrToUnsigned` unsigned digits; the float's
+fraction digits come from a table of powers of ten that `0x64a670` fills on first use
+(`core/threads#string-conversion-table`), and its other powers from the C runtime's `pow`. All three
+answer 0 for a null string and set error 0x57. `SStrTokenize` splits the text of console lines,
+CVar commands and many files into tokens.
 
-Roots: `0x64aaa0`, `0x64ac60`
+Roots: `0x64aaa0`, `0x64ac60`, `0x64ade0`, `0x64ae50`
 
 ## Float grammar
 
@@ -90,6 +92,74 @@ Test: `storm::sstrtoint_whole`, `net::who_string_helpers`
 `0x64ac6a` passes 0x57 to `SErrSetLastError` and returns 0. `0x64ac7b` compares with `-`. The digit
 test is `0x64ac8f`; `0x64aca2` and `0x64aca5` are `lea eax,[eax+eax*4]; lea eax,[ecx+eax*2]`, and
 `0x64acbc` is the `neg`. The test runs it whole over every length to 12 digits, the wrap and a fuzz.
+
+## String to unsigned
+
+`SStrToUnsigned(s)` (`0x64ade0`) reads decimal digits only, as `SStrToInt` tests them, accumulating
+`v·10 + d` in wrapping 32-bit arithmetic. A first byte that is not a digit gives 0, so `-5`, `+5`,
+` 5` and `abc` give 0: no sign or space is read. Digits stop at the first byte that is not one
+(`12x3` gives 12) and `4294967296` wraps to 0. A null `s` sets error 0x57 and gives 0.
+
+Addresses: `0x64ade0`, `0x64adea`, `0x64adf1`, `0x64adf7`, `0x64ae00`, `0x64ae0d`, `0x64ae11`, `0x64ae14`, `0x64ae1d`, `0x64ae20`, `0x64e850`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtounsigned_whole`
+
+`0x64adea` passes 0x57 to `SErrSetLastError` (`0x64e850`) and returns 0. The first byte is
+`movsx`, `sub 0x30`, `cmp 0xa` (`0x64adf7` to `0x64ae00`) and `jae` returns 0 (`0x64adf1`); a byte
+of 0x80 or more sign-extends below zero and is no digit. The second byte is tested at `0x64ae0d`.
+The loop is `lea eax,[eax+eax*4]; lea eax,[ecx+eax*2]` (`0x64ae11`, `0x64ae14`), the next byte
+tested at `0x64ae1d` and `jb` at `0x64ae20`. The test runs `0x64ade0` whole over every length to 12
+digits, the wrap, signs, other stops and a fuzz.
+
+## Tokenizer
+
+`SStrTokenize(&cursor, out, size, delims, quoted)` (`0x64ae50`, `__stdcall`) copies the next token
+of the string `*cursor` into `out` and advances `*cursor`. It skips leading delimiters, then takes
+bytes to the first delimiter, which it consumes, or to the end of the string. A byte is stored
+while the stored count plus 1 is below `size`: a token is cut at `size − 1` bytes, the rest is
+skipped, and a NUL follows when `size` is above 0. `*quoted`, when given, is 1 if a `"` opened or
+closed a quote in the call, else 0. A null cursor, `*cursor` or delimiters, or a null `out` with a
+nonzero `size`, sets error 0x57 and writes nothing. `eax` is not a result.
+
+Addresses: `0x64ae50`, `0x64ae5b`, `0x64ae5f`, `0x64ae77`, `0x64ae79`, `0x64ae8d`, `0x64aeb0`, `0x64aeda`, `0x64af00`, `0x64af46`, `0x64af4b`, `0x64af4e`, `0x64af66`, `0x64af6a`, `0x64af73`, `0x64af77`, `0x64af7f`, `0x64af86`, `0x64a3c0`, `0x64e850`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtokenize_whole`
+
+`0x64ae5b` to `0x64ae77` test the cursor, `*cursor`, `out` with `size`, and the delimiters;
+`0x64ae79` passes 0x57 to `SErrSetLastError` and returns with `ret 0x14`. `0x64ae8d` asks
+`SStrChr` (`0x64a3c0`) whether `"` is a delimiter. The skip loop is `0x64aeb0` to `0x64aeda`. The
+main loop `0x64af00` ends on a delimiter at `0x64af66`, which steps past it. The store test is
+`cmp edx,[ebp+0x10]; jae` (`0x64af4b`, `0x64af4e`) with `edx` the stored count plus 1; `0x64af6a`
+and `0x64af73` store the NUL when the count is below `size`; `0x64af7f` stores the cursor and
+`0x64af86` the quote flag. `eax` leaves holding the quote pointer (`0x64af77`). The test runs
+`0x64ae50` whole, with `SStrChr` run as its callee, over every string of five symbols to length
+five against seven delimiter strings and five sizes, longer fuzz strings, lines tokenized call
+after call, a null quote pointer and the argument errors, and compares every byte of the output
+buffer, the cursor and the flag.
+
+## Tokenizer quotes
+
+A `"` is special only when it is one of the delimiters. A `"` among the leading delimiters opens a
+quote and ends the skip. Inside a quote every byte, delimiters included, is token text until a
+`"`, which closes the quote, is consumed and ends the token. Outside a quote a `"` after at least
+one stored byte ends the token and is left in the string. The test is the stored count, not the
+token's length, so with `size` 1 every `"` toggles the quote. An unclosed quote runs to the end of
+the string, and `""` gives an empty token with `*quoted` set.
+
+Addresses: `0x64ae50`, `0x64aebf`, `0x64aece`, `0x64af04`, `0x64af09`, `0x64af10`, `0x64af12`, `0x64af14`, `0x64af2a`, `0x64af30`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtokenize_whole`
+
+`0x64aebf` compares the byte with `"` when the delimiter-quote flag `edi` is set; `0x64aece` stores
+1 in the quote flag `[ebp-0xc]` and the open flag `[ebp-4]` and steps past the quote. In the main
+loop `0x64af04` compares with `"`. `0x64af09` tests the stored count `[ebp-8]` and `0x64af10` the
+open flag; a count with no open quote jumps to the end at `0x64af12` without consuming the quote.
+`0x64af14` to `0x64af2a` otherwise toggle the open flag, step past the quote, set the quote flag and
+end the token when the toggled flag is clear. `0x64af30` sends every byte in an open quote to the store,
+past the delimiter test.
 
 ## Unreached functions
 
