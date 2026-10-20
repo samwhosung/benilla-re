@@ -19,7 +19,7 @@ Test: none
 
 ## Detection record
 
-The record at `0xc4e6bc` holds what the step learns: the vendor and device words at `+0` and `+2` (both `0xffff` when unknown), the two driver version words at `+4` and `+8`, the processor class at `+0x18`, the matched row id at `+0x1c`, the sound index at `+0x20`, the memory index at `+0x24`, the matched row at `+0x28` and the bias row at `+0x2c`. The processor class is 1 when the processor frequency exceeds 1500 MHz and 0 otherwise; the sound and memory indices are always 0.
+The record at `0xc4e6bc` holds what the step learns: the vendor and device words at `+0` and `+2` (both `0xffff` when unknown), the two driver version words at `+4` and `+8`, the processor class at `+0x18`, the matched row id at `+0x1c`, the sound index at `+0x20`, the memory index at `+0x24`, the matched row at `+0x28` and the bias row at `+0x2c`. The processor class is 0 or 1 (`Processor class`); the sound and memory indices are always 0.
 The step logs `DetectHardware():` and the four indices.
 
 Addresses: `0xc4e6bc`, `0x6414ac`, `0x6414b7`, `0x6414ba`, `0x6414c0`, `0x6414cd`, `0x6414d6`, `0x6414e8`, `0x6414eb`, `0x6414ee`, `0x64152f`, `0x64154e`, `0x641558`, `0x641562`, `0x42c060`, `0x589990`, `0x58baa0`, `0x80e2e0`, `0x8655d8`, `0xc518d0`, `0xc518d4`
@@ -27,8 +27,19 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x6414ac` reads the processor frequency (`0x42c060`), `0x6414ba` scales it to MHz and `0x6414c0` compares it with 1500.0 (`0x80e2e0`); `0x6414cd` stores 1 and `0x6414d6` stores 0. `0x6414e8` and `0x6414eb` clear the memory index and the row id. `0x6414ee` asks the adapter for its ids (`0x589990` reaches `0x58baa0`, which logs `CGxDevice::DeviceAdapterID()`) and the match runs only when it succeeds. The bias row is the entry of the table at `0x8655d8` for the processor class (`0x64152f`), 24 bytes each.
+`0x6414cd` stores class 1 and `0x6414d6` class 0. `0x6414e8` and `0x6414eb` clear the memory index and the row id. `0x6414ee` asks the adapter for its ids (`0x589990` reaches `0x58baa0`, which logs `CGxDevice::DeviceAdapterID()`) and the match runs only when it succeeds. The bias row is the entry of the table at `0x8655d8` for the processor class (`0x64152f`), 24 bytes each.
 `0x64154e` stores the row found through the index (`0xc518d0`, bounded by the largest id at `0xc518d4`), or 0. `0x641558` runs the change check and `0x641562` onward write the log.
+
+## Processor class
+
+`DetectHardware` (`0x641260`) stores the processor class at `+0x18` of the detection record at every start-up: 1 when the frequency from `OsGetCpuFrequency` (`0x42c060`), as a double times the float 1e-6 (`0x80e2e4`), exceeds the float 1500.0 (`0x80e2e0`), else 0. A rate of 1,500,000,004 Hz or more counts; from the power call, whose rates are multiples of 10⁶, 1501 MHz or more, and 1500 MHz gives 0. `ConsoleDeviceInitialize` then sets the flag byte `0xc4ec54` to 1, and the sound CVars register later, so `SoundBufferSize` (`0x457520`) defaults to `50` for class 1 and `100` for class 0; its flag test is always met.
+
+Addresses: `0x641260`, `0x64127a`, `0x6414ac`, `0x6414b7`, `0x6414ba`, `0x6414c0`, `0x6414cd`, `0x6414d6`, `0x42c060`, `0x80e2e0`, `0x80e2e4`, `0x63a230`, `0x63a26b`, `0x63a275`, `0xc4ec54`, `0x639a00`, `0x457520`, `0x457532`, `0x4571b0`, `0x4571b8`, `0x4027e7`, `0x4021db`, `0x4021e4`, `0x4029ea`, `0x402ae9`, `0x456fe0`, `0x835e0c`, `0x835e10`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6414ac` calls `0x42c060` and `0x6414b7` loads its result with `fild`; `0x6414ba` is `fmul` by the float at `0x80e2e4` (0x358637bd, 9.99999997e-7) and `0x6414c0` `fcomp` against the float at `0x80e2e0`. `test ah,0x41` branches for less, equal and unordered, so only a larger product stores 1 (`0x6414cd`); `0x6414d6` stores 0. At 53 bits the product passes 1500.0 from 1,500,000,004 Hz; 1,500,000,003 does not. `0x64127a` joins a loaded table to `0x6414ac`. `0x63a26b` runs `DetectHardware`, whose one caller it is, and `0x63a275` stores the flag, its one store. `0x457520` copies the record through `0x639a00`, tests `al`, and `cmp [ebp-0x1c],1` (`0x457532`) picks `0x835e10` or `0x835e0c`. `0x4021db` runs the start-up routine, which calls `ConsoleDeviceInitialize` at `0x4027e7`; the event loop starts at `0x4021e4` and its start handler reaches `WowClientInit` at `0x4029ea`, whose `0x402ae9` calls `0x456fe0`; that calls `0x4571b0`, which calls `0x457520` at `0x4571b8`. Each of these has one caller.
 
 ## Matching a row
 

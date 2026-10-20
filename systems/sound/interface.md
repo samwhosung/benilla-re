@@ -32,7 +32,7 @@ The CVars, with their defaults (category 7). The device CVars carry flag 2.
 
 | CVar | default | handler |
 |---|---|---|
-| SoundBufferSize | "50" when the record `0x639a00` copies has 1 at `+0x18`, else "100" | |
+| SoundBufferSize | "50" for processor class 1 (`console/hardware#processor-class`), else "100" | |
 | SoundOutputSystem, SoundDriver, SoundMixer, SoundMinHardwareChannels | "-1" | |
 | SoundMaxHardwareChannels, SoundSoftwareChannels | "12" | |
 | SoundMixRate, SoundInitFlags, SoundMemoryCache, SoundRolloffFactor | "44100", "128", "4", "4" | |

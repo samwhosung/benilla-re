@@ -3915,7 +3915,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457490	59	EnableMusicHandler	idb	sound	orchestration		Pauses the zone music by the inverse of EnableMusic, then restarts or stops the glue music; returns 1	verified	one	sound/interface#cvar-handlers	
 0x4574d0	37	SoundReverbHandler	idb	sound	orchestration		Stores the SoundReverb byte and applies the default reverb when it is 0; returns 1	verified	one	sound/interface#cvar-handlers	
 0x457500	31	MasterSoundEffectsHandler	idb	sound	primitive		Passes MasterSoundEffects being 0 to the engine's sound-effects switch; returns 1	verified	one	sound/interface#cvar-handlers	
-0x457520	38	GetSoundBufferSizeDefault		sound	orchestration		Returns "50" if 0xc4ec54 is set and the detection record has 1 at +0x18, else "100"	verified	one	sound/interface#sound-cvars	
+0x457520	38	GetSoundBufferSizeDefault		sound	orchestration		Returns "50" for processor class 1, else "100"; the flag 0xc4ec54 is set before it runs	verified	one	console/hardware#processor-class	
 0x457550	25	SoundGetParamValueInt		sound	orchestration		Stores a named CVar's integer value; returns false for an unknown name	verified	one	sound/interface#start-up	
 0x457570	25	SoundGetParamValueFloat		sound	orchestration		Stores a named CVar's float value; returns false for an unknown name	verified	one	sound/interface#start-up	
 0x457590	25	SoundGetParamValueString	idb	sound	orchestration		Stores a named CVar's string; returns false for an unknown name	verified	one	sound/interface#start-up	

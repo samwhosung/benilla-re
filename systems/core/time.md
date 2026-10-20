@@ -134,18 +134,34 @@ function at `0x702860` takes `rdtsc` (`0x702869`) less the start `0x702840` latc
 
 ## Processor frequency
 
-`0x42c060` returns the processor's frequency in hertz: the maximum MHz from
-`CallNtPowerInformation`, once, times 10⁶, or else the calibrated rate, waiting in 500 ms sleeps
-until the calibration has stored one.
+`OsGetCpuFrequency` (`0x42c060`) returns the processor's frequency in hertz as a 64-bit integer.
+Its first call runs `QueryCpuMaxMhz` (`0x42c0e0`), and `0x42c0b0` keeps only whether it succeeded.
+On success the answer is `MaxMhz` of the first processor record the power call returns, times 10⁶.
+Otherwise every call returns the largest counter rate the calibration has stored (`0x884060`),
+sleeping 500 ms while that is 0, with no limit. The query fails when `powrprof.dll` will not load,
+`CallNtPowerInformation` is missing or the call returns a nonzero status. Its output buffer is 0x60
+bytes, four 24-byte records; whether a host with more logical processors fails is the OS's answer,
+which the exe does not decide.
 
-Addresses: `0x42c060`, `0x42c0b0`, `0x42c0e0`, `0x884c70`, `0x884060`
+Addresses: `0x42c060`, `0x42c069`, `0x42c075`, `0x42c095`, `0x42c0a6`, `0x42c0b0`, `0x42c0be`, `0x42c0e0`, `0x42c0ef`, `0x42c0f9`, `0x42c101`, `0x42c109`, `0x42c115`, `0x42c119`, `0x42c11b`, `0x42c123`, `0x42c125`, `0x42c12a`, `0x42c130`, `0x42c135`, `0x415611`, `0x42bf42`, `0x42bf67`, `0x42bf6c`, `0x42bf7b`, `0x42bf9c`, `0x42bfa2`, `0x65aea0`, `0x884058`, `0x884060`, `0x884c70`, `0x884c90`, `0x884c94`, `0x8332c0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x42c0e0` loads `powrprof.dll`, calls `CallNtPowerInformation(11, …)` and multiplies the second
-dword by 1000000 (`0x42c11b` to `0x42c125`); `0x42c0b0` caches the answer. The fallback reads
-`0x884060`, which the calibration raises to the largest rate it has stored.
+`0x42c0ef` loads `powrprof.dll` and `0x42c0f9` returns 0 on null without `FreeLibrary`. `0x42c101`
+calls `GetProcAddress` through the lazy thunk `0x415611` for `CallNtPowerInformation`, and null
+goes to `FreeLibrary` (`0x42c135`) and returns 0. `0x42c10b` to `0x42c115` push 0x60, the buffer,
+two zeros and the level 0xb, and `0x42c119` takes any nonzero status to `FreeLibrary`. `0x42c11b`
+loads the dword at buffer `+4`, `0x42c123` multiplies it by 1000000, `0x42c125` and `0x42c12a`
+store the product in `0x884c70` and `0x42c130` sets the result 1. `0x42c0b0` keeps the result in
+`0x884c94` behind the guard `0x884c90`. A failure leaves `0x884c70` 0, `0x42c069` is not reached
+and `0x42c075` reads `0x884060`; `0x42c095` is `Sleep(500)` in the loop to `0x42c0a6`. The
+calibration thread copies `0x8332c0` to `0x884058` (`0x42bf6c`, atomically through `0x65aea0`) and
+raises `0x884060` when the new rate is larger (`0x42bf7b` to `0x42bfa2`) after every non-negative
+pick (`0x42bf42`), after `0x42b8b0` (`0x42bf67`) has returned early for the multi-core gate. A
+scan finds `0x884060` written at `0x42bf9c` and `0x42bfa2` only, and `0x42c060` called once, at
+`0x6414ac`. Microsoft documents one record per processor and `STATUS_BUFFER_TOO_SMALL` for a short
+buffer; the exe does not show either.
 
 ## Calendar time
 
