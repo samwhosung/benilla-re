@@ -22,6 +22,7 @@ pub mod dda;
 pub mod depthbucket;
 pub mod driftcloud;
 pub mod entity;
+pub mod entitygroup;
 pub mod fills;
 pub mod frustum;
 pub mod gather;
