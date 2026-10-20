@@ -29758,7 +29758,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5750	109	callalert		lua	unreached		Calls the global _ALERT with the error message, or prints it when none is set	verified	one	lua/auxlib#loading-chunks	
 0x6f57c0	35	lua_dobuffer		lua	unreached		Loads a buffer as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f57f0	28	lua_dostring		lua	unreached		Loads a null-ended string as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
-0x6f5810	22	luaO_int2fb		lua	primitive	int32_t __fastcall (uint32_t x)	Encodes a size as a byte: a 3-bit mantissa under a 5-bit exponent, rounded up	verified	one	lua/object#basic-object-functions	lua::luao_int2fb_difftest
+0x6f5810	22	luaO_int2fb		lua	primitive	int32_t __fastcall (uint32_t x)	Encodes a size as a byte: a 3-bit mantissa under a 5-bit exponent, rounded up	verified	two	lua/object#the-floating-byte-size-code	lua::luao_int2fb_difftest
 0x6f5830	113	luaO_log2		lua	primitive		Returns floor(log2(x)) of an unsigned integer by byte table, -1 for 0	verified	one	lua/object#basic-object-functions	
 0x6f58b0	60	luaO_rawequalObj		lua	primitive		Compares two values by tag, then by number or by payload	verified	one	lua/object#basic-object-functions	
 0x6f5900	132	luaO_str2d		lua	primitive		Converts a string to a number with strtod, allowing trailing spaces	verified	one	lua/object#basic-object-functions	
@@ -29877,7 +29877,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fa8a0	274	newkey		lua	boundary		Inserts a new key, moving a colliding node out of its main position when needed	verified	one	lua/object#table-access	
 0x6fa9c0	55	rehash		lua	boundary		Recounts a table and resizes it to the best array and node sizes	verified	one	lua/object#table-creation-and-growth	
 0x6faa00	245	numuse		lua	boundary		Counts the live keys of a table per power-of-two slice and computes the new sizes	verified	one	lua/object#table-creation-and-growth	
-0x6fab00	143	computesizes		lua	boundary	void __fastcall (int32_t *nums, int32_t ntotal, int32_t *narray, int32_t *nhash)	Chooses the array size so that at least half of its slots are in use	verified	one	lua/object#table-creation-and-growth	lua::computesizes_difftest
+0x6fab00	143	computesizes		lua	primitive	void __fastcall (int32_t *nums, int32_t ntotal, int32_t *narray, int32_t *nhash)	Chooses the array size so that at least half of its slots are in use	verified	two	lua/object#choosing-the-array-size	lua::computesizes_difftest
 0x6fab90	493	resize		lua	boundary		Rebuilds a table with new array and node sizes and reinserts its entries	verified	one	lua/object#table-creation-and-growth	
 0x6fad80	71	luaH_setnum		lua	boundary		Returns the slot for an integer key, creating the key when absent	verified	one	lua/object#table-access	
 0x6fadd0	5			lua	boundary		Runs its object file code not read here	inferred	none		

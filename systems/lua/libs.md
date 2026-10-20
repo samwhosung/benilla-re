@@ -51,9 +51,10 @@ One reference reaches `bit_mod_remainder`, the `jmp` at `0x7fad5d`. `bit.mod(7, 
 Twelve functions of the math library wrap one operation each: `abs` (`fabs`), `sin`, `cos` and
 `tan` (`fsin`, `fcos`, `fptan`, in radians), `atan` and `atan2` (`fpatan`), `asin` and `acos` (the
 C runtime), `floor`, `mod` (`fmod`), `sqrt` (`fsqrt`) and `pow`. Each reads its arguments with
-`luaL_checknumber`, pushes one number and answers 1. Nothing bounds the angle: an operand of
+`luaL_checknumber`, pushes one number and answers 1. Nothing bounds the angle: a finite operand of
 magnitude 2^63 or more is outside the x87's range, so `math.sin(x)` and `math.cos(x)` answer `x`
-itself and `math.tan(x)` answers the x87's indefinite NaN, which `tostring` prints `-1.#IND`.
+itself and `math.tan(x)` answers the x87's indefinite NaN, which `tostring` prints `-1.#IND`. ±∞
+is an invalid operand, and all three answer the indefinite.
 
 | function | name | decided by |
 |---|---|---|
@@ -78,12 +79,14 @@ Test: none
 `mathlib` (`0x822c60`) pairs each of these with its name; `ceil` is `math_ceil` (`ui/luastate`). The
 trigonometric functions take radians: no degree factor appears in `0x7fae10` to `0x7faf30`.
 `fsin`, `fcos` and `fptan` (`0x7fae1d`, `0x7fae4d`, `0x7fae7d`) follow the `fld qword` that ends
-`luaL_checknumber` (`0x6f4c80`) with no compare. Out of range each sets C2 and leaves ST(0) as it
-is (Intel SDM, `FSIN`, `FCOS`, `FPTAN`), and `fptan` pushes no 1.0, so with the stack empty at the call `fstp st(0)` at
+`luaL_checknumber` (`0x6f4c80`) with no compare. A finite operand out of range sets C2 and leaves
+ST(0) as it is (Intel SDM, `FSIN`, `FCOS`, `FPTAN`), and `fptan` pushes no 1.0, so with the stack empty at the call `fstp st(0)` at
 `0x7fae84` pops the operand and `fstp qword` at `0x7fae86` reads an empty register: the masked stack underflow
 stores the double 0xfff8000000000000, which `luaV_tostring` formats with `_sprintf` and `%.14g`
-(`0x6f7cac`), the C runtime's `-1.#IND`. The emulator's `fsin`, `fcos` and `fptan` take the range as
-above 2^63, not from it, and its stores never fault on an empty register (`METHOD#the-harness`).
+(`0x6f7cac`), the C runtime's `-1.#IND`. ±∞ raises the masked invalid operation, which stores that
+indefinite in ST(0); for `fptan` it reaches `0x7fae86` whether the 1.0 is pushed above it or not.
+The emulator's `fsin`, `fcos` and `fptan` take the range as above 2^63, not from it, give ±∞ back
+unchanged, and its stores never fault on an empty register (`METHOD#the-harness`).
 
 ## More math functions
 

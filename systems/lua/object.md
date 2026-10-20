@@ -16,8 +16,8 @@ Roots: `0x6f5810`, `0x6f5830`, `0x6f58b0`, `0x6f5900`, `0x6f5990`, `0x6f5c20`, `
 
 ## Basic object functions
 
-`luaO_int2fb` and `luaO_log2` are the integer helpers: a floating-byte code of an integer and the
-base-2 logarithm by table. `luaO_rawequalObj` compares two values by tag and then by number
+`luaO_int2fb` and `luaO_log2` are the integer helpers: a floating-byte code of an integer
+(`#the-floating-byte-size-code`) and the base-2 logarithm by table. `luaO_rawequalObj` compares two values by tag and then by number
 or by address. `luaO_str2d` reads a number with `strtod` and accepts trailing spaces only.
 `luaO_chunkid` builds the short source name used in messages, from `=name`, `@file` or a
 string chunk (`[string "first line..."]`). `luaO_pushvfstring` joins the literal text and the converted arguments of a `%s`, `%c`, `%d`, `%f`
@@ -27,7 +27,6 @@ pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0
 
 | function | name | decided by |
 |---|---|---|
-| `0x6f5810` | `luaO_int2fb` | loop while `x > 7` (`0x6f5812`) halving with rounding up (`0x6f5818`), result is `e` shifted left by 3, or `x` (`0x6f5820`): a 3-bit mantissa under a 5-bit exponent |
 | `0x6f5830` | `luaO_log2` | thresholds `0x10000` (`0x6f5834`), `0x1000000` (`0x6f583f`), `0x100` (`0x6f586b`), adds 24, 16, 8; -1 (`0x6f589a`) |
 | `0x6f58b0` | `luaO_rawequalObj` | tags differ returns 0 (`0x6f58b3`), jump table on tags 0..3 (`0x6f58c0`), `fcompp` (`0x6f58cd`), payload subtract (`0x6f58e3`) |
 | `0x6f5900` | `luaO_str2d` | `_strtod` (`0x6f5911`), `__isctype` 8 over the tail (`0x6f593e`), end test (`0x6f5964`) |
@@ -36,19 +35,37 @@ pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0
 | `0x6f5c20` | `luaO_pushfstring` | calls `luaO_pushvfstring` with the address of its own arguments (`0x6f5c2d`) |
 | `0x6f5c40` | `luaO_chunkid` | `=` (`0x6f5c49`), `@` (`0x6f5c6b`), else `[string "` (`0x6f5ceb`), first line by `strcspn` (`0x6f5cd7`), `..."]` (`0x6f5d5d`) |
 
-Addresses: `0x6f5bc8`, `0x6f5810`, `0x6f5812`, `0x6f5818`, `0x6f5820`, `0x6f8b31`, `0x6f8b41`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
+Addresses: `0x6f5bc8`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
 Confidence: verified
 Proof: one
-Test: `lua::luao_int2fb_difftest`
+Test: none
 
-`luaO_int2fb` rounds up: `x = (x+1) >> 1` while the value exceeds 7, the exponent counting the
-shifts, and `0xffffffff` wraps to 0 in one step and encodes as 8. `OP_NEWTABLE` decodes the byte as
-`(B & 7) << (B >> 3)` (`0x6f8b31`, `0x6f8b41`), so 9 array items size an array of 10. The test
-runs `luaO_int2fb` whole. `luaO_log2` indexes a 256-byte table by the highest nonzero byte, adding 24, 16, 8 or 0.
+`luaO_log2` indexes a 256-byte table by the highest nonzero byte, adding 24, 16, 8 or 0.
 `luaO_rawequalObj` treats nil as equal to nil, numbers by value (NaN compares unequal through
 the `test ah,0x44` parity test), every other tag by payload address. For a `=` source,
 `luaO_chunkid` copies the rest, cut to the buffer; for `@` it copies the file name, prefixed by
 `...` when it does not fit; otherwise it takes the text up to the first newline, cut to fit.
+
+## The floating-byte size code
+
+`luaO_int2fb(x)` codes an array size as a 3-bit mantissa under a 5-bit exponent: while `x` is 8 or
+more, compared unsigned, it takes `x = (x + 1) >> 1` and counts the step `e`, and the code is
+`e << 3 | x`. `OP_NEWTABLE` decodes its `B` operand as `(B & 7) << (B >> 3)`, the array size, and
+passes `C` to `luaH_new` as the log2 of the hash size. The code rounds up: 9 array items size an
+array of 10, and `0xffffffff` wraps to 0 in one step and codes as 8.
+
+Addresses: `0x6f5810`, `0x6f5812`, `0x6f5817`, `0x6f5818`, `0x6f581e`, `0x6f5820`, `0x6f8b14`, `0x6f8b17`, `0x6f8b2e`, `0x6f8b31`, `0x6f8b34`, `0x6f8b3a`, `0x6f8b3d`, `0x6f8b41`, `0x6f8b45`, `0x6fa4f0`
+Confidence: verified
+Proof: two
+Test: `lua::luao_int2fb_difftest`
+
+`0x6f5812` is `cmp ecx,8; jb`, unsigned; the loop is `inc ecx; shr ecx,1; inc eax` (`0x6f5817`,
+`0x6f5818`) until `jae` at `0x6f581e` fails, and `0x6f5820` is `shl eax,3; or eax,ecx`. In
+`OP_NEWTABLE`, `B` is bits 15 to 23 of the instruction (`0x6f8b14`, `0x6f8b17`): `0x6f8b31` shifts
+it right by 3, `0x6f8b3a` keeps its low 3 bits and `0x6f8b41` shifts those left by the exponent
+into `edx`. `C` is bits 6 to 14 (`0x6f8b2e`, `0x6f8b34`), pushed at `0x6f8b3d` as the third
+argument of `luaH_new` (`0x6f8b45`). An independent cold read derived the same. The test runs
+`luaO_int2fb` whole.
 
 ## Strings
 
@@ -125,23 +142,40 @@ of two) and picks the sizes with `computesizes`: the largest array part at least
 | `0x6fa690` | `luaH_free` | three `luaM_irealloc` calls in `ltable.c` (`0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`), the first only for a nonzero node size |
 | `0x6fa9c0` | `rehash` | `numuse` (`0x6fa9d5`), `luaO_log2` (`0x6fa9dd`), `resize` (`0x6fa9ec`) |
 | `0x6faa00` | `numuse` | slice loop to 24 (`0x6faa67`), `arrayindex` (`0x6faab6`), `luaO_log2` (`0x6faac2`), `computesizes` (`0x6faae7`) |
-| `0x6fab00` | `computesizes` | a size kept at `a >= 2^(i-1)` (`0x6fab43`, `0x6fab45`), array size a power of two, hash count `total - na`; n of -1 gives 0 (`0x6fab69`) |
+| `0x6fab00` | `computesizes` | `#choosing-the-array-size` |
 | `0x6fab90` | `resize` | `setarrayvector` (`0x6fac1f`), `setnodevector` (`0x6fac2f`), `luaH_setnum` (`0x6fac63`), `luaH_set` (`0x6facfd`), old vector freed (`0x6fad5e`) |
 
-Addresses: `0x6fa4f0`, `0x6fa50a`, `0x6fa517`, `0x6fa52c`, `0x6fa53c`, `0x6fa549`, `0x6fa560`, `0x6fa584`, `0x6fa5d0`, `0x6fa5e2`, `0x6fa5e9`, `0x6fa601`, `0x6fa620`, `0x6fa690`, `0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`, `0x6fa9c0`, `0x6fa9d5`, `0x6fa9dd`, `0x6fa9ec`, `0x6faa00`, `0x6faa67`, `0x6faab6`, `0x6faac2`, `0x6faae7`, `0x6fab00`, `0x6fab43`, `0x6fab45`, `0x6fab69`, `0x6fab90`, `0x6fac1f`, `0x6fac2f`, `0x6fac63`, `0x6facfd`, `0x6fad5e`, `0x6fabe1`, `0x6fa98c`
+Addresses: `0x6fa4f0`, `0x6fa50a`, `0x6fa517`, `0x6fa52c`, `0x6fa53c`, `0x6fa549`, `0x6fa560`, `0x6fa584`, `0x6fa5d0`, `0x6fa5e2`, `0x6fa5e9`, `0x6fa601`, `0x6fa620`, `0x6fa690`, `0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`, `0x6fa9c0`, `0x6fa9d5`, `0x6fa9dd`, `0x6fa9ec`, `0x6faa00`, `0x6faa67`, `0x6faab6`, `0x6faac2`, `0x6faae7`, `0x6fab00`, `0x6fab90`, `0x6fac1f`, `0x6fac2f`, `0x6fac63`, `0x6facfd`, `0x6fad5e`, `0x6fabe1`, `0x6fa98c`
 Confidence: verified
 Proof: one
-Test: `lua::computesizes_difftest`
+Test: none
 
 `resize` keeps the old node vector, or copies the dummy node into a temporary when the old size
 is 0 (`rep movs` at `0x6fabe1`), grows the array first (`0x6fac1f`) and shrinks it after the new
 node vector exists, reinserting the vanishing array slice with `luaH_setnum` and then the old nodes
-with `luaH_set`. `newkey` calls `rehash` when no free node is left (`0x6fa98c`). The array part is
-the largest `2^n` for which at least `2^(n-1)` of the keys `1` to `2^n` are in use, as in
-upstream 5.0 and not 5.1: the walk adds `nums[i]`, the keys in `(2^(i-1), 2^i]`, to `a` and keeps
-`n = i` unless `cmp eax,esi; jl` (`0x6fab43`, `0x6fab45`) finds `a < 2^(i-1)`. Keys 3 and 4 alone
-give an array of 4. The walk stops when every integer key is counted or `narray < 2^(i-1)`. The
-test runs `computesizes` whole.
+with `luaH_set`. `newkey` calls `rehash` when no free node is left (`0x6fa98c`).
+
+## Choosing the array size
+
+`computesizes` picks the array part as upstream 5.0 does, not 5.1. It walks the slices `nums[i]`,
+the integer keys in `(2^(i-1), 2^i]`, adding each nonempty one to the running count `a`, and takes
+`2^i` as the size, holding `a` keys, when after adding `a >= 2^(i-1)`; an empty slice never moves
+the size. It stops once `a` reaches the integer key count `*narray` or `*narray < 2^(i-1)`. Keys 3
+and 4 alone give an array of 4; keys 1, 2 and 5 give 2. The array is `2^n`, or 0 with no size
+taken, and the hash part gets `ntotal` less the keys the array holds.
+
+Addresses: `0x6fab00`, `0x6fab10`, `0x6fab20`, `0x6fab37`, `0x6fab39`, `0x6fab3f`, `0x6fab41`, `0x6fab43`, `0x6fab45`, `0x6fab47`, `0x6fab54`, `0x6fab5e`, `0x6fab69`, `0x6fab82`
+Confidence: verified
+Proof: two
+Test: `lua::computesizes_difftest`
+
+`0x6fab10` starts the log at 0 when key 1 is in use and at −1 when not, with `a` and the held count
+at `nums[0]`. The walk runs while `a < *narray` (`0x6fab20`, `0x6fab54`) and `*narray >= 2^(i-1)`
+(`0x6fab37`, `0x6fab39`). `test ebx,ebx; jle` at `0x6fab3f` skips an empty slice before `0x6fab41`
+adds it to `a`; `cmp eax,esi; jl` (`0x6fab43`, `0x6fab45`) keeps the size when `a < 2^(i-1)`, so
+the test is non-strict, and `0x6fab47` stores `i` and `a`. `0x6fab5e` gives `*nhash = ntotal −
+held`, and a log of −1 gives an array of 0 (`0x6fab69`), else `1 << n` (`0x6fab82`). An independent
+cold read derived the same. The test runs `computesizes` whole.
 
 ## Table access
 
