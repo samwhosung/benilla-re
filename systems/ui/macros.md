@@ -224,14 +224,15 @@ levels below it, each scope in two files: `macros-local.txt` for macros whose lo
 body line, and `END`, each ended by a carriage return and line feed. The save runs when the save flag
 `0xbdcbf8` is set.
 
-Addresses: `0x4f0aa0`, `0x4f0c60`, `0x5afed0`, `0x5af6b0`, `0x64a7f0`, `0xbdcbf8`
+Addresses: `0x4f0aa0`, `0x4f0b61`, `0x4f0c60`, `0x5afed0`, `0x5af6b0`, `0x64a7f0`, `0x84cb60`, `0xbdcbf8`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4f0c60` clears the save flag and calls `0x5afed0` for file kinds 4 (account) and 5 (character) with the
 callback `0x4f0aa0`; the callback gets the local file's handle in `ecx` and the cache file's in `edx`, and a macro
-goes to the first when `+0x20` is set. The block is built with the format `MACRO %d "%s" %s` plus CRLF, each
+goes to the first when `+0x20` is set. The block is built with the format `MACRO %d "%s" %s` plus CRLF (`0x84cb60`, pushed
+at `0x4f0b61` with the id `[rec+0x18]`, the name `+0x24` and the icon `+0x64`), each
 body line from the tokenizer with CRLF, then `END` with CRLF.
 
 ## Loading macro files

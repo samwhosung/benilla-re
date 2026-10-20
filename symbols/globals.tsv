@@ -1738,7 +1738,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84c990	void *[18]	s_macroFunctions		ui	Holds the 9 name and function pairs of the macro Lua functions, CreateMacro to GetMacroIndexByName	verified	one	ui/scriptapi#function-tables
 0x84ca64	char[17]	s_textInterfaceIcons		unassigned	Holds the string "Interface\Icons\"	inferred	none	
 0x84cab0	char[17]	s_textCastSpellByName		ui	Holds the string "CastSpellByName("	inferred	none	
-0x84cb60	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x84cb60	char[19]	s_textMacroDSS		ui	Holds the macro file header format, MACRO %d "%s" %s and CRLF, that 0x4f0b61 pushes	verified	one	ui/macros#macro-files
 0x84cb74	char[63]	s_textUsageCreateMacroNameIconIndexBodyLocal		ui	Holds the string "Usage: CreateMacro(name, iconIndex, body, local, perCharacter)"	inferred	none	
 0x84cbb4	char[40]	s_textCreateMacroFailedNoNameSpecified		ui	Holds the string "CreateMacro() failed, no name specified"	inferred	none	
 0x84cbdc	char[45]	s_textCreateMacroFailedAlreadyHaveDMacros		ui	Holds the string "CreateMacro() failed, already have %d macros"	inferred	none	
