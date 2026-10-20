@@ -43,11 +43,11 @@ Test: `net::datastore_heap`, `net::datastore_inline`, `net::datastore_window`
 
 ## Time speed packet
 
-`SMSG_LOGIN_SETTIMESPEED` (`0x42`) is a u32 packed date and a float rate. The packed date is the fields minute (bits 0 to 5), hour (6 to 10), weekday (11 to 13), day (14 to 19), month (20 to 23), year (24 to 28) and a two-bit field (29 and 30); a field whose bits are all ones reads as `-1`. A packet not read to its end logs `Malformed message recieved: Id = %d, Len = %d, Read = %d` and the handler returns 0. Otherwise it passes the date to the clock object `0xce8538`, calls `0x6c5f50`, passes the rate to the clock and logs `Gamespeed set from <old> to <new>`. The three callees are not read here.
+`SMSG_LOGIN_SETTIMESPEED` (`0x42`) is a u32 packed date (`gametime#packed-date-fields`) and a float rate. A packet not read to its end logs `Malformed message recieved: Id = %d, Len = %d, Read = %d` and the handler returns 0. Otherwise it decodes the date, sets the clock `0xce8538` to it with `force` (`gametime#setting-the-time`), calls the bridge `0x6c5f50` (`gametime#time-changed-bridge`), stores the rate clamped (`gametime#time-scale`) and logs `Gamespeed set from <old> to <new>`, the new value being the rate as received, not as clamped (`gametime#game-speed-set`). The bridge runs before the rate is stored.
 
-Addresses: `0x6c5e80`, `0x642c30`, `0x642b30`, `0x6c5e96`, `0x6c5ea1`, `0x6c5eaa`, `0x6c5ed9`, `0x6c5ee9`, `0x6c5eee`, `0x6c5efc`
+Addresses: `0x6c5e80`, `0x642c30`, `0x642b30`, `0x6c5e96`, `0x6c5ea1`, `0x6c5eaa`, `0x6c5ed9`, `0x6c5ee9`, `0x6c5eee`, `0x6c5efc`, `0x6c5f01`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6c5e96` reads the dword with `0x418eb0` and `0x6c5ea1` the rate with `0x419130`; `0x6c5eaa` is `call [edx+0x14]`, the store's read-to-end test. `0x6c5ed9` calls `0x642c30`, which passes the seven field addresses of its output record, `+0` to `+0x18`, to `0x642b30`; that function extracts each field with a shift and mask and stores `-1` for an all-ones value (`0x642b39` to `0x642bee`): minute `& 0x3f`, hour `>> 6 & 0x1f`, weekday `>> 0xb & 7`, day `>> 0xe & 0x3f`, month `>> 0x14 & 0xf`, year `>> 0x18 & 0x1f`, and `>> 0x1d & 3`. `0x6c5ee9` is `0x6434d0` on the clock with the record, `0x6c5eee` calls `0x6c5f50` and `0x6c5efc` is `0x643820` with the rate; the old speed in the log is its return.
+`0x6c5e96` reads the dword with `0x418eb0` and `0x6c5ea1` the rate with `0x419130`; `0x6c5eaa` is `call [edx+0x14]`, the store's read-to-end test. `0x6c5ed9` calls `0x642c30` on the dword. `0x6c5ee9` is `0x6434d0` on the clock with the record, `0x6c5eee` calls `0x6c5f50` and `0x6c5efc` is `0x643820` with the rate; the old speed in the log is its return, and `0x6c5f01` loads the received float for the line.
