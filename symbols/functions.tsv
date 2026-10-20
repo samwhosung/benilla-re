@@ -10636,9 +10636,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ee0a0	43	DeletingDestructor4ee0a0		ui	orchestration		Destroys the object through 0x4ee0d0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4ee0d0	36			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ee100	104			ui	primitive		Runs its object file code not read here	inferred	none		ui::glue_4dc_4ee100_half_pair
-0x4ee170	230	CGMinimapFrame::LoadArrowModel		ui	primitive		Creates a model from a file and sets it on the eight arrow children, or answers 0 when it does not load	verified	one	ui/minimap#the-engine-children	
-0x4ee260	77	CGMinimapFrame::LoadPlayerModel		ui	orchestration		Sets a model file on the player arrow child	verified	one	ui/minimap#the-engine-children	
-0x4ee2b0	126	CGMinimapFrame::PostLoadXML		ui	orchestration		Reads the arrow and player model attributes with their defaults and loads both	verified	one	ui/minimap#the-engine-children	
+0x4ee170	230	CGMinimapFrame::LoadArrowModel		ui	primitive		Sets a model of a file, the error cube when it fails to open, on the eight arrow children; 0 only when the create fails	verified	one	ui/minimap#arrow-model-loading	
+0x4ee260	77	CGMinimapFrame::LoadPlayerModel		ui	orchestration		Sets a model file on the player arrow child, answering 0 when the child holds no model after it	verified	one	ui/minimap#arrow-model-loading	
+0x4ee2b0	126	CGMinimapFrame::PostLoadXML		ui	orchestration		Reads the arrow and player model attributes with their defaults and loads both	verified	one	ui/minimap#arrow-model-loading	
 0x4ee330	364	MinimapApplyPing		ui	primitive	void __fastcall (void *guid, float *point)	Stores a world point as the ping and signals MINIMAP_PING with the pinger's token and the offset over the zoom diameter	verified	one	ui/minimap#the-ping	ui::glue_4ea_4ee330_scale
 0x4ee4a0	411	Minimap::SetMaskTexture	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Minimap method SetMaskTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
 0x4ee640	411	Minimap::SetIconTexture	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Minimap method SetIconTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
