@@ -7932,7 +7932,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b30c0	228	CompareBookSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two book spells by tab position, name, numeric rank and rank string	verified	one	ui/spellbook#book-order	ui::sortcmp_4b30c0
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
-0x4b3250	15	SignalCurrentSpellCastChanged		ui	orchestration		Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
+0x4b3250	15	SignalCurrentSpellCastChanged		ui	orchestration		Fires ACTIONBAR_UPDATE_STATE through 0x4e5bf0, then CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	verified	one	ui/spellbook#picking-up-a-book-spell	
 0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
 0x4b32f0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		

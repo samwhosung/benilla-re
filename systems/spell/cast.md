@@ -20,10 +20,11 @@ Roots: `0x6e4b60`, `0x6e5a90`, `0x6e6ef0`, `0x6e6f10`, `0x6e7130`, `0x6e9b60`, `
 spell `0xceca88` and its item guid `0xcecab0` move to the saved slot `0xcecaa8` and `0xcecb20`,
 and the new spell and its item's guid, or 0, take their place. With spell 0 it pops: the saved
 slot is copied back and stays as it was. A spell equal to the in-flight one changes nothing.
-Every change ends in `0x4b3250`, which fires `CURRENT_SPELL_CAST_CHANGED` (261) with no arguments.
+Every change ends in `0x4b3250`, which fires `ACTIONBAR_UPDATE_STATE` (214) and then
+`CURRENT_SPELL_CAST_CHANGED` (261), both with no arguments.
 Only one level is saved: a second push overwrites the saved slot.
 
-Addresses: `0x6e4ad0`, `0x6e4ad5`, `0x6e4adf`, `0x6e4b00`, `0x6e4b2c`, `0xceca88`, `0xcecaa8`, `0xcecab0`, `0xcecb20`, `0x4b3250`
+Addresses: `0x6e4ad0`, `0x6e4ad5`, `0x6e4adf`, `0x6e4b00`, `0x6e4b2c`, `0xceca88`, `0xcecaa8`, `0xcecab0`, `0xcecb20`, `0x4b3250`, `0x4e5bf0`
 Confidence: verified
 Proof: one
 Test: none
@@ -31,7 +32,8 @@ Test: none
 The function is `fastcall(ecx = spell, edx = item)`. `0x6e4ad5 cmp eax,ecx; je` returns; `test
 ecx,ecx; je 0x6e4b2c` pops. The push stores the old spell at `0x6e4adf` and the guid pair, then
 reads the item's guid through `[edx+0x8]` (`0x6e4b00`), or stores zeros. Every path tail-jumps to
-`0x4b3250`, which calls a game UI function and jumps to `0x703e50` with `ecx = 0x105`. The
+`0x4b3250`, which calls `0x4e5bf0` (`mov ecx,0xd6; jmp 0x703e50`) and jumps to `0x703e50` with
+`ecx = 0x105`. The
 writers of the four globals in the image are this function and the system start `0x6e7150`, which zeroes them;
 the cast result handler `0x6e7330` also clears the saved slot (`handlers`). All four lie in the
 zero-filled part of `.data`.
@@ -160,8 +162,8 @@ Test: none
 `0x6e5250(caster, record, guid)` loads the word `0xcecac0` from `Targets` (`+0x34`, 16 bits), then
 switches on `EffectImplicitTargetA[0]` (`+0x148`), 1 to 63, through an 11-entry table. If the word
 has 0x2000 and the text `0xcee838` is not empty, the text is copied to the record's `+0x70`, 0x2000
-leaves the word and enters the mask. It fires `CURRENT_SPELL_CAST_CHANGED` through
-`0x4b3250`; then a zero word sends at once. Target 16 returns 0. Otherwise a candidate is bound through `0x6e5b40`; with none bound, the active player is bound when the
+leaves the word and enters the mask. It fires `ACTIONBAR_UPDATE_STATE` and `CURRENT_SPELL_CAST_CHANGED`
+through `0x4b3250`; then a zero word sends at once. Target 16 returns 0. Otherwise a candidate is bound through `0x6e5b40`; with none bound, the active player is bound when the
 `autoSelfCast` value is nonzero; else an unknown object whose spell's maximum range exceeds 100 is
 sent by guid.
 
