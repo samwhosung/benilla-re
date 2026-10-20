@@ -165,28 +165,33 @@ it. `$a`, `$e`, `$f`, `$F`, `$c`, `$d`, `$p`, `$t` and `$z` do not.
 
 `$gMale:Female;` picks the first form for a male and the second otherwise, using the active player's
 gender (`fields+0x7a`), not the described unit's. With no active player the token fails and the output
-holds a literal `$` followed by the text. Each form loses its leading and trailing spaces and keeps interior
-ones. A token without a colon, or without a `;` after it, prints nothing and the text after the letter is copied
-as it stands.
+holds a literal `$` followed by the text after the letter, spaces kept. Otherwise every space after the letter
+is skipped before anything is searched for, in every branch. Each form loses its leading and trailing spaces and
+keeps interior ones. A token without a colon, or without a `;` after it, prints nothing and leaves the cursor
+after those spaces, so the text that follows is copied without them.
 
-Addresses: `0x50786d`, `0x507877`, `0x50787c`, `0x508180`, `0x508193`, `0x5081a4`, `0x5081b1`, `0x5081c2`, `0x5081c8`, `0x5081ed`, `0x5081f6`, `0x508200`, `0x50820c`, `0x50820e`, `0x508214`, `0x508219`, `0x508222`, `0x50823d`, `0x508257`, `0x508263`, `0x508267`, `0x508285`, `0x50828c`, `0x64a760`, `0x64a6f0`
+Addresses: `0x50786d`, `0x507877`, `0x50787c`, `0x508180`, `0x508193`, `0x5081a4`, `0x5081b1`, `0x5081c2`, `0x5081c8`, `0x5081cd`, `0x5081d9`, `0x5081ed`, `0x5081f6`, `0x508200`, `0x50820c`, `0x50820e`, `0x508214`, `0x508219`, `0x508222`, `0x50823d`, `0x508257`, `0x508263`, `0x508267`, `0x508285`, `0x50828c`, `0x64a760`, `0x64a6f0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x508193` and `0x5081a4` find the active player with mask 0x10; none returns 0 (`0x5081b1`), and the dispatcher
-returns it (`0x507883`). The colon and semicolon are searched for with `SStrChr` to the end of the text
+`0x508193` and `0x5081a4` find the active player with mask 0x10; none returns 0 (`0x5081b1`), before any space
+is skipped, and the dispatcher returns it (`0x507883`). The dispatcher has set the cursor past the letter
+(`0x507871`). The spaces are stepped over at `0x5081c8` to `0x5081cd`; an empty rest branches at `0x5081c2` to the
+return of 1 (`0x50828c`), and a rest of only spaces returns 1 with the cursor at its end (`0x5081d9`). The colon and semicolon are searched for
+with `SStrChr` to the end of the text
 (`0x5081ed`, `0x508200`). The byte at `fields+0x7a` (`0x508214`) of 0 keeps the first form (`0x50821b`); anything else,
 2 included, takes the second (`0x508222`). The form is appended whole (`0x508257`) and the trailing spaces trimmed
 (`0x508267` to `0x508280`); the cursor ends after the `;` (`0x508285`).
 
 ## Plural text
 
-`$lSingular:Plural;` has the same shape and no player. It asks the interface's plural function for the
+`$lSingular:Plural;` has the same shape and no player, and skips the spaces after the letter first
+(`0x5082c0` to `0x5082c5`). It asks the interface's plural function for the
 plural index of the key and takes the first form when the index is 1, the second otherwise, so the first form is
 used only for a key of 1: a key of 0 reads plural. It cannot fail.
 
-Addresses: `0x50788d`, `0x507897`, `0x5082a0`, `0x5082b8`, `0x5082c0`, `0x5082e5`, `0x5082f6`, `0x50830c`, `0x50830f`, `0x508314`, `0x508316`, `0x50831f`, `0x508343`, `0x508357`, `0x508367`, `0x508385`, `0x50838c`, `0x703cf0`
+Addresses: `0x50788d`, `0x507897`, `0x5082a0`, `0x5082b8`, `0x5082c0`, `0x5082c5`, `0x5082e5`, `0x5082f6`, `0x50830c`, `0x50830f`, `0x508314`, `0x508316`, `0x50831f`, `0x508343`, `0x508357`, `0x508367`, `0x508385`, `0x50838c`, `0x703cf0`
 Confidence: verified
 Proof: one
 Test: none
