@@ -155,8 +155,8 @@ Test: none
 Azimuth and elevation are the first camera's eye (`posBase`) seen from attachment 0's position.
 The bones are roots whose pivots equal the attachment positions; their flags are 0 or 0x200, so
 `0x714961 test cl,7` never takes the billboard leg. The loader `0x706a50` rewrites an `.mdx` or
-`.mdl` extension to `.m2` and refuses any other, so the scripts' `.mdx` names resolve to `.m2`
-files. Each scene has one camera, and `SetCamera(0)` indexes it raw. The frame's own `SetFacing` (`ui`) turns
+`.mdl` extension to `.m2`, takes `.m2` as it is and refuses any other or none, so the scripts'
+`.mdx` names resolve to `.m2` files. Each scene has one camera, and `SetCamera(0)` indexes it raw. The frame's own `SetFacing` (`ui`) turns
 the scene model, and no GlueXML file calls it. With the bone yaw dropped, the total angle between Human's
 forward and the line to the camera goes from 12.937 to 22.126 degrees; its elevation is 12.829.
 

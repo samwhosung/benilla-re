@@ -106,22 +106,25 @@ Of `0x7ae010`, `noise_table_randf01_difftest` runs `0x7ae13b`–`0x7ae177`.
 
 ## Shared model lookup
 
-`0x706a50` returns the shared model of a file, loading it on first use. `.mdl` and `.mdx` (without
-case) become `.m2`; any other extension fails, and so does a file that does not open. The key is
-the name the opened file reports, up to its last dot: `h = h·19 + tolower(c)` over its bytes in
-32-bit arithmetic, each byte sign-extended first, so a byte of 0x80 or above adds its negative
-value, which the C-locale `tolower` returns unchanged; the bucket is `h mod 1021`, unsigned. A bucket's chain is sorted by hash, then by name without case; a match adds a reference
+`0x706a50` returns the shared model of a file, loading it on first use. The extension is the path
+from its last dot: `.mdl` and `.mdx` (without case) become `.m2`, `.m2` passes as it is, and any
+other extension or a path with no dot fails; so does a file that does not open. The key is
+the name the opened file reports, up to its last dot: `h = h·19 + tolower(c)` over its bytes, each
+sign-extended, in 32-bit arithmetic; the bucket is `h mod 1021`, unsigned. A bucket's chain is sorted by hash, then by name without case; a match adds a reference
 and closes the file, a miss inserts a new 0x164-byte shared model and starts its load.
 
-Addresses: `0x706a50`, `0x706b35`, `0x706b68`, `0x706b71`, `0x706b8a`, `0x6487b0`, `0x71d2c0`, `0x71d430`, `0x71d4e0`, `0x73f700`, `0x40f92b`
+Addresses: `0x706a50`, `0x706a80`, `0x706a8c`, `0x706a92`, `0x706aa6`, `0x706aba`, `0x706acb`, `0x706acd`, `0x706adf`, `0x706caf`, `0x706b35`, `0x706b68`, `0x706b71`, `0x706b8a`, `0x6487b0`, `0x71d2c0`, `0x71d430`, `0x71d4e0`, `0x73f700`, `0x40f92b`
 Confidence: verified
 Proof: one
 Test: none
 
-The extension is found with `strrchr` (`0x73f700`) and compared with `SStrCmpI`. `0x6487b0`
+The extension is found with `strrchr` (`0x73f700`, `0x706a80`), a null failing at `0x706a8c`, and
+compared with `SStrCmpI` to `.mdl` (`0x706a92`) and `.mdx` (`0x706aa6`), either rewritten to `.m2`
+(`0x706aba` to `0x706acb`), and otherwise to `.m2` (`0x706acd`), whose mismatch fails at `0x706caf`
+with `Model2: Invalid file extension: %s` and whose match opens the file as named (`0x706adf`). `0x6487b0`
 copies the file's name into a 0x104-byte buffer (`0x706b35`) and the last dot is cut. The hash loop
 loads each byte with `movsx` (`0x706b68`), calls `tolower` (`0x40f92b`), whose C-locale path adds
-0x20 only for 0x41 to 0x5a, and computes `imul ebx,ebx,0x13; add ebx,eax` (`0x706b71`). The bucket
+0x20 only for 0x41 to 0x5a, so a byte of 0x80 or above adds its negative value, and computes `imul ebx,ebx,0x13; add ebx,eax` (`0x706b71`). The bucket
 is `div` by 0x3fd (`0x706b8a`). The chain
 walk continues while the node's hash `+0x12c` is lower, or equal with `SStrCmpI(node+0x20, name)`
 negative. A new node is allocated with line 0x19d, constructed by `0x71d2c0`, loaded by
