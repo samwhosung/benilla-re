@@ -123,7 +123,7 @@ That the bit tested by `0x630a80` is the game object's transport flag is inferre
 
 ## Point inside a transport
 
-Both transport handlers answer slot +0x54 with one body: 1 without a world entity at `+0x10`, else
+Both transport handlers answer slot +0x54 with the same body: 1 without a world entity at `+0x10`, else
 `CWorld::IsPointInEntity`. A map object definition (tag 0x8 of its `+0x8`) answers by its root's
 convex volume planes, `PointInsidePlanes`, and false while the root is unloaded. A doodad
 definition (tag 0x40) answers false without a model at `+0x88` or while it is unloaded, else whether the point lies in

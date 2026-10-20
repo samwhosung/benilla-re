@@ -246,9 +246,9 @@ For a visible victim and kind 0 the gain goes through the victim, which marks it
 writes no line, and a gain of 0 writes nothing. That line names the victim and adds a group bonus
 or raid penalty: `COMBATLOG_XPGAIN_FIRSTPERSON`, `_GROUP`, `_RAID`, or with a rest modifier
 `COMBATLOG_XPGAIN_EXHAUSTIONn` and its forms. Otherwise the line is
-`COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED`. The unnamed group and raid lines, reached with no unit and a
-multiplier other than 1, pass the group string's address where the XP belongs, so they print that
-address and put the XP in the bonus.
+`COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED`. The unnamed group and raid forms, which would print the group
+string's address where the XP belongs, are unreachable: they need no unit and a multiplier other
+than 1, and the one caller without a unit passes 1.0.
 
 Addresses: `0x637e30`, `0x637ec0`, `0x637ac0`, `0x637cd0`, `0x637da0`, `0x637f70`, `0x637f90`, `0x637a80`, `0x864330`, `0x60a0c0`, `0x60a0f7`, `0x6251e0`, `0x625202`, `0x625259`, `0x6251a4`
 Confidence: verified
@@ -262,6 +262,9 @@ sets bit 0x8 of `+0xc58` and calls `0x6251e0` at `0x60a0f7`. Its one gate is `+0
 call at `0x6251a4` finds nothing. Else `0x637f90` writes with no unit and multiplier 1.0, and
 `ShowXPGain` floats. `0x637ac0`: the `Exhaustion` row of the player's rest byte (`+0x1b` of its
 fields) with a multiplier other than 0 and 1 selects `0x864330`'s key; the base `ftol(xp/mult)`
-equal, below or above the received picks the plain, `_GROUP` or `_RAID` form. `0x637da0`: after
+equal, below or above the received picks the plain, `_GROUP` or `_RAID` form. `0x637ac0`'s callers
+are `0x637ab1`, in `0x637a80` with the unit `ClntObjMgrObjectPtr` found at `0x637aa8`, and
+`0x637fa3`, in `0x637f90` with no unit and 1.0 (`0x637f98`); `0x637cd0` with a multiplier of 1.0
+computes `ftol(xp / 1.0)`, the XP itself, so the unnamed line is the plain one. `0x637da0`: after
 `ebx` holds the unnamed format, `GetText(…UNNAMED_GROUP)` is pushed as the first argument of
 `You gain %d experience. (+%d group bonus)`, ahead of the XP and the difference. Slices: xpgain_rest_gate_difftest `0x637b3e`-`0x637b7b`.
