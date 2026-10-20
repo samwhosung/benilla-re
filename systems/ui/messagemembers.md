@@ -69,15 +69,15 @@ The slices are `0x785eb5` to `0x785efd` (the inner rectangle), `0x785f03` to `0x
 
 ## Message frame setters
 
-The layout callback `0x785e80` runs the frame's (`0x76b580`) and then `0x785ea0`; `0x785c00(a, flags)` runs the layout when bit 0 or 4 of `flags` is set. `0x785c20` and `0x785c80` store a time at `+0x34c` or `+0x350` and copy it into every line whose own time is 0.
+The layout callback `0x785e80` runs the frame's (`0x76b580`) and then `0x785ea0`; `0x785c00(a, flags)` runs the layout when bit 0 or 4 of `flags` is set. `0x785c20` and `0x785c80` store a time at `+0x34c` or `+0x350` and copy it into every line whose own time (`+0x10` or `+0x14`) is not 0, NaN included; a line at 0 or -0 keeps it.
 `0x785b80` stores four insets (`+0x330` to `+0x33c`) and lays out; `0x785dc0` deactivates every line and clears the queue. `0x785bb0` stores a length at `+0x340` and sets the fixed length of each line's `FontString` through `0x771680`; nothing calls it.
 
-Addresses: `0x785e80`, `0x785cec`, `0x785e8a`, `0x785c00`, `0x785c0f`, `0x785c20`, `0x785c4b`, `0x785c80`, `0x785cab`, `0x785b80`, `0x785ba7`, `0x785dc0`, `0x785df8`, `0x785bb0`, `0x785be1`, `0x76b580`, `0x771680`
+Addresses: `0x785e80`, `0x785cec`, `0x785e8a`, `0x785c00`, `0x785c0f`, `0x785c20`, `0x785c4b`, `0x785c50`, `0x785c80`, `0x785cab`, `0x7ffd74`, `0x785b80`, `0x785ba7`, `0x785dc0`, `0x785df8`, `0x785bb0`, `0x785be1`, `0x76b580`, `0x771680`
 Confidence: verified
 Proof: one
 Test: none
 
-The unreached claim is a census: every `call` and `jmp` to `0x785bb0` in the listing and every little-endian occurrence of the address in each section of the image, none of either; the same two scans find the callers of `0x785ea0` (`0x785b80`, `0x785c00`, `0x785e80`, and `0x785cec` inside `0x785ce0`), the control. `0x785c20` tests the line's time against 0.0 with `test ah,0x44` (`0x785c4b`).
+The unreached claim is a census: every `call` and `jmp` to `0x785bb0` in the listing and every little-endian occurrence of the address in each section of the image, none of either; the same two scans find the callers of `0x785ea0` (`0x785b80`, `0x785c00`, `0x785e80`, and `0x785cec` inside `0x785ce0`), the control. `0x785c20` compares the line's time with 0.0 (`0x7ffd74`), and `test ah,0x44; jnp` (`0x785c4b`) skips the store at `0x785c50` only on C3 alone, equal; less, greater and unordered store. `0x785c80` does the same at `0x785cab`.
 
 ## Scroll frame teardown
 
