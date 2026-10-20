@@ -7,6 +7,12 @@
 //! values. The probe runs with the world ray `0x672170` replaced: once as a miss, and once as a
 //! counter island that writes chosen hit points into the segment it is given. Every draw comes off
 //! the high bits of an LCG, and each branch is tallied and required to be hit.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `cam_511610` runs `fsin` at `0x511625`; `f2xm1` at
+//! `0x511643`; `fsincos` at `0x511692` and `0x5116af`. `cam_50d900` runs `fsincos` at `0x50d9b4`.
+//! `cam_511920` runs `fsin` at `0x511a1c` and `0x511a61` and `fsincos` at `0x511a39`. The emulator
+//! computes each in host `double`, so where its result reaches a compared value the host's math
+//! stands in for the x87's, and the test shows the code around it.
 #![allow(
     clippy::float_cmp,
     clippy::too_many_arguments,

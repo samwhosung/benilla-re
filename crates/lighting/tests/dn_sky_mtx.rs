@@ -2,6 +2,10 @@
 //! `DrawDecalBatches` (`0x6d7480`) from `0x6d7506` to `0x6d7532` that tests `[0xcea620]` and calls
 //! `0x589e30` with its scaled value, against `sky_element_draw_scale`. The matrix functions
 //! `0x7bc6a0`, `0x7bdb00` and `0x7bdc40` run in the emulator inside the first.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sky_billboard_build_difftest` runs `fsincos` at
+//! `0x7bdb6a`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

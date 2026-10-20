@@ -4,6 +4,11 @@
 //! against `dn_fade_factor`, `dn_sky_tex_sample`, `dn_tone_curve`, `dn_cam_sky_setter`,
 //! `dn_override_sky_phase`, `dn_track_phase_wrap` and `dn_array_scale_36`. `UpdateStars` and
 //! `GetNightFraction` call `EvalSkyTrack` (`0x6cf6c0`), which runs in the emulator too.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `dn_sky_tex_sample_difftest` runs `fcos` at
+//! `0x6cf8ab`. `dn_tone_curve_difftest` runs `fyl2x` at `0x73f9af` and `f2xm1` at `0x744b0a`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

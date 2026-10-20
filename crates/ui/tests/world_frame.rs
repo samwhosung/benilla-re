@@ -4,6 +4,10 @@
 //!
 //! The cosine and sine are compared with the host's functions structurally, as the x87
 //! transcendentals differ by CPU; everything else bit for bit.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `textglue_482_cos_sin` runs `fcos` at `0x48343c` and
+//! `fsin` at `0x483449`. The emulator computes each in host `double`, so where its result reaches a
+//! compared value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod fpkit;
 

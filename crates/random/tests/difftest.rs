@@ -1,6 +1,10 @@
 //! The float part of `RandomUnitVector2` (`0x44fd00`), run as the slice `0x44fdc8` to `0x44fe17`
 //! with the accumulator in `esi`: the angle from the mantissa, then `fsincos`. The slice also
 //! writes the state through `ecx`, to a scratch cell.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `rand_44fd00_gradient` runs `fsincos` at `0x44fe01`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

@@ -172,8 +172,9 @@ A claim that something never happens is a census, and a census earns its zero.
 
 A bit-exact test runs the exe's own code in the Unicorn emulator beside the reimplementation. The
 harness is `crates/difftest`, and each system's crate under `crates/` holds a reimplementation and
-its tests (`CONTRIBUTING.md`, Adding a test). The x87 setting below holds for every finding, and
-the rules after it are the ones each test follows.
+its tests (`CONTRIBUTING.md`, Adding a test). The x87 setting below holds for every finding, the
+emulator's limits after it bound what a test can show, and the rules after them are the ones each
+test follows.
 
 The client runs the x87 at 53-bit precision, rounding to nearest, every exception masked: the
 control word `0x023F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and
@@ -184,6 +185,26 @@ nearest, and `0x409c33` loads the result with `fldcw`. `0x5995c0` creates the
 Direct3D 9 device with the flags `0x22` or `0x52` (`0x599614` to `0x59961c`), both of which
 include `D3DCREATE_FPU_PRESERVE`, so the device never lowers the precision. Every finding and test
 assumes this control word unless it says otherwise.
+
+The emulator is the QEMU x86 core of `unicorn-engine` 2.1.5, and its x87 is not the client's at
+every instruction. `f2xm1`, `fyl2x`, `fyl2xp1`, `fsin`, `fcos`, `fsincos`, `fptan`, `fpatan`,
+`fprem` and `fprem1` convert their operands to the host's `double`, call its C library and
+convert back, so a result carries 53 significant bits where the x87 rounds at 64, and the two
+remainders are computed in `double`, not exactly. Their edges differ too: `fsin`, `fcos`,
+`fsincos` and `fptan` reduce an operand that rounds to ±2^63 as a `double`, which the x87 reports
+out of range, and
+give ±∞ back unchanged with C2 set where the x87 returns the indefinite; `fyl2x` and `fyl2xp1`
+of an operand outside their domain, or of a NaN, set C2 and pop nothing; `fprem` and `fprem1` of
+an infinite or NaN operand, or with a zero divisor, return the host's positive NaN. Beyond these,
+a signalling NaN loaded from memory or stored to it stays signalling where the x87 quiets it, and
+a read of an empty register returns what the register last held: there is no stack fault and no
+indefinite. A test whose compared values pass through one of these shows the code around the
+instruction, not the client's result there, and keeps its inputs off the other differences.
+`BENILLA_RE_X87_CENSUS` names a file to which every test appends a line for each address of the
+ten that it runs: its name as a row's `test` column gives it, the address and the mnemonic, and
+`edge` on a second line once it runs one on an operand where the answers differ beyond rounding.
+A test that runs one names it by address in its file's header and says what its comparison rests
+on; a test with an `edge` line compares no value that passes through it there.
 
 - Each test reads the reader's own `WoW.exe` and refuses any other build by its hash.
 - The emulator pins the x87 control word to `0x027F` and `MXCSR` at entry and checks them after (`0x027F`

@@ -2,6 +2,11 @@
 //! `sky_dome_ray_point` and `sky_cloud_uv_scroll`. The quadratic solver `0x454f40` and the C
 //! runtime's `acos` `0x741820` run in the emulator inside the calls. Inputs are finite: a NaN or
 //! infinite direction sends `acos` into the C runtime's error path.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sky_dome_ray_point_difftest` runs `fcos` at
+//! `0x6cf9dc`. `sky_cloud_uv_scroll_difftest` runs `fcos` at `0x6cf8ab` and `fpatan` at `0x741866`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

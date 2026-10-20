@@ -7,6 +7,11 @@
 //! The sampler: the step copy, the interpolation, a zero, positive, negative and NaN weight, a
 //! global sequence on the track, and the blend leg. The blend: a negative dot, the linear
 //! fallback at `1 - c <= 2^-23`, and the sine path, with non-normalized inputs in the sweep.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `m2_track_sample_quat_difftest`,
+//! `sample_quat_slerp_difftest` run `fpatan` at `0x74d190` and `fsin` at `0x74d1a3` and `0x74d1b0`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

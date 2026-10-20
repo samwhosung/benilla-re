@@ -10,6 +10,10 @@
 //!
 //! Each test adds NaN, the infinities, both zeros and its thresholds, equal and a step either
 //! side, to its random inputs.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `b2_arrival_cos_threshold_difftest` runs `fcos` at
+//! `0x610c8d`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

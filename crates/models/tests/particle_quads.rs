@@ -2,6 +2,11 @@
 //! `systems/models/particles.md#tail-quads`): `CParticleEmitter2::WriteQuads` (`0x7b2a50`) called
 //! whole on each leg, with the particle matrix, the gradient record and the streams in memory,
 //! and the vertices read back from the streams.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `particle_quad_expand_tiled_rotated_difftest` runs
+//! `fsincos` at `0x7be4f7`. `particle_quad_expand_rotated_difftest` runs `fsincos` at `0x7b2f5e`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 #![allow(clippy::too_many_arguments)] // a case takes every field it writes
 

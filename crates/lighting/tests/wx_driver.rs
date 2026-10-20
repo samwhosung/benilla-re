@@ -3,6 +3,10 @@
 //! instructions between two addresses (a slice) or, for a value the exe leaves wide in a register
 //! into a compare, as an island: the slice's bytes copied from the image with a `fstp` appended
 //! that captures the value (as a double where the exe keeps it wide).
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `wx_67be40_owned_fp_difftest` runs `fpatan` at
+//! `0x67bede`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

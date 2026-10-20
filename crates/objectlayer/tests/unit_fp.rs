@@ -5,6 +5,11 @@
 //! colour read of `0x614550`. Each runs whole in the emulator, with the calls around it stubbed
 //! where noted. The cosine of `DrunkSway` and the `fmod` of `WrapAngleToPi` are the host's. Each
 //! test adds NaN, the infinities, both zeros and the thresholds to its random inputs.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `cosine_pulse_difftest` runs `fcos` at `0x60ab61`,
+//! `0x60ab6c` and `0x60ab7d`. `angle_wrap_pi_difftest` runs `fprem` at `0x73f91f`. The emulator
+//! computes each in host `double`, so where its result reaches a compared value the host's math
+//! stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

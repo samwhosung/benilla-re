@@ -6,6 +6,10 @@
 //! (`0x58a980`, `0x449bf0`), so the exe's own polar conversion, HSV to RGB and pack run into the
 //! buffer, which is compared dword for dword with `build_wheel_texture`. The vector's resize
 //! (`0x526930`) is stubbed to do nothing.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `geo_78b580` runs `fpatan` at `0x78b682`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

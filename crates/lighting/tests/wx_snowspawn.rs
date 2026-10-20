@@ -3,6 +3,11 @@
 //! are compared with the transcription bit for bit. The sines and cosines (`fsincos`, `fcos`,
 //! `fsin`) are compared within one unit in the last place, since the host's functions stand in for
 //! the x87's; the angles that feed them and every other value are bit-exact.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `snowfl_sincos_difftest` runs `fsincos` at
+//! `0x677846`. `snowfl_sky_rot_difftest` runs `fcos` at `0x67797c` and `fsin` at `0x677981`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

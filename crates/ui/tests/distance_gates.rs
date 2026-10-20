@@ -13,6 +13,10 @@
 //!   the stored `f32` back.
 //!
 //! Every draw comes off the high bits of an LCG.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `dist2_5116e0` runs `fyl2x` at `0x73f9af` and
+//! `f2xm1` at `0x744b0a`. The emulator computes each in host `double`, so where its result reaches
+//! a compared value the host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::too_many_arguments)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

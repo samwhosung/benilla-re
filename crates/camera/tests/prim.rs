@@ -1,5 +1,9 @@
 //! `SetParticleDensity` (`0x7adfb0`) run whole and read from `0x87d5fc`, and the `fsincos` of
 //! `StoreAngleProperty` (`0x7acc40`) run as the slice `0x7acc87` to `0x7acc90`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `camera_angle_cossin` runs `fsincos` at `0x7acc8a`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

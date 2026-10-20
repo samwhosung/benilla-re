@@ -5,6 +5,11 @@
 //! reflection `0x601e83` to `0x601eca`, the path length `0x601eda` to `0x601f7e`, and the length
 //! through the speed and the duration, `0x601eda` to `0x601faf`. A gate is compared by `ah` and the
 //! jump it decides.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `monster_move_direction_sincos_difftest` runs
+//! `fsincos` at `0x601aba`. The emulator computes each in host `double`, so where its result
+//! reaches a compared value the host's math stands in for the x87's, and the test shows the code
+//! around it.
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 use benilla_re_objectlayer::monster_move::*;

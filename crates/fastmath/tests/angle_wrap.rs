@@ -12,6 +12,10 @@
 //! The second part replaces `0x73f90a` by a chosen value and runs the wrap on it: remainders the
 //! first part cannot produce (NaN, the infinities, and `0` to `1e-300` below it) go through the
 //! compare with 0 and the add of 2π.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `angle_wrap_diff` runs `fprem` at `0x73f91f`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 
 use benilla_re_difftest::{Emu, Wow};
 use benilla_re_fastmath::angle_wrap::angle_wrap;

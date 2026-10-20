@@ -12,6 +12,10 @@
 //! BOUNDARY: these are ui-OWNED attribute parsers (`0x6f2cf0` = string-keyed `{key,value}` lookup,
 //! `0x64aaa0` = CRT `atof`), NOT the Lua 5.0 VM at `0x6f3+` — confirmed at the bytes (no `lua_State`
 //! threading, no `TValue` tags). See the module doc.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `glue_6f1_color_pack` runs `fyl2x` at `0x73f9af` and
+//! `f2xm1` at `0x744b0a`. The emulator computes each in host `double`, so where its result reaches
+//! a compared value the host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

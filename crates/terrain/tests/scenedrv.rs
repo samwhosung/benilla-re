@@ -1,4 +1,8 @@
 //! The frame camera, scene and scroll arithmetic against `0x680bc0`, `0x681070` and `0x66fd50`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `render_fog_dist_difftest` runs `fcos` at
+//! `0x68110a`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

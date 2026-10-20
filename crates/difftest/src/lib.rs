@@ -40,6 +40,33 @@ pub const REQUIRE_DATA_VARIABLE: &str = "BENILLA_RE_REQUIRE_DATA";
 pub const SKIP_LOG_VARIABLE: &str = "BENILLA_RE_SKIP_LOG";
 /// Names a file to which every executed basic-block address is appended once.
 pub const COVERAGE_VARIABLE: &str = "BENILLA_RE_COVERAGE_OUT";
+/// Names a file to which each test appends, once per address, every x87 instruction it runs that
+/// the emulator computes in host `double`: the test as a row names it, the address and the
+/// mnemonic, tab-separated (`docs/METHOD.md#the-harness`).
+pub const X87_CENSUS_VARIABLE: &str = "BENILLA_RE_X87_CENSUS";
+
+/// The x87 transcendental and remainder instructions, `D9` and a second byte, that the emulator
+/// computes by converting their operands to host `double` (`docs/METHOD.md#the-harness`).
+const X87_HOST_DOUBLE: [(u8, &str); 10] = [
+    (0xf0, "f2xm1"),
+    (0xf1, "fyl2x"),
+    (0xf2, "fptan"),
+    (0xf3, "fpatan"),
+    (0xf5, "fprem1"),
+    (0xf8, "fprem"),
+    (0xf9, "fyl2xp1"),
+    (0xfb, "fsincos"),
+    (0xfe, "fsin"),
+    (0xff, "fcos"),
+];
+
+/// The mnemonic of `D9 second` when it is one of [`X87_HOST_DOUBLE`].
+fn x87_host_double(second: u8) -> Option<&'static str> {
+    X87_HOST_DOUBLE
+        .iter()
+        .find(|(b, _)| *b == second)
+        .map(|(_, m)| *m)
+}
 
 /// The build every finding is read from, as `tools/exe.env` gives it to every tool.
 const IDENTITY: &str = include_str!("../../../tools/exe.env");
@@ -225,6 +252,174 @@ fn record_coverage(addr: u64) {
             let _ = writeln!(s.file, "{addr:#x}");
         }
     }
+}
+
+/// Where the x87 census goes when `BENILLA_RE_X87_CENSUS` is set.
+static X87_CENSUS: OnceLock<Option<std::sync::Mutex<X87Sink>>> = OnceLock::new();
+
+struct X87Sink {
+    file: std::fs::File,
+    seen: std::collections::HashSet<(String, u64)>,
+}
+
+thread_local! {
+    /// The running test thread's name and the addresses already recorded for it, so an
+    /// instruction in a hot loop costs one lookup.
+    static X87_SEEN: std::cell::RefCell<(String, std::collections::HashSet<u64>)> =
+        std::cell::RefCell::new((String::new(), std::collections::HashSet::new()));
+}
+
+/// The running test as a row's `test` column names it: the crate's directory, which `cargo test`
+/// passes as `CARGO_MANIFEST_DIR`, and the test thread's name.
+fn running_test() -> String {
+    let krate = std::env::var_os("CARGO_MANIFEST_DIR")
+        .and_then(|dir| {
+            Path::new(&dir)
+                .file_name()
+                .map(|n| n.to_string_lossy().into_owned())
+        })
+        .unwrap_or_default();
+    let thread = std::thread::current();
+    format!("{krate}::{}", thread.name().unwrap_or("main"))
+}
+
+/// An x87 register as the 80-bit format holds it.
+#[derive(Clone, Copy)]
+struct X87Value {
+    negative: bool,
+    exponent: u16,
+    significand: u64,
+}
+
+impl X87Value {
+    fn read(uc: &Unicorn<'_, EmuState>, reg: RegisterX86) -> Option<X87Value> {
+        let b = uc.reg_read_long(reg).ok()?;
+        let b: [u8; 10] = b.get(..10)?.try_into().ok()?;
+        let top = u16::from_le_bytes([b[8], b[9]]);
+        Some(X87Value {
+            negative: top & 0x8000 != 0,
+            exponent: top & 0x7fff,
+            significand: u64::from_le_bytes(b[..8].try_into().ok()?),
+        })
+    }
+    fn is_nan(self) -> bool {
+        self.exponent == 0x7fff && self.significand << 1 != 0
+    }
+    fn is_infinite(self) -> bool {
+        self.exponent == 0x7fff && self.significand << 1 == 0
+    }
+    fn is_zero(self) -> bool {
+        self.exponent == 0 && self.significand == 0
+    }
+    /// The value, rounded to `f64`, which is enough to place it against a domain bound.
+    fn value(self) -> f64 {
+        let m = self.significand as f64 * 2f64.powi(i32::from(self.exponent) - 16383 - 63);
+        if self.negative {
+            -m
+        } else {
+            m
+        }
+    }
+}
+
+/// Whether the operands of `mnemonic`, about to run, lie where the emulator's answer differs
+/// from the x87's beyond rounding (`docs/METHOD.md#the-harness`): ±∞, or ±2^63 once rounded to
+/// `double`, for the trigonometric four, a NaN or an operand outside the domain for the logarithms and `f2xm1`, and
+/// an infinite or NaN dividend or a NaN or zero divisor for the remainders.
+fn x87_edge(uc: &Unicorn<'_, EmuState>, mnemonic: &str) -> bool {
+    let Some(st0) = X87Value::read(uc, RegisterX86::ST0) else {
+        return false;
+    };
+    match mnemonic {
+        "fsin" | "fcos" | "fsincos" | "fptan" => {
+            // The emulator compares the operand rounded to `double` with 2^63.
+            st0.is_infinite() || st0.value().abs() == 9_223_372_036_854_775_808.0
+        }
+        "fyl2x" => st0.is_nan() || st0.is_zero() || st0.negative,
+        "fyl2xp1" => st0.is_nan() || st0.value().abs() >= 1.0 - std::f64::consts::FRAC_1_SQRT_2,
+        "f2xm1" => st0.is_nan() || st0.value().abs() > 1.0,
+        "fprem" | "fprem1" => {
+            let st1 = X87Value::read(uc, RegisterX86::ST1);
+            st0.is_infinite() || st0.is_nan() || st1.is_some_and(|d| d.is_nan() || d.is_zero())
+        }
+        _ => false,
+    }
+}
+
+/// Appends the running test, `addr` and `mnemonic` to the census file the first time the test
+/// runs that address, and again with `edge` the first time it runs it on an operand
+/// [`x87_edge`] names; a no-op when the census is off.
+fn record_x87(addr: u64, mnemonic: &str, edge: bool) {
+    let thread = std::thread::current();
+    let name = thread.name().unwrap_or("main");
+    let fresh = X87_SEEN.with(|seen| {
+        let mut seen = seen.borrow_mut();
+        if seen.0 != name {
+            seen.0 = name.to_string();
+            seen.1.clear();
+        }
+        seen.1.insert(addr | u64::from(edge) << 63)
+    });
+    if !fresh {
+        return;
+    }
+    let sink = X87_CENSUS.get_or_init(|| {
+        let path = std::env::var_os(X87_CENSUS_VARIABLE)?;
+        let file = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(path)
+            .ok()?;
+        Some(std::sync::Mutex::new(X87Sink {
+            file,
+            seen: std::collections::HashSet::new(),
+        }))
+    });
+    if let Some(m) = sink {
+        let test = running_test();
+        let mut s = m.lock().unwrap_or_else(|e| e.into_inner());
+        if s.seen.insert((test.clone(), addr | u64::from(edge) << 63)) {
+            use std::io::Write;
+            let tail = if edge { "\tedge" } else { "" };
+            // One write per line, so lines from parallel test processes do not interleave.
+            let _ = s
+                .file
+                .write_all(format!("{test}\t{addr:#x}\t{mnemonic}{tail}\n").as_bytes());
+        }
+    }
+}
+
+/// The `.text` address whose bytes start with `window`, when exactly one does: the source of an
+/// instruction an island test runs from scratch.
+fn text_source(window: &[u8]) -> Option<u64> {
+    let (text, va) = TEXT_IMAGE.get()?;
+    let mut found = None;
+    for (i, w) in text.windows(window.len()).enumerate() {
+        if w == window {
+            if found.is_some() {
+                return None;
+            }
+            found = Some(va + i as u64);
+        }
+    }
+    found
+}
+
+/// An island instruction's scratch address, its first bytes and the bytes that end with its two,
+/// to its [`text_source`].
+type IslandSources = std::collections::HashMap<(u64, [u8; 8], Option<[u8; 8]>), Option<u64>>;
+
+/// [`text_source`] of each island instruction already looked up, so an island loop costs one
+/// lookup.
+static ISLAND_SOURCES: OnceLock<std::sync::Mutex<IslandSources>> = OnceLock::new();
+
+/// [`text_source`] of the island instruction at `addr`: the 8 bytes from it, or else the 8 that end
+/// with its two, for an instruction at the end of a copied stretch.
+fn island_source(addr: u64, window: [u8; 8], before: Option<[u8; 8]>) -> Option<u64> {
+    let cache = ISLAND_SOURCES.get_or_init(Default::default);
+    let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
+    *c.entry((addr, window, before))
+        .or_insert_with(|| text_source(&window).or_else(|| text_source(&before?).map(|va| va + 6)))
 }
 
 /// `.text`'s bytes and its base address, kept from the first [`Emu::new`] for [`scan_island`].
@@ -452,6 +647,49 @@ impl<'a> Emu<'a> {
                 }
             })
             .expect("add coverage block hook");
+        }
+        // With BENILLA_RE_X87_CENSUS set, record each x87 instruction the emulator computes in
+        // host double: one hook over `.text` that looks the address up among those whose bytes
+        // are one (an address no instruction starts at is never looked up), and one over scratch
+        // for island code. One hook, not one per address: the instruction budget already traces
+        // every instruction, and each trace walks every code hook.
+        if std::env::var_os(X87_CENSUS_VARIABLE).is_some() {
+            if let Some((text, tva)) = TEXT_IMAGE.get() {
+                let sites: std::collections::HashMap<u64, &'static str> = text
+                    .windows(2)
+                    .enumerate()
+                    .filter(|(_, pair)| pair[0] == 0xd9)
+                    .filter_map(|(i, pair)| Some((tva + i as u64, x87_host_double(pair[1])?)))
+                    .collect();
+                let end = tva + text.len() as u64 - 1;
+                uc.add_code_hook(*tva, end, move |uc, addr, _| {
+                    if let Some(&m) = sites.get(&addr) {
+                        record_x87(addr, m, x87_edge(uc, m));
+                    }
+                })
+                .expect("add x87 census hook");
+            }
+            uc.add_code_hook(
+                SCRATCH_BASE,
+                SCRATCH_BASE + SCRATCH_SIZE - 1,
+                |uc, addr, _| {
+                    let mut pair = [0u8; 2];
+                    if uc.mem_read(addr, &mut pair).is_err() || pair[0] != 0xd9 {
+                        return;
+                    }
+                    if let Some(m) = x87_host_double(pair[1]) {
+                        let mut window = [0u8; 8];
+                        let mut before = [0u8; 8];
+                        let before = uc.mem_read(addr - 6, &mut before).ok().map(|()| before);
+                        let source = uc
+                            .mem_read(addr, &mut window)
+                            .ok()
+                            .and_then(|()| island_source(addr, window, before));
+                        record_x87(source.unwrap_or(addr), m, x87_edge(uc, m));
+                    }
+                },
+            )
+            .expect("add x87 census island hook");
         }
         // Records the address, pc and kind of an unmapped access; returning false leaves it
         // unhandled, so the run aborts exactly as it would without the hook.

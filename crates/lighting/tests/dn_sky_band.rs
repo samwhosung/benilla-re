@@ -3,6 +3,11 @@
 //! the slice functions of `dn_sky_band`. The slices run with the leaves they call (`EvalSkyTrack`
 //! `0x6cf6c0` and `LerpChannel` `0x6d15f0`) in the emulator, and the wide track value the
 //! transcriptions take is read from the same leaf with `call_f64`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sky_band_orient_setup_difftest` runs `fcos` at
+//! `0x6d0dd0`, `0x6d0df8` and `0x6d0e4a` and `fsin` at `0x6d0e0f` and `0x6d0e3f`. The emulator
+//! computes each in host `double`, so where its result reaches a compared value the host's math
+//! stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

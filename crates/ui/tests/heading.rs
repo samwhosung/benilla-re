@@ -6,6 +6,10 @@
 //! emulator and in Rust alike, so it compares bit for bit. The inputs include the axis-aligned
 //! guards, `2^-22` on either side and NaN; each branch is tallied and required to be hit. Every
 //! draw comes off the high bits of an LCG.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `geo_47f220` runs `fpatan` at `0x47f2a7`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, Wow};

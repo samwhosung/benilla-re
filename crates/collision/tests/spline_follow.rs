@@ -2,6 +2,11 @@
 //! `ebp`, `esi` the mover and `edi` its `+0x5c`: `0x7c5509` to `0x7c551c`, `0x7c562c` to
 //! `0x7c566d`, `0x7c55a5` to `0x7c55ca`, `0x7c569c` to `0x7c57c6` (which calls the C runtime's
 //! `acos` at `0x741820`), `0x7c57d9` to `0x7c5841` and `0x7c5841` to `0x7c5871`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `spline_follow_facing_wrap` runs `fpatan` at
+//! `0x7c55ab`. `spline_follow_turn` runs `fpatan` at `0x741866`. The emulator computes each in host
+//! `double`, so where its result reaches a compared value the host's math stands in for the x87's,
+//! and the test shows the code around it.
 
 #![allow(clippy::unusual_byte_groupings)]
 

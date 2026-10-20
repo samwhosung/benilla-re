@@ -13,6 +13,10 @@
 //! (with the render leaves `0x7bf4b0` and `0x7bdd00` stubbed to capture their arguments) run
 //! whole. Each test adds NaN, the infinities, both zeros and its thresholds, equal and a step
 //! either side, to its random inputs.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `facing_interp_difftest` runs `fprem` at `0x73f91f`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

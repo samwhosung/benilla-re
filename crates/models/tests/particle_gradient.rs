@@ -1,5 +1,10 @@
 //! The particle gradients (`systems/models/particles.md#gradients`): the sample and the record
 //! setters called whole, the lifespan test read at its `fnstsw`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `gradient_repeat_leg_scope_difftest`,
+//! `particle_gradient_sample_difftest` run `fprem` at `0x73f91f`. The emulator computes each in
+//! host `double`, so where its result reaches a compared value the host's math stands in for the
+//! x87's, and the test shows the code around it.
 
 mod common;
 

@@ -6,6 +6,10 @@
 //! `0x511e90` replaced by an island that returns a chosen matrix. The sine and cosine route
 //! through the host's maths library in the emulator and in Rust alike. Every draw comes off the
 //! high bits of an LCG, and each branch is tallied and required to be hit.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `cam_50d5d0` runs `fsincos` at `0x50d651`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 #![allow(
     clippy::float_cmp,
     clippy::needless_range_loop,

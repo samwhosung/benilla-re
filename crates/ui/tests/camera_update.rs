@@ -31,6 +31,10 @@
 //! the binary's REAL bytes (incl. the CRT floor `0x73fdf5` / ceil `0x73ff3f` and `__ftol` `0x40a2b0`,
 //! mapped `.text`) so it covers every embedded FP-arith op by construction. Each test carries a
 //! deterministic `==threshold` boundary probe; fuzz reads the LCG HIGH bits. `.to_bits()`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `glue4fd_50e8d0_shake_sincos` runs `fsincos` at
+//! `0x50efe8`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 #![allow(clippy::too_many_arguments)]
 

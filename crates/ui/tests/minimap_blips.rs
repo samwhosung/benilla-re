@@ -11,6 +11,10 @@
 //! slice carries a deterministic boundary probe: the matrix transforms probe an exact
 //! identity/zero configuration; the live-vs-reload reciprocal probes a value where the f32 and f64
 //! reciprocals differ in the low bit.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `glue_4ec950_rotate` runs `fsincos` at `0x4ed452`
+//! and `0x4ed4f7`. The emulator computes each in host `double`, so where its result reaches a
+//! compared value the host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp, clippy::too_many_arguments)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

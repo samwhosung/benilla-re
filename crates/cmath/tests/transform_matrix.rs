@@ -2,6 +2,10 @@
 //! rotation about an axis (`0x7bdb00`), run whole against `translate_matrix`,
 //! `transform_mat43_vec3` and `axis_angle_mat4`, on edge values, a fuzz, and the shared set of edge
 //! fills and random non-NaN bit patterns. A NaN result matches any NaN.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `axis_angle_mat4_difftest` runs `fsincos` at
+//! `0x7bdb6a`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

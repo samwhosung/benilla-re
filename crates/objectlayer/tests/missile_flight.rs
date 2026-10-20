@@ -13,6 +13,13 @@
 //! - The line runs in both device channel orders over random ends, heights and colours.
 //!
 //! Further tests probe every gate with NaN, infinities, zeros and the thresholds.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `effect_beam_trail_difftest`,
+//! `effect_beam_trail_special_values_difftest` run `fsin` at `0x61f997`.
+//! `missile_target_intercept_curved_difftest`,
+//! `missile_target_intercept_curved_special_values_difftest` run `fsin` at `0x61d41b` and `fsincos`
+//! at `0x7be4f7`. The emulator computes each in host `double`, so where its result reaches a
+//! compared value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

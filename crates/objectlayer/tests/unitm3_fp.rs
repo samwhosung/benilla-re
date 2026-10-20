@@ -16,6 +16,11 @@
 //!
 //! Each test adds NaN, the infinities, both zeros and its thresholds, equal and a step either
 //! side, to its random inputs.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `click_ring_corner_difftest`,
+//! `click_ring_pulse_difftest` run `fsin` at `0x61144a`. The emulator computes each in host
+//! `double`, so where its result reaches a compared value the host's math stands in for the x87's,
+//! and the test shows the code around it.
 
 mod common;
 

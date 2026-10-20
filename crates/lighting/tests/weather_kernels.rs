@@ -4,6 +4,10 @@
 //! emulator and compares bit for bit. The tilt runs the real `0x7be730` and its cmath callees; the
 //! intensity ramp stubs the timer, the three effect setters and the recompute, and checks the
 //! argument each live setter receives.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `weather_wind_tilt_difftest` runs `fsincos` at
+//! `0x7be4f7`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

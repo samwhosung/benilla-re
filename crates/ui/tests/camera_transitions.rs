@@ -9,6 +9,10 @@
 //! Every branch is chosen from the high bits of an LCG, and each branch is tallied and required to
 //! be hit: both early-outs, the full arm, the inner's within-0.001 return and both directions of
 //! the wrap at the seam of π.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `cam_5102b0` runs `fprem` at `0x73f91f`. The
+//! emulator computes each in host `double`, so where its result reaches a compared value the host's
+//! math stands in for the x87's, and the test shows the code around it.
 #![allow(
     clippy::float_cmp,
     clippy::too_many_arguments,

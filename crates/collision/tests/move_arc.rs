@@ -3,6 +3,12 @@
 //! whole on a mover laid out at the client's offsets. The output fields start as sentinels, so a
 //! field the function leaves alone is compared too. The arc functions divide by the turn and pitch
 //! rates, so the random rates stay away from 0.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `velocity_basis_difftest`,
+//! `velocity_vector_difftest` run `fsincos` at `0x7c58a1` and `0x7c58eb`. `pitch_arc_difftest` runs
+//! `fsincos` at `0x7c521d`. `turn_pitch_arc_difftest` runs `fsincos` at `0x7c509c` and `0x7c50b7`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 use benilla_re_collision::move_arc::{
     pitch_arc, turn_pitch_arc, velocity_basis, velocity_vector, CMovement,

@@ -3,6 +3,10 @@
 //! are compared with the transcription bit for bit. The sine and cosine (`fsincos`) are compared
 //! within one unit in the last place, since the host's functions stand in for the x87's; the angle
 //! that feeds them and every other value is bit-exact.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sand_sincos_difftest` runs `fsincos` at `0x679512`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

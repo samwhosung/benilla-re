@@ -1,6 +1,10 @@
 //! `NTempest::CRndSeed::SetSeed` (`0x44ea80`) followed by eight calls of
 //! `NTempest::CRandom::uint32` (`0x4531e0`) on the same state, and `RandomUnitVector3` (`0x44fe20`)
 //! from states written directly, as an emitter's `CRandom` and a particle's draws use them.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `unit_vector_3d_states_difftest` runs `fsincos` at
+//! `0x45001c`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 #![allow(clippy::float_cmp)]
 #![allow(clippy::needless_range_loop)] // the loops index the client's memory layout

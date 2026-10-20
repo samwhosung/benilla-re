@@ -1,6 +1,10 @@
 //! A particle's step (`systems/models/particles.md#particle-motion`,
 //! `systems/models/particles.md#model-particles`, `systems/models/particles.md#particle-life`):
 //! the step, the model particle's turn and the quaternion product called whole, the age as a slice.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `particle_spin_integrate_difftest` runs `fsincos` at
+//! `0x7b2947`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 #![allow(clippy::vec_init_then_push)] // the cases are listed one by one with their reasons
 

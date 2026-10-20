@@ -2,6 +2,11 @@
 //! (`0x6a5270`) as slices, and `CeilLog2` (`0x6a5590`) run whole. A stretch run in an island is the
 //! exe's own bytes, checked, copied between a load and a store. The tiling's cell size `0xca7ebc`,
 //! its divisor `0xca7eec` and its border `0xca8098` are set at run time, so the tests write them.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `mip_level_count_difftest` runs `fyl2x` at
+//! `0x6a559b` and `0x6a55a5`. The emulator computes each in host `double`, so where its result
+//! reaches a compared value the host's math stands in for the x87's, and the test shows the code
+//! around it.
 
 mod common;
 
@@ -642,7 +647,7 @@ fn footprint_cell_rect_difftest() {
 }
 
 /// `0x6a5590` whole: every power of two from 2^-11 to 2^23 and a step either side (where `ceil`
-/// turns), 0, −0, +∞, the extremes, and positive values over several scales.
+/// turns), +∞, the extremes, and positive values over several scales.
 #[test]
 fn mip_level_count_difftest() {
     let Some(wow) = Wow::load() else {
@@ -670,10 +675,10 @@ fn mip_level_count_difftest() {
         );
     }
 
-    // ---- specials in the modeled (positive / +Inf / zero) domain ----
+    // ---- specials in the modeled (positive / +Inf) domain. ±0 is left out: the x87's `fyl2x`
+    // gives −∞ there and pops, the emulator's sets C2 and pops nothing (docs/METHOD.md#the-harness),
+    // so the emulator's 0 is not the client's path. ----
     check(&mut e, 1.0, "x=1 → 0");
-    check(&mut e, 0.0, "x=+0 → 0");
-    check(&mut e, -0.0, "x=-0 → 0");
     check(&mut e, f32::INFINITY, "+Inf → 0 (ftol indefinite)");
     check(&mut e, f32::MAX, "f32::MAX → 128");
     check(&mut e, f32::MIN_POSITIVE, "smallest normal");
@@ -706,7 +711,7 @@ fn mip_level_count_difftest() {
     }
 
     eprintln!(
-        "mip_level_count: {checked} fuzz + 105 boundary/named cases bit-exact vs WoW.exe @ 0x6a5590 \
+        "mip_level_count: {checked} fuzz cases and every boundary and named case bit-exact vs WoW.exe @ 0x6a5590 \
          (ceil(log2 x); c=0x802940=2.0)"
     );
 }

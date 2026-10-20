@@ -19,6 +19,11 @@
 //! transcribes, the blend slot `0x74d11a` and the rotation slot `0x74b6bb`. `HasLiveParticles`
 //! (`0x7b5f60`) is a stub that
 //! returns a fixed value, 0 or 1 per emulator.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `m2_animate_difftest` runs `fpatan` at `0x74d190`
+//! and `fsin` at `0x74d1a3` and `0x74d1b0`. The emulator computes each in host `double`, so where
+//! its result reaches a compared value the host's math stands in for the x87's, and the test shows
+//! the code around it.
 
 mod common;
 

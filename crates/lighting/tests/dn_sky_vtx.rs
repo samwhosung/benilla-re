@@ -4,6 +4,11 @@
 //! the sun position and the lookup factor the transcription takes are read from the same functions
 //! on the same state, and the colour buffer is compared word for word. `BuildDiscQuad` has its
 //! first-use flag set so its immediates are skipped, and the scaled rows are compared.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `sky_dome_vtx_color_build_difftest` runs `fcos` at
+//! `0x6cf8ab` and `0x6cf9dc` and `fpatan` at `0x741866`. The emulator computes each in host
+//! `double`, so where its result reaches a compared value the host's math stands in for the x87's,
+//! and the test shows the code around it.
 
 mod common;
 

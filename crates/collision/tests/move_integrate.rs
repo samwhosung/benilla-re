@@ -4,6 +4,11 @@
 //! (`0x7c52c0`) run whole on a mover laid out at the client's offsets. 2π at `[0xcf5d00]` is zero
 //! in the image until a static initializer stores it, so the test writes it. The trajectory tests
 //! feed the facing and the pitch back step after step.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `strafe_turn_difftest`, `strafe_turn_trajectory` run
+//! `fprem` at `0x73f91f`. `simple_turn_move_difftest` runs `fsincos` at `0x7c5307`. The emulator
+//! computes each in host `double`, so where its result reaches a compared value the host's math
+//! stands in for the x87's, and the test shows the code around it.
 
 use benilla_re_collision::move_integrate::{
     get_pitch_rate, get_strafe_speed, linear_move, pitch_integrate, simple_turn_move, strafe_turn,

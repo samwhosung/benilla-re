@@ -93,7 +93,8 @@ pub fn footprint_cell_rect(
 /// `0x6a5590(x)`: `ceil(log2 x)`. `log10(x)/log10(2)` through `fyl2x`, then `ceil` (`0x73fdf5`) and
 /// `__ftol`. The `fyl2x` quotient can differ from `log2` in its last bits, but it is exact at the
 /// powers of two, the only points where `ceil` turns, so the count is the same for every positive
-/// `x`; `+∞` gives the integer indefinite's low dword, 0.
+/// `x`; `+∞` gives the integer indefinite's low dword, 0. ±0 gives `−∞` (`fyl2x` signals a zero
+/// divide, masked) and so 0 too, which no test shows: the emulator's `fyl2x` of 0 pops nothing.
 pub fn mip_level_count(x: f32) -> i32 {
     crate::x87::ftol(f64::from(x).log2().ceil())
 }

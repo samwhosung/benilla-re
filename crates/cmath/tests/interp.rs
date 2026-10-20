@@ -1,6 +1,10 @@
 //! `CosineInterpolate` (`0x5b7bb0`), run whole: three `f32` on the stack and the result left in
 //! `st0` at 53 bits. The inputs are every pair of twelve edge values at five weights, and a fuzz in
 //! [−2000, 2000]; the `fcos` runs through the host's cosine, which the emulator uses too.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `cmath_cosine_smoothstep` runs `fcos` at `0x5b7bbc`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

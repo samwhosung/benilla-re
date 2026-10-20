@@ -3,6 +3,10 @@
 //! output pointer, which is read back. The arguments are random and kept inside each builder's
 //! validity gate, so the exe never takes its `SErrSetLastError` path. The `fptan` of the perspective
 //! is the host's tangent, which the emulator uses too; the half-angle stays under 1.6.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `perspective_difftest` runs `fptan` at `0x5c3d4c`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

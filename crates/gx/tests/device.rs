@@ -2,6 +2,11 @@
 //! slice of it, in the emulator on synthesized and fuzzed inputs and compares the results bit for bit.
 //! These are the OpenGL device's functions (vtable `0x809af8`); their Direct3D twins are not
 //! transcribed.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `gamma_ramp_matches_binary` runs `fyl2x` at
+//! `0x73f9af` and `f2xm1` at `0x744b0a`. The emulator computes each in host `double`, so where its
+//! result reaches a compared value the host's math stands in for the x87's, and the test shows the
+//! code around it.
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 

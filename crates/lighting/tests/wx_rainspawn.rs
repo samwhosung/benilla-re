@@ -3,6 +3,11 @@
 //! are compared with the transcription bit for bit. The sine and cosine (`fsincos`, `fcos`, `fsin`)
 //! are compared within one unit in the last place, since the host's functions stand in for the
 //! x87's; the angle that feeds them and every other value is bit-exact.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `rainspawn_sincos_difftest` runs `fsincos` at
+//! `0x674d45`. `rainspawn_sky_time_difftest` runs `fcos` at `0x674e7d` and `fsin` at `0x674e82`.
+//! The emulator computes each in host `double`, so where its result reaches a compared value the
+//! host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

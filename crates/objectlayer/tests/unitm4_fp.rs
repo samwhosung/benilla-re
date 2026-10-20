@@ -13,6 +13,11 @@
 //! of its integers to its random inputs. The angles leave out infinities and magnitudes past 1e15:
 //! an infinity sends `fmod` to the C runtime's error path, which needs state the start-up sets and
 //! the emulator does not run, and past that the emulator's partial `fprem` rounds in `f64`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `u4_lean_smooth_difftest`,
+//! `u4_turn_apply_step_difftest`, `u4_turn_delta_difftest` run `fprem` at `0x73f91f`. The emulator
+//! computes each in host `double`, so where its result reaches a compared value the host's math
+//! stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

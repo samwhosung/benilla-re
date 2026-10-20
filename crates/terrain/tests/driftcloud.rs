@@ -7,6 +7,13 @@
 //! value as the transcription's `Stream`, write the cloud header into the emulator, run the
 //! function (its inlined draws and the callee run real) and compare every stored dword, the
 //! generator state after the call included.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `weather_drift_reinit_difftest` runs `fsin` at
+//! `0x68e243` and `0x68e247` and `fcos` at `0x68e253` and `0x68e262`.
+//! `weather_gust_velocity_difftest`, `weather_toroidal_advect_difftest` run `fsin` at `0x68e243`,
+//! `0x68e247` and `0x68e55f` and `fcos` at `0x68e253` and `0x68e262`. The emulator computes each in
+//! host `double`, so where its result reaches a compared value the host's math stands in for the
+//! x87's, and the test shows the code around it.
 
 mod common;
 

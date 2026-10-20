@@ -4,6 +4,15 @@
 //! `dn_channel_lerp8`, `dn_sun_dir`, `dn_fog_ambient_darkened`, `dn_celestial_positions` and
 //! `dn_sun_trig_table`. The sine and cosine are the host's in the emulator and in the
 //! transcriptions.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `dn_sun_dir_difftest` runs `fsin` at `0x6d3b2d` and
+//! `0x6d3b3e` and `fcos` at `0x6d3b32` and `0x6d3b4d`. `dn_sun_trig_table_difftest` runs `fcos` at
+//! `0x6d0588`, `0x6d06b2` and `0x6d0705` and `fsin` at `0x6d06cd` and `0x6d0710`.
+//! `dn_celestial_positions_difftest` runs `fsin` at `0x6d3ff5`, `0x6d4010`, `0x6d40e4`, `0x6d40ff`,
+//! `0x6d4287` and `0x6d42a2` and `fcos` at `0x6d4004`, `0x6d4017`, `0x6d40f3`, `0x6d4106`,
+//! `0x6d4296` and `0x6d42a9`. The emulator computes each in host `double`, so where its result
+//! reaches a compared value the host's math stands in for the x87's, and the test shows the code
+//! around it.
 
 mod common;
 

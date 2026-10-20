@@ -3,6 +3,12 @@
 //! quaternion applied on the left of a 4×4 (`0x7bddb0`). The axes are the edge fills and random
 //! bit patterns, each both flagged as unit and not; the angles reach past a turn in both
 //! directions. A NaN result matches any NaN.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `euler_to_mat3_f` runs `fsincos` at `0x7bf4d2`,
+//! `0x7bf52a` and `0x7bf582`. `axis_angle_mat34` runs `fsincos` at `0x7bb8c7`. `axis_angle_mat3`
+//! runs `fsincos` at `0x7be4f7`. The emulator computes each in host `double`, so where its result
+//! reaches a compared value the host's math stands in for the x87's, and the test shows the code
+//! around it.
 
 mod common;
 

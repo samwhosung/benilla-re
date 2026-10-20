@@ -1,6 +1,11 @@
 //! How an emitter spawns a particle (`systems/models/emission.md`): the spawn routines, the speed
 //! and the setters called whole with the emitter's `CRandom` seeded through `0x44ea80`, the rest as
 //! slices.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `emit_shape_sphere_difftest` runs `fsincos` at
+//! `0x7b8e5b` and `0x7b8e76`. The emulator computes each in host `double`, so where its result
+//! reaches a compared value the host's math stands in for the x87's, and the test shows the code
+//! around it.
 
 #![allow(clippy::needless_range_loop)] // index loops follow the `+off + 4·k` layout
 

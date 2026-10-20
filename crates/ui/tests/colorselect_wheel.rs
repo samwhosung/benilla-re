@@ -7,6 +7,11 @@
 //! the rectangle getter `0x768320` stubbed to copy one chosen rectangle for both frames, and the
 //! calls after the stores (`0x78bae0`, `0x76b320`) stubbed. Each branch is tallied and required to
 //! be hit; two NaNs compare equal. Every draw comes off the high bits of an LCG.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `geo_78bc20` runs `fsincos` at `0x78bc77`.
+//! `geo_78bd80` runs `fpatan` at `0x78be40`. The emulator computes each in host `double`, so where
+//! its result reaches a compared value the host's math stands in for the x87's, and the test shows
+//! the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, Wow};

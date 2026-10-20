@@ -3,6 +3,11 @@
 //! `ScaleLightPosition` (`0x6d5fb0`), against `sun_glare_setup`, `moon_glare_setup`,
 //! `wind_angle_update`, `sky_noise_value`, `sky_bump_value` and `vec_scale_remap`. The glare setups
 //! and the heading run as the slice that holds their arithmetic; the others run whole.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `wind_angle_update_difftest` runs `fpatan` at
+//! `0x6d4555` and `0x6d4569`. `sky_bump_lut_difftest`, `sky_noise_lut_difftest` run `fcos` at
+//! `0x6d0ce8`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 

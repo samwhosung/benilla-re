@@ -1,5 +1,9 @@
 //! `RandomUnitVector3` (`0x44fe20`) run whole: `ecx` the output, `edx` the state, compared with
 //! the host's `fsqrt` and `fsincos` stand-ins bit for bit.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `rand_unit_vector_3d_diff` runs `fsincos` at
+//! `0x45001c`. The emulator computes each in host `double`, so where its result reaches a compared
+//! value the host's math stands in for the x87's, and the test shows the code around it.
 #![allow(clippy::float_cmp)]
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};

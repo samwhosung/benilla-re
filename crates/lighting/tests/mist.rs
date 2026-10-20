@@ -6,6 +6,10 @@
 //! (the `[0x810008]` fallback), which the `terrain_height` closures reproduce. `0x67a990` runs
 //! whole: the generator (`0x4531e0` and its inlined copies), the tilt matrix (`0x7bdd60`,
 //! `0x7bcae0`), the grid virtual `0x67ca00` through the real table `0x810038`, and `0x6745d0`.
+//!
+//! Host double (`docs/METHOD.md#the-harness`): `mist_spawn_difftest` runs `fsincos` at `0x67a9eb`
+//! and `0x7bdb6a`. The emulator computes each in host `double`, so where its result reaches a
+//! compared value the host's math stands in for the x87's, and the test shows the code around it.
 
 mod common;
 
