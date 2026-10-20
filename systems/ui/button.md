@@ -319,15 +319,15 @@ texture or nil.
 
 The button's destructor body `0x778850` stores its vtables (`0x81c7f8`, `0x81c7c8` at `+0x24`), clears the three state textures (`0x778fd0(state, 0)`), releases the script
 slots `+0x4cc` and `+0x4d4`, destroys the three label fonts at `+0x434`, `+0x3b8` and `+0x33c` (`0x783b20`) and runs the frame destructor. The colour setters `0x778e20`, `0x778e70` and
-`0x778ec0` take a pointer to a colour dword. When it differs from the stored colour (`+0x394` normal, `+0x48c` disabled, `+0x410` highlight), or its changed bit is clear, they store it and set 0x404 in
+`0x778ec0` take a pointer to a colour dword. When it differs from the stored colour (`+0x394` normal, `+0x48c` disabled, `+0x410` highlight), or its set bit 0x400 is clear, they store it and set 0x404 in
 the font's validity word; then they clear bit 2 of its inherit mask and run slot 5 of the font part. `0x785140` is the check button's destructor body: it clears its two checked textures and runs `0x778850`.
 
-Addresses: `0x778850`, `0x778868`, `0x77887c`, `0x778895`, `0x7788a0`, `0x7788ab`, `0x7788b4`, `0x778e20`, `0x778e28`, `0x778e3b`, `0x778e41`, `0x778e4b`, `0x778e5e`, `0x778e70`, `0x778ec0`, `0x785140`, `0x785152`, `0x78515b`, `0x785163`, `0x778fd0`, `0x783b20`, `0x785330`, `0x785440`, `0x702670`, `0x7693b0`
+Addresses: `0x778850`, `0x778868`, `0x77887c`, `0x778895`, `0x7788a0`, `0x7788ab`, `0x7788b4`, `0x778e20`, `0x778e28`, `0x778e3b`, `0x778e36`, `0x778e41`, `0x778e4b`, `0x778e5e`, `0x778e70`, `0x778e86`, `0x778ec0`, `0x778ed6`, `0x785140`, `0x785152`, `0x78515b`, `0x785163`, `0x778fd0`, `0x783b20`, `0x785330`, `0x785440`, `0x702670`, `0x7693b0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x778e70` and `0x778ec0` are `0x778e20` with the offsets `+0x48c`, `+0x46c`, `+0x460`, `+0x434` and `+0x410`, `+0x3f0`, `+0x3e4`, `+0x3b8`. The slot call is `call [edx+0x14]` on the font part
+The set bit is `test dh,0x4` on the font's word (`0x778e36`, `0x778e86`, `0x778ed6`). `0x778e70` and `0x778ec0` are `0x778e20` with the offsets `+0x48c`, `+0x46c`, `+0x460`, `+0x434` and `+0x410`, `+0x3f0`, `+0x3e4`, `+0x3b8`. The slot call is `call [edx+0x14]` on the font part
 (`0x778e5e`). `0x785140` stores the check button's vtables `0x81cb80` and `0x81cb54` (`0x785145`, `0x78514b`).
 
 ## Button method helper and type test

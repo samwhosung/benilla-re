@@ -9,27 +9,29 @@ Roots: `0x770910`, `0x770ad0`, `0x7714f0`, `0x772100`, `0x772240`, `0x772460`, `
 
 ## Merging font blocks
 
-A font block is the record a `Font` object keeps and a follower reads: a validity word at `+0x0`, the font name `+0x4`,
-height `+0x10`, flags `+0x14`, spacing `+0x18`, two justify words `+0x1c` and `+0x20`, and the shadow colour `+0x24` with
-`+0x28`, `+0x2c`. Bits 0x100 to 0x1000 of the word say a group is set (font, justify words, shadow, spacing) and bits
-0x1 to 0x10 that it changed. `0x770ad0(source)` and `0x770910(destination, mask)` copy a group into the receiving block only
-when it differs (a font by name ignoring case, a height or spacing by 2^-22) or its changed bit is still clear, and then set
-both bits of the group. A font is accepted only when the engine builds it.
+A font block, the record a `Font` keeps and a follower reads, holds a validity word at `+0x0`, the font name `+0x4`,
+height `+0x10`, flags `+0x14`, spacing `+0x18`, the justify word `+0x1c`, the text colour `+0x20`, the shadow colour
+`+0x24` and the shadow offsets `+0x28`, `+0x2c`. Bits 0x100 to 0x1000 say a group is set (font, justify, colour,
+shadow, spacing) and bits 0x1 to 0x10 that it changed. `0x770ad0(source)` and `0x770910(destination, mask)` copy a set
+group into the receiving block only when it differs (a font by name ignoring case, a height or spacing by 2^-22) or,
+except for the font, the receiving block's set bit is still clear, and then set both bits of the group.
 
-Addresses: `0x770910`, `0x770ad0`, `0x770915`, `0x77091c`, `0x770949`, `0x770973`, `0x770984`, `0x7709a7`, `0x7709b2`, `0x7709bd`, `0x7709d3`, `0x770a07`, `0x770a2b`, `0x770a78`, `0x44d040`, `0x41e4c0`, `0x41e3a0`, `0x64a4c0`, `0x8029d4`
+Addresses: `0x770910`, `0x770ad0`, `0x770915`, `0x77091c`, `0x770949`, `0x770973`, `0x770984`, `0x7709a7`, `0x7709b2`, `0x7709bd`, `0x7709d3`, `0x770a07`, `0x770a2b`, `0x770a78`, `0x44d040`, `0x41e4c0`, `0x41e3a0`, `0x64a4c0`, `0x8029d4`, `0x7709f9`, `0x770a1d`, `0x770a5b`, `0x770a9d`, `0x770b9e`, `0x770bbd`, `0x770bf6`, `0x770c33`
 Confidence: verified
 Proof: one
 Test: `ui::glue_settled_eps`
 
-The two functions are the same copy: `0x770ad0` takes the source's set bits (`test ah,1` ... `ah,0x10`), `0x770910` also
-requires the group's low bit in the mask `edx = word & mask` (`0x770920`, `test dl,1`). The font group reads both names through
-`0x41e4c0` (`0x770949`), skips when `SStrCmpI` (limit `0x7fffffff`, `0x770973`) finds them equal, the heights are within 2^-22 and
-the flags equal (`0x770997`), skips a height not above 0 (`jnp` after `test ah,0x41`, `0x7709a7`), calls
-`TextBlockGenerateFont(name, flags, height)` (`0x7709b2`) and closes the handle it returns at once (`0x7709bd`), then
-assigns the name with `0x41e3a0`, stores height and flags and ORs 0x101 (`0x7709d3`). The other groups store their
-words and OR 0x202, 0x404 and 0x808, and the spacing, when it differs by 2^-22 or its changed bit is clear, 0x1010 (`0x770aa7`).
-`ui::glue_settled_eps` runs the 2^-22 compare of the height (`0x77097c` to `0x77098c`, `0x770b29` to `0x770b39`) and the spacing
-(`0x770a84`, `0x770c1a`) as slices that end at `fnstsw`; the same test covers `0x7714f0` and `0x771600`.
+`0x770ad0` takes the source's set bits (`test ah,1` ... `ah,0x10`); `0x770910` also requires the group's changed bit in
+`edx = word & mask` (`0x770920`, `test dl,1`). The equal-value test reads the receiving block's set bit: `test ch,0x2`
+(`0x7709f9`, `0x770b9e`), `ch,0x4` (`0x770a1d`, `0x770bbd`), `ah,0x8` (`0x770a5b`, `0x770bf6`), `ah,0x10` (`0x770a9d`,
+`0x770c33`). `PushChanges` clears the changed bits after each push (`0x7841bb`), so they are 0 at rest. The font group has
+no set-bit test: it reads both names through `0x41e4c0` (`0x770949`), copies when the receiving name is empty, and skips
+when `SStrCmpI` (`0x770973`) finds them equal, the heights within 2^-22 and the flags equal, or the height is
+not above 0 (`0x7709a7`). Else it calls `TextBlockGenerateFont(name, flags, height)` (`0x7709b2`) and, if the engine
+builds a font, closes the handle (`0x7709bd`), assigns the name with `0x41e3a0`, stores height and flags and
+ORs 0x101 (`0x7709d3`). The other groups store their words and OR 0x202, 0x404 and 0x808, and the spacing 0x1010
+(`0x770aa7`). `ui::glue_settled_eps` runs the 2^-22 compare of the height (`0x77097c` to `0x77098c`, `0x770b29` to `0x770b39`) and the
+spacing (`0x770a84`, `0x770c1a`) as slices that end at `fnstsw`; the same test covers `0x7714f0` and `0x771600`.
 
 ## Font string members
 
