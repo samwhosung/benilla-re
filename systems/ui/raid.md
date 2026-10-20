@@ -17,13 +17,14 @@ online byte.
 
 Addresses: `0x4ba0b0`, `0x4ba0c0`, `0x4ba0d0`, `0x4ba108`, `0x4ba114`, `0x4ba125`, `0x4ba8d3`, `0x4ba8ea`, `0x4ba90c`, `0x4ba91c`, `0x4ba920`, `0x4ba945`, `0x4ba958`, `0x4ba960`, `0x4ba5f0`, `0xb712a8`, `0xb713e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4ba0b0` registers the target opcode 0x321 and the ready check opcode 0x322, zeroes the target table and allocates the records with
 `SMemAlloc(0x160, ...)`: `cmp esi,0xa0` at 4 bytes a step gives 40. `0x4ba5f0` copies the 0x148-byte block into `+0x10` (`rep movs`, 0x52 dwords) and
 rewrites bit 0 of `+0x18` after it. The dead bit and the level and zone offsets are those of `objectlayer/party#the-party-member-record`
-shifted by 0x10. A member present before a list keeps its `+0x158` word; a new member starts at 0.
+shifted by 0x10. A member present before a list keeps its `+0x158` word; a new member starts at 0. An independent cold
+read derived the same rows and fields.
 
 ## Rebuilding the roster
 
@@ -48,6 +49,23 @@ copies the old block into a stack buffer (`0x4ba6e4`), a miss zeroes one (`0x4ba
 `0x4ba90c` to `0x4ba929`, block `0x4ba945`, online `0x4ba960`, and the word found by GUID in the saved list (`0x4ba978`, `0x4baa91`) or 0
 (`0x4ba993`). The event is `0x4babef`; the request is built at `0x4bac01` and sent at `0x4bac33` under the flag at `ebp−0x28`, the full
 target list request of `#setting-a-raid-target`. The test runs `0x4ba5f0` whole.
+
+## What the rebuild sends
+
+A rebuild sends two kinds of message. When the roster was empty on entry it sends `MSG_RAID_TARGET_UPDATE` (0x321) with the one byte
+0xff, the full target list request, after the rows and the roster event; for each added member with no player object it sends
+`CMSG_REQUEST_PARTY_MEMBER_STATS` (0x27f) with the member's GUID, before that event. A rebuild into a roster that had members sends no
+0x321, and an added member whose object is held sends no 0x27f.
+
+Addresses: `0x4ba612`, `0x4ba61c`, `0x4babf4`, `0x4bac01`, `0x4bac20`, `0x4bac33`, `0x4bab18`, `0x4bab21`, `0x4bab6e`, `0x4bab95`, `0x4baba1`, `0x4babac`, `0x5ab630`
+Confidence: verified
+Proof: two
+Test: `ui::raid_rebuild_difftest`
+
+`0x4ba61c` keeps `sete` of the old count at `ebp−0x28`, and `0x4babf4` tests it before `0x4bac01` puts the opcode, `0x4bac20` the byte
+0xff and `0x4bac33` sends through `ClientServices::Send`. For an added member `0x4bab18` looks the GUID up with mask 0x10 and `0x4bab21`
+takes the send path for a null object: `0x4bab6e` puts 0x27f, `0x4baba1` the GUID through `CDataStore::PutGuid`, and `0x4babac` sends. An
+independent cold read derived the same. The test compares the bytes each send carries.
 
 ## Unit tokens after a rebuild
 
@@ -99,13 +117,14 @@ is `0x5e6e73`. The tests run `0x4ba1b0` and `0x4ba140` whole.
 
 ## Rows past the count
 
-Nothing clears a row at or past the member count. The rebuild writes the rows below its new count, the other writers stop at the count, and
-`ClearRaidRoster` (`0x4ba550`) only zeroes it. Membership (`0x4baee0`, and so `UnitInRaid`) stops at the count too, but `0x4bb0f0` returns
-the block of the first of all 40 rows holding a GUID, and `0x4bb130` the pet block of the first online row of the 40 whose pet GUID
-matches. So once the roster shrinks, or the player leaves the raid, a GUID that left still finds its old row: the record getters fall back
-to it (`party#reading-a-member-without-its-object`), and a stats message for it writes into it (`objectlayer/party#party-member-stats`).
+Within one world session nothing clears a row at or past the member count: `0x4ba0b0` zeroes all 40 when the session starts and
+`ShutdownRaid` frees them when it ends, while the rebuild writes the rows below its new count, the other writers stop at the count, and
+`ClearRaidRoster` (`0x4ba550`) only zeroes the count. Membership (`0x4baee0`, and so `UnitInRaid`) stops at the count, but `0x4bb0f0`
+returns the block of the first of all 40 rows holding a GUID, and `0x4bb130` the pet block of the first online row whose pet GUID
+matches. So a GUID that left the raid finds its old row: the record getters fall back to it
+(`party#reading-a-member-without-its-object`), and a stats message for it writes into it (`objectlayer/party#party-member-stats`).
 
-Addresses: `0x4bb0f0`, `0x4bb0fb`, `0x4bb115`, `0x4bb127`, `0x4bb130`, `0x4bb149`, `0x4bb14e`, `0x4bb169`, `0x4bb17b`, `0x4baee0`, `0x4baeee`, `0x4ba550`, `0x4ba571`, `0x4ba173`, `0x4bb24c`, `0x4bb264`, `0x4ba40e`, `0x4ba3e8`, `0x4bae1d`, `0x4bae03`, `0x49640f`, `0x49642f`, `0x5e5166`, `0x5f0bcc`, `0x4ba0a5`
+Addresses: `0x4ba0b0`, `0x4ba10d`, `0x4ba12a`, `0x48f603`, `0x4ba1d0`, `0x4ba1fb`, `0x49120e`, `0x4bb0f0`, `0x4bb0fb`, `0x4bb115`, `0x4bb127`, `0x4bb130`, `0x4bb149`, `0x4bb14e`, `0x4bb169`, `0x4bb17b`, `0x4baee0`, `0x4baeee`, `0x4ba550`, `0x4ba571`, `0x4ba173`, `0x4bb24c`, `0x4bb264`, `0x4ba40e`, `0x4ba3e8`, `0x4bae1d`, `0x4bae03`, `0x49640f`, `0x49642f`, `0x5e5166`, `0x5f0bcc`, `0x4ba0a5`
 Confidence: verified
 Proof: one
 Test: none
@@ -113,11 +132,13 @@ Test: none
 `0x4bb0f0` returns 0 for GUID 0 (`0x4bb0fb`), compares the GUIDs of rows 0 to 39 (`cmp ecx,0x28`, `0x4bb115`) with no status test, and
 returns `row + 0x10` (`0x4bb127`). `0x4bb130` skips a row with GUID 0 (`0x4bb149`) or with bit 0 of `+0x18` clear (`0x4bb14e`), stops at
 0x28 (`0x4bb169`) and returns `row + 0x90` (`0x4bb17b`). `0x4baee0` stops at `0xb713e0` (`0x4baeee`). Of the 37 functions that name the
-table or the count, those that store through a row pointer are the rebuild, `0x4ba140` (`0x4ba173`), the ready check's start (`0x4bb24c`,
+table or the count, those that store through a row pointer are `0x4ba0b0`, which zeroes each new record (`0x4ba10d`, `rep stos` at
+`0x4ba12a`) once, from `CGGameUI::InitializeGame` (`0x48f603`), the rebuild, `0x4ba140` (`0x4ba173`), the ready check's start (`0x4bb24c`,
 bound `0x4bb264`) and answer (`0x4ba40e`, bound `0x4ba3e8`), and `0x4badc0`, which rebuilds a found member's block through `0x5f0880`
 (`0x4bae1d`, bound `0x4bae03`); the rebuild's stores are the control. `0x4ba550` stores the count (`0x4ba571`) and the target table only.
 The scans' callers are `GPartyInfo::GetRemoteStats` (`0x49640f`) after the party record, `GetPartyPetRecord` (`0x49642f`),
 `ReadPartyMemberStats` (`0x5e5166`), which writes the block it gets, and `CGPlayer_C::ComparePartyRecord` (`0x5f0bcc`), which copies it.
+`ShutdownRaid` frees the records (`0x4ba1fb`), from `CGGameUI::ShutdownGame` (`0x49120e`).
 A 41st list entry (`objectlayer/party#the-group-list`) takes its row pointer from the dword after the table, which `0x4ba0a5` sets to 0x7f800000.
 
 ## Group leader and membership

@@ -587,7 +587,7 @@ opcode	name	role	site	function	entries	basis
 0x27b	SMSG_SPELLDISPELLOG	handler	0x5e37bf	0x5e8b60	objectlayer/playercombat#spell-combat-log-messages	opcode
 0x27c	SMSG_DAMAGE_CALC_LOG	handler	0x5e3814	0x5e8d30	objectlayer/playercombat#spell-combat-log-messages|objectlayer/playercombat#damage-calculation-log	opcode
 0x27e	CMSG_GROUP_CHANGE_SUB_GROUP	send	0x4bbab0	0x4bb990	ui/groupverbs#the-raid-roster-verbs	opcode
-0x27f	CMSG_REQUEST_PARTY_MEMBER_STATS	send	0x4babac	0x4ba5f0	ui/party#asking-for-stats|ui/raid#unit-tokens-after-a-rebuild	opcode
+0x27f	CMSG_REQUEST_PARTY_MEMBER_STATS	send	0x4babac	0x4ba5f0	ui/party#asking-for-stats|ui/raid#what-the-rebuild-sends|ui/raid#unit-tokens-after-a-rebuild	opcode
 0x27f	CMSG_REQUEST_PARTY_MEMBER_STATS	send	0x4bae62	0x4badc0	core/close#packets-sent-in-the-world|ui/party#asking-for-stats	opcode
 0x27f	CMSG_REQUEST_PARTY_MEMBER_STATS	send	0x4e8426	0x4e82d0	ui/party#a-members-record	opcode
 0x27f	CMSG_REQUEST_PARTY_MEMBER_STATS	send	0x4e8679	0x4e85d0	core/close#packets-sent-in-the-world|ui/party#asking-for-stats	opcode
@@ -753,7 +753,7 @@ opcode	name	role	site	function	entries	basis
 0x31f	SMSG_INSTANCE_RESET_FAILED	handler	0x4986ba	0x49e540		unread
 0x320	SMSG_UPDATE_LAST_INSTANCE	handler	0x4986ca	0x49e670	ui/groupverbs#instances	function
 0x321	MSG_RAID_TARGET_UPDATE	handler	0x4ba0c0	0x4ba220	ui/raid#the-raid-target-table	opcode
-0x321	MSG_RAID_TARGET_UPDATE	send	0x4bac33	0x4ba5f0	ui/raid#the-roster-record|ui/raid#rebuilding-the-roster|ui/raid#the-raid-target-table	opcode
+0x321	MSG_RAID_TARGET_UPDATE	send	0x4bac33	0x4ba5f0	ui/raid#the-roster-record|ui/raid#rebuilding-the-roster|ui/raid#what-the-rebuild-sends|ui/raid#the-raid-target-table	opcode
 0x321	MSG_RAID_TARGET_UPDATE	send	0x4bc03a	0x4bbec0	ui/raid#setting-a-raid-target	opcode
 0x322	MSG_RAID_READY_CHECK	handler	0x4ba0d0	0x4ba360	ui/raid#starting-a-ready-check|ui/raid#answering-a-ready-check	opcode
 0x322	MSG_RAID_READY_CHECK	send	0x4bb295	0x4bb1d0	ui/raid#starting-a-ready-check	opcode

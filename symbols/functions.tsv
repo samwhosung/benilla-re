@@ -14484,7 +14484,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55f310	393	NameCacheStore		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, uint32_t arg3, uint32_t arg4)	Writes a name record into the names cache, sets its valid byte and runs the callbacks	verified	one	dbcache#name-cache-writers	
 0x55f4a0	580	NameCacheReadFile		dbcache	unreached		Reads the names cache from its file; nothing calls it	inferred	none	dbcache#name-cache-writers	
 0x55f6f0	369	NameCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Runs a name's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache#name-and-guild-responses	
-0x55f870	281	DBCache::NameCache::CancelCallback		dbcache	primitive		Frees the callbacks waiting on a GUID's name request that match a function and data	inferred	none	ui/raid#pending-roster-names	
+0x55f870	281	DBCache::NameCache::CancelCallback		dbcache	orchestration		Frees the callbacks waiting on a GUID's name request that match a function and data	inferred	none	ui/raid#pending-roster-names	
 0x55f990	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x55fa50	1164	NameCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Name cache from its file, or returns at once for a cache that is not saved	verified	one	dbcache#caches-that-are-not-saved	
 0x55fee0	647	NameCacheWriteFile		dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache#name-cache-node	
