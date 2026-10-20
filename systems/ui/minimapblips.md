@@ -216,7 +216,7 @@ is shown through slot 0x88 (`0x4eb869`).
 ## Blip sizes
 
 The sizes are fixed when the frame is constructed and do not follow a later aspect change. With `base` =
-`G48 · 5/3` (1.0 at 4:3), a landmark icon is `0.0125·base` of a layout unit, a dot `0.00625·base` and the
+G48 times the float 5/3, held at 53 bits (0.99999991655 at 4:3, where G48 is `0x3f199999`), a landmark icon is `0.0125·base` of a layout unit, a dot `0.00625·base` and the
 disc `0.11·base`; on the 140-unit stock widget that is 16, 8 and 140.8 units. Party dots are scaled 1.3
 and the arrows orbit at 0.8 of the half disc, 56.32 units. The eight arrow frames get the disc size as
 their width and height and a model scale of 0.6; the player arrow gets none, an offset of 0.001 and its
@@ -227,7 +227,7 @@ Confidence: verified
 Proof: one
 Test: `ui::glue_4edbc0_unit_scale_spread`
 
-`0x4edc42` is `0x41ae70(1.0)` and `0x4edc47` multiplies by 5/3. The products with `0x807a4c` (0.0125), `0x807a48`
+`0x4edc42` is `0x41ae70(1.0)` and `0x4edc47` multiplies by 1.6666666 (`0x80655c`), exactly, since two floats' product fits 53 bits; `base` stays in `st1` and is never stored. At 4:3 the cells take `0x3c4ccccc`, `0x3bcccccc` and `0x3de147ad`. The products with `0x807a4c` (0.0125), `0x807a48`
 (0.00625) and `0x807a44` (0.11) are stored at `0xbc7658` (`0x4edc6f`), `0xbc82a8` (`0x4edc9a`) and
 `0xbc7970` (`0x4edcaf`); the halves are `0xbc762c`, `0xbc7630` and `0xbc8274` (`0x4edcc1`, `0x4edcd3`,
 `0x4edce5`) and the corner tables follow from them. The arrow frames' scale is the float 0.6 at `0x807a28`

@@ -226,8 +226,8 @@ Test: `ui::glue_76d1a0_scale`
 `0x41ae70(1.0)` returns G48 (`0x76d1c6`); `0x76d1cb` multiplies by the float 1.6666666 (`0x3fd55555`),
 `0x76d1d1` loads `+0x3a0` and `0x76d1dd` multiplies by `+0x7c`. The position is `+0x7c` times the three
 floats at `+0x390` (`0x76d205`). `0x710650(pos, facing, axis (0,0,1), (s, s, s))` writes the identity
-and then translate, rotate and scale into `model+0xbc` (`0x76d235`). 5/3 is √((4/3)² + 1), so G48 · 5/3 is
-exactly 1 at the 4:3 reference and √(a_ref²+1)/√(a²+1) at aspect a. `0x76d1a9` calls `0x702690` on the
+and then translate, rotate and scale into `model+0xbc` (`0x76d235`). The float 5/3 stands for √((4/3)² + 1), so G48 · 5/3 is
+near 1 at 4:3, 0.99999991655 with G48 at `0x3f199999` (`screencoord#screen-scale-state`), and near (5/3)/√(a²+1) at aspect a. `0x76d1a9` calls `0x702690` on the
 `OnUpdateModel` slot.
 
 ## Model unit to pixel
@@ -259,7 +259,7 @@ A `Model` frame with a width or height of exactly 0.0 takes that size from its m
 `max − min` of the box in model units, handed to the layout as layout units with no conversion. With
 no model or a model whose data is not resident the size stays 0.0, and the size getter never forces a
 load. A negative or nonzero authored size is returned as is. The geometry then fills `G48 · (5/3) ·
-modelScale` of the rectangle it implies, anchored at the bottom-left: exactly 1.0 at 4:3.
+modelScale` of the rectangle it implies, anchored at the bottom-left: 0.99999991655 of it at 4:3 with a model scale of 1.
 
 Addresses: `0x76d080`, `0x76d0d0`, `0x76d08c`, `0x76d097`, `0x76d09a`, `0x76d0a6`, `0x76d0b5`, `0x76d0bb`, `0x76ce00`, `0x76ce57`, `0x76ce69`, `0x713640`, `0x713661`, `0x7103d0`, `0x768420`
 Confidence: verified
