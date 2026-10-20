@@ -27,7 +27,7 @@ pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0
 
 | function | name | decided by |
 |---|---|---|
-| `0x6f5810` | `luaO_int2fb` | loop while `x > 7` (`0x6f5812`) halving with rounding up (`0x6f5818`), result is `e` shifted left by 3, or `x` (`0x6f5820`) |
+| `0x6f5810` | `luaO_int2fb` | loop while `x > 7` (`0x6f5812`) halving with rounding up (`0x6f5818`), result is `e` shifted left by 3, or `x` (`0x6f5820`): a 3-bit mantissa under a 5-bit exponent |
 | `0x6f5830` | `luaO_log2` | thresholds `0x10000` (`0x6f5834`), `0x1000000` (`0x6f583f`), `0x100` (`0x6f586b`), adds 24, 16, 8; -1 (`0x6f589a`) |
 | `0x6f58b0` | `luaO_rawequalObj` | tags differ returns 0 (`0x6f58b3`), jump table on tags 0..3 (`0x6f58c0`), `fcompp` (`0x6f58cd`), payload subtract (`0x6f58e3`) |
 | `0x6f5900` | `luaO_str2d` | `_strtod` (`0x6f5911`), `__isctype` 8 over the tail (`0x6f593e`), end test (`0x6f5964`) |
@@ -36,13 +36,15 @@ pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0
 | `0x6f5c20` | `luaO_pushfstring` | calls `luaO_pushvfstring` with the address of its own arguments (`0x6f5c2d`) |
 | `0x6f5c40` | `luaO_chunkid` | `=` (`0x6f5c49`), `@` (`0x6f5c6b`), else `[string "` (`0x6f5ceb`), first line by `strcspn` (`0x6f5cd7`), `..."]` (`0x6f5d5d`) |
 
-Addresses: `0x6f5bc8`, `0x6f5810`, `0x6f5812`, `0x6f5818`, `0x6f5820`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
+Addresses: `0x6f5bc8`, `0x6f5810`, `0x6f5812`, `0x6f5818`, `0x6f5820`, `0x6f8b31`, `0x6f8b41`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lua::luao_int2fb_difftest`
 
 `luaO_int2fb` rounds up: `x = (x+1) >> 1` while the value exceeds 7, the exponent counting the
-shifts. `luaO_log2` indexes a 256-byte table by the highest nonzero byte, adding 24, 16, 8 or 0.
+shifts, and `0xffffffff` wraps to 0 in one step and encodes as 8. `OP_NEWTABLE` decodes the byte as
+`(B & 7) << (B >> 3)` (`0x6f8b31`, `0x6f8b41`), so 9 array items size an array of 10. The test
+runs `luaO_int2fb` whole. `luaO_log2` indexes a 256-byte table by the highest nonzero byte, adding 24, 16, 8 or 0.
 `luaO_rawequalObj` treats nil as equal to nil, numbers by value (NaN compares unequal through
 the `test ah,0x44` parity test), every other tag by payload address. For a `=` source,
 `luaO_chunkid` copies the rest, cut to the buffer; for `@` it copies the file name, prefixed by

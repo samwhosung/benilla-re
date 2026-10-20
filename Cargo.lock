@@ -245,6 +245,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-lua"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-minigame"
 version = "0.1.0"
 dependencies = [

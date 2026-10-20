@@ -1,0 +1,10 @@
+[package]
+name = "benilla-re-lua"
+description = "The Lua 5.0 helpers of WoW.exe 1.12.1.5875 whose output decides a table's layout, reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
