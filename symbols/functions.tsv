@@ -838,7 +838,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x414240	208	__strcmpi	idb	crt	boundary		Runs its object file code that calls __lock, 0x40f99a, __unlock; not read here	inferred	none		
 0x414310	257	__strnicmp	idb	crt	boundary		Compares up to n bytes of two strings without case; with no locale set it folds A to Z and orders the bytes unsigned	verified	one	net/friends#strings-without-case	net::friends_compare
 0x414411	139	_atol	idb	crt	primitive	int32_t __cdecl (const char *string)	Reads C-locale white space, one sign and decimal digits into a wrapping 32-bit value; 0 for no digit	verified	two	net/dial#integer-from-text	net::crt_atol
-0x41449c	11	_atoi	idb	crt	orchestration	int32_t __cdecl (const char *string)	Returns _atol of the string	verified	two	net/dial#integer-from-text	net::crt_atol
+0x41449c	11	_atoi	idb	crt	orchestration	int32_t __cdecl (const char *string)	Returns _atol of the string	verified	one	net/dial#integer-from-text	net::crt_atol
 0x4144a7	186	__atoi64	idb	crt	unreached		Runs its object file code that calls __isctype, __allmul; not read here	inferred	none		
 0x414561	46	___tzset	idb	crt	boundary		Runs its object file code that calls __lock, __tzset_lk, __unlock; not read here	inferred	none		
 0x41458f	22	__tzset	idb	crt	unreached		Runs its object file code that calls __lock, __tzset_lk, __unlock; not read here	inferred	none		
@@ -2930,7 +2930,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x43b850	15			os			Runs OsTcp.cpp code not read here	inferred	none		
 0x43b860	5			os			Runs OsTcp.cpp code not read here	inferred	none		
 0x43b870	19			os			Runs OsTcp.cpp code not read here	inferred	none		
-0x43b890	731	ResolveHostsThread		os	primitive	uint32_t __stdcall (void *param)	Builds a resolve request's address list from its ';' separated text, then marks the request done	verified	two	net/dial#resolver-list-split	net::dial_resolve_thread
+0x43b890	731	ResolveHostsThread		os	primitive	uint32_t __stdcall (void *param)	Builds a resolve request's address list from its ';' separated text	verified	two	net/dial#resolver-list-split	net::dial_resolve_thread
 0x43bb70	179			os	unreached		Runs OsTcp.cpp code that calls SMemAlloc, 0x43aa30; not read here	inferred	none		
 0x43bc30	3			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43bc40	342			os	unreached		Runs OsTcp.cpp code that calls 0x4413d0, 0x43bb70, SMemAlloc and 1 more; not read here	inferred	none		
@@ -2939,7 +2939,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x43c150	158			os	unreached		Runs OsTcp.cpp code that calls SMemAlloc, 0x43ad20; not read here	inferred	none		
 0x43c1f0	12			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43c200	46	FindResolveRequest		os	orchestration	ResolveRequest * __thiscall (OsTcp *this, uint32_t id)	Returns the resolve request with an id from the object's list, or null	verified	one	net/dial#resolver-hand-off	net::dial_resolve_thread
-0x43c230	602	StartHostResolve		os	orchestration	uint32_t __thiscall (OsTcp *this, const char *host, uint32_t port, void *callback, void *user)	Queues a resolve request for a host text and starts its thread; returns 1, or 0 for a null input or no thread	verified	two	net/dial#logon-dial	
+0x43c230	602	StartHostResolve		os	orchestration	uint32_t __thiscall (OsTcp *this, const char *host, uint32_t port, void *callback, void *user)	Queues a resolve request for a host text and starts its thread; returns 1, or 0 for a null input or no thread	verified	one	net/dial#logon-dial-start	
 0x43c490	289			os			Runs OsTcp.cpp code that calls 0x440f40; not read here	inferred	none		
 0x43c5c0	148			os	unreached		Runs OsTcp.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x43c660	234			os			Runs OsTcp.cpp code that calls 0x440f80, SMemFree; not read here	inferred	none		
@@ -3065,16 +3065,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x43f300	3			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43f310	39			os	unreached		Runs OsTcp.cpp code that calls 0x43bfe0; not read here	inferred	none		
 0x43f340	42			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError; not read here	inferred	none		
-0x43f370	45	MakeSockaddrIn		os	primitive	void __fastcall (uint32_t address, uint32_t port, void *out)	Writes a 16-byte sockaddr_in: family 2, the port in network order, the address and eight zero bytes	verified	two	net/dial#name-piece	net::dial_resolve_thread
+0x43f370	45	MakeSockaddrIn		os	primitive	void __fastcall (uint32_t address, uint32_t port, void *out)	Writes a 16-byte sockaddr_in: family 2, the port in network order, the address and eight zero bytes	verified	one	net/dial#resolver-piece-limits	net::dial_resolve_thread
 0x43f3a0	38			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
-0x43f3d0	110	ParseAddressPiece		os	primitive	void __fastcall (const char *text, uint32_t port, void *out)	Writes a sockaddr_in for a digit-led text: inet_addr of the text before a colon, the number after it as the port	verified	two	net/dial#address-piece	net::dial_digit_piece, net::dial_resolve_thread
+0x43f3d0	110	ParseAddressPiece		os	primitive	void __fastcall (const char *text, uint32_t port, void *out)	Writes a sockaddr_in: inet_addr of the text before a colon, the number after it as the port	verified	two	net/dial#address-piece	net::dial_digit_piece, net::dial_resolve_thread
 0x43f440	34			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43f470	87			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
-0x43f4d0	32	GetSockaddrAddress		os	primitive	uint32_t __fastcall (const void *sockaddr, uint16_t *port)	Returns a sockaddr_in's address and stores its port in host order through a non-null pointer	verified	one	net/threads#random-address-pick	net::address_random_pick
+0x43f4d0	32	GetSockaddrAddress		os	primitive	uint32_t __fastcall (const void *sockaddr, uint16_t *port)	Returns a sockaddr_in's address and stores its port in host order through a non-null pointer	verified	one	net/threads#random-address-draw	net::address_random_pick
 0x43f4f0	65			os			Runs OsTcp.cpp code that calls SStrPrintf; not read here	inferred	none		
 0x43f540	8			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43f550	100			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
-0x43f5c0	41	RequestHostResolve		os	orchestration	uint32_t __fastcall (const char *host, uint32_t port, void *callback, void *user)	Starts resolving a host text on a thread through the OsTcp object; returns 0 while there is none	verified	two	net/dial#logon-dial	
+0x43f5c0	41	RequestHostResolve		os	orchestration	uint32_t __fastcall (const char *host, uint32_t port, void *callback, void *user)	Starts resolving a host text on a thread through the OsTcp object; returns 0 while there is none	verified	one	net/dial#logon-dial-start	
 0x43f5f0	35			os	unreached		Runs OsTcp.cpp code that calls 0x43c150; not read here	inferred	none		
 0x43f620	46			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError, 0x43ea10; not read here	inferred	none		
 0x43f650	46			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError, 0x43e9b0; not read here	inferred	none		
@@ -13397,8 +13397,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5376f0	176	NetClient::Deinitialize		net	primitive	void __thiscall (NetClient *this)	Tears a NetClient down: disconnects, frees its connection and queue, zeroes its tables, stops the platform last	verified	one	net/dispatch#handler-tables	net::netclient_deinitialize
 0x5377a0	70	LogClientNetStats		net	orchestration	void __cdecl (void)	Logs bytes sent, bytes received and the milliseconds since net start to the console	inferred	none		
 0x5377f0	46	NetClient::RequestDestroy		net	orchestration	uint32_t __thiscall (NetClient *this)	Disconnects and queues a destroy event so the next poll deletes the client; returns 0 when never initialized	inferred	none		
-0x537820	150	NetClient::Connect		net	orchestration	uint32_t __thiscall (NetClient *this, const char *address)	Splits "host:port" (port 9090 when none), turns the header cipher off, and dials through 0x5378c0	verified	two	net/dial#world-address	net::dial_world_connect
-0x5378c0	68	NetClient::ConnectHost		net	orchestration	uint32_t __thiscall (NetClient *this, const char *host, uint32_t port)	Sets state 5 and asks the connection to dial host and port; returns 1, or 0 after a fatal error when not in state 2	verified	two	net/dial#world-address	net::dial_world_connect
+0x537820	150	NetClient::Connect		net	orchestration	uint32_t __thiscall (NetClient *this, const char *address)	Splits "host:port" (port 9090 when none) and dials through 0x5378c0	verified	two	net/dial#world-address	net::dial_world_connect
+0x5378c0	68	NetClient::ConnectHost		net	orchestration	uint32_t __thiscall (NetClient *this, const char *host, uint32_t port)	Sets state 5 and asks the connection to dial host and port; returns 1, or 0 after a fatal error when not in state 2	verified	one	net/dial#world-dial-states	net::dial_world_connect
 0x537910	138	NetClient::Disconnect		net	orchestration	void __thiscall (NetClient *this)	Marks a connected client disconnecting; otherwise drops the connection and queued events for a fresh one, state 2	verified	one	net/session#disconnecting	
 0x5379a0	139	NetClient::Send	idb	net	primitive	void __thiscall (NetClient *this, CDataStore *msg)	Sends a message when connected and non-empty, counts its bytes, and switches the header cipher on after the first send	verified	one	net/wire#arming-the-cipher	net::netclient_send
 0x537a30	24	NetClient::SetLoginData		net	orchestration	void __thiscall (NetClient *this, const void *data)	Copies a 108-byte login block, account name then the 40-byte session key at its +0x44, into the client at +0x04	verified	one	net/session#session-key	
@@ -17940,7 +17940,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b5250	288	WowConnection::Init		net	orchestration	void __thiscall (WowConnection *this, void *consumer, uint32_t arg)	Resets a connection: one reference, queue limit 100000, state 0 then 1, consumer stored, cipher off, framed receive	inferred	none		
 0x5b5370	48	WowConnection::Disconnect		net	orchestration	void __thiscall (WowConnection *this)	Moves a connected connection with an open socket from state 5 to state 7 under its lock, which stops sends	inferred	none	net/session#disconnecting	
 0x5b53a0	168	WowConnection::HandleClose		net	orchestration	void __thiscall (WowConnection *this)	Handles a close event: closes the socket, sets state 6, reports the disconnect to the consumer, drops the socket	inferred	none		
-0x5b5450	325	WowConnection::AllocSendBuffer		net	primitive	void * __thiscall (WowConnection *this, const void *data, int32_t len, uint8_t raw)	Allocates a buffer of data behind a big-endian length: 2 bytes to 0x7fff, else 3 with 0x80 set; raw adds no header	verified	one	net/wire#size-header	net::header_encode
+0x5b5450	325	WowConnection::AllocSendBuffer		net	primitive	void * __thiscall (WowConnection *this, const void *data, int32_t len, uint8_t raw)	Allocates a buffer of data behind a big-endian length: 2 bytes to 0x7fff, else 3 with 0x80 set; raw adds no header	verified	one	net/wire#size-header-copies	net::header_encode
 0x5b55a0	98	WowConnection::CloneSendBuffer		net	orchestration	void * __thiscall (WowConnection *this, const void *buffer, int32_t len)	Copies a stack-built send buffer and its framed bytes into a pooled buffer	inferred	none		
 0x5b5610	21	WowConnection::FreeSendBuffer		net	orchestration	void __thiscall (WowConnection *this, void *buffer)	Returns a send or delayed-receive buffer to the data-store pool, sized by its stored length	inferred	none		
 0x5b5630	1201	WowConnection::Send		net	primitive	uint32_t __thiscall (WowConnection *this, CDataStore *msg, int32_t headroom)	Frames a message, enciphers its header, sends it and queues what send did not take; returns 0 all sent, 1 part, 2 none	verified	one	net/wire#size-header	net::cipher_recv_roundtrip, net::cipher_send, net::header_send_inplace, net::header_send_node
@@ -17957,7 +17957,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b6c80	263	WowConnection::Connect		net	host	void __thiscall (WowConnection *this)	Opens a non-blocking socket and connects it to the stored address and port: state 2, or 8 when that fails	verified	one	net/wire#connecting	
 0x5b6d90	133	WowConnection::ConnectToHostPort		net	unreached	uint8_t __thiscall (WowConnection *this, const char *hostPort, uint32_t timeoutMs)	Splits host:port at the colon (port 0 without one) and connects through 0x5b6e40; returns 1	inferred	none	net/layout#unreached-functions	
 0x5b6e20	28	WowConnection::ConnectToAddress		net	orchestration	uint8_t __thiscall (WowConnection *this, uint32_t addr, uint16_t port, uint32_t timeoutMs)	Stores an address and port and connects through 0x5b6c80; returns 1	verified	one	net/wire#connecting	
-0x5b6e40	107	WowConnection::ConnectToHost		net	host	uint8_t __thiscall (WowConnection *this, const char *host, uint16_t port, uint32_t timeoutMs)	Stores a host address (dotted, else the first name lookup, else 0) and a 16-bit port, then connects; returns 1	verified	two	net/dial#host-dial	net::dial_connect_host
+0x5b6e40	107	WowConnection::ConnectToHost		net	host	uint8_t __thiscall (WowConnection *this, const char *host, uint16_t port, uint32_t timeoutMs)	Stores a host address (dotted, else the first name lookup) and a 16-bit port, then connects	verified	two	net/dial#host-dial	net::dial_connect_host
 0x5b6eb0	8	WowConnection::Reconnect		net	unreached	uint8_t __thiscall (WowConnection *this)	Connects again to the stored address and port through 0x5b6c80; returns 1	inferred	none	net/layout#unreached-functions	
 0x5b6ec0	224	WowConnection::Listen		net	unreached	uint8_t __thiscall (WowConnection *this, uint16_t port, uint8_t loopback)	Opens a non-blocking socket listening on the port, backlog 10000, state 3; returns 0 when one is open or on failure	inferred	none	net/layout#unreached-functions	
 0x5b6fa0	41	WowConnection::StopListening		net	unreached	void __thiscall (WowConnection *this)	Closes the socket of a listening connection (state 3) and removes it from the network engine	inferred	none	net/layout#unreached-functions	
@@ -18139,8 +18139,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bc050	240	ClientLink::SendXferCancel		net	orchestration	void __thiscall (ClientLink *this)	Sends command 0x34 alone	verified	one	net/logonlink#file-transfer	
 0x5bc140	263	ClientLink::SendRealmListRequest		net	orchestration	void __thiscall (ClientLink *this)	Sends command 0x10 with a zero u32 when the link is in state 6, and nothing otherwise	verified	one	net/connection#connect-and-realm-list	
 0x5bc250	90	ClientLink::ConnectToAddress		net	orchestration	void __thiscall (ClientLink *this, uint32_t ip, uint16_t port)	Creates the link's connection with the link as its response and dials an IPv4 address and port	inferred	none		
-0x5bc2b0	292	ConnectToRandomAddress		net	primitive	void __stdcall (const void *addresses, uint32_t count, ClientLink *link)	Dials a socket address picked from a list by a random state seeded with the clock, or reports failure	verified	two	net/threads#random-address-pick	net::address_random_pick
-0x5bc3e0	47	ClientLink::Connect		net	orchestration	void __thiscall (ClientLink *this, const char *host)	Sets state 1 and resolves host on port 3724 with 0x5bc2b0 as the callback, when the link is in state 0	verified	two	net/dial#logon-dial	
+0x5bc2b0	292	ConnectToRandomAddress		net	primitive	void __stdcall (const void *addresses, uint32_t count, ClientLink *link)	Dials the socket address that a random draw modulo the count picks from a list, or reports failure	verified	two	net/threads#random-address-pick	net::address_random_pick
+0x5bc3e0	47	ClientLink::Connect		net	orchestration	void __thiscall (ClientLink *this, const char *host)	Resolves host on port 3724 through 0x43f5c0, with 0x5bc2b0 as the callback and the link as its argument	verified	two	net/dial#logon-dial	
 0x5bc410	170	ClientLink::ClientLink		net	orchestration	ClientLink * __thiscall (ClientLink *this, void *owner)	Builds a link: pending requests with an 18 s timeout, a 100 ms timer, a lock, a receive store, state 0, the owner	inferred	none		
 0x5bc4c0	3	ClientLink::OnMessage		net	orchestration	void __thiscall (ClientLink *this, WowConnection *conn, uint32_t time, CDataStore *message)	Returns; the link reads raw bytes and ignores framed messages	inferred	none		
 0x5bc4d0	43	ClientLink::DeletingDestructor		net	orchestration	ClientLink * __thiscall (ClientLink *this, uint32_t flags)	Destroys the link and frees it when bit 0 of flags is set	inferred	none		
@@ -18178,7 +18178,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bd490	15	InitDouble14		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5bd4a0	5	InitQuotient17Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bd4b0; a static initializer	verified	one	net/layout#static-initializers	
 0x5bd4b0	19	InitQuotient17		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
-0x5bd4d0	31	AlignUpToMultiple		net	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t multiple)	Rounds a value up to a multiple, the add wrapping	verified	one	net/threads#random-address-pick	net::address_align_up
+0x5bd4d0	31	AlignUpToMultiple		net	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t multiple)	Rounds a value up to a multiple, the add wrapping	verified	one	net/threads#align-up-to-multiple	net::address_align_up
 0x5bd4f0	133	ReallocConnectionArray		net	host	void __thiscall (void *this, uint32_t capacity)	Sets a connection-pointer array's capacity, resizing its block or moving the kept entries to a new one	inferred	none		
 0x5bd580	5	InitCopy15Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bd590; a static initializer	verified	one	net/layout#static-initializers	
 0x5bd590	11	InitCopy15		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	

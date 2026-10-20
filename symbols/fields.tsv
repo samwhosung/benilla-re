@@ -1146,6 +1146,8 @@ OsTcp	0x0544	4	void *	m_wakeEvent	os	Holds the event that wakes the OsTcp_Base t
 OsTcp	0x0614	4	int32_t	m_requestCount	os	Counts the resolve requests started and not yet handed to their callbacks	verified	one	net/dial#resolver-hand-off
 OsTcp	0x0618	4	void *	m_lock	os	Holds the event used as the mutex over the request list	verified	one	net/dial#resolver-hand-off
 OsTcp	0x061c	4	uint32_t	m_lastId	os	Holds the last request id given	verified	one	net/dial#resolver-hand-off
+OsTcp	0x0620	4	int32_t	m_requestLinkOffset	os	Holds the offset of the link inside a request, 0	verified	one	net/dial#resolver-hand-off
+OsTcp	0x0624	4	ResolveRequest *	m_requestsTail	os	Holds the last request of the list, or the list head's own link while it is empty	verified	one	net/dial#resolver-hand-off
 OsTcp	0x0628	4	ResolveRequest *	m_requests	os	Holds the first request of the list; an odd value ends it	verified	one	net/dial#resolver-hand-off
 OsThreadRecord	0x0000	8	void *[2]	m_link	os	Holds the record's link in the record list	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	core/threads#engine-thread-records
@@ -1195,6 +1197,7 @@ RealmInfo	0x0009	256	char[256]	m_name	net	Holds the realm name	verified	one	glue
 RealmInfo	0x012c	4	float	m_population	net	Holds the population, the sentinels 600, 200 and 400 replaced by 0, 0.001 and 8	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0130	1	uint8_t	m_characters	net	Counts the account's characters on the realm	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0131	1	uint8_t	m_category	net	Holds the realm's category id, 0 meaning the first category	verified	one	glue/realms#the-realm-record
+ResolveRequest	0x0000	4	ResolveRequest *	m_prev	os	Holds the previous link: the list head's link for the first request, else the request before it	verified	one	net/dial#resolver-hand-off
 ResolveRequest	0x0004	4	ResolveRequest *	m_next	os	Holds the next request of the list; an odd value ends it	verified	one	net/dial#resolver-hand-off
 ResolveRequest	0x0008	4	char *	m_host	os	Holds the copy of the host text the request owns	verified	one	net/dial#resolver-hand-off
 ResolveRequest	0x000c	4	char *	m_remaining	os	Holds the text not yet cut into pieces, null once the last piece is taken	verified	one	net/dial#resolver-hand-off

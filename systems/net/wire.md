@@ -18,18 +18,29 @@ Roots: `0x5379a0`, `0x5ab630`
 
 ## Size header
 
-A world packet starts with its size `N`, the count of opcode and body bytes, big-endian: two bytes, `N >> 8` and `N & 0xff`, up to 32,767 (a signed compare); above that three, the low bytes of `(N >> 16) | 0x80`, `N >> 8` and `N`. The first byte takes no mask: a size of 2^23 or more puts its bit 23 on the flag bit, already set, and drops bits 24 to 31, so the header carries `N` modulo 2^23. A reader picks the form from the first byte's top bit and takes `(b0 & 0x7f) << 16 | b1 << 8 | b2`. The opcode is sent as four bytes little-endian and read as two.
+A world packet starts with its size `N`, the count of opcode and body bytes, big-endian: two bytes, `N >> 8` and `N & 0xff`, up to 32,767 (a signed compare); above that three, the low bytes of `(N >> 16) | 0x80`, `N >> 8` and `N`. The first byte takes no mask: a size of 2^23 or more puts its bit 23 on the flag bit, already set, and drops bits 24 to 31: the header carries `N` modulo 2^23. A reader takes the form from the first byte's top bit and reads `(b0 & 0x7f) << 16 | b1 << 8 | b2`. The opcode goes out as four bytes little-endian and comes in as two.
 
-Addresses: `0x5b5630`, `0x5b5450`, `0x5b65f0`, `0x5b566b`, `0x5b56a3`, `0x5b56da`, `0x5b56f9`, `0x5b5712`, `0x5b5718`, `0x5b571b`, `0x5b5725`, `0x5b572b`, `0x5b577a`, `0x5b57b7`, `0x5b57ba`, `0x5b59a3`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`, `0x5b5495`
+Addresses: `0x5b5630`, `0x5b65f0`, `0x5b56da`, `0x5b56f9`, `0x5b5712`, `0x5b5718`, `0x5b571b`, `0x5b5725`, `0x5b572b`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`
 Confidence: verified
 Proof: two
-Test: `net::header_decode`, `net::header_encode`, `net::header_send_inplace`, `net::header_send_node`
+Test: `net::header_decode`, `net::header_send_inplace`
 
-Three copies of the send rule write the same bytes. `Send` (`0x5b5630`) with `headroom` of 3 or more writes the header in place: `0x5b56da` `cmp eax,0x7fff; jg`, the two-byte form at `0x5b56f9`, and the three-byte form with `sar edx,0x10` (`0x5b5712`) and `or dl,0x80` (`0x5b5718`), stored by `0x5b571b`, `0x5b5725` and `0x5b572b`. With less it copies into a node (`0x5b577a`, `0x5b57b7`, `0x5b57ba`). `0x5b5450` repeats the rule at `0x5b5495` for packets of 100,000 bytes and more (`0x5b56a3`) and the delayed path (`0x5b59a3`). `Send` returns before them for a size of 0 or less (`0x5b566b`).
+`0x5b56da` `cmp eax,0x7fff; jg` picks the form for the length of the data store's bytes. The two-byte form shifts by 8 (`0x5b56f9`); the three-byte form shifts by `0x10` (`sar edx,0x10`, `0x5b5712`) and ORs `0x80` (`or dl,0x80`, `0x5b5718`), stored by `0x5b571b`, `0x5b5725` and `0x5b572b`.
 
-On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bit is clear: `((b0 & 0x7f) << 8 | b1) + 2` (`0x5b677b`). Otherwise `((b0 & 0x7f) << 16 | b1 << 8 | b2) + 3` (`0x5b6765` to `0x5b6772`), the frame's whole length.
+On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bit is clear: `((b0 & 0x7f) << 8 | b1) + 2` (`0x5b677b`). Otherwise it takes the three-byte form, `((b0 & 0x7f) << 16 | b1 << 8 | b2) + 3` (`0x5b6765` to `0x5b6772`), the frame's whole length.
 
-Every opcode the client builds goes in through the data store's 32-bit put, as in `0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits: `0x537abe` in the dispatcher and `0x537b46` in the worker thread's data hook. The tests run `0x5b6730` to `0x5b6789` (decode), `0x5b5495` to `0x5b54f0`, `0x5b56da` to `0x5b572e` and `0x5b577a` to `0x5b57d0` (encode).
+Every opcode the client builds goes in through the data store's 32-bit put, as in `0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits: `0x537abe` in the dispatcher and `0x537b46` in the worker thread's data hook. `header_decode` runs `0x5b6730` to `0x5b6789`; `header_send_inplace` runs `0x5b56da` to `0x5b572e`. Two readings, by a benilla builder and its auditor, agree on the receive form (`0x5b674d`, `0x5b6765`, `0x5b677b`) and the send at `0x5b56da` and `0x5b5712` to `0x5b572b`, where a size of 2^23 or more folds bit 23 into the flag.
+
+## Size header copies
+
+Three live copies of the send rule write the same bytes. `Send` (`0x5b5630`) with `headroom` of 3 or more writes the header in place, the copy above. With less it copies the message into a node and writes the header there (`0x5b577a`). `AllocSendBuffer` (`0x5b5450`) writes it at `0x5b5495` for packets of 100,000 bytes and more and for the delayed path. A fourth copy, at `0x5b5b7f` in `SendPair` (`0x5b5af0`), is unreached. `Send` leaves before any of them for a size of 0 or less, so `N` is positive there.
+
+Addresses: `0x5b5630`, `0x5b5450`, `0x5b566b`, `0x5b56a3`, `0x5b56af`, `0x5b577a`, `0x5b57b7`, `0x5b57ba`, `0x5b5495`, `0x5b59a3`, `0x5b5af0`, `0x5b5b7f`, `0x5b5bc7`
+Confidence: verified
+Proof: one
+Test: `net::header_encode`, `net::header_send_node`
+
+`0x5b56af` to `0x5b56bd` compare `headroom` with 3 and `jl` to the node copy. `0x5b577a` `cmp ecx,0x7fff` picks the form, `sar edx,0x10` and `or dl,0x80` at `0x5b57b7` and `0x5b57ba`. `0x5b56a3` `cmp esi,0x186a0` sends a packet of 100,000 bytes or more to `0x5b5450`, which `0x5b59a3` also calls for the delayed path; it repeats the rule at `0x5b5495`. `0x5b566b` `test eax,eax; jg` leaves for a size of 0 or less. `0x5b5af0` has no call, jump or stored address (`cargo xtask census --why`), and its copy runs from `0x5b5b7f` `cmp ebx,0x7fff` to the store at `0x5b5bc7`. `header_encode` runs `0x5b5495` to `0x5b54f0`; `header_send_node` runs `0x5b577a` to `0x5b57d0`.
 
 ## Header cipher
 
