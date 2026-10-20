@@ -193,17 +193,18 @@ immediate `0x7530`.
 
 ## Answering a ready check
 
-`ConfirmReadyCheck([ready])` sends opcode 0x322 with one byte, the low byte of `GetScriptFlagArg(1, 0)`, only while a check is running; the
-byte is 1 for true and 0 for false or nothing. The leader's own client handles an incoming 0x322 (`u64 guid`, `u8 status`) at `0x4ba3b0`: for the roster record of that GUID it
+`ConfirmReadyCheck([ready])` sends opcode 0x322 with one byte, the low byte of `GetScriptFlagArg(1, 0)`, only while a check is running. A number
+sends its truncated low byte (2 sends 2, 1.9 sends 1, 256 sends 0), a boolean its value, nil 0 and no argument the default 0; a string follows the
+first-letter table of `ui/actionuse#reading-a-script-flag`. The leader's own client handles an incoming 0x322 (`u64 guid`, `u8 status`) at `0x4ba3b0`: for the roster record of that GUID it
 stores 0 in `+0x158` whatever the status was, and only for a status of 0 it shows `RAID_MEMBER_NOT_READY` with the member's name. A body-less message reads as
 GUID 0 and status 0 and matches nothing.
 
-Addresses: `0x4bc090`, `0x4bc099`, `0x4bc0ad`, `0x4bc0d8`, `0x4bc0e4`, `0x4ba360`, `0x4ba3a2`, `0x4ba3b7`, `0x4ba3c4`, `0x4ba3d4`, `0x4ba3f9`, `0x4ba405`, `0x4ba40e`, `0x4ba414`, `0x4ba41d`, `0x4ba44c`, `0x4ba484`, `0x4ba48f`, `0x49a870`
+Addresses: `0x4bc090`, `0x4bc099`, `0x4bc0ad`, `0x4bc0bf`, `0x4bc0d8`, `0x4bc0e4`, `0x6f1c10`, `0x6f1c46`, `0x4ba360`, `0x4ba3a2`, `0x4ba3b7`, `0x4ba3c4`, `0x4ba3d4`, `0x4ba3f9`, `0x4ba405`, `0x4ba40e`, `0x4ba414`, `0x4ba41d`, `0x4ba44c`, `0x4ba484`, `0x4ba48f`, `0x49a870`
 Confidence: verified
 Proof: one
 Test: none
 
-Both reads are guarded by the data store's at-end test (vtable `+0x14`), so a short message leaves the locals 0. `ecx` holds the constant 0 from `0x4ba3e4`
+`0x4bc0ad` calls `GetScriptFlagArg`, whose number arm returns the `_ftol` result whole (`0x6f1c46`); `0x4bc0bf` keeps `al` and `0x4bc0e4` writes it with `PutInt8`. Both reads are guarded by the data store's at-end test (vtable `+0x14`), so a short message leaves the locals 0. `ecx` holds the constant 0 from `0x4ba3e4`
 to the store at `0x4ba40e` (re-zeroed at `0x4ba48f` after the calls), and the status byte is read only by the compare at `0x4ba414`. The client sends the plain byte; the
 store ignores it. The line is `AddChatLine(text, 10, ten zeros)`, type 10 being `CHAT_MSG_SYSTEM` (`chatevents`).
 

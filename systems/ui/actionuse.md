@@ -130,7 +130,7 @@ container guid and slot. The use arm builds the flag 0x20 at `0x4e604f` and call
 
 `0x6f1c10(L, index, default)` reads a Lua argument as a flag. A missing argument, a light userdata
 and a table, function, userdata or thread give the default. Nil gives 0. A boolean gives itself. A
-number is truncated toward zero and gives 1 when nonzero, so 0.6 is 0. A string gives 0 when its first
+number gives its truncation toward zero as a 32-bit integer, not 1, so 0.6 is 0 and 2 is 2. A string gives 0 when its first
 character is `0`, `F`, `f`, `N` or `n`, and 1 when it is `1` to `9`, `T`, `t`, `Y` or `y`. Any other
 string is compared without case with `off` and `disabled`, giving 0, with `on` and `enabled`, giving 1,
 and otherwise gives the default. The string `"0"` is therefore false although every Lua 5.0 string is
@@ -144,7 +144,7 @@ Test: none
 `0x6f1c19` calls `lua_type` (`0x6f3400`); `0x6f1c1e cmp eax,4; ja` sends a missing argument to the
 default at `0x6f1cdc`, the others through the five-dword table at 0x6f1ce8: nil to the zero return,
 boolean to `0x6f3660`, light userdata to the default, number to `0x6f3620` and the truncating
-`0x40a2b0`, string to `0x6f1c51`. The first byte, minus 0x30, indexes a 0x4a-byte table at 0x6f1d08
+`0x40a2b0`, whose low dword the arm returns unchanged (`0x6f1c46`), string to `0x6f1c51`. The first byte, minus 0x30, indexes a 0x4a-byte table at 0x6f1d08
 (arms 0 false, 1 true, 2 the keyword compares of `0x6f1c81` onward with `0x64a4c0` and length
 0x7fffffff); a byte outside `0` to `y`, and the empty string, take arm 2.
 
