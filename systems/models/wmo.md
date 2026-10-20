@@ -262,7 +262,8 @@ copy: 0x200 and 0x800 each take a chunk of 16-bit entries, 0x1 the BSP chunks, 0
 recursion read the group. The mask of `0x6a4e00` is its first argument, the literal 0x2000 its sole
 caller pushes (`0x69b570`). A scan of `0x680000` to `0x6c5000` for `test`, `and` and `bt` with an
 immediate above 0x10000 on the flags finds exactly `0x6b42e0` and `0x6c46a6`; the scan sees no mask
-held in a register. No instruction of the forms searched tests bit 0x8000: from `0x66f000` to `0x6c5000` the only immediates 0x8000 are
+held in a register. Bit 0x8000 is read by `shr eax,0xf; and al,1` at `0x670735`
+(`terrain/world#entity-outdoors-test`), the only `shr` by 0xf from `0x66f000` to `0x6c5000`; there the other immediates 0x8000 are
 `or` stores (`0x670df1`, `0x671052`, `0x6713c2`, `0x688a5a`) and one compare (`0x68b5cc`), and the image has no
 `test ah,0x80`, `test byte [reg+0x11],0x80` or `bt reg,0xf` (`test ah,0x41` finds 1218 for control).
 

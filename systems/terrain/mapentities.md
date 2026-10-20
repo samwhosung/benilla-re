@@ -23,10 +23,12 @@ indoors bit of `+0x90`, and sets `+0xc` bit 4 when the group has bit 0x40 (exter
 Addresses: `0x6a87f0`, `0x6a8805`, `0x6a880a`, `0x6a880d`, `0x6a8811`, `0x6a8820`, `0x6a8823`, `0x6a882d`, `0x6a8836`, `0x6a4a00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::entity_light_flags_difftest`
 
 `0x6a8805` looks the group record up by its key `+0x7c`; `0x6a880d` tests 0x8, `0x6a8823` 0x40.
-`ret 4`; the entity is `ecx`, the map object `edx` and the group node the stack argument.
+`ret 4`; the entity is `ecx`, the map object `edx` and the group node the stack argument. The group
+is not tested for null before `0x6a880a` reads `+0x10`; the test gives it a loaded group and runs the
+function whole.
 
 ## Entity placement
 

@@ -234,23 +234,43 @@ Test: none
 `[esi+0x2a8]`; `0x609f29` calls `0x4d6370` and `0x609f34 cmp eax,[ecx*4+0x80928c]` with `ecx` from
 `[esi+0x2ac]`; `jge` passes.
 
-## Place and taming rungs
+## Indoors and outdoors rungs
 
-A spell with `Attributes` bit 14 (0x4000) or 15 (0x8000) tests the caster's world node (`0x612cc0`). Bit 14 refuses with 0x52 when the test returns nonzero. Bit 15 refuses when it returns 0: with 0x4b when
-one of the three effects applies an aura of type 78 (`Effect` 6), else 0x55. A spell with `AttributesEx2`
-bit 16 (0x10000) refuses with 0x17 when the caster is the active player and `PLAYER_FIELD_BYTES` byte 0 has
-bit 0, after showing the taming failure for reason 2 (`0x6e6a20`).
+A spell with `Attributes` bit 14 (0x4000) or 15 (0x8000) asks one question, once: `0x612cc0`, the
+outdoors test of the caster's world node (`terrain/world#entity-outdoors-test`). An outdoors answer
+(`al` nonzero) refuses bit 14 with 0x52, `SPELL_FAILED_ONLY_INDOORS`. An indoors answer refuses bit 15
+with 0x4b, `SPELL_FAILED_NO_MOUNTS_ALLOWED`, when one of the three effects applies aura 78, mounted
+(`Effect` 6), else with 0x55, `SPELL_FAILED_ONLY_OUTDOORS`. A spell with both bits is refused on
+either answer; with neither the question is not asked. An item cast takes the rungs too. They follow
+the stealth, combat, caster aura state and reputation rungs and precede the taming rung.
 
-Addresses: `0x609f59`, `0x609f63`, `0x609f6f`, `0x609f7c`, `0x609f90`, `0x609f94`, `0x609fa1`, `0x609fa6`, `0x609fb4`, `0x609fd0`, `0x609fd7`, `0x609fe0`, `0x609ffb`, `0x60a00b`, `0x60a018`, `0x60a01e`, `0x60a02b`, `0x612cc0`, `0x6e6a20`
+Addresses: `0x609f59`, `0x609f5c`, `0x609f63`, `0x609f6d`, `0x609f6f`, `0x609f7c`, `0x609f90`, `0x609fa1`, `0x609fa6`, `0x609fb4`, `0x609fd0`, `0x609fd7`, `0x612cc0`, `0x6706f0`, `0x6e1a00`
+Confidence: verified
+Proof: one
+Test: `objectlayer::cast_place_rung_difftest`
+
+`0x609f5c test ah,0xc0` selects bits 14 and 15 and `0x609f5f je` skips to `0x609fd7`. `0x609f63`
+calls `0x612cc0`, which is `mov ecx,[ecx+0xe0]; jmp 0x6706f0` on the caster in `edi`; `0x609f68 test
+al,al` reads `al` alone. `0x609f6d je` sends a zero to `0x609f90`, `test ah,ah; jns`, bit 15 clear
+passing; a nonzero answer reaches `0x609f6f test ah,0x40`, `dl` 0x52 at `0x609f7c`. The scan at
+`0x609f94` compares `[esi+0xf4+4i]` (`Effect`) with 6 at `0x609fa1` and `[esi+0x16c+4i]`
+(`EffectApplyAuraName`) with 0x4e at `0x609fa6` for i in 0 to 2; `0x609fd0 mov dl,0x4b` joins the 0x55
+report at `0x609fb6`. A scan of the listing for `mov dl,0x4b`, `0x52` and `0x55` finds one site each
+(control: `mov dl,0x53` finds `0x609c20` and `0x609c56`). The test runs the slice `0x609f59` to the
+pass exit `0x60a049`, with `0x612cc0` and `0x6e1a00` stubbed.
+
+## Taming rung
+
+A spell with `AttributesEx2` bit 16 (0x10000) refuses with 0x17 when the caster is the active player
+and `PLAYER_FIELD_BYTES` byte 0 has bit 0, after showing the taming failure for reason 2 (`0x6e6a20`).
+
+Addresses: `0x609fd7`, `0x609fe0`, `0x609ffb`, `0x60a00b`, `0x60a018`, `0x60a01e`, `0x60a02b`, `0x468550`, `0x6e6a20`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x612cc0` is `mov ecx,[ecx+0xe0]; jmp 0x6706f0`, the world node test. `0x609f5c test ah,0xc0` selects
-bits 14 and 15; `0x609f6d je` is the zero-result case. The scan at `0x609f94` compares `[esi+0x16c+4i]` with
-0x4e and `[esi+0xf4+4i]` with 6 for i in 0 to 2, and `0x609fd0 mov dl,0x4b` joins the 0x55 report at
-`0x609fb6`. `0x609fe0` takes the object's type word bit 4 and compares its guid with `0x468550`; `0x60a018
-test al,1` is `PLAYER_FIELD_BYTES` byte 0, and `0x60a01e` is `call 0x6e6a20` with `cl` 2.
+`0x609fe0` takes the object's type word bit 4 and compares its guid with `0x468550`; `0x60a018 test
+al,1` is `PLAYER_FIELD_BYTES` byte 0, and `0x60a01e` is `call 0x6e6a20` with `cl` 2.
 
 ## Rung order
 
