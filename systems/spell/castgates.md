@@ -168,7 +168,7 @@ state.
 A spell with `Attributes` bit 12 (0x1000) refuses with 0x51 when `0x60a050` returns 0, and one with bit 13
 (0x2000) refuses with 0x54 when it returns nonzero. `0x60a050` decides whether the game clock `0xce8538`
 lies between 5:30 and 21:00. So 0x1000 allows a cast by day only (0x51 is `SPELL_FAILED_ONLY_DAYTIME`) and 0x2000
-by night only (0x54, `SPELL_FAILED_ONLY_NIGHTTIME`).
+by night only (0x54, `SPELL_FAILED_ONLY_NIGHTTIME`); the client's name switch `0x6e23e0` returns their keys at `0x6e25dc` and `0x6e25ee`.
 
 Addresses: `0x609cd3`, `0x609cd6`, `0x609cdb`, `0x609ce2`, `0x609cee`, `0x609d03`, `0x609d06`, `0x609d0b`, `0x609d12`, `0x609d1e`, `0x60a050`, `0x60a067`, `0x60a072`, `0x60a08b`, `0x60a0a8`, `0xce8538`, `0x642ae0`, `0x642710`
 Confidence: verified

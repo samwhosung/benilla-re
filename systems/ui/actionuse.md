@@ -130,7 +130,7 @@ container guid and slot. The use arm builds the flag 0x20 at `0x4e604f` and call
 
 `0x6f1c10(L, index, default)` reads a Lua argument as a flag. A missing argument, a light userdata
 and a table, function, userdata or thread give the default. Nil gives 0. A boolean gives itself. A
-number gives its truncation toward zero as a 32-bit integer, not 1, so 0.6 is 0 and 2 is 2. A string gives 0 when its first
+number gives the low 32 bits of its 64-bit truncation (0 for NaN, ±inf or ≥2^63), so 0.6 gives 0. A string gives 0 when its first
 character is `0`, `F`, `f`, `N` or `n`, and 1 when it is `1` to `9`, `T`, `t`, `Y` or `y`. Any other
 string is compared without case with `off` and `disabled`, giving 0, with `on` and `enabled`, giving 1,
 and otherwise gives the default. The string `"0"` is therefore false although every Lua 5.0 string is

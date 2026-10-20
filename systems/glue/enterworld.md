@@ -244,4 +244,4 @@ The returns of `0x6c96c0` (`ret 0x18`), by the `mov eax` before each: 0 for a nu
 a nonempty extra list: with `edx` 0 a space or apostrophe fails the charset test and reports 3. The
 three word-list loops call `0x71fc70` over three tables of 16-byte records; a hit reaches
 `0x6c9a4f`. The charset predicate and the locale table `0x6c9a70` are not read here. `0x6c9b30` is `0x6c9ae0` without the
-charset 3 cap (`0x6c9b51` to `0x6c9b66`); no `call`, `jmp` or stored dword names it.
+charset 3 cap (`0x6c9b51` to `0x6c9b66`); no `call`, `jmp` or stored dword names it (the same scan finds `0x5abd58` for `0x6c9ae0`).

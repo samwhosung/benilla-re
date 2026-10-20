@@ -268,11 +268,12 @@ dispatch that this entry does not repeat.
 
 The release on a plate reaches the button release `0x7792d0`, which calls the plate's click slot `0x7cb910` with the
 button bit. That slot calls `0x4949f0` with the bit and the plate's unit GUID, then runs the button's own click.
-`0x4949f0` selects the unit for button 1 and interacts for button 4, and a scripted `Click` runs the same slot. The
-click skips the world router `0x481f60`: a charmed player is not sent to the nothing leg, a held preview payload is
+`0x4949f0` selects the unit for button 1 and interacts for button 4, and a scripted `Click` runs the same slot. With
+an `OnDoubleClick` script, a second release within 300 ms runs slot 0x98 instead (`0x77938d`) and does not select
+(`ui/button#double-click`). The click skips the world router `0x481f60`: a charmed player is not sent to the nothing leg, a held preview payload is
 not cleared first, and the press-time pick is not read, since the plate uses its own unit.
 
-Addresses: `0x7cb910`, `0x7cb92a`, `0x4949f0`, `0x4925d0`, `0x492820`, `0x779540`, `0x7792d0`, `0x481f60`, `0x492ce0`
+Addresses: `0x7cb910`, `0x7cb92a`, `0x4949f0`, `0x4925d0`, `0x492820`, `0x779540`, `0x7792d0`, `0x77938d`, `0x779650`, `0x481f60`, `0x492ce0`
 Confidence: verified
 Proof: one
 Test: none
@@ -282,7 +283,7 @@ Test: none
 the plate's constructor stores (`0x7cb29a`) holds `0x7cb910` there. `0x7cb92a` is the one `call` or `jmp` to
 `0x4949f0`, and no dword of the image holds its address; the same census finds `0x492d05` and `0x494a22` for
 `0x4925d0`. `0x4949f0` returns when no active player is found (`0x494a13`), calls `0x4925d0` for 1 (`0x494a22`) or
-`0x492820` for 4 (`0x494a39`), and calls nothing else. The router, called from `0x514d79` and `0x514d8d`, tests
+`0x492820` for 4 (`0x494a39`), and does nothing for another bit. The router, called from `0x514d79` and `0x514d8d`, tests
 the charm pair at `0x481f98`, and its object leg `0x492ce0` calls `ClearCursor(1, 1)` at `0x492cf3` when `0xb4b41c`
 is set. Neither is on the plate's path.
 

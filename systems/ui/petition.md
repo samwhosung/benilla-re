@@ -109,7 +109,7 @@ is the only reference to `0x6c9b70`. It stores the extra list, a space and a zer
 the flags 0, 1, 1 (`0x6c9b76` to `0x6c9b7a`): NamesReserved, ChatProfanity and NamesProfanity, the loops at `0x6c99e1`,
 `0x6c9977` and `0x6c9909` over `0xce8930`, `0xce893c` and `0xce8948`. It compares an accept (`0x6c9b99`) with 0x18 on the
 unit count (`0x6c9b9e`) and sets 2 (`0x6c9ba4`). In `0x6c96c0`, a unit the list holds is accepted, since no charset predicate behind `0x6c9dd0` takes 0x20 or 0x27; a space as unit 1 returns 10 (`0x6c985c`), after a space 11 (`0x6c98c4`), as the last unit 10 (`0x6c98fb`). The
-validator never returns 4 or 5, and 7 and 8 need an apostrophe in the list, so those messages do not show from here.
+validator never returns 4 or 5, and 7 and 8 need an apostrophe in the list, so `ERR_GUILD_NAME_MIXED_LANGUAGES` and `ERR_GUILD_NAME_PROFANE` do not show from here.
 
 ## Closing
 

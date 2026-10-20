@@ -22,12 +22,12 @@ Proof: one
 Test: `ui::glue_settled_eps`
 
 `0x770ad0` takes the source's set bits (`test ah,1` ... `ah,0x10`); `0x770910` also requires the group's changed bit in
-`edx = word & mask` (`0x770920`, `test dl,1`). The equal-value test reads the receiving block's set bit: `test ch,0x2`
+`edx = word & mask` (`0x770920`, `test dl,1`). The equal-value test reads the receiving set bit: `test ch,0x2`
 (`0x7709f9`, `0x770b9e`), `ch,0x4` (`0x770a1d`, `0x770bbd`), `ah,0x8` (`0x770a5b`, `0x770bf6`), `ah,0x10` (`0x770a9d`,
-`0x770c33`). `PushChanges` clears the changed bits after each push (`0x7841bb`), so they are 0 at rest. The font group has
-no set-bit test: it reads both names through `0x41e4c0` (`0x770949`), copies when the receiving name is empty, and skips
-when `SStrCmpI` (`0x770973`) finds them equal, the heights within 2^-22 and the flags equal, or the height is
-not above 0 (`0x7709a7`). Else it calls `TextBlockGenerateFont(name, flags, height)` (`0x7709b2`) and, if the engine
+`0x770c33`). `PushChanges` zeroes the changed bits after each push (`0x7841bb`). The font group has
+no set-bit test: it reads both names through `0x41e4c0` (`0x770949`), skips when the source has no font (`0x770952`), copies when the
+receiving block has none (`0x770962`), and skips when `SStrCmpI` (`0x770973`) finds them equal, the heights within 2^-22 and the flags equal, or the height is
+not above 0 (`0x7709a7`). It calls `TextBlockGenerateFont(name, flags, height)` (`0x7709b2`) and, if the engine
 builds a font, closes the handle (`0x7709bd`), assigns the name with `0x41e3a0`, stores height and flags and
 ORs 0x101 (`0x7709d3`). The other groups store their words and OR 0x202, 0x404 and 0x808, and the spacing 0x1010
 (`0x770aa7`). `ui::glue_settled_eps` runs the 2^-22 compare of the height (`0x77097c` to `0x77098c`, `0x770b29` to `0x770b39`) and the
