@@ -12,6 +12,7 @@
 
 pub mod apply;
 pub mod cast_time;
+pub mod castplace;
 pub mod datastore;
 pub mod dynobj_fp;
 pub mod dynoffset;
