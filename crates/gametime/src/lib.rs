@@ -63,8 +63,9 @@ pub const SCALE_MIN_BITS: u32 = 0x3c88_8889;
 pub const SCALE_MAX_BITS: u32 = 0x4270_0000;
 
 /// `0x643820`: the value `[+0x2c]` takes for the argument `scale`. An argument below 1/60
-/// (`-0.0` and the negatives included) gives 1/60, one above 60.0 gives 60.0, and anything else,
-/// NaN with its bits, is stored as it is.
+/// (`-0.0` and the negatives included) gives 1/60, one above 60.0 gives 60.0, and a NaN goes
+/// through `fld` and `fstp`: a quiet one keeps its bits and a signalling one is stored with its
+/// quiet bit set. The test leaves signalling NaNs out, since the emulator's `fld` does not quiet them.
 pub fn set_scale(scale: f32) -> f32 {
     let (min, max) = (
         f32::from_bits(SCALE_MIN_BITS),
@@ -74,6 +75,8 @@ pub fn set_scale(scale: f32) -> f32 {
         min
     } else if scale > max {
         max
+    } else if scale.is_nan() {
+        f32::from_bits(scale.to_bits() | 0x0040_0000)
     } else {
         scale
     }

@@ -23038,7 +23038,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6422e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6422f0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x642300	30			unassigned			Runs its object file code not read here	inferred	none		
-0x642320	130	WowTime::GetDayNumber		unassigned		int32_t __thiscall (const WowTime *this)	Returns mktime of the date divided by 86,400, or 0 when its year, month or day is negative	verified	one	gametime#day-number-and-time-text	
+0x642320	130	WowTime::GetDayNumber		unassigned		int32_t __thiscall (const WowTime *this)	Returns mktime of the date divided by 86,400, or 0 when its year, month or day is negative	verified	one	gametime/overview#day-number-and-time-text	
 0x6423b0	3			unassigned			Runs its object file code not read here	inferred	none		
 0x6423c0	198			unassigned			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
 0x642490	33			unassigned			Runs its object file code that calls _localtime; not read here	inferred	none		
@@ -23060,11 +23060,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642a10	162			unassigned			Runs its object file code not read here	inferred	none		
 0x642ac0	21			unassigned	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
 0x642ae0	80	WowTime::WowEncodeTime	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x642b30	211	WowTime::WowDecodeTime2	idb	base	primitive	void __fastcall (uint32_t packed, int32_t *minute, int32_t *hour, int32_t *weekday, int32_t *day, int32_t *month, int32_t *year, int32_t *extra)	Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	two	gametime#packed-date-fields	gametime::gametime_642c30_decode_time
+0x642b30	211	WowTime::WowDecodeTime2	idb	base	primitive	void __fastcall (uint32_t packed, int32_t *minute, int32_t *hour, int32_t *weekday, int32_t *day, int32_t *month, int32_t *year, int32_t *extra)	Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
 0x642c10	32			unassigned			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
-0x642c30	30	WowTime::WowDecodeTime	idb	base	orchestration	void __fastcall (uint32_t packed, WowTime *out)	Decodes a packed date into a seven-field record by calling 0x642b30	verified	two	gametime#packed-date-fields	gametime::gametime_642c30_decode_time
+0x642c30	30	WowTime::WowDecodeTime	idb	base	orchestration	void __fastcall (uint32_t packed, WowTime *out)	Decodes a packed date into a seven-field record by calling 0x642b30	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
 0x642c50	38			unassigned	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
-0x642c80	397	WowTime::FormatTime		unassigned		char * __fastcall (const WowTime *time, char *buffer, uint32_t size)	Formats a time as month/day/year (weekday) hour:minute, or Not Set, into a buffer	verified	one	gametime#day-number-and-time-text	
+0x642c80	397	WowTime::FormatTime		unassigned		char * __fastcall (const WowTime *time, char *buffer, uint32_t size)	Formats a time as month/day/year (weekday) hour:minute, or Not Set, into a buffer	verified	one	gametime/overview#day-number-and-time-text	
 0x642e10	118	PackGuidIntoStore		base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
 0x642e90	5			base			Runs its object file code not read here	inferred	none		
 0x642ea0	11			base			Runs its object file code not read here	inferred	none		
@@ -23113,22 +23113,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6432c0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6432e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6432f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x643300	228	GameTimeConstruct		gametime	orchestration	void * __thiscall (void *this)	Sets the clock to an unset time, scale 1/60, the tick base and an empty callback table	verified	one	gametime#clock-state	
+0x643300	228	GameTimeConstruct		gametime	orchestration	void * __thiscall (void *this)	Sets the clock to an unset time, scale 1/60, the tick base and an empty callback table	verified	one	gametime/overview#clock-state	
 0x6433f0	93			unassigned			Runs its object file code that calls 0x643fa0; not read here	inferred	none		
-0x643450	126	GameTimeSetOffsets		gametime	unreached	void __thiscall (void *this, int minutes, int days, bool force)	Replaces the clock's minute and day offsets and sets the time again	inferred	none	gametime#unreached-functions	
-0x6434d0	198	GameTimeSet		gametime	primitive	void __thiscall (void *this, const WowTime *time, bool force)	Sets the clock's time with its offsets applied; a forced set re-enters the minute	verified	two	gametime#setting-the-time	gametime::gametime_6434d0_set_time
-0x6435a0	155	GameTimeUpdate		gametime	primitive	void __thiscall (void *this, float dt)	Adds dt times the scale to the minute fraction and advances a minute per whole one	verified	one	gametime#per-frame-advance	gametime::gametime_6435a0_minute_accum
-0x643640	128	GameTimeSetFromHost		gametime	unreached	void __thiscall (void *this, bool force)	Sets the clock from the host's local time, forced or by sync	inferred	none	gametime#unreached-functions	
-0x6436c0	324	GameTimeSync		gametime	primitive	void __thiscall (void *this, const WowTime *time, bool force)	Syncs the clock to a server time: advances it forward, or stalls it when it is ahead	verified	two	gametime#server-sync	gametime::gametime_6436c0_sync_time
-0x643810	4	GameTimeGetScale		gametime	unreached	float __thiscall (void *this)	Returns the clock's time scale	inferred	none	gametime#unreached-functions	
-0x643820	102	GameTimeSetScale		gametime	primitive	float __thiscall (void *this, float scale)	Stores the time scale clamped to 1/60 through 60, a NaN as it is, and returns the scale it held	verified	two	gametime#time-scale	gametime::gametime_643820_set_scale
-0x643890	335	GameTimeAddCallback		gametime	unreached	void * __thiscall (void *this, const WowTime *minute, void *callback, void *argument)	Adds a callback for a minute of the day and returns its record	inferred	none	gametime#unreached-functions	
-0x6439e0	139	GameTimeRemoveCallback		gametime	unreached	void __thiscall (void *this, void *record)	Unlinks a callback record and frees it	inferred	none	gametime#unreached-functions	
-0x643a70	85	GameTimeGetDayPhase		gametime	primitive	double __thiscall (void *this)	Returns the time of day as a fraction of a day from the tick, scale and minute offset	verified	one	gametime#day-phase	gametime::gametime_643a70_day_phase
-0x643ad0	83	GameTimeAdvanceMinute		gametime	primitive	void __thiscall (void *this)	Advances the clock one minute, rolls the day at midnight and runs the minute's callbacks	verified	one	gametime#one-minute	gametime::gametime_643ad0_advance_offset
-0x643b30	126	GameTimeRunCallbacks		gametime	orchestration	void __thiscall (void *this, int minuteOfDay)	Calls each callback registered for a minute of the day with the clock and its argument	verified	one	gametime#one-minute	
-0x643bb0	128	GameTimeFreeEntry		gametime	orchestration	void __stdcall (void *entry)	Frees a callback table entry: its records, then the entry	verified	one	gametime#clock-state	
-0x643c30	120	GameTimeUnlinkEntry		gametime	orchestration	void __thiscall (void *this)	Unlinks the two lists of a callback table entry	verified	one	gametime#clock-state	
+0x643450	126	GameTimeSetOffsets		gametime	unreached	void __thiscall (void *this, int minutes, int days, bool force)	Replaces the clock's minute and day offsets and sets the time again	inferred	none	gametime/overview#unreached-functions	
+0x6434d0	198	GameTimeSet		gametime	primitive	void __thiscall (void *this, const WowTime *time, bool force)	Sets the clock's time with its offsets applied; a forced set re-enters the minute	verified	two	gametime/overview#setting-the-time	gametime::gametime_6434d0_set_time
+0x6435a0	155	GameTimeUpdate		gametime	primitive	void __thiscall (void *this, float dt)	Adds dt times the scale to the minute fraction and advances a minute per whole one	verified	one	gametime/overview#per-frame-advance	gametime::gametime_6435a0_minute_accum
+0x643640	128	GameTimeSetFromHost		gametime	unreached	void __thiscall (void *this, bool force)	Sets the clock from the host's local time, forced or by sync	inferred	none	gametime/overview#unreached-functions	
+0x6436c0	324	GameTimeSync		gametime	primitive	void __thiscall (void *this, const WowTime *time, bool force)	Syncs the clock to a server time: advances it forward, or stalls it when it is ahead	verified	two	gametime/overview#server-sync	gametime::gametime_6436c0_sync_time
+0x643810	4	GameTimeGetScale		gametime	unreached	float __thiscall (void *this)	Returns the clock's time scale	inferred	none	gametime/overview#unreached-functions	
+0x643820	102	GameTimeSetScale		gametime	primitive	float __thiscall (void *this, float scale)	Stores the time scale clamped to 1/60 through 60, a NaN quieted, and returns the scale it held	verified	two	gametime/overview#time-scale	gametime::gametime_643820_set_scale
+0x643890	335	GameTimeAddCallback		gametime	unreached	void * __thiscall (void *this, const WowTime *minute, void *callback, void *argument)	Adds a callback for a minute of the day and returns its record	inferred	none	gametime/overview#unreached-functions	
+0x6439e0	139	GameTimeRemoveCallback		gametime	unreached	void __thiscall (void *this, void *record)	Unlinks a callback record and frees it	inferred	none	gametime/overview#unreached-functions	
+0x643a70	85	GameTimeGetDayPhase		gametime	primitive	double __thiscall (void *this)	Returns the time of day as a fraction of a day from the tick, scale and minute offset	verified	one	gametime/overview#day-phase	gametime::gametime_643a70_day_phase
+0x643ad0	83	GameTimeAdvanceMinute		gametime	primitive	void __thiscall (void *this)	Advances the clock one minute, rolls the day at midnight and runs the minute's callbacks	verified	one	gametime/overview#one-minute	gametime::gametime_643ad0_advance_offset
+0x643b30	126	GameTimeRunCallbacks		gametime	orchestration	void __thiscall (void *this, int minuteOfDay)	Calls each callback registered for a minute of the day with the clock and its argument	verified	one	gametime/overview#one-minute	
+0x643bb0	128	GameTimeFreeEntry		gametime	orchestration	void __stdcall (void *entry)	Frees a callback table entry: its records, then the entry	verified	one	gametime/overview#clock-state	
+0x643c30	120	GameTimeUnlinkEntry		gametime	orchestration	void __thiscall (void *this)	Unlinks the two lists of a callback table entry	verified	one	gametime/overview#clock-state	
 0x643cb0	91			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x643d10	198			unassigned			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x643de0	189			unassigned			Runs its object file code that calls 0x643fa0, 0x6440b0, SMemFree; not read here	inferred	none		
@@ -28191,16 +28191,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5bc0	10			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5bd0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6c5be0	355			unassigned			Runs its object file code that calls 0x644430, 0x643fa0, 0x6440b0 and 2 more; not read here	inferred	none		
-0x6c5d50	22	GameTimeUpdateFromFrame		unassigned	orchestration	uint32_t __fastcall (const float *dt, uint32_t unused)	Calls the clock's per-frame update with the float its argument points to and returns 1	verified	one	gametime#per-frame-advance	
-0x6c5d70	108	ClientInitializeGameTime	idb	unassigned	orchestration	void __cdecl (void)	Registers the five game-time opcode handlers and zeroes the four time-changed callbacks	verified	one	gametime#server-messages	
-0x6c5de0	150	ReceiveNewGameSpeed	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock's time scale from the packet's float and logs the old scale and that float, or a malformed packet	verified	two	gametime#game-speed-set	gametime::gametime_6c5de0_game_speed_set
+0x6c5d50	22	GameTimeUpdateFromFrame		unassigned	orchestration	uint32_t __fastcall (const float *dt, uint32_t unused)	Calls the clock's per-frame update with the float its argument points to and returns 1	verified	one	gametime/overview#per-frame-advance	
+0x6c5d70	108	ClientInitializeGameTime	idb	unassigned	orchestration	void __cdecl (void)	Registers the five game-time opcode handlers and zeroes the four time-changed callbacks	verified	one	gametime/messages#server-messages	
+0x6c5de0	150	ReceiveNewGameSpeed	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock's time scale from the packet's float and logs the old scale and that float, or a malformed packet	verified	two	gametime/messages#game-speed-set	gametime::gametime_6c5de0_game_speed_set
 0x6c5e80	193	ReceiveNewTimeSpeed	idb	unassigned		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a packed date and a rate, passes them to the world clock and logs the speed change, or logs a malformed packet	verified	one	net/messages#time-speed-packet	
-0x6c5f50	177	OnGameTimeSet		unassigned	primitive	void __cdecl (void)	Stamps the light state from the clock, recommits sky and fog, calls the time-changed callbacks and prints the time	verified	two	gametime#time-changed-bridge	gametime::gametime_6c5f50_time_changed
-0x6c6010	109	ReceiveGameTimeUpdate	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Syncs the clock to the packet's packed date without force, or logs a malformed packet	verified	two	gametime#game-time-update	gametime::gametime_6c6010_game_time_update
-0x6c6080	154	ReceiveServerTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Logs the packet's packed date as the server game time, or a malformed packet	verified	one	gametime#server-time-message	gametime::gametime_6c6080_server_time
-0x6c6120	114	ReceiveNewGameTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock to the packet's packed date with force and runs the time-changed bridge, or logs a malformed packet	verified	two	gametime#game-time-set	gametime::gametime_6c6120_game_time_set
-0x6c61a0	60	ClearGameTimeHandlers		unassigned	orchestration	void __cdecl (void)	Clears the five game-time opcode handlers, then jumps to 0x6433f0 on the clock	verified	one	gametime#server-messages	
-0x6c61e0	56	SetTimeChangedCallback		unassigned	unreached	void __fastcall (uint32_t add, void *callback)	Stores a callback in the first empty time-changed slot, or clears the slot that holds it	inferred	none	gametime#unreached-functions	
+0x6c5f50	177	OnGameTimeSet		unassigned	primitive	void __cdecl (void)	Stamps the light state from the clock, recommits sky and fog, calls the time-changed callbacks and prints the time	verified	two	gametime/messages#time-changed-bridge	gametime::gametime_6c5f50_time_changed
+0x6c6010	109	ReceiveGameTimeUpdate	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Syncs the clock to the packet's packed date without force, or logs a malformed packet	verified	two	gametime/messages#game-time-update	gametime::gametime_6c6010_game_time_update
+0x6c6080	154	ReceiveServerTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Logs the packet's packed date as the server game time, or a malformed packet	verified	one	gametime/messages#server-time-message	gametime::gametime_6c6080_server_time
+0x6c6120	114	ReceiveNewGameTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock to the packet's packed date with force and runs the time-changed bridge, or logs a malformed packet	verified	two	gametime/messages#game-time-set	gametime::gametime_6c6120_game_time_set
+0x6c61a0	60	ClearGameTimeHandlers		unassigned	orchestration	void __cdecl (void)	Clears the five game-time opcode handlers, then jumps to 0x6433f0 on the clock	verified	one	gametime/messages#server-messages	
+0x6c61e0	56	SetTimeChangedCallback		unassigned	unreached	void __fastcall (uint32_t add, void *callback)	Stores a callback in the first empty time-changed slot, or clears the slot that holds it	inferred	none	gametime/overview#unreached-functions	
 0x6c6220	8	CurrencyMultiplier	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
 0x6c6260	59	SplitCopper		unassigned	primitive		Splits an amount into copper, silver and gold: divides by 10000, 100 and 1, each step on the last remainder	inferred	none	objectlayer/quests#quest-completion	
@@ -28961,7 +28961,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dd200	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6dd220	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6dd230	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6dd240	1	LogDiscard		unassigned	orchestration	void __cdecl (uint32_t, uint32_t, const char *, ...)	Returns at once, so a log call with two numbers and a format writes nothing	verified	one	gametime#sync-log-and-day-numbers	
+0x6dd240	1	LogDiscard		unassigned	orchestration	void __cdecl (uint32_t, uint32_t, const char *, ...)	Returns at once, so a log call with two numbers and a format writes nothing	verified	one	gametime/overview#sync-log-and-day-numbers	
 0x6dd250	3			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6dd260	3			unassigned			Runs its object file code not read here	inferred	none		
 0x6dd270	5	SpellTablesInitCopy1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x6dd280; a static initializer	verified	one	spell/layout#static-initializers	

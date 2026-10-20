@@ -17,11 +17,11 @@ opcode	name	role	site	function	entries	basis
 0x03f	SMSG_TRANSFER_PENDING	handler	0x401767	0x401900	collision/teleport#far-transfer-handlers	opcode
 0x040	SMSG_TRANSFER_ABORTED	handler	0x401778	0x4019a0	collision/teleport#far-transfer-handlers|collision/teleport#transfer-abort	opcode
 0x041	SMSG_CHARACTER_LOGIN_FAILED	handler	0x5b3b15	0x5b3ea0	net/dispatch#realm-connection-messages	opcode
-0x042	SMSG_LOGIN_SETTIMESPEED	handler	0x6c5d8d	0x6c5e80	gametime#server-messages|net/messages#time-speed-packet	opcode
-0x043	SMSG_GAMETIME_UPDATE	handler	0x6c5d9e	0x6c6010	gametime#server-sync|gametime#game-time-update|gametime#server-messages	opcode
-0x045	SMSG_GAMETIME_SET	handler	0x6c5dc0	0x6c6120	gametime#game-time-set|gametime#server-messages	opcode
-0x047	SMSG_GAMESPEED_SET	handler	0x6c5d7c	0x6c5de0	gametime#game-speed-set|gametime#server-messages	opcode
-0x049	SMSG_SERVERTIME	handler	0x6c5daf	0x6c6080	gametime#server-messages|gametime#server-time-message	opcode
+0x042	SMSG_LOGIN_SETTIMESPEED	handler	0x6c5d8d	0x6c5e80	gametime/messages#server-messages|net/messages#time-speed-packet	opcode
+0x043	SMSG_GAMETIME_UPDATE	handler	0x6c5d9e	0x6c6010	gametime/messages#game-time-update|gametime/messages#server-messages|gametime/overview#server-sync	opcode
+0x045	SMSG_GAMETIME_SET	handler	0x6c5dc0	0x6c6120	gametime/messages#game-time-set|gametime/messages#server-messages	opcode
+0x047	SMSG_GAMESPEED_SET	handler	0x6c5d7c	0x6c5de0	gametime/messages#game-speed-set|gametime/messages#server-messages	opcode
+0x049	SMSG_SERVERTIME	handler	0x6c5daf	0x6c6080	gametime/messages#server-messages|gametime/messages#server-time-message	opcode
 0x04a	CMSG_PLAYER_LOGOUT	send	0x5ab095	0x5ab000	core/close#no-logout-request|net/connection#logout|ui/popups#logout-and-quit	opcode
 0x04b	CMSG_LOGOUT_REQUEST	send	0x5ab095	0x5ab000	core/close#no-logout-request|net/connection#logout|ui/idle#the-idle-law|ui/popups#logout-and-quit	opcode
 0x04c	SMSG_LOGOUT_RESPONSE	handler	0x5b3b42	0x5b3ea0	net/dispatch#realm-connection-messages	opcode

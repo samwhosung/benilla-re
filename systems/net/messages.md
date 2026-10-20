@@ -43,7 +43,7 @@ Test: `net::datastore_heap`, `net::datastore_inline`, `net::datastore_window`
 
 ## Time speed packet
 
-`SMSG_LOGIN_SETTIMESPEED` (`0x42`) is a u32 packed date (`gametime#packed-date-fields`) and a float rate. A packet not read to its end logs `Malformed message recieved: Id = %d, Len = %d, Read = %d` and the handler returns 0. Otherwise it decodes the date, sets the clock `0xce8538` to it with `force` (`gametime#setting-the-time`), calls the bridge `0x6c5f50` (`gametime#time-changed-bridge`), stores the rate clamped (`gametime#time-scale`) and logs `Gamespeed set from <old> to <new>`, the new value being the rate as received, not as clamped (`gametime#game-speed-set`). The bridge runs before the rate is stored.
+`SMSG_LOGIN_SETTIMESPEED` (`0x42`) is a u32 packed date (`gametime/messages#packed-date-fields`) and a float rate. A packet not read to its end logs `Malformed message recieved: Id = %d, Len = %d, Read = %d` and the handler returns 0. Otherwise it decodes the date, sets the clock `0xce8538` to it with `force` (`gametime/overview#setting-the-time`), calls the bridge `0x6c5f50` (`gametime/messages#time-changed-bridge`), stores the rate clamped (`gametime/overview#time-scale`) and logs `Gamespeed set from <old> to <new>`, the new value being the rate as received, not as clamped (`gametime/messages#game-speed-set`). The bridge runs before the rate is stored.
 
 Addresses: `0x6c5e80`, `0x642c30`, `0x642b30`, `0x6c5e96`, `0x6c5ea1`, `0x6c5eaa`, `0x6c5ed9`, `0x6c5ee9`, `0x6c5eee`, `0x6c5efc`, `0x6c5f01`
 Confidence: verified
