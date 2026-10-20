@@ -1142,6 +1142,11 @@ ObjectManager	0x00d4	4	MovementGlobals *	m_movementGlobals	objectlayer	Holds the
 OrientedBox	0x0000	12	NTempest::C3Vector	m_center	cmath	Holds the centre	verified	one	cmath/types#cones-and-oriented-boxes
 OrientedBox	0x000c	12	NTempest::C3Vector	m_halfExtents	cmath	Holds the half-extents along the three axes	verified	one	cmath/types#cones-and-oriented-boxes
 OrientedBox	0x0018	36	NTempest::C3Vector[3]	m_axes	cmath	Holds the three unit axes, one per row	verified	one	cmath/types#cones-and-oriented-boxes
+OsTcp	0x0544	4	void *	m_wakeEvent	os	Holds the event that wakes the OsTcp_Base thread	verified	one	net/dial#resolver-hand-off
+OsTcp	0x0614	4	int32_t	m_requestCount	os	Counts the resolve requests started and not yet handed to their callbacks	verified	one	net/dial#resolver-hand-off
+OsTcp	0x0618	4	void *	m_lock	os	Holds the event used as the mutex over the request list	verified	one	net/dial#resolver-hand-off
+OsTcp	0x061c	4	uint32_t	m_lastId	os	Holds the last request id given	verified	one	net/dial#resolver-hand-off
+OsTcp	0x0628	4	ResolveRequest *	m_requests	os	Holds the first request of the list; an odd value ends it	verified	one	net/dial#resolver-hand-off
 OsThreadRecord	0x0000	8	void *[2]	m_link	os	Holds the record's link in the record list	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x000c	4	void *	m_handle	os	Holds a duplicate of the thread handle	verified	one	core/threads#engine-thread-records
@@ -1190,6 +1195,18 @@ RealmInfo	0x0009	256	char[256]	m_name	net	Holds the realm name	verified	one	glue
 RealmInfo	0x012c	4	float	m_population	net	Holds the population, the sentinels 600, 200 and 400 replaced by 0, 0.001 and 8	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0130	1	uint8_t	m_characters	net	Counts the account's characters on the realm	verified	one	glue/realms#the-realm-record
 RealmInfo	0x0131	1	uint8_t	m_category	net	Holds the realm's category id, 0 meaning the first category	verified	one	glue/realms#the-realm-record
+ResolveRequest	0x0004	4	ResolveRequest *	m_next	os	Holds the next request of the list; an odd value ends it	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0008	4	char *	m_host	os	Holds the copy of the host text the request owns	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x000c	4	char *	m_remaining	os	Holds the text not yet cut into pieces, null once the last piece is taken	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0010	4	uint32_t	m_id	os	Holds the request id	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0014	4	void *	m_thread	os	Holds the handle of the resolver thread	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0018	4	void *	m_callback	os	Holds the function called with the finished list	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x001c	4	void *	m_user	os	Holds the argument passed to the callback	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0020	4	uint32_t	m_done	os	Holds 1 once the thread has ended the list	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0024	4	uint32_t	m_capacity	os	Holds the capacity of the address list in entries	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0028	4	uint32_t	m_count	os	Holds the count of entries in the address list	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x002c	4	void *	m_entries	os	Holds the address list, 16-byte socket addresses	verified	one	net/dial#resolver-hand-off
+ResolveRequest	0x0030	4	uint32_t	m_step	os	Holds the step by which the address list grows	verified	one	net/dial#resolver-hand-off
 SFileObject	0x0000	4	uint32_t	m_kind	storm	Holds the loose-file index kind the open resolved	verified	two	storm/bz#the-file-object
 SFileObject	0x0004	4	void *	m_file	storm	Holds the C runtime FILE of a loose or .bz file	verified	two	storm/bz#the-file-object
 SFileObject	0x0008	4	void *	m_archiveBlock	storm	Holds kind 2's 8-byte block, whose +0x04 is the archive opened for the file	verified	one	storm/bz#the-file-object

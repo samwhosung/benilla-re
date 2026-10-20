@@ -44,16 +44,16 @@ reports `RESPONSE_CONNECTED` and enters state 6, the only state in which it send
 dispatches packets; a failed dial reports `RESPONSE_FAILED_TO_CONNECT` and returns to state 2.
 A realm name not in the list reports `REALM_LIST_REALM_NOT_FOUND`.
 
-Addresses: `0x5ab7b0`, `0x5ab6f0`, `0x5ab800`, `0x5ab82f`, `0x537820`, `0x53785a`, `0x5378c0`, `0x5aaa90`, `0x537ce0`, `0x5aaaf0`
+Addresses: `0x5ab7b0`, `0x5ab6f0`, `0x5ab800`, `0x5ab82f`, `0x537820`, `0x5378c0`, `0x5aaa90`, `0x537ce0`, `0x5aaaf0`
 Confidence: verified
 Proof: one
 Test: none
 
 The session is the object at `0xc28128`. `0x5ab6f0` compares the name case-insensitively with each 0x134-byte record of the list at
 `0xc28118` and copies a match to `0xc27fb8`; `0x5ab800` connects with the text at `0xc280c1`, the
-record's `+0x109` (`0x5ab82f`). `0x537820` raises a fatal error unless `+0x70 == 2`, copies the
-text, splits it at `:` with `_atoi` for the port, `0x2382` otherwise (`0x53785a`), calls
-`0x5b73c0(0)` and `0x5378c0`, which sets `+0x70` to 5 and calls `0x5b6e40`, the dial. The connect
+record's `+0x109` (`0x5ab82f`). `0x537820` reports a fatal error unless `+0x70 == 2`, splits the
+text into a host and a port (`dial`, World address), calls
+`0x5b73c0(0)` and `0x5378c0`, which sets `+0x70` to 5 and calls `0x5b6e40`, the dial (`dial`, Host dial). The connect
 event's slot 13 is `0x5aaa90`: `0x5aa920(1, 5)`, `+0x1b00 = 1`, a call outside the system at
 `0x5aaaa6`, then `0x537ce0`, which stores 6.
 Slot 15, the failed dial, is `0x5aaaf0`: `0x5aa920(0, 4)` and state 2.

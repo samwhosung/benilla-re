@@ -2579,6 +2579,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884ef8	void *	s_threadRecords		os	Holds the list's last link (sentinel previous) of the registered thread records	verified	one	core/threads#engine-thread-records
 0x884f00	uint32_t	s_threadRecordCount		os	Holds the number of registered thread records	verified	one	core/threads#engine-thread-records
 0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
+0x885400	OsTcp *	s_osTcp		os	Holds the OsTcp object, set by the OsTcp start-up and null before it and after the shutdown	verified	one	net/dial#logon-dial
 0x885604	uint32_t	s_presentSuppressed		unassigned	Holds the flag that skips the frame pass's present block while a movie plays	verified	one	gx/capture#capture-request-and-frame-order
 0x88560c	void *	s_screenshotCallback		unassigned	Holds the completion callback of the pending screenshot request, or 0	verified	one	gx/capture#capture-request-and-frame-order
 0x88562c	void *[2]	s_stockFonts		unassigned	Holds the handles of the two stock text fonts	verified	one	ui/fonttext#stock-text-block-fonts

@@ -41,14 +41,14 @@ Test: none
 
 ## Random address pick
 
-`ConnectToRandomAddress` (`0x5bc2b0`, entries, count, callback) dials one of `count` 16-byte socket addresses. It seeds a random state with the clock's seconds, advances it once with the steps of `0x4531e0` written inline (`random`), and takes entry `acc mod count`, passing its address and its port, put in host order by `0x43f4d0`, to `ClientLink::ConnectToAddress` (`0x5bc250`). A null list or a count of 0 calls the callback's slot 3 with three zeros instead. `AlignUpToMultiple` (`0x5bd4d0`, value, multiple) rounds the value up to a multiple, the add wrapping.
+`ConnectToRandomAddress` (`0x5bc2b0`, entries, count, callback) dials one of `count` 16-byte socket addresses, the list the resolver built (`dial`). It seeds a random state with the clock's seconds, `time(NULL)`, advances it once with the steps of `0x4531e0` written inline (`random`), and takes entry `acc mod count`, passing its address and its port, put in host order by `0x43f4d0`, to `ClientLink::ConnectToAddress` (`0x5bc250`). A null list or a count of 0 calls the callback's slot 3 with three zeros instead. `AlignUpToMultiple` (`0x5bd4d0`, value, multiple) rounds the value up to a multiple, the add wrapping.
 
-Addresses: `0x5bc2b0`, `0x5bc2d1`, `0x5bc2da`, `0x5bc392`, `0x5bc3a5`, `0x5bc3b2`, `0x5bc3cb`, `0x5bd4d0`, `0x5bcdc6`
+Addresses: `0x5bc2b0`, `0x5bc2d1`, `0x5bc2da`, `0x5bc392`, `0x5bc3a5`, `0x5bc3b2`, `0x5bc3cb`, `0x5bd4d0`, `0x5bcdc6`, `0x4294c0`, `0x73f049`, `0x44ea80`, `0x43f4d0`, `0x43b810`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::address_random_pick`, `net::address_align_up`
 
-`0x5bc2d1` is `GetUnixTime` and `0x5bc2da` `NTempest::CRndSeed::SetSeed` into a local state; `0x5bc2df` to `0x5bc38b` are the lane steps (4, 12, 24, 28 with the moduli `0xbc`, `0xd4`, `0xec`, `0xf4`), the four byte-offset reads of `0x802700`, the rotations by 1, 2 and 3 and the add to the seed. `0x5bc392` is `div` by the count; the remainder times 16 indexes the entries. `0x5bd4d0` is `div` and, for a nonzero remainder, `sub ecx,edx; add esi,ecx`; a multiple of 0 faults; `0x5bcdc6` is its caller in the select loop. The tests run both whole, the clock, `ntohs` and the dial stubbed.
+`0x5bc2d1` is `GetUnixTime` with a null pointer (`0x4294c0`, a call of `_time` `0x73f049`) and `0x5bc2da` `NTempest::CRndSeed::SetSeed` into a local state; `0x5bc2df` to `0x5bc38b` are the lane steps (4, 12, 24, 28 with the moduli `0xbc`, `0xd4`, `0xec`, `0xf4`), the four byte-offset reads of `0x802700`, the rotations by 1, 2 and 3 and the add to the seed. `0x5bc392` is `div` by the count; the remainder times 16 indexes the entries. `0x5bd4d0` is `div` and, for a nonzero remainder, `sub ecx,edx; add esi,ecx`; a multiple of 0 faults; `0x5bcdc6` is its caller in the select loop. The tests run both whole, the clock, `ntohs` and the dial stubbed.
 
 ## Socket bitmap and callback bracket
 

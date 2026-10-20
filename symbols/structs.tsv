@@ -96,6 +96,7 @@ NTempest::CImVector		4		cmath	Holds a colour as four bytes: blue, green, red, al
 NTempest::CRndSeed	idb	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager		224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
 OrientedBox		60		cmath	Holds an oriented box: centre, half-extents and three unit axes; the size is the extent read	inferred	none	cmath/types#cones-and-oriented-boxes
+OsTcp		1580		os	Holds the OsTcp object: the network thread's events, the resolve request count, lock, id counter and list	verified	one	net/dial#resolver-hand-off
 OsThreadRecord		6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
 PATHINFO		16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
 PLAYERNAMEDESC		56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
@@ -106,6 +107,7 @@ PlayerPendingItemExpiration		24		objectlayer	Holds an enchantment time waiting f
 RACECLASSINFO		32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
 RealmCategory		28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
 RealmInfo		308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
+ResolveRequest		52		os	Holds a host resolve request: link, host text, id, thread, callback, done flag and address list	verified	one	net/dial#resolver-hand-off
 SFileObject		96		storm	Holds an open Storm file: its kind, C runtime file, names, .bz inflate state and lock	verified	two	storm/bz#the-file-object
 SKILLCOSTSINFO		32		spell	Holds a skill-cost index node: cost-set id, two links, and a run of SkillCostsData rows	verified	one	spell/tables#startup-build-of-the-indexes
 SKILLLINEREC		28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race

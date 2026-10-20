@@ -18,31 +18,18 @@ Roots: `0x5379a0`, `0x5ab630`
 
 ## Size header
 
-A world packet starts with its size `N`, the count of opcode and body bytes, big-endian. For
-`N` up to 32,767 the header is two bytes, `N >> 8` and `N & 0xff`. Above that it is three bytes,
-`(N >> 16) | 0x80`, `N >> 8` and `N & 0xff`. A reader picks the form from the top bit of the
-first byte. The client sends the opcode as four bytes little-endian and reads it as two bytes
-little-endian. It applies the same size rule in both directions.
+A world packet starts with its size `N`, the count of opcode and body bytes, big-endian: two bytes, `N >> 8` and `N & 0xff`, up to 32,767 (a signed compare); above that three, the low bytes of `(N >> 16) | 0x80`, `N >> 8` and `N`. The first byte takes no mask: a size of 2^23 or more puts its bit 23 on the flag bit, already set, and drops bits 24 to 31, so the header carries `N` modulo 2^23. A reader picks the form from the first byte's top bit and takes `(b0 & 0x7f) << 16 | b1 << 8 | b2`. The opcode is sent as four bytes little-endian and read as two.
 
-Addresses: `0x5b5630`, `0x5b5450`, `0x5b65f0`, `0x5b56da`, `0x5b5712`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`, `0x5b5495`
+Addresses: `0x5b5630`, `0x5b5450`, `0x5b65f0`, `0x5b566b`, `0x5b56a3`, `0x5b56da`, `0x5b56f9`, `0x5b5712`, `0x5b5718`, `0x5b571b`, `0x5b5725`, `0x5b572b`, `0x5b577a`, `0x5b57b7`, `0x5b57ba`, `0x5b59a3`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`, `0x5b5495`
 Confidence: verified
 Proof: two
-Test: `net::header_decode`, `net::header_encode`
+Test: `net::header_decode`, `net::header_encode`, `net::header_send_inplace`, `net::header_send_node`
 
-`0x5b56da` `cmp eax,0x7fff; jg` picks the form for the length of the data store's bytes. The
-three-byte form shifts by `0x10` and ORs `0x80` (`0x5b5712`, `0x5b5718`); the two-byte form
-shifts by 8 (`0x5b56f9`). `0x5b5450`, which builds a heap node for packets of 100,000 bytes and
-more (`0x5b56a3` `cmp esi,0x186a0`) and for the delayed path (`0x5b59a3`), repeats the rule at
-`0x5b5495`.
+Three copies of the send rule write the same bytes. `Send` (`0x5b5630`) with `headroom` of 3 or more writes the header in place: `0x5b56da` `cmp eax,0x7fff; jg`, the two-byte form at `0x5b56f9`, and the three-byte form with `sar edx,0x10` (`0x5b5712`) and `or dl,0x80` (`0x5b5718`), stored by `0x5b571b`, `0x5b5725` and `0x5b572b`. With less it copies into a node (`0x5b577a`, `0x5b57b7`, `0x5b57ba`). `0x5b5450` repeats the rule at `0x5b5495` for packets of 100,000 bytes and more (`0x5b56a3`) and the delayed path (`0x5b59a3`). `Send` returns before them for a size of 0 or less (`0x5b566b`).
 
-On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bit is clear:
-`((b0 & 0x7f) << 8 | b1) + 2` (`0x5b677b`). Otherwise `((b0 & 0x7f) << 16 | b1 << 8 | b2) + 3`
-(`0x5b6765` to `0x5b6772`), the frame's whole length.
+On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bit is clear: `((b0 & 0x7f) << 8 | b1) + 2` (`0x5b677b`). Otherwise `((b0 & 0x7f) << 16 | b1 << 8 | b2) + 3` (`0x5b6765` to `0x5b6772`), the frame's whole length.
 
-Every opcode the client builds goes in through the data store's 32-bit put, as in
-`0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits:
-`0x537abe` in the dispatcher and `0x537b46` in the worker thread's data hook.
-`header_decode` runs `0x5b6730` to `0x5b6789`; `header_encode` runs `0x5b5495` to `0x5b54f0`.
+Every opcode the client builds goes in through the data store's 32-bit put, as in `0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits: `0x537abe` in the dispatcher and `0x537b46` in the worker thread's data hook. The tests run `0x5b6730` to `0x5b6789` (decode), `0x5b5495` to `0x5b54f0`, `0x5b56da` to `0x5b572e` and `0x5b577a` to `0x5b57d0` (encode).
 
 ## Header cipher
 
@@ -197,4 +184,4 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5b6cdc` pushes `FIONBIO` (`0x8004667e`) for `ioctlsocket` and `0x5b6cfb` the port for `htons`; `0x5b6d1d` calls `0x5bd6e0` unless the connection is listed (`+0xc4`); `0x5b6d2d` sets state 2. `0x5b6d3c` is `connect`; `0x5b6d4c` compares `WSAGetLastError` with `0x2733` and `0x5b6d75` stores state 8. `0x5b60c6` is `getsockopt` with level `0xffff` and option `0x1007`; a non-zero value reaches `0x5b6137`, the call of slot 3 (`[ebx+0xc]`), after state 6 (`0x5b60f4`). Zero stores state 5 (`0x5b613c`), calls WSOCK32 ordinal 5, `getpeername`, into `+0x78` and ordinal 6, `getsockname`, into `+0x88` (`0x5b6174`, `0x5b6190`), and calls slot 2 (`0x5b61ac`). `0x5b6e20` stores the address at `+0x64` and the port at `+0x68`, calls `0x5b6c80` and returns 1; its third, `0x1388` pushed at `0x5bc293`, is not read.
+`0x5b6cdc` pushes `FIONBIO` (`0x8004667e`) for `ioctlsocket` and `0x5b6cfb` the port for `htons`; `0x5b6d1d` calls `0x5bd6e0` unless the connection is listed (`+0xc4`); `0x5b6d2d` sets state 2. `0x5b6d3c` is `connect`; `0x5b6d4c` compares `WSAGetLastError` with `0x2733` and `0x5b6d75` stores state 8. `0x5b60c6` is `getsockopt` with level `0xffff` and option `0x1007`; a non-zero value reaches `0x5b6137`, the call of slot 3 (`[ebx+0xc]`), after state 6 (`0x5b60f4`). Zero stores state 5 (`0x5b613c`), calls WSOCK32 ordinal 5, `getpeername`, into `+0x78` and ordinal 6, `getsockname`, into `+0x88` (`0x5b6174`, `0x5b6190`), and calls slot 2 (`0x5b61ac`). `0x5b6e20` stores the address at `+0x64` and the port at `+0x68`, calls `0x5b6c80` and returns 1; its third, `0x1388` pushed at `0x5bc293`, is not read. `0x5b6e40` does the same for a host text (`dial`, Host dial).
