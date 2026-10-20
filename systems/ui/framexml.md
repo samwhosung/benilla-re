@@ -5,7 +5,7 @@ frames and running Lua: the toc runner, the file loader with its `.lua` and XML 
 an XML file holds, templates, creating a frame from a node, the frame-type factories, script
 elements, the load log and the sound suppressed while loading.
 
-`FrameXML.cpp` (from 0x6ed930, ending before `XMLTree.cpp`) holds the toc runner `0x6edb90`, the
+`FrameXML.cpp` (from 0x6ed930; two files with no path follow it before `XMLTree.cpp`, `Object files`) holds the toc runner `0x6edb90`, the
 file loader `0x6ede10`, the frame creator `0x6ee280`, the template table and the factory table.
 `XMLTree.cpp` builds the node tree with the linked expat 1.95.5. What a frame does with its own node
 is in `frames` (`Loading from XML`), `anchors` and `visibility`; each widget type's own elements
@@ -313,3 +313,26 @@ start handler `0x6f28a0` makes a node (`0x6f2b10`: parent `+0x0`, first child `+
 appended as the last child, and copies the attribute pairs to `+0x14` with their count at `+0x10`.
 `0x6f29d0` appends character data to the body `+0xc`. `0x6f2c50` finds a child and `0x6f2cf0` an
 attribute with `SStrCmpI`. The string `expat_1.95.5` is at `0x882094`.
+
+## Object files
+
+The initializer table holds four runs here, in link order: `FrameXML.cpp`'s, slots `0x82d0a4` to
+`0x82d0c0`, opened by the +∞ thunk `0x6ee260`; a file with no path, `0x82d0c4` to `0x82d0cc`,
+opened by `0x6f10d0`; a second with no path, `0x82d0d0` to `0x82d0d8`, opened by `0x6f19e0`; and
+`XMLTree.cpp`'s from `0x82d0dc`, opened by `0x6f2c90`. The second file runs from `0x6f19e0` to its
+last initializer `0x6f2840` at least, and is `ui`'s: it holds the name parsers from `0x6f1a00`,
+`FormatFontFlags` and the XML value readers. Where `FrameXML.cpp` ends before `0x6f10d0`, and which
+file holds `0x6f17d0` to `0x6f1990` and `0x6f2860` to `0x6f2880`, the runs do not settle.
+
+Addresses: `0x827000`, `0x82d0a4`, `0x82d0c0`, `0x82d0c4`, `0x82d0cc`, `0x82d0d0`, `0x82d0d8`, `0x82d0dc`, `0x6ee260`, `0x6f10d0`, `0x6f17a0`, `0x6f19e0`, `0x6f2810`, `0x6f2830`, `0x6f2840`, `0x6f2c90`, `0x6eead3`, `0x6ef023`, `0x6f28c2`, `0x6f1a00`, `0x6f1ad0`
+Confidence: verified
+Proof: one
+Test: none
+
+The slots are read from the table: `0x82d0c4` to `0x82d0cc` hold `0x6f10d0`, `0x6f1780` and
+`0x6f17a0`, and `0x82d0d0` to `0x82d0d8` hold `0x6f19e0`, `0x6f2810` and `0x6f2830`, each run
+opening with a +∞ copy (`systems/README`, Object files). `0x6eead3` to `0x6ef023` push the path of
+`FrameXML.cpp` and `0x6f28c2` onward that of `XMLTree.cpp`; no function between them passes a `.cpp` path.
+The functions between a run's first and last initializer are its file's, so `0x6f19e0` to `0x6f2840`
+are one file's.
+

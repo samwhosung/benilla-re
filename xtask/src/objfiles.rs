@@ -34,7 +34,7 @@ use std::sync::LazyLock;
 const INITIALIZERS: (u32, u32) = (0x827000, 0x82e030);
 
 /// The object files the docs list by address where no path or row bounds them: `ui`'s runs
-/// (`systems/ui/README.md`), the minigame's board file (`symbols/README.md`), and the object-file
+/// (`systems/ui/README.md`, `systems/ui/framexml.md`), the minigame's board file (`symbols/README.md`), and the object-file
 /// spans of `gx` (`systems/gx/overview.md`), `lighting` (`systems/lighting/overview.md`), `cmath`
 /// (`systems/cmath/overview.md`), `dbcache` (`systems/dbcache.md`) and `font`
 /// (`systems/font/overview.md`). A span is that system's; a span whose end the doc leaves open is
@@ -55,6 +55,7 @@ const DECLARED: &[(u32, u32, &str)] = &[
     (0x6cdf50, 0x6d6c20, "lighting"),
     (0x6d6df0, 0x6d8530, "lighting"),
     (0x6ed930, 0x6ed930, "ui"),
+    (0x6f19e0, 0x6f2840, "ui"),
     (0x701940, 0x706430, "ui"),
     (0x728b10, 0x728ef3, "minigame"),
     (0x728f00, 0x730bbf, "ui"),

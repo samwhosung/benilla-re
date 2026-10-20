@@ -79,6 +79,29 @@ call `0x41ad70` for `A`, multiply by 1024 (`0x7ffd68`), divide the argument by i
 `MultiplyByScreenScaleX` (`0x79fa28`). `GetFont` (`0x79f3b0`) returns the file name, then `DivideByScreenScaleX` of the float
 `1024·A·height` (`0x79f3d6`, `0x79f3e3`), then the flags text.
 
+## Font flags text
+
+`GetFont`'s third value is the text `FormatFontFlags(flags)` (`0x6f1ad0`) builds: the names of the
+flags that share a bit with the argument, in the order of the table `0x811b10`, `OUTLINE` (1),
+`THICKOUTLINE` (4) and `MONOCHROME` (2), joined by `, `, or the empty string for none. The text lives
+in the 64-byte static `0xceea60`, which every call empties and rewrites, so a caller holds it only
+until the next call. `FontString:GetFont` passes the string's flags (`0x772810`) and the shared
+`GetFont` the font's `+0x4c`; each pushes the text with `lua_pushstring`.
+
+Addresses: `0x6f1ad0`, `0x6f1ad4`, `0x6f1ae0`, `0x6f1ae8`, `0x6f1afd`, `0x6f1b02`, `0x6f1b10`, `0x6f1b18`, `0x6f1b1e`, `0x811b10`, `0xceea60`, `0x84480c`, `0x64a760`, `0x79d4d2`, `0x79f3f5`, `0x79f3f8`, `0x772810`, `0x6f3890`
+Confidence: verified
+Proof: one
+Test: `ui::format_font_flags_6f1ad0`
+
+`0x6f1ad4` stores 0 in the first byte of `0xceea60`. The loop steps eight bytes over the three pairs
+of `0x811b10` (`0x6f1b18`, `cmp esi,0x18`) and tests `flag & argument` (`0x6f1ae0`). For a hit it
+appends `, ` (`0x84480c`) when the first byte is nonzero (`0x6f1ae8` to `0x6f1afd`) and then the
+name (`0x6f1b02` to `0x6f1b10`), each through `SStrPack` with the size 0x40, and it returns the
+buffer (`0x6f1b1e`). Nothing else reads or writes `0xceea60`: its five references are in
+`0x6f1ad0`. The callers are `0x79d4d2` and `0x79f3f8`, after `0x772810` and the load at `0x79f3f5`.
+The test runs `0x6f1ad0` whole, with its `SStrPack`, over every flags word below 0x10, high bits
+and a fuzz.
+
 ## Shadow offsets and spacing
 
 `SetShadowOffset(x, y)` needs two numbers and raises `Usage: %s:SetShadowOffset(x, y)` otherwise; `SetSpacing(s)` needs one and raises

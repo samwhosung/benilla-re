@@ -4557,7 +4557,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceea1c	uint32_t	s_xmlTemplateBuckets		ui	Points to the bucket array of the XML template table	verified	one	ui/framexml#templates
 0xceea30	uint32_t	s_frameXMLDebugLevel		ui	Holds the FrameXML trace level FrameXML_Debug sets, 0 by default	verified	one	ui/framexml#the-load-status-and-its-log
 0xceea3c	uint32_t	s_tocLinesTotal		ui	Holds the total of toc lines for the progress callback	verified	one	ui/framexml#running-a-toc
-0xceea60	uint8_t			ui	Holds a byte its object file's code reads and writes; not read here	inferred	none	
+0xceea60	char[64]	s_fontFlagsText		ui	Holds the flags text FormatFontFlags builds and returns, emptied and rewritten by each call	verified	one	ui/fontmethods#font-flags-text
 0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	one	ui/luastate#the-context-word
 0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	one	ui/luastate#the-context-word
 0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	one	ui/addons#the-saved-variables-format

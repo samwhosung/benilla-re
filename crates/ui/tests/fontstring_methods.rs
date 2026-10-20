@@ -17,7 +17,7 @@ use benilla_re_ui::color::{
     clamp01, clamp01_alpha, normalize_channel, pack_color, quantize_channel, unpack_color,
     unpack_vertex_color,
 };
-use benilla_re_ui::fontstring::set_text_height_guarded;
+use benilla_re_ui::fontstring::{format_font_flags, set_text_height_guarded};
 use benilla_re_ui::ui_scale::{get_point, logical_to_device, point_to_logical, set_point};
 use fpkit::{next, read_f64, rng};
 
@@ -680,4 +680,47 @@ fn clamp_quantize_boundaries() {
     assert_eq!(quantize_channel(0.0), 0);
     assert_eq!(quantize_channel(1.0), 255); // 255.0 + 0.5 = 255.5 -> trunc 255
     assert_eq!(quantize_channel(0.5), 128); // 127.5 + 0.5 = 128.0 -> trunc 128
+}
+
+/// `FormatFontFlags` (`0x6f1ad0`) whole, with its `SStrPack` (`0x64a760`), over every flags word
+/// below 0x10, the high bits alone and with the low ones, and a fuzz; the buffer `0xceea60` is
+/// filled with junk first, which the call must empty. `SErrSetLastError` is stubbed and never
+/// called.
+#[test]
+fn format_font_flags_6f1ad0() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    emu.stub(0x64e850, 0, 1);
+    let mut words: Vec<u32> = (0..0x10).collect();
+    words.extend([
+        0x8,
+        0x10,
+        0x8000_0000,
+        0xffff_fff8,
+        0xffff_ffff,
+        0x8000_0005,
+    ]);
+    let mut s = 0x6f1a_d0c3u32;
+    for _ in 0..500 {
+        words.push(next(&mut s));
+    }
+    for &flags in &words {
+        emu.write(0xceea60, &[b'#'; 64]);
+        emu.clear_calls();
+        let ret = emu.call(0x6f1ad0, flags, 0, &[]);
+        assert_eq!(ret, 0xceea60, "returns the buffer");
+        let mut text = emu.read(0xceea60, 64);
+        let end = text.iter().position(|&b| b == 0).expect("terminated");
+        text.truncate(end);
+        assert_eq!(
+            text,
+            format_font_flags(flags),
+            "flags {flags:#x}: {:?}",
+            String::from_utf8_lossy(&text)
+        );
+        assert!(emu.calls().is_empty(), "no error for flags {flags:#x}");
+    }
+    eprintln!("format_font_flags_6f1ad0: {} words bit-exact", words.len());
 }

@@ -1,7 +1,8 @@
 //! The `FontString` and `Font` methods whose arithmetic is more than a layout conversion
 //! (`systems/ui/fontstring.md#lua-methods`): the guarded height setter and the setters that store
-//! only when the new value differs from the field by more than an epsilon. The conversions and the
-//! colour packs they share are in [`crate::ui_scale`] and [`crate::color`].
+//! only when the new value differs from the field by more than an epsilon, and the flags text of
+//! `GetFont`. The conversions and the colour packs they share are in [`crate::ui_scale`] and
+//! [`crate::color`].
 
 use crate::ui_scale::{logical_to_device, LOGICAL_BASE, LOGICAL_WIDTH, UI_SCALE};
 
@@ -56,4 +57,24 @@ pub fn set_scaled_changed_spilled(arg: f32, old_field: f32) -> SetChange {
         stored: new_f32,
         changed: delta_ge_eps((f64::from(new_f32) - f64::from(old_field)).abs()),
     }
+}
+
+/// The font flags and their names, `0x811b10`, in the table's order.
+pub const FONT_FLAG_NAMES: [(u32, &[u8]); 3] =
+    [(1, b"OUTLINE"), (4, b"THICKOUTLINE"), (2, b"MONOCHROME")];
+
+/// `FormatFontFlags` (`0x6f1ad0`), `GetFont`'s third value: the names of the flags that share a bit
+/// with `flags`, in the table's order, joined by `, `; empty for none. The longest text is 33 bytes,
+/// so the 64-byte buffer's `SStrPack` cap never cuts it.
+pub fn format_font_flags(flags: u32) -> Vec<u8> {
+    let mut text = Vec::new();
+    for (bit, name) in FONT_FLAG_NAMES {
+        if bit & flags != 0 {
+            if !text.is_empty() {
+                text.extend_from_slice(b", ");
+            }
+            text.extend_from_slice(name);
+        }
+    }
+    text
 }

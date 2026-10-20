@@ -29606,9 +29606,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f19f0	11	InitInfinity6f19f0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f1a00	31	GetJustifyName		ui	orchestration		Answers the name of the first justify bit set, else UNKNOWN	verified	one	ui/fontstring#justify	
 0x6f1a20	69	ParseOrientation		ui	orchestration		Maps HORIZONTAL or VERTICAL, ignoring case, to 0 or 1	verified	one	ui/slider#construction	
-0x6f1a70	31			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x6f1a70	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f1a90	53	ParseFontFlags		ui	orchestration		Reads font flags as substrings: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont	
-0x6f1ad0	85			unassigned	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
+0x6f1ad0	85	FormatFontFlags		ui	primitive	const char * __fastcall (uint32_t flags)	Joins the names of the font flags set, OUTLINE, THICKOUTLINE and MONOCHROME in that order, with comma and space	verified	one	ui/fontmethods#font-flags-text	ui::format_font_flags_6f1ad0
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive	bool __fastcall (lua_State *L, int index, bool defaultValue)	Reads a script argument as a flag: nil 0, boolean itself, number truncated, string by first letter or keyword	verified	one	ui/actionuse#reading-a-script-flag	
 0x6f1d60	328	XmlReadValue		ui	primitive		Converts a length attribute of an XML element and stores it, or a relative value unconverted	verified	one	ui/backdrop#the-xml-element	ui::glue_6f1_metric_scale_divide
