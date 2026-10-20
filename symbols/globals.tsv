@@ -2013,6 +2013,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x860818	char *[13]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 12: Closed to Despawn for states 0 to 8, null for 9 to 12	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860850	char[4]	s_textOm3		unassigned	Holds the string "om3"	inferred	none	
 0x860944	char[23]	s_typeTagC4Plane		unassigned	Holds the RTTI name of NTempest::C4Plane, the tag the transport handler frees its plane array with	verified	one	cmath/types#type-names
+0x8609a4	char[30]	s_formatCursorUnableFile		objectlayer	Holds the format Interface\Cursor\Unable%s.blp of the cursor file of an unusable game object	verified	one	objectlayer/gameobjects#cursor
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons

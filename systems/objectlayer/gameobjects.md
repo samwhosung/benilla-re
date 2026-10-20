@@ -270,13 +270,14 @@ custom cursor 41, drawn from `Interface\Cursor\<name>.blp`, or `Unable<name>.blp
 Otherwise a lock with a `LockType` cursor name gives that cursor, or its `Unable` form when the
 lock is no key and the object is not usable; without one, `Interact` or `UnableInteract`.
 
-Addresses: `0x5f8760`, `0x5f8790`, `0x5f8810`, `0x5f3070`, `0x5f30a5`, `0x5f30cd`, `0x5f30f0`, `0x5f3112`, `0xc0dac8`, `0x853b88`
+Addresses: `0x5f8760`, `0x5f8790`, `0x5f87dd`, `0x5f8810`, `0x8609a4`, `0x5f3070`, `0x5f30a5`, `0x5f30cd`, `0x5f30f0`, `0x5f3112`, `0xc0dac8`, `0x853b88`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x5f8760` tests `[rec+0x18]` and returns `neg al; sbb; and eax,0x29` of slot 5; else the handler's
-slot 4. `0x5f8790(buffer, size)` formats the path with `0x5f8810`, slot 6 with (0, 0). `0x5f3070`
+slot 4. `0x5f8790(buffer, size)` formats the path with `0x5f8810`, slot 6 with (0, 0); a usable object gets the plain format, else `0x5f87dd` pushes
+`Interface\Cursor\Unable%s.blp` (`0x8609a4`). `0x5f3070`
 reads slot 6 into `edi`, takes the lock's index 0 (`0x5f30a5`) in `LockType` (`0xc0dac8`) and its
 `+0x70`; type 1 (`0x5f30cd`) or usable copies the name, else `"Unable%s"` (`0x5f30f0`), and the
 cursor is its id in `0x853b88`. `0x5f3112` returns 5 or 25.
