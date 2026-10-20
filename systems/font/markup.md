@@ -61,15 +61,19 @@ NUL-terminated.
 
 ## Line starts
 
-`0x5c2430(text, flags, size, width, offsets, count, ...)` fills an array with the byte offset
-at which each line of a text starts and returns the number written.
+`0x5c2430(font, text, length, size, width, offsets, count, …, flags)` writes the byte offset at
+which each line of the first `length` bytes of a text starts into `offsets`, at most `count` of
+them, and returns the number of lines, which can exceed `count`: a caller with a short array gets
+the whole count back, and a `count` of 0 only counts.
 
-Addresses: `0x5c2430`, `0x5c7260`, `0x5c2540`
+Addresses: `0x5c2430`, `0x5c24a9`, `0x5c24c7`, `0x5c2514`, `0x5c2522`, `0x5c2523`, `0x5c7260`, `0x5c2540`
 Confidence: verified
 Proof: one
 Test: `font::line_break_enumerate_difftest`
 
-The loop records the cursor, decodes a token and either (class 2) moves past it or asks the
+`0x5c24c7` counts every line and `0x5c24a9` (`cmp edi,count; jae`) skips its store once the count
+reaches `count`; the trailing LF does the same (`0x5c2514`, `0x5c2522`), and `0x5c2523` returns the
+count. The loop records the cursor, decodes a token and either (class 2) moves past it or asks the
 line measure `0x5c7260` (see `measure`) how far one line goes. A step of 0 ends it. A text
 that ends in a LF adds one more offset equal to its length. A zero size or box returns 0; with
 flag bit 2 the font's default size (`0x5c2540`) replaces the size. The test covers the newline,
