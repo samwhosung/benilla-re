@@ -14400,7 +14400,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x559c10	633			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x559e90	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x559bc0; not read here	inferred	none		
 0x559f90	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x559fe0	515	ItemNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a item name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x559fe0	515	ItemNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
 0x55a1f0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55a200	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55a210	249			dbcache	unreached		Runs DBCache.cpp code that calls 0x559bf0, 0x56d490, 0x556690 and 2 more; not read here	inferred	none		
@@ -14452,7 +14452,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55d3b0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x55d500; not read here	inferred	none		
 0x55d4b0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55d500	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55d530	534	NpcCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a NPC text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x55d530	534	NpcCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an NPC text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
 0x55d750	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55d760	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55d770	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x55d100, 0x56d790, 0x556690 and 2 more; not read here	inferred	none		
@@ -14636,7 +14636,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x569800	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x569950; not read here	inferred	none		
 0x569900	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x569950	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x569980	534	ItemTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a item text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x569980	534	ItemTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
 0x569ba0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bb0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bc0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, 0x56e210, 0x556690 and 2 more; not read here	inferred	none		
