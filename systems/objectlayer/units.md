@@ -325,7 +325,7 @@ unit attacks through 0x4bd630. `0x60ecb0` tests `+0xc48`; `0x60ecd0` adds `UNIT_
 effects that need a free slot or a pet, life, crowd control, weapons, mount, stance, time of day,
 water, movement, form, stealth, combat, aura state, reputation, indoors and outdoors, and taming.
 
-Addresses: `0x6094f0`, `0x609517`, `0x609884`, `0x609cdb`, `0x609e50`, `0x609f63`, `0x60a01e`, `0x612480`, `0x60a050`, `0x612cc0`, `0x60d020`
+Addresses: `0x6094f0`, `0x609517`, `0x609884`, `0x609cd6`, `0x609cdb`, `0x609ce2`, `0x609d06`, `0x609d12`, `0x609e50`, `0x609f63`, `0x60a01e`, `0x612480`, `0x60a050`, `0x612cc0`, `0x60d020`
 Confidence: verified
 Proof: one
 Test: none
@@ -337,8 +337,8 @@ Results are `SPELL_FAILED` codes; 0x8d carries a second code. No record sets err
 a living player with bit 0x4 of `PLAYER_FIELD_BYTES` byte 0 (`+0x1028`) 0x61; charmed, stunned, silenced (prevention 1, flag 0x2000), pacified (2, 0x20000), fleeing,
 confused give 0x8d with 0x14, 0x64, 0x60, 0x5a, 0x1e, 0x16. Interrupt flag 0x200 needs drawn
 weapons (0x41), 0x40 a mount (0x53); Attributes 0x1000000 clear refuses a mount (0x39), 0x8000000
-clear a seated caster (0x3e); 0x1000 needs night (`0x60a050`, 5:30 to 21:00 is day, 0x51) and
-0x2000 day (0x54); 0x100 water (0x58), 0x80 none (0x50); interrupt flag 1 refuses a moving
+clear a seated caster (0x3e); 0x1000 needs day (`0x60a050` is nonzero from 5:30 to 21:00; 0x51 otherwise) and
+0x2000 night (0x54); 0x100 water (0x58), 0x80 none (0x50); interrupt flag 1 refuses a moving
 caster (0x2e); `0x612480` checks forms (0x3d, 0x56); 0x20000 needs stealth (0x57); 0x10000000
 refuses combat; caster aura state 0x12; reputation 0x8f; `0x612cc0` tests outdoors for 0x4000
 (0x52) and 0x8000 (mount aura 0x4b, else 0x55); taming 0x6e6a20(2), 0x17. `0x60d020` sets the
