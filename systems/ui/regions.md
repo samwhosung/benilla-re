@@ -50,7 +50,7 @@ Slot 0 is the callback `0x76b580` in most tables, and slots 7 and 8 are the plai
 `[eax+0x20]`. Of the 34 vtables stored at `+0x24` by a constructor (a census of `mov [reg+0x24], 0x8xxxxx`),
 the width and height slots differ from the plain pair in the texture's `0x81c6ec`, the font string's
 `0x81c74c` and `0x81cec4`, and the five model tables `0x803934`, `0x808234`, `0x80837c`, `0x8084cc` and `0x81c5d8`
-(`modelview`). Of the other 26, 23 keep the plain pair, `0x81cb20` is a font table, `0x81c8b4` holds two slots before the edit box's own font's main table `0x81c8bc` (the edit box's
+(`modelview`). Of the other 26, 23 keep the plain pair, `0x81cb20` holds two slots before a Font's vtable `0x81cb28`, `0x81c8b4` two before the edit box's own font's main table `0x81c8bc` (the edit box's
 one-slot `0x81c8dc` at `+0x314` follows it), and
 `0x81c7a4` is the font object's base table: three slots followed by floats (`0x7f800000`, `0x40490fdb`,
 `0x41200000`, repeated). Slot 9 is `0x46ff60`, `xor eax,eax; ret`.

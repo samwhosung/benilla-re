@@ -268,6 +268,28 @@ Test: none
 `0x783a40` stores 0x212 at `+0x54` (`0x783a87`), −1 at `+0x58` (`0x783a8e`), 0x1f at `+0x2c` (`0x783a98`), the list sentinel at `+0x74` with its tag (`0x783ab5` to `0x783ac4`), the vtables
 `0x81cb28` and `0x81cb20` (`0x783acd`, `0x783ad3`) and increments `0xcf4e78` (`0x783adf`). `0x783b40` loops `0x770c60(follower, 0)` while the list head is not tagged.
 
+## Font tables
+
+A `Font`'s constructor stores two tables: the pair `0x81cb20` at `+0x24` and the vtable `0x81cb28` in
+`[this]`. The pair is the thunk `0x784f80`, which steps `this` back 0x24 into the deleting destructor,
+and the block merge `0x77e4b0`. The vtable has eight slots: 0 the deleting destructor `0x783af0`, 1
+`0x77e4a0` (the dword at `+0x68`), 2 `0x7a1100` (a script method lookup), 3 `0x702590` (the OnEvent
+script by name), 4 `0x77e4e0` (a type id test), 5 `0x784180` (`PushChanges`), 6 `0x77e500` (a type name
+test) and 7 `0x77e520` (the name Font). The three floats from `0x81cb48` are the check button's constants.
+
+Addresses: `0x81cb20`, `0x81cb28`, `0x81cb48`, `0x783acd`, `0x783ad3`, `0x784f80`, `0x77e4b0`, `0x783af0`, `0x77e4a0`, `0x7a1100`, `0x702590`, `0x77e4e0`, `0x784180`, `0x77e500`, `0x77e520`, `0x785000`, `0x785590`, `0x7855f0`, `0x7842d0`, `0x81c8b4`, `0x81c8bc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x783acd` and `0x783ad3` store `0x81cb28` and `0x81cb20`. The dwords from `0x81cb28` are code addresses
+through `0x81cb44`; `0x81cb48` holds `0x7f800000`, `0x81cb4c` `0x40490fdb` and `0x81cb50` `0x41200000`,
+which `0x785000` (+∞), `0x785590` (π + π) and `0x7855f0` (10 × 10) read. `0x7842d0` calls slot 5.
+`0x784f80` is `sub ecx,0x24; jmp 0x783af0`; `0x77e4a0` loads `[ecx+0x68]`; `0x702590` compares its
+argument with OnEvent (`0x872a20`) and answers `this + 0xc`; `0x77e4e0` compares with `[0xcf4ea8]`;
+`0x77e500` compares a name with `[0x87a450]`, the string Font, and `0x77e520` returns it. The edit box's own
+font keeps the same shape, `0x81c8b4` and `0x81c8bc`, and differs in slots 0 (`0x77e550`) and 5 (`0x77e530`).
+
 ## Font object SetFontObject
 
 `0x7841d0(source)` is a `Font`'s `SetFontObject`, the call under `CopyFontObject`. In order it copies

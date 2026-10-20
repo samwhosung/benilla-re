@@ -1189,7 +1189,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c9c8	void *[11]	s_simpleRegionLayoutVtable		ui	Holds the layout vtable stored at +0x24 of a region base, before a texture or font string replaces it	verified	one	ui/regions#the-region-base
 0x81c9f4	void *[11]	s_simpleRegionVtable		ui	Holds the vtable a region base stores at +0x0 while it is built or torn down, its slot 0 being 0x77f6c0	verified	one	ui/regions#the-region-base
 0x81ca68	void *[39]	CSimpleStatusBar::vftable		ui	Holds the 39 virtual function slots of CSimpleStatusBar, which its constructor stores	inferred	none	
-0x81cb20	uint32_t[13]	s_fontTableB		ui	Holds the ten slots and three floats of a font table stored at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
+0x81cb20	void *[2]	s_simpleFontFollowerSlots		ui	Holds the two slots a Font keeps at +0x24 (0x783ad3): a thunk to its deleting destructor and the block merge 0x77e4b0	verified	one	ui/fonttext#font-tables
+0x81cb28	void *[8]	CSimpleFont::vftable		ui	Holds the eight virtual function slots of CSimpleFont, which its constructor stores (0x783acd)	verified	one	ui/fonttext#font-tables
+0x81cb48	const float[3]	s_checkboxHeaderConsts		ui	Holds +inf, pi and 10.0, the check button's copies of the shared header's constants, which follow the Font tables	verified	one	ui/fonttext#font-tables
 0x81cb54	void *[11]	s_simpleCheckboxLayoutVtable		ui	Holds the layout vtable of a check button, stored at +0x24	verified	one	ui/button#button-teardown-and-text-colour-slots
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
