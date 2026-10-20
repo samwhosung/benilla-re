@@ -239,18 +239,18 @@ immediate in the map object code, `0x680000` to `0x6c5000`:
 |---|---|---|
 | 0x1 | `0x6c4579` | the load parses the BSP chunks |
 | 0x4 | `0x6c45d9` | the load stores the vertex colours (`+0xf4`, count `+0x148`) |
-| 0x8 | `0x6b3d13`, `0x6b3f40`, `0x6b44f8` | exterior: a flood root, and a portal into it records a window |
-| 0x48 | `0x6b3be8`, `0x6b3fe8`, `0x6b63c9` | exterior-lit: drawer choice, no interior chain |
+| 0x8 | `0x6a880d`, `0x6b3d13`, `0x6b3f40`, `0x6b44f8` | exterior: a flood root, a portal into it records a window, and the entity claim leaves the indoors bit clear |
+| 0x40, 0x48 | `0x6a8823` (0x40); `0x6b3be8`, `0x6b3fe8`, `0x6b63c9` (0x48) | exterior-lit: the entity claim lights it by the sun, the drawer choice, no interior chain |
 | 0x200 | `0x6c453d` | the load stores the light references (`+0xe4`, count `+0x140`) |
 | 0x800 | `0x6c455b` | the load stores the doodad references (`+0xe8`, count `+0x144`) |
-| 0x1000 | `0x6b4176`, `0x6b4220`, `0x6c460d` | liquid: latches the parity, and the load stores the grid |
+| 0x1000 | `0x6b4176`, `0x6b4220`, `0x6c460d`, `0x6b9e5c`, `0x6b9f68`, `0x6baa7f`, `0x6bb17f`, `0x6bb6bf` | liquid: latches the parity, the load stores the grid, and the liquid queries of a group read it |
 | 0x2000 | `0x6a4e2f` | skips the group in the liquid query |
 | 0x10000 | `0x6b3d0b`, `0x6b3d8b`, `0x6b3f1b`, `0x6b4215` | the group draws through the callback and is never walked |
 | 0x20000 | `0x6c46a6` | the load stores the strip index chunk (`+0xcc`, count `+0x12c`) |
 | 0x40000 | `0x6b42e0` | the walk publishes the root's sky box name |
 | 0x148 | `0x6b42d0` | the walk sets the render-global byte `0xca80c4` |
 
-Addresses: `0x6c400b`, `0x6c400e`, `0x6a4b10`, `0x6b3be8`, `0x6b3d0b`, `0x6b3d13`, `0x6b3d8b`, `0x6b3f1b`, `0x6b3f40`, `0x6b3fe8`, `0x6b4176`, `0x6b4215`, `0x6b4220`, `0x6b42d0`, `0x6b42e0`, `0x6b44f8`, `0x6b63c9`, `0x6c4530`, `0x6c453d`, `0x6c455b`, `0x6c4579`, `0x6c45d9`, `0x6c460d`, `0x6c46a6`, `0x6a4e00`, `0x6a4e2f`, `0x69b570`, `0x69b575`, `0xca80c4`
+Addresses: `0x6c400b`, `0x6c400e`, `0x6a4b10`, `0x6b3be8`, `0x6b3d0b`, `0x6b3d13`, `0x6b3d8b`, `0x6b3f1b`, `0x6b3f40`, `0x6b3fe8`, `0x6b4176`, `0x6b4215`, `0x6b4220`, `0x6b42d0`, `0x6b42e0`, `0x6b44f8`, `0x6b63c9`, `0x6a880d`, `0x6a8823`, `0x6b9e5c`, `0x6b9f68`, `0x6baa7f`, `0x6bb17f`, `0x6bb6bf`, `0x688a25`, `0x688a4a`, `0x697b94`, `0x6a6971`, `0x6a6c31`, `0x6c4530`, `0x6c453d`, `0x6c455b`, `0x6c4579`, `0x6c45d9`, `0x6c460d`, `0x6c46a6`, `0x6a4e00`, `0x6a4e2f`, `0x69b570`, `0x69b575`, `0xca80c4`
 Confidence: verified
 Proof: one
 Test: none
@@ -261,11 +261,13 @@ copy: 0x200 and 0x800 each take a chunk of 16-bit entries, 0x1 the BSP chunks, 0
 (`0x6b4e64`). The seeds read `[eax+edi]` of the record array at `+0x130`; `0x6b3be8` and the
 recursion read the group. The mask of `0x6a4e00` is its first argument, the literal 0x2000 its sole
 caller pushes (`0x69b570`). A scan of `0x680000` to `0x6c5000` for `test`, `and` and `bt` with an
-immediate above 0x10000 on the flags finds exactly `0x6b42e0` and `0x6c46a6`; the scan sees no mask
-held in a register. Bit 0x8000 is read by `shr eax,0xf; and al,1` at `0x670735`
+immediate above 0x10000 on the flags finds exactly `0x6b42e0` and `0x6c46a6`, and sees no mask held in
+a register. Bit 0x8000 is read by `shr eax,0xf; and al,1` at `0x670735`
 (`terrain/world#entity-outdoors-test`), the only `shr` by 0xf from `0x66f000` to `0x6c5000`; there the other immediates 0x8000 are
 `or` stores (`0x670df1`, `0x671052`, `0x6713c2`, `0x688a5a`) and one compare (`0x68b5cc`), and the image has no
-`test ah,0x80`, `test byte [reg+0x11],0x80` or `bt reg,0xf` (`test ah,0x41` finds 1218 for control).
+`test ah,0x80`, `test byte [reg+0x11],0x80` or `bt reg,0xf` (`test ah,0x41` finds 1218 for control). The scan
+skips `test ah,ah; js` and `jns`: its five hits there test `0xc7b2a4` (`0x688a25`, `0x688a4a`) or a node's `+0x8`
+(`0x697b94`, `0x6a6971`, `0x6a6c31`), not group flags.
 
 ## Portal crossing
 

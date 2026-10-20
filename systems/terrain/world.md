@@ -194,18 +194,19 @@ Test: `terrain::entity_outdoors_difftest`
 `0x69d4f0` walks the entity's node list `+0x20` for the first group node (`+0x8` flags bit 0x10),
 then that group's own list for the map object and writes the object, its model `+0x118`, the
 group and the group record `0x6a4a00` finds by `+0x7c`. Its callers compare `0x670540`'s words between
-two entities. The test runs `0x69d4f0` whole, under `0x6706f0`.
+two entities. The test runs `0x69d4f0` whole, under `0x6706f0`, and sees it only through the `al` of
+`0x6706f0`: whether a group is found and its flags, not the three words `0x69d4f0` writes.
 
 ## Entity outdoors test
 
 `0x6706f0` returns in `al` whether an entity is outdoors for a spell. It answers 1 for a null entity
 and for one whose `+0x90` bit 0 is clear: on open terrain, or in a map object group with the exterior
-flag 0x8. With the bit set it answers bit 15 (0x8000) of the flags of the entity's group, the first
-that `0x69d4f0` finds loaded, and 0 when it finds none: 0 is a group with neither 0x8 nor 0x8000, or
-no loaded group. It reads no area table, no terrain flag and no transport state; flag 0x2000 plays no
-part.
+flag 0x8 (`Entity indoors bit`). With the bit set it answers bit 15 (0x8000) of the flags of the
+entity's group, the first that `0x69d4f0` finds loaded, and 0 when it finds none: 0 is a group with
+neither 0x8 nor 0x8000, or no loaded group. It reads no area table, no terrain flag and no transport
+state; group flag 0x2000 plays no part.
 
-Addresses: `0x6706f0`, `0x6706fa`, `0x670709`, `0x670726`, `0x670732`, `0x670735`, `0x67073e`, `0x69d4f0`, `0x69d52c`, `0x6a4a00`, `0x6a87f0`, `0x6a880d`, `0x6a8a20`, `0x6a8b47`, `0x69e280`, `0x69e295`, `0x6717d0`, `0x5f1f10`, `0x7c4930`, `0x612cc6`
+Addresses: `0x6706f0`, `0x6706fa`, `0x670709`, `0x670726`, `0x670732`, `0x670735`, `0x67073e`, `0x69d4f0`, `0x69d52c`, `0x6a4a00`, `0x6a4a26`, `0x69d559`, `0x6a87f0`, `0x6a8802`, `0x612cc6`
 Confidence: verified
 Proof: one
 Test: `terrain::entity_outdoors_difftest`
@@ -214,14 +215,32 @@ Test: `terrain::entity_outdoors_difftest`
 calls `0x69d4f0`; a 0 clears `al` (`0x67073e`). Else `0x670732` loads the group's `+0x10`, the
 header flags (`models/wmo#group-header`), and `0x670735` is `shr eax,0xf; and al,1`; the upper bytes
 of `eax` hold the shifted flags. `0x69d4f0` skips a record whose target lacks tag bit 0x10 (`0x69d52c`)
-and a group `0x6a4a00(key, 0)` answers null for (root `+0x1d4` or group `+0x164` zero), and returns at
-the first group. A group node with no list of its own reads address 8; the test builds none.
-`0x6a87f0` sets `+0x90` bit 0 for a group without 0x8 (`0x6a880d`); a unit's node reaches it from
-`0x6a8a20` at `0x6a8b47`, a terrain hit does not. `0x69e280` clears the bit (`0x69e295`) before it
-re-places the node, and `0x6717d0` runs it when the node moves (`terrain/lightattach#node-sync`). A
-unit on a transport is placed the same way, at the world position its slot 5, `0x5f1f10`, returns
-through `0x7c4930`. The `jmp` at `0x612cc6` is the one caller, and no stored address names the function (control: `0x6e43a0`
-twice). The test runs `0x6706f0` whole.
+and a group node for which `0x6a4a00(key, 0)` answers null (root `+0x1d4` or group `+0x164` zero), and
+returns at the first group. The list holds one (`Entity indoors bit`), so a 0 answer is that group
+lacking both 0x8 and 0x8000. Both tests reach `0x6a4a00` with flag 0 (`0x69d559`, `0x6a8802`), so its
+flag arm `0x6a4a26` does not run. A group node with no list of its own reads address 8; the test builds
+none. The `jmp` at `0x612cc6` is the one caller, and no stored address names the function (control:
+`0x6e43a0` twice). The test runs `0x6706f0` whole.
+
+## Entity indoors bit
+
+An entity's `+0x90` bit 0 is set when its placement finds a map object group without the exterior flag
+0x8, and clear otherwise. The placement runs again, from a clear bit and an empty attachment list,
+when the node moves by a squared step of 0.001 or more or an update forces it. A unit on a transport is placed at the world
+position of its slot 5; nothing in the placement reads the transport.
+
+Addresses: `0x6a87f0`, `0x6a880d`, `0x6a8a20`, `0x6a8b47`, `0x6a86d0`, `0x6a86f4`, `0x6a92d0`, `0x6a8b3a`, `0x69e280`, `0x69e295`, `0x6717d0`, `0x5f1f10`, `0x7c4930`
+Confidence: verified
+Proof: one
+Test: `terrain::entity_light_flags_difftest`
+
+`0x6a87f0` sets the bit for a group without 0x8 (`0x6a880d`). A unit's node is placed by `0x6a8a20`
+(`0x6a86d0` sends the bit-13 nodes to `0x6a8c10`), which calls it at `0x6a8b47` for a map object hit
+and not for a terrain hit. `0x6a86d0` unlinks every record of the entity's list (`0x6a86f4`) and
+`0x6a8a20` links exactly one group node (`0x6a92d0`, at `0x6a8b3a`). `0x69e280` clears the bit
+(`0x69e295`) before it re-places the node, and `0x6717d0` runs it on a move
+(`terrain/lightattach#node-sync`). `0x5f1f10`, slot 5 of a unit, returns the world position through
+`0x7c4930`. The test runs `0x6a87f0` whole.
 
 ## World thunks
 

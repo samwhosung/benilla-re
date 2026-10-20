@@ -194,6 +194,29 @@ by 0xc22e4507, adds the dividend, shifts right 16 and adds the sign bit: a signe
 86,400. In `0x642c80`, `0x642cd5` adds 2000; the weekday names are the seven string pointers from
 0x865864 (`0x642d64`); `0x642dc6` formats the minute with `%2.2i`.
 
+## Time range test
+
+`IsDaytime` (`0x60a050`) asks `WowTime::InRange` (`0x642710`) whether the clock lies from 5:30 up to, not
+including, 21:00: 5:30 and 20:59 are day, 21:00 and 5:29 are night. Only the hour and the minute count,
+since the bounds leave weekday, day, month and year unset. `InRange(this, from, to)` gives `this >= from`
+and `this < to` when `from <= to`, else `this >= from` or `this < to`. An ordering walks year, month, day,
+weekday, hour, minute and skips a field either time leaves negative; for equality an unset field matches
+anything. A clock with no hour and minute set, as built, is not in range.
+
+Addresses: `0x60a050`, `0x60a067`, `0x60a08b`, `0x60a0a8`, `0x642ae0`, `0x642c30`, `0x642710`, `0x642880`, `0x6429d0`, `0x642770`, `0x6428c0`, `0x642a10`, `0x6425f0`, `0x642620`, `0x642650`, `0x642680`, `0x6426b0`, `0x6426e0`, `0xce8538`
+Confidence: verified
+Proof: one
+Test: `gametime::time_order_difftest`, `gametime::time_in_range_difftest`, `gametime::time_encode_difftest`, `gametime::is_daytime_difftest`
+
+`0x60a067` and `0x60a08b` call `0x642ae0` (minute in `edx`, hour the first stack argument, weekday to year
+-1, the two-bit field 0); its stores mask each field, so -1 packs as all ones, and `0x642c30` returns those as
+-1. `0x60a0a8` calls `0x642710` on `0xce8538`. `0x642710` calls `0x642880(from, to)`; if true, `0x6429d0(this,
+from)` and `0x642770(this, to)` must both pass, else either. `0x642880` is `0x642a10` or `0x642770`;
+`0x6429d0` is `0x642a10` or `0x6428c0`. `0x642770` and `0x6428c0` read the fields at `+0x14` down to `+0`,
+skip one that either record has negative, stop at the first unequal pair (`0x6425f0` to `0x6426e0` return 1,
+0 or -1, signed) and answer `setl` or `setg`, 0 for the same record. `0x642a10` returns 0 at the first
+unequal pair both set, else 1. The tests run each function whole.
+
 ## Unreached functions
 
 `0x643450` applies new minute and day offsets and sets the clock again. `0x643640` sets the clock from the host's

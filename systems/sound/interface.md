@@ -106,8 +106,8 @@ Test: none
 
 `WowTime::WowEncodeTime` packs minute (`edx`) and hour (first stack argument), the other fields −1:
 (0, 21) and (30, 5). `InRange(clock 0xce8538, 05:30, 21:00)` true clears `esi`; `0xb05f18` holds
-1 at night and indexes the day and night columns of the music and ambience rows. What `InRange`
-does with the two times is base's, not read here.
+1 at night and indexes the day and night columns of the music and ambience rows. `InRange` takes 05:30 up
+to, not including, 21:00 (`gametime/overview#time-range-test`).
 
 ## Lua sound functions
 

@@ -167,8 +167,9 @@ state.
 
 A spell with `Attributes` bit 12 (0x1000) refuses with 0x51 when `0x60a050` returns 0, and one with bit 13
 (0x2000) refuses with 0x54 when it returns nonzero. `0x60a050` decides whether the game clock `0xce8538`
-lies between 5:30 and 21:00. So 0x1000 allows a cast by day only (0x51 is `SPELL_FAILED_ONLY_DAYTIME`) and 0x2000
-by night only (0x54, `SPELL_FAILED_ONLY_NIGHTTIME`); the client's name switch `0x6e23e0` returns their keys at `0x6e25dc` and `0x6e25ee`.
+lies from 5:30 up to, not including, 21:00 (`gametime/overview#time-range-test`). So 0x1000 allows a cast by
+day only (0x51 is `SPELL_FAILED_ONLY_DAYTIME`) and 0x2000 by night only (0x54, `SPELL_FAILED_ONLY_NIGHTTIME`); the
+client's name switch `0x6e23e0` returns their keys at `0x6e25dc` and `0x6e25ee`.
 
 Addresses: `0x609cd3`, `0x609cd6`, `0x609cdb`, `0x609ce2`, `0x609cee`, `0x609d03`, `0x609d06`, `0x609d0b`, `0x609d12`, `0x609d1e`, `0x60a050`, `0x60a067`, `0x60a072`, `0x60a08b`, `0x60a0a8`, `0xce8538`, `0x642ae0`, `0x642710`
 Confidence: verified
@@ -178,8 +179,8 @@ Test: none
 `0x609cd6 test ah,0x10` and `0x609d06 test ah,0x20` are bits 12 and 13. The two rungs differ only in
 the branch after the call: `0x609ce2 jne` passes the day rung and `0x609d12 je` passes the night rung.
 `0x60a050` encodes the times 21:00 (`push 0x15`) and 5:30 (`push 5`, `edx` 0x1e) through `0x642ae0`, decodes
-both with `0x642c30` and returns `0x642710` on the clock with the two times (`0x60a0a8`). The comparison
-function is in `base`; both rungs reload `edi` afterwards.
+both with `0x642c30` and returns `0x642710` on the clock with the two times (`0x60a0a8`). Both rungs reload
+`edi` afterwards.
 
 ## Moving rung
 
@@ -244,7 +245,7 @@ with 0x4b, `SPELL_FAILED_NO_MOUNTS_ALLOWED`, when one of the three effects appli
 either answer; with neither the question is not asked. An item cast takes the rungs too. They follow
 the stealth, combat, caster aura state and reputation rungs and precede the taming rung.
 
-Addresses: `0x609f59`, `0x609f5c`, `0x609f63`, `0x609f6d`, `0x609f6f`, `0x609f7c`, `0x609f90`, `0x609fa1`, `0x609fa6`, `0x609fb4`, `0x609fd0`, `0x609fd7`, `0x612cc0`, `0x6706f0`, `0x6e1a00`
+Addresses: `0x609f59`, `0x609f5c`, `0x609f63`, `0x609f6d`, `0x609f6f`, `0x609f7c`, `0x609f90`, `0x609fa1`, `0x609fa6`, `0x609fb4`, `0x609fd0`, `0x609fd7`, `0x609fd4`, `0x609f72`, `0x609f92`, `0x609f5f`, `0x609fde`, `0x609fec`, `0x60a01a`, `0x609f27`, `0x609f3b`, `0x60952b`, `0x609543`, `0x612cc0`, `0x6706f0`, `0x6e1a00`, `0x739368`
 Confidence: verified
 Proof: one
 Test: `objectlayer::cast_place_rung_difftest`
@@ -256,8 +257,12 @@ passing; a nonzero answer reaches `0x609f6f test ah,0x40`, `dl` 0x52 at `0x609f7
 `0x609f94` compares `[esi+0xf4+4i]` (`Effect`) with 6 at `0x609fa1` and `[esi+0x16c+4i]`
 (`EffectApplyAuraName`) with 0x4e at `0x609fa6` for i in 0 to 2; `0x609fd0 mov dl,0x4b` joins the 0x55
 report at `0x609fb6`. A scan of the listing for `mov dl,0x4b`, `0x52` and `0x55` finds one site each
-(control: `mov dl,0x53` finds `0x609c20` and `0x609c56`). The test runs the slice `0x609f59` to the
-pass exit `0x60a049`, with `0x612cc0` and `0x6e1a00` stubbed.
+(control: `mov dl,0x53` finds `0x609c20`, `0x609c56` and `0x739368`, outside the validator). The
+only branches to `0x609fd4`, `0x609fd7` and `0x60a03f` are `0x609f72`, `0x609f92`, `0x609f5f`,
+`0x609fde`, `0x609fec` and `0x60a01a`, all in the slice, and the only branches into `0x609f59` are
+`0x609f27` and `0x609f3b`, the reputation rung. The item argument is read once, at `0x60952b`, so an
+item cast, which skips the cooldown and power rungs (`0x609543`), runs these. The test runs the slice
+`0x609f59` to the pass exit `0x60a049`, with `0x612cc0` and `0x6e1a00` stubbed.
 
 ## Taming rung
 

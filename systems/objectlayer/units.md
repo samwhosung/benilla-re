@@ -337,7 +337,7 @@ Results are `SPELL_FAILED` codes; 0x8d carries a second code. No record sets err
 a living player with bit 0x4 of `PLAYER_FIELD_BYTES` byte 0 (`+0x1028`) 0x61; charmed, stunned, silenced (prevention 1, flag 0x2000), pacified (2, 0x20000), fleeing,
 confused give 0x8d with 0x14, 0x64, 0x60, 0x5a, 0x1e, 0x16. Interrupt flag 0x200 needs drawn
 weapons (0x41), 0x40 a mount (0x53); Attributes 0x1000000 clear refuses a mount (0x39), 0x8000000
-clear a seated caster (0x3e); 0x1000 needs day (`0x60a050` is nonzero from 5:30 to 21:00; 0x51 otherwise) and
+clear a seated caster (0x3e); 0x1000 needs day (`0x60a050`, 5:30 up to 21:00, else 0x51) and
 0x2000 night (0x54; the name switch `0x6e23e0` keys them at `0x6e25dc` and `0x6e25ee`); 0x100 water (0x58), 0x80 none (0x50); interrupt flag 1 refuses a moving
 caster (0x2e); `0x612480` checks forms (0x3d, 0x56); 0x20000 needs stealth (0x57); 0x10000000
 refuses combat; caster aura state 0x12; reputation 0x8f; `0x612cc0` asks whether the caster is
