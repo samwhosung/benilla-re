@@ -107,25 +107,31 @@ clears the area table slot the chunk's `+0xb4` names (`0x6c1fee`) and calls `0x6
 
 ## Map object update
 
-`0x698720` brings in the map objects and groups near the player. For each loaded map object whose box
-meets the box of half-size the far clip around the position, it makes sure the root has loaded
-(waiting for it) and activates the object. For each of its groups that meets that box it sets the
-group's keep-alive timer to 30.0, loads the group when it is not loaded, and marks it when it also
-meets the box of half-size 150. A loaded group gets its lights and doodads made. With a nonzero
-argument, an object whose bounds meet the frame's frustum box goes into the depth buckets.
+`0x698720` walks the map object list. An object whose box meets the far box, of half-size the far
+clip around the position, waits for its root's loaded byte and, unless bit 7 of its byte `+0xc` is
+set, goes to `BindDoodadSet`. Then, met or not, each of the object's groups that meets the far box
+sets its timer to 30.0 and, when neither loaded nor reading, goes to `CMapObj::LoadGroup`; one that also meets the box of half-size 150 is then waited on while its read
+handle is set. A loaded group goes to `CreateGroupLights` and `CreateGroupDoodads`. With a nonzero
+argument, an object with bit 7 set whose box meets the frame's frustum box goes to `0x6817c0`.
 
-Addresses: `0x698720`, `0x698727`, `0x698751`, `0x69875d`, `0x698795`, `0x69879e`, `0x6987aa`, `0x6987b9`, `0x6987c4`, `0x698804`, `0x69885d`, `0x698865`, `0x698882`, `0x69888b`, `0x6988ea`, `0x698900`, `0x69890f`, `0x698924`, `0x698930`, `0x69895c`, `0x6989bd`, `0x699330`, `0x6a4a50`, `0x6a4a00`, `0x6a4a30`, `0x6a4a90`, `0x695c00`, `0x695aa0`, `0x6a8730`, `0x698a30`, `0x6817c0`, `0xc63240`, `0xc62520`
-Confidence: inferred
-Proof: none
+Addresses: `0x698720`, `0x698727`, `0x698751`, `0x69875d`, `0x698795`, `0x69879e`, `0x6987aa`, `0x6987b9`, `0x6987c4`, `0x6987ff`, `0x698804`, `0x69885d`, `0x698865`, `0x698882`, `0x69888b`, `0x6988ea`, `0x6988f1`, `0x698900`, `0x69890f`, `0x698924`, `0x69892b`, `0x698930`, `0x69895c`, `0x6989bd`, `0x699330`, `0x6a4a50`, `0x6a4a00`, `0x6a4a30`, `0x6a4a90`, `0x6a4ab6`, `0x6a4ac3`, `0x443bd0`, `0x695c00`, `0x695aa0`, `0x6a8730`, `0x698a30`, `0x6817c0`, `0x672730`, `0xc63240`, `0xc62520`
+Confidence: verified
+Proof: one
 Test: none
 
-The far box is `0xc63240` to `0xc63254` (min x, y, z then max) and the 150 box `0xc62520` to `0xc62534`
-(`0x69888b` to `0x6988e3`). `0x69879e` tests the root's loaded byte `+0x1d4`, `0x6987aa` loops
-`0x6a4a50` until it is set, `0x6987c4` activates through `0x698a30`. The group's timer `+0x15c` is set to
-0x41f00000 (`0x698865`) and its loaded byte is `+0x164`; `0x698882` loads the group (`0x6a4a30`), `0x6988ea`
-marks it (`0x6a4a90`). `0x69890f` and `0x698924` make the lights and doodads (when the group flags
-0x10 and 0x8 are clear). `0x6989bd` buckets the object. What `0x698a30`, `0x6a4a90` and `0x6a8730`
-do is not read here.
+The list starts at `0xca7da4`, ending at null or an odd link. Every box test counts touching faces
+and fails on NaN. `CWorld::PrepareAreaOfInterest` builds both boxes (`world#area-of-interest`).
+The far box is `0xc63240` (min x, y, z, then max) against the object's box `+0x44` (min) and `+0x50` (max): three `fcomp` with `test
+ah,0x41; jp` need `far.min <= box.max`, and `0x699330` needs `far.max >= box.min`. `0x6987a8` to
+`0x6987b7` loops `0x6a4a50` until the root's `+0x1d4` is set; `0x6a4a50` calls `0x443bd0` while the
+root's read handle `+0x1d0` is set. Each group node gives its index `+0x7c` to `0x6a4a00(root,
+index, 1)` (`0x6987ff`), which returns null for a root without `+0x1d4`, else the group
+`[root+0x1f4+4·index]`, and its box `+0x44` to the same tests. `0x698865` stores 0x41f00000 at
+`+0x15c`; with `+0x164` and `+0x160` clear, `0x698882` calls `0x6a4a30`, which calls `0x6c3e20(index, 0)`. The 150 box `0xc62520` is
+tested at `0x69888b` to `0x6988e8`, and `0x6988f1` calls `0x6a4a90`, which loops `0x443bd0` on the
+group's `+0x160` (`0x6a4ab6` to `0x6a4ac3`). With `+0x164` set, flag 0x10 of the node's `+0xc`
+clear calls `0x695c00` (`0x69890f`) and 0x8 clear calls `0x695aa0` and `0x6a8730` (`0x698924`,
+`0x69892b`). `0x6989bd` calls `0x6817c0`.
 
 ## Scene node reset
 

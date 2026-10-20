@@ -25906,7 +25906,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x698390	347	CMap::Update		terrain	orchestration	void __thiscall (CMap *this)	Runs the frame's map update: object frame, tile loads, doodads, unloads, map objects, node reset	verified	one	terrain/mapupdate#map-update-order	terrain::fade_time_gate_difftest, terrain::fade_count_index_difftest
 0x6984f0	222	UpdateAreaResidency		terrain	orchestration	void __fastcall (uint32_t arg1)	Unloads areas outside the outer window and updates the chunks of those inside	verified	one	terrain/mapupdate#area-unload	
 0x6985d0	331	ScheduleTileLoads		terrain	orchestration	void __cdecl (void)	Requests and builds the outer window's chunks, waiting for the inner window's reads and building the ring within 5 ms	verified	one	terrain/mapupdate#tile-load-pass	
-0x698720	696	UpdateMapObjectVisibility		terrain	orchestration	void __thiscall (void *this)	Loads and activates the map objects and groups near the player and makes their lights and doodads	inferred	none	terrain/mapupdate#map-object-update	
+0x698720	696	UpdateMapObjectVisibility		terrain	orchestration	void __thiscall (void *this)	Walks the map objects, calling the group loads in the far box and waiting on roots and on groups within 150	verified	one	terrain/mapupdate#map-object-update	
 0x6989e0	76	ResetSceneNodes		terrain	orchestration	void __fastcall (void *area)	Sets every scene node's cull state to 1 and buckets the nodes flagged for it	verified	one	terrain/mapupdate#scene-node-reset	
 0x698a30	249	BindDoodadSet		terrain	orchestration	void __fastcall (void *def, uint32_t arg2)	Binds a map object's doodad set to its def and transforms it	inferred	none		
 0x698b30	51	PropagateBoundsToOwners		terrain	orchestration	void __thiscall (void *this)	Grows the boxes of every object a def is linked into	verified	one	terrain/doodads#pending-doodads	
@@ -25921,7 +25921,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x699230	19	InitTerrainInvTwoPi8		terrain	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	terrain/statics#static-initializers	
 0x699250	98	MinVector3		terrain	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the per-component minimum of two vectors, taking b on a tie or a NaN	verified	one	terrain/chunk#chunk-vertices	terrain::vec3_min
 0x6992c0	98	MaxVector3		terrain	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the per-component maximum of two vectors, the second's on a tie or NaN	verified	one	terrain/doodads#vector-maximum	terrain::vec3_max
-0x699330	46	IsVector3AllLessOrEqual		terrain	orchestration	uint8_t __fastcall (const float *a, const float *b)	Returns whether each component of a is at most b's	inferred	none		
+0x699330	46	IsVector3AllGreaterOrEqual		terrain	orchestration	uint8_t __fastcall (const float *a, const float *b)	Returns whether each component of a is at least b's, false on NaN	verified	one	terrain/mapupdate#map-object-update	
 0x699360	57	ClampAllocQuantum		terrain	primitive	uint32_t __thiscall (void *this, uint32_t arg2)	Returns the lowest set bit of a count below 64, else 64	inferred	none		
 0x6993a0	31	RoundUpToMultipleA		terrain	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
 0x6993c0	133	ResizeDefArray		terrain	host	void __thiscall (void *this, uint32_t count)	Reallocates a pointer array to a count	inferred	none		
@@ -26558,10 +26558,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a4830	170	CMapObj::BoxOverlapsGroup		models	orchestration		Returns whether a box overlaps a group's bounding box	verified	one	terrain/lightattach#containment-walk	
 0x6a48e0	166	CMapObj::GroupContainsPoint		models	unreached		Returns whether a point lies in a group's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6a4990	100	PointInsidePlanes		models	primitive	bool __thiscall (CMapObj *this, const float *point)	Returns whether a point lies inside a loaded map object's convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume	models::wmo_point_in_convex_volume_difftest
-0x6a4a00	46	CMapObj::GetLoadedGroup		models	orchestration		Returns a group of a map object when both are loaded	inferred	none	models/wmo#queries	
-0x6a4a30	18	CMapObj::LoadGroup		models	orchestration		Starts loading a group of a map object	inferred	none	models/wmo#loading	
-0x6a4a50	49	CMapObj::WaitLoad		models	host		Waits for a map object's file read to finish	inferred	none		
-0x6a4a90	58	CMapObj::WaitLoadGroup		models	host		Waits for a group's file read to finish	inferred	none		
+0x6a4a00	46	CMapObj::GetLoadedGroup		models	orchestration		Returns a group of a loaded map object when the group is loaded or the flag is set, else null	verified	one	terrain/mapupdate#map-object-update	
+0x6a4a30	18	CMapObj::LoadGroup		models	orchestration		Passes a group index and 0 to CMapObj::LoadGroupFile	verified	one	terrain/mapupdate#map-object-update	
+0x6a4a50	49	CMapObj::WaitLoad		models	host		Waits on AsyncFileReadWait while a map object's read handle +0x1d0 is set	verified	one	terrain/mapupdate#map-object-update	
+0x6a4a90	58	CMapObj::WaitLoadGroup		models	host		Waits on AsyncFileReadWait while a group's read handle +0x160 is set	verified	one	terrain/mapupdate#map-object-update	
 0x6a4ad0	54	CMapObj::GetGroupValue		models	orchestration		Returns a value of a loaded group	inferred	none		
 0x6a4b10	37	CMapObj::GetGroupPointer		models	orchestration		Returns a group's record pointer when the map object is loaded	inferred	none		
 0x6a4b40	379	CMapObj::RayHitClosest		models	unreached		Finds the closest group surface a ray hits and its vertex colour; nothing reaches it	inferred	none	models/overview#unreached-code	
