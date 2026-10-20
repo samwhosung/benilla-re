@@ -21,7 +21,7 @@ opcode	name	role	site	function	entries	basis
 0x043	SMSG_GAMETIME_UPDATE	handler	0x6c5d9e	0x6c6010	gametime#server-sync|gametime#game-time-update|gametime#server-messages	opcode
 0x045	SMSG_GAMETIME_SET	handler	0x6c5dc0	0x6c6120	gametime#game-time-set|gametime#server-messages	opcode
 0x047	SMSG_GAMESPEED_SET	handler	0x6c5d7c	0x6c5de0	gametime#game-speed-set|gametime#server-messages	opcode
-0x049	SMSG_SERVERTIME	handler	0x6c5daf	0x6c6080	gametime#server-messages	opcode
+0x049	SMSG_SERVERTIME	handler	0x6c5daf	0x6c6080	gametime#server-messages|gametime#server-time-message	opcode
 0x04a	CMSG_PLAYER_LOGOUT	send	0x5ab095	0x5ab000	core/close#no-logout-request|net/connection#logout|ui/popups#logout-and-quit	opcode
 0x04b	CMSG_LOGOUT_REQUEST	send	0x5ab095	0x5ab000	core/close#no-logout-request|net/connection#logout|ui/idle#the-idle-law|ui/popups#logout-and-quit	opcode
 0x04c	SMSG_LOGOUT_RESPONSE	handler	0x5b3b42	0x5b3ea0	net/dispatch#realm-connection-messages	opcode

@@ -4381,7 +4381,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8534	int32_t	s_violenceLevel		client	Holds the violenceLevel CVar value; written by 0x6c5af0	inferred	none	spell/visuals#spell-visual-record-choice
 0xce8538	int32_t	s_gameClockMinute		gametime	Holds the clock's minute, the first word of the 0x70-byte game clock object	verified	one	gametime#clock-state
 0xce853c	int32_t	s_gameClockHour		gametime	Holds the clock's hour, the second word of its time	verified	one	gametime#clock-state
-0xce85a8	void *[4]	s_gameTimeCallbacks		unassigned	Holds four time-changed callbacks for the bridge, 0 when unset; only the unreached 0x6c61e0 sets one	verified	one	gametime#time-changed-bridge
+0xce85a8	void *[4]	s_gameTimeCallbacks		unassigned	Holds four time-changed callbacks for the bridge, 0 when unset; only the unreached 0x6c61e0 sets one	verified	two	gametime#time-changed-bridge
 0xce86d4	uint32_t	s_trailObjectCount		playername	Counts the live trail objects	verified	one	playername/swing#trail-objects
 0xce86d8	uint8_t[20]	s_trailObjectPool		playername	Holds the block pool of trail objects	verified	one	playername/overview#block-pools
 0xce86ec	uint8_t[20]	s_swingPool		playername	Holds the block pool of swing records	verified	one	playername/overview#block-pools
