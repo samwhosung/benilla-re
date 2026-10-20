@@ -201,7 +201,8 @@ including, 21:00: 5:30 and 20:59 are day, 21:00 and 5:29 are night. Only the hou
 since the bounds leave weekday, day, month and year unset. `InRange(this, from, to)` gives `this >= from`
 and `this < to` when `from <= to`, else `this >= from` or `this < to`. An ordering walks year, month, day,
 weekday, hour, minute and skips a field either time leaves negative; for equality an unset field matches
-anything. A clock with no hour and minute set, as built, is not in range.
+anything. A clock with no hour and minute set, as built, is not daytime: `>= 5:30` holds through the
+wildcard equality, and `< 21:00` fails.
 
 Addresses: `0x60a050`, `0x60a067`, `0x60a08b`, `0x60a0a8`, `0x642ae0`, `0x642c30`, `0x642710`, `0x642880`, `0x6429d0`, `0x642770`, `0x6428c0`, `0x642a10`, `0x6425f0`, `0x642620`, `0x642650`, `0x642680`, `0x6426b0`, `0x6426e0`, `0xce8538`
 Confidence: verified
