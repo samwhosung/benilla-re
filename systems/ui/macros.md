@@ -169,19 +169,20 @@ name in place at the closing quote and stores the resolver's result without the 
 
 ## Name to spell
 
-`0x4b3950(name, &book)` splits `Name(Rank N)`: the name before the first `(` and the text between that `(` and
+`0x4b3950(name, &book)` splits `Name(Rank N)`: the name before the last `(` and the text between that `(` and
 the next `)`. It calls `0x4b3a10(name, rank, &book)`, which searches the player's book and then the pet's, each
 from its last slot down, for the first spell whose name equals the name without case and, when rank text was
 given, whose rank equals it. Both lists are in book order, so a bare name resolves to the highest rank in the
 book. A match writes book 0 or 1 and returns the slot; no match returns -1 and leaves the selector. `0x4b3bc0`
 turns the slot and book into a spell id, 0 on a miss or a slot of 0x400 and up.
 
-Addresses: `0x4b3950`, `0x4b3a10`, `0x4b3bc0`
+Addresses: `0x4b3950`, `0x4b3985`, `0x4b398e`, `0x64a450`, `0x4b3a10`, `0x4b3bc0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4b3950` finds the `(` and ends the name there; the rank text is walked by UTF-8 character to the `)`.
+`0x4b3950` finds the last `(` with `0x64a450` (`0x4b3985`), which keeps the latest match as it walks to the
+end, and ends the name there (`0x4b398e`); the rank text is walked by UTF-8 character to the `)`.
 `0x4b3a10` loads the entry at the count and decrements, so the walk is from the last entry; it compares the
 record's `Name` (`+0x1e0` plus the locale) and `Rank` (`+0x204`) strings (`ui/spellbook#getspellname`). The only
 writes of the selector are on a match. `0x4b3bc0` reads the pet list for a nonzero book and the player list otherwise.
