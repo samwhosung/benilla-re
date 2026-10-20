@@ -64,8 +64,8 @@ box of 10000.0, returns all characters when the total fits, else walks the array
 ## Steps along a line
 
 `0x5c7260` measures one line step for a text. It chooses the fixed-width run `0x5c7300` for flag
-`0x80` and the proportional run `0x5c7470` otherwise, and zeroes its outputs for a negative size
-or box or an empty text. Each returns the bytes consumed, the width and the start of the next line.
+`0x80` and the proportional run `0x5c7470` otherwise, and zeroes its outputs when a gate fails
+(`Line step gates`). Each returns the bytes consumed, the width and the start of the next line.
 
 Addresses: `0x5c7260`, `0x5c7300`, `0x5c7470`, `0x5c7710`, `0x5c741f`, `0x5c7780`, `0x73fdf5`
 Confidence: verified
@@ -81,6 +81,24 @@ It ends in one of three ways: at a newline or the end of the text; at the last b
 in the middle of a word, which sets the caller's broke flag to `(flags >> 6) & 1`. Widths are scaled by
 `ScreenToPixelHeight(size) / pixelSize` over `W`. The proportional run skips the white space after
 the break with `0x5c7710`.
+
+## Line step gates
+
+`0x5c7260` stores 0 to bytes, width and next, and runs neither measure, for a size below 0, a box of 0
+or below, or a null or empty text. A size of 0 and a NaN size or box pass: the fixed run `0x5c7300`
+zeroes a size of 0 itself, and the proportional run `0x5c7470` takes the font's natural height for it.
+
+Addresses: `0x5c7260`, `0x5c726e`, `0x5c727e`, `0x5c7283`, `0x5c72d5`, `0x5c7300`, `0x5c731a`, `0x5c7470`, `0x5c748b`, `0x5c2540`
+Confidence: verified
+Proof: one
+Test: none
+
+`fcomp` against 0.0 reads size (`0x5c7266`) and box (`0x5c7276`). `test ah,5; jnp` (`0x5c726e`) jumps to
+`0x5c72d5` for C0 alone, a size below 0; `test ah,0x41; jnp` (`0x5c727e`) does for C0 or C3 alone, a box
+below or equal to 0. A NaN sets C0, C2 and C3, an even parity, so both gates pass it, and a size of 0
+sets C3, outside the mask of the first. `0x5c7283` zeroes for a null text or a first byte of 0.
+`0x5c72d5` stores 0 at the three out pointers. The fixed run's `test ah,0x44; jp` (`0x5c731a`) falls to its
+zeroing for C3 alone; the proportional run's (`0x5c748b`) calls `0x5c2540` for it.
 
 ## Block height and fit
 
