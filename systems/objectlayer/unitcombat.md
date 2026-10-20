@@ -248,10 +248,11 @@ animations only when the sheathe state is 2 and bit 0x200 is set.
 
 0x1fc writes the environmental line, signals the active player's wound in the type's school
 with absorb and resist marks, and plays the type's kit, the kit even for a hit of all zeros. A unit's death writes the death line,
-shows a pending XP gain, plays the death animation and the death sound, stops its loop sound and,
-for the active player, signals `PLAYER_DEAD`.
+flushes the XP gain held on it, which is always empty since a gain is written as it is stored,
+plays the death animation and the death sound, stops its loop sound and, for the active player,
+signals `PLAYER_DEAD`.
 
-Addresses: `0x624f30`, `0x602d94`, `0x624f7c`, `0x624fb3`, `0x624fcc`, `0x625190`, `0x6251e0`, `0x809274`, `0xc4d8e4`
+Addresses: `0x624f30`, `0x602d94`, `0x624f7c`, `0x624fb3`, `0x624fcc`, `0x625190`, `0x6251e0`, `0x60a0c0`, `0x5fad50`, `0x809274`, `0xc4d8e4`
 Confidence: verified
 Proof: one
 Test: none
@@ -260,8 +261,10 @@ Test: none
 values are 0; else it calls `0x62aac0(guid, type, damage, absorbed, resisted)`. `0x624fb3` reads the school from `0x809274`:
 0, 0, 0, 2, 3, 2 for types 0 to 5, marks 0x20 for absorbed and 0x40 for resisted. `0x624fcc`
 plays `s_environmentalDamageKits[type]` as kind 0. `0x625190` calls `0x62c160`, `0x6251e0`,
-`CGUnit_C::PlayDeathAnimation`, `0x623a40(4)` and `0x6237e0`. `0x6251e0` logs a pending gain
-`+0xc80` through `0x637a80`, floats it over the active player and clears it. The landing handler
+`CGUnit_C::PlayDeathAnimation`, `0x623a40(4)` and `0x6237e0`. `0x6251e0` logs a nonzero gain
+`+0xc80` through `0x637a80`, floats it over the active player and clears it. `+0xc80` has three
+writers: `CGUnit_C::CGUnit_C` zeroes it, `0x60a0c0` stores it and calls `0x6251e0` after, and
+`0x6251e0` clears it. The landing handler
 0x602d00 is `0x624f30`'s other caller (`0x602d94`): a player-driven unit, without the movement flags
 0x20200800 or a mover `+0xa4` record with 0x200 and not 0x4, that falls more than 13 yards while alive, or 70 or more, plays its forced pain vocal,
 slot 34 kind 2, then `0x624f30(2, 0, 0, 0)`: the fall kit with no line.

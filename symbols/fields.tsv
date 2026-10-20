@@ -230,11 +230,11 @@ CGUnit_C	0x0c1c	4	uint32_t	m_lastStandState	objectlayer	Holds the stand state th
 CGUnit_C	0x0c20	32	uint32_t[8]	m_emoteQueue	objectlayer	Holds four delay and emote pairs, written by 0x60bbc0	verified	one	objectlayer/unitanim#emotes
 CGUnit_C	0x0c40	4	uint32_t	m_bleedTime	objectlayer	Holds the next bleed time, written by 0x60a260 and the constructor	verified	one	objectlayer/unitbody#low-health-and-bleeding
 CGUnit_C	0x0c48	8	uint64_t	m_attackTarget	objectlayer	Holds the attack target GUID, written by 0x5ff070 and cleared by 0x605860	verified	one	objectlayer/units#the-unit-object
-CGUnit_C	0x0c58	4	uint32_t	m_unitState	objectlayer	Holds state bits: 0x2 low health, 0x8 pending XP, 0x10 flash, 0x20 and 0x40 breath, 0x100 native display	verified	one	objectlayer/units#the-unit-object
+CGUnit_C	0x0c58	4	uint32_t	m_unitState	objectlayer	Holds state bits: 0x2 low health, 0x8 kill XP shown, 0x10 flash, 0x20 and 0x40 breath, 0x100 native display	verified	one	objectlayer/units#the-unit-object
 CGUnit_C	0x0c60	4	int32_t	m_terrainType	objectlayer	Holds the TerrainType id of the ground under the unit or -1, written by 0x5fa730 and 0x5fba95	verified	one	objectlayer/unitbody#liquid-and-swimming
 CGUnit_C	0x0c78	4	uint32_t	m_nextRippleTime	objectlayer	Holds the time of the next water ripple, written by 0x5fa760	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 CGUnit_C	0x0c7c	4	void *	m_nameDesc	objectlayer	Holds the name descriptor, written by 0x606fe0 and cleared by 0x607030	verified	one	objectlayer/unitnames#the-name-block
-CGUnit_C	0x0c80	12	uint32_t[3]	m_pendingXP	objectlayer	Holds an XP gain and its two arguments, written by 0x60a0c0	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+CGUnit_C	0x0c80	12	uint32_t[3]	m_pendingXP	objectlayer	Holds an XP gain and its two arguments, written by 0x60a0c0 and cleared by 0x6251e0 in the same call	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 CGUnit_C	0x0c8c	4	uint32_t	m_precastSpell	objectlayer	Holds the precast spell id, written by 0x60d020 and cleared by 0x60d040	verified	one	objectlayer/units#caster-checks-for-a-spell
 CGUnit_C	0x0c90	4	uint32_t	m_tokenFlags	objectlayer	Holds the unit token flags, written by 0x60c520, 0x60c4a0 and 0x60c4f0	verified	one	objectlayer/units#reactions-tokens-and-groups
 CGUnit_C	0x0c94	4	float	m_bodyFacing	objectlayer	Holds the body facing, written by 0x607ed0, 0x5fbd60 and the constructor	verified	one	objectlayer/unitbody#body-turn-and-spine-twist

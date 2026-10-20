@@ -224,8 +224,8 @@ faction's row in the client's locale and the standing's `FACTION_STANDING_LABEL%
 ## Deaths and the environment
 
 `0x62c160` writes a unit's death: `UNITDIESSELF` for the player, `UNITDESTROYEDOTHER` for a unit a
-summoning or totem spell created, else `UNITDIESOTHER`, under 0x2b or 0x2c. A unit holding a pending
-XP gain writes none; its XP line names it instead. `0x62aac0` writes environmental damage,
+summoning or totem spell created, else `UNITDIESOTHER`, under 0x2b or 0x2c. A unit marked when its
+kill's XP line was written writes none; its XP line names it instead. `0x62aac0` writes environmental damage,
 `VSENVIRONMENTALDAMAGE_<type>_SELF` or `_OTHER`, flashes the victim's nameplate, and raises
 `DAMAGE`, `ABSORB` or `RESIST`.
 
@@ -241,20 +241,25 @@ class 0. Both use the one-sided test.
 
 ## Experience
 
-0x1d0 shows XP the player earns: for a visible victim and kind 0 the gain waits on the victim
-until it dies; otherwise it is written at once and floated over the player. The line names the
-victim and adds a group bonus or raid penalty: `COMBATLOG_XPGAIN_FIRSTPERSON`, `_GROUP`, `_RAID`,
-or with a rest modifier `COMBATLOG_XPGAIN_EXHAUSTIONn` and its forms. With no victim the unnamed
-group and raid lines pass the group string's address where the XP belongs, so they print that
+0x1d0 shows XP the player earns, written and floated over the player when the message arrives.
+For a visible victim and kind 0 the gain goes through the victim, which marks it so that its death
+writes no line, and a gain of 0 writes nothing. That line names the victim and adds a group bonus
+or raid penalty: `COMBATLOG_XPGAIN_FIRSTPERSON`, `_GROUP`, `_RAID`, or with a rest modifier
+`COMBATLOG_XPGAIN_EXHAUSTIONn` and its forms. Otherwise the line is
+`COMBATLOG_XPGAIN_FIRSTPERSON_UNNAMED`. The unnamed group and raid lines, reached with no unit and a
+multiplier other than 1, pass the group string's address where the XP belongs, so they print that
 address and put the XP in the bonus.
 
-Addresses: `0x637e30`, `0x637ec0`, `0x637ac0`, `0x637cd0`, `0x637da0`, `0x637f70`, `0x637f90`, `0x637a80`, `0x864330`
+Addresses: `0x637e30`, `0x637ec0`, `0x637ac0`, `0x637cd0`, `0x637da0`, `0x637f70`, `0x637f90`, `0x637a80`, `0x864330`, `0x60a0c0`, `0x60a0f7`, `0x6251e0`, `0x625202`, `0x625259`, `0x6251a4`
 Confidence: verified
 Proof: one
 Test: `objectlayer::xpgain_rest_gate_difftest`
 
 `0x637ec0`: the player's own GUID writes `COMBATLOG_XPLOSS_FIRSTPERSON_UNNAMED` with the negated XP
-(`0x637f70`); a victim with kind 0 calls `CGUnit_C::SetPendingXP`; else `0x637f90` writes and
+(`0x637f70`); a victim with kind 0 calls `CGUnit_C::SetPendingXP`, which stores the gain at `+0xc80`,
+sets bit 0x8 of `+0xc58` and calls `0x6251e0` at `0x60a0f7`. Its one gate is `+0xc80` nonzero
+(`0x625202`); it writes through `0x637a80`, floats and zeroes `+0xc80` (`0x625259`), so the death's
+call at `0x6251a4` finds nothing. Else `0x637f90` writes with no unit and multiplier 1.0, and
 `ShowXPGain` floats. `0x637ac0`: the `Exhaustion` row of the player's rest byte (`+0x1b` of its
 fields) with a multiplier other than 0 and 1 selects `0x864330`'s key; the base `ftol(xp/mult)`
 equal, below or above the received picks the plain, `_GROUP` or `_RAID` form. `0x637da0`: after

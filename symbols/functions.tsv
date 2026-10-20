@@ -21704,7 +21704,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x624f20	10	CGUnit_C::PassMissReason		objectlayer	orchestration	uint32_t __thiscall (CGUnit_C *this, uint32_t value)	Returns its stack argument unchanged	verified	one	spell/go#missile-and-impact-legs	
 0x624f30	213	OnEnvironmentalDamage		objectlayer	primitive		Writes environmental damage, signals the active player's wound and plays the type's kit	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x625010	382	SpillBlood		objectlayer	primitive		Adds a victim's front or back blood effect from its UnitBlood row	verified	one	objectlayer/unitcombat#blood	objectlayer::diff_blood_spurt_front_back, objectlayer::diff_blood_spurt_front_back_diff_rounding, objectlayer::diff_blood_spurt_dot
-0x625190	66	PresentUnitDeath		objectlayer	orchestration		Writes a unit's death line, shows its pending XP and plays its death animation and sound	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
+0x625190	66	PresentUnitDeath		objectlayer	orchestration		Writes a unit's death line, flushes its XP gain and plays its death animation and sound	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x6251e0	139	ShowPendingXpGain		objectlayer	orchestration		Logs a unit's pending XP gain, floats it over the active player and clears it	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x625270	391	LogHonorGain		objectlayer	primitive		Writes the honor line, floats HK or DK and raises HONOR_GAINED	verified	one	objectlayer/unitcombat#honor	
 0x625400	71	GetParryItem		objectlayer	orchestration		Returns a victim's parrying weapon, or its blocking shield or weapon	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
@@ -21899,7 +21899,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62c080	83	GetSpellReflectKey		objectlayer	orchestration		Returns the SPELLREFLECT key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62c0e0	83	GetSpellMissKey		objectlayer	orchestration		Returns the SPELLMISS key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62c140	20	GetDamageShieldChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x3f for class 0 or 1, else 0x40	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
-0x62c160	359	LogUnitDeath		objectlayer	primitive		Writes a unit death or destruction line unless a pending XP gain names it	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	objectlayer::diff_combat_gate_inreg, objectlayer::diff_combat_gate_dist2
+0x62c160	359	LogUnitDeath		objectlayer	primitive		Writes a unit death or destruction line unless its kill's XP line named it	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	objectlayer::diff_combat_gate_inreg, objectlayer::diff_combat_gate_dist2
 0x62c2d0	71	IsSummonedUnit		objectlayer	primitive	bool __thiscall (CGUnit_C *this)	Returns whether the spell that created a unit has a summoning or totem first effect	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
 0x62c360	643	LogCastFailure		objectlayer	primitive	void __fastcall (void *unit, uint32_t spell, const char *reason)	Writes a unit's cast failure line to the combat log after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	objectlayer::diff_combat_gate_copied_twin, objectlayer::diff_combat_gate_dist2
 0x62c5f0	128	LogFactionStanding		objectlayer	primitive		Writes a reputation increase or decrease line under 0x55 and raises FACTION	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
@@ -22476,14 +22476,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x637a30	19	InitCollideSq40		collision	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	collision/overview#resolution-file-initializers	
 0x637a50	5	InitCollideSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x637a60, a static initializer of the file	verified	one	collision/overview#resolution-file-initializers	
 0x637a60	19	InitCollideSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#resolution-file-initializers	
-0x637a80	59	LogPendingXpGain		objectlayer	orchestration		Writes a pending XP gain line	verified	one	objectlayer/combatlogmessages#experience	
+0x637a80	59	LogPendingXpGain		objectlayer	orchestration		Writes a unit's held XP gain line, naming the unit	verified	one	objectlayer/combatlogmessages#experience	
 0x637ac0	528	LogExhaustionXpGain		objectlayer	primitive		Writes an XP line with its rest modifier and group bonus or raid penalty	verified	one	objectlayer/combatlogmessages#experience	objectlayer::xpgain_rest_gate_difftest
 0x637cd0	279	LogXpGainLine		objectlayer	primitive		Writes a plain, group or raid XP line, named or unnamed	verified	one	objectlayer/combatlogmessages#experience	objectlayer::ot_combatlog_xp_scaled_difftest
 0x637df0	5	InitCombatLogXpCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x637e00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x637e00	11	InitCombatLogXpCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x637e10	18	RegisterXpLogMessage		objectlayer	orchestration		Registers the handler for 0x1d0	verified	one	objectlayer/combatlogmessages#log-messages	
 0x637e30	144	HandleXpLog		objectlayer	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles 0x1d0: reads an XP gain and passes it on	verified	one	objectlayer/combatlogmessages#experience	
-0x637ec0	162	ShowXpGain		objectlayer	orchestration		Writes an XP loss, holds a gain on its victim, or writes and floats it	verified	one	objectlayer/combatlogmessages#experience	
+0x637ec0	162	ShowXpGain		objectlayer	orchestration		Writes an XP loss, or writes and floats a gain, through its victim for a visible kill	verified	one	objectlayer/combatlogmessages#experience	
 0x637f70	30	LogXpLoss		objectlayer	primitive		Writes COMBATLOG_XPLOSS_FIRSTPERSON_UNNAMED with the negated XP	verified	one	objectlayer/combatlogmessages#experience	
 0x637f90	28	LogXpGainNow		objectlayer	orchestration		Passes an XP gain to its line	verified	one	objectlayer/combatlogmessages#experience	
 0x637fb0	10	ClearXpLogMessage		objectlayer	orchestration		Clears the handler for 0x1d0	verified	one	objectlayer/combatlogmessages#log-messages	
