@@ -6957,7 +6957,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492310	138	SendAreaSpiritHealAccept		ui	primitive		Refreshes the healer scan and sends opcode 0x2e3 with the cached healer GUID	verified	one	ui/popups#the-area-spirit-healer	
 0x4923a0	10	CancelAreaSpiritHealAura		ui	primitive		Cancels aura 2584 on the player	verified	one	ui/popups#the-area-spirit-healer	
 0x4923b0	260	CheckAreaSpiritHealer		ui	primitive		Keeps the cached area spirit healer within 22 yards, else clears it, or looks for one	verified	one	ui/distancegates#thresholds	ui::dist2_4923b0
-0x4924c0	190	SelectAreaSpiritHealer		ui	primitive		Selects a spirit guide the player may assist within 20 yards	verified	one	ui/distancegates#thresholds	ui::dist2_4924c0
+0x4924c0	190	SelectAreaSpiritHealer		ui	primitive		Selects a spirit guide within 20 yards that may assist the player	verified	one	ui/distancegates#thresholds	ui::dist2_4924c0
 0x492580	76	HandleGroundClick		ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x4925d0	591	SelectObjectByClick		ui	primitive	void __stdcall (uint64_t guid)	Offers the payload to the clicked object, then makes it the target	verified	one	ui/mouseover#selecting-by-click	
 0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Makes the clicked object the target and runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	

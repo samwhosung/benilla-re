@@ -26,18 +26,18 @@ Each threshold is the square of a constant, folded by a static initialiser (`fld
 |---|---|---|---|
 | `0x4944a0` | a player unit that it can cooperate with, or itself | `0xb4d918` = 10² | at most |
 | `0x48ba00` | the unit, by distance index 1 to 4 | 10², 11.111111², 10², 30² | strictly less |
-| `0x4924c0` | a spirit guide it may assist (NPC flag 0x40) | 20² | at most |
+| `0x4924c0` | a spirit guide (NPC flag 0x40) that may assist it | 20² | at most |
 | `0x4923b0` | the cached area spirit healer | (20 * 1.1)² as a float | at most |
 | `0x492130` | the cached corpse position | `0xb4e2ac` = 40² | at most |
 | `0x48edf0` | camera eye to the new shot's position | 30² | not above (else the areas unload) |
 | `0x48f080` | camera eye to the camera's followed unit | 30² | not above |
 
-Addresses: `0x4944a0`, `0xb4d918`, `0x48cc80`, `0x48cc86`, `0x48cc8c`, `0x804498`, `0x48ba30`, `0x48ba4e`, `0x48ba53`, `0x48ba58`, `0x48ba5d`, `0x48ba63`, `0x48ba69`, `0xb4e3cc`, `0xb4e29c`, `0xb4e258`, `0xb4e2a0`, `0x48cbb0`, `0x48cb50`, `0x48cd10`, `0x4924c0`, `0x492547`, `0x4923b0`, `0x492406`, `0x492411`, `0x8044d0`, `0x804580`, `0x492130`, `0x48edf0`, `0x48eeb5`, `0x48eec9`, `0x48f080`, `0x48f0f0`, `0x804554`, `0x804558`, `0x804490`, `0x80448c`, `0x8044a4`
+Addresses: `0x4944a0`, `0xb4d918`, `0x48cc80`, `0x48cc86`, `0x48cc8c`, `0x804498`, `0x48ba30`, `0x48ba4e`, `0x48ba53`, `0x48ba58`, `0x48ba5d`, `0x48ba63`, `0x48ba69`, `0xb4e3cc`, `0xb4e29c`, `0xb4e258`, `0xb4e2a0`, `0x48cbb0`, `0x48cb50`, `0x48cd10`, `0x4924c0`, `0x492506`, `0x492547`, `0x4923b0`, `0x492406`, `0x492411`, `0x8044d0`, `0x804580`, `0x492130`, `0x48edf0`, `0x48eeb5`, `0x48eec9`, `0x48f080`, `0x48f0f0`, `0x804554`, `0x804558`, `0x804490`, `0x80448c`, `0x8044a4`
 Confidence: verified
 Proof: one
 Test: `ui::dist2_4923b0`, `ui::dist2_4924c0`
 
-The 10, 11.111111, 10 and 30 of `CheckInteractDistance` are the cells `0xb4d918`, `0xb4e29c`, `0xb4e258` and `0xb4e2a0`, copied into the table `0xb4e3cc` once, at the first call (`0x48ba30`). `0x4923b0` keeps an area spirit healer to 22.000001 yards and `0x4924c0` accepts one within 20, so a healer leaves at 22 and is chosen at 20.
+The 10, 11.111111, 10 and 30 of `CheckInteractDistance` are the cells `0xb4d918`, `0xb4e29c`, `0xb4e258` and `0xb4e2a0`, copied into the table `0xb4e3cc` once, at the first call (`0x48ba30`). `0x4923b0` keeps an area spirit healer to 22.000001 yards and `0x4924c0` accepts one within 20, so a healer leaves at 22 and is chosen at 20. `0x4924c0` asks `CGUnit_C::CanAssist_Unit` with the guide as `this` and the player as the argument (`0x492506`).
 The cinematic gates are `uicamera/cinematic`; the corpse gate is `deathui#corpse-range-events`. The squares of `0x48edf0` and `0x48f080` are formed inline from 30.0.
 
 `ui::dist2_4923b0` runs the slice `0x492448` to `0x492475` and `ui::dist2_4924c0` the slice `0x492527` to `0x492559`, each the distance test.
