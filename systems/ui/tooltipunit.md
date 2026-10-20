@@ -19,13 +19,14 @@ object (type mask 8), the party member record, and the record of the party membe
 With none of the three it hides the tooltip and returns. Otherwise it stores the GUID at `+0x368` and
 `+0x36c`, fills the health bar and adds the lines. Every path ends by showing the tooltip and returning 0.
 
-Addresses: `0x529fe0`, `0x52a003`, `0x52a021`, `0x52a02b`, `0x52a036`, `0x52a042`, `0x52a04e`, `0x52a056`, `0x52a058`, `0x52a070`, `0x52a079`, `0x52aa02`, `0x52aa12`, `0x496400`, `0x496420`, `0x4e8820`, `0x4e8860`
+Addresses: `0x529fe0`, `0x52a003`, `0x52a021`, `0x52a02b`, `0x52a036`, `0x52a042`, `0x52a04e`, `0x52a056`, `0x52a058`, `0x52a070`, `0x52a079`, `0x52aa02`, `0x52aa12`, `0x496400`, `0x49640f`, `0x4bb0f0`, `0x496420`, `0x4e8820`, `0x4e8860`
 Confidence: verified
 Proof: one
 Test: `ui::glue_512_529fe0_percent_quantize`
 
-`0x52a021` calls `0x468460` with mask 8 on the GUID; `0x496400` (`0x52a02b`) returns the party member record
-(`0x4e8820`, 0x148 bytes each from `0xbc70b0`) and `0x496420` (`0x52a036`) the record at `+0x80` of the member
+`0x52a021` calls `0x468460` with mask 8 on the GUID; `0x496400` (`0x52a02b`) returns the party record of the GUID
+(`0x4e8820`, 0x148 bytes each from `0xbc70b0`), else its raid record in the same layout (`0x49640f` → `0x4bb0f0`,
+at `+0x10` of a row at `0xb712a8`), and `0x496420` (`0x52a036`) the record at `+0x80` of the member
 whose pet GUID matches and whose flags bit 0 is set (`0x4e8860`). When all three are zero (`0x52a042` to
 `0x52a049`) the tooltip's `+0xd0` is zeroed and slot 0x84 called (`0x52a050`, `0x52a058`). The GUID is
 stored at `0x52a070` and `0x52a079`. The party record's bit 0 of `+0x8` means online; its words at `+0xa`
