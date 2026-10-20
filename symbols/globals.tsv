@@ -861,7 +861,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e460	float	s_minutesPerDay		unassigned	Holds 1440.0, the game minutes in a day	verified	one	gametime#day-phase
 0x80e4b0	uint32_t[3]	s_auctionDurations		ui	Holds 120, 480 and 1440, the run times the deposit accepts	verified	one	ui/auctionlists#deposit
 0x80e4e0	const uint32_t			storm	Holds a dword that SStrHash reads; not read here	inferred	none	
-0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	inferred	none	
+0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	verified	one	storm/strings#float-value
 0x80e648	uint8_t[256]	s_archiveSignatureKey		storm	Holds the built-in 256-byte key that checks an archive's signature when no key is given	verified	one	storm/format#archive-signature-check
 0x80e748	uint8_t[4]	s_archiveSignatureExponent		storm	Holds the built-in exponent 0x10001 of the archive signature check	verified	one	storm/format#archive-signature-check
 0x80f9ec	uint32_t[12]	s_compressorTable		storm	Holds six mask and compressor pairs of the codecs, in the order 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#compression-codecs

@@ -23405,7 +23405,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a5a0	123	SStrCopy	idb	storm	boundary		Copies a string up to a length	inferred	none	collision/mover#initialisation-and-teardown	
 0x64a620	75	SStrDupA	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SMemAlloc; not read here	inferred	none		
 0x64a670	16	BuildPow10TableOnce		storm	boundary		Runs 0x64a680 once and sets its guard	verified	one	core/threads#string-conversion-table	
-0x64a680	88	BuildPow10Table		storm	boundary		Fills a table of 20 by 10 doubles with k times 10 to the power -(r+1)	verified	one	core/threads#string-conversion-table	
+0x64a680	88	BuildPow10Table		storm	primitive		Fills a table of 20 by 10 doubles with k times 10 to the power -(r+1)	verified	one	core/threads#string-conversion-table	storm::sstrtofloat_whole
 0x64a6e0	1			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string	inferred	none		
 0x64a720	49			storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
@@ -23413,9 +23413,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a7f0	43	SStrPrintf	idb	storm	orchestration		Formats into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	core/threads#allocator-and-error-calls	
 0x64a820	140	ISStrVPrintf	idb	storm	boundary		Runs its object file code that calls vsnoprintf, __vsnprintf, vsoprintf and 1 more; not read here	inferred	none		
 0x64a8b0	43	SStrVPrintf	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, ISStrVPrintf; not read here	inferred	none		
-0x64a8e0	434			storm	unreached		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
-0x64aaa0	434	SStrToFloat	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
-0x64ac60	98	SStrToInt	idb	storm	boundary		Converts a decimal string to an integer	verified	one	net/who#who-query-packet	net::who_string_helpers
+0x64a8e0	434	ParseDecimalDouble		storm	unreached		Reads a decimal float as SStrToFloat does, with the double 0.0 for null; nothing reaches it	verified	one	storm/strings#unreached-functions	
+0x64aaa0	434	SStrToFloat	idb	storm	primitive	float __stdcall (const char *string)	Reads a decimal float: an optional minus, digits, a fraction and an exponent at 53 bits; 0.0 and error 0x57 for null	verified	one	storm/strings#float-grammar	storm::sstrtofloat_whole
+0x64ac60	98	SStrToInt	idb	storm	primitive	int32_t __stdcall (const char *string)	Reads an optional minus and decimal digits in wrapping 32-bit arithmetic; 0 and error 0x57 for null	verified	one	storm/strings#string-to-integer	net::who_string_helpers, storm::sstrtoint_whole
 0x64acd0	269			storm	unreached		Runs its object file code that calls SErrSetLastError, __CIpow, __ftol and 1 more; not read here	inferred	none		
 0x64ade0	70	SStrToUnsigned	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		

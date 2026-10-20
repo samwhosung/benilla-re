@@ -1,0 +1,84 @@
+# storm: string conversions
+
+Storm's string-to-number functions, which the client calls for every number it reads from text: XML
+attributes, settings and console arguments. `SStrToFloat` reads a decimal float and `SStrToInt` a
+decimal integer; the float's fraction digits come from a table of powers of ten that `0x64a670`
+fills on first use (`core/threads#string-conversion-table`), and its other powers from the C
+runtime's `pow`. Both answer 0 for a null string and set error 0x57.
+
+Roots: `0x64aaa0`, `0x64ac60`
+
+## Float grammar
+
+`SStrToFloat(s)` (`0x64aaa0`) reads one optional `-`, with no space skipped and no `+`; then
+decimal digits; then a `.` and decimal digits; then an exponent; each part optional, and the read
+stops at the first byte that fits none. A `.` with no digit after it is still passed, so `1.e2` reads
+as `1e2`. The exponent is `e` or `E`, one optional `+`, and `SStrToInt` of the rest, so `1e+-2` reads
+as `1e-2`. ` 12` and `+12` read 0, `.5` as `0.5`, `-` as −0.0, and a null `s` sets error 0x57 and
+answers 0.0. A digit is a byte, sign-extended, minus `'0'` below 10 unsigned.
+
+Addresses: `0x64aaa0`, `0x64aab1`, `0x64aab8`, `0x64aad7`, `0x64aae6`, `0x64ab05`, `0x64ab4b`, `0x64ab9b`, `0x64ab9f`, `0x64abaa`, `0x64abeb`, `0x64ac0a`, `0x64ac0f`, `0x64ac19`, `0x64ac2d`, `0x64ac48`, `0x64e850`, `0x7ffd74`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtofloat_whole`
+
+`0x64aab1` passes 0x57 to `SErrSetLastError` and `0x64aab8` loads the float 0.0. `0x64aad7`
+compares the first byte with `-` and keeps the flag for the `fchs` at `0x64ac48`. The digit tests
+are `movsx`, `sub 0x30`, `cmp 0xa` with `jae` (`0x64aae6`, `0x64ab05`, `0x64ab4b`). `0x64ab9b`
+compares with `.`, and `0x64ab9f` steps past it before `0x64abaa` tests the next byte, so a missed
+fraction falls to the exponent test with the pointer after the dot. The fraction loop reads its next
+byte at `0x64abeb`. `0x64ac0a` and `0x64ac0f` compare with `e` and `E`, `0x64ac19` skips one `+`,
+and `0x64ac2d` calls `SStrToInt`. The test runs `0x64aaa0` whole over the cases above.
+
+## Float value
+
+The value is built at 53 bits. Integer digits gather in a 32-bit chunk; when it reaches `0x19999999`
+it is folded into a double, `acc = pow(10, n)·acc + chunk`, `n` the chunk's digit count, and the
+chunk restarts. At the end the last chunk is folded the same way, or is the value alone while `acc`
+is 0. A fraction digit `d` at place `k`, from −1 down, adds `table[−k − 1][d]` while `k > −21`
+and `pow(10, k)·d` past it. An exponent `e` makes the value
+`pow(10, e)·value`. `pow` is the C runtime's `0x73f940`, which reaches 10^n through `fyl2x` and
+`f2xm1`; a value is a correctly rounded decimal only as far as those powers are.
+
+Addresses: `0x64aaa0`, `0x64aac6`, `0x64aace`, `0x64ab12`, `0x64ab19`, `0x64ab31`, `0x64ab46`, `0x64ab59`, `0x64ab64`, `0x64ab76`, `0x64abb6`, `0x64abc6`, `0x64abe4`, `0x64ac3b`, `0x64ac40`, `0x64a670`, `0x64a680`, `0x73f940`, `0x80e5a0`, `0x802970`, `0xc52560`, `0xc52ba0`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtofloat_whole`
+
+`0x64aac6` builds the table through `0x64a670` while the guard `0xc52ba0` is 0. `0x64ab12` is
+`chunk·10 + d` by two `lea`, and `0x64ab19` compares it with `0x19999999` (`jb`). The fold
+`fld 10.0` (`0x80e5a0`), `fild n`, `pow` (`0x64ab31`), `fmul acc`, `fild qword chunk`, `faddp`
+(`0x64ab46`) runs there and, unless `acc` equals 0.0 (`0x802970`, `0x64ab59`, `jnp` at `0x64ab64`),
+again at the end (`0x64ab76`). `0x64abb6` compares the place with −21 (`jg`); the table path adds
+`[0xc52560 + 8·(10·row + d)]` (`0x64abe4`), the other calls `pow` (`0x64abc6`), multiplies by the
+digit and adds the stored value. The exponent calls `pow` at `0x64ac3b` and multiplies the stored
+value at `0x64ac40`. The test takes `pow` as an input: it runs `0x64aaa0` whole, its `pow` and
+table builder included, and the reimplementation reads `pow(10, n)` from the same `pow` through a
+trampoline; inputs keep every step a normal double, and the 200 table cells are compared.
+
+## String to integer
+
+`SStrToInt(s)` (`0x64ac60`) reads one optional `-` and then decimal digits, as `SStrToFloat` tests
+them, accumulating `v·10 + d` in wrapping 32-bit arithmetic, and negates after a `-`. No digit
+gives 0; a null `s` sets error 0x57 and gives 0.
+
+Addresses: `0x64ac60`, `0x64ac6a`, `0x64ac7b`, `0x64ac8f`, `0x64aca2`, `0x64aca5`, `0x64acbc`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtoint_whole`, `net::who_string_helpers`
+
+`0x64ac6a` passes 0x57 to `SErrSetLastError` and returns 0. `0x64ac7b` compares with `-`. The digit
+test is `0x64ac8f`; `0x64aca2` and `0x64aca5` are `lea eax,[eax+eax*4]; lea eax,[ecx+eax*2]`, and
+`0x64acbc` is the `neg`. The test runs it whole over every length to 12 digits, the wrap and a fuzz.
+
+## Unreached functions
+
+`0x64a8e0` is `SStrToFloat`'s body with one difference: a null string loads the double 0.0
+(`0x802970`) instead of the float. Nothing reaches it: no `call` or `jmp` in the listing targets it
+and no dword of the image, at any alignment, holds its address. The controls: the same scans find
+107 direct calls of `0x64aaa0` and the vtable slot `0x807ac4` holding `0x4ebe70`.
+
+Addresses: `0x64a8e0`
+Confidence: verified
+Proof: one
+Test: none

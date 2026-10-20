@@ -8,8 +8,9 @@
 //!
 //! The crate also holds two of Storm's routines whose output the client sends or checks: MD5
 //! ([`md5`]) and CRC-32 ([`crc32`]); the string hash of Storm's hash tables ([`str_hash_ht`]); and
-//! the loose-file index the open path asks before the archives ([`LooseIndex`]); and the `.bz` loose
-//! file the index serves as kind 1 ([`BzFile`]).
+//! the loose-file index the open path asks before the archives ([`LooseIndex`]); the `.bz` loose
+//! file the index serves as kind 1 ([`BzFile`]); and the string-to-number conversions
+//! ([`str_to_float`], [`str_to_int`]).
 
 #![forbid(unsafe_code)]
 
@@ -17,12 +18,14 @@ mod bz;
 mod crc32;
 mod looseindex;
 mod md5;
+mod strconv;
 mod strhash;
 
 pub use bz::{parse_header, BzFile, BzHeader, BzRead, BzSource, HEADER_LEN, INPUT_LEN, MAGIC};
 pub use crc32::crc32;
 pub use looseindex::{LooseEntry, LooseIndex, LooseKind, LooseSource, Resolved, DATA_DIR};
 pub use md5::md5;
+pub use strconv::{pow10_table, str_to_float, str_to_int};
 pub use strhash::{lookup2, str_hash_ht};
 
 use std::path::{Path, PathBuf};
