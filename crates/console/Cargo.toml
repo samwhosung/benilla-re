@@ -8,6 +8,7 @@ publish = false
 
 [dependencies]
 benilla-re-cmath.workspace = true
+benilla-re-storm.workspace = true
 
 [dev-dependencies]
 benilla-re-difftest.workspace = true

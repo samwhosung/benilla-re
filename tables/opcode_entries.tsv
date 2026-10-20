@@ -1,5 +1,5 @@
 opcode	name	role	site	function	entries	basis
-0x008	CMSG_WORLD_TELEPORT	send	0x404fc8	0x404dc0	ui/worldmap#unreached-map-teleport	function
+0x008	CMSG_WORLD_TELEPORT	send	0x404fc8	0x404dc0	console/commands#world-port-command|console/commands#world-port-message|ui/worldmap#unreached-map-teleport	function
 0x008	CMSG_WORLD_TELEPORT	send	0x4a782b	0x4a76e0	ui/geometry#click-to-world|ui/worldmap#unreached-map-teleport	function
 0x009	CMSG_TELEPORT_TO_UNIT	send	0x404b31	0x404a60	console/commands#teleport-commands	opcode
 0x00a	CMSG_ZONE_MAP	send	0x6738d3	0x673850	terrain/overview#unreached-functions	function

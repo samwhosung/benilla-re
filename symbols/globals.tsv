@@ -378,6 +378,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ff9c8	const float	s_floatbce38e39		unassigned	Holds the float -0.027777778 (0xbce38e39)	inferred	none	
 0x7ff9d0	const float	s_float3ce38e39		unassigned	Holds the float 0.027777778 (0x3ce38e39)	inferred	none	
 0x7ff9d8	const float	s_float3f800000		unassigned	Holds the float 1 (0x3f800000)	inferred	none	
+0x7ff9dc	void *[2]	s_playerCommandsVtable		unassigned	Holds the player commands module vtable: register 0x4049e0, unregister 0x405390	verified	one	console/commands#player-command-lifetime
 0x7ff9e4	void *[11]	CDataStore::vftable		base	Holds the plain data store's vtable: slot 2 refuses a read outside the window, slot 3 grows the buffer	verified	one	net/messages#data-store-writes
 0x7ffa10	uint8_t[20]	CStatus::vftable		client	Holds the vtable of CStatus	inferred	none	
 0x7ffa24	const float	s_half		ui	Holds 0.5, the factor of the layout's centre arithmetic	verified	one	ui/anchors#edge-resolution-from-size
@@ -1308,10 +1309,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e994	char[6]	s_textMouseSpeedFormat		unassigned	Holds the string "%1.1f"	verified	one	cvar/defaults#formatted-defaults
 0x82e99c	char[18]	s_checkAddonVersionName		client	Holds checkAddonVersion, the CVar that refuses out-of-date add-ons	verified	one	ui/addons#whether-an-add-on-may-load
 0x82e9d8	char[14]	s_textMovieSubtitle		client	Holds the string "movieSubtitle"	inferred	none	
+0x82ecc8	char[6]	s_argDelimiters		unassigned	Holds the tokenizer delimiters tab, CR, LF, quote and space, with no comma	verified	one	console/commands#world-port-command
 0x82edbc	char[12]	s_textPatchMPQ		client	Holds a string of 11 characters	inferred	none	
 0x82edfc	uint16_t			unassigned	Holds a word that RunPrepatchList, CVarLoadFile, TopLevelExceptionFilter read; not read here	inferred	none	
 0x82ee00	char[2]			unassigned	Holds the string " "	inferred	none	
 0x82ef08	char[6]	s_textSS		unassigned	Holds the string "%s %s"	inferred	none	
+0x82ef90	char[7]	s_argDelimitersComma		unassigned	Holds the delimiters of 0x82ecc8 and a comma, which port and setrawpos split with	verified	one	console/commands#teleport-commands
+0x82ef98	char[22]	s_badWorldNumberFormat		unassigned	Holds the format "Bad world number: %i" and a line feed	verified	one	console/commands#world-port-command
+0x82efb0	char[48]	s_worldportUsage		unassigned	Holds the text "Usage: worldport <continentID> [x y z] [facing]"	verified	one	console/commands#world-port-command
 0x82f00c	int32_t	s_loadingMapId		loadingscreen	Holds the map the plain screen shows art for, -1 for none	verified	one	loadingscreen/screen#plain-screen
 0x82f010	const uint16_t[4]	s_loadingQuadIndices		loadingscreen	Holds the indices 0, 1, 2, 3 of a four-corner strip	verified	one	loadingscreen/screen#plain-screen
 0x82f018	const char *[8]	s_loadingFontPaths		loadingscreen	Holds the tip font file for each locale index	verified	one	loadingscreen/screen#tip-text

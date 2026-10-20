@@ -116,6 +116,17 @@ Test: none
 `0x6400e0` calls `0x63f9e0` four times (`0x6400f1`, `0x640104`, `0x640117`, `0x64012a`) with the pushes `(help line, 2)` and `(0, 5)`; the names are `help`, `quit`, `ver` and `setmap`. `0x640130` calls
 `0x63cdf0` and returns 1; `0x640140` writes the version text and returns 1. The only caller of `0x6400e0` is the start-up wiring at `0x40236b`. The literal names at the registration sites, the 13 console commands and the CVar names of `tables/cvars.tsv` include no `run`.
 
+## Player command lifetime
+
+`ClientInitializeGame` (`0x401570`) registers `port`, `worldport`, `setrawpos` (category 0), `showplayer` (1), `togglehelm` and `togglecloak` (4), none with a help line, and `ClientDestroyGame` (`0x401ee0`) removes them. It makes a 4-byte module object with the vtable `0x7ff9dc`, appends it to the holder list `0x8827c8` and calls slot 0, `RegisterPlayerCommands` (`0x4049e0`), after the object, movement and interface initializers and before the map opens. The game flag `0x882734` is set last. `ClientDestroyGame` returns at once while the flag is clear; otherwise it calls slot 1, `UnregisterPlayerCommands` (`0x405390`), of every listed module, which unregisters all six names, then frees the modules. Outside that span the names are not registered: each occurs only in those two functions. `whois` has the same lifetime (`0x5adc50`, `0x5ae2d0`).
+
+Addresses: `0x401570`, `0x401ee0`, `0x4049e0`, `0x405390`, `0x7ff9dc`, `0x8827c8`, `0x882734`, `0x4016d2`, `0x4016db`, `0x40171d`, `0x401726`, `0x401734`, `0x4017cd`, `0x4017e5`, `0x401ef3`, `0x401f86`, `0x401f9a`, `0x401fb1`, `0x401fc6`, `0x5adc50`, `0x5adcfd`, `0x5ae2d0`, `0x5ae316`, `0x5ae31b`, `0x63f9e0`, `0x63fb40`, `0x46c236`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4016d2` allocates 4 bytes under `Client.cpp` line `0x891` and `0x4016db` stores `0x7ff9dc`, whose two dwords are `0x4049e0` and `0x405390`. `0x40171d` appends the module to the holder's eight slots and `0x401726` is `call [eax]`. `0x401734` onward register six packet handlers, `0x4017cd` opens the map and `0x4017e5` sets the flag; A scan of every `e8` and `e9` in `.text` finds one caller of `0x401570`, `0x46c236`, and four of `0x401ee0` (`0x403646`, `0x46c5f8`, `0x5aad8d`, `0x5aaeca`); the same scan finds 333 of `0x42c010`, whose callers number over 300. `0x401ef3` tests the flag. The loop from `0x401f77` calls `[eax+4]` at `0x401f86`, frees each module (`0x401f9a`) and the holder (`0x401fb1`). `0x405390` calls `ConsoleCommandUnregister` once per name and tail-jumps for the last. Each name's address occurs twice in the image, in `0x4049e0` and `0x405390`, the vtable once (`0x4016dd`), and `0x4049e0` and `0x405390` occur only as its two dwords, called by no `e8` or `e9`. `0x5adc50` registers `whois` (`0x5adcfd`) when the friend list is new; `0x5ae2d0` runs at `0x401fc6` and, when the list exists, loads its name at `0x5ae316` and unregisters it at `0x5ae31b`.
+
 ## Show player command
 
 `0x4049e0` registers `showplayer` with the handler `0x405220`, category 1 and no help line. With
@@ -136,25 +147,48 @@ value to pick the text.
 
 ## Teleport commands
 
-`0x4049e0` registers `port`, `worldport`, `setrawpos` (category 0), `showplayer` (1), `togglehelm`
-and `togglecloak` (4), none with a help line. `port` and `setrawpos` need the active player. When
-the arguments begin with a digit or `-`, both read `x y [z] [facing]`: `x` and `y` are required
-(without them the handler returns 0), `z` defaults to 0 and `facing`, in degrees, to the player's
-own. The position must pass `0x404d10`, else `Coordinates out of range` is printed. `port` then
-sends opcode 0xc6 and `setrawpos` 0xe1, each with the four floats, facing in radians. Other text
-makes `port` send opcode 0x9 with the whole argument string and makes `setrawpos` return 0.
+`port` and `setrawpos` need the active player and return 1 without one. When the arguments begin
+with a digit or `-`, both read `x y [z] [facing]`, split at tabs, line breaks, `"`, spaces and
+commas (`0x82ef90`, the set of `worldport` plus a comma): `x` and `y` are required (without them the
+handler returns 0), `z` defaults to 0 and `facing`, in degrees, to the player's own. The position
+must pass `0x404d10`, else `Coordinates out of range` is printed. `port` then sends opcode 0xc6 and
+`setrawpos` 0xe1, each with the four floats, facing in radians. Other text makes `port` send opcode
+0x9 with the whole argument string and makes `setrawpos` return 0.
 
-Addresses: `0x4049e0`, `0x404a60`, `0x404ab8`, `0x404ac8`, `0x404aef`, `0x404b31`, `0x404b7d`, `0x404bca`, `0x404c11`, `0x404c3a`, `0x404c46`, `0x404cdc`, `0x405000`, `0x405055`, `0x40506d`, `0x405157`, `0x4051e4`, `0x404d10`
+Addresses: `0x404a60`, `0x404aab`, `0x404ab8`, `0x404ac8`, `0x404aef`, `0x404b31`, `0x404b7d`, `0x404bca`, `0x404c11`, `0x404c3a`, `0x404c46`, `0x404cdc`, `0x405000`, `0x405048`, `0x405055`, `0x40506d`, `0x405157`, `0x4051e4`, `0x404d10`, `0x82ef90`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x404ab8` tests the first byte with `IsAsciiDigit` and `0x404ac8` against `-`; otherwise `0x404aef`
-starts opcode 0x9, `PutCString` adds the text and `0x404b31` sends. The tokens are split at tabs, line
-breaks, `"`, spaces and commas; `0x404b7d` returns 0 on a missing `x`.
+`0x404aab` and `0x405048` leave with 1 when `ClntObjMgrObjectPtr` finds no player. `0x404a69` and
+`0x405006` copy `0x82ef90` (`\t\r\n" ,`) to the stack for `SStrTokenize`. `0x404ab8` tests the
+first byte with `IsAsciiDigit` and `0x404ac8` against `-`; otherwise `0x404aef` starts opcode 0x9,
+`PutCString` adds the text and `0x404b31` sends. `0x404b7d` returns 0 on a missing `x`.
 A missing `z` stores 0.0 (`0x404c11`), a given facing is scaled by π/180 (`0x404c3a`) and a missing one
 comes from the player's slot `+0x18` (`0x404c46`). `0x405000` repeats the parse; it returns 0 at
 `0x40506d` and starts opcode 0xe1 at `0x405157`.
+
+## World port command
+
+`worldport <map> [x [y [z [facing]]]]` (`0x404dc0`) does nothing and returns 1 without an active player. It splits its arguments at tabs, line breaks, `"` and spaces (`0x82ecc8`, no comma) into tokens of at most 63 bytes. With no token it prints `Usage: worldport <continentID> [x y z] [facing]` in class 4 and returns 0. The map is the first token read by `SStrToUnsigned`: text that is not digits gives 0, and digits wrap at 32 bits. A map that is negative as a signed integer, above the highest `Map.dbc` id or without a row prints `Bad world number: ` and the signed number in class 3, and returns 0. The executor ignores the return.
+
+Addresses: `0x404dc0`, `0x404dec`, `0x404e07`, `0x404e29`, `0x404e2e`, `0x404e3d`, `0x404e4e`, `0x404ef1`, `0x404ef9`, `0x404f04`, `0x404f0e`, `0x82ecc8`, `0x82efb0`, `0x82ef98`, `0x64ae50`, `0x64ade0`, `0x63cb50`, `0x63cd00`, `0xc0daa8`, `0xc0daac`, `0x63ce9a`
+Confidence: verified
+Proof: one
+Test: `console::worldport_whole_difftest`
+
+`0x404dec` is `je` on the null from `ClntObjMgrObjectPtr`. `0x404e07` loads `0x82ecc8` (a dword and a word, `\t\r\n" `) into the stack copy that every tokenize call takes with the 0x40-byte buffer and a null quote pointer (`0x404e29`). `0x404e2e` tests the buffer's first byte: zero prints `0x82efb0` with `ConsoleWrite` and `edx` 4 (`0x404e3d`). `0x404e4e` reads the map into `esi`. `0x404ef1` is `jl` for a negative `esi` (signed), `0x404ef9` is `jg` against the highest id `[0xc0daac]`, and `0x404f04` tests the entry of the id map `[0xc0daa8]` for null; `0x404f0e` calls `ConsoleWriteA` with `0x82ef98`, class 3 and `esi`. The store holds `largest id = -1` until `Map.dbc` loads, so every map fails before that. `0x63ce9a` calls the handler and returns without reading `eax`. The test runs `0x404dc0` whole (see the message entry).
+
+## World port message
+
+After the map passes, `worldport` sends opcode 8 with `OsGetAsyncTimeMs`, the map as a u32, then `x`, `y`, `z` and the facing as floats, and returns 1. Each of the next four tokens that exists replaces its default, read by `SStrToFloat` (text that is not a number gives 0): the defaults are the active player's position, vtable slot 5, and its facing in radians, slot 6. A given facing is multiplied by π/180, so it is in radians on the wire. No range or finite test applies, unlike `port`'s `0x404d10`. vmangos reads the same order (`src/game/Server/Packets/Misc.cpp`, `WorldTeleport::ReadFromWorldPacket`).
+
+Addresses: `0x404dc0`, `0x404dfa`, `0x404e01`, `0x404e04`, `0x404e77`, `0x404e9c`, `0x404ec1`, `0x404ee6`, `0x404eec`, `0x404f1f`, `0x404f45`, `0x404f4e`, `0x404f57`, `0x404f66`, `0x404fc8`, `0x404ff0`, `0x42c010`, `0x418190`, `0x4182b0`, `0x4181f0`, `0x4183d0`, `0x5379a0`, `0x64aaa0`, `0x7ffaac`, `0x8827c8`, `0x80af78`, `0x5f1f10`, `0x5f1f30`
+Confidence: verified
+Proof: one
+Test: `console::worldport_whole_difftest`
+
+`0x404dfa` calls slot 5 with the pointer to the floats `[ebp-0x1c]` to `[ebp-0x14]` and `0x404e01` slot 6, stored at `[ebp-8]` (`0x404e04`); the player's vtable `0x80af78` holds `0x5f1f10` and `0x5f1f30` there. The tokens after the map are `SStrToFloat` stored as floats at `0x404e77`, `0x404e9c` and `0x404ec1`; the fifth is multiplied by the float at `0x7ffaac` at `0x404ee6` and the 53-bit product stored as a float at `0x404eec`. An empty token skips its store. `0x404f1f` reads the clock; the store takes `PutUInt32` of 8 (`0x404f45`), the clock, the map and four `PutFloat` calls (`0x404f66` onward); `0x404fc8` sends through the holder `0x8827c8`, made when null as `port` does, and `0x404ff0` returns 1. The test runs `0x404dc0` whole over 9,000 argument lines, with the real tokenizer, number readers and data store, and stubs for the player, the console, the clock, the allocator and the send; it compares the return, the stubs' calls in order and the sent bytes.
 
 ## Position range test
 

@@ -187,15 +187,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4048f0	50			unassigned	unreached		Runs its object file code that calls sgetu8; not read here	inferred	none		
 0x404930	55			unassigned	unreached		Runs its object file code that calls sgetu8, 0x4048f0; not read here	inferred	none		
 0x404970	97			unassigned	unreached		Runs its object file code that calls sgetu8, 0x4048f0; not read here	inferred	none		
-0x4049e0	115	RegisterPlayerCommands		unassigned		void __cdecl (void)	Registers the console commands port, worldport, setrawpos, showplayer, togglehelm and togglecloak	verified	one	console/commands#teleport-commands	
+0x4049e0	115	RegisterPlayerCommands		unassigned		void __cdecl (void)	Registers the console commands port, worldport, setrawpos, showplayer, togglehelm and togglecloak	verified	one	console/commands#player-command-lifetime	
 0x404a60	685	PortCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Sends a cheat teleport to x y [z] [facing], or a teleport to the unit an argument names	verified	one	console/commands#teleport-commands	
 0x404d10	170	IsWorldPositionInRange		unassigned		uint32_t __stdcall (float x, float y, float z, float margin)	Returns whether x, y and z are finite and x and y lie within the map square less a margin	verified	one	console/commands#position-range-test	
-0x404dc0	570	CCommand_WorldTeleport	idb	unassigned		uint32_t __fastcall (const char *name, const char *args)	Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 12 more; not read here	inferred	none		
+0x404dc0	570	CCommand_WorldTeleport	idb	unassigned	primitive	uint32_t __fastcall (const char *name, const char *args)	Sends CMSG_WORLD_TELEPORT for a map, with x, y, z and facing defaulting to the active player's	verified	one	console/commands#world-port-command	console::worldport_whole_difftest
 0x405000	533	SetRawPosCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Sends a raw position x y [z] [facing] for the active player	verified	one	console/commands#teleport-commands	
 0x405220	41	ShowPlayerCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Toggles the active player's model flag and prints player visible or player hidden	verified	one	console/commands#show-player-command	
 0x405250	147	ToggleHelmCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Sends opcode 0x2b9 with no body and returns 1	verified	one	console/commands#helm-and-cloak-commands	
 0x4052f0	147	ToggleCloakCommand		unassigned		uint32_t __fastcall (const char *name, const char *args)	Sends opcode 0x2ba with no body and returns 1	verified	one	console/commands#helm-and-cloak-commands	
-0x405390	60			unassigned			Runs its object file code that calls 0x63fb40; not read here	inferred	none		
+0x405390	60	UnregisterPlayerCommands		unassigned		void __cdecl (void)	Unregisters port, worldport, setrawpos, showplayer, togglehelm and togglecloak	verified	one	console/commands#player-command-lifetime	
 0x4053d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4053e0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x405400	5			unassigned			Runs its object file code not read here	inferred	none		
