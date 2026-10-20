@@ -114,7 +114,7 @@ as a collectable object of type 10. `luaF_getlocalname` is called at `0x6fbb54`,
 vector, then sized by `setarrayvector` and `setnodevector`. `setnodevector` raises `table
 overflow` above 2^24 nodes, uses the shared dummy node for a log size of 0, and otherwise allocates 40
 bytes a node, all nil. `rehash` counts the live keys (`numuse`, which fills a count per power
-of two) and picks the sizes with `computesizes`: the largest array part more than half full.
+of two) and picks the sizes with `computesizes`: the largest array part at least half full.
 `resize` moves the entries into the new vectors and `luaH_free` frees a table.
 
 | function | name | decided by |
@@ -125,20 +125,23 @@ of two) and picks the sizes with `computesizes`: the largest array part more tha
 | `0x6fa690` | `luaH_free` | three `luaM_irealloc` calls in `ltable.c` (`0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`), the first only for a nonzero node size |
 | `0x6fa9c0` | `rehash` | `numuse` (`0x6fa9d5`), `luaO_log2` (`0x6fa9dd`), `resize` (`0x6fa9ec`) |
 | `0x6faa00` | `numuse` | slice loop to 24 (`0x6faa67`), `arrayindex` (`0x6faab6`), `luaO_log2` (`0x6faac2`), `computesizes` (`0x6faae7`) |
-| `0x6fab00` | `computesizes` | array size a power of two, hash count `total - na`; n of -1 gives 0 (`0x6fab69`) |
+| `0x6fab00` | `computesizes` | a size kept at `a >= 2^(i-1)` (`0x6fab43`, `0x6fab45`), array size a power of two, hash count `total - na`; n of -1 gives 0 (`0x6fab69`) |
 | `0x6fab90` | `resize` | `setarrayvector` (`0x6fac1f`), `setnodevector` (`0x6fac2f`), `luaH_setnum` (`0x6fac63`), `luaH_set` (`0x6facfd`), old vector freed (`0x6fad5e`) |
 
-Addresses: `0x6fa4f0`, `0x6fa50a`, `0x6fa517`, `0x6fa52c`, `0x6fa53c`, `0x6fa549`, `0x6fa560`, `0x6fa584`, `0x6fa5d0`, `0x6fa5e2`, `0x6fa5e9`, `0x6fa601`, `0x6fa620`, `0x6fa690`, `0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`, `0x6fa9c0`, `0x6fa9d5`, `0x6fa9dd`, `0x6fa9ec`, `0x6faa00`, `0x6faa67`, `0x6faab6`, `0x6faac2`, `0x6faae7`, `0x6fab00`, `0x6fab69`, `0x6fab90`, `0x6fac1f`, `0x6fac2f`, `0x6fac63`, `0x6facfd`, `0x6fad5e`, `0x6fabe1`, `0x6fa98c`
+Addresses: `0x6fa4f0`, `0x6fa50a`, `0x6fa517`, `0x6fa52c`, `0x6fa53c`, `0x6fa549`, `0x6fa560`, `0x6fa584`, `0x6fa5d0`, `0x6fa5e2`, `0x6fa5e9`, `0x6fa601`, `0x6fa620`, `0x6fa690`, `0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`, `0x6fa9c0`, `0x6fa9d5`, `0x6fa9dd`, `0x6fa9ec`, `0x6faa00`, `0x6faa67`, `0x6faab6`, `0x6faac2`, `0x6faae7`, `0x6fab00`, `0x6fab43`, `0x6fab45`, `0x6fab69`, `0x6fab90`, `0x6fac1f`, `0x6fac2f`, `0x6fac63`, `0x6facfd`, `0x6fad5e`, `0x6fabe1`, `0x6fa98c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lua::computesizes_difftest`
 
 `resize` keeps the old node vector, or copies the dummy node into a temporary when the old size
 is 0 (`rep movs` at `0x6fabe1`), grows the array first (`0x6fac1f`) and shrinks it after the new
 node vector exists, reinserting the vanishing array slice with `luaH_setnum` and then the old nodes
 with `luaH_set`. `newkey` calls `rehash` when no free node is left (`0x6fa98c`). The array part is
-the largest `2^n` for which more than `2^(n-1)` of the keys `1` to `2^n` are in use, as in
-upstream 5.0.
+the largest `2^n` for which at least `2^(n-1)` of the keys `1` to `2^n` are in use, as in
+upstream 5.0 and not 5.1: the walk adds `nums[i]`, the keys in `(2^(i-1), 2^i]`, to `a` and keeps
+`n = i` unless `cmp eax,esi; jl` (`0x6fab43`, `0x6fab45`) finds `a < 2^(i-1)`. Keys 3 and 4 alone
+give an array of 4. The walk stops when every integer key is counted or `narray < 2^(i-1)`. The
+test runs `computesizes` whole.
 
 ## Table access
 
