@@ -28342,8 +28342,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c96c0	939	ValidateNameText		unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	
 0x6c9a70	100			unassigned			Runs its object file code not read here	inferred	none		
 0x6c9ae0	80	ValidateCharacterName		unassigned			Validates a character name with no extra characters and all word lists on; code 2 when over 12, 8 or 6 units	verified	one	glue/enterworld#character-name-check	
-0x6c9b30	63			unassigned	unreached		Runs its object file code that calls 0x6c96c0; not read here	inferred	none		
-0x6c9b70	61			unassigned			Runs its object file code that calls 0x6c96c0; not read here	inferred	none		
+0x6c9b30	63	ValidateCharacterNameTwoCaps		unassigned	unreached		Validates a character name with no extra characters and all word lists on; code 2 when over 12 or 8 units	verified	one	glue/enterworld#character-name-check	
+0x6c9b70	61	ValidateGuildName		unassigned	orchestration	uint32_t __fastcall (int32_t locale, const char *name)	Validates a guild name: a space is the extra character, both profanity lists are on, code 2 over 24 units	verified	one	ui/petition#guild-name-check	
 0x6c9bb0	86			unassigned	unreached		Runs its object file code that calls 0x6c9c50, 0x6c9d80, 0x6c9d10; not read here	inferred	none		
 0x6c9c10	24			unassigned	unreached		Runs its object file code that calls 0x6c9bb0; not read here	inferred	none		
 0x6c9c30	21	IsAsciiDigit		unassigned			Returns whether a 16-bit code is an ASCII digit	verified	one	ui/chatlanguage#splitting-a-line-into-words	

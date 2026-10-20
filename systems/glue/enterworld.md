@@ -234,7 +234,7 @@ apostrophe included), 6 (a hit in any of three word lists), 9 (three equal units
 conversion overflow or a charset index outside 0 to 7) or 0xd (accepted). It never returns 4
 (mixed languages) or 5 (profane); a profane hit reports reserved.
 
-Addresses: `0x5abd50`, `0x6c9ae0`, `0x6c96c0`, `0x6c9b04`, `0x65b350`, `0x6c9a4f`, `0x6c9a5d`, `0x6c98c1`, `0x6c9833`, `0x71fc70`
+Addresses: `0x5abd50`, `0x6c9ae0`, `0x6c9b30`, `0x6c96c0`, `0x6c9b04`, `0x65b350`, `0x6c9a4f`, `0x6c9a5d`, `0x6c98c1`, `0x6c9833`, `0x71fc70`
 Confidence: verified
 Proof: one
 Test: none
@@ -243,4 +243,5 @@ The returns of `0x6c96c0` (`ret 0x18`), by the `mov eax` before each: 0 for a nu
 (`0x6c9827`), 0 or 1 by length (`0x6c98ac setne`), 8, 0xb, 9, 7, 0xa, 0xd, 6, 0xc. 7, 8, 0xa and 0xb need
 a nonempty extra list: with `edx` 0 a space or apostrophe fails the charset test and reports 3. The
 three word-list loops call `0x71fc70` over three tables of 16-byte records; a hit reaches
-`0x6c9a4f`. The charset predicate and the locale table `0x6c9a70` are not read here.
+`0x6c9a4f`. The charset predicate and the locale table `0x6c9a70` are not read here. `0x6c9b30` is `0x6c9ae0` without the
+charset 3 cap (`0x6c9b51` to `0x6c9b66`); no `call`, `jmp` or stored dword names it.

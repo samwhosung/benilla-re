@@ -90,18 +90,26 @@ The check is the validator `0x4f5160` of the next entry. The packet is the opcod
 
 ## Guild name check
 
-`0x4f5160(name)` returns 1 only for a name the locale-aware checker `0x6c9b70` accepts (code 13). Every other code shows a
+`0x4f5160(name)` returns 1 only for a name the checker `0x6c9b70` accepts (code 13). Every other code shows a
 message and returns 0: 0 `ERR_GUILD_ENTER_NAME`, 1 `ERR_GUILD_NAME_TOO_SHORT`, 4 `ERR_GUILD_NAME_MIXED_LANGUAGES`,
 5 `ERR_GUILD_NAME_PROFANE`, 6 `ERR_GUILD_NAME_RESERVED`, 10 `ERR_GUILD_NAME_INVALID_SPACE`, 11
-`ERR_GUILD_NAME_NAME_CONSECUTIVE_SPACES`, and 2, 3, 7, 8, 9 or above 11 `ERR_GUILD_NAME_INVALID`.
+`ERR_GUILD_NAME_NAME_CONSECUTIVE_SPACES`, and 2, 3, 7, 8, 9 or above 11 `ERR_GUILD_NAME_INVALID`. The checker runs the
+validator `0x6c96c0` with the locale index, a space as the one extra character, the NamesProfanity and ChatProfanity
+lists on and NamesReserved off, so a list hit is code 6. It turns an accept of more than 24 UTF-16 units into code 2.
+A space is accepted in the middle only: first or last gives 10, after a space 11.
 
-Addresses: `0x4f5160`, `0x4f5162`, `0x4f5168`, `0x4f516d`, `0x4f5178`, `0x4f517d`, `0x6c9b70`, `0x496720`
+Addresses: `0x4f5160`, `0x4f5162`, `0x4f5168`, `0x4f516d`, `0x4f5178`, `0x4f517d`, `0x6c9b70`, `0x6c9b76`, `0x6c9b88`, `0x6c9b99`, `0x6c9b9e`, `0x6c9ba4`, `0x6c96c0`, `0x6c985c`, `0x6c98c4`, `0x6c98fb`, `0x496720`
 Confidence: verified
 Proof: one
 Test: none
 
 The code is passed through `cmp eax,0xd` and `cmp eax,0xb; ja`, then a 12-entry jump table that follows the function. The
-message ids are 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x7b and 0x73.
+message ids are 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x7b and 0x73. `0x4f5162` loads the locale index `0xc0e080`; `0x4f5168`
+is the only reference to `0x6c9b70`. It stores the extra list, a space and a zero unit, at `[ebp-4]` (`0x6c9b88`) and pushes
+the flags 0, 1, 1 (`0x6c9b76` to `0x6c9b7a`): NamesReserved, ChatProfanity and NamesProfanity, the loops at `0x6c99e1`,
+`0x6c9977` and `0x6c9909` over `0xce8930`, `0xce893c` and `0xce8948`. It compares an accept (`0x6c9b99`) with 0x18 on the
+unit count (`0x6c9b9e`) and sets 2 (`0x6c9ba4`). In `0x6c96c0`, a unit the list holds is accepted, since no charset predicate behind `0x6c9dd0` takes 0x20 or 0x27; a space as unit 1 returns 10 (`0x6c985c`), after a space 11 (`0x6c98c4`), as the last unit 10 (`0x6c98fb`). The
+validator never returns 4 or 5, and 7 and 8 need an apostrophe in the list, so those messages do not show from here.
 
 ## Closing
 
