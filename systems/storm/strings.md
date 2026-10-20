@@ -1,10 +1,11 @@
 # storm: string conversions
 
-Storm's string-to-number functions, which the client calls for every number it reads from text: XML
-attributes, settings and console arguments. `SStrToFloat` reads a decimal float and `SStrToInt` a
-decimal integer; the float's fraction digits come from a table of powers of ten that `0x64a670`
-fills on first use (`core/threads#string-conversion-table`), and its other powers from the C
-runtime's `pow`. Both answer 0 for a null string and set error 0x57.
+Storm's string-to-number functions, which the client calls for the numbers in XML attributes, many
+settings and console arguments; the C runtime's `_sscanf` (`0x73fb5d`, 32 direct calls, formats `%d`
+and `%f` among them) reads others, as the `lodDist` setting does (`0x688ac0`). `SStrToFloat` reads a
+decimal float and `SStrToInt` a decimal integer; the float's fraction digits come from a table of
+powers of ten that `0x64a670` fills on first use (`core/threads#string-conversion-table`), and its
+other powers from the C runtime's `pow`. Both answer 0 for a null string and set error 0x57.
 
 Roots: `0x64aaa0`, `0x64ac60`
 
@@ -32,13 +33,12 @@ and `0x64ac2d` calls `SStrToInt`. The test runs `0x64aaa0` whole over the cases 
 
 ## Float value
 
-The value is built at 53 bits. Integer digits gather in a 32-bit chunk; when it reaches `0x19999999`
-it is folded into a double, `acc = pow(10, n)·acc + chunk`, `n` the chunk's digit count, and the
-chunk restarts. At the end the last chunk is folded the same way, or is the value alone while `acc`
-is 0. A fraction digit `d` at place `k`, from −1 down, adds `table[−k − 1][d]` while `k > −21`
-and `pow(10, k)·d` past it. An exponent `e` makes the value
-`pow(10, e)·value`. `pow` is the C runtime's `0x73f940`, which reaches 10^n through `fyl2x` and
-`f2xm1`; a value is a correctly rounded decimal only as far as those powers are.
+The value is built at 53 bits; the steps hold while every one stays a normal double. Integer digits
+gather in a 32-bit chunk, which at `0x19999999` folds into a double, `acc = pow(10, n)·acc + chunk`,
+`n` its digit count, and restarts. The last chunk folds the same way, or is the value alone while
+`acc` is 0. A fraction digit `d` at place `k`, from −1 down, adds `table[−k − 1][d]` while `k > −21`
+and `pow(10, k)·d` past it. An exponent `e` makes the value `pow(10, e)·value`. `pow` is the C
+runtime's `0x73f940`; a value is a correctly rounded decimal only as far as its powers are.
 
 Addresses: `0x64aaa0`, `0x64aac6`, `0x64aace`, `0x64ab12`, `0x64ab19`, `0x64ab31`, `0x64ab46`, `0x64ab59`, `0x64ab64`, `0x64ab76`, `0x64abb6`, `0x64abc6`, `0x64abe4`, `0x64ac3b`, `0x64ac40`, `0x64a670`, `0x64a680`, `0x73f940`, `0x80e5a0`, `0x802970`, `0xc52560`, `0xc52ba0`
 Confidence: verified
@@ -52,9 +52,29 @@ Test: `storm::sstrtofloat_whole`
 again at the end (`0x64ab76`). `0x64abb6` compares the place with −21 (`jg`); the table path adds
 `[0xc52560 + 8·(10·row + d)]` (`0x64abe4`), the other calls `pow` (`0x64abc6`), multiplies by the
 digit and adds the stored value. The exponent calls `pow` at `0x64ac3b` and multiplies the stored
-value at `0x64ac40`. The test takes `pow` as an input: it runs `0x64aaa0` whole, its `pow` and
-table builder included, and the reimplementation reads `pow(10, n)` from the same `pow` through a
-trampoline; inputs keep every step a normal double, and the 200 table cells are compared.
+value at `0x64ac40`. `pow` reaches 10^n through `fyl2x` and `f2xm1`. The test takes `pow` as an
+input: it runs `0x64aaa0` whole, its `pow` and table builder included, and the reimplementation reads
+`pow(10, n)` from the same `pow` through a trampoline; inputs keep every step a normal double, and
+the 200 table cells are compared.
+
+## Float result
+
+`SStrToFloat` leaves its value in `st0` as the 53-bit double the last step produced, never rounded
+to a float; a caller sees it unrounded until it stores it. A step stored to a double and read back
+overflows or rounds to a denormal past the double range, where `st0`'s wider exponent does not, so
+the value past that range is not derived.
+
+Addresses: `0x64aaa0`, `0x64ab48`, `0x64ab98`, `0x64abee`, `0x64ac48`, `0x64ac4f`, `0x688b7c`, `0x688b96`, `0x68900c`, `0x689026`
+Confidence: verified
+Proof: one
+Test: `storm::sstrtofloat_whole`
+
+The extent holds three stores of a float value, all `qword` and none `dword`: `fstp` at `0x64ab48`,
+`fst` at `0x64ab98` and `0x64abee`; `st0` keeps its own copy through each `fst`. The `fchs`
+(`0x64ac48`) and `ret 4` (`0x64ac4f`) leave `st0` unrounded. `HandleDistCullOption` (`0x688b70`) and
+`HandleUnitDrawDistOption` (`0x689000`) call it and `fcom` `st0` against float bounds at `0x688b7c`
+and `0x68900c`; their `fstp dword`, the pattern's control, comes after, at `0x688b96` and `0x689026`.
+The test reads `st0` as a double and compares it bit for bit.
 
 ## String to integer
 
