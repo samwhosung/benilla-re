@@ -30,12 +30,37 @@ Confidence: verified
 Proof: one
 Test: `image::image_tga_pixel_offset`
 
-The descriptor's low nibble is the attribute (alpha) bit count, bit 4 flips horizontally and
-bit 5 puts the origin at the top. Two idioms repeat: bytes per pixel is `(bpp + 7) >> 3`, and a
+Two idioms repeat: bytes per pixel is `(bpp + 7) >> 3`, and a
 palette entry is `(min(size / 3, 8) · 3) >> 3` bytes (`imul 0x55555556` for the division), so
 24 and 32-bit entries are 3 bytes, 16-bit entries 1 and 8-bit entries 0. `0x5a3b40` returns the
 pixel data offset `entry · length + idLength + 0x12`. `0x5a3600` frees the pixels, closes the file,
 frees the ID buffer (`0x5a4320`, which also clears `+0x08`) and the palette.
+
+## Descriptor bits
+
+The descriptor (`+0x19`) has two live fields. Its low nibble is the attribute (alpha) bit count: the open,
+the depth check, the decoders, the palette expansion, the alpha add and strip and the loaders test
+`& 0xf`. Bit 5 puts the origin at the top, and only `0x5a4070` tests it. Bit 4, which the file format
+gives as a right-to-left origin, is tested by no code that is reached: a file with it set decodes, flips
+and saves as if it were clear, and the saved header carries it as stored. The writer `0x5a43c0` sets it
+from its `flip` argument, which is 0 at both live callers, the screenshot and the font atlas dump.
+
+Addresses: `0x5a3660`, `0x5a37b3`, `0x5a37c0`, `0x5a37e3`, `0x5a382b`, `0x5a3c3c`, `0x5a3c8e`, `0x5a3d7e`, `0x5a3ff3`, `0x5a4083`, `0x5a408d`, `0x5a4193`, `0x5a4265`, `0x5a4292`, `0x5a42c3`, `0x5a4350`, `0x5a4380`, `0x5a43c0`, `0x5a4424`, `0x5a442c`, `0x5a4810`, `0x4491f0`, `0x449237`, `0x449375`, `0x4493a0`, `0x44947b`, `0x44a140`, `0x44a1b9`, `0x5258a0`, `0x4426f0`, `0x442760`, `0x44277b`, `0x5cf640`, `0x5cfb62`, `0x5cfb98`
+Confidence: verified
+Proof: one
+Test: none
+
+Census of every access to `[reg+0x19]` in `0x5a35e0` to `0x5a49b0`, wider ones included: 20 sites.
+Seventeen mask the low nibble, test bit 5 or rewrite one field and keep the other bits. The others are
+the writer `0x5a43c0` (`0x5a440d` to `0x5a4449`, which merges the nibble, bit 4 from `flip` and bit 5
+from `top`) and the unreached `0x5a4350` (`0x5a436e`, which forwards bits 4 and 5 to the writer). The
+four `0x5a3660` callers keep the record in their frames (`ebp` −0x50, −0x5c, −0x48, −0x50): `+0x19` is
+read `& 0xf` at `0x449237`, `0x449375`, `0x44947b` and `0x44a1b9` and never in `0x5258a0`, and `0x4493a0`
+reads only `+0x14` and `+0x16` of the first caller's record. Controls: the same scan finds the bit 5
+tests (`0x5a4083`, `0x5a408d`) and the bit 4 insert (`0x5a4424 shl al,4`, `0x5a442c and al,0x10`). A scan
+of those ranges for `0x10`, `0xf0`, `shr 4` and `bt` adds `and al,0xf0` (`0x5a37c0`, `0x5a42c3`), which
+keeps bit 4, and `0x5a37fd cmp al,0x10`, a depth test. The `flip` pushes are `push esi` (`0x442760`) and
+`push ebx` (`0x5cfb62`), both zeroed. `0x5a4810` writes the 18 header bytes as one block.
 
 ## Opening a file
 
