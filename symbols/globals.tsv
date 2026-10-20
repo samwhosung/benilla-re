@@ -4077,17 +4077,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc53d48	char[128]	s_errorLogTitle		storm	Holds the title line of the error log	verified	one	storm/errorlog#client-registration
 0xc53dc8	void *	s_errorLogHeaderCallback		storm	Holds the callback that writes the error log's header	verified	one	storm/errorlog#client-registration
 0xc53dd0	char[260]	s_lastErrorLogPath		storm	Holds the path of the last error log written, empty before one	verified	one	storm/errorlog#client-registration
-0xc53ee8	uint32_t	s_stormOption6High		storm	Holds the second dword of Storm option 6, 0 at load	verified	one	storm/printf#storm-options
-0xc53ef0	uint32_t	s_stormOption6Low		storm	Holds the first dword of Storm option 6, 0 at load	verified	one	storm/printf#storm-options
+0xc53ee8	uint32_t	s_stormOption6Second		storm	Holds the second dword of Storm option 6, 0 at load; the getter reads it, the unreached 0x64eac0 adds 1	verified	one	storm/printf#storm-options
+0xc53ef0	uint32_t	s_stormOption6First		storm	Holds the first dword of Storm option 6, 0 at load; the getter reads it, the unreached 0x64eab0 adds 1	verified	one	storm/printf#storm-options
 0xc53ef4	uint32_t	s_stormOption3		storm	Holds Storm option 3, 0 at load	verified	one	storm/printf#storm-options
 0xc53ef8	uint32_t	s_stormOption1		storm	Holds Storm option 1, 0 at load	verified	one	storm/printf#storm-options
-0xc53efc	uint32_t	s_stormOption2		storm	Holds Storm option 2, a power of two, 0 at load	verified	one	storm/printf#storm-options
+0xc53efc	uint32_t	s_stormOption2		storm	Holds Storm option 2: a power of two or 2^31 + 2^k, 0 at load	verified	one	storm/printf#storm-options
 0xc53f00	uint32_t	s_stormOption4		storm	Holds Storm option 4, 0 at load	verified	one	storm/printf#storm-options
 0xc53f04	uint32_t	s_stormOption5		storm	Holds Storm option 5, 0 at load	verified	one	storm/printf#storm-options
 0xc53f08	uint32_t	s_stormOption7		storm	Holds Storm option 7, 0 at load	verified	one	storm/printf#storm-options
 0xc53f0c	uint32_t	s_stormOption9		storm	Holds Storm option 9 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
 0xc53f10	uint32_t	s_formatterMode		storm	Holds Storm option 10: 1 selects the ordered formatter vsnoprintf, set at start-up, 0 at load	verified	one	storm/printf#storm-options
-0xc53f14	uint32_t	s_stormWideCalls		storm	Holds Storm option 11: 1 runs the file, folder and registry calls through UTF-16, set at start-up	verified	one	storm/printf#storm-options
+0xc53f14	uint32_t	s_stormOption11		storm	Holds Storm option 11, 1 from start-up: SFileStat and SDirOpen then take the wide calls; eight more readers unread	verified	one	storm/printf#storm-options
 0xc53f18	uint32_t	s_stormOption12		storm	Holds Storm option 12 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
 0xc53f1c	uint32_t	s_stormOption13		storm	Holds Storm option 13 as 0 or 1, 0 at load	verified	one	storm/printf#storm-options
 0xc53f24	uint32_t[3]	s_flaggedSwitchList		storm	Holds the list of switches with a flag bit of 0x3000000: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id

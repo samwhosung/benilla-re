@@ -2,12 +2,15 @@
 
 Storm's string formatting and the options that steer it. `SStrPrintf` and `SStrVPrintf` format into
 a buffer of a given size through `ISStrVPrintf`, which picks the C runtime's `_vsnprintf` or Storm's
-own formatter by Storm option 10. The client sets that option at start, so from then on every string
-Storm formats goes through `vsnoprintf`: it binds each conversion, `%N$` ones included, to an
-argument by number and hands it, rewritten, to the C runtime's `_snprintf`. The code is Storm's, in
-two stretches: `SStrPrintf` (`0x64a7f0`) to `SStrVPrintf` (`0x64a8b0`) beside the option calls
-`0x64ead0` and `0x64ec80`, and the formatter, `vsnoprintf` (`0x6697d0`) to `vsoprintf` (`0x669d10`).
-The source file of neither stretch is named in the image.
+own formatter by Storm option 10. The client sets that option at start, so from then on `SStrPrintf`
+and `SStrVPrintf` go through `vsnoprintf`: it binds each conversion, `%N$` ones included, to an
+argument by number and hands it, rewritten, to the C runtime's `_snprintf`. Storm's other formatting
+calls the C runtime whatever the option: `0x667440` `__vsnprintf` (`0x667461`), as do `0x64d080`
+(`0x64d0a3`) and `0x64db80` (`0x64dbaa`), and `SLogVWrite` `_vsprintf` (`0x65ac73`). The code is
+Storm's, in two stretches: `SStrPrintf` (`0x64a7f0`) to `SStrVPrintf` (`0x64a8b0`) beside the option
+calls `0x64ead0` and `0x64ec80`, and the formatter, `vsnoprintf` (`0x6697d0`) to `vsoprintf`
+(`0x669d10`), with the variadic forms `0x669d30` (with a size) and `0x669d50` (2^20) after it,
+which nothing reaches. The source file of neither stretch is named in the image.
 
 Roots: `0x64a7f0`, `0x64a8b0`, `0x64ec80`, `0x64ead0`
 
@@ -15,7 +18,7 @@ Roots: `0x64a7f0`, `0x64a8b0`, `0x64ec80`, `0x64ead0`
 
 `0x64ec80(id, data, size)` sets one of the options 1 to 13 and returns 1. It returns 0 for a null
 `data`, an id outside the range or 8, a size other than the option's, or for option 2 a value that is
-not a power of two. It sets Storm's last error to 0x57 first and to 0 on success. `0x64ead0(id, data,
+neither a power of two nor 2^31 + 2^k for k below 31: the test runs in 32 bits. It sets Storm's last error to 0x57 first and to 0 on success. `0x64ead0(id, data,
 size)` reads an option into a buffer of at least its size and sets `*size`; option 8 it computes
 through `0x650be0`. Every cell starts at 0, and `ClientMain` is the setter's only caller: it sets
 options 10 and 11 to 1.
@@ -23,7 +26,7 @@ options 10 and 11 to 1.
 | option | size | cell | stored |
 |---|---|---|---|
 | 1 | 4 | `0xc53ef8` | the value |
-| 2 | 4 | `0xc53efc` | the value, a power of two |
+| 2 | 4 | `0xc53efc` | the value, a power of two or 2^31 + 2^k |
 | 3 | 4 | `0xc53ef4` | the value |
 | 4 | 4 | `0xc53f00` | the value |
 | 5 | 4 | `0xc53f04` | the value |
@@ -41,8 +44,10 @@ Proof: one
 Test: `storm::set_option_difftest`
 
 `0x64ec9a` bounds `id − 1` by 12 and jumps through `0x64ee8c`, whose entry for 8 is the failure
-`0x64ee84`; each case needs the size exactly (`cmp [ebp+0x10],4; jne`). Option 2 needs `(v − 1) ^ v
-== 2v − 1` (`0x64ece1`), true for the powers of two alone; options 9 to 13 store `setne`
+`0x64ee84`; each case needs the size exactly (`cmp [ebp+0x10],4; jne`). Option 2 needs `v` nonzero and `(v − 1) ^ v
+== 2v − 1` in 32 bits (`0x64ece1` to `0x64ecec`). With `2^k` the lowest set bit the left side is
+`2^(k+1) − 1`, so `2v` must be `2^(k+1)` modulo 2^32: `v` is `2^k` or `2^k + 2^31`, and
+`0x80000001` passes; options 9 to 13 store `setne`
 (`0x64edfe` for 10, `0x64ee24` for 11). The getter's table `0x64ec4c` needs `*size` at least the
 option's, stores the cell and sets `*size` (`0x64ec35`). The census of `e8`/`e9` to `0x64ec80`
 and of the address stored anywhere finds `0x402141` (id 10) and `0x402151` (id 11), each passing a
@@ -85,7 +90,7 @@ twice.
 
 Addresses: `0x6697d0`, `0x669867`, `0x669873`, `0x669888`, `0x669892`, `0x6698c1`, `0x669a80`, `0x6698c8`, `0x6698da`, `0x6698f6`, `0x669984`, `0x66999e`, `0x6699ae`, `0x669a90`, `0x6699cf`, `0x669a59`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::vsnoprintf_difftest`
 
 The frame holds 256 kinds at `ebp−0xd14`, 256 eight-byte values at `ebp−0x914` and 256 specs
@@ -98,17 +103,17 @@ copy a dword (`0x6698c8`), 2 two dwords (`0x6698da`), 3 a double through `fld` a
 copies a spec into a 256-byte buffer, cuts its `N$` (`0x669984`) and for kind 2 makes `ll` into
 `I64` (`0x66999e`). The table `0x669a90` pushes one dword for kinds 0 and 1 and two for 2 and 3,
 with the room `end − position + 1` (`0x6699cf`); the format cursor then skips the spec's length
-less one (`0x669a59`). The test runs `0x6697d0` whole with `_snprintf` a stub; the emulator does not
-quiet a signalling NaN in `fld`, so the test passes none.
+less one (`0x669a59`). An independent cold read derived the same binding. The test runs `0x6697d0`
+whole with `_snprintf` a stub and passes no signalling NaN, which the emulator's `fld` keeps.
 
 ## Parsing a conversion
 
 `ParseFormatSpecifier` walks from the byte after the `%`. Digits build a number, and `$` sets the
-index to it less one, or to 0 for none; any other byte clears the number and is classed. `%` and
-NUL end a spec taking no argument, `C D U X c d i u x` an integer, 8 bytes after `ll` or `I64`,
-`E F G e f g` a double, `P S p s` a pointer. Every other byte goes on, `h`, `n`, `o`, `*` and the
-flags included, so `%o` runs on to the next ending byte. `_snprintf` gets the spec with its first
-`$` and the digits before it cut, and an 8-byte integer's `ll` made `I64`.
+index to it less one, or to 0 for none; any other clears the number and is classed. A digit is
+what `_isdigit` says of the byte sign-extended (`#bytes-that-count-as-digits`). `%` and NUL end a spec taking no argument, `C D U X c d i u x` an integer, 8 bytes
+after `ll` or `I64`, `E F G e f g` a double, `P S p s` a pointer. Every other byte goes on, so `%o`
+runs on to the next ending byte. `_snprintf` gets the spec with its first `$` and the digits before
+it cut, and an 8-byte integer's `ll` made `I64`.
 
 Addresses: `0x669ab0`, `0x669ad7`, `0x669ae9`, `0x669af2`, `0x669b0f`, `0x669b1b`, `0x669bb8`, `0x669bd4`, `0x669b29`, `0x669b3a`, `0x669b56`, `0x669b69`, `0x669b81`, `0x669b9d`, `0x669c50`, `0x669cc0`, `0x8670e0`
 Confidence: verified
@@ -125,27 +130,82 @@ at `0x669b56` (the kind as set, 0 or 2), 2 at `0x669b81` (kind 3), 3 at `0x669b3
 it and the digits before it; `FixUpLongLongFormatSpecifier` finds `ll` with `_strstr`, moves the
 rest one byte right and writes `I64` from `0x8670e0`. All three run whole inside the test.
 
+## Bytes that count as digits
+
+The parser and the walk back over the digits before a `$` hand `_isdigit` each byte sign-extended,
+and `_isdigit` indexes its table with no bound. So besides `0` to `9` the bytes 0xf7, 0xfb and 0xfd
+count as digits, worth −57, −53 and −51 in `n = 10n + c − 0x30`, and are cut with the digits
+before a `$`; `%9\xf7$d` reads argument 33. Every other byte from 0x80 is no digit while a pointer
+the small-block heap rewrites keeps its bits 2 and 18 clear, as it does at load; when one is set,
+0xed or 0xee counts too.
+
+Addresses: `0x669ad2`, `0x669ad7`, `0x669ae9`, `0x669c69`, `0x669c75`, `0x669c83`, `0x73fc0f`, `0x83171c`, `0x831710`, `0x831714`, `0x831720`, `0x40f057`
+Confidence: verified
+Proof: one
+Test: `storm::vsnoprintf_difftest`
+
+`0x669ad2` and `0x669c69`, `0x669c83` load the byte with `movsx`. With `__mb_cur_max` (`0x831710`)
+at 1, `_isdigit` (`0x73fc0f`) tests bit 2 of the word at twice the value in the table `_pctype`
+(`0x83171c`) points to. The 128 words below the table hold, at 0xf7, 0xfb and 0xfd,
+`__decimal_point` (`0x831714`) and the low bytes of `_pctype` and `_pwctype` (`0x831720`), each
+with bit 2 set and written only by the unreached locale initializers; at 0xed and 0xee, the low and
+third bytes of a heap region pointer, written at `0x40f057`; and nothing with bit 2 set elsewhere.
+The census of absolute operands in those words finds those cells alone. The test runs the three
+bytes before a `$` and in a width.
+
 ## Truncation and overruns
 
 The third pass stops once the position reaches `dest + size − 1` and writes a NUL there. `_snprintf`
 gets the room left, the last byte included. A conversion that fills it exactly returns its length,
 so the position passes the last byte and the NUL lands one byte past the buffer. One that does not
 fit returns −1, so the position steps back a byte and the next text overwrites the cut conversion
-from the byte before it. Nothing bounds the tables: a spec longer than 255 bytes, a 257th
-spec or an index of 256 or more writes past its table. A format ending in a lone `%`
-reads on past its NUL in both passes.
+from the byte before it; a cut conversion at `dest` leaves the position at `dest − 1`, so the next
+byte or the NUL lands one byte before the buffer. A format ending in a lone `%` reads on past its NUL in both passes.
 
-Addresses: `0x6697e6`, `0x669921`, `0x6699c9`, `0x669a51`, `0x669a69`, `0x669a76`, `0x66996a`, `0x669873`, `0x669888`, `0x669ad6`, `0x669b9d`
+Addresses: `0x6697e6`, `0x669921`, `0x6699c9`, `0x669a51`, `0x669a69`, `0x669a76`, `0x669850`, `0x669ad6`, `0x669b9d`, `0x669baa`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::vsnoprintf_difftest`
 
 `0x6697e6` sets the end `dest + size − 1`; `0x669921` and `0x669a69` compare the position with it
 unsigned (`jae`, `jb`). The room is `end − position + 1` (`0x6699c9`), and `0x669a51` adds the
 return to the position unchecked; `0x669a76` stores the NUL. Under the C runtime's `_snprintf`
 contract (the length for an exact fit, −1 when cut) an exact fit leaves the position at `end + 1`;
-`ISStrVPrintf` then also rewrites `size − 1`. `0x66996a` copies the spec's whole length into the
-256 bytes at `ebp−0x114`, and the first pass stores specs and kinds with no bound (`0x669873`,
-`0x669888`). The parse steps past a NUL before classing it (`0x669ad6`) and returns from
-`0x669b9d` with the cursor beyond it. The test covers every room from 1 to 80 over one format, and
-the lone `%`.
+`ISStrVPrintf` then also rewrites `size − 1`. At `dest − 1` the position is still below the end, so
+the loop goes on: with a size of 4, `%s` and `longer`, the client writes 0 at `dest[−1]`. The first pass reads the format at `0x669850`; the parse steps past a NUL before
+classing it (`0x669ad6`) and stores the cursor beyond it (`0x669b9d`, `0x669baa`). An independent
+cold read derived the same. The test covers every room from 1 to 80 over one format, a conversion
+at `dest` that does not fit, and the lone `%`.
+
+## Unbounded spec tables
+
+Nothing bounds the first pass's tables or the third pass's spec buffer: a spec longer than 255
+bytes, a 257th spec, or an index outside 0 to 255 writes outside its table in the frame. An index
+goes below 0 when the digits before a `$` wrap `n` past 2^31 or include bytes that count as
+negative digits (`#bytes-that-count-as-digits`).
+
+Addresses: `0x66996a`, `0x669873`, `0x669888`, `0x669892`, `0x669af2`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x66996a` copies the spec's whole length into the 256 bytes at `ebp−0x114`, and the first pass
+stores specs and kinds with no bound (`0x669873`, `0x669888`); `0x669892` raises the count to the
+index plus one, signed. `0x669af2`'s `$` stores `n − 1` for any nonzero `n`. The test keeps every
+index from 0 to 255.
+
+## Unreached functions
+
+Four functions of the two stretches have no caller and no stored address: `0x669d30(dest, size,
+fmt, ...)` and `0x669d50(dest, fmt, ...)`, the variadic forms of `vsnoprintf` with a size and with
+2^20, and `0x64eab0` and `0x64eac0`, which add 1 to option 6's first and second dword.
+
+Addresses: `0x669d30`, `0x669d43`, `0x669d50`, `0x669d64`, `0x64eab0`, `0x64eac0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x669d30` passes its own size and the address of its variadic arguments to `vsnoprintf` at
+`0x669d43`; `0x669d50` pushes 2^20 as the size (`0x669d64`). The census of `e8`/`e9` to each and of
+its address stored anywhere finds none, with `vsoprintf`'s one call from `ISStrVPrintf` as the
+control.

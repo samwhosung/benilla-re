@@ -20,7 +20,8 @@ pub const OPTION_CELLS: [(u32, &[u32]); 12] = [
 /// `0x64ec80(id, data, size)`, `__stdcall`: sets option `id`. It calls `SErrSetLastError(0x57)`
 /// first, and on success `SErrSetLastError(0)`; the codes are returned in that order with the
 /// result. A null `data`, an id outside 1 to 13 or 8, or a size other than 4 (8 for option 6)
-/// fails. Option 2 takes only a power of two, `(v − 1) ^ v == 2v − 1` on 32 bits; options 1 to 7
+/// fails. Option 2 takes a nonzero `v` with `(v − 1) ^ v == 2v − 1` on 32 bits: a power of two, or
+/// `2^31 + 2^k` for `k` below 31, since `2v` wraps; options 1 to 7
 /// store the value, 6 its two dwords at `0xc53ef0` and `0xc53ee8`, and 9 to 13 store `v != 0`.
 /// `write(cell, value)` receives each store.
 pub fn set_option(

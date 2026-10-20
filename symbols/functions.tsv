@@ -23537,10 +23537,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64ea30	1			storm	unreached		Runs its object file code not read here	inferred	none		
 0x64ea40	41			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ea70	60			storm	unreached		Runs its object file code not read here	inferred	none		
-0x64eab0	7			storm	unreached		Runs its object file code not read here	inferred	none		
-0x64eac0	7			storm	unreached		Runs its object file code not read here	inferred	none		
+0x64eab0	7			storm	unreached		Adds 1 to the first dword of Storm option 6 (0xc53ef0); nothing reaches it	verified	one	storm/printf#unreached-functions	
+0x64eac0	7			storm	unreached		Adds 1 to the second dword of Storm option 6 (0xc53ee8); nothing reaches it	verified	one	storm/printf#unreached-functions	
 0x64ead0	379	GetStormOption		storm	orchestration	uint32_t __stdcall (uint32_t id, void *data, uint32_t *size)	Reads Storm option 1 to 13 into a buffer of at least its size and stores the size	verified	one	storm/printf#storm-options	
-0x64ec80	523	SetStormOption		storm	primitive	uint32_t __stdcall (uint32_t id, const void *data, uint32_t size)	Sets Storm option 1 to 13 from a value of its size, refusing 8 and an option 2 that is not a power of two	verified	one	storm/printf#storm-options	storm::set_option_difftest
+0x64ec80	523	SetStormOption		storm	primitive	uint32_t __stdcall (uint32_t id, const void *data, uint32_t size)	Sets Storm option 1 to 13 from a value of its size, refusing 8 and an option 2 that fails a 32-bit power-of-two test	verified	one	storm/printf#storm-options	storm::set_option_difftest
 0x64eec0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64eed0	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64eee0	10			storm	boundary		Runs its object file code that calls 0x64eef0; not read here	inferred	none		
@@ -24264,13 +24264,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x669550	317			storm	boundary		Runs its object file code that calls 0x6696c0, 0x668ff0, 0x669690; not read here	inferred	none		
 0x669690	41			storm	boundary		Runs its object file code not read here	inferred	none		
 0x6696c0	264			storm	boundary		Runs its object file code that calls 0x6694f0, 0x668ff0, SMemReAlloc and 3 more; not read here	inferred	none		
-0x6697d0	688	vsnoprintf	idb	storm	primitive	int32_t __cdecl (char *dest, uint32_t size, const char *fmt, va_list args)	Formats with each conversion bound to its argument by number and handed to _snprintf; returns the length	verified	one	storm/printf#ordered-conversions	storm::vsnoprintf_difftest, storm::isstrvprintf_difftest
+0x6697d0	688	vsnoprintf	idb	storm	primitive	int32_t __cdecl (char *dest, uint32_t size, const char *fmt, va_list args)	Formats with each conversion bound to its argument by number and handed to _snprintf; returns the length	verified	two	storm/printf#ordered-conversions	storm::vsnoprintf_difftest, storm::isstrvprintf_difftest
 0x669ab0	262	ParseFormatSpecifier	idb	storm	primitive	int32_t __fastcall (const char **cursor, uint32_t *kind, int32_t *index)	Parses one conversion after a %: its N$ index, its argument kind, and whether it takes an argument	verified	one	storm/printf#parsing-a-conversion	storm::vsnoprintf_difftest
 0x669c50	103	RemoveOrderingFromFormatSpecifier	idb	storm	primitive	void __fastcall (char *spec)	Cuts the first $ and the digits before it out of a conversion spec	verified	one	storm/printf#parsing-a-conversion	storm::vsnoprintf_difftest
 0x669cc0	74	FixUpLongLongFormatSpecifier	idb	storm	primitive	void __fastcall (char *spec)	Rewrites the first ll of a conversion spec as I64	verified	one	storm/printf#parsing-a-conversion	storm::vsnoprintf_difftest
 0x669d10	30	vsoprintf	idb	storm	orchestration	int32_t __cdecl (char *dest, const char *fmt, va_list args)	Formats through vsnoprintf with a size of 2^20	verified	one	storm/printf#formatting-into-a-buffer	storm::isstrvprintf_difftest
-0x669d30	29			storm	unreached		Runs its object file code that calls vsnoprintf; not read here	inferred	none		
-0x669d50	30			storm	unreached		Runs its object file code that calls vsnoprintf; not read here	inferred	none		
+0x669d30	29			storm	unreached		Formats a variadic list into a sized buffer through vsnoprintf; nothing reaches it	verified	one	storm/printf#unreached-functions	
+0x669d50	30			storm	unreached		Formats a variadic list through vsnoprintf with a size of 2^20; nothing reaches it	verified	one	storm/printf#unreached-functions	
 0x669d70	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x669d80	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x669d90	5			storm	boundary		Runs its object file code not read here	inferred	none		

@@ -49,6 +49,15 @@ pub fn conversion_class(byte: u8) -> u8 {
     }
 }
 
+/// Whether the C runtime's `_isdigit` (`0x73fc0f`) calls `byte` a digit as Storm passes it,
+/// sign-extended: the table lookup has no bound, so 0xf7, 0xfb and 0xfd read words below the
+/// table whose bit 2 is set (`systems/storm/printf.md#bytes-that-count-as-digits`). 0xed and 0xee
+/// read a heap pointer whose bits are clear at load and are taken as no digit.
+#[must_use]
+pub fn is_storm_digit(byte: u8) -> bool {
+    byte.is_ascii_digit() || matches!(byte, 0xf7 | 0xfb | 0xfd)
+}
+
 /// What `ParseFormatSpecifier` (`0x669ab0`) leaves: the cursor after the spec, the kind code (4
 /// for a spec that takes no argument) and whether it takes one.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -58,8 +67,8 @@ pub struct Parsed {
     pub takes_argument: bool,
 }
 
-/// `ParseFormatSpecifier` (`0x669ab0`), from the byte after a `%`. Digits accumulate `n = 10n + d`
-/// (`0x669ae9`) and a `$` sets `index` to `n − 1`, or 0 for `n` of 0 (`0x669af2`), without
+/// `ParseFormatSpecifier` (`0x669ab0`), from the byte after a `%`. Digits ([`is_storm_digit`])
+/// accumulate `n = 10n + c − 0x30` with `c` sign-extended (`0x669ae9`) and a `$` sets `index` to `n − 1`, or 0 for `n` of 0 (`0x669af2`), without
 /// clearing `n`; any other byte clears it (`0x669b12`) and is classed. `ll` and `I64` set kind 2
 /// and are skipped; the classes that end the spec are 0 (no argument), 1, 2 and 4. `fmt` reads as
 /// zero past its end, where the client reads the bytes that follow the string.
@@ -71,8 +80,8 @@ pub fn parse_format_specifier(fmt: &[u8], start: usize, index: &mut i32) -> Pars
     loop {
         let c = at(p);
         p += 1;
-        if c.is_ascii_digit() {
-            n = n.wrapping_mul(10).wrapping_add(i32::from(c) - 0x30);
+        if is_storm_digit(c) {
+            n = n.wrapping_mul(10).wrapping_add(i32::from(c as i8) - 0x30);
             continue;
         }
         if c == b'$' {
@@ -122,14 +131,14 @@ pub fn parse_format_specifier(fmt: &[u8], start: usize, index: &mut i32) -> Pars
     }
 }
 
-/// `RemoveOrderingFromFormatSpecifier` (`0x669c50`): the first `$` and the digits right before it
-/// are cut out of the NUL-terminated spec.
+/// `RemoveOrderingFromFormatSpecifier` (`0x669c50`): the first `$` and the digits
+/// ([`is_storm_digit`]) right before it are cut out of the NUL-terminated spec.
 pub fn remove_ordering(spec: &mut Vec<u8>) {
     let Some(dollar) = spec.iter().position(|&b| b == b'$') else {
         return;
     };
     let mut first = dollar;
-    while first > 0 && spec[first - 1].is_ascii_digit() {
+    while first > 0 && is_storm_digit(spec[first - 1]) {
         first -= 1;
     }
     spec.drain(first..=dollar);

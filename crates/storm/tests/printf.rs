@@ -161,6 +161,19 @@ const PROBES: &[(&[u8], &str)] = &[
         "high bytes in literal text",
     ),
     (b"", "empty"),
+    (b"%s", "a cut conversion at dest: the NUL lands at dest[-1]"),
+    (
+        b"%9\xf7$d %d",
+        "0xf7 is a digit worth -57: argument 33, then 34",
+    ),
+    (
+        b"%9\xfb$s|%9\xfd$x",
+        "0xfb and 0xfd are digits: arguments 37 and 39",
+    ),
+    (
+        b"%1\xf7\xfb\xfdd %\xedd %\xeed",
+        "the three in a width; 0xed and 0xee are not digits",
+    ),
 ];
 
 #[test]

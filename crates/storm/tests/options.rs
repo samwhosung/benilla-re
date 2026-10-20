@@ -41,6 +41,12 @@ fn set_option_difftest() {
     for _ in 0..40 {
         values.push(lcg(&mut s));
     }
+    // Option 2's 32-bit test: every power of two and every 2^31 + 2^k pass, a step off fails.
+    for k in 0..32 {
+        values.push(1 << k);
+        values.push((1u32 << 31) | (1 << k));
+        values.push((1u32 << k).wrapping_add(1) | 2);
+    }
     let mut cases = 0u32;
     for id in 0..=15u32 {
         for size in [0u32, 3, 4, 5, 8, 12] {
