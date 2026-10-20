@@ -249,20 +249,42 @@ Test: none
 `0x492870` selects and `0x492881` calls slot 0x60 of the object with the result of `0x41f8f0(0)`, the Shift state
 (`core/input#key-codes`). `0x494a15` and `0x494a2c` test the action for 1 and 4.
 
-## Clicking a nameplate
+## Pressing a nameplate
 
-A press whose hovered frame is a nameplate goes to the plate alone and never starts mouselook, since the command
-that enters mouselook runs only inside the world frame's own button handlers. The plate takes the press, becomes
-the pressed frame, and the release reaches its click slot, which calls `0x4949f0` with the plate's unit and then
-the button's own click. So a click on a plate selects or interacts with its unit exactly as a click on the model does.
+A press whose hovered frame is a nameplate is consumed by the plate (`ui/mouse#a-press-is-consumed`), so no frame
+beneath it sees the press. The world frame's button handlers, which run the mouse commands that enter mouselook, do
+not run for it, and the press starts no mouselook.
 
-Addresses: `0x7cb910`, `0x4949f0`, `0x779540`, `0x7792d0`
+Addresses: `0x779210`, `0x7663f4`, `0x514840`, `0x50fe30`
 Confidence: inferred
 Proof: none
 Test: none
 
-`0x7cb91c` and `0x7cb916` load the plate's GUID from `+0x4e8` and `+0x4ec`; `0x7cb92a` calls `0x4949f0` and `0x7cb936` `0x779540`.
-That the world frame's handlers alone start mouselook was read in the caller census of the binding dispatch, not here.
+`0x7663f4` consumes the press whatever the plate's button slot `0x779210` returns. That the mouse commands, which reach
+`0x514840` and `0x50fe30`, run only from the world frame's button handlers rests on a caller census of the binding
+dispatch that this entry does not repeat.
+
+## Clicking a nameplate
+
+The release on a plate reaches the button release `0x7792d0`, which calls the plate's click slot `0x7cb910` with the
+button bit. That slot calls `0x4949f0` with the bit and the plate's unit GUID, then runs the button's own click.
+`0x4949f0` selects the unit for button 1 and interacts for button 4, and a scripted `Click` runs the same slot. The
+click skips the world router `0x481f60`: a charmed player is not sent to the nothing leg, a held preview payload is
+not cleared first, and the press-time pick is not read, since the plate uses its own unit.
+
+Addresses: `0x7cb910`, `0x7cb92a`, `0x4949f0`, `0x4925d0`, `0x492820`, `0x779540`, `0x7792d0`, `0x481f60`, `0x492ce0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7cb91c` and `0x7cb916` load the plate's GUID from `+0x4e8` and `+0x4ec`; `0x7cb92a` calls `0x4949f0` and
+`0x7cb936` `0x779540`. The release calls slot 0x94 with the event's button (`0x7793a9`), and the vtable `0x81de50`
+the plate's constructor stores (`0x7cb29a`) holds `0x7cb910` there. `0x7cb92a` is the one `call` or `jmp` to
+`0x4949f0`, and no dword of the image holds its address; the same census finds `0x492d05` and `0x494a22` for
+`0x4925d0`. `0x4949f0` returns when no active player is found (`0x494a13`), calls `0x4925d0` for 1 (`0x494a22`) or
+`0x492820` for 4 (`0x494a39`), and calls nothing else. The router, called from `0x514d79` and `0x514d8d`, tests
+the charm pair at `0x481f98`, and its object leg `0x492ce0` calls `ClearCursor(1, 1)` at `0x492cf3` when `0xb4b41c`
+is set. Neither is on the plate's path.
 
 ## The right button
 

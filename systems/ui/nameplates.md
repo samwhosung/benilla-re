@@ -61,7 +61,7 @@ Bit-exact coverage: `ui::luabind_7a1_get_width_height` covers `0x7a1ee6` to `0x7
 
 ## Scripts and mouse
 
-The plate fires every script an addon sets, and the engine sets none. The overrides run first and end in the button's handler: `OnUpdate` (`0x7cb950` to `0x76b2c0`), `OnEnter` (`0x7cb850` to `0x779490`) and `OnLeave` (`0x7cb8b0` to `0x7794e0`), and the click `0x7cb910`, which selects the unit through `0x4949f0` and then runs the button's click. `OnShow`, `OnHide`, `OnMouseDown` and `OnMouseUp` are the inherited ones.
+The plate fires every script an addon sets, and the engine sets none. The overrides run first and end in the button's handler: `OnUpdate` (`0x7cb950` to `0x76b2c0`), `OnEnter` (`0x7cb850` to `0x779490`) and `OnLeave` (`0x7cb8b0` to `0x7794e0`), and the click `0x7cb910`, which calls `0x4949f0` (select for the left button, interact for the right) and then runs the button's click (`ui/mouseover#clicking-a-nameplate`). `OnShow`, `OnHide`, `OnMouseDown` and `OnMouseUp` are the inherited ones.
 
 Addresses: `0x7cb950`, `0x7cba17`, `0x7cb850`, `0x7cb8a5`, `0x7cb8b0`, `0x7cb8ff`, `0x7cb910`, `0x7cb92a`, `0x7cb936`, `0x7cb637`, `0x779730`, `0x7792d0`, `0x76af00`, `0x778771`, `0x7cba30`, `0x76b320`, `0x6e48a0`, `0x6e6320`, `0x6e6180`
 Confidence: verified
