@@ -2,6 +2,8 @@
 //! night cycle. All x87 arithmetic is at 53-bit precision (`f64`); `f32` operands widen exactly.
 #![allow(clippy::float_cmp)]
 
+pub mod timecmp;
+
 #[inline]
 fn f(bits: u32) -> f64 {
     f64::from(f32::from_bits(bits))
