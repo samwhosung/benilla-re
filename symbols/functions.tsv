@@ -14252,7 +14252,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x554ca0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x554cb0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x554cc0	10			dbcache	orchestration		Runs its object file code that calls 0x554cd0; not read here	inferred	none		
-0x554cd0	29	InitNameCacheArguments		dbcache	orchestration	void __cdecl ()	Constructs the names cache with its tag, file name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved	
+0x554cd0	29	InitNameCacheArguments		dbcache	orchestration	void __cdecl ()	Constructs the names cache with its tag, file name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved	
 0x554cf0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x554d00	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x554d10	10			dbcache	orchestration		Runs its object file code that calls 0x554d20; not read here	inferred	none		
@@ -14284,26 +14284,26 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x554f20	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x554f30	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x554f40	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554f50	130	DBCacheLoadAll		dbcache	orchestration	void __cdecl ()	Calls the load function of each of the thirteen caches	verified	one	dbcache#caches-that-are-not-saved	
+0x554f50	130	DBCacheLoadAll		dbcache	orchestration	void __cdecl ()	Calls the load function of each of the thirteen caches	verified	one	dbcache/overview#caches-that-are-not-saved	
 0x554fe0	1			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554ff0	239	DBCache::RegisterHandlers	idb	dbcache	orchestration	void __cdecl ()	Registers the fourteen query response handlers with the message registrar	verified	one	dbcache#handlers	
-0x5550e0	28	HandleCreatureQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a creature query response through the creature cache	verified	one	dbcache#handlers	
-0x555100	28	HandleGameObjectQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a game object query response through its cache	verified	one	dbcache#handlers	
-0x555120	28	HandleItemNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an item name query response through its cache	verified	one	dbcache#handlers	
-0x555140	28	HandleItemQueryResponseSingle	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives one item record through the item cache	verified	one	dbcache#handlers	
-0x555160	28	HandleItemQueryResponseMultiple	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a counted list of item records through the item cache	verified	one	dbcache#handlers	
-0x555180	28	HandleNpcTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an NPC text query response through its cache	verified	one	dbcache#handlers	
-0x5551a0	227	HandleNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a name response; a named record goes to the names cache, an empty name refuses the guid	verified	one	dbcache#name-and-guild-responses	
-0x555290	97	HandleGuildQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a guild response; a named record goes to the guild cache, an empty name refuses the id	verified	one	dbcache#name-and-guild-responses	
-0x555300	344	HandleQuestQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a quest record and stores it in the quest cache	verified	one	dbcache#handlers	
-0x555460	28	HandlePageTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a page text query response through its cache	verified	one	dbcache#handlers	
-0x555480	125	HandlePetNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a pet name record and stores it in its cache	verified	one	dbcache#handlers	
-0x555500	221	HandlePetitionQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a petition record and stores it in its cache	verified	one	dbcache#handlers	
-0x5555e0	28	HandleItemTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an item text query response through its cache	verified	one	dbcache#handlers	
-0x555600	47	HandleNameInvalidate	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a guid and removes that name from the names cache	verified	one	dbcache#handlers	
+0x554ff0	239	DBCache::RegisterHandlers	idb	dbcache	orchestration	void __cdecl ()	Registers the fourteen query response handlers with the message registrar	verified	one	dbcache/overview#handlers	
+0x5550e0	28	HandleCreatureQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a creature query response through the creature cache	verified	one	dbcache/overview#handlers	
+0x555100	28	HandleGameObjectQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a game object query response through its cache	verified	one	dbcache/overview#handlers	
+0x555120	28	HandleItemNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an item name query response through its cache	verified	one	dbcache/overview#handlers	
+0x555140	28	HandleItemQueryResponseSingle	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives one item record through the item cache	verified	one	dbcache/overview#handlers	
+0x555160	28	HandleItemQueryResponseMultiple	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a counted list of item records through the item cache	verified	one	dbcache/overview#handlers	
+0x555180	28	HandleNpcTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an NPC text query response through its cache	verified	one	dbcache/overview#handlers	
+0x5551a0	227	HandleNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a name response; a named record goes to the names cache, an empty name refuses the guid	verified	one	dbcache/overview#name-and-guild-responses	
+0x555290	97	HandleGuildQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a guild response; a named record goes to the guild cache, an empty name refuses the id	verified	one	dbcache/overview#name-and-guild-responses	
+0x555300	344	HandleQuestQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a quest record and stores it in the quest cache	verified	one	dbcache/overview#handlers	
+0x555460	28	HandlePageTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives a page text query response through its cache	verified	one	dbcache/overview#handlers	
+0x555480	125	HandlePetNameQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a pet name record and stores it in its cache	verified	one	dbcache/overview#handlers	
+0x555500	221	HandlePetitionQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Decodes a petition record and stores it in its cache	verified	one	dbcache/overview#handlers	
+0x5555e0	28	HandleItemTextQueryResponse	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Receives an item text query response through its cache	verified	one	dbcache/overview#handlers	
+0x555600	47	HandleNameInvalidate	idb	dbcache	orchestration	int __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a guid and removes that name from the names cache	verified	one	dbcache/overview#handlers	
 0x555630	140			dbcache	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
 0x5556c0	120			dbcache	orchestration		Runs its object file code that calls 0x557200, 0x558ce0, 0x55c1b0 and 8 more; not read here	inferred	none		
-0x555740	248	DBCacheClearUnsaved		dbcache	orchestration	void __cdecl ()	Clears every cache whose persist flag is 0	verified	one	dbcache#caches-that-are-not-saved	
+0x555740	248	DBCacheClearUnsaved		dbcache	orchestration	void __cdecl ()	Clears every cache whose persist flag is 0	verified	one	dbcache/overview#caches-that-are-not-saved	
 0x555840	95			dbcache	unreached		Runs its object file code that calls 0x555d20; not read here	inferred	none		
 0x5558a0	95			dbcache	unreached		Runs its object file code that calls 0x555d60; not read here	inferred	none		
 0x555900	95			dbcache	unreached		Runs its object file code that calls 0x555da0; not read here	inferred	none		
@@ -14343,20 +14343,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x556640	41			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x556670	25			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x556690	60			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x5566d0	633	CreatureCacheSave		dbcache	primitive	void __thiscall (void *this)	Writes the Creature cache to its file as header, entries and a zero pair, then empties the cache; runs at exit	verified	one	dbcache#the-wdb-file	
+0x5566d0	633	CreatureCacheSave		dbcache	primitive	void __thiscall (void *this)	Writes the Creature cache to its file as header, entries and a zero pair, then empties the cache; runs at exit	verified	one	dbcache/overview#the-wdb-file	
 0x556950	256			dbcache	primitive		Runs its object file code that calls 0x556640; not read here	inferred	none		
 0x556a50	77			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x556aa0	515	CreatureCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a creature record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x556aa0	515	CreatureCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a creature record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x556cb0	3			dbcache	unreached		Runs its object file code not read here	inferred	none		
 0x556cc0	3			dbcache	unreached		Runs its object file code not read here	inferred	none		
 0x556cd0	288			dbcache	unreached		Runs its object file code that calls 0x556670, 0x56d190, 0x556690 and 2 more; not read here	inferred	none		
 0x556df0	41			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x556e20	449	CreatureCacheReceive		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, bool single)	Reads records from a response into the Creature cache and runs the callbacks	verified	one	dbcache#receiving-a-record	
-0x556ff0	281	CreatureCacheRemove		dbcache	unreached		Removes a creature node by key; nothing references it	inferred	none	dbcache#cache-objects-and-nodes	
+0x556e20	449	CreatureCacheReceive		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, bool single)	Reads records from a response into the Creature cache and runs the callbacks	verified	one	dbcache/overview#receiving-a-record	
+0x556ff0	281	CreatureCacheRemove		dbcache	unreached		Removes a creature node by key; nothing references it	inferred	none	dbcache/overview#cache-objects-and-nodes	
 0x557110	228			dbcache	unreached		Runs its object file code that calls 0x556670, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x557200	163			dbcache	orchestration		Runs its object file code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x5572b0	1055	CreatureCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Creature cache from its file, or returns at once for a cache that is not saved	inferred	none		
-0x5576d0	625	CreatureCacheWriteFile		dbcache	unreached		Duplicates the Creature cache file writer; no branch or stored address reaches it	verified	one	dbcache#the-wdb-file	
+0x5576d0	625	CreatureCacheWriteFile		dbcache	unreached		Duplicates the Creature cache file writer; no branch or stored address reaches it	verified	one	dbcache/overview#the-wdb-file	
 0x557950	406			dbcache	unreached		Runs DBCache.cpp code that calls 0x556670, 0x557af0, 0x56c8f0 and 1 more; not read here	inferred	none		
 0x557af0	17			dbcache	orchestration		Runs DBCache.cpp code not read here	inferred	none		
 0x557b10	96			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
@@ -14374,7 +14374,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x558180	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x558410	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x558130; not read here	inferred	none		
 0x558510	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x558560	534	GameObjectCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a game object record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x558560	534	GameObjectCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a game object record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x558780	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x558790	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x5587a0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x558160, 0x56d310, 0x556690 and 2 more; not read here	inferred	none		
@@ -14400,7 +14400,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x559c10	633			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x559e90	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x559bc0; not read here	inferred	none		
 0x559f90	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x559fe0	515	ItemNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x559fe0	515	ItemNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x55a1f0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55a200	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55a210	249			dbcache	unreached		Runs DBCache.cpp code that calls 0x559bf0, 0x56d490, 0x556690 and 2 more; not read here	inferred	none		
@@ -14426,7 +14426,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55b650	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x55b8e0	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x55b600; not read here	inferred	none		
 0x55b9e0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x55bc50	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55bc60	3	ItemCacheNoOp		dbcache	orchestration		Returns at once, dropping three stack arguments	verified	one	objectlayer/players#arrival-in-the-world	
 0x55bc70	308	ItemCacheReceive		dbcache	unreached		Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
@@ -14452,7 +14452,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55d3b0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x55d500; not read here	inferred	none		
 0x55d4b0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55d500	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55d530	534	NpcCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an NPC text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x55d530	534	NpcCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an NPC text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x55d750	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55d760	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55d770	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x55d100, 0x56d790, 0x556690 and 2 more; not read here	inferred	none		
@@ -14465,32 +14465,32 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55e420	424			dbcache	unreached		Runs DBCache.cpp code that calls 0x55d100, 0x557af0, 0x56cb30 and 1 more; not read here	inferred	none		
 0x55e5d0	99			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55e640	93			dbcache	primitive		Runs DBCache.cpp code that calls 0x555e20; not read here	inferred	none		
-0x55e6a0	218	NameCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Name cache: empty lists, mask -1, the file tag and name, opcode and flags	verified	one	dbcache#cache-objects-and-nodes	
+0x55e6a0	218	NameCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Name cache: empty lists, mask -1, the file tag and name, opcode and flags	verified	one	dbcache/overview#cache-objects-and-nodes	
 0x55e780	130			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556590, SMemFree, 0x557af0 and 2 more; not read here	inferred	none		
-0x55e810	276	NameCacheNodeAlloc		dbcache	primitive		Allocates a name node of 0x188 bytes plus the extra it is given and clears its record, list and flags	verified	one	dbcache#name-cache-node	
+0x55e810	276	NameCacheNodeAlloc		dbcache	primitive		Allocates a name node of 0x188 bytes plus the extra it is given and clears its record, list and flags	verified	one	dbcache/overview#name-cache-node	
 0x55e930	189			dbcache	primitive		Runs DBCache.cpp code that calls 0x555e60, 0x55eab0, SMemFree; not read here	inferred	none		
 0x55e9f0	190			dbcache	primitive		Runs DBCache.cpp code that calls 0x55ec50, 0x555e60, 0x55eb40 and 1 more; not read here	inferred	none		
 0x55eab0	136			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55eb40	135			dbcache	primitive		Runs DBCache.cpp code that calls 0x55ec50, 0x555e60, SMemFree; not read here	inferred	none		
 0x55ebd0	120			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55ec50	25			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55ec70	652	NameCacheSave		dbcache	primitive		Saves the Name cache's valid nodes that have +0x180 clear when it persists, then frees the cache	inferred	none	dbcache#name-cache-node	
+0x55ec70	652	NameCacheSave		dbcache	primitive		Saves the Name cache's valid nodes that have +0x180 clear when it persists, then frees the cache	inferred	none	dbcache/overview#name-cache-node	
 0x55ef00	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x55f050; not read here	inferred	none		
 0x55f000	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x55f050	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55f080	620	DBCache::NameCache::GetRecord	idb	dbcache	orchestration	void * __thiscall (DBCache::NameCache *this, uint64_t guid, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a name record for a guid, or keeps a callback and sends the name query on a miss	verified	one	dbcache#asking-for-a-record	
+0x55f080	620	DBCache::NameCache::GetRecord	idb	dbcache	orchestration	void * __thiscall (DBCache::NameCache *this, uint64_t guid, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a name record for a guid, or keeps a callback and sends the name query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x55f2f0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55f300	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
-0x55f310	393	NameCacheStore		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, uint32_t arg3, uint32_t arg4)	Writes a name record into the names cache, sets its valid byte and runs the callbacks	verified	one	dbcache#name-cache-writers	
-0x55f4a0	580	NameCacheReadFile		dbcache	unreached		Reads the names cache from its file; nothing calls it	inferred	none	dbcache#name-cache-writers	
-0x55f6f0	369	NameCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Runs a name's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache#name-and-guild-responses	
+0x55f310	393	NameCacheStore		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, uint32_t arg3, uint32_t arg4)	Writes a name record into the names cache, sets its valid byte and runs the callbacks	verified	one	dbcache/overview#name-cache-writers	
+0x55f4a0	580	NameCacheReadFile		dbcache	unreached		Reads the names cache from its file; nothing calls it	inferred	none	dbcache/overview#name-cache-writers	
+0x55f6f0	369	NameCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Runs a name's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache/overview#name-and-guild-responses	
 0x55f870	281	DBCache::NameCache::CancelCallback		dbcache	orchestration		Frees the callbacks waiting on a GUID's name request that match a function and data	inferred	none	ui/raid#pending-roster-names	
 0x55f990	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
-0x55fa50	1164	NameCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Name cache from its file, or returns at once for a cache that is not saved	verified	one	dbcache#caches-that-are-not-saved	
-0x55fee0	647	NameCacheWriteFile		dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache#name-cache-node	
-0x560170	506	NameCacheRemove		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Unlinks a name from both lists and frees it	inferred	none	dbcache#name-cache-writers	
-0x560370	135	NameCacheSetSkipSave		dbcache	orchestration		Sets the skip-from-save flag at +0x180 on the name node with the given guid	verified	one	dbcache#name-cache-node	
-0x560400	93	NameCacheClear		dbcache	orchestration	void __thiscall (void *this)	Frees every node of the names cache and empties it	verified	one	dbcache#caches-that-are-not-saved	
+0x55fa50	1164	NameCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Name cache from its file, or returns at once for a cache that is not saved	verified	one	dbcache/overview#caches-that-are-not-saved	
+0x55fee0	647	NameCacheWriteFile		dbcache	unreached		Duplicates the Name cache file writer; unreached	inferred	none	dbcache/overview#name-cache-node	
+0x560170	506	NameCacheRemove		dbcache	orchestration	void __thiscall (void *this, uint64_t guid)	Unlinks a name from both lists and frees it	inferred	none	dbcache/overview#name-cache-writers	
+0x560370	135	NameCacheSetSkipSave		dbcache	orchestration		Sets the skip-from-save flag at +0x180 on the name node with the given guid	verified	one	dbcache/overview#name-cache-node	
+0x560400	93	NameCacheClear		dbcache	orchestration	void __thiscall (void *this)	Frees every node of the names cache and empties it	verified	one	dbcache/overview#caches-that-are-not-saved	
 0x560460	218	GuildCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Guild cache: empty lists, mask -1, the file tag and name, opcode and flags	inferred	none		
 0x560540	130			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556590, SMemFree, 0x557af0 and 2 more; not read here	inferred	none		
 0x5605d0	257			dbcache	primitive		Runs DBCache.cpp code that calls SMemAlloc; not read here	inferred	none		
@@ -14504,12 +14504,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x560cb0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x560e00; not read here	inferred	none		
 0x560db0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x560e00	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x560e30	534	DBCache::GuildGetRecord		dbcache	orchestration	void * __thiscall (DBCache *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a guild record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x560e30	534	DBCache::GuildGetRecord		dbcache	orchestration	void * __thiscall (DBCache *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a guild record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x561050	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x561060	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
-0x561070	308	GuildCacheReceive		dbcache	orchestration	void __thiscall (void *this, GuildRecord *record, uint32_t key)	Stores a decoded guild record in the guild cache and runs its callbacks	verified	one	dbcache#name-and-guild-responses	
+0x561070	308	GuildCacheReceive		dbcache	orchestration	void __thiscall (void *this, GuildRecord *record, uint32_t key)	Stores a decoded guild record in the guild cache and runs its callbacks	verified	one	dbcache/overview#name-and-guild-responses	
 0x5611b0	471			dbcache	unreached		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x560a00 and 5 more; not read here	inferred	none		
-0x561390	293	GuildCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint32_t key)	Runs a guild's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache#name-and-guild-responses	
+0x561390	293	GuildCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint32_t key)	Runs a guild's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache/overview#name-and-guild-responses	
 0x5614c0	236	GuildCacheCancelCallback		dbcache	primitive		Removes a pending callback from a cache's request	inferred	none	objectlayer/players#destruction	
 0x5615b0	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x561670	1061	GuildCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Guild cache from its file, or returns at once for a cache that is not saved	inferred	none		
@@ -14531,7 +14531,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5628c0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x562a10; not read here	inferred	none		
 0x5629c0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x562a10	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x562a40	534	QuestCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a quest record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x562a40	534	QuestCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a quest record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x562c60	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x562c70	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x562c80	656			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, 0x56dc10, SStrCopy and 2 more; not read here	inferred	none		
@@ -14558,7 +14558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5645b0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x564700; not read here	inferred	none		
 0x5646b0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x564700	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x564730	534	PageTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a page text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x564730	534	PageTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a page text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x564950	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x564960	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x564970	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x564300, 0x56dd90, 0x556690 and 2 more; not read here	inferred	none		
@@ -14584,7 +14584,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x565e70	636			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x5660f0	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x565e20; not read here	inferred	none		
 0x5661f0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x566240	515	PetNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a pet name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x566240	515	PetNameCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a pet name record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x566450	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x566460	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x566470	252			dbcache	primitive		Runs DBCache.cpp code that calls 0x565e50, 0x56df10, SStrCopy and 2 more; not read here	inferred	none		
@@ -14610,7 +14610,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x567980	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x567c10	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x567930; not read here	inferred	none		
 0x567d10	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x567d60	534	PetitionCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a petition record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x567d60	534	PetitionCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a petition record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x567f80	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x567f90	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x567fa0	538			dbcache	primitive		Runs DBCache.cpp code that calls 0x567960, 0x56e090, SStrCopy and 2 more; not read here	inferred	none		
@@ -14636,11 +14636,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x569800	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x569950; not read here	inferred	none		
 0x569900	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x569950	41			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x569980	534	ItemTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache#asking-for-a-record	
+0x569980	534	ItemTextCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item text record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x569ba0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bb0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bc0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, 0x56e210, 0x556690 and 2 more; not read here	inferred	none		
-0x569d00	476	ItemTextCacheReceive		dbcache	primitive		Receives an item text response, refusing a key with its top bit set, else decoding the text inline	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_item_text
+0x569d00	476	ItemTextCacheReceive		dbcache	primitive		Receives an item text response, refusing a key with its top bit set, else decoding the text inline	verified	one	dbcache/overview#pages-pets-and-item-texts	dbcache::dbcache_item_text
 0x569ee0	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550; not read here	inferred	none		
 0x56a010	236			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x56a100	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
@@ -14698,7 +14698,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x56d490	372			dbcache	primitive		Runs its object file code that calls 0x56f030, 0x559bf0, 0x555da0 and 2 more; not read here	inferred	none		
 0x56d610	372			dbcache	primitive		Runs its object file code that calls 0x56f450, 0x55b630, 0x555de0 and 2 more; not read here	inferred	none		
 0x56d790	372			dbcache	primitive		Runs its object file code that calls 0x56f870, 0x55d100, 0x555e20 and 2 more; not read here	inferred	none		
-0x56d910	372	NameCacheAllocNode		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint32_t arg3, uint32_t arg4)	Inserts a node into the names cache, growing the buckets when a chain passes 13	verified	one	dbcache#cache-objects-and-nodes	
+0x56d910	372	NameCacheAllocNode		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint32_t arg3, uint32_t arg4)	Inserts a node into the names cache, growing the buckets when a chain passes 13	verified	one	dbcache/overview#cache-objects-and-nodes	
 0x56da90	372			dbcache	primitive		Runs its object file code that calls 0x5700b0, 0x560a00, 0x555ea0 and 2 more; not read here	inferred	none		
 0x56dc10	372			dbcache	primitive		Runs its object file code that calls 0x5704d0, 0x562610, 0x555ee0 and 2 more; not read here	inferred	none		
 0x56dd90	372			dbcache	primitive		Runs its object file code that calls 0x5708f0, 0x564300, 0x555f20 and 2 more; not read here	inferred	none		
@@ -28374,7 +28374,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ca010	83	SetWardenBuffer		warden	host	WardenBuffer * __thiscall (WardenBuffer *this, uint32_t size, const void *data)	Copies size bytes of data into a new allocation, or empties the buffer for a null data pointer	verified	one	warden/cache#the-cache-record	
 0x6ca070	68	WriteWardenBuffer		warden	orchestration	void __thiscall (WardenBuffer *this, CDataStore *store)	Puts the length as a dword, then each byte, in a data store	verified	one	warden/cache#the-cache-record	warden::record_writer
 0x6ca0c0	94	ReadWardenBuffer		warden	orchestration	void __thiscall (WardenBuffer *this, CDataStore *store)	Reads a dword length and that many bytes from a data store into a new allocation	verified	one	warden/cache#the-cache-record	warden::record_reader, warden::record_reader_short_stores
-0x6ca120	6	GetWowCacheVersion		warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache#the-wdb-file	
+0x6ca120	6	GetWowCacheVersion		warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache/overview#the-wdb-file	
 0x6ca130	10	InitWardenCritSect1Thunk		warden	orchestration	void __cdecl (void)	Calls 0x6ca140, then jumps to 0x6ca150; a static initializer	verified	one	warden/overview#static-initializers	
 0x6ca140	10	InitWardenCritSect1		warden	orchestration	void __cdecl (void)	Constructs the critical section at 0xce8958	verified	one	warden/overview#static-initializers	
 0x6ca150	12	RegisterDestroyWardenCritSect1		warden	orchestration	void __cdecl (void)	Registers 0x6ca160 with atexit	verified	one	warden/overview#static-initializers	
@@ -28892,11 +28892,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dbaa0	316	Md5BucketsResize		minimap	primitive	void __thiscall (void *this, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	minimap/overview#array-and-list-helpers	
 0x6dbbe0	264	Md5BucketsRealloc		minimap	primitive	void __thiscall (void *this, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	minimap/overview#array-and-list-helpers	
 0x6dbcf0	616			unassigned			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutFloat, CDataStore::PutCString; not read here	inferred	none		
-0x6dbf60	536	QuestCacheRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a quest record: dwords, floats, four texts, objective groups and four objective texts	verified	one	dbcache#guild-and-quest	dbcache::dbcache_quest
+0x6dbf60	536	QuestCacheRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a quest record: dwords, floats, four texts, objective groups and four objective texts	verified	one	dbcache/overview#guild-and-quest	dbcache::dbcache_quest
 0x6dc180	98			unassigned			Runs its object file code that calls CDataStore::PutGuid, CDataStore::PutCString, 0x4181f0; not read here	inferred	none		
-0x6dc1f0	98	NameCacheRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a name record: a guid, the name, a server name and three dwords	verified	one	dbcache#names-and-petitions	dbcache::dbcache_name
+0x6dc1f0	98	NameCacheRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a name record: a guid, the name, a server name and three dwords	verified	one	dbcache/overview#names-and-petitions	dbcache::dbcache_name
 0x6dc260	46			unassigned			Runs its object file code that calls 0x4181f0, CDataStore::PutCString; not read here	inferred	none		
-0x6dc290	48	PetNameRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a pet name record: a dword, a string and a dword	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_pet_name
+0x6dc290	48	PetNameRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a pet name record: a dword, a string and a dword	verified	one	dbcache/overview#pages-pets-and-item-texts	dbcache::dbcache_pet_name
 0x6dc2c0	259	IntersectSegments2D		unassigned	unreached	uint32_t __fastcall (const NTempest::C2Vector *a, const NTempest::C2Vector *b, const NTempest::C2Vector *c, const NTempest::C2Vector *d, NTempest::C2Vector *out)	Returns 1 when two 2D segments cross, else writes where their lines meet	verified	one	cmath/solids#segments-in-the-plane	
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
@@ -36137,8 +36137,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8040	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7c8060	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8070	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8080	160	CreatureStatsWrite		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Writes a creature record: four names, a subname, seven dwords and two flag bytes	verified	one	dbcache#the-wdb-file	
-0x7c8120	265	CreatureStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads a creature record: four names, a subname, seven dwords and two flag bytes	verified	one	dbcache#creature-and-game-object	dbcache::dbcache_creature
+0x7c8080	160	CreatureStatsWrite		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Writes a creature record: four names, a subname, seven dwords and two flag bytes	verified	one	dbcache/overview#the-wdb-file	
+0x7c8120	265	CreatureStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads a creature record: four names, a subname, seven dwords and two flag bytes	verified	one	dbcache/overview#creature-and-game-object	dbcache::dbcache_creature
 0x7c8230	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8240	15			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c8250	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
@@ -36196,7 +36196,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8720	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8730	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8740	119			dbcache	primitive		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString; not read here	inferred	none		
-0x7c87c0	205	GameObjectStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads a game object record: two dwords, five strings and 24 dwords	verified	one	dbcache#creature-and-game-object	dbcache::dbcache_gameobject
+0x7c87c0	205	GameObjectStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads a game object record: two dwords, five strings and 24 dwords	verified	one	dbcache/overview#creature-and-game-object	dbcache::dbcache_gameobject
 0x7c8890	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c88a0	15			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c88b0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
@@ -36254,7 +36254,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8d80	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8d90	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8da0	18			dbcache	orchestration		Runs its object file code that calls CDataStore::PutCString; not read here	inferred	none		
-0x7c8dc0	60	ItemNameRead		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream)	Reads an item name record: one string, duplicated	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_item_name
+0x7c8dc0	60	ItemNameRead		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream)	Reads an item name record: one string, duplicated	verified	one	dbcache/overview#pages-pets-and-item-texts	dbcache::dbcache_item_name
 0x7c8e00	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8e10	15			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c8e20	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
@@ -36312,7 +36312,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c92f0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9300	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9310	813			dbcache	primitive		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString, CDataStore::PutFloat; not read here	inferred	none		
-0x7c9640	897	ItemStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads an item record: names, dwords, arrays, floats and a description	verified	one	dbcache#item-and-npc-text	dbcache::dbcache_itemstats
+0x7c9640	897	ItemStatsRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads an item record: names, dwords, arrays, floats and a description	verified	one	dbcache/overview#item-and-npc-text	dbcache::dbcache_itemstats
 0x7c99d0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c99e0	15			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c99f0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
@@ -36370,7 +36370,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c9ec0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9ed0	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9ee0	192			dbcache	primitive		Runs its object file code that calls CDataStore::PutFloat, CDataStore::PutCString, CDataStore::PutUInt32; not read here	inferred	none		
-0x7c9fa0	308	NpcTextRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads an NPC text record: eight probabilities, string pairs, languages and emotes	verified	one	dbcache#item-and-npc-text	dbcache::dbcache_npctext
+0x7c9fa0	308	NpcTextRead		dbcache	primitive	void __thiscall (void *this, CDataStore *stream)	Reads an NPC text record: eight probabilities, string pairs, languages and emotes	verified	one	dbcache/overview#item-and-npc-text	dbcache::dbcache_npctext
 0x7ca0e0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7ca0f0	15			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7ca100	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
@@ -36485,7 +36485,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cab80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cab90	11			unassigned			Runs its object file code not read here	inferred	none		
 0x7caba0	38			unassigned			Runs its object file code that calls CDataStore::PutCString, CDataStore::PutUInt32; not read here	inferred	none		
-0x7cabd0	43	PageTextRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a page text record: a string and the next page id	verified	one	dbcache#pages-pets-and-item-texts	dbcache::dbcache_page_text
+0x7cabd0	43	PageTextRead		unassigned		void __thiscall (void *this, CDataStore *stream)	Reads a page text record: a string and the next page id	verified	one	dbcache/overview#pages-pets-and-item-texts	dbcache::dbcache_page_text
 0x7cac00	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cac10	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7cac20	5			unassigned			Runs its object file code not read here	inferred	none		

@@ -175,7 +175,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-Each lookup puts its opcode from `[cache+0x30]`; the caller passes the store in `ecx` (the first caller of each lookup gives the store above), and the constructor call, six pushes then `mov ecx,<store>`, pushes the opcode fourth (`0x554b46` for creatures, `0x554cd6` for names). The first writes after the vtable store are the puts listed. `net/dispatch` and `dbcache#asking-for-a-record` describe the lookup. A thirteenth cache, `wowcache.wdb` at `0xc0e084`, has opcode 0 and its lookup `0x56b430` is not read here.
+Each lookup puts its opcode from `[cache+0x30]`; the caller passes the store in `ecx` (the first caller of each lookup gives the store above), and the constructor call, six pushes then `mov ecx,<store>`, pushes the opcode fourth (`0x554b46` for creatures, `0x554cd6` for names). The first writes after the vtable store are the puts listed. `net/dispatch` and `dbcache/overview#asking-for-a-record` describe the lookup. A thirteenth cache, `wowcache.wdb` at `0xc0e084`, has opcode 0 and its lookup `0x56b430` is not read here.
 
 ## Social messages
 

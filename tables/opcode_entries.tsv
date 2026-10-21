@@ -29,22 +29,22 @@ opcode	name	role	site	function	entries	basis
 0x04e	CMSG_LOGOUT_CANCEL	send	0x5aafb9	0x5aaf80	core/close#no-logout-request|net/connection#logout|ui/popups#logout-and-quit	opcode
 0x04f	SMSG_LOGOUT_CANCEL_ACK	handler	0x5b3b33	0x5b3ea0	net/dispatch#realm-connection-messages	opcode
 0x050	CMSG_NAME_QUERY	send	0x55f1fa	0x55f080	net/server#cache-query-opcodes	opcode
-0x051	SMSG_NAME_QUERY_RESPONSE	handler	0x555062	0x5551a0	dbcache#handlers|dbcache#name-cache-writers	opcode
+0x051	SMSG_NAME_QUERY_RESPONSE	handler	0x555062	0x5551a0	dbcache/overview#handlers|dbcache/overview#name-cache-writers	opcode
 0x052	CMSG_PET_NAME_QUERY	send	0x566372	0x566240	net/server#cache-query-opcodes	opcode
-0x053	SMSG_PET_NAME_QUERY_RESPONSE	handler	0x5550a6	0x555480	dbcache#handlers	opcode
+0x053	SMSG_PET_NAME_QUERY_RESPONSE	handler	0x5550a6	0x555480	dbcache/overview#handlers	opcode
 0x054	CMSG_GUILD_QUERY	send	0x560f68	0x560e30	net/server#cache-query-opcodes|ui/guild#the-guild-cache	opcode
-0x055	SMSG_GUILD_QUERY_RESPONSE	handler	0x555073	0x555290	dbcache#handlers|ui/guild#the-guild-cache	opcode
+0x055	SMSG_GUILD_QUERY_RESPONSE	handler	0x555073	0x555290	dbcache/overview#handlers|ui/guild#the-guild-cache	opcode
 0x056	CMSG_ITEM_QUERY_SINGLE	send	0x55bb68	0x55ba30	net/server#cache-query-opcodes|spell/failures#item-power-and-form-arms	opcode
-0x058	SMSG_ITEM_QUERY_SINGLE_RESPONSE	handler	0x55502f	0x555140	dbcache#handlers	opcode
-0x059	SMSG_ITEM_QUERY_MULTIPLE_RESPONSE	handler	0x555040	0x555160	dbcache#handlers	opcode
+0x058	SMSG_ITEM_QUERY_SINGLE_RESPONSE	handler	0x55502f	0x555140	dbcache/overview#handlers	opcode
+0x059	SMSG_ITEM_QUERY_MULTIPLE_RESPONSE	handler	0x555040	0x555160	dbcache/overview#handlers	opcode
 0x05a	CMSG_PAGE_TEXT_QUERY	send	0x564868	0x564730	net/server#cache-query-opcodes	opcode
-0x05b	SMSG_PAGE_TEXT_QUERY_RESPONSE	handler	0x555095	0x555460	dbcache#handlers	opcode
+0x05b	SMSG_PAGE_TEXT_QUERY_RESPONSE	handler	0x555095	0x555460	dbcache/overview#handlers	opcode
 0x05c	CMSG_QUEST_QUERY	send	0x562b78	0x562a40	net/server#cache-query-opcodes|ui/questlog#the-rebuild	opcode
-0x05d	SMSG_QUEST_QUERY_RESPONSE	handler	0x555084	0x555300	dbcache#handlers|ui/questlog#when-the-templates-arrive|ui/questrewardspell#quest-log-reward-spell	opcode
+0x05d	SMSG_QUEST_QUERY_RESPONSE	handler	0x555084	0x555300	dbcache/overview#handlers|ui/questlog#when-the-templates-arrive|ui/questrewardspell#quest-log-reward-spell	opcode
 0x05e	CMSG_GAMEOBJECT_QUERY	send	0x558698	0x558560	net/server#cache-query-opcodes	opcode
-0x05f	SMSG_GAMEOBJECT_QUERY_RESPONSE	handler	0x55500d	0x555100	dbcache#handlers	opcode
+0x05f	SMSG_GAMEOBJECT_QUERY_RESPONSE	handler	0x55500d	0x555100	dbcache/overview#handlers	opcode
 0x060	CMSG_CREATURE_QUERY	send	0x556bd2	0x556aa0	net/server#cache-query-opcodes	opcode
-0x061	SMSG_CREATURE_QUERY_RESPONSE	handler	0x554ffc	0x5550e0	dbcache#handlers	opcode
+0x061	SMSG_CREATURE_QUERY_RESPONSE	handler	0x554ffc	0x5550e0	dbcache/overview#handlers	opcode
 0x062	CMSG_WHO	send	0x5af168	0x5aebb0	net/who#who-query-packet	opcode
 0x063	SMSG_WHO	handler	0x5adc98	0x5adf60	net/who#who-list-reply	opcode
 0x064	CMSG_WHOIS	send	0x5adf1f	0x5adee0	net/server#formats-vmangos-reads|net/server#social-messages	opcode
@@ -352,7 +352,7 @@ opcode	name	role	site	function	entries	basis
 0x17d	SMSG_GOSSIP_MESSAGE	handler	0x4e1efc	0x4e26e0	ui/gossip#the-gossip-message	opcode
 0x17e	SMSG_GOSSIP_COMPLETE	handler	0x4e1f0d	0x4e2800		unread
 0x17f	CMSG_NPC_TEXT_QUERY	send	0x55d668	0x55d530	net/server#cache-query-opcodes|ui/gossip#the-greeting	opcode
-0x180	SMSG_NPC_TEXT_UPDATE	handler	0x555051	0x555180	dbcache#handlers	opcode
+0x180	SMSG_NPC_TEXT_UPDATE	handler	0x555051	0x555180	dbcache/overview#handlers	opcode
 0x182	CMSG_QUESTGIVER_STATUS_QUERY	send	0x5eaff8	0x5eafb0	objectlayer/quests#quest-giver-status-refresh|objectlayer/quests#quest-messages-sent	opcode
 0x183	SMSG_QUESTGIVER_STATUS	handler	0x5e325e	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
 0x184	CMSG_QUESTGIVER_HELLO	send	0x501526	0x5013f0	ui/questshare#accepting-and-declining	opcode
@@ -418,7 +418,7 @@ opcode	name	role	site	function	entries	basis
 0x1c4	CMSG_TURN_IN_PETITION	send	0x5ef4f3	0x5ef2b0	objectlayer/party#petitions	opcode
 0x1c5	SMSG_TURN_IN_PETITION_RESULTS	handler	0x5e3407	0x5e5050	objectlayer/party#petitions	opcode
 0x1c6	CMSG_PETITION_QUERY	send	0x567e98	0x567d60	net/server#cache-query-opcodes	opcode
-0x1c7	SMSG_PETITION_QUERY_RESPONSE	handler	0x5550b7	0x555500	dbcache#handlers	opcode
+0x1c7	SMSG_PETITION_QUERY_RESPONSE	handler	0x5550b7	0x555500	dbcache/overview#handlers	opcode
 0x1c8	SMSG_FISH_NOT_HOOKED	handler	0x5e3605	0x5e38c0	objectlayer/playermessages#error-notices	opcode
 0x1c9	SMSG_FISH_ESCAPED	handler	0x5e3616	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#error-notices	opcode
 0x1ca	CMSG_BUG	send	0x5ac560	0x5abe10	net/layout#unreached-functions	function
@@ -512,7 +512,7 @@ opcode	name	role	site	function	entries	basis
 0x23d	SMSG_BATTLEFIELD_LIST	handler	0x4a9c4f	0x4aa6c0	ui/battlefield#the-list-message	opcode
 0x23e	CMSG_BATTLEFIELD_JOIN	send	0x4aa057	0x4a9f60	ui/battlefield#joining-and-leaving	opcode
 0x243	CMSG_ITEM_TEXT_QUERY	send	0x569ab8	0x569980	net/server#cache-query-opcodes	opcode
-0x244	SMSG_ITEM_TEXT_QUERY_RESPONSE	handler	0x5550c8	0x5555e0	dbcache#handlers	opcode
+0x244	SMSG_ITEM_TEXT_QUERY_RESPONSE	handler	0x5550c8	0x5555e0	dbcache/overview#handlers	opcode
 0x245	CMSG_MAIL_TAKE_MONEY	send	0x4af8a1	0x4af7d0	ui/mail#mail-packets	opcode
 0x246	CMSG_MAIL_TAKE_ITEM	send	0x4afa16	0x4af8e0	ui/mail#mail-packets	opcode
 0x247	CMSG_MAIL_MARK_AS_READ	send	0x4add54	0x4adcd0	ui/mail#mail-packets|ui/mail#opening-the-inbox	opcode
@@ -661,7 +661,7 @@ opcode	name	role	site	function	entries	basis
 0x2c2	SMSG_INIT_WORLD_STATES	handler	0x48f51f	0x48f690	ui/gameui#game-start-up|ui/questtext#world-state-numbers|ui/worldstate#the-packets	opcode
 0x2c3	SMSG_UPDATE_WORLD_STATE	handler	0x48f52f	0x48f690	ui/gameui#game-start-up|ui/questtext#world-state-numbers|ui/worldstate#the-packets	opcode
 0x2c4	CMSG_ITEM_NAME_QUERY	send	0x55a112	0x559fe0	net/server#cache-query-opcodes	opcode
-0x2c5	SMSG_ITEM_NAME_QUERY_RESPONSE	handler	0x55501e	0x555120	dbcache#handlers	opcode
+0x2c5	SMSG_ITEM_NAME_QUERY_RESPONSE	handler	0x55501e	0x555120	dbcache/overview#handlers	opcode
 0x2c6	SMSG_PET_ACTION_FEEDBACK	handler	0x4bc6d6	0x4bdb70	ui/petbar#pet-mode-and-feedback-messages	opcode
 0x2c7	CMSG_CHAR_RENAME	send	0x46b40b	0x46b340	glue/flow#rename-request-and-reply	opcode
 0x2c8	SMSG_CHAR_RENAME	handler	0x46aa4e	0x46b440	glue/flow#rename-request-and-reply	opcode
@@ -747,7 +747,7 @@ opcode	name	role	site	function	entries	basis
 0x318	CMSG_SET_WATCHED_FACTION	send	0x4d62b4	0x4d6240	ui/reputationlua#watched-faction|ui/reputationwire#faction-requests	opcode
 0x319	MSG_MOVE_TIME_SKIPPED	handler	0x6035e0	0x603b40	collision/timeskip#skipped-time-received|objectlayer/unitmovement#movement-message-handlers	opcode
 0x31a	SMSG_SPLINE_MOVE_ROOT	handler	0x603780	0x603c80	objectlayer/unitmovement#movement-message-handlers	opcode
-0x31c	SMSG_INVALIDATE_PLAYER	handler	0x5550d9	0x555600	dbcache#handlers	opcode
+0x31c	SMSG_INVALIDATE_PLAYER	handler	0x5550d9	0x555600	dbcache/overview#handlers	opcode
 0x31d	CMSG_RESET_INSTANCES	send	0x48a6e6	0x48a6b0	ui/groupverbs#instances	opcode
 0x31e	SMSG_INSTANCE_RESET	handler	0x4986aa	0x49e470	ui/groupverbs#instances	function
 0x31f	SMSG_INSTANCE_RESET_FAILED	handler	0x4986ba	0x49e540		unread

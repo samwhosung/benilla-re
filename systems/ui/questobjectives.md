@@ -188,7 +188,7 @@ Test: none
 
 The walk is `0x4df7f0` to `0x4df830` over `0xbb71c0`, stride 0x10, against the count `0xbb7478`; it reads no
 header flag, so a header's zone or sort id is looked up as a quest id. The lookup `0x562a40` (`0x4df805`) gets a
-null callback (`0x4df7f4`), and a miss without one returns null and sends nothing (`dbcache#asking-for-a-record`).
+null callback (`0x4df7f4`), and a miss without one returns null and sends nothing (`dbcache/overview#asking-for-a-record`).
 `cmp [eax],edx` at `0x4df818` compares `ReqItemId[i]` with the entry, so an entry of 0 matches any cached quest
 with an empty item slot. A match leaves the walk for `0x4df83b`: `mov ecx,0x134` and `FrameScript_SignalEvent`
 (`0x4df840`), then `0x468460` with mask 0x10 and `0x5eb070` (`0x4df864`). The callers `0x5d85d9`, `0x5d9519` and

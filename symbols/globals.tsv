@@ -1937,7 +1937,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x855808	int32_t	s_physicalResistIndex		ui	Holds the index of the damage class row marked physical, −1 until the table is checked	verified	one	ui/tooltipunitstatus#the-studied-creature-lines
 0x85580c	char[23]	s_pathWowClientDbH		dbc	Holds ..\..\DB/WowClientDB.h, the tag of the allocations in the table loaders	verified	one	dbc#the-loader
 0x8558a4	char *[8]	s_localeNames		unassigned	Holds the eight locale tags enUS to xxYY the locale index counts through	verified	one	dbc#localized-strings
-0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	one	dbcache#name-cache-node
+0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	one	dbcache/overview#name-cache-node
 0x856450	uint32_t			unassigned	Holds a dword that SendBugReport reads; not read here	inferred	none	
 0x85645c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x858348	char[32]	s_textDBFilesClientChatProfanityDbc		dbc	Holds the string "DBFilesClient\ChatProfanity.dbc"	inferred	none	
@@ -3696,19 +3696,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	one	dbc#localized-strings
-0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
-0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
-0xc0e138	uint8_t[60]	s_petNameCache		dbcache	Holds the pet name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
-0xc0e174	uint8_t[60]	s_pageTextCache		dbcache	Holds the page text cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
-0xc0e1b0	uint8_t[60]	s_questCache		dbcache	Holds the quest cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
-0xc0e1ec	uint8_t[60]	s_guildCache		dbcache	Holds the guild cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
-0xc0e228	uint8_t[60]	s_nameCache		dbcache	Holds the names cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
+0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
+0xc0e138	uint8_t[60]	s_petNameCache		dbcache	Holds the pet name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
+0xc0e174	uint8_t[60]	s_pageTextCache		dbcache	Holds the page text cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
+0xc0e1b0	uint8_t[60]	s_questCache		dbcache	Holds the quest cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
+0xc0e1ec	uint8_t[60]	s_guildCache		dbcache	Holds the guild cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
+0xc0e228	uint8_t[60]	s_nameCache		dbcache	Holds the names cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
 0xc0e264	void *	s_npcTextCache		dbcache	Holds the NPC text cache store, npccache.wdb	verified	one	ui/gossip#the-greeting
-0xc0e2a0	uint8_t[60]	s_itemCache		dbcache	Holds the item cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e2a0	uint8_t[60]	s_itemCache		dbcache	Holds the item cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
-0xc0e318	uint8_t[60]	s_gameObjectCache		dbcache	Holds the game object cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
-0xc0e354	uint8_t[60]	s_creatureCache		dbcache	Holds the creature cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e318	uint8_t[60]	s_gameObjectCache		dbcache	Holds the game object cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
+0xc0e354	uint8_t[60]	s_creatureCache		dbcache	Holds the creature cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e5b0	float	s_gameObjectDisplayInfoInvTwoPi		dbc	Holds 1/(2π), set at startup by the record file; nothing reads it	verified	one	dbc#record-files
 0xc0e5b4	float	s_gameObjectDisplayInfoTwoPi		dbc	Holds 2 pi, set at startup by the record file; nothing reads it	verified	one	dbc#record-files
 0xc0e5b8	float	s_gameObjectDisplayInfoInfinity		dbc	Holds +inf, set at startup by the record file; nothing reads it	verified	one	dbc#record-files

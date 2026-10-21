@@ -36,7 +36,7 @@ const INITIALIZERS: (u32, u32) = (0x827000, 0x82e030);
 /// The object files the docs list by address where no path or row bounds them: `ui`'s runs
 /// (`systems/ui/README.md`, `systems/ui/framexml.md`), the minigame's board file (`symbols/README.md`), and the object-file
 /// spans of `gx` (`systems/gx/overview.md`), `lighting` (`systems/lighting/overview.md`), `cmath`
-/// (`systems/cmath/overview.md`), `dbcache` (`systems/dbcache.md`) and `font`
+/// (`systems/cmath/overview.md`), `dbcache` (`systems/dbcache/overview.md`) and `font`
 /// (`systems/font/overview.md`). A span is that system's; a span whose end the doc leaves open is
 /// one address, its first function. The spans are ordered by start.
 const DECLARED: &[(u32, u32, &str)] = &[
