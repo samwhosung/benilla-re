@@ -9197,7 +9197,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cc090	23	InitZero4cc090		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4cc0b0	12	InitZero4cc090Register		ui	orchestration	void __cdecl (void)	Registers 0x4cc0c0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4cc0c0	47	InitZero4cc090Exit		ui	primitive	void __cdecl (void)	Frees the OutbidItemInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4cc0f0	393	CGAuctionHouse::InitializeGame	idb	ui	orchestration	void __stdcall ()	Registers the auction packet handlers, allocates the 150 records and outbid pairs and sets the sort keys	verified	one	ui/auction#session-state	
+0x4cc0f0	393	CGAuctionHouse::InitializeGame	idb	ui	orchestration	void __stdcall ()	Registers the auction packet handlers, allocates the 150 records and outbid pairs and sets the sort keys	verified	one	ui/auction#session-state	ui::outbid_list_start_up_difftest
 0x4cc280	101	ResetAuctionSession		ui	orchestration	void __stdcall ()	Clears the sell slot, zeroes the auction session state, counts and flags, and sets the three selections to -1	verified	one	ui/auction#the-session-reset	
 0x4cc2f0	5	LeaveWorldCloseAuctionHouse		ui	orchestration	void __cdecl ()	Jumps to the auction close 0x4cd5f0	verified	one	ui/auction#opening-and-closing	
 0x4cc300	284	RemoveAuctionHandlers		ui	orchestration	void __stdcall ()	Removes the auction packet handlers registered by 0x4cc0f0	verified	one	ui/auction#session-state	
@@ -9216,8 +9216,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cd570	128	OpenAuctionHouse		ui	orchestration	void __fastcall (uint32_t house, uint64_t auctioneer)	Stores the auctioneer and house, resets the lists and flags, clears the sell slot and signals 421	verified	one	ui/auction#opening-and-closing	
 0x4cd5f0	68	CloseAuctionHouse		ui	orchestration	void __stdcall ()	Signals 422, ends the interaction, zeroes the auctioneer, house and flags and clears the sell slot	verified	one	ui/auction#opening-and-closing	
 0x4cd640	62	ClearAuctionSellSlot		ui	orchestration	void __stdcall ()	Unlocks and clears the sell slot item and signals NEW_AUCTION_UPDATE	verified	one	ui/auctionlists#sell-slot	
-0x4cd680	153	SendOwnerListRequest		ui	orchestration	void __fastcall (uint32_t offset)	Sends 0x259 with the list offset when the owner request flag is set, then clears the flag	verified	one	ui/auction#requests-the-client-sends	
-0x4cd720	293	SendBidderListRequest		ui	primitive	void __fastcall (uint32_t offset)	Sends 0x264 with the offset and the open house's outbid auction ids when its flag is set	verified	one	ui/auction#requests-the-client-sends	
+0x4cd680	153	SendOwnerListRequest		ui	orchestration	void __fastcall (uint32_t offset)	Sends 0x259 with the list offset when the owner request flag is set, clears the flag and saves the offset	verified	one	ui/auction#requests-the-client-sends	
+0x4cd720	293	SendBidderListRequest		ui	primitive	void __fastcall (uint32_t offset)	Sends 0x264 with the offset and the open house's outbid ids when armed, saves the offset, drops the house's first pair	verified	one	ui/auction#requests-the-client-sends	
 0x4cd850	91	PromoteAuctionBrowseSortColumn		ui	primitive	void __fastcall (uint32_t column)	Promotes a column in the browse sort keys and sorts the browse list	verified	one	ui/auctionlists#sorting	
 0x4cd8b0	36	SortAuctionBrowseList		ui	orchestration	void __cdecl ()	Sorts the browse list with qsort and signals AUCTION_ITEM_LIST_UPDATE	verified	one	ui/auctionlists#sorting	
 0x4cd8e0	84	CompareAuctionBrowseRows		ui	primitive	int __cdecl (void **a, void **b)	Compares two browse rows by the 8 sort keys in turn, negating a reversed key	verified	one	ui/auctionlists#sorting	
@@ -9228,9 +9228,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cdd60	91	PromoteAuctionBidderSortColumn		ui	primitive	void __fastcall (uint32_t column)	Promotes a column in the bidder sort keys and sorts the bidder list	verified	one	ui/auctionlists#sorting	
 0x4cddc0	36	SortAuctionBidderList		ui	orchestration	void __cdecl ()	Sorts the bidder list with qsort and signals AUCTION_BIDDER_LIST_UPDATE	verified	one	ui/auctionlists#sorting	
 0x4cddf0	84	CompareAuctionBidderRows		ui	primitive	int __cdecl (void **a, void **b)	Compares two bidder rows by the 8 sort keys in turn, negating a reversed key	verified	one	ui/auctionlists#sorting	
-0x4cde50	212	AddOutbidAuction		ui	primitive	void __fastcall (uint32_t house, uint32_t auction)	Appends a {house, auction} pair to the outbid list, doubling its capacity when full	verified	one	ui/auction#outbid-list	
-0x4cdf30	86	RemoveOutbidAuction		ui	primitive	void __fastcall (uint32_t auction)	Removes the outbid pair with an auction id, moving the later pairs down	verified	one	ui/auction#outbid-list	
-0x4cdf90	80	RemoveOutbidHouse		ui	primitive	void __fastcall (uint32_t house)	Removes the outbid pairs of a house, moving the later pairs down	verified	one	ui/auction#outbid-list	
+0x4cde50	212	AddOutbidAuction		ui	primitive	void __fastcall (uint32_t house, uint32_t auction)	Appends a {house, auction} pair to the outbid list; a full list doubles its slots and does not count the pair	verified	one	ui/auction#outbid-list	ui::outbid_list_doubling_difftest, ui::outbid_list_sequence_difftest
+0x4cdf30	86	RemoveOutbidAuction		ui	primitive	void __fastcall (uint32_t auction)	Removes the first outbid pair with an auction id, moving the later pairs down a slot	verified	one	ui/auction#outbid-removals	ui::outbid_list_remove_auction_difftest, ui::outbid_list_sequence_difftest
+0x4cdf90	80	RemoveOutbidHouse		ui	primitive	void __fastcall (uint32_t house)	Removes only the first outbid pair of a house, moving the later pairs down a slot	verified	one	ui/auction#outbid-removals	ui::outbid_list_remove_house_difftest, ui::outbid_list_sequence_difftest
 0x4cdfe0	294	RemoveAuction		ui	primitive	void __fastcall (uint32_t auction)	Removes an auction from the browse, owner and bidder lists, signalling each list that held it	verified	one	ui/auctionmessages#removing-an-auction	
 0x4ce110	5	InitDouble4ce120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ce120, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4ce120	15	InitDouble4ce120		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	

@@ -3161,8 +3161,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb72420	uint32_t[16]	s_auctionOwnerSortKeys		ui	Holds the owner list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
 0xb72470	void *[50]	s_auctionBidderRecords		ui	Holds the 50 record pointers of the bidder list	verified	one	ui/auction#session-state
 0xb72548	uint32_t[16]	s_auctionBidderSortKeys		ui	Holds the bidder list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
-0xb72590	uint32_t	s_outbidCapacity		ui	Holds the capacity of the outbid pair list, 8 at first and doubling	verified	one	ui/auction#outbid-list
+0xb7258c	uint32_t	s_outbidPairsAlloc		ui	Holds the outbid pointer array's allocated size in entries, 8 at first and the slot count after a doubling	verified	one	ui/auction#outbid-list
+0xb72590	uint32_t	s_outbidCapacity		ui	Holds the slot count of the outbid pair list, 8 at first and doubled when an append finds it full	verified	one	ui/auction#outbid-list
 0xb72594	uint32_t **	s_outbidPairs		ui	Points to the outbid list's pointers to {house id, auction id} pairs	verified	one	ui/auction#outbid-list
+0xb72598	uint32_t	s_outbidPairsChunk		ui	Holds the outbid pointer array's grow quantum cap, 0 until a doubling reaches 64 slots, then 64	verified	one	ui/auction#outbid-list
 0xb725b0	uint32_t[16]	s_auctionListSortKeys		ui	Holds the browse list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
 0xb725f8	uint64_t	s_auctioneerGuid		ui	Holds the open auctioneer's GUID, 0 when no auction window is open	verified	one	ui/trade#answering-a-trade-request
 0xb72600	uint32_t	s_auctionHouseId		ui	Holds the open auction house's id from the hello packet	verified	one	ui/auction#session-state
@@ -3180,8 +3182,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb72644	uint32_t	s_auctionListPending		ui	Holds the browse rows whose item record has not arrived	verified	one	ui/auction#browse-results
 0xb72648	uint32_t	s_auctionOwnerPending		ui	Holds the owner rows whose item record has not arrived	verified	one	ui/auction#owner-and-bidder-results
 0xb7264c	uint32_t	s_auctionBidderPending		ui	Holds the bidder rows whose item record has not arrived	verified	one	ui/auction#owner-and-bidder-results
-0xb72650	uint32_t			ui	Holds a dword that HandleAuctionCommandResultPacket reads and writes; not read here	inferred	none	
-0xb72654	uint32_t			ui	Holds a dword that HandleAuctionCommandResultPacket reads and writes; not read here	inferred	none	
+0xb72650	uint32_t	s_auctionOwnerRequestOffset		ui	Holds the list offset the last owner request sent, which a started auction sends again	verified	one	ui/auction#requests-the-client-sends
+0xb72654	uint32_t	s_auctionBidderRequestOffset		ui	Holds the list offset the last bidder request sent, which a placed bid sends again	verified	one	ui/auction#requests-the-client-sends
 0xb72658	uint32_t	s_auctionLastBid		ui	Holds the bid amount PlaceAuctionBid last sent, copied into the row when the server accepts it	verified	one	ui/auctionmessages#result-0-success
 0xb72680	uint32_t[16]	s_guildSortChain		ui	Holds the eight sort slots, a key and a direction each, the latest first	verified	one	ui/guild#the-roster-order
 0xb726d0	uint32_t[10]	s_guildRankRights		ui	Holds the rights bit mask of each of the ten ranks	verified	one	ui/guild#rank-rights

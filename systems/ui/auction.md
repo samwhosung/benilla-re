@@ -153,7 +153,9 @@ from the reset `0x4908c0`, and `0x4ce160`. Neither `0x4cd5f0` nor the interactio
 
 ## Requests the client sends
 
-Each request is a packet whose first field is the auctioneer GUID (u64, not packed); strings carry their NUL.
+Each request is a packet whose first field is the auctioneer GUID (u64, not packed); strings carry their NUL. The owner
+and bidder requests save the list offset they send in `0xb72650` and `0xb72654`; a started auction sends the owner
+request again at its offset, and a placed bid the bidder request at its.
 
 | opcode | sent by | body after the GUID |
 |---|---|---|
@@ -164,16 +166,19 @@ Each request is a packet whose first field is the auctioneer GUID (u64, not pack
 | 0x25a | `PlaceAuctionBid` | auction id u32, bid u32 |
 | 0x264 | `GetBidderAuctionItems` | list offset u32, count u32, then count auction ids u32 |
 
-Addresses: `0x4ce925`, `0x4d03a6`, `0x4cec3d`, `0x4cd6e0`, `0x4cf915`, `0x4cd7fd`, `0x4cd680`, `0x4cd720`, `0x4cd7f2`, `0x417e10`, `0x5ab630`
+Addresses: `0x4ce925`, `0x4d03a6`, `0x4cec3d`, `0x4cd6e0`, `0x4cf915`, `0x4cd7fd`, `0x4cd680`, `0x4cd720`, `0x4cd7f2`, `0x4cd808`, `0x417e10`, `0x5ab630`, `0x4cd6ef`, `0x4cd81a`, `0x4cd5d2`, `0x4cd5d7`, `0x4cc4d1`, `0x4cc51c`, `0xb72650`, `0xb72654`
 Confidence: verified
 Proof: one
 Test: none
 
 The writers are `0x418190` and `0x4181f0` (u32), `0x418070` (u8), `0x418370` (u64) and `0x418430` (string); the
-send is `0x5ab630`. `0x4cd720` writes the count as 0, then appends the id of every outbid-list entry whose house is
-the open one, and patches the count with `0x417e10` (`0x4cd7f2`). The list offset is the page times 50 (`imul
-reg,reg,0x32`: `0x4ceb44`, `0x4cecbf`, `0x4ced0f`). No sort order is sent. The calls `0x4cd680` and `0x4cd720` send
-only while their one-shot flag is set and clear it afterwards, saving the offset (`0xb72650`, `0xb72654`).
+send is `0x5ab630`. `0x4cd720` writes the count as 0, then appends the id of every outbid-list pair whose house is
+the open one, patches the count with `0x417e10` (`0x4cd7f2`), sends, and calls `0x4cdf90` once (`0x4cd808`). The list
+offset is the page times 50 (`imul reg,reg,0x32`: `0x4ceb44`, `0x4cecbf`, `0x4ced0f`). No sort order is sent. The calls
+`0x4cd680` and `0x4cd720` send only while their one-shot flag is set and clear it afterwards; the offset they were
+called with is stored after the send, in `0xb72650` (`0x4cd6ef`) and `0xb72654` (`0x4cd81a`). The hello zeroes both
+(`0x4cd5d2`, `0x4cd5d7`). The started arm reads `0xb72650` (`0x4cc4d1`) and the bid arm `0xb72654` (`0x4cc51c`) for
+the call. An image scan for each dword finds those three sites and no other; the control `0xb72658` finds its two.
 
 ## The query throttle
 
@@ -196,16 +201,44 @@ re-read the flag.
 
 ## Outbid list
 
-Up to eight {house id, auction id} pairs (growing by doubling) are kept in `0xb72594` with the count `0xb72634`. A
-bidder notification for an outbid auction appends its pair (`0x4cde50`), a successful bid removes the auction's pair
-(`0x4cdf30`), and the bidder request sends the open house's auction ids and then removes that house's pairs
-(`0x4cdf90`).
+The list is a pointer array `0xb72594` with `0xb72590` slots (eight after start-up), each pointing at a {house id,
+auction id} pair, and a count `0xb72634` of the pairs in use. A bidder notification for an outbid auction appends its
+pair (`0x4cde50`). Appending to a full list doubles the slots and writes the pair in the first new slot without raising
+the count, so the pair is lost: the next append takes the same slot. A successful bid and a bidder request remove
+pairs (next entry).
 
-Addresses: `0x4cde50`, `0x4cdf30`, `0x4cdf90`, `0x4cc1c9`, `0x4cc213`, `0x4cd793`, `0x4cd802`, `0x4ccff3`, `0x4cc517`, `0xb72594`, `0xb72590`, `0xb72634`
+Addresses: `0x4cde50`, `0x4cde62`, `0x4cde90`, `0x4cde9b`, `0x4cded7`, `0x4cdee1`, `0x4cdf0d`, `0x4cdf1c`, `0x4cdf23`, `0x4cc1c9`, `0x4cc1d0`, `0x4cc207`, `0x4cc213`, `0x4cc413`, `0x4cdf57`, `0x4cdfae`, `0x4ccff3`, `0x4d07d0`, `0x4d0810`, `0x4d0830`, `0x4cd7e6`, `0x4cdf4d`, `0x4cdf7f`, `0x4cdfd4`, `0xb72594`, `0xb72590`, `0xb72634`, `0xb7258c`, `0xb72598`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::outbid_list_start_up_difftest`, `ui::outbid_list_doubling_difftest`, `ui::outbid_list_sequence_difftest`
 
-`0x4cc213` allocates eight 8-byte pairs at start-up, `0x4cde62 cmp eax,ebx; jae` finds the list full and
-`0x4cde9b lea edi,[ebx+ebx]` doubles the capacity. `0x4cd793` loads the count for the request and `0x4cd7b6` compares
-the house with `0xb72600`.
+`0x4cc207` stores 8 slots and `0x4cc213` allocates their pairs. The count is stored at `0x4cc1d0`, `0x4cc413`,
+`0x4cde90`, `0x4cdf57` and `0x4cdfae` only (an image scan for the dword finds 14 sites; the control `0xb72658` finds its
+two), and `0x4cde90` raises it from below the slot count, so a full list has a count equal to its slots, in `ebx`.
+`0x4cde62 cmp eax,ebx; jae 0x4cde9a` finds that. `0x4cde9b` doubles. When the array `0xb7258c` holds fewer, `0x4d0810`
+rounds the doubled count up to a quantum (the cap `0xb72598` if set, else `0x4d07d0`'s: 64 from 64 up, which sets the
+cap) and `0x4d0830` raises the array to it. `0x4cded7` stores the new slot count, `0x4cdee1` to `0x4cdf00` allocate the
+new pairs, `0x4cdf0d` and `0x4cdf1c` store the house and the auction in slot `ebx`, and `0x4cdf23` returns with no
+count store. Every read of a pair stops at the count (`0x4cd7e6`, `0x4cdf4d`, `0x4cdf7f`, `0x4cdfd4`). The tests run `0x4cde50`
+whole and `0x4cc1c9` to `0x4cc234` of start-up, with `0x6462e0` and `0x646320` stubbed, and compare the slots, the
+count, the array and every pair.
+
+## Outbid removals
+
+`0x4cdf30` removes the first pair with an auction id, a successful bid's (`0x4cc517`). `0x4cdf90` removes the first
+pair with a house id and stops. Each lowers the count and copies the later pairs down a slot, leaving the old last
+slot's pair in place. The bidder request sends the auction id of every pair of the open house, then calls `0x4cdf90`
+once (`0x4cd808`): a house with n pairs sends all n and drops one, so it takes n requests to clear.
+
+Addresses: `0x4cdf30`, `0x4cdf90`, `0x4cdf54`, `0x4cdf83`, `0x4cdfa7`, `0x4cdfab`, `0x4cdfb4`, `0x4cdfb6`, `0x4cdfd6`, `0x4cdfd8`, `0x4cc517`, `0x4cd793`, `0x4cd7b6`, `0x4cd7e8`, `0x4cd802`, `0x4cd808`, `0xb72594`, `0xb72634`, `0xb72600`
+Confidence: verified
+Proof: one
+Test: `ui::outbid_list_remove_house_difftest`, `ui::outbid_list_remove_auction_difftest`, `ui::outbid_list_sequence_difftest`
+
+`0x4cdfa7 cmp [edi],ecx; jne 0x4cdfd8` finds the first house match, `0x4cdfab dec esi` lowers the count, and `0x4cdfb6`
+to `0x4cdfd6` copy each later pair down with the scan's own index `eax`, which ends at the new count; so `0x4cdfd8 inc
+eax; cmp eax,esi; jb 0x4cdfa4` ends the scan. A match in the last slot arrives by `jae 0x4cdfd8` (`0x4cdfb4`) with
+`eax` at the new count and ends it the same way. `0x4cdf30` is the same copy entered at `0x4cdf54`, and returns at
+`0x4cdf83`. The sender's loop closes at `0x4cd7e8 jb 0x4cd7a4` and tests the house against `0xb72600` (`0x4cd7b6`);
+`0x4cd802` and `0x4cd808` call once after it. The tests run both removals whole, with a match in the first, a middle
+and the last slot, and a pair past the count that the key would match.
