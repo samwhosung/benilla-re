@@ -106,6 +106,17 @@ not `IsDeadOrGhost`, mover flags without 0x2000, `UNIT_FIELD_FLAGS` without 0x40
 mode 6 only when `r² < d²`. `0x5df460(byte)` sets the auto-loot byte `+0x1d30` and, with a held
 GUID, calls `0x4c1fa0(0)`. `0x5ed5f0` holds a GUID as the loot target and plays animation 0x32. Slices: loot_range_5df130_difftest `0x5df1a0`-`0x5df1d4`; interact_reach_5df2a0_difftest `0x5df301`-`0x5df389`; p3_interact_reach_sq_5ec110 `0x5ec142`-`0x5ec17e`; p3_interact_in_range_5ec110 `0x5ec196`-`0x5ec1c1`.
 
+## The auto-loot byte
+
+The player's byte at `+0x1d30` holds the Shift state of the last interaction that set it, until a sweep or the next one replaces it. `SetAutoLoot` (`0x5df460`) stores the low byte of its argument; a nonzero byte with a loot target held (`+0x1d28`) also runs the sweep at once. The loot legs of a unit's and a corpse's interaction slots (for the active mover) and a game object's slot (whatever it does) pass whether Shift is down; `OpenItem` passes whether modifier 0 is exactly 1, `InteractWithSpell` its `value` when `set` is given, the sweep 0. The byte is read where a loot window opens (`0x4c1ec7`), at its last item record (`0x4c2b1d`) and in the inventory failure's tail (`0x5e3b0d`).
+
+Addresses: `0x5df460`, `0x5df468`, `0x5df470`, `0x5df480`, `0x5dd40f`, `0x60bfe4`, `0x5d6c4a`, `0x5d6c68`, `0x60bfc6`, `0x5f869f`, `0x5edcb6`, `0x5f06ef`, `0x4c2219`, `0x492879`, `0x5014c8`, `0x4c1ec7`, `0x4c2b1d`, `0x5e3b0d`, `0x41f8f0`
+Confidence: verified
+Proof: one
+Test: `objectlayer::set_auto_loot_difftest`
+
+The listing holds five operands with the displacement `0x1d30`: the stores `0x5dd40f` (the constructor, 0) and `0x5df468`, and the loads `0x4c1ec7`, `0x4c2b1d` and `0x5e3b0d`; no `lea` or `rep stos` reaches it (the same scan finds the `+0x1d28` operands, among them `0x5df470`). `0x5df460` is called from six sites: `0x4c2219` (0), `0x5d6c68` and `0x60bfe4` (`setne` of the slot's argument, only when the player is the active mover, `0x5d6c4a` and `0x60bfc6`), `0x5f869f` (the same, in `0x5f8660` once the player resolves, without the mover test), `0x5edcb6` (`dec eax; neg eax; sbb al,al; inc al` over `EventIsKeyDown(0)`, so 1 only for a result of exactly 1) and `0x5f06ef` (`[ebx+0x14]`, when the byte `[ebx+0x10]` is set). The slot's argument comes from `EventIsKeyDown(0)`, called with `ecx` 0 at `0x492879` (a world click) and `0x5014c8` (declining a quest at an object) and passed to the slot at `[vtable+0x60]`. The test runs `0x5df460` whole with the sweep stubbed.
+
 ## The loot target
 
 The active player's loot target is a GUID at `+0x1d28`. Five sites set it: `LootUnit`

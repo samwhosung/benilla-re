@@ -11,6 +11,7 @@
 #![forbid(unsafe_code)]
 
 pub mod apply;
+pub mod auto_loot_byte;
 pub mod cast_time;
 pub mod castplace;
 pub mod datastore;

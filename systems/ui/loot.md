@@ -72,20 +72,28 @@ random property, `0x4c1e49` stores the slot byte. The wire slot type is not copi
 
 ## Late item records
 
-`0x4c2ac0(entry, ok)` is the item-cache callback. A failed fetch does nothing. Otherwise it clears the pending flag
-of every row with that entry and subtracts one from the pending count; at 0 it does what the end of `0x4c1cb0` does:
-the auto-loot sweep, or `LOOT_OPENED`. So the window is not shown until every item record has arrived, and its one
-`LOOT_OPENED` is raised on the last arrival. The stock window shows itself on that event and does not repaint on a
-second one.
+`0x4c2ac0(entry, ok)` is the item-cache callback. Each row whose record is missing registers it once, with data 0 and the dedupe flag off, so it runs once per such row, in the order the rows registered (`dbcache/callbacks#callback-order`). A failed fetch does nothing. Otherwise it clears the pending flag of every row with that entry and subtracts one from the pending count; at 0 it does what the end of `0x4c1cb0` does: the auto-loot sweep, or `LOOT_OPENED`. So the window is not shown until every item record has arrived, and its one `LOOT_OPENED` is raised on the last arrival. The stock window shows itself on that event and does not repaint on a second one.
 
-Addresses: `0x4c2ac0`, `0x4c2ac3`, `0x4c2ae2`, `0x4c2af6`, `0x4c2afc`, `0x4c2b29`, `0x4c2b37`, `0x55bdb0`
+Addresses: `0x4c2ac0`, `0x4c2ac3`, `0x4c2ae2`, `0x4c2af6`, `0x4c2afc`, `0x4c2b1d`, `0x4c2b29`, `0x4c2b37`, `0x55bdb0`, `0x4c1e63`, `0x4c1e65`, `0x4c1e67`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4c2ac3 mov al,[ebp+0xc]; test al,al; je` drops a failed arrival. `0x4c2ae2` clears the flag, `0x4c2af6 dec` and `0x4c2afc jne`
 leave until the last, and `0x4c2b37` signals 267. The fetch completion `0x55bdb0` runs each pending callback with the success byte 1. The
-callback address is pushed at `0x4c1e67`, `0x4c1d4f` and `0x4c1f47` only.
+callback address is pushed at `0x4c1e67`, `0x4c1d4f` and `0x4c1f47` only. `0x4c1e63` and `0x4c1e65` push the dedupe flag and the data, both 0,
+before the registration at `0x4c1e67`. Two rows with one missing entry register twice and count twice.
+
+## Pending records that never arrive
+
+A fetch that fails, or a row cleared while its record is pending, leaves the pending count above 0 for the rest of the session, so neither the item-cache callback nor the sweep signals for it. A failed fetch returns `0x4c2ac0` before it clears a flag or lowers the count. A cleared row cancels the callbacks of every row with that entry (`dbcache/callbacks#cancelling-a-callback`) and does not lower the count, which has three writers: `0x4c1def` stores 0 at the start of a session, `0x4c1e94` adds one per missing record and `0x4c2af6` subtracts one per callback.
+
+Addresses: `0x4c2ac0`, `0x4c2ac3`, `0x4c2ac8`, `0x4c2b3c`, `0x4c1f00`, `0x4c1f34`, `0x4c1f3d`, `0x4c1f52`, `0x4c1f59`, `0x4c1d4f`, `0x4c1def`, `0x4c1e94`, `0x4c2af6`, `0x55c0c0`, `0xb71b44`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4c2ac8 je 0x4c2b3c` leaves for a zero success byte before `0x4c2ae2` and `0x4c2af6`. `0x4c1f34` tests the row's pending flag (`0x4c1f3d je`) and `0x4c1f52` calls `0x55c0c0` with the entry, `0x4c2ac0` and data 0, then `0x4c1f59` clears the row; the code between has no store to `0xb71b44`, whose stores in the image are the three above (a scan of the absolute operand). `0x4c1cb0` cancels each pending row the same way when a session ends (`0x4c1d4f`).
 
 ## Taking a row out
 
@@ -281,21 +289,36 @@ Bit-exact coverage: `ui::luabind_533470_set_loot_item` covers `0x53353c` to `0x5
 
 ## Auto-loot
 
-`0x4c1fa0(flag)` is the auto-loot sweep, run when a session ends fetching and the player's auto-loot byte is set (it
-follows the Shift key at interaction, `objectlayer/interaction#looting`). Without a player it signals `LOOT_OPENED`.
-It sends the coin request when there is money, plays the coin sound, and prints the money line for a player in no
-group. It then walks the rows: a type-0 bind-on-pickup item of quality 2 or more raises the confirmation for the first
-such row only; any other type-0 row is sent as in a click. It clears the auto-loot byte; if loot remains and `flag` is
-0 it signals `LOOT_OPENED`, and if nothing remains it closes the loot with release.
+`0x4c1fa0(flag)` sweeps the open window. It returns at once while item records are pending, and with no active player only signals `LOOT_OPENED`. Otherwise, in order: it sends `CMSG_LOOT_MONEY` when the money cell is not 0 (−1 too), and for money above 0 plays the coin sound and, outside a party and a raid, prints the money line, once per source; it sends each row of loot type 0 as a click does (item sound, `CMSG_AUTOSTORE_LOOT_ITEM`), except a bind-on-pickup row of quality 2 or more, of which the first raises `LOOT_BIND_CONFIRM`; other types are left; it clears the player's auto-loot byte; then it closes the loot with release when `LootHasContents` finds nothing, else signals `LOOT_OPENED` if `flag` is 0.
 
-Addresses: `0x4c1fa0`, `0x4c1fb3`, `0x4c1ff4`, `0x4c1ffc`, `0x4c2020`, `0x4c2170`, `0x4c2180`, `0x4c2196`, `0x4c21c2`, `0x4c21d4`, `0x4c21ff`, `0x4c2219`, `0x4c221e`, `0x4c2240`, `0x4c224f`, `0x5df460`, `0xb71bc4`
+Addresses: `0x4c1fa0`, `0x4c1fb3`, `0x4c1fd9`, `0x4c1fe0`, `0x4c1ff4`, `0x4c1ffc`, `0x4c2008`, `0x4c2015`, `0x4c2020`, `0x4c2030`, `0x4c203d`, `0x4c2170`, `0x4c2196`, `0x4c21b3`, `0x4c21bc`, `0x4c21c2`, `0x4c21d4`, `0x4c21dc`, `0x4c21ff`, `0x4c2219`, `0x4c221e`, `0x4c2228`, `0x4c2237`, `0x4c2240`, `0x4c224f`, `0x4c2a70`, `0x5ea8c0`, `0x5e1ad0`, `0x5ebce0`, `0x5df460`, `0x48f200`, `0x48f264`, `0x4c1ed3`, `0x4c2b29`, `0x5df480`, `0xb71b44`, `0xb71bc4`, `0x847cec`
+Confidence: verified
+Proof: one
+Test: `ui::auto_loot_sweep_difftest`
+
+`0x4c1fb3 jne` returns on `0xb71b44`; `0x4c1fd9 jne` leaves the no-player arm (`0x4c1fe0` signals 267). `0x4c1ff4 je` skips a zero money cell, not −1; `0x4c1ffc` calls `0x5ea8c0`, which sends only while the player's loot target `+0x1d28` is set. `0x4c2008 jne` (`0xb71bc4`) and `0x4c2015 jle` gate the sound (`0x4c2020`) and the line, which `0x4c2030` (a party member, `0xbc6f48`) and `0x4c203d` (a raid, `0xb713e0`) skip (`0x4c2170` prints). `0x4c2196 jne` skips rows whose wire type (`0x5ebce0`) is not 0; `0x4c21b3` and `0x4c21bc` test bonding 1 and quality 2 or more; `0x4c21c2` keeps one confirmation (`0x4c21d4` signals 287, `0x4c21dc` stores the position in `0x847cec`); `0x4c21ff` calls `0x5e1ad0`. `0x4c2219` calls `0x5df460` with 0, `0x4c221e` stores 1 in `0xb71bc4`, `0x4c2228` calls `0x4c2a70`; `0x4c2237 jne` returns for a nonzero flag, `0x4c2240` signals 267, and `0x4c224f` is `0x48f200` with release 1. Callers: `0x4c1ed3`, `0x4c2b29` and `0x5df480` pass flag 0; `0x48f264` passes the close's own flag for a loot type 4 window with contents. The test runs the whole function with `0x468550`, `0x5ebce0`, `0x5df460` and `0x4c2a70` run for real.
+
+## Window state after the sweep
+
+The sweep's sends change no row and not the money cell: a row goes when its `SMSG_LOOT_REMOVED` arrives (`0x5ebeb0` to `0x4c1f00`) and the coin row when `SMSG_LOOT_CLEAR_MONEY` does (`0x5ec030` to `0x4c2750`), both after the sweep has returned. `LootHasContents` counts as left a source that still resolves with money above 0 or any occupied row, sent or not. So a sweep that found money or a row ends by signalling `LOOT_OPENED`, before any reply; only an empty window or a source gone from the object manager closes with release. Each cleared row then signals `LOOT_SLOT_CLEARED`; the last closes the loot with release.
+
+Addresses: `0x4c2a70`, `0x4c2a8c`, `0x4c2a93`, `0x4c2a9c`, `0x4c2aa6`, `0x4c2aae`, `0x5ebeb0`, `0x5ec030`, `0x4c1f00`, `0x4c1f77`, `0x4c1f7f`, `0x4c1f8d`, `0x4c2750`, `0x4c2765`, `0x4c276f`, `0x4c2777`, `0x4c2785`, `0xb71968`, `0xb71ba0`
+Confidence: verified
+Proof: one
+Test: `ui::auto_loot_sweep_difftest`
+
+The sweep (`0x4c1fa0` to `0x4c2257`) stores only `0x847cec` and `0xb71bc4`, and its callees only send, play and signal. `0x4c2a8c` resolves the source with mask 1 and `0x4c2a93 je` answers 0 for none; `0x4c2a9c jle` tests the money cell above 0 and `0x4c2aa6` to `0x4c2ab8` the 16 entries for one nonzero. `0x4c1f77` signals 268, `0x4c1f7f` asks again and `0x4c1f8d` closes with release when it answers 0; `0x4c2750` does the same for the coin row. The test reads the 16 rows and the money cell back after each sweep and finds them unchanged.
+
+## Auto-loot with full bags
+
+Refused stores leave the window open. A server that cannot fit the items the sweep asked for answers each `CMSG_AUTOSTORE_LOOT_ITEM` with `SMSG_INVENTORY_CHANGE_FAILURE` and no item GUID. Each shows the error for its result (50, `ERR_INV_FULL`) and signals no loot event: the tail that can signal `LOOT_OPENED` needs the auto-loot byte, which the sweep cleared. So the player sees `LOOT_OPENED` once, from the sweep, which shows the stock window; the coin row, if taken, clears by `LOOT_SLOT_CLEARED` (1); the refused rows stay, and the window stays until `CloseLoot` or a movement start closes it.
+
+Addresses: `0x5e38c0`, `0x5e3a4b`, `0x5e3acf`, `0x5e3ad8`, `0x5e3b0d`, `0x5e3b15`, `0x5e3b20`, `0x4c2219`, `0x622630`, `0x496720`, `0x4c1f00`, `0x4c2750`, `0x60e990`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4c1fb3 jne` returns while fetches are pending. `0x4c1ffc` sends the coin request, and `0x4c2001` to `0x4c2020` play the sound
-only when `0xb71bc4` is 0. `0x4c2196 test eax,eax; jne` selects loot type 0; `0x4c21c2 test ebx,ebx` keeps one
-confirmation. `0x4c2219` calls `0x5df460(0)`, which clears the byte, and `0x4c221e` stores 1 in `0xb71bc4`.
+Every nonzero result of `SMSG_INVENTORY_CHANGE_FAILURE` reaches `0x5e3ad8` (`objectlayer/playermessages#inventory-change-failures`): with both item GUIDs zero `0x5e3a4b` and `0x5e3acf` skip their releases, and `0x5e3b0d` loads the byte the sweep cleared at `0x4c2219`, so `0x5e3b15 je` leaves without `0x5e3b20`. `0x622630` maps result 50 to `ERR_INV_FULL` (`objectlayer/inventory#inventory-results`). Nothing in this path closes the window: `CloseLoot` (`Loot functions`) and the movement-start guard (`No walk-away leash`) do.
 
 ## No walk-away leash
 

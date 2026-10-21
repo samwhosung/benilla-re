@@ -241,14 +241,14 @@ opcode	name	role	site	function	entries	basis
 0x104	CMSG_TEXT_EMOTE	send	0x5ef713	0x5ef560	objectlayer/interaction#text-emotes|objectlayer/standstate#the-emote-checks-in-front	opcode
 0x105	SMSG_TEXT_EMOTE	handler	0x49864a	0x49dbe0	ui/chatemote#the-message	opcode
 0x107	CMSG_AUTOSTORE_GROUND_ITEM	send	0x5d9dd5	0x5d9d60	objectlayer/items#item-slots	opcode
-0x108	CMSG_AUTOSTORE_LOOT_ITEM	send	0x5e1b12	0x5e1ad0	objectlayer/inventory#moving-items|objectlayer/sounds#loot-and-auto-equip-item-sounds|ui/loot#taking-a-slot	opcode
+0x108	CMSG_AUTOSTORE_LOOT_ITEM	send	0x5e1b12	0x5e1ad0	objectlayer/inventory#moving-items|objectlayer/sounds#loot-and-auto-equip-item-sounds|ui/loot#taking-a-slot|ui/loot#auto-loot	opcode
 0x109	CMSG_STORE_LOOT_IN_SLOT	send	0x5e1ba9	0x5e1b40	objectlayer/inventory#moving-items|ui/bags#pickup-of-a-container-item	opcode
 0x10b	CMSG_AUTOSTORE_BAG_ITEM	send	0x5e137c	0x5e12e0	objectlayer/inventory#moving-items|ui/bags#putting-an-item-in-a-bag	opcode
 0x10c	CMSG_SWAP_ITEM	send	0x5e0fdb	0x5e0c40	objectlayer/inventory#moving-items|ui/bags#putting-an-item-in-a-bag	opcode
 0x10d	CMSG_SWAP_INV_ITEM	send	0x5e0ba4	0x5e0b50	objectlayer/overview#unreached-functions	function
 0x10e	CMSG_SPLIT_ITEM	send	0x5e12af	0x5e1210	objectlayer/inventory#moving-items|ui/bags#putting-an-item-in-a-bag	opcode
 0x111	CMSG_DESTROYITEM	send	0x4898a3	0x4897b0	ui/cursor#delete_item_confirm	opcode
-0x112	SMSG_INVENTORY_CHANGE_FAILURE	handler	0x5e303e	0x5e38c0	objectlayer/playermessages#inventory-change-failures	opcode
+0x112	SMSG_INVENTORY_CHANGE_FAILURE	handler	0x5e303e	0x5e38c0	objectlayer/playermessages#inventory-change-failures|ui/loot#auto-loot-with-full-bags	opcode
 0x113	SMSG_OPEN_CONTAINER	handler	0x5e304f	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices	opcode
 0x114	CMSG_INSPECT	send	0x5ded10	0x5decc0	objectlayer/interaction#other-units	opcode
 0x115	SMSG_INSPECT	handler	0x5e32d5	0x5e7d70	objectlayer/playermessages#other-small-handlers	opcode
@@ -316,7 +316,7 @@ opcode	name	role	site	function	entries	basis
 0x15c	CMSG_RESURRECT_RESPONSE	send	0x5dede9	0x5ded80	objectlayer/playermessages#resurrection-and-summoning	opcode
 0x15d	CMSG_LOOT	send	0x5df249	0x5df130	objectlayer/interaction#looting	opcode
 0x15d	CMSG_LOOT	send	0x5df403	0x5df2a0	objectlayer/interaction#looting	opcode
-0x15e	CMSG_LOOT_MONEY	send	0x5ea904	0x5ea8c0	objectlayer/inventory#loot|ui/loot#taking-a-slot	opcode
+0x15e	CMSG_LOOT_MONEY	send	0x5ea904	0x5ea8c0	objectlayer/inventory#loot|ui/loot#taking-a-slot|ui/loot#auto-loot	opcode
 0x15f	CMSG_LOOT_RELEASE	send	0x48f311	0x48f200	core/close#leave-world-cascade|core/close#packets-sent-in-the-world|ui/loot#no-walk-away-leash	opcode
 0x15f	CMSG_LOOT_RELEASE	send	0x5eb9a7	0x5eb900	objectlayer/inventory#loot	opcode
 0x160	SMSG_LOOT_RESPONSE	handler	0x5e30b5	0x5e6010	objectlayer/inventory#loot	opcode
@@ -390,7 +390,7 @@ opcode	name	role	site	function	entries	basis
 0x1a5	SMSG_BUY_FAILED	handler	0x5e3082	0x5e5910	objectlayer/inventory#vendors	opcode
 0x1a9	SMSG_SHOWTAXINODES	handler	0x5e332a	0x5e38c0	ui/taxi#the-show-nodes-message	opcode
 0x1aa	CMSG_TAXINODE_STATUS_QUERY	send	0x5eb1bb	0x5eb170	objectlayer/interaction#taxis	opcode
-0x1ab	SMSG_TAXINODE_STATUS	handler	0x5e3319	0x5e38c0	objectlayer/interaction#the-loot-target|objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices|objectlayer/playermessages#error-notices|objectlayer/playermessages#inventory-change-failures|objectlayer/playermessages#item-push-bank-and-binding|objectlayer/playermessages#level-up-and-exploration|objectlayer/playermessages#dice-rolls|objectlayer/playermessages#gm-tickets|objectlayer/quests#shared-quests|spell/cancel#who-cancels-a-cast|ui/auradisplay#the-duration-packet|ui/chatserver#chat-restricted|ui/gossip#the-innkeeper-bind|ui/inventory#failure-messages|ui/inventory#wrong-bag-type|ui/minimap#the-ping|ui/popups#the-instance-boot-countdown|ui/popups#pet-unlearn|ui/questshare#the-sharers-answers|ui/taxi#the-show-nodes-message|ui/taxiroute#activation-replies|ui/taxiroute#new-flight-path|ui/tutorials#where-tutorials-fire	function
+0x1ab	SMSG_TAXINODE_STATUS	handler	0x5e3319	0x5e38c0	objectlayer/interaction#the-auto-loot-byte|objectlayer/interaction#the-loot-target|objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices|objectlayer/playermessages#error-notices|objectlayer/playermessages#inventory-change-failures|objectlayer/playermessages#item-push-bank-and-binding|objectlayer/playermessages#level-up-and-exploration|objectlayer/playermessages#dice-rolls|objectlayer/playermessages#gm-tickets|objectlayer/quests#shared-quests|spell/cancel#who-cancels-a-cast|ui/auradisplay#the-duration-packet|ui/chatserver#chat-restricted|ui/gossip#the-innkeeper-bind|ui/inventory#failure-messages|ui/inventory#wrong-bag-type|ui/loot#auto-loot-with-full-bags|ui/minimap#the-ping|ui/popups#the-instance-boot-countdown|ui/popups#pet-unlearn|ui/questshare#the-sharers-answers|ui/taxi#the-show-nodes-message|ui/taxiroute#activation-replies|ui/taxiroute#new-flight-path|ui/tutorials#where-tutorials-fire	function
 0x1ac	CMSG_TAXIQUERYAVAILABLENODES	send	0x5ed068	0x5ed020	objectlayer/interaction#talking-to-an-npc|objectlayer/interaction#taxis|ui/taxiroute#taking-a-node	opcode
 0x1ad	CMSG_ACTIVATETAXI	send	0x5ed0fe	0x5ed0a0	objectlayer/interaction#taxis|ui/taxiroute#taking-a-node	opcode
 0x1ae	SMSG_ACTIVATETAXIREPLY	handler	0x5e333b	0x5e38c0	ui/taxiroute#activation-replies	opcode
@@ -493,7 +493,7 @@ opcode	name	role	site	function	entries	basis
 0x21e	SMSG_SET_REST_START	handler	0x5e36f3	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#error-notices	opcode
 0x21f	CMSG_SKILL_BUY_STEP	send	0x4d3fef	0x4d3e50	tradeskill/skills#skill-points	opcode
 0x220	CMSG_SKILL_BUY_RANK	send	0x4d3df3	0x4d3d40	tradeskill/skills#skill-points	opcode
-0x222	SMSG_SPIRIT_HEALER_CONFIRM	handler	0x5e3704	0x5e38c0	objectlayer/interaction#the-loot-target|objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices|objectlayer/playermessages#error-notices|objectlayer/playermessages#inventory-change-failures|objectlayer/playermessages#item-push-bank-and-binding|objectlayer/playermessages#level-up-and-exploration|objectlayer/playermessages#dice-rolls|objectlayer/playermessages#gm-tickets|objectlayer/quests#shared-quests|spell/cancel#who-cancels-a-cast|ui/auradisplay#the-duration-packet|ui/chatserver#chat-restricted|ui/gossip#the-innkeeper-bind|ui/inventory#failure-messages|ui/inventory#wrong-bag-type|ui/minimap#the-ping|ui/popups#the-instance-boot-countdown|ui/popups#pet-unlearn|ui/questshare#the-sharers-answers|ui/taxi#the-show-nodes-message|ui/taxiroute#activation-replies|ui/taxiroute#new-flight-path|ui/tutorials#where-tutorials-fire	function
+0x222	SMSG_SPIRIT_HEALER_CONFIRM	handler	0x5e3704	0x5e38c0	objectlayer/interaction#the-auto-loot-byte|objectlayer/interaction#the-loot-target|objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#notices|objectlayer/playermessages#error-notices|objectlayer/playermessages#inventory-change-failures|objectlayer/playermessages#item-push-bank-and-binding|objectlayer/playermessages#level-up-and-exploration|objectlayer/playermessages#dice-rolls|objectlayer/playermessages#gm-tickets|objectlayer/quests#shared-quests|spell/cancel#who-cancels-a-cast|ui/auradisplay#the-duration-packet|ui/chatserver#chat-restricted|ui/gossip#the-innkeeper-bind|ui/inventory#failure-messages|ui/inventory#wrong-bag-type|ui/loot#auto-loot-with-full-bags|ui/minimap#the-ping|ui/popups#the-instance-boot-countdown|ui/popups#pet-unlearn|ui/questshare#the-sharers-answers|ui/taxi#the-show-nodes-message|ui/taxiroute#activation-replies|ui/taxiroute#new-flight-path|ui/tutorials#where-tutorials-fire	function
 0x224	SMSG_GOSSIP_POI	handler	0x4e1f1e	0x4e2840	ui/gossip#the-gossip-point-of-interest	opcode
 0x225	CMSG_CHAT_IGNORED	send	0x49d50b	0x49d4b0	ui/chatevents#the-chat-tag	function
 0x22f	CMSG_GM_REQUEST_PLAYER_INFO	handler	0x48f4cf	0x48f690	ui/gameui#game-start-up	opcode

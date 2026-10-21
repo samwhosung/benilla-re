@@ -1663,7 +1663,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8479f8	void *[28]	s_tradeFunctions		ui	Holds the 14 name and function pairs of the trade Lua functions, CloseTrade to SetTradeMoney	verified	one	ui/scriptapi#function-tables
 0x847ce0	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x847ce4	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	ui/loot#the-row-widget
-0x847cec	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	ui/loot#loot-state
+0x847cec	int32_t	s_lootBindRow		ui	Holds the array position of the row awaiting its bind confirmation, -1 for none	verified	one	ui/loot#loot-state
 0x847cf0	void *[32]	s_lootFunctions		ui	Holds the 16 name and function pairs of the loot Lua functions	verified	one	ui/loot#loot-functions
 0x847e98	char[38]	s_textWrongObjectTypeForMemberFunction		ui	Holds the string "Wrong object type for member function"	inferred	none	
 0x847ec0	char[49]	s_errNonScriptObject		ui	Holds the error of a method whose table holds no object	verified	one	ui/methods#finding-self
@@ -3098,12 +3098,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71835	uint8_t	s_screenFadeClockStarted		ui	Holds 1 once the fade has drawn a frame and set its start time	verified	one	ui/screenfade#fade-state
 0xb71840	char[260]	s_lootIconPath		ui	Holds the icon path text the loot window builds for a row or the coin row	verified	one	ui/loot#loot-lua-reads
 0xb71968	uint8_t[448]	s_lootRows		ui	Holds the 16 loot rows of 0x1c bytes the window reads, packed from the wire entries	verified	one	ui/loot#loot-state
-0xb71b44	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	ui/loot#loot-state
-0xb71b48	uint64_t	s_lootOpenedGuid		ui	Holds a GUID whose presence makes an inventory failure signal LOOT_OPENED	inferred	none	objectlayer/playermessages#inventory-change-failures
+0xb71b44	uint32_t	s_lootPendingRecords		ui	Holds the count of loot rows whose item record is still being fetched	verified	one	ui/loot#loot-state
+0xb71b48	uint64_t	s_lootSourceGuid		ui	Holds the GUID of the open loot window's source, 0 when no window is open	verified	one	ui/loot#loot-state
 0xb71b64	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71ba0	int32_t	s_lootMoney		ui	Holds the loot window's money in copper, 0 for none and -1 once the coin row is taken	verified	one	ui/loot#loot-state
 0xb71bbc	uint32_t	s_lootType		ui	Holds the loot type of the open window, 3 for fishing loot	verified	one	ui/loot#loot-state
-0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once the auto-loot sweep has handled the coin row of this source	verified	one	ui/loot#auto-loot
+0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once an auto-loot sweep has run for the open source, which limits the coin sound and line to the first	verified	one	ui/loot#auto-loot
 0xb71bd0	uint32_t	s_lotteryVendorDelay		ui	Holds the vendor delay of the lottery query result; zero ends the read	verified	one	ui/lottery#query-result
 0xb71bd4	uint32_t	s_lotteryVendorClock		ui	Holds now plus the vendor delay, the time IsVendorActive waits to pass	verified	one	ui/lottery#query-result
 0xb71bd8	uint32_t	s_lotteryDrawDelay		ui	Holds the seconds to the next draw as the lottery query result gives them	verified	one	ui/lottery#query-result

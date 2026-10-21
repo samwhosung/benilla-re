@@ -115,14 +115,18 @@ the error with the level; result 0x10 lets `0x5ede00` show the bag-family error;
 error. A nonzero `item1` clears the loot target and its animation when it is the looted item,
 cancels a cast that uses it, and is released in the interface; so is a nonzero `item2`.
 
-Addresses: `0x5e38c0`, `0x622630`, `0x5ede00`
+Addresses: `0x5e38c0`, `0x622630`, `0x5ede00`, `0x5e3a4b`, `0x5e3acf`, `0x5e3ad8`, `0x5e3aff`, `0x5e3b07`, `0x5e3b0d`, `0x5e3b15`, `0x5e3b20`
 Confidence: verified
 Proof: one
 Test: none
 
 The cast check compares `item1` with `GetCastItemGuidPtr` and calls `CancelCast(1, 0, 0x17)`; the
-release is `0x495420`. When the GUID at `0xb71b48` is set and the auto-loot byte `+0x1d30` is set,
-it ends with `LOOT_OPENED`.
+release is `0x495420`. Every nonzero result then reaches `0x5e3ad8`, which signals `LOOT_OPENED`
+(`0x5e3b20`) only when the loot window's source `0xb71b48` is set (`0x5e3aff`), the active player
+resolves (`0x5e3b07`) and its auto-loot byte is set (`0x5e3b0d`, `0x5e3b15`). The sweep has cleared
+the byte by then (`ui/loot#auto-loot`), so the tail fires only for a session the sweep has not run
+for: one whose item records are still being fetched, or one open while an interaction set the byte with
+no loot target held (`objectlayer/interaction#the-auto-loot-byte`).
 
 ## Item push, bank and binding
 
