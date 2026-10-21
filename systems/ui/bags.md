@@ -196,7 +196,7 @@ payload, then the slot's item, as the rows say.
 | neither, wrapping paper held | send the wrap |
 | neither, otherwise | a locked item: nothing; else it goes on the cursor and is locked |
 
-Addresses: `0x4f9b30`, `0x4f9b40`, `0x4f9b54`, `0x4f9b77`, `0x4f9b87`, `0x4f9ba3`, `0x4f9bb6`, `0x4f9bc6`, `0x4f9bd0`, `0x4f9c0b`, `0x4f9c13`, `0x4f9c35`, `0x4f9c38`, `0x4f9c43`, `0x4f9c5d`, `0x4f9c6d`, `0x4f9c7b`, `0x4f9d81`, `0x4f9dd1`, `0x4f9de9`, `0x4f9df0`, `0x4f9e0e`, `0x4f9e43`, `0x4f9e63`, `0x4f9e85`, `0x4f9eac`, `0x4f9ee0`, `0x4f9f3c`, `0x4f9f5c`, `0x4f9820`, `0x494c80`, `0x495180`, `0x6228a0`, `0x6e48a0`, `0x6e6330`, `0x495d60`, `0x523d10`, `0x4fadb0`, `0x5edf10`, `0x5edfc0`, `0x494b60`, `0x4953e0`, `0x495190`, `0x5e1210`, `0x5e0c40`, `0x5e1b40`, `0x5e1f30`, `0x6f34d0`, `0x6f4940`, `0xb4b3e4`, `0xb4b40c`, `0xb4d900`, `0xbdd038`, `0xbddfa0`
+Addresses: `0x4f9b30`, `0x4f9b40`, `0x4f9b54`, `0x4f9b77`, `0x4f9b87`, `0x4f9ba3`, `0x4f9bb6`, `0x4f9bc6`, `0x4f9bd0`, `0x4f9c0b`, `0x4f9c13`, `0x4f9c35`, `0x4f9c38`, `0x4f9c43`, `0x4f9c5d`, `0x4f9c6d`, `0x4f9c7b`, `0x4f9d46`, `0x4f9d81`, `0x4f9db3`, `0x4f9dd1`, `0x4f9de9`, `0x4f9df0`, `0x4f9e0e`, `0x4f9e43`, `0x4f9e63`, `0x4f9e85`, `0x4f9eac`, `0x4f9ee0`, `0x4f9f3c`, `0x4f9f5c`, `0x4f9820`, `0x494c80`, `0x495180`, `0x6228a0`, `0x6e48a0`, `0x6e6330`, `0x495d60`, `0x523d10`, `0x4fadb0`, `0x5edf10`, `0x5edfc0`, `0x494b60`, `0x4953e0`, `0x495190`, `0x5e1210`, `0x5e0c40`, `0x5e1b40`, `0x5e1f30`, `0x6f34d0`, `0x6f4940`, `0xb4b3e4`, `0xb4b40c`, `0xb4d900`, `0xbdd038`, `0xbddfa0`
 Confidence: verified
 Proof: one
 Test: none
@@ -208,7 +208,8 @@ gate reads the list's byte `+0x10` (`0x4f9bc6`) against slots 0x27 to 0x44 (`0x4
 and `0x495180` (`0x4f9c0b`), the slot's item by `0x6228a0` (`0x4f9c13`). `0x4f9c38` branches on a held GUID,
 `0x4f9c43` on the preview entry, `0x4f9ec6` on the kind. `0x4f9c6d` is `0x495d60` with `ecx` 0, after both predicates
 (`0x4f9c54`, `0x4f9c5d`). The repair arm opens at `0x4f9c7b`, the wrap at `0x4f9d81`, the lock test is `0x4f9dd1`, and
-`0x4f9de9`, `0x4f9df0` set the cursor and the lock. The sends are `0x4f9e43`, `0x4f9eac`, `0x4f9ee0` and `0x4f9f3c`.
+`0x4f9de9`, `0x4f9df0` set the cursor and the lock. The sends are the repair (`0x4f9d46`), the wrap (`0x4f9db3`), the split (`0x4f9e43`), the swap (`0x4f9eac`), kind 6
+(`0x4f9ee0`) and the buy (`0x4f9f3c`).
 `PickupInventoryItem` refuses a locked item before its targeting leg; this verb tests the lock only in the swap row
 (`0x4f9e76`) and the last (`0x4f9dd1`).
 
@@ -216,8 +217,8 @@ and `0x495180` (`0x4f9c0b`), the slot's item by `0x6228a0` (`0x4f9c13`). `0x4f9c
 
 A kind 5 preview dropped on a bag slot with a vendor open reads its row from the table `0xbdd118` by the stored index.
 `PickupContainerItem` and the worker of `PutItemInBag` (`0x4c7c00`) do not return on an index outside 0 to the row
-count less 1: each passes a null row and reads the entry word from `[row+4]`, an access violation at address 4.
-`PickupInventoryItem` returns instead.
+count less 1: each sets the row pointer to null and then reads the entry word `[row+4]` for the send, an access
+violation at address 4 before the send is called. `PickupInventoryItem` returns instead.
 
 Addresses: `0x4f9f1c`, `0x4f9f24`, `0x4f9f30`, `0x4f9f35`, `0x4c7e84`, `0x4c7e88`, `0x4c7e9a`, `0x4c7ea5`, `0x4c791d`, `0x4c7925`, `0x4c7959`, `0xbdd118`, `0xbddfa8`, `0x4f9b30`, `0x4c7c00`, `0x4c7300`
 Confidence: verified
