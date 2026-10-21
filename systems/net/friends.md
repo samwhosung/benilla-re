@@ -76,7 +76,7 @@ Test: `net::friends_compare`
 
 ## Friend status result
 
-`SMSG_FRIEND_STATUS` (`0x68`) is a result byte and a guid, read by `0x5add30` and passed to `0x5acab0` with the packet; the handler returns 1 even when there is no friend list. The result selects an action and a game error `0x496720` shows. Results 2, 3, 5, 6, 7 and 8 name the player, so the message waits for a cache lookup.
+`SMSG_FRIEND_STATUS` (`0x68`) is a result byte and a guid, read by `0x5add30` and passed to `0x5acab0` with the packet; the handler returns 1 even when there is no friend list. The result selects an action and a game error `0x496720` shows. Results 2, 3, 5, 6, 7 and 8 name a friend and 14, 15 and 16 an ignored player, so their message waits for a cache lookup, finished by `0x5ace70` for a friend and `0x5acf40` for an ignore (`0x5acb7d`, `0x5acd1e`, `0x5acd42`, `0x5acd64`).
 
 | result | action on the slot | game error |
 |---|---|---|
