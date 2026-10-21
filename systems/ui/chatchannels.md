@@ -221,7 +221,7 @@ the text and the channel name as the channel. Notices 0 and 1 read a GUID and sh
 channel is joined and confirmed. Notice 12 reads a GUID and two bytes and calls `0x49e910` instead of
 showing a line. Notice 2 reads two u32, discarding the first, and a topic string when bytes remain.
 
-Addresses: `0x49bf80`, `0x49bf95`, `0x49bfa8`, `0x49bfcd`, `0x49bfe5`, `0x49bff3`, `0x49c60c`, `0x49bffa`, `0x49c005`, `0x49c01b`, `0x49c036`, `0x49c041`, `0x49c050`, `0x49c065`, `0x49c24d`, `0x49c283`, `0x49c4df`, `0x49c4e4`, `0x49c595`, `0x49c5b0`, `0x49c5c7`, `0x49c5d3`, `0x49c5f8`, `0x49e910`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x4191b0`, `0x5ab650`
+Addresses: `0x49bf80`, `0x49bf95`, `0x49bfa8`, `0x49bfcd`, `0x49bfe5`, `0x49bff3`, `0x49c60c`, `0x49bffa`, `0x49c005`, `0x49c01b`, `0x49c036`, `0x49c041`, `0x49c050`, `0x49c065`, `0x49c24d`, `0x49c283`, `0x49c4df`, `0x49c4e4`, `0x49c595`, `0x49c5b0`, `0x49c5c7`, `0x49c5d3`, `0x49c5f8`, `0x49e910`, `0x49c115`, `0x49c13c`, `0x49c157`, `0x49c39a`, `0x49c3a9`, `0x49c42b`, `0x49c43a`, `0x49c446`, `0x49c452`, `0x49c461`, `0x49c46d`, `0x49c5b5`, `0x49c5c2`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x4191b0`, `0x5ab650`
 Confidence: verified
 Proof: one
 Test: none
@@ -232,7 +232,7 @@ take 0x13 from `mov edi,0x13`, those that enter at `0x49c4e4` keep 0x12. The sha
 resolves the first GUID's name through the name cache into the sender, and the second one's into the
 fifth argument; `0x49c595` to `0x49c5b0` push the ten arguments. Notice 2 fires a second line, the topic, at
 `0x49c5f8` with the same type when `[ebp+0xf] == 2` and the topic string is not empty. The drop flag is
-set by notices 3 (YOU_LEFT only), 4, 5, 26 and 27 (notice 5, NOT_MEMBER, jumps to `0x49c461`, and `0x49c46d` stores `[ebp-0xc]=1`) and consumed after the event.
+set by notices 3 (YOU_LEFT only), 4, 5, 19, 26 and 27 and consumed after the event. The stores are `0x49c115` (3), `0x49c13c` (4), `0x49c446` (19 by the jump `0x49c3a9` to `0x49c43a`, 26 by falling through from `0x49c42b`) and `0x49c46d` (5 by the jump `0x49c157` to `0x49c461`, 27 by falling through from `0x49c452`).
 
 ## Channel list message
 
