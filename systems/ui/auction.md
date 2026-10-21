@@ -36,7 +36,7 @@ a count and a total from the wire (`0xb7261c` and `0xb72620`, `0xb72624` and `0x
 `0xb72630`) and a pending-lookups counter (`0xb72644`, `0xb72648`, `0xb7264c`). The 150 records are 0x48 bytes,
 allocated once at start-up (`0x4cc0f0`); sorting permutes the pointers. Each list has a sort key stack (browse
 `0xb725b0`, owner `0xb72420`, bidder `0xb72548`) of 8 pairs {column, reversed}. `0x4cc280` clears the counts, the
-GUID, the house and the flags, and the sell slot.
+GUID, the house, the flags and the sell slot, and sets the three selection cells to -1 (`auctionlists#selection`).
 
 Addresses: `0x4cc0f0`, `0x4cc280`, `0x4cc300`, `0x4cc195`, `0x4cc1ad`, `0x4cc1b8`, `0x4cc1c1`, `0x4cc238`, `0xb725f8`, `0xb72600`, `0xb72278`, `0xb72340`, `0xb72470`, `0xb7261c`, `0xb72620`, `0xb72624`, `0xb72628`, `0xb7262c`, `0xb72630`, `0xb72644`, `0xb72648`, `0xb7264c`, `0xb725b0`, `0xb72420`, `0xb72548`
 Confidence: verified

@@ -66,16 +66,17 @@ past deadline and `0x4cf569 cmp edi,0x2710; jbe` guards the removal `0x4cdfe0`. 
 `SetSelectedAuctionItem("type", index)` stores the id of the indexed record in a cell per list (`0x849058` browse,
 `0x84905c` owner, `0x849060` bidder), or -1 when the index is outside the list, and returns nothing.
 `GetSelectedAuctionItem("type")` scans the list for that id and returns its 1-based position, or 0 when it is gone, so
-sorting never moves the selection. The cells start at -1 and the reset sets them to 0.
+sorting never moves the selection. The cells start at -1 and the reset sets them to -1: a cell below 0 skips the scan, so the getter answers 0 until a selection is made.
 
-Addresses: `0x4cfda0`, `0x4cfec0`, `0x849058`, `0x84905c`, `0x849060`, `0x4cfe13`, `0x4cfe53`, `0x4cfe92`, `0x4cff35`, `0x4cc2d5`
+Addresses: `0x4cfda0`, `0x4cfec0`, `0x849058`, `0x84905c`, `0x849060`, `0x4cfe13`, `0x4cfe53`, `0x4cfe92`, `0x4cff35`, `0x4cc280`, `0x4cc2d2`, `0x4cc2d5`, `0x4cc2da`, `0x4cc2df`, `0x4cff15`, `0x4cff70`, `0x4cffcf`
 Confidence: verified
 Proof: one
 Test: none
 
 The stores are `0x4cfe13`, `0x4cfe53` and `0x4cfe92`, their -1 forms at `0x4cfe1e`, `0x4cfe5d` and `0x4cfe9c`. The getter's scan
-is `0x4cff21` to `0x4cff30`, and `0x4cff32 or eax,-1` then `inc eax` gives 0 when not found. The reset stores 0 at
-`0x4cc2d5`. The usage lines are `Usage: SetSelectedAuctionItem("type", index)` and `Usage: GetSelectedAuctionItem("type")`.
+is `0x4cff21` to `0x4cff30`, and `0x4cff32 or eax,-1` then `inc eax` gives 0 when not found. The reset `0x4cc280`
+loads -1 with `or eax,-1` (`0x4cc2d2`) and stores it at `0x4cc2d5`, `0x4cc2da` and `0x4cc2df`, and the cells' bytes in the
+file are -1. The getter's `test edx,edx; jl` (`0x4cff15`, `0x4cff70`, `0x4cffcf`) skips the scan for a negative cell. The usage lines are `Usage: SetSelectedAuctionItem("type", index)` and `Usage: GetSelectedAuctionItem("type")`.
 
 ## Sorting
 
