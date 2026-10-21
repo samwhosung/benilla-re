@@ -23427,9 +23427,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b3f0	100	SStrHashHT	idb	storm	primitive	uint32_t __stdcall (const char *s)	Hashes a string folded to upper case with / read as \ through bjhash with initial value 0	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
 0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
-0x64b4a0	80			storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Copies 0x64b4f0: finds a string in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
-0x64b4f0	80			storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Finds the first place a string occurs in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
-0x64b540	80			storm	boundary		Finds a string in another without case; null for an empty haystack, no match or a null argument	verified	one	net/who#who-query-tags	net::who_string_helpers
+0x64b4a0	80	SStrStr2		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Returns where a string first occurs in another, case-sensitively, as 0x64b4f0 does; null for no match or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
+0x64b4f0	80	SStrStr		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Finds the first place a string occurs in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
+0x64b540	80	SStrStrI		storm	boundary		Finds a string in another without case; null for an empty haystack, no match or a null argument	verified	one	net/who#who-query-tags	net::who_string_helpers
 0x64b590	80			storm	unreached		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
 0x64b5e0	221			storm	boundary		Runs its object file code that calls __allrem, __alldiv; not read here	inferred	none		
 0x64b6c0	136			storm	unreached		Runs SStr.cpp code that calls SInterlockedIncrement, SInterlockedDecrement, SMemFree; not read here	inferred	none		

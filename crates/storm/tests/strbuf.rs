@@ -1,5 +1,5 @@
 //! Storm's `SStrLen` (`0x64a6f0`), `SStrPack` (`0x64a760`) and `SStrStr` (`0x64b4f0`, with its
-//! byte-identical copy `0x64b4a0`) run whole in the emulator against `str_len`, `str_pack` and
+//! second copy `0x64b4a0`) run whole in the emulator against `str_len`, `str_pack` and
 //! `str_str`.
 //!
 //! Each function runs with its own callees (`SStrCmp` `0x64a480` and the C runtime's `strncmp`

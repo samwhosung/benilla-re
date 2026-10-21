@@ -1,5 +1,5 @@
 //! Storm's string length `SStrLen` (`0x64a6f0`), append `SStrPack` (`0x64a760`) and find
-//! `SStrStr` (`0x64b4f0`, and its byte-identical copy `0x64b4a0`)
+//! `SStrStr` (`0x64b4f0`, and its second copy `0x64b4a0`)
 //! (`systems/storm/strings.md`).
 
 /// The bytes of a C string held in `bytes`: those before the first NUL, or all of them.
