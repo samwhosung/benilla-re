@@ -6700,7 +6700,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48a0e0	26	Script::GetSubZoneText	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the subzone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
 0x48a100	26	Script::GetMinimapZoneText	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the minimap zone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
 0x48a120	135	Script::InitiateTrade	idb	ui	primitive	int __fastcall (lua_State *L)	Sends a trade request for a unit token unless the player is dead, showing ERR_PLAYER_DEAD	verified	one	ui/trade#starting-a-trade	
-0x48a1b0	348	Script::CanInspect	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes 1 when the unit can be inspected, else nil, with an error for an absent unit	verified	one	ui/distancegates#caninspect	ui::caninspect_dist2
+0x48a1b0	348	Script::CanInspect	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes 1 when the unit can be inspected, else nil, with an error for an absent unit	verified	one	ui/distancegates#caninspect	ui::caninspect_dist2, ui::can_inspect_whole_difftest
 0x48a310	148	Script::NotifyInspect	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends the inspect request for a unit token through the active player	verified	one	ui/honorinspect#inspect-target	
 0x48a3b0	109	Script::InviteToParty	idb	ui	primitive	int __fastcall (lua_State *L)	Invites the player a unit token names to the group	verified	one	ui/groupverbs#inviting-and-removing-by-token	
 0x48a420	237	Script::InviteByName	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends a group invite by name, or shows ERR_INVITE_SELF for the player's own name	verified	one	ui/groupverbs#inviting-and-removing-by-name	

@@ -57,17 +57,23 @@ It has eight callers: `CanInspect` (`0x48a2a1`) and the seven at `0x4c8331` to `
 
 ## CanInspect
 
-`CanInspect(unit)` raises `Usage: CanInspect(unit)` unless the argument is a string or number. It resolves the token (`0x515940`). When there is no object it shows an error and then still runs `0x4944a0` with a null unit, which answers 0: the error is `ERR_UNIT_NOT_FOUND` for a nonempty token and `ERR_GENERIC_NO_TARGET` for an empty one.
-Otherwise it runs `0x4944a0` on the object. It pushes the number 1 for a true answer and nil for a false one, one value either way.
+`CanInspect(unit)` raises `Usage: CanInspect(unit)` unless the argument is a string or number. It resolves the token (`0x515940`), shows at most one error by the first test below that holds, then runs `0x4944a0` on the object (null for none). It pushes the number 1 for a true answer and nil for a false one, one value either way; `0x4944a0` repeats the tests, so the answer is false after any error.
 
-Addresses: `0x48a1b0`, `0x48a1ca`, `0x48a1f1`, `0x48a1fa`, `0x48a29f`, `0x48a2a1`, `0x48a2d6`, `0x48a2df`, `0x48a2e4`, `0x48a2ee`, `0x48a2f3`, `0x48a2fd`, `0x496720`
+| test, in order | message |
+|---|---|
+| the token names no object and is not empty | 295 `ERR_UNIT_NOT_FOUND` |
+| the token names no object and is empty | 184 `ERR_GENERIC_NO_TARGET` |
+| the active player has no object, or the object's type word lacks the player bit, or the object is not the player's own and `CanCooperate` refuses it | 297 `ERR_INVALID_INSPECT_TARGET` |
+| the squared distance exceeds 100; a NaN does not | 125 `ERR_OUT_OF_RANGE` |
+
+Addresses: `0x48a1b0`, `0x48a1ca`, `0x48a1f1`, `0x48a1fa`, `0x48a216`, `0x48a21f`, `0x48a231`, `0x48a237`, `0x48a245`, `0x48a28b`, `0x48a294`, `0x48a29f`, `0x48a2a1`, `0x48a2c4`, `0x48a2c7`, `0x48a2cc`, `0x48a2d6`, `0x48a2da`, `0x48a2df`, `0x48a2e4`, `0x48a2ee`, `0x48a2f3`, `0x48a2fd`, `0x496720`, `0x468460`, `0x606ba0`, `0x4944a0`, `0x515940`, `0x4f874d`
 Confidence: verified
 Proof: one
-Test: `ui::caninspect_dist2`
+Test: `ui::caninspect_dist2`, `ui::can_inspect_whole_difftest`
 
-The error ids are 295 and 184 of `tables/messages.tsv` (both kind 2). A party member who is out of range has a roster GUID but no object (`party#tables-and-the-party-functions`), so polling `CanInspect("party3")` shows an error line on each call.
+The ids are in `tables/messages.tsv`, all kind 2. `cmp [ebx],0` (`0x48a2da`) splits 184 (`0x48a2f3`) from 295 (`0x48a2e4`). 297 is pushed at `0x48a2cc` from three jumps to `0x48a2c7`: no player object (`0x48a21f`), no player bit in the type word (`0x48a231`) and a refused `CanCooperate` (`0x48a245`, through `0x48a2c4`); `0x48a237` skips that call for the player itself. The 297 leg then jumps to `0x48a29f`, over the range test. `0x48a28b test ah,0x41; jne` skips the push of 125 (`0x48a294`) when the squared distance is at most 100 or unordered. The function holds four `call 0x496720` (control: `PurchaseSlot` holds `0x4f874d`), and `0x4944a0`, `0x515940` and `0x606ba0` hold none. `0x4944a0` repeats these tests with the same polarity and operands. A party member out of range has a roster GUID but no object (`party#tables-and-the-party-functions`), so polling `CanInspect("party3")` shows 295 on each call.
 
-`ui::caninspect_dist2` runs the slice `0x48a25f` to `0x48a289`, the inline distance test that precedes the call of `0x4944a0`.
+`ui::caninspect_dist2` runs the slice `0x48a25f` to `0x48a289`, the inline distance test that precedes the call of `0x4944a0`. `ui::can_inspect_whole_difftest` runs `0x48a1b0` whole, with the Lua calls, `0x515940`, `0x606ba0`, `0x496720` and `0x464870` stubbed, and compares the usage error, the messages and the pushed value.
 
 ## CheckInteractDistance
 

@@ -329,3 +329,90 @@ pub fn check_interact_in_range(q: [f32; 3], p: [f32; 3], threshold: f32) -> bool
 /// `0xb4e29c`, `0xb4e258` and `0xb4e2a0`: the squares of 10, 11.1111, 10 and 30. The index is
 /// `distIndex - 1`.
 pub const INTERACT_TABLE: [f32; 4] = [100.0, 123.45678, 100.0, 900.0];
+
+// ---- CanInspect, whole ----
+
+/// `ERR_UNIT_NOT_FOUND`, `ERR_GENERIC_NO_TARGET`, `ERR_INVALID_INSPECT_TARGET` and
+/// `ERR_OUT_OF_RANGE`: the four messages `CanInspect` shows through `0x496720`
+/// (`tables/messages.tsv` ids 295, 184, 297 and 125).
+pub const MSG_UNIT_NOT_FOUND: u32 = 295;
+pub const MSG_GENERIC_NO_TARGET: u32 = 184;
+pub const MSG_INVALID_INSPECT_TARGET: u32 = 297;
+pub const MSG_OUT_OF_RANGE: u32 = 125;
+
+/// The object a token names, as `CanInspect` and `0x4944a0` read it.
+#[derive(Clone, Copy, Debug)]
+pub struct InspectTarget {
+    /// The type word has the player bit (`shr ecx,4; test cl,1`).
+    pub is_player: bool,
+    /// The object is the active player's own.
+    pub is_self: bool,
+    /// `CanCooperate(player, target)`, asked only of another object.
+    pub cooperates: bool,
+    /// The position the vtable slot `+0x14` returns.
+    pub pos: [f32; 3],
+}
+
+/// What `CanInspect` sees for one call.
+#[derive(Clone, Copy, Debug)]
+pub struct InspectWorld {
+    /// The argument is a string or a number.
+    pub arg_ok: bool,
+    /// The token's first byte is 0.
+    pub token_empty: bool,
+    /// The object `GetUnitFromToken` finds.
+    pub target: Option<InspectTarget>,
+    /// The active player's position, when its object exists.
+    pub player: Option<[f32; 3]>,
+}
+
+/// One effect of a `CanInspect` call, in order.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum InspectEffect {
+    /// `luaL_error` with the usage text.
+    Usage,
+    /// A message through `0x496720`.
+    Message(u32),
+    /// `lua_pushnumber(1.0)`.
+    PushOne,
+    /// `lua_pushnil`.
+    PushNil,
+}
+
+/// `CanInspect` (`0x48a1b0`), whole: the usage error, or at most one message and then the push of
+/// `0x4944a0`'s answer.
+///
+/// With no object the message is 295 for a nonempty token and 184 for an empty one. With an object
+/// the first failing test gives 297: no active player object, an object without the player bit, or
+/// another object than the player's that `CanCooperate` refuses; a 297 skips the range test. Then
+/// `100 < d^2` gives 125 (a NaN does not). The answer repeats the tests, so it is true exactly when
+/// none failed.
+pub fn can_inspect(w: &InspectWorld) -> Vec<InspectEffect> {
+    use InspectEffect::{Message, PushNil, PushOne, Usage};
+    if !w.arg_ok {
+        return vec![Usage];
+    }
+    let mut out = Vec::new();
+    let Some(t) = w.target else {
+        out.push(Message(if w.token_empty {
+            MSG_GENERIC_NO_TARGET
+        } else {
+            MSG_UNIT_NOT_FOUND
+        }));
+        out.push(PushNil);
+        return out;
+    };
+    let refused = w.player.is_none() || !t.is_player || (!t.is_self && !t.cooperates);
+    if refused {
+        out.push(Message(MSG_INVALID_INSPECT_TARGET));
+        out.push(PushNil);
+        return out;
+    }
+    let player = w.player.expect("checked above");
+    let far = can_inspect_out_of_range(player, t.pos, 100.0);
+    if far {
+        out.push(Message(MSG_OUT_OF_RANGE));
+    }
+    out.push(if far { PushNil } else { PushOne });
+    out
+}
