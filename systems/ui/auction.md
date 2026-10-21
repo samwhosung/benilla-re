@@ -52,9 +52,10 @@ stacks as 5, 3, 2, 0, 6, 1, 4, 7 from the twin tables `0x849064` and `0x849084`;
 `0x4cc280` clears the sell slot, then zeroes the auctioneer GUID and the house id, the three counts and totals, the query
 throttle `0xb72638`, the two request flags `0xb7263c` and `0xb72640` and the three pending counters, and stores -1 in the
 three selection cells `0x849058`, `0x84905c` and `0x849060`. It stores nothing else: the outbid count `0xb72634`, the
-records, the sort key stacks and the saved page offsets stay as they were. Its one caller is `0x490a05`.
+records, the sort key stacks and the saved page offsets `0xb72650` and `0xb72654` stay as they were. It has one call
+site, `0x490a05` in `0x4908c0`.
 
-Addresses: `0x4cc280`, `0x4cc285`, `0x4cc287`, `0x4cc28c`, `0x4cc291`, `0x4cc296`, `0x4cc2af`, `0x4cc2b4`, `0x4cc2b9`, `0x4cc2be`, `0x4cc2c3`, `0x4cc2cd`, `0x4cc2d2`, `0x4cc2d5`, `0x4cc2da`, `0x4cc2df`, `0x4cd640`, `0x490a05`, `0xb725f8`, `0xb72600`, `0xb7261c`, `0xb72630`, `0xb72634`, `0xb72638`, `0xb7263c`, `0xb72640`, `0xb72644`, `0xb72648`, `0xb7264c`, `0x849058`, `0x84905c`, `0x849060`
+Addresses: `0x4cc280`, `0x4cc285`, `0x4cc287`, `0x4cc28c`, `0x4cc291`, `0x4cc296`, `0x4cc2af`, `0x4cc2b4`, `0x4cc2b9`, `0x4cc2be`, `0x4cc2c3`, `0x4cc2cd`, `0x4cc2d2`, `0x4cc2d5`, `0x4cc2da`, `0x4cc2df`, `0x4cd640`, `0x490a05`, `0x4908c0`, `0xb72650`, `0xb72654`, `0xb725f8`, `0xb72600`, `0xb7261c`, `0xb72630`, `0xb72634`, `0xb72638`, `0xb7263c`, `0xb72640`, `0xb72644`, `0xb72648`, `0xb7264c`, `0x849058`, `0x84905c`, `0x849060`
 Confidence: verified
 Proof: one
 Test: none
@@ -64,7 +65,7 @@ GUID, `0x4cc287`, `0x4cc28c`), `0xb72600` (`0x4cc291`), the six counts and total
 `0x4cc2af`), the throttle (`0x4cc2b4`), the two request flags (`0x4cc2b9`, `0x4cc2be`) and the pending counters `0xb72644`,
 `0xb72648` and `0xb7264c` (`0x4cc2c3` to `0x4cc2cd`). `0x4cc2d2 or eax,-1` makes -1, stored at `0x4cc2d5`, `0x4cc2da` and
 `0x4cc2df`. The body ends at `ret`, `0x4cc2e4`, with no other store. The call sites of `0x4cc280` in the image are
-`0x490a05` alone, and the address is stored nowhere (an image scan for the dword and for `e8`/`e9` targets finds that one
+`0x490a05` alone, inside `0x4908c0`, and the address is stored nowhere (an image scan for the dword and for `e8`/`e9` targets finds that one
 call; control: `0x4cc0f0` finds `0x48f5f9`).
 
 ## Auction records
