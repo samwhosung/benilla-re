@@ -224,6 +224,26 @@ impl<'a> Rig<'a> {
         None
     }
 
+    /// The callbacks the exe holds for `key`, from the head of its node's list at `+0x1f4`
+    /// (the first at `+0x1fc`, each next at `+4`), with the function, id and data each holds.
+    fn list_of(&self, key: u32) -> Vec<Callback> {
+        let Some(node) = self.node_of(key) else {
+            return Vec::new();
+        };
+        let mut out = Vec::new();
+        let mut at = self.e.read_u32(u64::from(node) + 0x1fc);
+        while at & 1 == 0 && at != 0 {
+            let a = u64::from(at);
+            out.push(Callback {
+                func: self.e.read_u32(a + 8),
+                data: self.e.read_u32(a + 0x18),
+                id: [self.e.read_u32(a + 0x10), self.e.read_u32(a + 0x14)],
+            });
+            at = self.e.read_u32(a + 4);
+        }
+        out
+    }
+
     /// `0x55bdb0` over `keys` (a key with its top bit set is a refusal): one record with `single`
     /// set, else a count byte first.
     fn receive(&mut self, keys: &[u32], single: bool) {
@@ -253,6 +273,7 @@ fn callback_order_difftest() {
     let mut cancelled = 0u32;
     let mut emptied = 0u32;
     let mut ignored = 0u32;
+    let mut multi_removed = 0u32;
     for case in 0..48u32 {
         let mut rig = Rig::new(&wow, 3);
         let keys = [0x1000 + next(&mut s) % 0x100, 0x2000, 0x0300_0007, 0x4abc];
@@ -283,17 +304,31 @@ fn callback_order_difftest() {
             want_sends += u32::from(new_node);
             let ret = rig.get(&ask, true);
             assert_eq!(ret, 0, "case {case} ask {n}: a pending key has no record");
+            assert_eq!(
+                rig.list_of(key),
+                kept[&key],
+                "case {case} ask {n}: the list the exe holds"
+            );
             // Sometimes cancel what was just asked, and ask again with the flag set: an
             // emptied list takes the callback.
             if (next(&mut s) >> 16).is_multiple_of(4) {
                 rig.cancel(key, ask.func, ask.data);
                 let list = kept.get_mut(&key).unwrap();
+                let held = list.len();
                 cancel(list, cb.func, cb.data);
                 cancelled += 1;
-                // The same cancel again finds nothing to remove.
-                rig.cancel(key, ask.func, ask.data);
+                // Every callback with the function and data goes, not the first only.
+                multi_removed += u32::from(held - list.len() >= 2);
+                assert_eq!(
+                    rig.list_of(key),
+                    *list,
+                    "case {case} ask {n}: the list after the cancel"
+                );
                 if list.is_empty() {
                     emptied += 1;
+                    // A cancel on the emptied list removes nothing.
+                    rig.cancel(key, ask.func, ask.data);
+                    assert!(rig.list_of(key).is_empty());
                     // Half the time the pending key is left with no callback at all.
                     if (next(&mut s) >> 16).is_multiple_of(2) {
                         continue;
@@ -306,6 +341,7 @@ fn callback_order_difftest() {
                     let cb2 = Callback { id: again.id, ..cb };
                     keep(list, cb2, true);
                     assert_eq!(rig.get(&again, true), 0);
+                    assert_eq!(rig.list_of(key), *kept.get(&key).unwrap());
                 }
             }
         }
@@ -450,9 +486,9 @@ fn callback_order_difftest() {
     }
     eprintln!(
         "callback_order: {accepted_calls} calls with status 1, {refused_calls} with 0, \
-         {deduped} asks not kept, {cancelled} cancels ({emptied} emptied a list, {ignored} \
-         ignored while running), {multi} batches"
+         {deduped} asks not kept, {cancelled} cancels ({multi_removed} removed two or more, {emptied} \
+         emptied a list, {ignored} ignored while running), {multi} batches"
     );
     assert!(accepted_calls > 0 && refused_calls > 0 && deduped > 0 && multi > 0);
-    assert!(cancelled > 0 && emptied > 0 && ignored > 0);
+    assert!(cancelled > 0 && emptied > 0 && ignored > 0 && multi_removed > 0);
 }

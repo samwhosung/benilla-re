@@ -660,6 +660,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
+0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	one	dbcache/callbacks#item-node-allocation
 0x80917c	void *[4]	s_nameCacheVtable		dbcache	Holds the vtable of the names cache object; slot 0 frees a node	inferred	none	
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
@@ -3103,7 +3104,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71b64	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71ba0	int32_t	s_lootMoney		ui	Holds the loot window's money in copper, 0 for none and -1 once the coin row is taken	verified	one	ui/loot#loot-state
 0xb71bbc	uint32_t	s_lootType		ui	Holds the loot type of the open window, 3 for fishing loot	verified	one	ui/loot#loot-state
-0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once an auto-loot sweep has run for the open source, which limits the coin sound and line to the first	verified	one	ui/loot#auto-loot
+0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once an auto-loot sweep has run for the open source, which limits the coin sound and line to the first	verified	one	ui/autoloot#auto-loot
 0xb71bd0	uint32_t	s_lotteryVendorDelay		ui	Holds the vendor delay of the lottery query result; zero ends the read	verified	one	ui/lottery#query-result
 0xb71bd4	uint32_t	s_lotteryVendorClock		ui	Holds now plus the vendor delay, the time IsVendorActive waits to pass	verified	one	ui/lottery#query-result
 0xb71bd8	uint32_t	s_lotteryDrawDelay		ui	Holds the seconds to the next draw as the lottery query result gives them	verified	one	ui/lottery#query-result

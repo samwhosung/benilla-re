@@ -84,6 +84,12 @@ const POOL: [(u32, u32, u32, u32); 6] = [
 fn random_world(s: &mut u32, player: u32, source: u32) -> World {
     let pick = |s: &mut u32, n: u32| lcg(s) % n;
     let mut rows = [None; 16];
+    // The wire slot a row carries is not its array position (the copier packs the rows): a
+    // shuffled slot per position tells the bind confirmation's position from the slot sent.
+    let mut slots: [u8; 16] = std::array::from_fn(|i| i as u8);
+    for i in (1..16).rev() {
+        slots.swap(i, pick(s, i as u32 + 1) as usize);
+    }
     let count = match pick(s, 6) {
         0 => 0,
         n => n + pick(s, 6),
@@ -93,7 +99,7 @@ fn random_world(s: &mut u32, player: u32, source: u32) -> World {
         let (entry, bonding, quality, sound) = POOL[pick(s, 6) as usize];
         rows[at] = Some(Row {
             entry,
-            wire_slot: at as u8,
+            wire_slot: slots[at],
             slot_type: if pick(s, 5) == 0 { pick(s, 4) + 1 } else { 0 },
             bonding,
             quality,
@@ -240,6 +246,8 @@ fn auto_loot_sweep_difftest() {
     let mut taken_coin = 0u32;
     let mut sources_missing = 0u32;
     let mut other_types = 0u32;
+    let mut slot_sent_apart = 0u32;
+    let mut bind_apart = 0u32;
     for case in 0..4000u32 {
         let w = random_world(&mut s, player, source);
         // The cells.
@@ -326,6 +334,21 @@ fn auto_loot_sweep_difftest() {
             .filter(|r| r.slot_type == 0 && r.bonding == 1 && r.quality >= 2)
             .count();
         skipped_bind += u32::from(confirmable > 1 && stores.bind_row.is_some());
+        slot_sent_apart += u32::from(
+            stores.byte_cleared
+                && w.rows.iter().enumerate().any(|(i, r)| {
+                    r.is_some_and(|r| {
+                        r.slot_type == 0
+                            && !(r.bonding == 1 && r.quality >= 2)
+                            && usize::from(r.wire_slot) != i
+                    })
+                }),
+        );
+        bind_apart += u32::from(
+            stores
+                .bind_row
+                .is_some_and(|i| w.rows[i as usize].is_some_and(|r| u32::from(r.wire_slot) != i)),
+        );
         let _ = EVENT_LOOT_BIND_CONFIRM;
     }
     eprintln!(
@@ -349,6 +372,8 @@ fn auto_loot_sweep_difftest() {
         ("taken coin row", taken_coin),
         ("source gone", sources_missing),
         ("other types", other_types),
+        ("slot sent apart from its position", slot_sent_apart),
+        ("bind position apart from its slot", bind_apart),
     ] {
         assert!(n > 0, "no case reached: {name}");
     }

@@ -167,7 +167,7 @@ CGPlayer_C	0x1cd0	64	uint8_t[64]	m_tabSpells	objectlayer	Holds four 16-byte spel
 CGPlayer_C	0x1d10	16	uint32_t[4]	m_effect47Spells	objectlayer	Holds four spell ids, indexed by an effect-47 spell's misc value	verified	one	objectlayer/players#the-player-object
 CGPlayer_C	0x1d20	4	uint32_t	m_pendingDisplays	objectlayer	Holds the count of equipment displays waiting on an item record	verified	one	objectlayer/players#the-player-object
 CGPlayer_C	0x1d28	8	uint64_t	m_lootGuid	objectlayer	Holds the GUID being looted	verified	one	objectlayer/players#the-player-object
-CGPlayer_C	0x1d30	1	uint8_t	m_autoLoot	objectlayer	Holds the auto-loot byte: the Shift state of the last loot interaction, cleared by a sweep	verified	one	objectlayer/interaction#the-auto-loot-byte
+CGPlayer_C	0x1d30	1	uint8_t	m_autoLoot	objectlayer	Holds the auto-loot byte: the Shift state of the last interaction that set it, cleared by a sweep	verified	one	objectlayer/interaction#the-auto-loot-byte
 CGPlayer_C	0x1d38	4	uint32_t	m_inventoryCount	objectlayer	Holds the inventory slot count, 0x71 for the active player and 0 otherwise	verified	one	objectlayer/players#the-player-object
 CGPlayer_C	0x1d3c	4	uint64_t *	m_inventoryGuids	objectlayer	Points at the inventory GUIDs, PLAYER_FIELD_INV_SLOT_HEAD in the player fields	verified	one	objectlayer/players#the-player-object
 CGPlayer_C	0x1d40	8	uint64_t	m_inventoryOwner	objectlayer	Holds the player's GUID as the inventory's owner	verified	one	objectlayer/players#the-player-object

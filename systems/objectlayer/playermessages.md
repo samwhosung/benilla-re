@@ -124,9 +124,10 @@ The cast check compares `item1` with `GetCastItemGuidPtr` and calls `CancelCast(
 release is `0x495420`. Every nonzero result then reaches `0x5e3ad8`, which signals `LOOT_OPENED`
 (`0x5e3b20`) only when the loot window's source `0xb71b48` is set (`0x5e3aff`), the active player
 resolves (`0x5e3b07`) and its auto-loot byte is set (`0x5e3b0d`, `0x5e3b15`). The sweep has cleared
-the byte by then (`ui/loot#auto-loot`), so the tail fires only for a session the sweep has not run
-for: one whose item records are still being fetched, or one open while an interaction set the byte with
-no loot target held (`objectlayer/interaction#the-auto-loot-byte`).
+the byte by then (`ui/autoloot#auto-loot`), so the tail fires only while a window is open and the byte is
+set: while its item records are still being fetched, or after a later interaction set the byte with the loot
+target cleared (`0x5e3a84`, `0x5eb9d2`, `0x5ebad4`) and so no sweep run
+(`objectlayer/interaction#the-auto-loot-byte`).
 
 ## Item push, bank and binding
 

@@ -19,6 +19,17 @@ Test: `dbcache::callback_list_link_difftest`
 
 `0x56d0f2 mov edi,[eax]; test; je` skips the unlink for an unlinked node; the unlink ends at `0x56d120`, which zeroes both dwords. `0x56d12e` replaces a null reference with `ecx+4`, the terminator, and `0x56d135 je 0x56d14d` takes mode 1. Mode 1 (`0x56d14d` to `0x56d188`) stores the reference as the link's previous, copies the reference's next, points the old next's previous at the link (the terminator when the next is tagged, `0x56d164`) and the reference's next at the node. The other modes (`0x56d137` to `0x56d14a`) copy the reference's previous link and its next, point that previous link's next at the node and the reference's previous at the link. `0x55b2aa` to `0x55b2bb` build the empty list. The test runs the function whole but for a null node (`0x56d0ef`) and a negative link offset (`0x56d176`), on lists of link offset 0, in both modes, with the terminator, a head, a middle and a tail as reference, linking new nodes and moving linked ones, and compares every dword.
 
+## Item node allocation
+
+`0x55b250(bucket, extra, flags)` is slot 1 of the item cache's vtable, which the hash insert `0x56d610` calls for a key with no node. It allocates `extra + 0x204` zeroed bytes (flags OR 8), clears the links, the record at `+0x18` and the valid and dispatching bytes (`+0x1f0`, `+0x201`), builds the empty callback list at `+0x1f4`, links the node's hash link (`node+4`) at the head of the bucket's list and returns the node.
+
+Addresses: `0x55b250`, `0x80915c`, `0x56d610`, `0x56d72e`, `0x56d674`, `0x55b25c`, `0x55b267`, `0x55b26e`, `0x55b27b`, `0x55b2aa`, `0x55b2c8`, `0x55b2cd`, `0x55b2df`, `0x55b30f`, `0x55b332`
+Confidence: verified
+Proof: one
+Test: none
+
+The cache's vtable `0x80915c` holds `0x55b250` in slot 1. `0x56d72e call [eax+4]` passes the bucket's list object, `[ebp+0xc]` and `[ebp+0x10]`. `0x55b25c or eax,8` and `0x55b267 add ecx,0x204` make the allocation's flags and size (`0x55b26e` calls `0x6462e0`, tagged `DBCACHEHASH`). `0x55b27b` to `0x55b2a4` clear the two links and `+0x1b0`; `0x55b2aa` to `0x55b2bb` build the empty list; `0x55b2c8 rep stos` of 0x75 dwords clears the record; `0x55b2cd` to `0x55b2d9` clear the three bytes. `0x55b2df` adds the bucket's link offset, 4 (`0x56d674`), to the node; `0x55b30f` to `0x55b332` make the terminator `bucket+4` the link's previous, the terminator's next the link's next, point the old head's previous (or, when the list was empty, the terminator's) at the link and store the node as the terminator's next. The allocation-failure arm (`0x55b2e8`) is not read.
+
 ## Callback order
 
 A lookup appends the callback it keeps to the end of its key's list, and a response runs the list from the head: callbacks run in the order they were kept. `0x55ba30` allocates a 0x20-byte `DBCACHECALLBACK`, links it with `0x56d0e0(node, 2, 0)` and fills in the function (`+8`), the caller's id (`+0x10`) and the data (`+0x18`). For a key whose node exists with no record, a set dedupe flag keeps no second callback with the same function and data. A response calls `function(key, &id, data, status)` with status 1 after decoding and 0 for a refusal, then frees the list. All 26 link sites of the thirteen caches use mode 2 and no reference.

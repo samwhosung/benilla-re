@@ -8628,7 +8628,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c1ca0	12	EndLootWindowWithRelease		ui	orchestration	void __cdecl (void)	Calls EndLootWindow with 1, 0 and a zero stack argument	verified	one	core/close#leave-world-cascade	
 0x4c1cb0	580	SetLootSource		ui	primitive	void __fastcall (CGObject_C *source, uint32_t money, uint32_t type)	Ends the loot session in progress and starts one for the source object in ecx, copying the wire entries	verified	one	ui/loot#opening-and-closing-a-session	
 0x4c1f00	148	ClearLootRow		ui	primitive	void __fastcall (uint32_t wireSlot)	Removes the row with a wire slot, signals LOOT_SLOT_CLEARED and closes the loot when nothing is left	verified	one	ui/loot#taking-a-row-out	
-0x4c1fa0	696	AutoLootAll		ui	primitive	void __thiscall (void *this)	Sends the money and plain rows, clears the auto-loot byte, then closes an empty window or signals LOOT_OPENED	verified	one	ui/loot#auto-loot	ui::auto_loot_sweep_difftest
+0x4c1fa0	696	AutoLootAll		ui	primitive	void __fastcall (uint32_t flag)	Sends the money and plain rows, clears the auto-loot byte, then closes an empty window or signals LOOT_OPENED	verified	one	ui/autoloot#auto-loot	ui::auto_loot_sweep_difftest
 0x4c2260	61	GetLootRowCount		ui	primitive	int __stdcall ()	Returns the position of the last occupied loot row plus one, plus one while the money cell is set	verified	one	ui/loot#counting-and-guards	
 0x4c22a0	51	GetLootRowItem		ui	primitive	int __fastcall (int slot)	Returns the item entry of a loot slot, 0 for the coin row, an empty row or a closed window	verified	one	ui/loot#counting-and-guards	
 0x4c22e0	51	GetLootRowStack		ui	primitive	int __fastcall (int slot)	Returns the stack count of a loot slot, 0 for the coin row, an empty row or a closed window	verified	one	ui/loot#counting-and-guards	
@@ -8644,7 +8644,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c2790	431	TakeLootRow		ui	primitive	void __fastcall (int slot, int confirm)	Takes a loot slot: the coin row, a master loot or roll block, a bind confirmation or a store request	verified	one	ui/loot#taking-a-slot	
 0x4c2940	289	SendMasterLootGive		ui	primitive	void __fastcall (int slot, uint64_t candidate)	Sends CMSG_LOOT_MASTER_GIVE for a type 2 loot row after the window, slot and type checks	verified	one	ui/masterloot#giving-the-item	
 0x4c2a70	77	LootHasContents		ui	primitive	int __stdcall ()	Returns 1 when the loot source resolves and has money above 0 or an occupied row	verified	one	ui/loot#taking-a-row-out	ui::auto_loot_sweep_difftest
-0x4c2ac0	128	LootItemRecordArrived		ui	primitive	void __fastcall (uint32_t arg1, uint32_t unused, uint32_t entry, uint8_t ok)	Clears the pending flag of a loot row on arrival and starts the loot at the last pending item	verified	one	ui/loot#late-item-records	
+0x4c2ac0	128	LootItemRecordArrived		ui	primitive	void __fastcall (uint32_t entry, uint64_t *id, uint32_t data, uint8_t ok)	Clears the pending flag of a loot row on arrival and starts the loot at the last pending item	verified	one	ui/loot#late-item-records	
 0x4c2b40	225	Script::SetLootPortrait	idb	ui	primitive	int __fastcall (lua_State *L)	Bakes the loot source unit's portrait into a texture, returning 1, or clears it and returns nil	verified	one	ui/loot#loot-functions	
 0x4c2c30	41	Script::GetNumLootItems	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the loot row count through 0x4c2260	verified	one	ui/loot#loot-lua-reads	
 0x4c2c60	177	Script::GetLootSlotInfo	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the icon, name, count and quality of a loot slot, always four values	verified	one	ui/loot#loot-lua-reads	
@@ -14416,7 +14416,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55b0a0	218	ItemCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Item cache: empty lists, mask -1, the file tag and name, opcode and flags	inferred	none		
 0x55b180	124			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556590, SMemFree, 0x5565f0 and 3 more; not read here	inferred	none		
 0x55b200	72			dbcache	primitive		Runs DBCache.cpp code that calls SMemFree; not read here	inferred	none		
-0x55b250	268	ItemCacheAllocNode		dbcache	primitive	void * __thiscall (void *this, void *bucket, uint32_t extra, uint32_t flags)	Allocates an item node with an empty callback list and links it at the head of a bucket	verified	one	dbcache/callbacks#callback-list-links	
+0x55b250	268	ItemCacheAllocNode		dbcache	primitive	void * __thiscall (void *this, void *bucket, uint32_t extra, uint32_t flags)	Allocates an item node with an empty callback list and links it at the head of a bucket	verified	one	dbcache/callbacks#item-node-allocation	
 0x55b360	189			dbcache	primitive		Runs DBCache.cpp code that calls 0x555de0, 0x55b4e0, SMemFree; not read here	inferred	none		
 0x55b420	190			dbcache	primitive		Runs DBCache.cpp code that calls 0x55b630, 0x555de0, 0x55b570 and 1 more; not read here	inferred	none		
 0x55b4e0	136			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
