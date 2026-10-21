@@ -42,19 +42,19 @@ channel string (`Usage: %s("channel")`), `0x4a04b0` two (`Usage: %s("channel", "
 
 ## Listing channels
 
-`ListChannels()` prints one chat line of type 0x11 listing the joined channels as `[number. name] `, skipping empty slots and
+`ListChannels()` prints one type 0x11 chat line listing the joined channels as `[number. name] `, skipping empty slots and
 slots whose flag at `+0x9c` is set. Before each append it flushes the line when `SStrLen(line + SStrLen(entry))` reaches
-2048: the line's length less the entry's, once the line is as long as the entry. A client fault ten slots never reach,
-since ten entries of at most 137 characters make 1370. `GetChannelList()` returns,
-for each such slot, its number and then its name: the ChatChannels row's name in the current locale (`+0x30`) when the slot's
-row id at `+0x94` names a row, else the slot's own name. Both walk the 0xa0-byte slots of `0xb4fe04` up to the count `0xb4fe00`.
+2048: the line's length less the entry's, once the line is as long as the entry. The line never needs a flush (ten entries
+of at most 137 characters make 1370). While it is shorter than the entry, always for the first, the measure reads
+stale stack bytes and can still fire. `GetChannelList()` returns each such slot's number and name: the ChatChannels row's
+name in the current locale (`+0x30`) when the row id at `+0x94` names a row, else the slot's own.
 
 Addresses: `0x4a01c0`, `0x4a01e8`, `0x4a01f2`, `0x4a020a`, `0x4a022a`, `0x4a022f`, `0x4a0237`, `0x4a023c`, `0x4a0241`, `0x4a0215`, `0x4a026e`, `0x4a0281`, `0x4a0257`, `0x4a02b5`, `0x49a870`, `0x4a02d0`, `0x4a0302`, `0x4a0323`, `0x4a034b`, `0x4a0351`, `0x4a0382`, `0xb4fe00`, `0xb4fe04`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4a020a` formats `[%d. %s] ` (the number from the slot's first dword, the name at `+4`) into a 0x8a-byte buffer. `0x4a022a`
+Both functions walk the 0xa0-byte slots of `0xb4fe04` up to the count `0xb4fe00`. `0x4a020a` formats `[%d. %s] ` (the number from the slot's first dword, the name at `+4`) into a 0x8a-byte buffer. `0x4a022a`
 takes its length, `0x4a022f lea edx,[ebp+eax*1-0x88c]` points that far into the line and `0x4a0237` takes the length from
 there; `0x4a023c` compares it with 0x800 and `0x4a0241 jb` skips the flush. `0x4a0257` and `0x4a02b5` flush with
 `AddChatLine(0x11, ...)`. The line is the 0x800 bytes from `[ebp-0x88c]`, and the append (`0x4a0281`, `SStrPack` with size
