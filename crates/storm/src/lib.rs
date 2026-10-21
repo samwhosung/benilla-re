@@ -10,7 +10,8 @@
 //! ([`md5`]) and CRC-32 ([`crc32`]); the string hash of Storm's hash tables ([`str_hash_ht`]); and
 //! the loose-file index the open path asks before the archives ([`LooseIndex`]); the `.bz` loose
 //! file the index serves as kind 1 ([`BzFile`]); the string-to-number conversions
-//! ([`str_to_float`], [`str_to_int`], [`str_to_unsigned`]) and the tokenizer ([`str_tokenize`]);
+//! ([`str_to_float`], [`str_to_int`], [`str_to_unsigned`]), the tokenizer ([`str_tokenize`]) and
+//! the length, append and find helpers ([`str_len`], [`str_pack`], [`str_str`]);
 //! and the ordered printf the client formats its strings with ([`printf`]), which a Storm option
 //! selects ([`options`]).
 
@@ -22,6 +23,7 @@ mod looseindex;
 mod md5;
 pub mod options;
 pub mod printf;
+mod strbuf;
 mod strconv;
 mod strhash;
 mod strtok;
@@ -30,6 +32,7 @@ pub use bz::{parse_header, BzFile, BzHeader, BzRead, BzSource, HEADER_LEN, INPUT
 pub use crc32::crc32;
 pub use looseindex::{LooseEntry, LooseIndex, LooseKind, LooseSource, Resolved, DATA_DIR};
 pub use md5::md5;
+pub use strbuf::{str_len, str_pack, str_str};
 pub use strconv::{pow10_table, str_to_float, str_to_int, str_to_unsigned};
 pub use strhash::{lookup2, str_hash_ht};
 pub use strtok::{str_tokenize, Token};

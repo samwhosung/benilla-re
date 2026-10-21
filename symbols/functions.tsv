@@ -23407,9 +23407,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a670	16	BuildPow10TableOnce		storm	boundary		Runs 0x64a680 once and sets its guard	verified	one	core/threads#string-conversion-table	
 0x64a680	88	BuildPow10Table		storm	primitive		Fills a table of 20 by 10 doubles with k times 10 to the power -(r+1)	verified	one	core/threads#string-conversion-table	storm::sstrtofloat_whole
 0x64a6e0	1			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string	inferred	none		
+0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string; null sets error 0x57 and gives 0	verified	one	storm/strings#string-length-and-append	storm::sstrlen_whole
 0x64a720	49			storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x64a760	142	SStrPack		storm	primitive		Appends a string within a buffer size and terminates it	inferred	none		
+0x64a760	142	SStrPack		storm	primitive	uint32_t __stdcall (char *dest, const char *src, uint32_t size)	Appends a string to another below a buffer size, terminates it and returns the new length	verified	one	storm/strings#string-length-and-append	storm::sstrpack_whole
 0x64a7f0	43	SStrPrintf	idb	storm	orchestration		Formats into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	core/threads#allocator-and-error-calls	
 0x64a820	140	ISStrVPrintf	idb	storm	primitive	uint32_t __fastcall (char *dest, uint32_t size, const char *fmt, va_list args)	Formats through vsnoprintf or the C runtime by Storm option 10, cutting a result that fills the buffer	verified	one	storm/printf#formatting-into-a-buffer	storm::isstrvprintf_difftest
 0x64a8b0	43	SStrVPrintf	idb	storm	orchestration	uint32_t __cdecl (char *dest, uint32_t size, const char *fmt, va_list args)	Formats a va_list into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	storm/printf#formatting-into-a-buffer	
@@ -23427,8 +23427,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b3f0	100	SStrHashHT	idb	storm	primitive	uint32_t __stdcall (const char *s)	Hashes a string folded to upper case with / read as \ through bjhash with initial value 0	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
 0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
-0x64b4a0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
-0x64b4f0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
+0x64b4a0	80			storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Copies 0x64b4f0: finds a string in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
+0x64b4f0	80			storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Finds the first place a string occurs in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
 0x64b540	80			storm	boundary		Finds a string in another without case; null for an empty haystack, no match or a null argument	verified	one	net/who#who-query-tags	net::who_string_helpers
 0x64b590	80			storm	unreached		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
 0x64b5e0	221			storm	boundary		Runs its object file code that calls __allrem, __alldiv; not read here	inferred	none		

@@ -7,9 +7,10 @@ decimal float, `SStrToInt` a signed decimal integer and `SStrToUnsigned` unsigne
 fraction digits come from a table of powers of ten that `0x64a670` fills on first use
 (`core/threads#string-conversion-table`), and its other powers from the C runtime's `pow`. All three
 answer 0 for a null string and set error 0x57. `SStrTokenize` splits the text of console lines,
-CVar commands and many files into tokens.
+CVar commands and many files into tokens. `SStrLen` measures a string, `SStrPack` appends to one
+within a buffer size and `SStrStr` finds one in another.
 
-Roots: `0x64aaa0`, `0x64ac60`, `0x64ade0`, `0x64ae50`
+Roots: `0x64aaa0`, `0x64ac60`, `0x64ade0`, `0x64ae50`, `0x64a6f0`, `0x64a760`, `0x64b4f0`, `0x64b4a0`
 
 ## Float grammar
 
@@ -160,6 +161,51 @@ open flag; a count with no open quote jumps to the end at `0x64af12` without con
 `0x64af14` to `0x64af2a` otherwise toggle the open flag, step past the quote, set the quote flag and
 end the token when the toggled flag is clear. `0x64af30` sends every byte in an open quote to the store,
 past the delimiter test.
+
+## String length and append
+
+`SStrLen(s)` (`0x64a6f0`) returns the count of bytes before the first NUL. `SStrPack(dest, src, size)` (`0x64a760`)
+appends `src` to the string in `dest` and returns the new length of `dest`. A `size` of 0 returns 0 and writes
+nothing. Otherwise bytes of `src` are copied to the end of `dest` while the write address is below
+`dest + size - 1` (unsigned 32-bit address arithmetic), and a NUL follows the last byte copied; a `dest` already at the
+limit gets no byte and its NUL is rewritten at its old end. `size` 0x7fffffff has no limit. A null `s`, `dest` or
+`src` sets error 0x57 and gives 0, `SStrPack` writing nothing even for a `size` of 0.
+
+Addresses: `0x64a6f0`, `0x64a6fa`, `0x64a707`, `0x64a718`, `0x64a760`, `0x64a773`, `0x64a785`, `0x64a789`, `0x64a791`, `0x64a7a0`, `0x64a7a9`, `0x64a7ac`, `0x64a7b4`, `0x64a7c0`, `0x64a7c5`, `0x64a7c9`, `0x64a7d0`, `0x64e850`
+Confidence: verified
+Proof: one
+Test: `storm::sstrlen_whole`, `storm::sstrpack_whole`
+
+`0x64a6fa` and `0x64a773` pass 0x57 to `SErrSetLastError` (`0x64e850`). `SStrLen` tests the first byte at `0x64a707`
+and subtracts the start at `0x64a718`. In `SStrPack`, `0x64a789` returns 0 when `size`, tested at `0x64a785`, is 0, after
+the null tests; `0x64a791` to `0x64a79e` find the end of `dest`; `0x64a7a0` compares `size` with 0x7fffffff and
+`0x64a7ac` forms the limit `lea edi,[ebx+ecx-1]`. The copy loop tests `src` for NUL (`0x64a7a9`, `0x64a7c0`) and the
+write address with `jae` (`0x64a7b4`); `0x64a7c5` stores the NUL and `0x64a7c9` returns the write address less `dest`.
+The unlimited loop is `0x64a7d0`. The tests run both whole over every string of two letters to length five
+against 14 sizes (0 to 7, 9, 0x40, 0x7fffffff, 0x80000000 and the two that wrap the limit address) and a fuzz;
+the sentinel-filled destination region is compared whole.
+
+## String find
+
+`SStrStr(haystack, needle)` (`0x64b4f0`; `0x64b4a0` is a byte-identical copy) returns the address of the first position
+of `haystack` where `needle` matches, case-sensitively, else null. It tries each position from the start while
+the byte there is not NUL, comparing the needle's length in bytes through `SStrCmp` (`0x64a480`). An empty haystack
+gives null, even for an empty needle; an empty needle in a non-empty haystack matches at the start. A null
+argument sets error 0x57 and gives null. `0x64b540` is the same loop over `SStrCmpI`.
+
+Addresses: `0x64b4f0`, `0x64b4a0`, `0x64b4f4`, `0x64b4fb`, `0x64b501`, `0x64b50d`, `0x64b514`, `0x64b520`, `0x64b523`, `0x64b52a`, `0x64b52c`, `0x64b534`, `0x64b53a`, `0x64a480`, `0x64a4aa`, `0x40de80`, `0x64b540`, `0x64a6f0`
+Confidence: verified
+Proof: one
+Test: `storm::sstrstr_whole`
+
+`0x64b4f4` and `0x64b4fb` test the two arguments and `0x64b501` passes 0x57 to `SErrSetLastError`. `0x64b50d` keeps the
+needle's length (`SStrLen`); `0x64b514` returns null for an empty haystack. The loop pushes the length, the needle and the
+cursor and calls `SStrCmp` (`0x64b523`), which tests for null arguments and calls the C runtime's `strncmp`
+(`0x64a4aa`), a `repz cmpsb` that folds no case (`0x40de80`). A zero result returns the cursor (`0x64b53a`); else
+`0x64b52c` loads the next byte, steps and loops while it is not NUL, and the end returns null (`0x64b534`). The image
+holds nine direct calls of `0x64b4f0` (`0x49ae3c`, `0x49f68b`, `0x49f9eb`, `0x4efee0`, `0x6ede6a`, `0x6eded2`, `0x6f12e0`,
+`0x6f12f4`, `0x6f1359`) and five of `0x64b4a0`, and no dword holds either address; the control is the same scan finding
+`0x64b540`'s four. The test runs both copies whole.
 
 ## Unreached functions
 
