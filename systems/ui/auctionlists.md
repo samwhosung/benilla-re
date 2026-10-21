@@ -96,9 +96,72 @@ Test: `ui::sortcmp_4cd940`
 Each driver searches the stack (`0x4cd852`), toggles with `sete` (`0x4cd876`) at slot 0 or shifts with the loop `0x4cd887`
 to `0x4cd895`, stores the column and flag (`0x4cd899`, `0x4cd89f`) and falls into the sort tail. The adapters
 compare the pointers' records slot by slot (`0x4cd8f0` to `0x4cd91d`) with `0x4cd940(a, b, mode)` and negate when
-`[slot+4]` is nonzero. Ties on all eight keys return 0, and `qsort` does not promise to keep their order.
+`[slot+4]` is nonzero. Ties on all eight keys return 0, and the C runtime's `qsort` leaves them in the order its steps give (`The C runtime qsort`, below).
 
 Bit-exact coverage: `ui::sortcmp_4cd940` covers `0x4cd940` to `0x4cdb4f`, `0x4cdb5c` to `0x4cdc42` of `0x4cd940`.
+
+## The C runtime qsort
+
+`qsort(base, num, width, comp)` (`0x73f727`, `__cdecl`) reads only the sign of `comp`'s `int`. It returns at once for
+`num` below 2 or a `width` of 0. A range from `lo` to `hi` of 8 elements or fewer goes to the short sort. A larger one swaps
+the element `size / 2` places above `lo` with `lo`, the pivot. `loguy` steps up from `lo` while `loguy <= hi` and `comp(loguy, lo) <= 0`;
+`higuy` steps down from `hi + width` while `higuy > lo` and `comp(higuy, lo) >= 0`. While `higuy >= loguy` they swap and the
+scans resume; then `lo` swaps with `higuy`. The pivot is every call's second argument. Equal elements are not kept in order.
+
+Addresses: `0x73f727`, `0x73f739`, `0x73f743`, `0x73f772`, `0x73f77d`, `0x73f7a6`, `0x73f7b0`, `0x73f7bd`, `0x73f7ca`, `0x73f7cb`, `0x73f7cc`, `0x73f7d3`, `0x73f7d5`, `0x73f7dc`, `0x73f7dd`, `0x73f7de`, `0x73f7e5`, `0x73f7ea`, `0x73f7f3`, `0x73f7fe`, `0x73f87b`, `0x73f8c9`, `0x73f8f5`
+Confidence: verified
+Proof: one
+Test: `ui::crt_qsort_difftest`
+
+`0x73f739` and `0x73f743` end the call for `num < 2` and a zero width. `0x73f772 cmp eax,8; ja` sends a range of
+`(hi - lo) / width + 1` elements above 8 on; else `0x73f77d` calls `0x73f87b`. `0x73f7a6` to `0x73f7b0` halve the size,
+multiply by the width, add `lo` and call `0x73f8c9` on that element and `lo`. The comparator is `call [ebp+0x14]`
+(`0x73f7cc`, `0x73f7de`), and the pushes before it are `lo` then `loguy` (`0x73f7ca`, `0x73f7cb`) and `lo` then `higuy`
+(`0x73f7dc`, `0x73f7dd`), so its first argument is the scanned element and its second `lo`. `jle` (`0x73f7d3`) and `jge`
+(`0x73f7e5`) after `test eax,eax` are signed. `0x73f7ea cmp edi,[ebp-8]; jb` leaves the loop when `higuy < loguy`, unsigned;
+else `0x73f7f3` swaps and `0x73f7bd` resumes. `0x73f7fe` swaps `lo` and `higuy`. The test runs `0x73f727`, `0x73f87b` and
+`0x73f8c9` whole, with the comparator stubbed at the padding `0x73f8f5`, over arrays of 0 to 1200 records of 1 to 32 bytes,
+every array of 9 and 10 keys from three values among them, and compares each comparator call in order and the result's bytes.
+
+## The qsort split order
+
+After the pivot swap the range splits into the left part, `lo` to `higuy - width`, and the right part, `loguy` to `hi`. When
+`higuy - 1 - lo >= hi - loguy` (signed, in bytes; the left part has at least as many elements as the right) the left part is
+pushed and the loop goes on with the right; otherwise the right is pushed and the loop goes on with the left. A part is
+kept only with two elements or more (left `lo + width < higuy`, right `loguy < hi`). With
+nothing to continue it pops the last pair, and an empty stack ends it. The stacks hold 30 pairs, unchecked.
+
+Addresses: `0x73f727`, `0x73f785`, `0x73f790`, `0x73f79d`, `0x73f7a2`, `0x73f808`, `0x73f80f`, `0x73f810`, `0x73f812`, `0x73f814`, `0x73f81e`, `0x73f833`, `0x73f835`, `0x73f839`, `0x73f83f`, `0x73f846`, `0x73f848`, `0x73f854`, `0x73f85d`, `0x73f866`, `0x73f86c`, `0x73f86f`
+Confidence: verified
+Proof: one
+Test: `ui::crt_qsort_difftest`
+
+`0x73f812` compares `higuy - lo - 1` with `hi - loguy` and `0x73f814 jl` takes the right-part branch. With `L` and `R` the
+elements of the left and right part, the bytes are `L * width - 1` and `(R - 1) * width`, and the first is at least the second
+exactly when `L >= R`. The left-part branch pushes at `0x73f833` and `0x73f835` after `0x73f81e jae`; `0x73f839 jae 0x73f785`
+pops when `loguy >= hi`, else `0x73f83f` sets `lo = loguy`. The other branch pushes at `0x73f854` and `0x73f85d` after
+`0x73f848 jae`; `0x73f866 jae 0x73f785` pops when `lo + width >= higuy`, else `0x73f86c` and `0x73f86f` set `hi = higuy - width`.
+The pop `0x73f785` lowers both stack pointers and reloads `lo` and `hi` from the top entries (`0x73f79d`, `0x73f7a2`), and
+`0x73f790 jl` ends the sort when the count falls below 0. The stacks are `[ebp-0xf8]` and `[ebp-0x80]`, 30 dwords each. Keys
+all equal to the pivot leave `loguy` past `hi` and `higuy` at `lo`, and both parts are empty.
+
+## The qsort short sort
+
+`shortsort(lo, hi, width, comp)` (`0x73f87b`) is a selection sort. While `hi > lo` it sets `max` to `lo` and scans `p` from
+`lo + width` to `hi`, setting `max` to `p` when `comp(p, max) > 0`, so of equal elements the first stays the maximum. It then
+swaps `max` with `hi` and lowers `hi` by `width`. The first argument of every call is the scanned element. `swap(a, b, width)`
+(`0x73f8c9`) exchanges `width` bytes one at a time, and does nothing when `a == b` or `width` is 0.
+
+Addresses: `0x73f87b`, `0x73f885`, `0x73f899`, `0x73f89d`, `0x73f89e`, `0x73f89f`, `0x73f8a6`, `0x73f8a8`, `0x73f8b4`, `0x73f8bf`, `0x73f8c9`, `0x73f8d1`, `0x73f8dd`, `0x73f8e5`, `0x73f8f0`
+Confidence: verified
+Proof: one
+Test: `ui::crt_qsort_difftest`
+
+`0x73f885 cmp edi,eax; jbe` is the outer test, unsigned. The pushes before the comparator call (`0x73f89f`) are `max` then `p`
+(`0x73f89d`, `0x73f89e`); `0x73f8a6 jle` keeps `max` for a result of 0 or less and `0x73f8a8 mov ebx,esi` replaces it.
+`0x73f8b4` swaps `max` and `hi`, and `0x73f8bf cmp edi,[ebp+8]; ja` repeats while `hi > lo`. `0x73f8d1 cmp eax,ecx; je` and
+`0x73f8dd test esi,esi; je` leave `swap` for equal pointers and a zero width; `0x73f8e5` to `0x73f8f0` exchange one byte of
+each per pass. The test of the C runtime qsort runs both functions whole.
 
 ## Sort columns
 

@@ -31255,9 +31255,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f5a3	266	_fwrite	idb	crt	unreached		Runs its object file code that calls _memcpy, __flush, __write and 1 more; not read here	inferred	none		
 0x73f6ad	80	__vsnprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
 0x73f700	39	strrchr		crt			Returns the last occurrence of a character in a string	inferred	none	models/cache#shared-model-lookup	
-0x73f727	340	_qsort		crt			Sorts an array of elements with a comparison function	inferred	none		
-0x73f87b	78	_shortsort	idb	crt	boundary		Runs its object file code that calls _swap; not read here	inferred	none		
-0x73f8c9	44	_swap	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x73f727	340	_qsort		crt	primitive	void __cdecl (void *base, uint32_t num, uint32_t width, int (*compare)(const void *, const void *))	Sorts an array in place by quicksort on a middle pivot, with a selection sort for ranges of 8 elements or fewer	verified	one	ui/auctionlists#the-c-runtime-qsort	ui::crt_qsort_difftest
+0x73f87b	78	_shortsort	idb	crt	primitive	void __cdecl (char *lo, char *hi, uint32_t width, int (*compare)(const void *, const void *))	Sorts a range of at most 8 elements by moving the first maximum to the end until the range is empty	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
+0x73f8c9	44	_swap	idb	crt	boundary	void __cdecl (char *a, char *b, uint32_t width)	Exchanges two blocks of width bytes, doing nothing for the same address or a width of 0	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
 0x73f900	10	_fmod	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x73f914	30			crt	boundary		Runs its object file code that calls 0x74450c; not read here	inferred	none		

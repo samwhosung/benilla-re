@@ -25,6 +25,7 @@ pub mod chat_expand;
 pub mod clip_rect;
 pub mod color;
 pub mod colorselect_wheel;
+pub mod crt_qsort;
 pub mod cursor_picture;
 pub mod distance_gates;
 pub mod editbox_caret;
