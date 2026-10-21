@@ -9198,7 +9198,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cc0b0	12	InitZero4cc090Register		ui	orchestration	void __cdecl (void)	Registers 0x4cc0c0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4cc0c0	47	InitZero4cc090Exit		ui	primitive	void __cdecl (void)	Frees the OutbidItemInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4cc0f0	393	CGAuctionHouse::InitializeGame	idb	ui	orchestration	void __stdcall ()	Registers the auction packet handlers, allocates the 150 records and outbid pairs and sets the sort keys	verified	one	ui/auction#session-state	
-0x4cc280	101	ShutdownAuctionHouse		ui	orchestration	void __stdcall ()	Clears the sell slot, zeroes the auction session state, counts and flags, and sets the three selections to -1	verified	one	ui/auction#session-state	
+0x4cc280	101	ShutdownAuctionHouse		ui	orchestration	void __stdcall ()	Clears the sell slot, zeroes the auction session state, counts and flags, and sets the three selections to -1	verified	one	ui/auction#the-session-reset	
 0x4cc2f0	5	LeaveWorldCloseAuctionHouse		ui	orchestration	void __cdecl ()	Jumps to the auction close 0x4cd5f0	verified	one	ui/auction#opening-and-closing	
 0x4cc300	284	RemoveAuctionHandlers		ui	orchestration	void __stdcall ()	Removes the auction packet handlers registered by 0x4cc0f0	verified	one	ui/auction#session-state	
 0x4cc420	60	HandleAuctionHelloPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the auctioneer GUID and house id of a hello packet and opens the window	verified	one	ui/auction#opening-and-closing	
