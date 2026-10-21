@@ -11,19 +11,23 @@ Roots: `0x4899d0`, `0x489a80`, `0x489aa0`, `0x489ac0`, `0x489ae0`, `0x489b00`, `
 ## Setting the target
 
 `0x493540(guid)` selects a unit, or clears the selection for GUID 0. It does nothing when the protected gate for kind 3
-fails or when the active player is charmed (the descriptor dwords at `+0x10` and `+0x14` are not both 0). For a nonzero GUID
-it needs the object: while a spell awaits a target the object is bound as the spell's target and nothing else happens;
-otherwise its virtual slot `+0x58` must answer nonzero. Selecting the current target does nothing. Otherwise the old target
-is kept for `TargetLastTarget`, the new one is stored and lit, and an attackable one is kept for `TargetLastEnemy`.
-`CMSG_SET_SELECTION` (0x13d) is sent, `PLAYER_TARGET_CHANGED` is signalled, and an attacking player attacks the new target.
+fails or when the active player is charmed (descriptor dwords `+0x10` and `+0x14` not both 0). A nonzero GUID's
+object is looked up. While a spell awaits a target, a found one is only bound as its target;
+otherwise its virtual slot `+0x58` must answer nonzero. A missing one skips both. Selecting the current target does nothing.
+Otherwise the old target is kept for `TargetLastTarget` and the new one stored, object or not; a found object is lit, and an
+attackable one kept for `TargetLastEnemy`. `CMSG_SET_SELECTION` (0x13d) is sent, `PLAYER_TARGET_CHANGED` signalled, and an
+attacking player attacks the target.
 
-Addresses: `0x493540`, `0x493561`, `0x493590`, `0x4935ca`, `0x4935d5`, `0x4935ec`, `0x4935fb`, `0x49361d`, `0x493622`, `0x493639`, `0x4936a3`, `0x4936e2`, `0x493701`, `0x49372a`, `0x49377d`, `0x4937be`, `0x4937ff`, `0x493815`, `0x49383c`, `0x493843`, `0x493871`, `0x493892`, `0x49389c`, `0x4938c8`, `0xb4e2d8`, `0xb4e2e0`, `0xb4e2e8`, `0xb4e3b0`, `0x6e5b40`, `0x494a50`
+Addresses: `0x493540`, `0x493561`, `0x493590`, `0x4935bf`, `0x4935c8`, `0x4935ca`, `0x4935d5`, `0x4935ec`, `0x4935ee`, `0x4935fb`, `0x493605`, `0x49360b`, `0x49361d`, `0x493622`, `0x493639`, `0x4936a3`, `0x4936e2`, `0x4936ee`, `0x4936f7`, `0x493701`, `0x49372a`, `0x49377d`, `0x4937be`, `0x4937ff`, `0x493815`, `0x49383c`, `0x493843`, `0x493871`, `0x493892`, `0x49389c`, `0x4938c8`, `0xb4e2d8`, `0xb4e2e0`, `0xb4e2e8`, `0xb4e3b0`, `0x6e5b40`, `0x494a50`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x493561` calls the gate `0x494a50(3)` and `0x493590` reads the charm words. `0x4935fb` zeroes the cycle cache time
-`0xb4e3b0` for GUID 0. The old target is saved to `0xb4e2e0` at `0x493622`. `0x493639` tests `HasAttackTarget`, `0x4936a3` the
+`0xb4e3b0` for GUID 0. `0x4935bf` looks the object up; a miss, `0x4935c8 je 0x493605`, skips the awaiting-target test
+`0x4935ca` and the slot test `0x4935ee`, and `0x493605` goes on to compare the GUID with the selection `0xb4e2d8`
+(`0x49360b`). The old target is saved to `0xb4e2e0` at `0x493622`, the new one stored at `0x4936e2` before the second lookup
+`0x4936ee`, whose miss goes to `0x493843`. `0x493639` tests `HasAttackTarget`, `0x4936a3` the
 attackability of the current target (alive, not mounted, a living or flagged target, `CanAttack`), and the result decides
 `0x4938c8`, which calls `StartMeleeAttack` with the new GUID. `0x493701` lights the object and `0x49372a` adds token flag
 0x1000. A unit that `CanAttack` stores its GUID at `0xb4e2e8` (`0x49377d`). The tutorial triggers 18, 17, 4 and 34 are
