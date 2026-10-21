@@ -125,7 +125,7 @@ The formats are `%sTextLeft%d` (`0x8547ec`), `%sTextRight%d` (`0x8547dc`), `%sTe
 ## Item object link
 
 `0x52ae00(item)` builds the link text of an item object, or answers 0 for a null object. It reads the item's cached record by the entry at `[[item+8]+0xc]` (quality at `+0x1c` of the record, 1 when none), writes the item's name to a 0x100-byte buffer
-(`0x5d8bc0`) and, unless the item's flag word has bit 3 (wrapped), takes `[block+0x94]`, `[block+0x98]` and, when the object's type mask lacks bit 0x2000, the dword at `+0x40` of its descriptor block. It calls `0x52adb0(entry, quality, enchant, suffix, unique, name)`; a wrapped item passes
+(`0x5d8bc0`) and, unless the item's flag word has bit 3 (wrapped), takes `[block+0x94]`, `[block+0x98]` and, when the item record's flags lack 0x2000 (a charter; the `+0x110` vtable's slot, `objectlayer/items`), the dword at `+0x40` of its descriptor block. It calls `0x52adb0(entry, quality, enchant, suffix, unique, name)`; a wrapped item passes
 0 for all three numbers.
 
 Addresses: `0x52ae00`, `0x52ae4a`, `0x52ae6f`, `0x52ae7a`, `0x52ae88`, `0x52aea8`, `0x52aeaa`, `0x52aee0`, `0x55ba30`, `0x5d8bc0`, `0x52adb0`, `0xc0e2a0`
