@@ -11,9 +11,10 @@ Roots: `0x4c82a0`, `0x4c8590`, `0x4c88d0`, `0x4c8a60`, `0x4c8c10`, `0x4c8de0`, `
 
 `GetInventoryItemTexture`, `GetInventoryItemBroken`, `GetInventoryItemQuality`, `GetInventoryItemCooldown` and
 `GetInventoryItemLink` take a unit token and a slot. A first argument that is not a string raises `Usage: <name>(unit, slot)`; a slot the slot reader refuses raises `Invalid inventory slot in <name>`.
-The unit must pass `CanReadUnitInventory`: the active player, or a cooperative player within 10 yards. Slot -1 (the ammo slot)
-reads the item entry the player carries in the ammo field (`+0x102c`). A unit that fails the test, a missing item or an uncached record gives nil
-(the texture, quality, broken and link getters) or 0, 0, 0 (the cooldown).
+The unit must pass `CanReadUnitInventory`: the active player, or a cooperative player within 10 yards. Slot -1 (the ammo slot) of
+the texture and quality getters reads the active player's ammo entry (`+0x102c`); another unit gives nil. A unit that fails the test, a missing item or an uncached record gives nil
+(the texture, quality, broken and link getters) or 0, 0, 0 (the cooldown); an uncached ammo record also
+registers the callback of "Ammo record callback".
 
 Addresses: `0x4c82a0`, `0x4c82cf`, `0x4c8301`, `0x4c8328`, `0x4c8331`, `0x4c8382`, `0x4c8590`, `0x4c88d0`, `0x4c8a13`, `0x4c8a60`, `0x4c8c10`, `0x4c8c8e`, `0x4c8ca7`, `0x4c8520`, `0x4944a0`, `0x515940`
 Confidence: verified
@@ -36,6 +37,28 @@ Proof: one
 Test: none
 
 `0x4c8423` reads the visible item block of a unit; `0x4c8435` takes its display id, and `0x4c8461` the display id of the item object's record when no block exists. `0x4c8a13` tests the record's inventory type at `+0x2c` before using `+0x1c`. `0x4c8ce2` builds the link of the player's own item and `0x4c8d57` and `0x4c8d74` that of the visible item from its entry and suffix.
+
+## Ammo record callback
+
+The ammo legs of `GetInventoryItemTexture` and `GetInventoryItemQuality` ask the item record cache for the
+`PLAYER_AMMO_ID` entry (the texture getter after counting one in the inventory) with the callback `0x4c84f0`, which signals `UNIT_INVENTORY_CHANGED("player")` when the
+record arrives. A cached record returns at once and registers nothing. A missing one registers one callback per
+call, with no duplicate check, so n calls before the arrival signal n times. A refused record signals nothing.
+
+Addresses: `0x4c84f0`, `0x4c83bc`, `0x4c83ce`, `0x4c89cf`, `0x4c8a0a`, `0x4c8509`, `0x4c8355`, `0x4c8382`, `0x4c839b`, `0x4c83a0`, `0x4c89ab`, `0x55ba30`, `0x55be9f`, `0x55bf33`, `0x622130`, `0x5f1f70`, `0x703f50`, `0x82e280`, `0x847894`
+Confidence: verified
+Proof: one
+Test: `ui::ammo_record_callback_difftest`
+
+`0x4c84f0` ends in `ret 8` and reads only the stack dword at `+0xc`, the status the cache pushes under the data:
+`push 1` for an arrival (`0x55bf33`), `push 0` for a refusal (`0x55be9f`). A nonzero status pushes `"player"`
+(`0x847894`), `"%s"` (`0x82e280`) and 0xba and calls `0x703f50` (`0x4c8509`); the key in `ecx` and the owner
+pointer in `edx` are unread. The texture getter reaches the lookup (`0x4c83ce`) for slot -1 on the active player
+(`0x4c8355`) with a nonzero ammo id (`0x4c8382`) that `0x622130` counts in the inventory list from the unit's
+vtable slot 4 (`0x5f1f70`, `0x4c839b`, `0x4c83a0`), a count of 0 giving nil; the quality getter reaches it (`0x4c8a0a`) after loading the
+id (`0x4c89ab`) and without the count. Each pushes the key, the unit's GUID by pointer, `0x4c84f0`, data 0 and
+flag 0. The image stores `0x4c84f0` twice, at `0x4c83bd` and `0x4c89d0`, and no `call` or `jmp` reaches it (control: `0x5d8390`, stored
+three times). The test runs `0x4c84f0` whole, with `0x703f50` stubbed.
 
 ## Broken and cooldown
 

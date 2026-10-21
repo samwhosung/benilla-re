@@ -43,6 +43,7 @@ pub mod heading;
 pub mod hit_test;
 pub mod hyperlink;
 pub mod input_motion;
+pub mod inventory_verbs;
 pub mod layout_scale;
 pub mod list_sort;
 pub mod list_sort_cmp;
