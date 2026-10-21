@@ -1,11 +1,11 @@
 //! `CGItem_C::ApplyRecord` (`0x5d8440`) as the calls it makes, in order, with their arguments
 //! (`systems/objectlayer/items.md#the-item-record` and `#item-record-owner-signal`).
 //!
-//! The function is orchestration: it caches five record bytes, looks the display row up for the
-//! sound, and then, while the world latch `0xb4b424` is set, runs the lock and refresh calls for
-//! the active player's item and signals the owner's `UNIT_INVENTORY_CHANGED` for every item.
-//! Its contract is the call list, so that is what this models. The five byte getters run twice,
-//! before the latch test and again at the tail, and the display id getter once between.
+//! The function caches five record bytes, looks the display row up for the sound, and then,
+//! while the world latch `0xb4b424` is set, runs the lock and refresh calls for the active
+//! player's item and signals the owner's `UNIT_INVENTORY_CHANGED` for every item. What it does
+//! outside the bytes it stores is those calls, so that is what this models. The five byte getters
+//! run twice, before the latch test and again at the tail, and the display id getter once between.
 
 /// One call to a function the test stubs: its address and up to four values, whose meaning each
 /// arm below names.

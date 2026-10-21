@@ -299,7 +299,7 @@ object or an object without the unit bit gives null and 0 (`0x5fa5b6`); otherwis
 of that unit (`0x5fa5ba`). Without bit 24 (`0x5fa5c7`) the type word must hold the player bit
 0x10, `+0x10` must be 0 and bit 0 of the flags clear; the result is then 1 (`0x5fa5e2`), else 0.
 Stunned is not among the bits it tests. A creature possessed by a free player returns 1, one
-possessed by a feared player 0, and a creature the server lets the player drive without flag 24
+possessed by a feared player 0, and a creature the server lets the player drive without bit 24
 returns 0. Nothing bounds the recursion: a cycle of possessed units that the first test does not
 stop recurses until the stack ends. `objectlayer::is_unit_player_driven_difftest` runs `0x5fa550` whole, with `0x464870`
 stubbed over a table of objects.

@@ -344,18 +344,26 @@ fn object_ptr_difftest() {
                 } else {
                     0
                 };
-                // ecx = mask, edx = a source path the function never reads, then the GUID and a
-                // line number it never reads.
-                let bin = e.call(
-                    OBJECT_PTR,
-                    mask,
-                    0x860c0c,
-                    &[guid as u32, (guid >> 32) as u32, 0x1df],
-                );
-                assert_eq!(
-                    bin, want,
-                    "{label} mask {mask:#x} type {type_word:#x}: binary {bin:#x} ours {want:#x}"
-                );
+                // ecx = mask; edx and the third stack dword are a source path and a line number
+                // that the function never reads, so other values must give the same answer.
+                for (edx, line) in [
+                    (0x860c0c, 0x1df),
+                    (0, 0),
+                    (0xdead_beef, 0xffff_ffff),
+                    (1, 7),
+                ] {
+                    let bin = e.call(
+                        OBJECT_PTR,
+                        mask,
+                        edx,
+                        &[guid as u32, (guid >> 32) as u32, line],
+                    );
+                    assert_eq!(
+                        bin, want,
+                        "{label} mask {mask:#x} type {type_word:#x} edx {edx:#x} line {line:#x}: \
+                         binary {bin:#x} ours {want:#x}"
+                    );
+                }
                 found += u32::from(ours.is_some());
                 cases += 1;
             }

@@ -1,7 +1,7 @@
 //! `CGItem_C::ApplyRecord` (`0x5d8440`) against the exe, run whole
 //! (`systems/objectlayer/items.md#the-item-record`, `#item-record-owner-signal`).
 //!
-//! The function is orchestration, so the test compares what it calls: every callee but the active
+//! The test compares what the function calls and the bytes it stores: every callee but the active
 //! player's GUID getter (`0x468550`, run for real over a manager block the test writes) is
 //! stubbed, logs its address and arguments, and returns a value the test chooses (the record, the
 //! player object, the display id). The log is compared with `item_record::apply_record_calls` for
@@ -9,7 +9,7 @@
 //! dword or is 0, an active GUID of 0 (no manager), a record that is missing or has each side of
 //! `cmp [rec+0x60],1; jle`, and a player object that is missing or present. The five bytes the
 //! getters return and the item's flags are read back. The display row is read only as absent
-//! (`0x5da0b0` answering −1): the sound row at `0x5d84b2` to `0x5d84f5` is not run.
+//! (`0x5da0b0` answering −1): the sound row at `0x5d84b6` to `0x5d84f3` is not run.
 
 use benilla_re_difftest::{Emu, RegisterX86, StubIo, Wow};
 use benilla_re_objectlayer::item_record::{

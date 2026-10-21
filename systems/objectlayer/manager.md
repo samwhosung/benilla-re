@@ -52,7 +52,7 @@ chain by the bucket's link offset (`0x4648ee`). `0x468460(lo, hi, line)`, with t
 calls `0x464870`, keeps a null result, and else loads the descriptors `[object+8]` and clears the
 result when `test [descriptors+8],esi`, the type word against the mask, is zero (`0x46847a`). A mask
 of 0 finds nothing; `edx` and the line, a source path and a number in the callers, are not read.
-`objectlayer::object_ptr_difftest` runs `0x468460` whole with `0x464870` stubbed.
+`objectlayer::object_ptr_difftest` runs `0x468460` whole with `0x464870` stubbed and `edx` and the line varied.
 
 ## Releasing an object
 

@@ -43,15 +43,16 @@ Test: none
 The ammo legs of `GetInventoryItemTexture` and `GetInventoryItemQuality` ask the item record cache for the
 `PLAYER_AMMO_ID` entry (the texture getter after counting one in the inventory) with the callback `0x4c84f0`, which signals `UNIT_INVENTORY_CHANGED("player")` when the
 record arrives. A cached record returns at once and registers nothing. A missing one registers one callback per
-call, with no duplicate check, so n calls before the arrival signal n times. A refused record signals nothing.
+call, with no duplicate check, so n calls before the arrival signal n times. A status of 0 signals nothing.
 
-Addresses: `0x4c84f0`, `0x4c83bc`, `0x4c83ce`, `0x4c89cf`, `0x4c8a0a`, `0x4c8509`, `0x4c8355`, `0x4c8382`, `0x4c839b`, `0x4c83a0`, `0x4c89ab`, `0x55ba30`, `0x55be9f`, `0x55bf33`, `0x622130`, `0x5f1f70`, `0x703f50`, `0x82e280`, `0x847894`
+Addresses: `0x4c84f0`, `0x4c83bc`, `0x4c83ce`, `0x4c89cf`, `0x4c8a0a`, `0x4c8509`, `0x4c8355`, `0x4c8382`, `0x4c839b`, `0x4c83a0`, `0x4c89ab`, `0x4c84f3`, `0x55ba30`, `0x55be9f`, `0x55bf33`, `0x55bd22`, `0x55c01e`, `0x55ca2b`, `0x622130`, `0x5f1f70`, `0x703f50`, `0x82e280`, `0x847894`
 Confidence: verified
 Proof: one
 Test: `ui::ammo_record_callback_difftest`
 
-`0x4c84f0` ends in `ret 8` and reads only the stack dword at `+0xc`, the status the cache pushes under the data:
-`push 1` for an arrival (`0x55bf33`), `push 0` for a refusal (`0x55be9f`). A nonzero status pushes `"player"`
+`0x4c84f0` ends in `ret 8` and reads only the byte at `[ebp+0xc]` (`0x4c84f3`), the low byte of the status
+the cache pushes under the data: `push 1` for an arrival (`0x55bf33`), `push 0` for a refusal (`0x55be9f`); other
+cache functions pass 1 (`0x55bd22`) and 0 (`0x55c01e`, `0x55ca2b`) the same way. A nonzero byte pushes `"player"`
 (`0x847894`), `"%s"` (`0x82e280`) and 0xba and calls `0x703f50` (`0x4c8509`); the key in `ecx` and the owner
 pointer in `edx` are unread. The texture getter reaches the lookup (`0x4c83ce`) for slot -1 on the active player
 (`0x4c8355`) with a nonzero ammo id (`0x4c8382`) that `0x622130` counts in the inventory list from the unit's

@@ -88,15 +88,16 @@ Then `cmp [rec+0x60],1; jle` (`0x5d8577`); above, `0x6221e0(entry, 0)` (`0x5d859
 else 0x495420(guid), which clears bit 0 and signals 188. Then `0x5ebde0(item)` and the refreshes
 0x4fca20(0), 0x4f60c0, 0x4e5c70(entry), 0x4df7b0(entry), 0x4f9480(guid). The test runs `0x5d8440`
 whole with every callee but `0x468550` stubbed and compares the calls and arguments; it reads the
-display row as absent, a display id of −1, so `0x5d84b2` to `0x5d84f5` is not run.
+display row as absent, a display id of −1, so `0x5d84b6` to `0x5d84f3` is not run.
 
 ## Item record owner signal
 
 `0x5d8440` signals `UNIT_INVENTORY_CHANGED` (event 186) for every item record it applies while the
 byte at 0xb4b424 is set, whoever owns the item. `SignalUnitEvent` takes the item's
 `ITEM_FIELD_OWNER` GUID and signals once per unit token that names it, with `%s` and the token as
-`arg1`: `player` first for the active player, then `pet`, `target`, `party`, `raid`, `npc` and
-`mouseover` as each matches. An owner of 0, or no active player object, signals nothing. With the
+`arg1`, in the order of `0x515c50`: `player`, `pet` (the charm, else the summon), `target`, `partyN`
+or `partypetN` (the first match of 4), `raidN` or `raidpetN` (the first of 40), `npc`, `mouseover`.
+An owner of 0, or no active player object, signals nothing. With the
 byte clear the function runs none of this.
 
 Addresses: `0x5d8440`, `0x5d84ff`, `0x5d8506`, `0x5d8521`, `0x5d852a`, `0x5d85e8`, `0x5d85ed`, `0x5d85fe`, `0x5d860b`, `0x5d8300`, `0x5d834a`, `0x5d8390`, `0x5d83be`, `0x468550`, `0x515e50`, `0x515c50`, `0xb4b424`
