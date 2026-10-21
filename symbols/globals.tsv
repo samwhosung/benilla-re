@@ -1937,6 +1937,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x855808	int32_t	s_physicalResistIndex		ui	Holds the index of the damage class row marked physical, −1 until the table is checked	verified	one	ui/tooltipunitstatus#the-studied-creature-lines
 0x85580c	char[23]	s_pathWowClientDbH		dbc	Holds ..\..\DB/WowClientDB.h, the tag of the allocations in the table loaders	verified	one	dbc#the-loader
 0x8558a4	char *[8]	s_localeNames		unassigned	Holds the eight locale tags enUS to xxYY the locale index counts through	verified	one	dbc#localized-strings
+0x855b3c	char[49]	s_cancelCallbackIgnored		dbcache	Holds the console message CancelCallback prints when it is called while a list is being run	verified	one	dbcache/callbacks#cancelling-a-callback
 0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	one	dbcache/overview#name-cache-node
 0x856450	uint32_t			unassigned	Holds a dword that SendBugReport reads; not read here	inferred	none	
 0x85645c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	

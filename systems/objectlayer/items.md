@@ -80,8 +80,10 @@ Test: `objectlayer::apply_record_calls_difftest`
 
 The create hook `0x5d8400` calls `0x613af0` with its three arguments, then `0x5d8300`; slot 3 of the
 item and container vtables, `0x5d8430`, jumps to `0x5d8300` at the end of a reactivating update.
-`0x5d8300` calls `0x55ba30` on the cache at 0xc0e2a0 with the entry (field 3), the GUID and the
-callback `0x5d8390`; a record goes to `0x5d8440`, a miss to `inc [player+0x1d20]`. `0x5d8390` finds
+`0x5d8300` calls `0x55ba30` on the cache at 0xc0e2a0 with the entry (field 3), the item's GUID, the
+callback `0x5d8390`, the item as data and the dedupe flag 0 (`0x5d8321` to `0x5d833f`), so each item
+keeps its own callback and they run in the order the items asked (`dbcache/callbacks#callback-order`), not in GUID
+order; a record goes to `0x5d8440`, a miss to `inc [player+0x1d20]`. `0x5d8390` finds
 the item (mask 2) and, when its found byte is set, calls `0x5d8440` and decrements. `0x5d8440` sets
 `+0x314` bit 1, takes the display row from `0xc0dc08` and its `+0x2c` (`0x5d84cb`) into `0xc0dbf4`.
 Then `cmp [rec+0x60],1; jle` (`0x5d8577`); above, `0x6221e0(entry, 0)` (`0x5d8590`) and event 188;

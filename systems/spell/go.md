@@ -229,7 +229,7 @@ five, it inserts as the go's item leg does, with the pended time and flag, unles
 category recovery are both 0. It flushes and frees the node. The category values need the
 callback's first stack argument, 1 from the go, nonzero.
 
-Addresses: `0x6e8660`, `0x55bc70`, `0x6e867a`, `0x6e86a9`, `0x6e86c9`, `0x6e8735`, `0x6e8787`, `0x6e87c0`, `0x6e87ef`, `0x6e8806`, `0x6e8814`, `0x6e8830`, `0x6e8899`, `0x6e88d1`, `0x6e88f0`, `0x6e8943`, `0x6e8976`, `0x6e89a3`, `0x6e89a8`, `0x6e8a3a`, `0x55bd2a`, `0xceca60`
+Addresses: `0x6e8660`, `0x55bdb0`, `0x6e867a`, `0x6e86a9`, `0x6e86c9`, `0x6e8735`, `0x6e8787`, `0x6e87c0`, `0x6e87ef`, `0x6e8806`, `0x6e8814`, `0x6e8830`, `0x6e8899`, `0x6e88d1`, `0x6e88f0`, `0x6e8943`, `0x6e8976`, `0x6e89a3`, `0x6e89a8`, `0x6e8a3a`, `0x55bf2a`, `0x55bf39`, `0xceca60`
 Confidence: verified
 Proof: one
 Test: none
@@ -241,5 +241,5 @@ the first insert, which sets 3 and builds four buckets (`0x6e86c9`). A key's buc
 `2·mask + 2` (`0x6e87c0`). `0x6e87ef` allocates through slot 1 of the hash's vtable; `0x6e8806` to
 `0x6e8814` store. In `0x6e8830`, `0x6e88d1` asks the cache again with no callback; `0x6e88f0`
 scans `+0x11c`; `0x6e8943` tests `[ebx+0x8]`, which the cache passes as the stored argument
-on its record's arrival (`0x55bd1c`, `0x55bd2a`); `0x6e8976` skips two zeros; `0x6e89a3` inserts. The node is unlinked and
+on its record's arrival (`0x55bf2a`, `0x55bf39`, in the receive `0x55bdb0`); `0x6e8976` skips two zeros; `0x6e89a3` inserts. The node is unlinked and
 `0x6e8a3a` calls slot 0. The spell record lookup here has no null check before `+0x4c` (`0x6e8935`).

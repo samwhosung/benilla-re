@@ -119,14 +119,14 @@ on leaving the world (`0x4fc780` from `0x490ae9`).
 
 ## Cancelling the item requests
 
-The cancel `0x4fc890` removes nothing the build asked for. The cache's cancel `0x55c0c0` finds a record by the id it is given and drops the callback entry with the same callback and argument from that record. The requests are keyed by item id and `0x4fc890` passes spell ids, so the item callbacks stay registered. `0x4fc8cb` then zeroes the pending count, a record that arrives later finds the count 0 and rebuilds with flag 1, and a spell id equal to a pending item id would drop that entry's callback.
+The cancel `0x4fc890` removes nothing the build asked for. The cache's cancel `0x55c0c0` finds a record by the id it is given and drops every callback entry with the same callback and argument from that record. The requests are keyed by item id and `0x4fc890` passes spell ids, so the item callbacks stay registered. `0x4fc8cb` then zeroes the pending count, a record that arrives later finds the count 0 and rebuilds with flag 1, and a spell id equal to a pending item id would drop that entry's callback.
 
 Addresses: `0x4fc890`, `0x55c0c0`, `0x55c0d6`, `0x55c0f8`, `0x55c117`, `0x4fc8cb`, `0x4fc8f1`, `0x4fc8fb`, `0xc0e2a0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x55c0c0` is a thiscall on the cache `0xc0e2a0` with the id, the callback and the argument pushed (`ret 0xc`). It hashes the id (`and eax,edi`, `0x55c0d6`) and walks the bucket for the record whose id equals it (`cmp [eax],edi`, `0x55c0f8`). A loaded record (byte `+0x201`, `0x55c117`) only gets `DBCache::CancelCallback ignored for id %016I64X` written; otherwise the matching entry of the list at `+0x1fc` is unlinked and freed. `0x4fc8f1` takes the count-0 branch to `0x4fc8fb`.
+`0x55c0c0` is a thiscall on the cache `0xc0e2a0` with the id, the callback and the argument pushed (`ret 0xc`). It hashes the id (`and eax,edi`, `0x55c0d6`) and walks the bucket for the record whose id equals it (`cmp [eax],edi`, `0x55c0f8`). While the record's callbacks are being run (byte `+0x201`, `0x55c117`) only `DBCache::CancelCallback ignored for id %016I64X` is written; otherwise each matching entry of the list at `+0x1fc` is unlinked and freed (`dbcache/callbacks#cancelling-a-callback`). `0x4fc8f1` takes the count-0 branch to `0x4fc8fb`.
 
 
 ## Inventory slots

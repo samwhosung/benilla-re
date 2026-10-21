@@ -735,6 +735,11 @@ Cone	0x0000	12	NTempest::C3Vector	m_apex	cmath	Holds the apex	verified	one	cmath
 Cone	0x0010	12	NTempest::C3Vector	m_axis	cmath	Holds the unit axis	verified	one	cmath/types#cones-and-oriented-boxes
 Cone	0x001c	4	float	m_height	cmath	Holds the cap length along the axis; 0 for no cap	verified	one	cmath/types#cones-and-oriented-boxes
 Cone	0x0020	4	float	m_cosHalfAngle	cmath	Holds the cosine of the half-angle	verified	one	cmath/types#cones-and-oriented-boxes
+DBCACHECALLBACK	0x0000	4	void *	m_prevLink	dbcache	Points at the previous link, 0 while the callback is unlinked	verified	one	dbcache/callbacks#callback-order
+DBCACHECALLBACK	0x0004	4	void *	m_next	dbcache	Points at the next callback, or at the list terminator with bit 0 set at the end	verified	one	dbcache/callbacks#callback-order
+DBCACHECALLBACK	0x0008	4	void *	m_function	dbcache	Holds the function a response calls with the key, the id, the data and the status	verified	one	dbcache/callbacks#callback-order
+DBCACHECALLBACK	0x0010	8	uint64_t	m_id	dbcache	Holds the id the caller passed, whose address the function gets in edx	verified	one	dbcache/callbacks#callback-order
+DBCACHECALLBACK	0x0018	4	uint32_t	m_data	dbcache	Holds the data the caller passed, the function's first stack argument	verified	one	dbcache/callbacks#callback-order
 DYNAMICELEMENTVERT	0x0000	4	float	m_x	loadingscreen	Holds the x position	verified	one	loadingscreen/route#route-ribbon
 DYNAMICELEMENTVERT	0x0004	4	float	m_y	loadingscreen	Holds the y position	verified	one	loadingscreen/route#route-ribbon
 DYNAMICELEMENTVERT	0x0008	4	float	m_z	loadingscreen	Holds the z position, 0	verified	one	loadingscreen/route#route-ribbon

@@ -14416,7 +14416,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55b0a0	218	ItemCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Item cache: empty lists, mask -1, the file tag and name, opcode and flags	inferred	none		
 0x55b180	124			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556590, SMemFree, 0x5565f0 and 3 more; not read here	inferred	none		
 0x55b200	72			dbcache	primitive		Runs DBCache.cpp code that calls SMemFree; not read here	inferred	none		
-0x55b250	268			dbcache	primitive		Runs DBCache.cpp code that calls SMemAlloc, 0x55b600; not read here	inferred	none		
+0x55b250	268	ItemCacheAllocNode		dbcache	primitive	void * __thiscall (void *this, void *bucket, uint32_t extra, uint32_t flags)	Allocates an item node with an empty callback list and links it at the head of a bucket	verified	one	dbcache/callbacks#callback-list-links	
 0x55b360	189			dbcache	primitive		Runs DBCache.cpp code that calls 0x555de0, 0x55b4e0, SMemFree; not read here	inferred	none		
 0x55b420	190			dbcache	primitive		Runs DBCache.cpp code that calls 0x55b630, 0x555de0, 0x55b570 and 1 more; not read here	inferred	none		
 0x55b4e0	136			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
@@ -14426,17 +14426,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55b650	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x55b8e0	256			dbcache	primitive		Runs DBCache.cpp code that calls 0x55b600; not read here	inferred	none		
 0x55b9e0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
+0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns an item record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	dbcache::callback_order_difftest
 0x55bc50	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55bc60	3	ItemCacheNoOp		dbcache	orchestration		Returns at once, dropping three stack arguments	verified	one	objectlayer/players#arrival-in-the-world	
-0x55bc70	308	ItemCacheReceive		dbcache	unreached		Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
-0x55bdb0	471			dbcache	primitive		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x55b630 and 5 more; not read here	inferred	none		
-0x55bf90	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x55b630; not read here	inferred	none		
-0x55c0c0	236	DBCache::CancelCallback		dbcache	primitive	void __thiscall (DBCache *this, uint32_t id, void *callback, void *arg)	Removes a callback from the pending record with that id	verified	one	tradeskill/recipes#created-item	
+0x55bc70	308	ItemCacheStoreRecord		dbcache	unreached	void __thiscall (void *this, void *record, uint32_t key)	Copies a record into a key's node and runs its callbacks with status 1; nothing calls it	verified	one	dbcache/callbacks#unreached-item-cache-methods	
+0x55bdb0	471	ItemCacheReceive		dbcache	primitive	void __thiscall (void *this, CDataStore *store, bool single)	Reads the item records of a response and runs each key's callbacks in the order kept, status 1 or 0 for a refusal	verified	one	dbcache/callbacks#callback-order	dbcache::callback_order_difftest
+0x55bf90	293	ItemCacheRefuse		dbcache	unreached	void __thiscall (void *this, uint32_t key)	Runs a key's callbacks with status 0 and destroys its node; nothing calls it	verified	one	dbcache/callbacks#unreached-item-cache-methods	
+0x55c0c0	236	DBCache::CancelCallback		dbcache	primitive	void __thiscall (void *this, uint32_t key, void *callback, void *data)	Removes every callback with a function and data from the pending record with that id	verified	one	dbcache/callbacks#cancelling-a-callback	dbcache::callback_order_difftest
 0x55c1b0	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x55c270	1061	ItemCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Item cache from its file, or returns at once for a cache that is not saved	inferred	none		
 0x55c6a0	637			dbcache	unreached		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 8 more; not read here	inferred	none		
-0x55c920	424			dbcache	unreached		Runs DBCache.cpp code that calls 0x55b630, 0x557af0, 0x56caa0 and 1 more; not read here	inferred	none		
+0x55c920	424	ItemCacheRemove		dbcache	unreached	void __thiscall (void *this, uint32_t key)	Destroys a key's node, running a pending node's callbacks with status 0 first; nothing calls it	verified	one	dbcache/callbacks#unreached-item-cache-methods	
 0x55cad0	99			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x55cb40	93			dbcache	primitive		Runs DBCache.cpp code that calls 0x555de0; not read here	inferred	none		
 0x55cba0	218	NpcCacheConstruct		dbcache	orchestration	void __thiscall (void *this, uint32_t tag, const char *file, uint32_t opcode, uint32_t second, bool owner, bool persist)	Constructs the Npc cache: empty lists, mask -1, the file tag and name, opcode and flags	inferred	none		
@@ -14679,7 +14679,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x56c8f0	137			dbcache	unreached		Runs its object file code not read here	inferred	none		
 0x56c980	137			dbcache	unreached		Runs its object file code not read here	inferred	none		
 0x56ca10	137			dbcache	unreached		Runs its object file code not read here	inferred	none		
-0x56caa0	137			dbcache	unreached		Runs its object file code not read here	inferred	none		
+0x56caa0	137	ItemCacheDropNode		dbcache	unreached	void __thiscall (void *this, void *node)	Unlinks a node from its hash chain and the node list, then destroys it through slot 0; only 0x55c920 calls it	verified	one	dbcache/callbacks#unreached-item-cache-methods	
 0x56cb30	137			dbcache	unreached		Runs its object file code not read here	inferred	none		
 0x56cbc0	137			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x56cc50	137			dbcache	primitive		Runs its object file code not read here	inferred	none		
@@ -14691,8 +14691,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x56cfb0	114			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x56d030	137			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x56d0c0	16			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x56d0d0	16			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x56d0e0	171			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x56d0d0	16	ClearDbCacheLink		dbcache	orchestration	DBCACHECALLBACK * __thiscall (DBCACHECALLBACK *this)	Zeroes the two link dwords of a callback and returns it	verified	one	dbcache/callbacks#callback-order	
+0x56d0e0	171	LinkDbCacheCallback		dbcache	primitive	void __thiscall (void *this, DBCACHECALLBACK *node, uint32_t mode, DBCACHECALLBACK *reference)	Unlinks a callback, then links it after a reference or at the head (mode 1), before it or at the tail (mode 2)	verified	one	dbcache/callbacks#callback-list-links	dbcache::callback_list_link_difftest
 0x56d190	372			dbcache	primitive		Runs its object file code that calls 0x56e7f0, 0x556670, 0x555d20 and 2 more; not read here	inferred	none		
 0x56d310	372			dbcache	primitive		Runs its object file code that calls 0x56ec10, 0x558160, 0x555d60 and 2 more; not read here	inferred	none		
 0x56d490	372			dbcache	primitive		Runs its object file code that calls 0x56f030, 0x559bf0, 0x555da0 and 2 more; not read here	inferred	none		

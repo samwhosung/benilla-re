@@ -47,6 +47,7 @@ ChatWindow		152		ui	Holds one chat window: name, group flags, channel name and i
 ClientConnection		6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
 ClientLink		548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
 Cone		36		cmath	Holds a cone: apex, unit axis, cap length and the cosine of its half-angle; the size is the extent read	inferred	none	cmath/types#cones-and-oriented-boxes
+DBCACHECALLBACK		32		dbcache	Holds a callback kept for a pending record: its list link, function, caller id and data	verified	one	dbcache/callbacks#callback-order
 DYNAMICELEMENTVERT		24		loadingscreen	Holds one route vertex: position, texture coordinates and colour	verified	one	loadingscreen/route#route-ribbon
 DictionaryRecord		8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
 EvtContext		532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
