@@ -242,7 +242,7 @@ opcode	name	role	site	function	entries	basis
 0x105	SMSG_TEXT_EMOTE	handler	0x49864a	0x49dbe0	ui/chatemote#the-message	opcode
 0x107	CMSG_AUTOSTORE_GROUND_ITEM	send	0x5d9dd5	0x5d9d60	objectlayer/items#item-slots	opcode
 0x108	CMSG_AUTOSTORE_LOOT_ITEM	send	0x5e1b12	0x5e1ad0	objectlayer/inventory#moving-items|objectlayer/sounds#loot-and-auto-equip-item-sounds|ui/loot#taking-a-slot	opcode
-0x109	CMSG_STORE_LOOT_IN_SLOT	send	0x5e1ba9	0x5e1b40	objectlayer/inventory#moving-items	opcode
+0x109	CMSG_STORE_LOOT_IN_SLOT	send	0x5e1ba9	0x5e1b40	objectlayer/inventory#moving-items|ui/bags#pickup-of-a-container-item	opcode
 0x10b	CMSG_AUTOSTORE_BAG_ITEM	send	0x5e137c	0x5e12e0	objectlayer/inventory#moving-items|ui/bags#putting-an-item-in-a-bag	opcode
 0x10c	CMSG_SWAP_ITEM	send	0x5e0fdb	0x5e0c40	objectlayer/inventory#moving-items|ui/bags#putting-an-item-in-a-bag	opcode
 0x10d	CMSG_SWAP_INV_ITEM	send	0x5e0ba4	0x5e0b50	objectlayer/overview#unreached-functions	function
@@ -385,7 +385,7 @@ opcode	name	role	site	function	entries	basis
 0x1a0	CMSG_SELL_ITEM	send	0x5e1db2	0x5e1d50	objectlayer/interaction#the-vendor-click|ui/bags#using-a-container-item|ui/merchantcursor#picking-up-a-merchant-item	opcode
 0x1a1	SMSG_SELL_ITEM	handler	0x5e30a4	0x5e5910	objectlayer/inventory#vendors	opcode
 0x1a2	CMSG_BUY_ITEM	send	0x5e1efa	0x5e1e90	ui/inventoryverbs#vendor-stock	function
-0x1a3	CMSG_BUY_ITEM_IN_SLOT	send	0x5e1faa	0x5e1f30	ui/bags#putting-an-item-in-a-bag|ui/merchantcursor#buying-by-dropping	opcode
+0x1a3	CMSG_BUY_ITEM_IN_SLOT	send	0x5e1faa	0x5e1f30	ui/bags#putting-an-item-in-a-bag|ui/bags#pickup-of-a-container-item|ui/merchantcursor#buying-by-dropping	opcode
 0x1a4	SMSG_BUY_ITEM	handler	0x5e3093	0x5e5910	objectlayer/inventory#vendors	opcode
 0x1a5	SMSG_BUY_FAILED	handler	0x5e3082	0x5e5910	objectlayer/inventory#vendors	opcode
 0x1a9	SMSG_SHOWTAXINODES	handler	0x5e332a	0x5e38c0	ui/taxi#the-show-nodes-message	opcode

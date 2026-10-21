@@ -123,7 +123,7 @@ and 0 otherwise.
 | swap | held from the player's own bag slot (19 to 22), or the held item is a container | lock the target, send swap | 1 |
 | split | a split count `[0xb4b40c]` is pending | send 0x10e with slot 0xff | 1 |
 | store | otherwise | send 0x10b | 1 |
-| buy | nothing held, a vendor preview (kind 5), a vendor open, the index in range | send 0x1a3 with slot 0xff, clear | 0 |
+| buy | nothing held, a vendor preview (kind 5), a vendor open | send 0x1a3 with slot 0xff, clear | 0 |
 
 Addresses: `0x4c8f00`, `0x4c8f70`, `0x4c7c00`, `0x4c7ed0`, `0x4c7300`, `0x4c7ca7`, `0x4c7d62`, `0x4c7d8d`, `0x4c7df5`, `0x4c7e2e`, `0x4c7e49`, `0x4c7eaa`, `0x5e0c40`, `0x5e1210`, `0x5e12e0`, `0x5e1f30`
 Confidence: verified
@@ -172,6 +172,62 @@ Test: none
 opens the ammo leg, which needs a held item of class 6 (`0x4c73e6`) and sends 0x268 (`0x4c741a`). `0x4c76c1 mov
 ecx,2` is the item mask. The item-targeting and repair legs lie between `0x4c76df` and `0x4c77a8`; the repair arm is
 `ui/merchant#repair-clicks`.
+
+## Pickup of a container item
+
+`PickupContainerItem(index, slot)` is `0x4f9b30` and returns nothing. A non-number argument raises
+`Usage: PickupContainerItem(index, slot)`. It does nothing with no active player, with neither control (`0xb4b3e4`)
+nor bit 20 of the player's flags, when `0x4f9820` does not resolve the pair, or for a bank slot (39 to 68) of a
+bank-flagged list while no banker is open. Otherwise the cursor decides, a held item first, then a preview
+payload, then the slot's item, as the rows say.
+
+| cursor and slot | does |
+|---|---|
+| holds the slot's own item | `ClearCursor(1, 1)` |
+| holds an item, split count `0xb4b40c` set | send the split, `ClearCursor(0, 1)` |
+| holds an item; the slot is occupied and the held item has no source container GUID, or the slot's item is locked | nothing |
+| holds an item, otherwise | lock the slot's item, send the swap, `ClearCursor(0, 1)` |
+| a preview, kind 5 | with a vendor open, buy into the slot (0x1a3), `ClearCursor(1, 1)`; else nothing, the payload stays |
+| a preview, kind 6 | send 0x109, `ClearCursor(1, 1)`; no setter makes kind 6 |
+| a preview, kind 7 or 9 | `ClearCursor(1, 1)` |
+| neither, the slot empty | nothing |
+| neither, a spell wants an item (`0x6e48a0`, `0x6e6330`) | `0x495d60(0, GUID)`, no pickup |
+| neither, repair cursor 0x11 and a repairing vendor | repair (`ui/merchant#repair-clicks`) |
+| neither, wrapping paper held | send the wrap |
+| neither, otherwise | a locked item: nothing; else it goes on the cursor and is locked |
+
+Addresses: `0x4f9b30`, `0x4f9b40`, `0x4f9b54`, `0x4f9b77`, `0x4f9b87`, `0x4f9ba3`, `0x4f9bb6`, `0x4f9bc6`, `0x4f9bd0`, `0x4f9c0b`, `0x4f9c13`, `0x4f9c35`, `0x4f9c38`, `0x4f9c43`, `0x4f9c5d`, `0x4f9c6d`, `0x4f9c7b`, `0x4f9d81`, `0x4f9dd1`, `0x4f9de9`, `0x4f9df0`, `0x4f9e0e`, `0x4f9e43`, `0x4f9e63`, `0x4f9e85`, `0x4f9eac`, `0x4f9ee0`, `0x4f9f3c`, `0x4f9f5c`, `0x4f9820`, `0x494c80`, `0x495180`, `0x6228a0`, `0x6e48a0`, `0x6e6330`, `0x495d60`, `0x523d10`, `0x4fadb0`, `0x5edf10`, `0x5edfc0`, `0x494b60`, `0x4953e0`, `0x495190`, `0x5e1210`, `0x5e0c40`, `0x5e1b40`, `0x5e1f30`, `0x6f34d0`, `0x6f4940`, `0xb4b3e4`, `0xb4b40c`, `0xb4d900`, `0xbdd038`, `0xbddfa0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4f9b40` and `0x4f9b54` test the arguments with `lua_isnumber`, `0x4f9f5c` raises the error, and every return
+leaves 0 results. The player is `0x468460` with mask 0x10 (`0x4f9b77`); the control tests are `0x4f9b87` to `0x4f9ba3`.
+`0x4f9820` (`0x4f9bb6`) gives a list and a slot; its bank-flag output is overwritten unread (`0x4f9c35`), and the bank
+gate reads the list's byte `+0x10` (`0x4f9bc6`) against slots 0x27 to 0x44 (`0x4f9bd0`). The cursor is read by `0x494c80`
+and `0x495180` (`0x4f9c0b`), the slot's item by `0x6228a0` (`0x4f9c13`). `0x4f9c38` branches on a held GUID,
+`0x4f9c43` on the preview entry, `0x4f9ec6` on the kind. `0x4f9c6d` is `0x495d60` with `ecx` 0, after both predicates
+(`0x4f9c54`, `0x4f9c5d`). The repair arm opens at `0x4f9c7b`, the wrap at `0x4f9d81`, the lock test is `0x4f9dd1`, and
+`0x4f9de9`, `0x4f9df0` set the cursor and the lock. The sends are `0x4f9e43`, `0x4f9eac`, `0x4f9ee0` and `0x4f9f3c`.
+`PickupInventoryItem` refuses a locked item before its targeting leg; this verb tests the lock only in the swap row
+(`0x4f9e76`) and the last (`0x4f9dd1`).
+
+## Vendor row past the count
+
+A kind 5 preview dropped on a bag slot with a vendor open reads its row from the table `0xbdd118` by the stored index.
+`PickupContainerItem` and the worker of `PutItemInBag` (`0x4c7c00`) do not return on an index outside 0 to the row
+count less 1: each passes a null row and reads the entry word from `[row+4]`, an access violation at address 4.
+`PickupInventoryItem` returns instead.
+
+Addresses: `0x4f9f1c`, `0x4f9f24`, `0x4f9f30`, `0x4f9f35`, `0x4c7e84`, `0x4c7e88`, `0x4c7e9a`, `0x4c7ea5`, `0x4c791d`, `0x4c7925`, `0x4c7959`, `0xbdd118`, `0xbddfa8`, `0x4f9b30`, `0x4c7c00`, `0x4c7300`
+Confidence: verified
+Proof: one
+Test: none
+
+The rows are 28 bytes (`imul eax,eax,0x1c`, `0x4f9f26`, `0x4c7e90`) from `0xbdd118`, counted in `0xbddfa8`. The index tests
+are `jl` and `jge` (`0x4f9f1c`, `0x4f9f24`; `0x4c7e86`, `0x4c7e8e`), and their target sets the row to 0 (`0x4f9f30`,
+`0x4c7e9a`); the next instruction reads `[eax+4]` (`0x4f9f35`, `0x4c7ea5`). In `0x4c7300` the same tests jump to the
+function's exit (`0x4c791d`, `0x4c7925`, target `0x4c7959`).
 
 ## Bag slot watchers
 

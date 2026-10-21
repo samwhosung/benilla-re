@@ -84,8 +84,8 @@ targeting, ORs 3 for `0x6e6320`, 4 for `0x6e62d0`, 0x18 for `0x6e6180` and then 
 0x20000 and 0x40000 for `0x6e61a0`, `0x6e61e0`, `0x6e6200`, `0x6e6210`, then 0x200040 or 0x100000
 by `0x6e6230`, and in every case 0x20040 and 0x40040 for `0x6e6240` and `0x6e6250`. `0x7cba30`, a
 vtable slot, returns 0 while targeting a position with no unit bit. The item clicks
-`0x4c7300` and the Lua `PickupContainerItem` `0x4f9b30` pass the item to `0x495d60` while
-`0x6e6330` holds.
+`0x4c7300` and the Lua `PickupContainerItem` `0x4f9b30` pass the item to `0x495d60` while `0x6e48a0` and
+`0x6e6330` both hold (`ui/bags#pickup-of-a-container-item`).
 
 ## Binding a clicked object
 
