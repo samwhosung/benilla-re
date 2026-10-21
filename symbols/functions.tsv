@@ -9197,7 +9197,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cc090	23	InitZero4cc090		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4cc0b0	12	InitZero4cc090Register		ui	orchestration	void __cdecl (void)	Registers 0x4cc0c0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4cc0c0	47	InitZero4cc090Exit		ui	primitive	void __cdecl (void)	Frees the OutbidItemInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4cc0f0	393	CGAuctionHouse::InitializeGame	idb	ui	orchestration	void __stdcall ()	Registers the auction packet handlers, allocates the 150 records and outbid pairs and sets the sort keys	verified	one	ui/auction#session-state	ui::outbid_list_start_up_difftest
+0x4cc0f0	393	CGAuctionHouse::InitializeGame	idb	ui	orchestration	void __stdcall ()	Registers the auction packet handlers, allocates the 150 records and outbid pairs and sets the sort keys	verified	one	ui/auction#session-state	ui::outbid_list_start_up_difftest, ui::outbid_list_later_start_up_difftest
 0x4cc280	101	ResetAuctionSession		ui	orchestration	void __stdcall ()	Clears the sell slot, zeroes the auction session state, counts and flags, and sets the three selections to -1	verified	one	ui/auction#the-session-reset	
 0x4cc2f0	5	LeaveWorldCloseAuctionHouse		ui	orchestration	void __cdecl ()	Jumps to the auction close 0x4cd5f0	verified	one	ui/auction#opening-and-closing	
 0x4cc300	284	RemoveAuctionHandlers		ui	orchestration	void __stdcall ()	Removes the auction packet handlers registered by 0x4cc0f0	verified	one	ui/auction#session-state	
@@ -9305,7 +9305,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d0780	19	InitSquare4d0780		ui	primitive	void __cdecl (void)	Stores 40 × 40 = 1600 as a float in a global	verified	one	ui/initfloats#squares	
 0x4d07a0	5	InitSquare4d07b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d07b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4d07b0	19	InitSquare4d07b0		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
-0x4d07d0	57	Quantum644d07d0		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 64, else 64	verified	one	ui/containers#arrays	
+0x4d07d0	57	Quantum644d07d0		ui	primitive		Returns the grow quantum for a count: its highest power of two below 64, else 64, stored at this+0xc	verified	one	ui/containers#arrays	
 0x4d0810	31	RoundUp4d0810		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
 0x4d0830	133	SetArrayCapacity4d0830		ui	primitive		Sets an array's capacity exactly, keeping the smaller of capacity and count when it must move	verified	one	ui/containers#arrays	
 0x4d08c0	5	InitSquare4d08d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d08d0, a static initializer	verified	one	ui/initthunks#jump-thunks	

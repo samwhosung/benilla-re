@@ -3161,10 +3161,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb72420	uint32_t[16]	s_auctionOwnerSortKeys		ui	Holds the owner list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
 0xb72470	void *[50]	s_auctionBidderRecords		ui	Holds the 50 record pointers of the bidder list	verified	one	ui/auction#session-state
 0xb72548	uint32_t[16]	s_auctionBidderSortKeys		ui	Holds the bidder list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
-0xb7258c	uint32_t	s_outbidPairsAlloc		ui	Holds the outbid pointer array's allocated size in entries, 8 at first and the slot count after a doubling	verified	one	ui/auction#outbid-list
+0xb7258c	uint32_t	s_outbidPairsAlloc		ui	Holds the outbid array's allocated entries: 8, or 64 at a later start-up; raised to a doubled count above it	verified	one	ui/auction#outbid-list
 0xb72590	uint32_t	s_outbidCapacity		ui	Holds the slot count of the outbid pair list, 8 at first and doubled when an append finds it full	verified	one	ui/auction#outbid-list
 0xb72594	uint32_t **	s_outbidPairs		ui	Points to the outbid list's pointers to {house id, auction id} pairs	verified	one	ui/auction#outbid-list
-0xb72598	uint32_t	s_outbidPairsChunk		ui	Holds the outbid pointer array's grow quantum cap, 0 until a doubling reaches 64 slots, then 64	verified	one	ui/auction#outbid-list
+0xb72598	uint32_t	s_outbidPairsChunk		ui	Holds the outbid array's grow quantum cap: 0 until a doubling reaches 64 slots, then 64, kept at teardown	verified	one	ui/auction#outbid-list
 0xb725b0	uint32_t[16]	s_auctionListSortKeys		ui	Holds the browse list's 8 sort keys, each a column and a reversed flag	verified	one	ui/auction#session-state
 0xb725f8	uint64_t	s_auctioneerGuid		ui	Holds the open auctioneer's GUID, 0 when no auction window is open	verified	one	ui/trade#answering-a-trade-request
 0xb72600	uint32_t	s_auctionHouseId		ui	Holds the open auction house's id from the hello packet	verified	one	ui/auction#session-state

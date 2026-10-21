@@ -42,7 +42,7 @@ pub struct OutbidList {
     pub slots: Vec<Pair>,
     /// The pairs in use, `0xb72634`: always at most `slots.len()`.
     pub count: u32,
-    /// The pointer array's allocated size, `0xb7258c`.
+    /// The pointer array's allocated size, `0xb7258c`: at least the slot count.
     pub alloc: u32,
     /// The array's grow quantum cap, `0xb72598`: 0 until a quantum is asked for a count of 64 or
     /// more.
@@ -56,13 +56,22 @@ impl Default for OutbidList {
 }
 
 impl OutbidList {
-    /// What `0x4cc1c9` to `0x4cc234` build: eight zeroed slots, the array sized to eight, none in use.
+    /// What `0x4cc1c9` to `0x4cc234` build at the first start-up: eight zeroed slots, the array
+    /// sized to eight, none in use, the quantum cap 0.
     pub fn new() -> OutbidList {
+        OutbidList::started_with_cap(0)
+    }
+
+    /// What the same slice builds when the quantum cap `0xb72598` is already `chunk`: the
+    /// teardown (`0x4cc3bb` to `0x4cc419`) zeroes the array, its slot count and the count but
+    /// not the cap, so a later start-up sizes the array to eight rounded up to the cap, 64 once a
+    /// list has doubled to 64 slots. The slots are eight either way.
+    pub fn started_with_cap(chunk: u32) -> OutbidList {
         OutbidList {
             slots: vec![(0, 0); 8],
             count: 0,
-            alloc: 8,
-            chunk: 0,
+            alloc: round_up(8, if chunk == 0 { 8 } else { chunk }),
+            chunk,
         }
     }
 

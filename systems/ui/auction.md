@@ -40,12 +40,13 @@ allocated once at start-up (`0x4cc0f0`); sorting permutes the pointers. Each lis
 Addresses: `0x4cc0f0`, `0x4cc280`, `0x4cc300`, `0x4cc195`, `0x4cc1ad`, `0x4cc1b8`, `0x4cc1c1`, `0x4cc238`, `0xb725f8`, `0xb72600`, `0xb72278`, `0xb72340`, `0xb72470`, `0xb7261c`, `0xb72620`, `0xb72624`, `0xb72628`, `0xb7262c`, `0xb72630`, `0xb72644`, `0xb72648`, `0xb7264c`, `0xb725b0`, `0xb72420`, `0xb72548`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::outbid_list_start_up_difftest`
 
 The record allocations are `0x6462e0(0x48, <AuctionHouse.cpp>, line, 0)`, three per loop pass for 50 slots
 (`0x4cc1c1 cmp esi,0xc8`). The browse stack starts as columns 0 to 7 in order (`0x4cc246`); the owner and bidder
 stacks as 5, 3, 2, 0, 6, 1, 4, 7 from the twin tables `0x849064` and `0x849084`; every reversed flag starts 0
-(`0x4cc238` to `0x4cc274`). `0x4cc280` is called once, from `0x490a05`; `0x4cc0f0` once, from `0x48f5f9`.
+(`0x4cc238` to `0x4cc274`). `0x4cc280` is called once, from `0x490a05`; `0x4cc0f0` once, from `0x48f5f9`. The outbid list's part, `0x4cc1c9` to
+`0x4cc234`, runs in `ui::outbid_list_start_up_difftest`.
 
 ## The session reset
 
@@ -210,18 +211,19 @@ pairs (next entry).
 Addresses: `0x4cde50`, `0x4cde62`, `0x4cde90`, `0x4cde9b`, `0x4cded7`, `0x4cdee1`, `0x4cdf0d`, `0x4cdf1c`, `0x4cdf23`, `0x4cc1c9`, `0x4cc1d0`, `0x4cc207`, `0x4cc213`, `0x4cc413`, `0x4cdf57`, `0x4cdfae`, `0x4ccff3`, `0x4d07d0`, `0x4d0810`, `0x4d0830`, `0x4cd7e6`, `0x4cdf4d`, `0x4cdf7f`, `0x4cdfd4`, `0xb72594`, `0xb72590`, `0xb72634`, `0xb7258c`, `0xb72598`
 Confidence: verified
 Proof: one
-Test: `ui::outbid_list_start_up_difftest`, `ui::outbid_list_doubling_difftest`, `ui::outbid_list_sequence_difftest`
+Test: `ui::outbid_list_start_up_difftest`, `ui::outbid_list_later_start_up_difftest`, `ui::outbid_list_doubling_difftest`, `ui::outbid_list_sequence_difftest`
 
-`0x4cc207` stores 8 slots and `0x4cc213` allocates their pairs. The count is stored at `0x4cc1d0`, `0x4cc413`,
-`0x4cde90`, `0x4cdf57` and `0x4cdfae` only (an image scan for the dword finds 14 sites; the control `0xb72658` finds its
-two), and `0x4cde90` raises it from below the slot count, so a full list has a count equal to its slots, in `ebx`.
-`0x4cde62 cmp eax,ebx; jae 0x4cde9a` finds that. `0x4cde9b` doubles. When the array `0xb7258c` holds fewer, `0x4d0810`
-rounds the doubled count up to a quantum (the cap `0xb72598` if set, else `0x4d07d0`'s: 64 from 64 up, which sets the
-cap) and `0x4d0830` raises the array to it. `0x4cded7` stores the new slot count, `0x4cdee1` to `0x4cdf00` allocate the
-new pairs, `0x4cdf0d` and `0x4cdf1c` store the house and the auction in slot `ebx`, and `0x4cdf23` returns with no
-count store. Every read of a pair stops at the count (`0x4cd7e6`, `0x4cdf4d`, `0x4cdf7f`, `0x4cdfd4`). The tests run `0x4cde50`
-whole and `0x4cc1c9` to `0x4cc234` of start-up, with `0x6462e0` and `0x646320` stubbed, and compare the slots, the
-count, the array and every pair.
+`0x4cc207` stores 8 slots. The count is stored at `0x4cc1d0`, `0x4cc413`,
+`0x4cde90`, `0x4cdf57` and `0x4cdfae` only (14 image sites for the dword; the control `0xb72658` finds
+its two), and `0x4cde90` raises it from below the slot count, so a full list has a count equal to its slots.
+`0x4cde62 cmp eax,ebx; jae 0x4cde9a` finds that, and `0x4cde9b` doubles. `0x4cdea8 jbe` skips the array's growth when
+`0xb7258c` holds the doubled count; else `0x4d0810` rounds the count up to a quantum (the cap `0xb72598` if set, else
+`0x4d07d0`'s: the largest power of two not above the count, here the count itself, 64 from 64 up, which sets the cap)
+and `0x4d0830` raises the array. The teardown (`0x4cc401` to `0x4cc413`) leaves the cap, so a later start-up
+(`0x4cc1e1`) sizes the array to 64 and the doublings to 16, 32 and 64 skip the growth. `0x4cded7` stores the slot count, `0x4cdf0d` and `0x4cdf1c` store the pair in slot `ebx`, and `0x4cdf23` returns with no
+count store. Of 17 image sites for `0xb72594`, only the sender and the removals read a
+pair, below the count (`0x4cd7e6`, `0x4cdf4d`, `0x4cdf7f`, `0x4cdfd4`); `0x4d0830` moves pointers (`[esi+8]`).
+Tests run `0x4cde50` whole and `0x4cc1c9` to `0x4cc234` and `0x4cc3bb` to `0x4cc419`.
 
 ## Outbid removals
 
@@ -230,7 +232,7 @@ pair with a house id and stops. Each lowers the count and copies the later pairs
 slot's pair in place. The bidder request sends the auction id of every pair of the open house, then calls `0x4cdf90`
 once (`0x4cd808`): a house with n pairs sends all n and drops one, so it takes n requests to clear.
 
-Addresses: `0x4cdf30`, `0x4cdf90`, `0x4cdf54`, `0x4cdf83`, `0x4cdfa7`, `0x4cdfab`, `0x4cdfb4`, `0x4cdfb6`, `0x4cdfd6`, `0x4cdfd8`, `0x4cc517`, `0x4cd793`, `0x4cd7b6`, `0x4cd7e8`, `0x4cd802`, `0x4cd808`, `0xb72594`, `0xb72634`, `0xb72600`
+Addresses: `0x4cdf30`, `0x4cdf90`, `0x4cdf53`, `0x4cdf54`, `0x4cdf81`, `0x4cdf85`, `0x4cdfa7`, `0x4cdfab`, `0x4cdfb4`, `0x4cdfb6`, `0x4cdfd6`, `0x4cdfd8`, `0x4cc517`, `0x4cd793`, `0x4cd7b6`, `0x4cd7e8`, `0x4cd802`, `0x4cd808`, `0xb72594`, `0xb72634`, `0xb72600`
 Confidence: verified
 Proof: one
 Test: `ui::outbid_list_remove_house_difftest`, `ui::outbid_list_remove_auction_difftest`, `ui::outbid_list_sequence_difftest`
@@ -238,7 +240,7 @@ Test: `ui::outbid_list_remove_house_difftest`, `ui::outbid_list_remove_auction_d
 `0x4cdfa7 cmp [edi],ecx; jne 0x4cdfd8` finds the first house match, `0x4cdfab dec esi` lowers the count, and `0x4cdfb6`
 to `0x4cdfd6` copy each later pair down with the scan's own index `eax`, which ends at the new count; so `0x4cdfd8 inc
 eax; cmp eax,esi; jb 0x4cdfa4` ends the scan. A match in the last slot arrives by `jae 0x4cdfd8` (`0x4cdfb4`) with
-`eax` at the new count and ends it the same way. `0x4cdf30` is the same copy entered at `0x4cdf54`, and returns at
-`0x4cdf83`. The sender's loop closes at `0x4cd7e8 jb 0x4cd7a4` and tests the house against `0xb72600` (`0x4cd7b6`);
+`eax` at the new count and ends it the same way. `0x4cdf30` has its own copy loop (`0x4cdf54` to `0x4cdf81`), which returns
+at `0x4cdf85`; with no match it returns at `0x4cdf53`. The sender's loop closes at `0x4cd7e8 jb 0x4cd7a4` and tests the house against `0xb72600` (`0x4cd7b6`);
 `0x4cd802` and `0x4cd808` call once after it. The tests run both removals whole, with a match in the first, a middle
 and the last slot, and a pair past the count that the key would match.

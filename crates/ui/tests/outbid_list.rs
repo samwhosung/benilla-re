@@ -8,9 +8,11 @@
 //! real. After every call the test reads back the slot count, the count, the array's
 //! allocated size and quantum cap, the pointer array and the pair each slot's block holds, and
 //! compares them with `outbid_list::OutbidList`. Removals leave every block where it was and
-//! doubling keeps the old blocks. The guards at `0x4cdea0` and `0x4cdea8` skip the array's growth
-//! when the doubled slot count wraps or the array already holds it; the array holds exactly the
-//! slot count, which every comparison checks, so neither is taken.
+//! doubling keeps the old blocks. The guard at `0x4cdea0` skips the array's growth when the
+//! doubled slot count wraps, which a list that starts at eight slots never does. The guard at
+//! `0x4cdea8` skips it when the array already holds the doubled count: not from a first
+//! start-up, where the array holds exactly the slot count, but after the teardown and a later
+//! start-up with the quantum cap set, where the array holds 64 from the start.
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 use benilla_re_ui::outbid_list::{OutbidList, Pair};
@@ -20,6 +22,8 @@ const ADD: u64 = 0x4cde50;
 const REMOVE_AUCTION: u64 = 0x4cdf30;
 const REMOVE_HOUSE: u64 = 0x4cdf90;
 const START_UP: (u64, u64) = (0x4cc1c9, 0x4cc236);
+const TEARDOWN: (u64, u64) = (0x4cc3bb, 0x4cc419);
+const SMEM_FREE: u64 = 0x646430;
 const SMEM_ALLOC: u64 = 0x6462e0;
 const SMEM_REALLOC: u64 = 0x646320;
 const ALLOC: u64 = 0xb7258c;
@@ -36,6 +40,7 @@ fn started() -> Option<Emu<'static>> {
     let arena = e.alloc(ARENA);
     e.stub_alloc_sized(SMEM_ALLOC, arena, arena + ARENA, 0, 4);
     e.stub_realloc_sized(SMEM_REALLOC, 5);
+    e.stub(SMEM_FREE, 1, 4);
     let stack = e.alloc(0x1000);
     e.set_reg(RegisterX86::ESP, stack + 0xf00);
     e.set_reg(RegisterX86::EBP, stack + 0xe00);
@@ -43,6 +48,14 @@ fn started() -> Option<Emu<'static>> {
     e.set_reg(RegisterX86::EDI, 0);
     e.run(START_UP.0, START_UP.1);
     Some(e)
+}
+
+/// The exe's teardown slice, then its start-up slice again: the list a later world entry builds.
+fn restart(e: &mut Emu) {
+    e.set_reg(RegisterX86::EDI, 0);
+    e.run(TEARDOWN.0, TEARDOWN.1);
+    e.set_reg(RegisterX86::EDI, 0);
+    e.run(START_UP.0, START_UP.1);
 }
 
 /// The pointer array: the block address of every slot.
@@ -133,9 +146,60 @@ fn lcg(s: &mut u32) -> u32 {
 
 #[test]
 fn outbid_list_start_up_difftest() {
-    let Some(e) = started() else { return };
+    let Some(mut e) = started() else { return };
     assert_eq!(state(&e), OutbidList::new());
     assert_eq!(pointers(&e).len(), 8);
+    // A list that has not doubled to 64 slots leaves the cap 0, and a later start-up is the first's.
+    restart(&mut e);
+    assert_eq!(state(&e), OutbidList::new());
+    // Doubled to 64 slots, the cap is 64 and survives the teardown: the array is sized to 64.
+    let mut model = OutbidList::new();
+    let mut n = 0;
+    while model.slots.len() < 64 {
+        n += 1;
+        apply(&mut e, &mut model, Op::Add(1, 100 + n));
+    }
+    assert_eq!(e.read_u32(CHUNK), 64);
+    restart(&mut e);
+    assert_eq!(state(&e), OutbidList::started_with_cap(64));
+    assert_eq!(e.read_u32(ALLOC), 64);
+    assert_eq!(e.read_u32(SLOTS), 8);
+    assert_eq!(e.read_u32(COUNT), 0);
+}
+
+/// After a later start-up with the cap set the array holds 64 entries over 8 slots: the doublings
+/// to 16, 32 and 64 find it holding the count and skip its growth (`0x4cdea8`), and the doubling
+/// to 128 raises it to 128. The slots and the lost pair behave as at a first start-up.
+#[test]
+fn outbid_list_later_start_up_difftest() {
+    let Some(mut e) = started() else { return };
+    let mut model = OutbidList::new();
+    let mut n = 0;
+    while model.slots.len() < 64 {
+        n += 1;
+        apply(&mut e, &mut model, Op::Add(1, 100 + n));
+    }
+    restart(&mut e);
+    let mut model = OutbidList::started_with_cap(64);
+    assert_eq!(state(&e), model);
+    let mut n = 0u32;
+    for slots in [8u32, 16, 32, 64] {
+        while n < slots {
+            n += 1;
+            apply(&mut e, &mut model, Op::Add(1, 1000 + n));
+        }
+        let effect = apply(&mut e, &mut model, Op::Add(7, 5000 + slots));
+        assert_eq!(effect, Effect::Added { doubled: true });
+        assert_eq!(e.read_u32(SLOTS), 2 * slots);
+        // The array is untouched until the doubled count passes 64.
+        assert_eq!(e.read_u32(ALLOC), (2 * slots).max(64));
+        assert_eq!(e.read_u32(COUNT), slots);
+        n = slots;
+        apply(&mut e, &mut model, Op::Add(8, 6000 + slots));
+        n += 1;
+    }
+    assert_eq!(e.read_u32(ALLOC), 128);
+    assert_eq!(e.read_u32(CHUNK), 64);
 }
 
 /// The ninth append finds the list full: the slots double to 16, the pair lands in slot 8 and
