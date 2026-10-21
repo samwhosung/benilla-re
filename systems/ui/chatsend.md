@@ -74,8 +74,8 @@ before the server's flags update marks again.
 The text goes through four steps before the packet. A dead or ghost player may send only whisper, party,
 raid, raid leader, raid warning, guild, officer, channel, AFK, DND, battleground and battleground leader
 (otherwise error 0xef). The tutorial flag 0x16 is set. The text is copied into a 256-byte buffer, expanding
-`%t` (and `%n`) to the target's name. A drunk player's text is run through the drunk transform. Then the
-escape check runs, and a final gate decides whether the player may send at all.
+`%N`, `%T`, `%n` and `%t` to the target's name (the next entries). A drunk player's text is run through the drunk
+transform. Then the escape check runs, and a final gate decides whether the player may send at all.
 
 Addresses: `0x49f592`, `0x49f597`, `0x49f5a3`, `0x49f5df`, `0x49f5f7`, `0x49f5fc`, `0x49f604`, `0x49f60f`, `0x49f614`, `0x49f61a`, `0x49f627`, `0x49f648`, `0x49f656`, `0x49f65b`, `0x49f661`, `0x49f6aa`, `0x49f6af`, `0x4b54c0`, `0x605f30`, `0x5083a0`, `0x508680`, `0x494a50`, `0x8029d0`
 Confidence: verified
@@ -83,11 +83,77 @@ Proof: one
 Test: `ui::glue4fd_508680_garble_noise_minus_one`, `ui::glue4fd_508680_garble_threshold_quarter`
 
 The dead test is `0x605f30` (health at most 0, or ghost) and the allowed list is the compare chain `0x49f5a3`
-to `0x49f5da`. `0x4b54c0(0x16)` sets tutorial flag 0x16. `0x5083a0(text, buf, 0x100)` is the `%` expander of
-`QuestTextParser.cpp`: it finds each `%`, and for `T`, `t`, `N` or `n` appends the name of the object whose GUID is
-in `0xb4e2d8` (the target), or the global `TARGET_TOKEN_NOT_FOUND`; any other letter keeps the `%`. The drunk byte is
+to `0x49f5da`. `0x4b54c0(0x16)` sets tutorial flag 0x16. The expander is `0x5083a0(text, buf, 0x100)`, called
+once, from `0x49f60f` (`target token expansion`); the buffer is `[ebp-0x138]` and the result is dropped. The drunk byte is
 `[[player+0xe68]+0x1d]`, capped at 100 and multiplied by `0x8029d0` (0.01), and with it non-zero `0x508680` writes the
 text the packet sends; its inner steps are not read here. The final gate is `0x494a50(6)` (`0x49f6af`).
+
+## Target token expansion
+
+`0x5083a0(text, buf, size)` copies the C string `text` into `buf` and replaces `%N`, `%T`, `%n` and `%t`, and no
+other letter, with the target's name. After any other byte, including a second `%` and the end of the text, the `%`
+stays and the scan goes on with the next byte, so `%%t` gives `%` and the name and `100%` is unchanged. Every
+append is cut at `size - 1` bytes. It returns 1 when every `%` was followed by one of the four letters, else 0; a
+null `text` returns 0 and writes nothing. `SendChatMessage` drops the result.
+
+Addresses: `0x5083a0`, `0x5083bf`, `0x5083d7`, `0x5083dc`, `0x508403`, `0x508411`, `0x508430`, `0x508433`, `0x508443`, `0x508524`, `0x50852c`, `0x5084c3`, `0x5084d0`, `0x5084e6`, `0x5084f0`, `0x508502`, `0x50851b`, `0x49f60f`, `0x49f614`, `0x64a3c0`, `0x64a6f0`, `0x64a760`, `0xbe0b80`, `0x84f3a0`
+Confidence: verified
+Proof: one
+Test: `ui::expand_target_tokens_whole`
+
+`0x5083bf` returns 0 for a null `text` before any store; `0x5083d7` stores the NUL at `buf[0]`. `SStrChr`
+(`0x64a3c0`, `dl` = `%`) finds each `%` (`0x5083dc`, `0x5084f0`) and `0xbe0b80` holds the scan's place, which the
+file's other expanders share; it ends 0. The byte after the `%` is sign-extended and reduced by `N` (`0x508430`);
+an unsigned compare with 0x26 (`0x508433`) sends the rest to `0x5084d0`, and the others index the byte table
+`0x50852c` (39 bytes, 0 at the offsets of `N`, `T`, `n` and `t`, else 1) into the dword table `0x508524`
+(`0x50844a` for 0, `0x5084d0` for 1). `0x5084d0` appends `%` (`0x84f3a0`), sets the flag `[ebp-4]` and leaves
+the scan on the next byte, so a `%` there opens the next token. The result is `sete` of the flag (`0x50851b`);
+`0x49f614` overwrites `eax`. `SStrLen` and `SStrPack` bound every append (`storm/strings#string-length-and-append`).
+The test runs `0x5083a0` whole over every text of five symbols to length six against five sizes, a fuzz and
+the vectors above, with the four lookups of the next entry stubbed.
+
+## Target token name
+
+Each token looks the name up anew from the target GUID, `0xb4e2d8` (low dword) and `0xb4e2dc`. A GUID of 0 gives the
+text of the global `TARGET_TOKEN_NOT_FOUND`. Otherwise the object manager is asked for a unit with that GUID
+(`0x468460`, mask 8) and one found is named by `GetUnitName` (`0x609210`), whose miss text is `UNKNOWNOBJECT`
+(`objectlayer/unitnames#unit-names`). With no unit, the name cache `0xc0e228` is asked (`0x55f080`) with no
+callback, so it sends no query, and a record found gives its name, at the record's start; a miss gives
+`TARGET_TOKEN_NOT_FOUND`. That global is appended as the script text lookup returns it, which is empty when the
+global is not a string.
+
+Addresses: `0x50844a`, `0x508450`, `0x508457`, `0x50845c`, `0x50846f`, `0x508481`, `0x508488`, `0x50849f`, `0x5084a4`, `0x5084ae`, `0x5084bc`, `0x5084c1`, `0x468460`, `0x609210`, `0x609324`, `0x55f080`, `0x55f125`, `0x55f241`, `0x703bf0`, `0xb4e2d8`, `0xc0e228`, `0x84f3a4`
+Confidence: verified
+Proof: one
+Test: `ui::expand_target_tokens_whole`
+
+`0x50845c` tests `[0xb4e2d8] | [0xb4e2dc]` and jumps to `0x5084ae`. `0x50846f` is `0x468460` with `ecx` = 8 and the GUID;
+a null result goes to `0x508488`, which calls `0x55f080` (`0x50849f`) with `ecx` = `0xc0e228`, the GUID, the owner
+cell (zeroed at `0x50848b`) and three zeros for callback, data and flag, and a null result there to `0x5084ae`. `0x508481` is `0x609210` with
+its `realm` argument 0. `0x5084bc` is `0x703bf0` with the key `0x84f3a4`, `edx` = -1 and 0, as `0x609324` calls it
+for `UNKNOWNOBJECT`; with a null callback `0x55f080` returns null for a miss (`0x55f125`) and for a pending
+record (`0x55f241`). The test stubs the four lookups, runs `0x5083a0` whole and checks their registers,
+arguments and order for each token, with the name each returns appended.
+
+## Expander buffer overrun
+
+The expander does not append the text before a `%` alone: it appends the whole rest of the text, cut at `size - 1`,
+then stores a NUL at `buf[length so far + length of the run before the %]` (`0x50841e`), with no bound. Inside the
+buffer that ends the string after the run. At 256 or more it is a store outside `SendChatMessage`'s 256-byte buffer,
+into its frame: offset 264 is the low byte of the saved `lua_State` pointer `[ebp-0x30]`, 268 of the language
+`[ebp-0x2c]` the packet carries, and 296 of the whisper or channel target pointer `[ebp-0x10]`. A text with no `%`,
+or whose runs end below 256, stays inside.
+
+Addresses: `0x5083a0`, `0x508403`, `0x508411`, `0x50841e`, `0x49f604`, `0x49f609`, `0x49f60f`, `0x49f6f2`, `0x49f70b`, `0x49f760`, `0x64a760`
+Confidence: verified
+Proof: one
+Test: `ui::expand_target_tokens_whole`
+
+`0x508403` is `SStrLen` of the buffer and `0x508411` the append of the rest of the text from the run's start; `0x50841e`
+stores 0 at `[ecx+esi]` with `ecx` the sum of the two. The buffer is `lea edx,[ebp-0x138]` with 0x100 pushed
+(`0x49f609`, `0x49f604`); the next locals are read at `0x49f760` (`lua_State`), `0x49f6f2` (language) and `0x49f70b`
+(target). The test compares the whole 0x800-byte region after each call, with runs of 240 to 300 bytes before a
+`%t`, so the store at every offset is checked.
 
 ## The escape check
 

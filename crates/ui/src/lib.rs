@@ -20,6 +20,7 @@ pub mod camera_transitions;
 pub mod camera_update;
 pub mod camera_view;
 pub mod camera_view_input;
+pub mod chat_expand;
 pub mod clip_rect;
 pub mod color;
 pub mod colorselect_wheel;

@@ -1790,6 +1790,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84f354	const char[29]	s_keyPointsSpread		ui	Holds the global string key SPELL_POINTS_SPREAD_TEMPLATE of an amount range printed as decimals	verified	one	ui/spelltokens#effect-amounts
 0x84f374	const char[33]	s_keyIntPointsSpread		ui	Holds the global string key INT_SPELL_POINTS_SPREAD_TEMPLATE of an amount range printed as integers	verified	one	ui/spelltokens#effect-amounts
 0x84f398	char[5]	s_text1f		ui	Holds the string "%.1f"	verified	one	ui/spelltokens#tokens-that-read-a-record-field
+0x84f3a0	const char[2]	s_percent		ui	Holds the string % that a token the target expander does not expand leaves in the text	verified	one	ui/chatsend#target-token-expansion
+0x84f3a4	const char[23]	s_keyTargetTokenNotFound		ui	Holds the global string key TARGET_TOKEN_NOT_FOUND of the text a target token with no name takes	verified	one	ui/chatsend#target-token-name
 0x84f454	char *[5]	s_cameraViewSuffixes		unassigned	Holds the CVar name suffixes of the five camera views: none, then A to D	verified	one	uicamera/cvars#saved-view-cvars
 0x84f468	char *[3]	s_cameraAxisNames		uicamera	Holds the axis names Distance, Pitch and Yaw of the camera view CVars	verified	one	uicamera/cvars#saved-view-cvars
 0x84f474	uint32_t[3]	s_cameraAxisAngleFlags		uicamera	Holds 0, 1 and 1: whether a camera view axis is an angle scaled by pi/180	verified	one	uicamera/follow#gates
@@ -3412,7 +3414,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0b74	float	s_smartRectSquare74		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
 0xbe0b78	float	s_smartRectSquare78		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
 0xbe0b7c	float	s_smartRectSquare7c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
-0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
+0xbe0b80	const char *	s_tokenCursor		ui	Holds the scan place of the text expanders, which share it: description, quest text, world state and chat target tokens	verified	one	ui/spelltokens#the-expander
 0xbe0b84	uint32_t	s_tokenPluralKey		ui	Holds the number the last counted token printed, the key of a plural token	verified	one	ui/spelltokens#the-plural-key
 0xbe0b8c	uint32_t[12]	s_claimLists		ui	Holds three claim lists of 16 bytes: capacity, count, rectangle array and growth step	verified	one	ui/smartrect#claim-lists
 0xbe0bbc	float	s_smartRectInfinity		ui	Holds +inf, set by the object file's static initializer	verified	one	ui/smartrect#static-initializers

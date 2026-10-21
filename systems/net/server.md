@@ -68,7 +68,7 @@ Each row's client entry reads the sender's puts at the bytes. The vmangos reader
 | type names | `SAY` 0, `PARTY` 1, `RAID` 2, `GUILD` 3, `OFFICER` 4, `YELL` 5, `WHISPER` 6, `EMOTE` 8, `CHANNEL` 14, `AFK` 20, `DND` 21, `RAID_WARNING` 88, `BATTLEGROUND` 92 | `ui/chatsend#arguments-of-sendchatmessage` |
 | group types | party needs a party, raid and raid warning a raid, raid warning a leader or assistant; a leader's raid goes as 0x57 and battleground as 0x5d | `ui/chatsend#group-and-channel-checks` |
 | dead or ghost | twelve types only, else error 0xef | `ui/chatsend#text-steps` |
-| text buffer | 256 bytes, `%t` and `%n` expanded | `ui/chatsend#text-steps` |
+| text buffer | 256 bytes, `%N`, `%T`, `%n` and `%t` expanded to the target's name | `ui/chatsend#target-token-expansion` |
 | escape codes | a pipe must be followed by a pipe or `c` | `ui/chatsend#the-escape-check` |
 | addon message | prefix, tab, message in 2047 characters; language 0xffffffff | `ui/chatsend#sendaddonmessage` |
 
