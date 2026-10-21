@@ -9261,7 +9261,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cfc00	405	Script::SortAuctionItems	idb	ui	orchestration	int __fastcall (lua_State *L)	Maps a sort name to a column and promotes it in the named list	verified	one	ui/auctionlists#sorting	
 0x4cfda0	285	Script::SetSelectedAuctionItem	idb	ui	primitive	int __fastcall (lua_State *L)	Stores the auction id of a list row as the selection and returns nothing	verified	one	ui/auctionlists#selection	
 0x4cfec0	364	Script::GetSelectedAuctionItem	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the 1-based position of the selected auction in a list, or 0	verified	one	ui/auctionlists#selection	
-0x4d0030	548	Script::IsAuctionSortReversed	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the reversed flag of a sort column in a list's key stack	inferred	none	ui/auctionlists#reversed-flag	
+0x4d0030	548	Script::IsAuctionSortReversed	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes 1 when a sort column's reversed flag is set in the list's key stack, else nil; nothing for an unknown sort	verified	one	ui/auctionlists#reversed-flag	
 0x4d0260	374	Script::CancelAuction	idb	ui	primitive	int __fastcall (lua_State *L)	Sends 0x257 for an owner list row after checking money for the cancel fee	verified	one	ui/auctionlists#cancelling	ui::luabind_4d0260_cancel_auction_min_increment
 0x4d03e0	33	RegisterAuctionFunctions		ui	orchestration	void __stdcall ()	Registers the 23 auction Lua functions from the table 0x8490a8	verified	one	ui/auction#lua-functions	
 0x4d0410	27	UnregisterAuctionFunctions		ui	orchestration	void __stdcall ()	Removes the 23 auction Lua functions	verified	one	ui/auction#lua-functions	

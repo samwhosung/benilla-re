@@ -124,16 +124,26 @@ Bit-exact coverage: `ui::sortcmp_4cd940` covers `0x4cd940` to `0x4cdb4f`, `0x4cd
 
 ## Reversed flag
 
-`IsAuctionSortReversed("type", "sort")` returns the reversed flag of the column's slot in that list's key stack, as a
-number; the string tests match `SortAuctionItems`. The sort state lives only in the three key stacks.
+`IsAuctionSortReversed("type", "sort")` pushes the number 1 when the reversed flag of the sort column in that list's key
+stack is set, else nil, and returns one value. The sort name is matched first, with the names and columns of
+`SortAuctionItems`, and one that matches none returns nothing. A type that matches none returns nil. An argument that is
+neither a string nor a number raises `Usage: IsAuctionSortReversed("type", "sort")`. The sort state lives only in the
+three key stacks.
 
-Addresses: `0x4d0030`, `0xb725b0`, `0xb72420`, `0xb72548`
-Confidence: inferred
-Proof: none
+Addresses: `0x4d0030`, `0x4d003a`, `0x4d004e`, `0x4d0082`, `0x4d0145`, `0x4d014c`, `0x4d0152`, `0x4d0162`, `0x4d0179`, `0x4d0198`, `0x4d01a5`, `0x4d01aa`, `0x4d01c5`, `0x4d01dc`, `0x4d0206`, `0x4d020d`, `0x4d021d`, `0x4d0230`, `0x4d0232`, `0x4d0240`, `0x4d024e`, `0xb725b0`, `0xb72420`, `0xb72548`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x4d0030` repeats the column and type tests of `0x4cfc00` and reads the key stack's second dword; its body past those tests
-is not derived. The stacks are set only by the initialization (`0x4cc238` to `0x4cc274`) and by the three drivers.
+`0x4d003a` and `0x4d004e` test both arguments with `lua_isstring`, and a failure reaches the usage call at `0x4d0240`. The
+sort name is compared in turn with `quality` (`0x4d0082`, column 1), `level` (0), `duration` (3), `buyout` (4), `status` (5),
+`bid` (2), `name` (6) and `seller` (`0x4d0145`, column 7); the last miss, `0x4d014c jne`, goes to `0x4d024e` and returns 0
+values. The type is then compared with `owner` (`0x4d0162`), `bidder` (`0x4d01c5`) and `list` (`0x4d0206`), each scanning
+its stack's eight pairs for the column (`0x4d0179`, `0x4d01dc`, `0x4d021d`); a type that matches none, `0x4d020d jne`,
+goes to `0x4d0230` and pushes nil. A hit loads the flag at `+4` (`0x4d0198`): zero pushes nil (`0x4d0232`), and nonzero
+pushes 1.0 (`push 0x3ff00000`, `push 0` at `0x4d01a5`, `0x4d01aa`). A column the stack lacks also pushes nil (`0x4d0230`).
+An image scan for the dwords of the three stacks finds the initialization, the three drivers, the three comparators and this
+function, so the drivers are the only writers.
 
 ## Filter menus
 
