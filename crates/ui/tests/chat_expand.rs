@@ -8,7 +8,8 @@
 //! is stubbed too and must not be called. The buffer is a 0x800-byte region filled with a sentinel,
 //! compared whole after each call, so the stray NUL the expander stores past `size` shows. The
 //! inputs are every text of five symbols to length six against five sizes and the five ways a
-//! target resolves, then a fuzz of long texts, and the sizes either side of the stray store.
+//! target resolves, then a fuzz of long texts, and runs before a `%t` that put the stray store at
+//! every offset from 256 to 395.
 
 use benilla_re_difftest::{Emu, RegisterX86, StubIo, Wow};
 use benilla_re_ui::chat_expand::{expand_target_tokens, target_name};
@@ -333,12 +334,12 @@ fn expand_target_tokens_whole() {
         calls += 1;
     }
 
-    // The stray NUL: a run of k letters before `%t`, from the last offset inside the buffer
-    // to well past it, with the buffer already part full.
-    for prefix in [0usize, 1, 100, 200] {
-        for k in 240..=300 {
-            let mut text = Vec::new();
-            text.extend_from_slice(&b"x%t".repeat(prefix / 3));
+    // The stray NUL: a run of k letters before `%t`, behind 0, 1, 7, 33 and 66 tokens `x%t`
+    // that fill the buffer to 0, 5, 35, 165 and 255 bytes (held unit) or to 0, 10, 70, 255 and
+    // 255 (missing target), so the store lands at every offset from 256 to 395.
+    for tokens in [0usize, 1, 7, 33, 66] {
+        for k in 1..=140 {
+            let mut text = b"x%t".repeat(tokens);
             text.extend(std::iter::repeat_n(b'q', k));
             text.extend_from_slice(b"%t tail");
             for situation in [Situation::HeldUnit, Situation::Missing] {
@@ -346,6 +347,13 @@ fn expand_target_tokens_whole() {
                 calls += 1;
             }
         }
+    }
+    // The same at an empty buffer with runs of 240 to 300, around the first outside offset.
+    for k in 240..=300 {
+        let mut text = vec![b'q'; k];
+        text.extend_from_slice(b"%t tail");
+        rig.check(&text, 0x100, Situation::HeldUnit, &pools[0]);
+        calls += 1;
     }
 
     // What the entry states, read off the exe's output.

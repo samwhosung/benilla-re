@@ -108,7 +108,7 @@ an unsigned compare with 0x26 (`0x508433`) sends the rest to `0x5084d0`, and the
 `0x50852c` (39 bytes, 0 at the offsets of `N`, `T`, `n` and `t`, else 1) into the dword table `0x508524`
 (`0x50844a` for 0, `0x5084d0` for 1). `0x5084d0` appends `%` (`0x84f3a0`), sets the flag `[ebp-4]` and leaves
 the scan on the next byte, so a `%` there opens the next token. The result is `sete` of the flag (`0x50851b`);
-`0x49f614` overwrites `eax`. `SStrLen` and `SStrPack` bound every append (`storm/strings#string-length-and-append`).
+`0x49f614` writes `ecx` and `0x49f61a` overwrites `al`, so nothing reads it. `SStrLen` and `SStrPack` bound every append (`storm/strings#string-length-and-append`).
 The test runs `0x5083a0` whole over every text of five symbols to length six against five sizes, a fuzz and
 the vectors above, with the four lookups of the next entry stubbed.
 
@@ -139,21 +139,35 @@ arguments and order for each token, with the name each returns appended.
 
 The expander does not append the text before a `%` alone: it appends the whole rest of the text, cut at `size - 1`,
 then stores a NUL at `buf[length so far + length of the run before the %]` (`0x50841e`), with no bound. Inside the
-buffer that ends the string after the run. At 256 or more it is a store outside `SendChatMessage`'s 256-byte buffer,
-into its frame: offset 264 is the low byte of the saved `lua_State` pointer `[ebp-0x30]`, 268 of the language
-`[ebp-0x2c]` the packet carries, and 296 of the whisper or channel target pointer `[ebp-0x10]`. A text with no `%`,
-or whose runs end below 256, stays inside.
+buffer that ends the string after the run. From offset 256 it stores one zero byte past `SendChatMessage`'s 256-byte
+buffer `[ebp-0x138]`, into its frame, at the offset the sum names. Names lengthen the text, so a short text of `%t`
+tokens fills the buffer, and then any run of 9 bytes or more before a `%` reaches offset 264.
 
-Addresses: `0x5083a0`, `0x508403`, `0x508411`, `0x50841e`, `0x49f604`, `0x49f609`, `0x49f60f`, `0x49f6f2`, `0x49f70b`, `0x49f760`, `0x64a760`
+| offset | slot | a zero byte there |
+|---|---|---|
+| 256 to 263 | `[ebp-0x38]`, `[ebp-0x34]` | nothing: not read after the call |
+| 264 | `lua_State` pointer `[ebp-0x30]` | the escape error raises on a changed state (`0x49f760`) |
+| 268 | language `[ebp-0x2c]` | the packet's language loses its low byte (`0x49f6f2`) |
+| 272 to 295 | packet buffer `[ebp-0x28]` to `[ebp-0x11]` | nothing: written after the call (`0x49f6c8`) |
+| 296 | target pointer `[ebp-0x10]` | a whisper or channel target pointer changes (`0x49f70b`) |
+| 300 to 307 | `[ebp-0xc]`, `[ebp-8]` | nothing: not read after the call |
+| 308 | chat type `[ebp-4]` | a whisper goes out as say, with no target (`0x49f6e6`, `0x49f6fe`) |
+| 312 | the caller's saved `ebp` | every exit restores a changed `ebp` |
+| 316 | return address copy `[ebp+4]` | nothing: not read |
+| 320 to 331 | saved `ebx`, then the return address | at 320 or 324, and 324 or 328: `ebx` or the return changes |
+
+Addresses: `0x5083a0`, `0x508403`, `0x508411`, `0x50841e`, `0x49f1e3`, `0x49f1e9`, `0x49f604`, `0x49f609`, `0x49f60f`, `0x49f6c8`, `0x49f6e6`, `0x49f6f2`, `0x49f6fe`, `0x49f70b`, `0x49f751`, `0x49f760`, `0x49f775`, `0x49f78c`, `0x64a760`
 Confidence: verified
 Proof: one
 Test: `ui::expand_target_tokens_whole`
 
 `0x508403` is `SStrLen` of the buffer and `0x508411` the append of the rest of the text from the run's start; `0x50841e`
 stores 0 at `[ecx+esi]` with `ecx` the sum of the two. The buffer is `lea edx,[ebp-0x138]` with 0x100 pushed
-(`0x49f609`, `0x49f604`); the next locals are read at `0x49f760` (`lua_State`), `0x49f6f2` (language) and `0x49f70b`
-(target). The test compares the whole 0x800-byte region after each call, with runs of 240 to 300 bytes before a
-`%t`, so the store at every offset is checked.
+(`0x49f609`, `0x49f604`). The prologue (`0x49f1e3` to `0x49f1e9`) aligns `esp` to 8, which puts `ebp` 8 or 12 bytes
+below `ebx`, hence the two readings of the last row; the exits after the call, `0x49f751`, `0x49f775` and `0x49f78c`,
+pop `ebp` and `ebx` and return through `ebx`. The test compares the whole 0x800-byte region after each call, with
+runs of 1 to 140 bytes before a `%t` at buffer lengths 0, 5, 35, 165 and 255, and of 240 to 300 at length 0, so a
+store at every offset from 256 to 395 is checked against the model; the frame is not emulated.
 
 ## The escape check
 
