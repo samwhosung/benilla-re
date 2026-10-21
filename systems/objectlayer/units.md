@@ -283,20 +283,26 @@ four MD5 constants and three reads of another record's flags; no byte test of `+
 ## Player-driven units
 
 `0x5fa550` says whether a unit acts under its own control: a player that no one has charmed, or a
-possessed unit whose possessor is such a unit.
+possessed unit whose possessor is such a unit. It answers 0 for a unit with flag 0x2 clear and any of
+the flags 0x4, confused or fleeing set.
 
-Addresses: `0x5fa550`, `0x5fa566`, `0x5fa571`, `0x5fa582`, `0x5fa599`, `0x5fa5c7`, `0x5fa5e2`, `0x468460`
+Addresses: `0x5fa550`, `0x5fa566`, `0x5fa571`, `0x5fa582`, `0x5fa599`, `0x5fa5b6`, `0x5fa5ba`, `0x5fa5c7`, `0x5fa5e2`, `0x468460`, `0x464870`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::is_unit_player_driven_difftest`
 
-With bit 1 of `UNIT_FIELD_FLAGS` clear and any of 0xc00004 set (`0x5fa566`: confused, fleeing and bit 4) it
-returns 0. With bit 24 (possessed) set (`0x5fa582`) it takes the charmer GUID at `+0x10`, else the one at
-`+0x20`, resolves it with mask 8 (`0x5fa599`), returns 0 for no unit and otherwise asks `0x5fa550` of
-that unit. Without bit 24 (`0x5fa5c7`) the unit must be a player with no charmer GUID and bit 0 of
-the flags clear; the result is then 1 (`0x5fa5e2`), else 0. Stunned is not among the bits it tests.
-A creature possessed by a free player therefore returns 1, one possessed by a feared player 0, and
-a creature the server lets the player drive without flag 24 returns 0.
+It reads the flags at `+0xa0` of the field block `[unit+0x110]`. With bit 1 (0x2) clear and any of
+0xc00004 set (`0x5fa566`: bit 2, confused 0x400000, fleeing 0x800000) it returns 0. With bit 24 (possessed) set
+(`0x5fa582`) it takes `UNIT_FIELD_CHARMEDBY` (`+0x10`), else `UNIT_FIELD_CREATEDBY` (`+0x20`) when
+that is 0, and resolves it with `0x468460` and mask 8 (`0x5fa599`): a zero GUID, a GUID with no live
+object or an object without the unit bit gives null and 0 (`0x5fa5b6`); otherwise it asks `0x5fa550`
+of that unit (`0x5fa5ba`). Without bit 24 (`0x5fa5c7`) the type word must hold the player bit
+0x10, `+0x10` must be 0 and bit 0 of the flags clear; the result is then 1 (`0x5fa5e2`), else 0.
+Stunned is not among the bits it tests. A creature possessed by a free player returns 1, one
+possessed by a feared player 0, and a creature the server lets the player drive without flag 24
+returns 0. Nothing bounds the recursion: a cycle of possessed units that the first test does not
+stop recurses until the stack ends. `objectlayer::is_unit_player_driven_difftest` runs `0x5fa550` whole, with `0x464870`
+stubbed over a table of objects.
 
 ## Melee attack
 

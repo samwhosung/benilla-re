@@ -37,6 +37,7 @@ pub mod objmisc_fp;
 pub mod objtail_fp;
 pub mod player2_fp;
 pub mod player3_fp;
+pub mod player_driven;
 pub mod player_fp;
 pub mod spline_anchor;
 pub mod unit_fp;

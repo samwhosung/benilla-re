@@ -95,13 +95,12 @@ equal to the bound, or NaN, adds nothing.
 | 2 | flags (+0x40) have 0x10000000 and lack 0x200000, pitch (+0x20) above −0.6457718 (0xbf25514d, `0x80dfe8`, −37°) | or 0x30000 |
 | 3 | the unit's type mask has 0x10, a player, and the player's flags have 0x10 | or 0x8000 |
 
-`0x5fa550` reads the unit field block at +0x110, the descriptors from +0x18, whose +0xa0 holds
-the unit flags. It returns 0 when flag 0x2 is clear and any of 0xc00004 is set; under flag
-0x1000000, the answer for the unit whose GUID is at the block's +0x10 (+0x20 when that is zero),
-0 when no unit has it; otherwise 1 only for a player-type unit with a zero GUID at the block's
-+0x10 and flag 0x1 clear.
+`0x5fa550` (`objectlayer/units#player-driven-units`) returns 0 when flag 0x2 is clear and any of
+0xc00004 is set at +0xa0 of the unit field block (+0x110). Under flag 0x1000000 it returns the
+answer for the unit named by the GUID at the block's +0x10 (+0x20 when zero), 0 when `0x468460` with
+mask 8 finds none; otherwise 1 only for a player-type unit with a zero GUID at +0x10 and flag 0x1 clear.
 
-Addresses: `0x6315f0`, `0x5fa550`, `0x80dfe8`, `0x6315fa`, `0x631608`, `0x63160d`, `0x631610`, `0x631617`, `0x63161e`, `0x63162c`, `0x63162e`, `0x631648`, `0x631658`
+Addresses: `0x6315f0`, `0x5fa550`, `0x468460`, `0x80dfe8`, `0x6315fa`, `0x631608`, `0x63160d`, `0x631610`, `0x631617`, `0x63161e`, `0x63162c`, `0x63162e`, `0x631648`, `0x631658`
 Confidence: verified
 Proof: one
 Test: `collision::mask_select_difftest`

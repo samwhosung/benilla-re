@@ -43,13 +43,16 @@ bit with the caller's mask. Neither looks in the released table.
 Addresses: `0x464870`, `0x464890`, `0x4648ac`, `0x4648bc`, `0x4648da`, `0x4648ee`, `0x468460`, `0x46847a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::object_ptr_difftest`
 
 `0x464870` returns 0 when `lo | hi` is 0, else calls `0x464890`. `0x464890` returns 0 when the
 mask at `+0x24` is −1 (`0x4648ac`); else the bucket is `[+0x1c] + 12·(lo & mask)` (`0x4648bc`) and
 the walk compares `+0x18` and `+0x30` with `lo` and `+0x34` with `hi` (`0x4648da`), following the
 chain by the bucket's link offset (`0x4648ee`). `0x468460(lo, hi, line)`, with the mask in `ecx`,
-calls `0x464870` and clears the result when `test [[eax+8]+8],esi` is zero (`0x46847a`).
+calls `0x464870`, keeps a null result, and else loads the descriptors `[object+8]` and clears the
+result when `test [descriptors+8],esi`, the type word against the mask, is zero (`0x46847a`). A mask
+of 0 finds nothing; `edx` and the line, a source path and a number in the callers, are not read.
+`objectlayer::object_ptr_difftest` runs `0x468460` whole with `0x464870` stubbed.
 
 ## Releasing an object
 
