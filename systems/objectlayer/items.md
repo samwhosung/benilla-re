@@ -68,25 +68,51 @@ An item reads its record from the item record cache by its entry. A request that
 one more pending display on the owner, the player whose GUID is `ITEM_FIELD_OWNER`; the arrival
 callback counts it back. Arrival sets bit 1, recaches the five bytes and the sound row: the
 `ItemGroupSounds` row whose id is the `ItemDisplayInfo` row's `+0x2c`. Then, while the byte at
-0xb4b424 is set and the item is the active player's, it clears the lock on the entry's items when
-the record's `+0x60` exceeds 1 and signals `ITEM_LOCK_CHANGED`, else clears this item's lock
-through the interface; passes the item to `0x5ebde0`; refreshes the interface; and signals
-`UNIT_INVENTORY_CHANGED` for the owner.
+0xb4b424 is set and the item is the active player's: a record whose `+0x60` exceeds 1 clears the
+lock on the entry's items and signals `ITEM_LOCK_CHANGED` (only with the player's object), else
+this item's lock is cleared through the interface; `0x5ebde0` takes the item on the player's
+object, when it exists; the interface refreshes.
 
-Addresses: `0x5d8400`, `0x5d8300`, `0x5d8390`, `0x5d8440`, `0x5d84cb`, `0x5d8577`, `0x5d8590`, `0x5d85fe`, `0x55ba30`, `0x5ebde0`, `0x613af0`, `0xc0dc08`, `0xc0dbf4`
+Addresses: `0x5d8400`, `0x5d8300`, `0x5d8430`, `0x5d8390`, `0x5d8440`, `0x5d84cb`, `0x5d8577`, `0x5d8590`, `0x55ba30`, `0x5ebde0`, `0x613af0`, `0xc0dc08`, `0xc0dbf4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::apply_record_calls_difftest`
 
-The create hook `0x5d8400` calls `0x613af0` with its three arguments, then `0x5d8300`, which calls
-`0x55ba30` on the cache at 0xc0e2a0 with the entry (field 3), the GUID and the callback `0x5d8390`;
-a record goes to `0x5d8440`, a miss to `inc [player+0x1d20]`. `0x5d8390` finds the item (mask 2)
-and, when its found byte is set, calls `0x5d8440` and decrements. `0x5d8440` sets `+0x314` bit 1,
-takes the display row from `0xc0dc08` and its `+0x2c` (`0x5d84cb`) into `0xc0dbf4`. Then
-`cmp [rec+0x60],1; jle` (`0x5d8577`); above, `0x6221e0(entry, 0)` (`0x5d8590`) and event 188;
-else 0x495420(guid), which clears bit 0 and signals 188. Then `0x5ebde0(item)`, the refreshes
-0x4fca20(0), 0x4f60c0, 0x4e5c70(entry), 0x4df7b0(entry), 0x4f9480(guid), and 0x515e50(&owner, 186)
-(`0x5d85fe`).
+The create hook `0x5d8400` calls `0x613af0` with its three arguments, then `0x5d8300`; slot 3 of the
+item and container vtables, `0x5d8430`, jumps to `0x5d8300` at the end of a reactivating update.
+`0x5d8300` calls `0x55ba30` on the cache at 0xc0e2a0 with the entry (field 3), the GUID and the
+callback `0x5d8390`; a record goes to `0x5d8440`, a miss to `inc [player+0x1d20]`. `0x5d8390` finds
+the item (mask 2) and, when its found byte is set, calls `0x5d8440` and decrements. `0x5d8440` sets
+`+0x314` bit 1, takes the display row from `0xc0dc08` and its `+0x2c` (`0x5d84cb`) into `0xc0dbf4`.
+Then `cmp [rec+0x60],1; jle` (`0x5d8577`); above, `0x6221e0(entry, 0)` (`0x5d8590`) and event 188;
+else 0x495420(guid), which clears bit 0 and signals 188. Then `0x5ebde0(item)` and the refreshes
+0x4fca20(0), 0x4f60c0, 0x4e5c70(entry), 0x4df7b0(entry), 0x4f9480(guid). The test runs `0x5d8440`
+whole with every callee but `0x468550` stubbed and compares the calls and arguments; it reads the
+display row as absent, a display id of −1, so `0x5d84b2` to `0x5d84f5` is not run.
+
+## Item record owner signal
+
+`0x5d8440` signals `UNIT_INVENTORY_CHANGED` (event 186) for every item record it applies while the
+byte at 0xb4b424 is set, whoever owns the item. `SignalUnitEvent` takes the item's
+`ITEM_FIELD_OWNER` GUID and signals once per unit token that names it, with `%s` and the token as
+`arg1`: `player` first for the active player, then `pet`, `target`, `party`, `raid`, `npc` and
+`mouseover` as each matches. An owner of 0, or no active player object, signals nothing. With the
+byte clear the function runs none of this.
+
+Addresses: `0x5d8440`, `0x5d84ff`, `0x5d8506`, `0x5d8521`, `0x5d852a`, `0x5d85e8`, `0x5d85ed`, `0x5d85fe`, `0x5d860b`, `0x5d8300`, `0x5d834a`, `0x5d8390`, `0x5d83be`, `0x468550`, `0x515e50`, `0x515c50`, `0xb4b424`
+Confidence: verified
+Proof: one
+Test: `objectlayer::apply_record_calls_difftest`
+
+`mov al,[0xb4b424]; test al,al; je 0x5d860b` (`0x5d84ff` to `0x5d8506`) skips to the tail
+that recaches. The owner compare with `0x468550` jumps to `0x5d85ed` on a different low dword
+(`0x5d8521`) or high dword (`0x5d852a`); the active player's leg ends at `call 0x4f9480`
+(`0x5d85e8`) and falls into the same address. `0x5d85ed` copies the owner from `[item+0x114]`
+and `0x5d85fe` runs `mov edx,0xba; lea ecx,[ebp-0x10]; call 0x515e50`. No `ret` precedes
+`0x5d8654`. The image holds two `call 0x5d8440`, at `0x5d834a` and `0x5d83be`, and no stored copy
+of the address (control: `0x5d8390` is stored three times). `0x515c50` returns no token for a
+GUID of 0 or without the active player's object. The test covers `0x5d8440` whole: the latch both
+ways and each owner relation, with the `0x515e50` call for the owner and event 186 wherever the latch is set.
 
 ## Record getters
 

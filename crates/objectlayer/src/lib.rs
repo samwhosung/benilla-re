@@ -22,6 +22,7 @@ pub mod gameobject;
 pub mod gobj1_fp;
 pub mod gobj2_fp;
 pub mod gobj3_fp;
+pub mod item_record;
 pub mod leg_timing;
 pub mod missile;
 pub mod missile_flight;

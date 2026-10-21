@@ -19097,7 +19097,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d8390	99	OnItemRecordArrived		objectlayer	primitive		Hands an arrived item record to the item and lowers the owner's pending count	verified	one	objectlayer/items#the-item-record	
 0x5d8400	37	CGItem_C::OnCreate		objectlayer	orchestration		Runs an item's creation and asks for its record	verified	one	objectlayer/items#the-item-record	
 0x5d8430	5	CGItem_C::EndReactivation		objectlayer	orchestration		Jumps to 0x5d8300	verified	one	objectlayer/overview#small-bodies	
-0x5d8440	533	CGItem_C::ApplyRecord		objectlayer	primitive		Takes an item's arrived record: cached bytes, sound row, item lock and interface refreshes	verified	one	objectlayer/items#the-item-record	
+0x5d8440	533	CGItem_C::ApplyRecord		objectlayer	primitive	void __thiscall (CGItem_C *this)	Takes an item's arrived record: recaches its bytes and sound row, then in the world runs the lock and owner signal	verified	one	objectlayer/items#the-item-record	objectlayer::apply_record_calls_difftest
 0x5d8660	367	CGItem_C::Deactivate		objectlayer	primitive		Deactivates an item: drops cursor, cast, interface and text references and the record request	verified	one	objectlayer/items#item-slots	
 0x5d87d0	223	CGItem_C::~CGItem_C		objectlayer	primitive		Tears an item down: record request, watcher lists and the object	verified	one	objectlayer/items#the-item-object	
 0x5d88b0	148	GetInventoryIconByDisplayId		objectlayer	orchestration	const char * __fastcall (uint32_t displayId)	Returns an item display's inventory icon, cached, or INV_Misc_QuestionMark logging NOINVENTORYICON	verified	one	objectlayer/items#inventory-icons	
