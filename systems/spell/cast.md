@@ -336,7 +336,7 @@ ends in `0x6e6f30`. The pop is `0x6e4ad0(0, 0)` (`0x6e58bd`, `0x6e5989`). The at
 `0x6e5a90(spell, item, guid)` casts for the active player: `0x6e4b60(player, spell, item, guid)`.
 `0x6e5b10(guid*)` binds the object the guid names (mask 1) through `0x6e5b40`. `0x6ea1d0(spell)`
 stores the feed spell `0xcecad8`. `0x6ea1e0(item, unit)` casts it when the item and unit exist,
-the unit's created-by-spell field (`+0x214`) is nonzero, the feed spell has a record, and the
+the unit's `UNIT_FIELD_PETNUMBER` (`+0x214` in the unit block) is nonzero, the feed spell has a record, and the
 unit's creator (`+0x20`) is the active player; when the cast returns 1 it binds the item.
 
 Addresses: `0x6e5a90`, `0x468550`, `0x6e5aa4`, `0x6e5abe`, `0x6e5b10`, `0x6e5b2d`, `0x6ea1d0`, `0xcecad8`, `0x6ea1e0`, `0x6ea1fd`, `0x6ea207`, `0x6ea24f`, `0x6ea266`, `0x6ea274`, `0x4bd1d0`, `0x4bd385`

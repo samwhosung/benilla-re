@@ -241,7 +241,7 @@ container GUID and source slot, the player's GUID and the slot.
 returns nothing on every path. It does nothing unless an item is on the cursor and the unit token names a unit.
 For another player who can cooperate with the active player (same faction group) it first handles trade: the open
 trade partner gets the item in a trade slot, and with no trade open the call asks to trade (opcode 0x116). The
-payload stays. Then, for the player's pet (the charm, else the summon), it tries to feed it
+payload stays. Then, for the unit whose GUID is the pet bar's (`0xb714a0`), it tries to feed it
 (`spell/cast#cast-entries`) and, when that returns true, clears the cursor with `ClearCursor(1, 1)`. A refusal
 leaves the cursor alone. There is no distance test.
 
