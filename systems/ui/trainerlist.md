@@ -35,12 +35,14 @@ group hides its header, and collapsing keeps it. The rows stay in the array behi
 Addresses: `0x4d8410`, `0x4d8414`, `0x4d8429`, `0x4d8431`, `0x4d8447`, `0x4d8452`, `0x4d846f`, `0x4d84ac`, `0x4d84ba`, `0x4d84c6`, `0x4d8508`, `0x4d8528`, `0x4d8535`, `0x4d853d`, `0x4d8541`, `0x4d8546`, `0x4d8549`, `0x73f727`
 Confidence: verified
 Proof: one
-Test: `ui::listorder_trainer_filter_hides_header_e2e`, `ui::listorder_trainer_mounts_e2e`, `ui::listorder_trainer_tradeskill_e2e`, `ui::listorder_trainer_tradeskill_filter_e2e`
+Test: `ui::listorder_trainer_filter_hides_header_e2e`, `ui::listorder_trainer_mounts_e2e`, `ui::listorder_trainer_tradeskill_e2e`, `ui::listorder_trainer_tie_order_refilter_e2e`, `ui::listorder_trainer_tradeskill_filter_e2e`
 
 A header's `+0x1c` is set when some state `s` has its bit in the state filter and a nonzero counter `hdr[+4+4s]`; its `+0x20` is
 the collapsed flag from the expanded mask. The row test at `0x4d8528` has no header exemption; the exemption at `0x4d853d` guards
 only the collapse test. The counters are built with the list and re-counted by `0x4d7d40`. The sort runs over the whole
-array, with the visible flag as its first key.
+array, with the visible flag as its first key. The array is sorted in place and kept between runs, so rows that tie on every
+key stay where the C runtime's `qsort` leaves them from the order the last run left: one filter can order tied rows
+differently on a second run.
 
 Each test runs `0x4d8410` whole on a synthesized list, with the real `qsort`, comparators and collator, and reads the sorted rows; the two tradeskill tests also run the group-key slice `0x4d7781` to `0x4d7807`.
 
