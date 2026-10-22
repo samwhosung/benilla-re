@@ -19,6 +19,12 @@ A row says the client signals `event` on the call path of the registered Lua bin
           checks that each traced site is a signal site in `via` or a function `via` calls, and
           that the verb reaches `via` through calls.tsv.
 
+          The skill-list sort 0x4d2ed0 also has the rebuild 0x4d2cb0 as a caller, which is no
+          verb, so the walk leaves it out. `CollapseSkillHeader` and `ExpandSkillHeader` call it
+          after storing the mask (0x4d3bb1, 0x4d3c11), or through 0x4d3210 and 0x4d3270, which
+          tail-jump to it (0x4d3260). It signals at 0x4d2ff2 (`mov ecx,0x109; jmp 0x703e50`)
+          on every path from its entry.
+
 A verb is a row of bindings.tsv whose function lies outside the glue object files (0x46a000 to
 0x476000) and whose name does not start with `Get`: a getter's fire is a cache-miss re-query
 announced when the answer lands, a state event. Where a function has several names the first in
@@ -53,6 +59,8 @@ TRACED = [
     ('PetFollow', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC979,)),
     ('PetPassiveMode', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC956,)),
     ('PetWait', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC979,)),
+    ('CollapseSkillHeader', 'SKILL_LINES_CHANGED', 0x4D2ED0, (0x4D2FF2,)),
+    ('ExpandSkillHeader', 'SKILL_LINES_CHANGED', 0x4D2ED0, (0x4D2FF2,)),
 ]
 
 

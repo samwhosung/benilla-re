@@ -43,7 +43,7 @@ Test: none
 
 ## Rebuilding the list
 
-`0x4d2cb0` rebuilds the list from the local player and does nothing for another player object. It resets the counts, the selection and the points, and expands every category. It walks the 128 skill slots and keeps a skill when its SkillLine row, its race-class row (`0x6ddf90`) and its category row exist and the race-class flags lack bit `0x2`. A skill with rank 0 stays only when flag bit `0x1` is set,
+`0x4d2cb0` rebuilds the list from the local player and does nothing for another player object. It sets the collapse mask to all ones and zeroes the counts and the points, and leaves the selection. It walks the 128 skill slots and keeps a skill when its SkillLine row, its race-class row (`0x6ddf90`) and its category row exist and the race-class flags lack bit `0x2`. A skill with rank 0 stays only when flag bit `0x1` is set,
 or when bit `0x4` is set and the player's level reaches the row's level (`+0x14`). Each kept skill becomes a row; the first skill of a category also adds the category and a header row. Last it orders the list and raises `SKILL_LINES_CHANGED`.
 
 Addresses: `0x4d2cb0`, `0x4d2ce2`, `0x4d2cec`, `0x4d2cf1`, `0x4d2cf6`, `0x4d2cfb`, `0x4d2d04`, `0x4d2d11`, `0x4d2d26`, `0x4d2d60`, `0x4d2d9c`, `0x4d2da2`, `0x4d2da8`, `0x4d2dc5`, `0x4d2dd7`, `0x4d2e1c`, `0x4d2e46`, `0x4d2e64`, `0x4d2e83`, `0x4d2ea9`, `0x4d2eb7`, `0x4d2c90`, `0x4909f1`, `0x5de2a7`, `0x5de45c`, `0x5de49a`, `0x6ddf90`
@@ -51,7 +51,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4d2ce2` to `0x4d2cfb` reset the mask, the counts and the points. `0x4d2d04` to `0x4d2d26` read the skill word of the slot, only when the slot belongs to the local guid (`0x4d2d11`). `0x4d2d60` finds the race-class row. `0x4d2d9c` loads the flags, `0x4d2da2` drops a skill with bit `0x2`, `0x4d2da8` tests bit `0x1`, and `0x4d2dc5` and `0x4d2dd7` test bit `0x4` and the level. `0x4d2e1c` stores the untrained flag of the row (rank 0).
+`0x4d2ce2` to `0x4d2cfb` reset the mask, the counts and the points; nothing in it writes the selection `0xb731c4`, whose only writers are the start-up reset (`0x4d2bdb`) and `SetSelectedSkill` (`0x4d406a`, `0x4d4073`). A dropped skill stays selected. `0x4d2d04` to `0x4d2d26` read the skill word of the slot, only when the slot belongs to the local guid (`0x4d2d11`). `0x4d2d60` finds the race-class row. `0x4d2d9c` loads the flags, `0x4d2da2` drops a skill with bit `0x2`, `0x4d2da8` tests bit `0x1`, and `0x4d2dc5` and `0x4d2dd7` test bit `0x4` and the level. `0x4d2e1c` stores the untrained flag of the row (rank 0).
 `0x4d2e46` to `0x4d2e83` add the category and the header row. The loop ends at `0x4d2ea9` after 128 slots (`0x600` bytes) and `0x4d2eb7` orders. The world entry (`0x4909f1` through `0x4d2c90`) and the skill value, maximum and temporary bonus watchers (`0x5de2a7`, `0x5de45c`, `0x5de49a`) call it.
 
 ## Order and visibility

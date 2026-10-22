@@ -133,8 +133,9 @@ object exists and `0x5ee590` when it does not.
 
 A skill value change prints "Skill %d increased from %d to %d" to the console when the shown value
 (the value plus the permanent bonus when above 0) differs from the old one. Then, when the skill's
-`SkillRaceClassInfo` lacks flags 0x402, an old value of 0 shows `ERR_SKILL_GAINED_S`, and a rise
-of the active player shows `ERR_SKILL_UP_SI` with the new value. A skill of category 11 refreshes
+`SkillRaceClassInfo` lacks flags 0x402, an old value of 0 shows `ERR_SKILL_GAINED_S`; any other old
+value shows `ERR_SKILL_UP_SI` with the new shown value for the active player when the new value is
+above 0, whether it rose or fell. A skill of category 11 refreshes
 quest-giver statuses. Every value change ends in `0x4d7d40` and `0x4fca20(0)`.
 
 Addresses: `0x5de180`, `0x5de450`, `0x5de470`, `0x5ed990`
@@ -145,7 +146,7 @@ Test: none
 `0x5de180` reads the entry `k = (offset − 0x84c)/12` of the block at `+0x848` (field 718): id
 `+0`, value `+4`, max `+6`, temporary bonus `+8`, permanent `+0xa`. It calls `0x5ed990`, prints,
 calls `0x4d2cb0`, looks up `SkillLine` (`0xc0d924`) and `FindSkillRaceClassInfo`, and ends in
-`0x4d7d40` and `0x4fca20(0)`; an unchanged value goes straight to the end. `0x5de450` (max and
+`0x4d7d40` and `0x4fca20(0)`; an unchanged value goes straight to the end. `0x5de36a` tests the old value, the word read at entry, and sends zero to the gained line (`0x5de36c`) and nonzero to `0x5de385`; `0x5de3b8` and `0x5de3cc` need the new value, and the value with the bonus, above 0, and the push at `0x5de417` follows. Only the shown-value gate at `0x5de209` compares new with old. `0x5de450` (max and
 permanent bonus) calls `0x4d7d40`, `0x4fca20(0)` and `0x4d2cb0`; `0x5de470` (temporary bonus) calls
 `0x5ed990` and `0x4d2cb0`.
 

@@ -309,7 +309,7 @@ the glue space is left out: its ids name other events.
 
 ## verb_events.tsv
 
-The events a Lua verb fires (50 rows). `../tools/tables/verb_events.py` opens with the contract: a
+The events a Lua verb fires (52 rows). `../tools/tables/verb_events.py` opens with the contract: a
 verb is a `bindings.tsv` row outside the glue object files and not a getter, and a site belongs
 to the function row that holds it. A floor, not a census.
 
