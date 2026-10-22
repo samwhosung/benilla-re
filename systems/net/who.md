@@ -70,7 +70,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5adf74` and `0x5adf7f` read the count and total with `0x418fb0`; `0x5adf87` caps the count at `0x32`. With `SetWhoToUI` (`0xc2a12c`, set at `0x5ad87c`) clear, the threshold is the dword at `+0x28` of the object `0xc2a128` points to, else 3 (`0x5adfc1`). Nothing writes `0xc2a128`: a scan of the image for its address finds only the load at `0x5adfb3`, so the threshold is 3, and `cmp eax,ecx; jl` (`0x5adfca`) takes the event leg when it is below the raw count. The record loop reads `0x4191b0` (caps `0x30`, `0x60`) and four `0x418e30`; it stores while the offset is below `0x1f40` (`0x5ae045`) but prints every record. `qsort` is at `0x5ae0e2`, after the loop. `0x5ae160` formats the name twice, the level, race, class, the guild when it is not empty, and the zone with `WHO_LIST_FORMAT` or `WHO_LIST_GUILD_FORMAT`, then adds the text to chat with type 10 (`0x49a870`); a name with no row is `UNKNOWN`. `0x5ae0f6` passes the raw count to `WHO_NUM_RESULTS`.
+`0x5adf74` and `0x5adf7f` read the count and total with `0x418fb0`; `0x5adf87` caps the count at `0x32`. With `SetWhoToUI` (`0xc2a12c`, set at `0x5ad87c`) clear, the threshold is the dword at `+0x28` of the object `0xc2a128` points to, else 3 (`0x5adfc1`). Nothing writes `0xc2a128`: a scan of the image for its address finds only the load at `0x5adfb3`, so the threshold is 3, and `cmp eax,ecx; jl` (`0x5adfca`) takes the event leg when it is below the raw count. The record loop reads `0x4191b0` (caps `0x30`, `0x60`) and four `0x418e30`; it stores while the offset is below `0x1f40` (`0x5ae045`) but prints every record. `qsort` is at `0x5ae0e2`, after the loop. `0x5ae160` formats the name twice, the level, race, class, the guild when it is not empty, and the zone with `WHO_LIST_FORMAT` or `WHO_LIST_GUILD_FORMAT`, then adds the text to chat with type 10 (`0x49a870`); a race, class or zone id with no row is named `UNKNOWN` (`0x5ae199`, `0x5ae1d2`, `0x5ae20b`). `0x5ae0f6` passes the raw count to `WHO_NUM_RESULTS`.
 
 ## Who results function
 
@@ -85,14 +85,14 @@ Test: none
 
 ## Who sort keys
 
-`SortWho(type)` maps the text, without case, to a key: `name` 4, `level` 1, `class` 2, `group` 3, `race` 5, `zone` 0, `guild` 6, and any other text to 4. It moves that key to the front of a seven-slot chain of key and direction pairs. The direction flips only when the key was already first; otherwise it keeps the direction it had and the earlier slots shift down. It then sorts the kept results with `qsort` and fires `WHO_LIST_UPDATE` before it returns. The chain starts as keys 0 to 6 with direction 0, set once at start-up.
+`SortWho(type)` maps the text, without case, to a key: `name` 4, `level` 1, `class` 2, `group` 3, `race` 5, `zone` 0, `guild` 6, and any other text to 4. It moves that key to the front of a seven-slot chain of key and direction pairs. The direction flips only when the key was already first; otherwise it keeps the direction it had and the earlier slots shift down. It then sorts the kept results with `qsort` and fires `WHO_LIST_UPDATE` before it returns. The chain starts as keys 0 to 6 with direction 0, set again at each world entry.
 
-Addresses: `0x5ad890`, `0x5ad8bb`, `0x5ad982`, `0x5ad99e`, `0x5ad9ab`, `0x5ad9c3`, `0x5ad9d6`, `0x5ad9ed`, `0x5add04`, `0xc2817c`, `0xc28180`
+Addresses: `0x5ad890`, `0x5ad8bb`, `0x5ad982`, `0x5ad99e`, `0x5ad9ab`, `0x5ad9c3`, `0x5ad9d6`, `0x5ad9ed`, `0x5add04`, `0x5adc50`, `0x5adc5a`, `0x401666`, `0x5ae2d0`, `0xc2817c`, `0xc28180`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5ad8bb` sets the default key 4; the seven `0x64a4c0` compares run in the order name, level, class, group, race, zone, guild. `0x5ad982` searches the chain; `0x5ad99e` to `0x5ad9a7` flips the direction only for slot 0; `0x5ad9ab` to `0x5ad9c1` shift; `0x5ad9c3` and `0x5ad9c9` store slot 0. `0x5ad9d6` passes the comparator `0x5ada00` to `0x73f727` over `0xc281b8` with the kept count and `0xa0`. `0x5ad9ed` is `mov ecx,0x184; call 0x703e50`. `0x5add04` stores `key[i] = i` and `dir[i] = 0` for 7 slots.
+`0x5ad8bb` sets the default key 4; the seven `0x64a4c0` compares run in the order name, level, class, group, race, zone, guild. `0x5ad982` searches the chain; `0x5ad99e` to `0x5ad9a7` flips the direction only for slot 0; `0x5ad9ab` to `0x5ad9c1` shift; `0x5ad9c3` and `0x5ad9c9` store slot 0. `0x5ad9d6` passes the comparator `0x5ada00` to `0x73f727` over `0xc281b8` with the kept count and `0xa0`. `0x5ad9ed` is `mov ecx,0x184; call 0x703e50`. `0x5add04` stores `key[i] = i` and `dir[i] = 0` for 7 slots. It runs in `0x5adc50` (from `0x401666` in `0x401570`, the world entry's call at `0x46c236`) only while the friend list `0xc28168` is null (`0x5adc5a`), and the world teardown frees and nulls that list (`0x5ae2d0`).
 
 ## Who comparator
 
