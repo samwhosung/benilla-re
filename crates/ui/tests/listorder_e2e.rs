@@ -1267,3 +1267,260 @@ fn listorder_trainer_tradeskill_filter_e2e() {
     let (vis_all, _) = run_trainer_tradeskill(&wow, 7);
     assert_eq!(vis_all, n + 2, "mask 7 shows the same rows as mask 3 here");
 }
+
+// ═══ 5 · tie order across successive filter changes ════════════════════════════════════════════
+
+/// Spells of the tie list: 101 and 103 have no record (a nameless row), 102 and 106 are both
+/// "Alpha" rank 1.
+const TIE_SPELLS: &[SpellSpec] = &[
+    SpellSpec {
+        id: 100,
+        name: "Zeta",
+        rank: "Rank 1",
+        spell_level: 0,
+        effects: [0; 3],
+    },
+    SpellSpec {
+        id: 102,
+        name: "Alpha",
+        rank: "Rank 1",
+        spell_level: 0,
+        effects: [0; 3],
+    },
+    SpellSpec {
+        id: 104,
+        name: "Beta",
+        rank: "Rank 1",
+        spell_level: 0,
+        effects: [0; 3],
+    },
+    SpellSpec {
+        id: 105,
+        name: "Gamma",
+        rank: "Rank 1",
+        spell_level: 0,
+        effects: [0; 3],
+    },
+    SpellSpec {
+        id: 106,
+        name: "Alpha",
+        rank: "Rank 1",
+        spell_level: 0,
+        effects: [0; 3],
+    },
+];
+
+/// `(spell, state, group key)`; every row has required level 1 and required skill value 0, so the
+/// rows of a group tie on every key but the name.
+const TIE_WIRE: &[(u32, u8, u32)] = &[
+    (100, 0, 26),
+    (101, 0, 26),
+    (102, 0, 26),
+    (103, 0, 26),
+    (106, 0, 26),
+    (104, 2, 256),
+    (105, 1, 256),
+];
+
+/// The `(state mask, expand mask)` each finalize runs under, in turn.
+const TIE_STEPS: [(u32, u32); 6] = [
+    (3, u32::MAX),
+    (1, u32::MAX),
+    (5, u32::MAX),
+    (7, u32::MAX),
+    (7, !1),
+    (7, u32::MAX),
+];
+
+/// Run `0x4d8410` once per step of `TIE_STEPS` over one persistent display-row array, never
+/// rebuilt in between, and return per step `(visible count, [(spell id or -1, group key), …])`
+/// for the whole array, the hidden rows behind the visible ones included.
+fn run_trainer_refilter(wow: &Wow, trainer_type: u32) -> Vec<(u32, Vec<(i32, u32)>)> {
+    let mut emu = Emu::new(wow);
+    spell_store(&mut emu, TIE_SPELLS);
+
+    let hdr_keys: &[u32] = &[26, 256];
+    let hdrs: Vec<u64> = hdr_keys
+        .iter()
+        .map(|k| {
+            let h = emu.alloc(TRAINER_HDR_SIZE);
+            emu.write_u32(h, *k);
+            h
+        })
+        .collect();
+    let n = TIE_WIRE.len() as u64;
+    let total = n + hdrs.len() as u64;
+    let rows_arr = emu.alloc(total * 4);
+    for (i, &(spell, state, key)) in TIE_WIRE.iter().enumerate() {
+        let r = emu.alloc(TRAINER_ROW_SIZE);
+        emu.write_u32(r, spell);
+        emu.write_u32(r + 4, key);
+        emu.write(r + 0x14, &[1]);
+        emu.write(r + 0x30, &[state]);
+        emu.write_u32(rows_arr + (i as u64) * 4, r as u32);
+        // The builder's per-state member counter of the row's header (`0x4d785b`).
+        let hi = hdr_keys.iter().position(|k| *k == key).unwrap();
+        let slot = hdrs[hi] + 4 + u64::from(state) * 4;
+        let prev = emu.read_u32(slot);
+        emu.write_u32(slot, prev + 1);
+    }
+    for (i, k) in hdr_keys.iter().enumerate() {
+        let hr = emu.alloc(TRAINER_ROW_SIZE);
+        emu.write_u32(hr, u32::MAX);
+        emu.write_u32(hr + 4, *k);
+        emu.write_u32(rows_arr + (n + i as u64) * 4, hr as u32);
+    }
+    let hdrs_arr = emu.alloc(hdrs.len() as u64 * 4);
+    for (i, h) in hdrs.iter().enumerate() {
+        emu.write_u32(hdrs_arr + (i as u64) * 4, *h as u32);
+    }
+    emu.write_u32(T_HDRS, hdrs_arr as u32);
+    emu.write_u32(T_NHDR, hdrs.len() as u32);
+    emu.write_u32(T_ROWS, rows_arr as u32);
+    emu.write_u32(T_NROW, total as u32);
+    emu.write_u32(T_TYPE, trainer_type);
+    emu.write_u32(T_GROUPMASK, u32::MAX);
+
+    TIE_STEPS
+        .iter()
+        .map(|&(state_mask, expand_mask)| {
+            emu.write_u32(T_STATEMASK, state_mask);
+            emu.write_u32(T_EXPANDMASK, expand_mask);
+            emu.call(TRAINER_FINALIZE, 0, 0, &[]);
+            let visible = emu.read_u32(T_NVIS);
+            let list = (0..total)
+                .map(|i| {
+                    let r = u64::from(emu.read_u32(rows_arr + i * 4));
+                    (emu.read_u32(r) as i32, emu.read_u32(r + 4))
+                })
+                .collect();
+            (visible, list)
+        })
+        .collect()
+}
+
+/// **A re-sort of the persistent row array keeps ties where the C runtime's `qsort` leaves them.**
+///
+/// `0x4d8410` sorts the array it finds, never one rebuilt from the wire order, so a row that
+/// ties with another on every key of the comparator (the nameless 101 and 103, the two "Alpha"
+/// rows 102 and 106) lands wherever `qsort` leaves it given the order the previous filter left.
+/// Steps 4 and 6 run under the same masks (7, all expanded) and sort differently: the second
+/// starts from the order the steps between left. Trainer types 0 and 2 select different
+/// comparators and give the same rows here, since the rows tie on every key either one has beyond
+/// the name. The expected orders are what the exe's own code produces.
+#[test]
+fn listorder_trainer_tie_order_refilter_e2e() {
+    let Some(wow) = Wow::load() else { return };
+    // `-1` is a group header; the group key is 26 for the first group and 256 for the second.
+    let h26 = (-1, 26);
+    let h256 = (-1, 256);
+    let expected: [(u32, [(i32, u32); 9]); 6] = [
+        // mask 3
+        (
+            8,
+            [
+                h26,
+                (102, 26),
+                (103, 26),
+                (101, 26),
+                (106, 26),
+                (100, 26),
+                h256,
+                (105, 256),
+                (104, 256),
+            ],
+        ),
+        // mask 1
+        (
+            6,
+            [
+                h26,
+                (103, 26),
+                (101, 26),
+                (102, 26),
+                (106, 26),
+                (100, 26),
+                (105, 256),
+                (104, 256),
+                h256,
+            ],
+        ),
+        // mask 5
+        (
+            8,
+            [
+                h26,
+                (101, 26),
+                (102, 26),
+                (103, 26),
+                (106, 26),
+                (100, 26),
+                h256,
+                (104, 256),
+                (105, 256),
+            ],
+        ),
+        // mask 7
+        (
+            9,
+            [
+                h26,
+                (102, 26),
+                (103, 26),
+                (101, 26),
+                (106, 26),
+                (100, 26),
+                h256,
+                (104, 256),
+                (105, 256),
+            ],
+        ),
+        // mask 7, first group collapsed
+        (
+            4,
+            [
+                h26,
+                h256,
+                (104, 256),
+                (105, 256),
+                (100, 26),
+                (101, 26),
+                (103, 26),
+                (102, 26),
+                (106, 26),
+            ],
+        ),
+        // mask 7, all expanded again
+        (
+            9,
+            [
+                h26,
+                (102, 26),
+                (106, 26),
+                (100, 26),
+                (101, 26),
+                (103, 26),
+                h256,
+                (104, 256),
+                (105, 256),
+            ],
+        ),
+    ];
+
+    for trainer_type in [0, 2] {
+        let got = run_trainer_refilter(&wow, trainer_type);
+        for (step, (g, e)) in got.iter().zip(&expected).enumerate() {
+            assert_eq!(
+                (g.0, g.1.as_slice()),
+                (e.0, e.1.as_slice()),
+                "trainer type {trainer_type}, step {step} (state mask {}, expand mask {:#x})",
+                TIE_STEPS[step].0,
+                TIE_STEPS[step].1
+            );
+        }
+        assert_ne!(
+            got[3].1, got[5].1,
+            "type {trainer_type}: the same filter sorts differently from a different starting order"
+        );
+    }
+}
