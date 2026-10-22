@@ -13,6 +13,7 @@ CloseTrade	PLAYER_TRADE_MONEY	body	-	0x4bfdce
 CloseTradeSkill	TRADE_SKILL_CLOSE	helper	0x4fc870	0x4fc884
 CollapseCraftSkillLine	CRAFT_UPDATE	helper	0x4f6be0	0x4f6bf0
 CollapseQuestHeader	QUEST_LOG_UPDATE	helper	0x4ded30	0x4ded98|0x4dedba|0x4dedd6
+CollapseSkillHeader	SKILL_LINES_CHANGED	traced	0x4d2ed0	0x4d2ff2
 CollapseTradeSkillSubClass	TRADE_SKILL_UPDATE	helper	0x4fd750	0x4fd765
 CollapseTrainerSkillLine	TRAINER_UPDATE	helper	0x4d8cd0	0x4d8ce0
 ConfirmLootRoll	CANCEL_LOOT_ROLL	helper	0x61bdf0	0x61bf2a
@@ -21,6 +22,7 @@ DoTradeSkill	UPDATE_TRADESKILL_RECAST	helper	0x4fd770	0x4fd781
 DropCursorMoney	PLAYER_MONEY	helper	0x494cc0	0x494d10
 ExpandCraftSkillLine	CRAFT_UPDATE	helper	0x4f6be0	0x4f6bf0
 ExpandQuestHeader	QUEST_LOG_UPDATE	helper	0x4ded30	0x4ded98|0x4dedba|0x4dedd6
+ExpandSkillHeader	SKILL_LINES_CHANGED	traced	0x4d2ed0	0x4d2ff2
 ExpandTradeSkillSubClass	TRADE_SKILL_UPDATE	helper	0x4fd750	0x4fd765
 ExpandTrainerSkillLine	TRAINER_UPDATE	helper	0x4d8cd0	0x4d8ce0
 PetAggressiveMode	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc956
