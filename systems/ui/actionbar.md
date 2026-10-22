@@ -283,7 +283,7 @@ Test: none
 pet-book spell, a missing record, or an unlisted target type. 0: `0x6e4440` fails
 (`spell/checks#range-pre-check`, no report). 1: the first effect's implicit target is 6, 21, 23, 25, 26,
 35, 45, 57 or 61 and a target is selected. `ActionHasRange` (`0x4e75d0`) is true when the spell's `|min|`
-or `|max|` range from `0x6e3480` exceeds 2.384e-07.
+or `|max|` range from `0x6e3480` is not below 2^-22 (`0x8029d4`, `fcomp` then `test ah,5; jp` at `0x4e5885`), so a range equal to it, or a NaN, counts.
 
 Addresses: `0x4e56f0`, `0x4e7550`, `0x4e75d0`, `0x4e5810`, `0x4e5880`, `0x4e5765`, `0x4e5770`, `0x4e5780`, `0x4e579c`, `0x6e3480`, `0x6e4440`
 Confidence: verified
