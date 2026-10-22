@@ -167,3 +167,25 @@ Test: none
 
 `0x479592` clears `+0x3c` first; `0x479596 jne` tests the path byte. The load is `0x479601 call 0x449d90` with the static status, the bind `0x479622 call 0x710ec0` with type 1, and `0x479638` stores 1 only on success. The setters test `+0x3c` before building cells
 (`0x4787a2`, `0x4784eb`, `0x47845a`, `0x4785b6`, `0x4786f7`), and `0x478908` makes the item store a no-op.
+
+## A failed build
+
+`0x476b90` returns 0 when the race is out of range or `0x477c20(0, 0, skin)` is false: the skin colour is negative, the race and sex have no skin variation 0, or the colour is not below its colour count. By then it has released the old model, copied the descriptor with its model, and zeroed both cell grids and the held items; `+0x3c` holds the descriptor's byte. It loads no baked skin, runs no setter and leaves `+0x08`, `+0x0a`, `+0x10` and `+0x184` as they were. Every caller ignores the result and keeps the new component: none retries, tries another colour or restores an older component, and each goes on as after a successful build.
+
+Addresses: `0x476b90`, `0x476bb3`, `0x476bcd`, `0x476be3`, `0x476bef`, `0x476c06`, `0x476c9a`, `0x477c20`, `0x5fb510`, `0x5fb515`, `0x5d63bc`, `0x5d63c9`, `0x470c2e`, `0x470c33`, `0x472b61`, `0x472b66`, `0x476aa4`, `0x476aaa`, `0x5fb228`, `0x607dea`, `0x475fb0`
+Confidence: verified
+Proof: one
+Test: none
+
+The fail block `0x476c9a xor al,al` is reached from `0x476be3`, `0x476bef` and `0x476c06`, after the copy (`0x476bb3`) and the zeroing (`0x476bc0` to `0x476bda`), before the flag stores at `0x476c11`. A byte scan of `.text` for `e8` and `e9` finds five calls and no jump (control: the eight calls of `0x477c20`), and a dword scan of the image no stored address (control: `0x477a70` once, at `0x477958`). Each caller writes `eax` before reading `al`: `0x5fb515`, `0x5d63c9`, `0x470c33`, `0x472b66`, and `0x476aaa` in the unreached `0x476960`. Each live caller takes a fresh block from `0x475fb0` (`0x5fb26c` or `0x5fb3dd`, `0x5d6297`, `0x470bc2`, `0x472aac`). The unit clears its pending flag `+0xccc` first (`0x5fb228`, `0x607dea`), so it builds again only after `0x5faf0e`, `0x5fb9d1` or `0x60ad28` set it.
+
+## Composite without a skin
+
+With `+0x3c` clear, the update after a failed build still composites: it creates the target, binds it as type 1 and runs all ten handlers, which skip the null skin, underwear, face and hair cells and blit only item cells into `0xb422d8`. Every component composites into that one buffer, nothing clears it, and the upload copies all of it. The body shows what earlier composites left there, another character's skin, face and clothes, under its own items. A later partial composite or a refill takes the buffer as it is then. The build binds neither type 6 nor type 8. With `+0x3c` set, only on the unit's extra-row path, the update picks geosets alone and nothing binds type 1.
+
+Addresses: `0x477860`, `0x4778e7`, `0x47793e`, `0x477970`, `0x477999`, `0x477070`, `0x47708b`, `0x4770f0`, `0x477109`, `0x4774a3`, `0x4774c5`, `0x477a86`, `0x477a0d`, `0x477a2b`, `0x58ac70`, `0x58acd0`, `0x594b90`, `0x476183`, `0x44af90`, `0x5a4af0`, `0x5a4b10`, `0x478160`, `0x478220`, `0x710ec0`, `0x4782cc`, `0x478204`, `0x7101d6`, `0x477aa3`, `0x479622`, `0x5fb376`, `0x5fb426`, `0x5d62da`, `0x4729ad`, `0x470962`, `0x470d43`, `0x470e86`, `0x477866`, `0x71da42`, `0x70ef16`, `0x70b7bd`, `0x5a2afc`, `0xb422d8`
+Confidence: verified
+Proof: one
+Test: none
+
+Null cells pass `0x476eb0` (`0x4778e7`); `0x47793e` makes the target, `0x477970` binds it, and mask −1 runs every handler (`0x477999`). `0x477070` and `0x4770f0` leave at `0x47708b` and `0x477109` on a cell without data. The kernels write `[0xb422d8]` (`0x4774a3`, `0x4774c5`) and the callback's event 1 hands the device the same pointer (`0x477a86`); its event 0, a refill, recomposites (`0x477aa3`). `0x477a2b` uploads at once (flag 1, `0x477a0d`) through `0x58ac70`, `0x58acd0` and `0x594b90`. The dword 0xb422d8 occurs six times: the store `0x476183`, two at shutdown, these reads. `0x44af90` allocates it through `0x5a4af0` with `SMemAlloc` flags 0 (`0x5a4b10`), so before any composite it holds the heap's bytes. Types 6 and 8 are bound at `0x4782cc` and `0x478204`, in `0x478220` and `0x478160`, which the setters and `0x479580` call. `+0x3c` is copied as 1 at `0x5fb376`, and as 0 at `0x5fb426`, `0x5d62da`, `0x4729ad`, `0x470962`, `0x470d43` and `0x470e86`; `0x477866` tests it. Of the eleven `0x710ec0` calls two push type 1, `0x477970` and `0x479622`, and the replay `0x7101d6` repeats a deferred one. A model made from its file has type-1 handle 0: unnamed shared textures stay 0 (`0x71da42`), copied at `0x70ef16`. A null handle binds `SetTexture(stage, 0)` (`0x70b7bd`, `0x5a2afc`); what an empty stage samples is the graphics API's.
