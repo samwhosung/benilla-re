@@ -10,10 +10,10 @@ Roots: `0x4c82a0`, `0x4c8590`, `0x4c88d0`, `0x4c8a60`, `0x4c8c10`, `0x4c8de0`, `
 ## Reading a worn item
 
 `GetInventoryItemTexture`, `GetInventoryItemBroken`, `GetInventoryItemQuality`, `GetInventoryItemCooldown` and
-`GetInventoryItemLink` take a unit token and a slot. A first argument that is not a string raises `Usage: <name>(unit, slot)`; a slot the slot reader refuses raises `Invalid inventory slot in <name>`.
-The unit must pass `CanReadUnitInventory`: the active player, or a cooperative player within 10 yards. Slot -1 (the ammo slot) of
+`GetInventoryItemLink` take a unit token and a slot. A non-string first argument raises `Usage: <name>(unit, slot)`; a slot the slot reader refuses raises `Invalid inventory slot in <name>`.
+The unit must pass `CanReadUnitInventory` (self, or a cooperative player within 10 yards). Slot -1 of
 the texture and quality getters reads the active player's ammo entry (`+0x102c`); another unit gives nil. A unit that fails the test, a missing item or an uncached record gives nil
-(the texture, quality, broken and link getters) or 0, 0, 0 (the cooldown); an uncached ammo record also
+(the texture, quality and broken getters) or 0, 0, 0 (the cooldown). The link getter pushes nothing there (`0x4c8c56`) but links an uncached record nameless (`0x52ae00`); an uncached ammo record also
 registers the callback of "Ammo record callback".
 
 Addresses: `0x4c82a0`, `0x4c82cf`, `0x4c8301`, `0x4c8328`, `0x4c8331`, `0x4c8382`, `0x4c8590`, `0x4c88d0`, `0x4c8a13`, `0x4c8a60`, `0x4c8c10`, `0x4c8c8e`, `0x4c8ca7`, `0x4c8520`, `0x4944a0`, `0x515940`
