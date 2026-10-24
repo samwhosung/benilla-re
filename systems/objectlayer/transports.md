@@ -117,8 +117,7 @@ needs a non-zero point count for a stop, and `0x5f4e47` multiplies the delay by 
 index, null past the store's count, and `0x5f4e8c` ends the run at another path. The node and stop
 arrays live on the stack, 0x3000 and 0x2000 bytes, 1024 entries each. Slot 27 (`0x5f4f80`)
 recreates the entity, clears `+0x5c`, sets `+0x54` to −1, rejoins the transport list (`0x5f4f97`)
-and ticks. The test runs `0x5f4cc0` whole on generated rows; on the install's nine ship paths it
-gives the periods a server reports.
+and ticks. The test runs `0x5f4cc0` whole on generated rows.
 
 ## Leg curve
 
@@ -152,27 +151,28 @@ equal waits in both legs (60 and 60 seconds, or none).
 | fault | effect |
 |---|---|
 | Every leg's end adds W, the waits of the last leg's stops, not W_k, its own | W > W_k: the ship sits at the leg's end playing 0xa3 for W − W_k ms; W < W_k: the next leg cuts the last W_k − W ms of this one |
-| A stop on a leg's last node: the stop table has n + 1 entries but the timing loop stops at it | entry n stays unwritten, gains the leg start and ends the last span; the stop's wait counts in W but not in the leg's entries; during it the ship clamps to the leg end playing 0xa2 or 0xa3 |
+| A stop on a leg's last node: for s stops the table has s + 1 entries but the timing loop stops at it | entry s stays unwritten, gains the leg start and ends the last span; the stop's wait counts in W only when the leg is the path's last, and never in the leg's entries; during it the ship clamps to the leg end playing 0xa2 or 0xa3 |
 | More than 1024 nodes in one leg | the appends overrun the stack arrays |
-| A leg of 3 nodes or fewer | no segment length and no length is written; the timing and the tick read what the leg's memory held |
+| A leg of 3 nodes or fewer | no segment length and no length is written; the timing and the tick read what the leg's memory held. With 1 or 2 nodes the length list's count wraps to n − 3 mod 2^32 while its buffer is 0 bytes, and a later leg that grows the leg array copies that many floats |
 
-Addresses: `0x5f4e32`, `0x5f4eeb`, `0x5f4f01`, `0x5f4f10`, `0x5f916e`, `0x5f91a1`, `0x5f519e`, `0x5f9530`, `0x5f9610`, `0x4532e3`, `0x5f9427`
+Addresses: `0x5f4e32`, `0x5f4eeb`, `0x5f4f01`, `0x5f4f10`, `0x5f916e`, `0x5f91a1`, `0x5f519e`, `0x5f9530`, `0x5f9610`, `0x4532e3`, `0x5f9427`, `0x45478a`, `0x4547d1`, `0x4547f3`, `0x5f9ad0`, `0x5f9c10`, `0x5f9ca1`
 Confidence: verified
 Proof: one
 Test: none
 
 The stop array is emptied only when a new leg starts (`0x5f4e32`), and the post-loop sum at
-`0x5f4eeb`–`0x5f4f01` reads it for every leg. A leg's last entry holds its travel plus its own
-waits; past it and before the leg's end the tick runs span n with decelerates 0, whose distance
-passes the leg length, so the fraction clamps to 1. `0x5f916e` sizes the stops to n + 1;
+`0x5f4eeb`–`0x5f4f01` reads it per leg. A leg's last entry holds its travel plus its own
+waits; past it and before the leg's end the tick runs span s with decelerates 0, whose distance
+passes the length: the fraction clamps to 1. `0x5f916e` sizes the stops to s + 1;
 `0x5f91a1` leaves the loop at a stop on the last node, and the end span writes the entry at that
-index, never entry n, which keeps what the allocation left. `0x5f4f10` adds the leg start to each
-of the n + 1 entries; `0x5f519e` reads entry n's time as the last span's end, and that span runs
+index, never entry s, which keeps what the allocation left. `0x5f4f10` adds the leg start to all
+s + 1; `0x5f519e` reads entry s's time as the last span's end, and that span runs
 with accelerates 1 and decelerates 0. The appends `0x5f9530` and `0x5f9610` check no bound.
-`0x4532e3` skips both length slots for 3 points or fewer, and the leg set-up (`0x5f9427` to
-`0x5f9450`) never writes the length `+8`. The scan follows the client: the run of rows from the
-path's first, split at a map change and after flag 0x1, a stop being flag 0x2 past a leg's first
-node.
+`0x4532e3` skips both length slots for 3 points or fewer; the set-up (`0x5f9427` to
+`0x5f9450`) never writes the length `+8`. For 1 or 2 points slot 7 stores the count n − 3 mod 2^32
+(`0x45478a`, `0x4547f3`) and its capacity rounding wraps to 0 (`0x4547d1` to `0x4547e2`);
+`0x5f9c10`, copying for `0x5f9ad0`, allocates 4 × count mod 2^32 bytes and copies count floats
+(`0x5f9ca1` to `0x5f9cf2`).
 
 ## Leg timing
 
@@ -196,7 +196,7 @@ Confidence: verified
 Proof: one
 Test: `objectlayer::leg_time_difftest`, `objectlayer::leg_time_special_values_difftest`, `objectlayer::ship_path_build_difftest`
 
-`0x5f9120(points, stops, leg)` calls `SetSplinePath`, sizes the stops to n + 1 and zeros `+0x34`.
+`0x5f9120(points, stops, leg)` calls `SetSplinePath`, sizes the stops to s + 1 for s stops and zeros `+0x34`.
 Stop i's distance is 0x453300(spline, node), a cumulative length; seg is it less the last. A stop
 at the leg's last node ends the loop (`0x5f91a1`). `0x5f91db` picks the first span's form,
 `0x5f9205` the middle form; the end runs from `0x5f92b8` with seg = length − last. `fst` at

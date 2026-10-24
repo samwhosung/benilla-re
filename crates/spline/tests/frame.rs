@@ -524,7 +524,9 @@ fn frame_builder_linear_diff() {
 /// picks between the two by the dot product, then finishes the frame. The expected frame composes
 /// `seg_locate`, `frame_tangent_linear`, `eval_point_quad` over the derivative basis,
 /// `frame_spline_tangent` and `frame_finish`. A derivative shorter than 0.01 leaves the tangent
-/// unwritten (`frame_spline_tangent` gives `None`) and the case is skipped.
+/// unwritten (`frame_spline_tangent` gives `None`): the fuzz skips it, and the probes preset the
+/// output's tangent and expect it kept. The probes also hold a derivative of exactly 0.01 and one
+/// ulp either side, and a dot product of exactly 0.5 (`0x4546b4`, `jp`: the derivative).
 #[test]
 fn frame_builder_spline_diff() {
     let Some(wow) = Wow::load() else {
@@ -547,7 +549,13 @@ fn frame_builder_spline_diff() {
         src[0], src[1], src[2], 0.0, src[3], src[4], src[5], 0.0, src[6], src[7], src[8], 0.0,
         src[9], src[10], src[11], 1.0,
     ];
-    let run = |emu: &mut Emu, count: u32, scale: f32, knots: &[f32], cps: &[[f32; 3]], gt: f32| {
+    let run_preset = |emu: &mut Emu,
+                      count: u32,
+                      scale: f32,
+                      knots: &[f32],
+                      cps: &[[f32; 3]],
+                      gt: f32,
+                      preset: Option<[f32; 3]>| {
         let n_seg = count.wrapping_sub(3); // the 0x454380 wrapper subtracts 3
         let (seg, frac) = eval::seg_locate(scale, knots, gt, n_seg);
         let su = seg as usize;
@@ -558,9 +566,16 @@ fn frame_builder_spline_diff() {
         let cps4 = [cps[su], cps[su + 1], cps[su + 2], cps[su + 3]];
         let deriv_raw = eval::eval_point_quad(&deriv_basis, &cps4, frac);
         let lin = frame_tangent_linear(cps[su + 1], cps[su + 2], eps2_frame, one);
-        let Some(tan) = frame_spline_tangent(deriv_raw, lin, eps2_deriv) else {
-            return; // degenerate derivative → T unwritten by the binary; outside the diff domain
+        let tan = match (frame_spline_tangent(deriv_raw, lin, eps2_deriv), preset) {
+            (Some(tan), _) => tan,
+            (None, Some(p)) => p,   // T unwritten: the preset stays
+            (None, None) => return, // T unwritten, and the fuzz leaves the output as it was
         };
+        if let Some(p) = preset {
+            for (i, v) in p.iter().enumerate() {
+                emu.write_u32(cv.out + 4 * i as u64, v.to_bits());
+            }
+        }
         let want = frame_finish(tan, eps2_frame, one);
         cv.set_mode(emu, 1); // spline mode
         cv.set_count(emu, count);
@@ -587,7 +602,51 @@ fn frame_builder_spline_diff() {
             eqf32(b[i], want[8 + i], &format!("{ctx}.B[{i}]"));
         }
     };
+    let run = |emu: &mut Emu, count: u32, scale: f32, knots: &[f32], cps: &[[f32; 3]], gt: f32| {
+        run_preset(emu, count, scale, knots, cps, gt, None);
+    };
     let knots: Vec<f32> = (0..40).map(|i| 1.0 + (i as f32) * 0.2).collect();
+
+    // Four points and t = 0: one segment, local parameter 0, where the derivative is exactly
+    // (P[2] − P[0])·0.5 and the chord P[2] − P[1].
+    let preset = Some([0.25f32, -0.5, 0.75]);
+    let eps = f32::from_bits(0x3c23_d70a); // 0.01, the f32 at 0x8029d0
+    for d in [
+        0.0,
+        f32::from_bits(eps.to_bits() - 1),
+        eps,
+        f32::from_bits(eps.to_bits() + 1),
+    ] {
+        let cps = [
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [d * 2.0, 0.0, 0.0],
+            [5.0, 1.0, 0.0],
+        ];
+        let deriv = eval::eval_point_quad(&deriv_basis, &cps, 0.0);
+        assert_eq!(deriv, [d, 0.0, 0.0], "the probe's derivative is (d, 0, 0)");
+        run_preset(&mut emu, 4, 1.0, &knots, &cps, 0.0, preset);
+    }
+    // A unit derivative whose x is exactly 0.5 against the chord (1, 0, 0): the dot is exactly 0.5.
+    let mut b = f32::from_bits(0x3fdd_b3d7); // √3 as an f32
+    let mut found = false;
+    for _ in 0..64 {
+        let len = (1.0 + f64::from(b) * f64::from(b)).sqrt();
+        if (1.0 / len) as f32 == 0.5 {
+            found = true;
+            break;
+        }
+        b = f32::from_bits(b.to_bits() + 1);
+    }
+    assert!(found, "a derivative (1, b, 0) of unit x 0.5");
+    let cps = [
+        [0.0, 0.0, 0.0],
+        [1.0, 2.0 * b, 0.0],
+        [2.0, 2.0 * b, 0.0],
+        [5.0, 1.0, 0.0],
+    ];
+    run_preset(&mut emu, 4, 1.0, &knots, &cps, 0.0, preset);
+
     let mut s = 0x4545_8222u32;
     for _ in 0..6000 {
         let count = 8 + lcg(&mut s) % 16;

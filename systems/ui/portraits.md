@@ -102,7 +102,7 @@ client does not hold. An entry is never redrawn or removed until `ClearPortraitC
 `CGGameUI::ShutdownGame` when the client leaves the world (`ClientDestroyGame`); the exit
 destructor empties it at process exit.
 
-Addresses: `0xc0ce88`, `0xc0cea4`, `0xc0ceac`, `0x524f60`, `0x524fce`, `0x525077`, `0x525663`, `0x525719`, `0x52572c`, `0x525737`, `0x525739`, `0x5250b9`, `0x525ce9`, `0x526d70`, `0x525cb0`, `0x51a02b`, `0x4c2bf0`, `0x524b70`, `0x524bfa`, `0x491187`, `0x402039`, `0x401ee0`, `0x5246d0`, `0x5247a0`, `0x524791`, `0x808dc4`, `0x526280`
+Addresses: `0xc0ce88`, `0xc0cea4`, `0xc0ceac`, `0x524f60`, `0x524fce`, `0x525077`, `0x525663`, `0x525719`, `0x52572c`, `0x525737`, `0x525739`, `0x5250b9`, `0x525ce9`, `0x526d70`, `0x525cb0`, `0x51a02b`, `0x4c2bf0`, `0x524b70`, `0x524bfa`, `0x491187`, `0x402039`, `0x401ee0`, `0x5246d0`, `0x5247a0`, `0x524791`, `0x808dc4`, `0x526280`, `0x5262f0`
 Confidence: verified
 Proof: one
 Test: none
@@ -116,6 +116,6 @@ section stores either address. `0x524fce` and `0x525663` test the type mask's bi
 non-player `0x525719` reads `+0x1f4` of the fields, and the node takes it as its hash at `+0`
 (`0x525737`), at `+0x14` the byte `[ebp-0x2d]`, which no instruction of the bake writes
 (`0x525739`), and the texture at `+0x18`. The lookups `0x5250b9` and `0x525ce9` compare the hash
-alone, and no slot of the table's vtable `0x808dc4` reads `+0x14`: its remove slot `0x526280`
-closes the texture and frees the node. `0x524bfa` passes the table to the clear loop; `0x524b70`'s one
+alone, and no slot of the table's vtable `0x808dc4` reads `+0x14`: its free slot `0x526280`
+closes the texture and frees the node, and its new slot `0x5262f0` allocates the node zeroed. `0x524bfa` passes the table to the clear loop; `0x524b70`'s one
 caller is `0x491187`, and `0x491180`'s is `0x402039`.
