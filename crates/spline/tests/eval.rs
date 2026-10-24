@@ -335,6 +335,15 @@ fn seg_locate_diff() {
     run(&mut emu, 10.0, &knots, 0.0, 4); // t=0
     run(&mut emu, 10.0, &knots, 1.0, 4); // t=1
     run(&mut emu, 10.0, &knots, 0.2, 4); // s = 2.0 exactly = first knot boundary
+                                         // The sum is compared before it is stored: 1 + 2^-24 holds at 53 bits and rounds to 1.0 as a
+                                         // float, so s = 1 stops in segment 1 and not past it.
+    run(
+        &mut emu,
+        1.0,
+        &[1.0, f32::from_bits(0x3380_0000), 1.0],
+        1.0,
+        3,
+    );
     for &t in &[-0.5f32, 0.0, 0.1, 0.25, 0.5, 0.75, 0.99, 1.0, 1.5] {
         for &n in &[1u32, 2, 4, 8] {
             run(&mut emu, 10.0, &knots, t, n);
