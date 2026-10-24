@@ -293,6 +293,8 @@ version = "0.1.0"
 dependencies = [
  "benilla-re-cmath",
  "benilla-re-difftest",
+ "benilla-re-spline",
+ "benilla-re-storm",
 ]
 
 [[package]]
