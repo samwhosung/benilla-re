@@ -229,8 +229,8 @@ opcode	name	role	site	function	entries	basis
 0x0f7	MSG_MOVE_HOVER	handler	0x603730	0x603bb0	collision/selfmove#self-addressed-move|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0f9	CMSG_OPENING_CINEMATIC	send	0x48c8f6	0x48c8c0	ui/groupverbs#small-sends	opcode
 0x0fa	SMSG_TRIGGER_CINEMATIC	handler	0x5e35c1	0x5e38c0	objectlayer/playermessages#notices	opcode
-0x0fb	CMSG_NEXT_CINEMATIC_CAMERA	send	0x48ef24	0x48edf0	terrain/mapupdate#forced-reload|ui/distancegates#thresholds|ui/screenfade#ending-a-fade|uicamera/cinematic#playing-a-shot	function
-0x0fc	CMSG_COMPLETE_CINEMATIC	send	0x48f179	0x48f080	terrain/mapupdate#forced-reload|ui/chatchannels#the-zone-walk|ui/distancegates#thresholds|ui/loadinginput#the-cursor-during-a-transfer|ui/screenfade#ending-a-fade|uicamera/cinematic#stepping-and-ending	function
+0x0fb	CMSG_NEXT_CINEMATIC_CAMERA	send	0x48ef24	0x48edf0	core/framepass#a-pass-inside-a-pass|terrain/mapupdate#forced-reload|ui/distancegates#thresholds|ui/screenfade#ending-a-fade|uicamera/cinematic#playing-a-shot	function
+0x0fc	CMSG_COMPLETE_CINEMATIC	send	0x48f179	0x48f080	core/framepass#a-pass-inside-a-pass|terrain/mapupdate#forced-reload|ui/chatchannels#the-zone-walk|ui/distancegates#thresholds|ui/loadinginput#the-cursor-during-a-transfer|ui/screenfade#ending-a-fade|uicamera/cinematic#stepping-and-ending	function
 0x0fd	SMSG_TUTORIAL_FLAGS	handler	0x4b536f	0x4b5700	ui/tutorials#the-servers-flags	opcode
 0x0fe	CMSG_TUTORIAL_FLAG	send	0x4b558f	0x4b54c0	ui/tutorials#acknowledging-a-tutorial	opcode
 0x0ff	CMSG_TUTORIAL_CLEAR	send	0x4b5630	0x4b55c0	ui/tutorials#the-lua-functions	opcode
