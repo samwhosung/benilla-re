@@ -110,6 +110,42 @@ client gets 0x11 every tick. The current context is set by `0x41db50(+0x208)` an
 0 here: the constructor fills it only when bit 0 of its third argument is set (`0x4220b6`), and
 the application init `0x402350` passes 0 (`0x402812`), so both return at once.
 
+## What one tick runs
+
+For the client's context a tick runs these steps in order, each to its end before the next, none
+with a cap on how much it handles:
+
+| step | call | what runs |
+|---|---|---|
+| timers | `0x428510` at `0x420d0c` | each due timer's callback (`core/events#timers`) |
+| window input | `0x423920` at `0x420d23` | each record the pump yields, through its category's handlers, until it yields none |
+| packets | category 6 at `0x420d55` | `0x403620`: each queued packet of each client, oldest first, through `0x537aa0` in state 6 |
+| frame time | category 5 at `0x420d63` | twelve handlers, among them unit movement, `CGGameUI::Update`, the glue manager and the elapsed counter |
+| frame pass | category 0x11 at `0x420d6a` | `0x442350`: the top's `OnUpdate` walk, its draw walk (the world, then the interface), the layers above it, the present |
+
+So every input record and packet waiting at the tick reaches its handlers before the interface's
+next `OnUpdate`, any number of each; a packet that arrives during the poll waits for the next tick.
+`OnUpdate` runs once a tick with the tick's frame time, twice when a fade's end starts or ends a
+cinematic shot, and not at all while a layer with flag bit 0 clear covers the top, as the loading
+screen does (`core/framepass`).
+
+Addresses: `0x423920`, `0x42c9f0`, `0x423983`, `0x4239a0`, `0x403620`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x5384e0`, `0x538586`, `0x538790`, `0x53879f`, `0x537c50`, `0x537aa0`, `0x6ca190`, `0x442330`, `0x442350`, `0x764330`, `0x764340`, `0x765650`, `0x76570a`, `0x765710`, `0x76b2c0`, `0x7657d0`, `0x482d70`
+Confidence: verified
+Proof: one
+Test: none
+
+The order is `One tick`'s. `0x423920` calls the pump `0x42c9f0` until it returns 0 (`0x423983`),
+handing each record to `0x4239a0`, whose handlers call `0x4245b0` themselves; a quit only sets the
+out-flag. `0x403620` calls `0x5b3db0` (`0x538040` on each client of its list) and then Warden's
+tick `0x6ca190`. `0x538040` jumps to `0x5384d0`, which holds the queue's lock from
+`0x5384e0` while it walks the nodes from the head along `+4` (`0x538586`) and frees them;
+`0x538790`, the network thread's append, takes the same lock (`0x53879f`). The twelve category-5
+handlers each return 1, so none stops the walk before `0x442330`. In the pass the top's callback
+`0x764330` hands its second stack argument, the elapsed time, to `0x765650` (`0x764340`), which
+pushes it for each shown frame's update slot 0x38 (`0x76570a`, `0x765710`); the base slot `0x76b2c0`
+runs `OnUpdate` with it as `arg1`, widened to a double. `0x7657d0` then draws from stratum 0, where
+the world frame's batch callback `0x482d70` runs (`ui/worldframe#drawing-the-world`).
+
 ## Next due time
 
 After a tick the next due time is the tick's start time `s` plus a wait `w`. With flag 4 still
