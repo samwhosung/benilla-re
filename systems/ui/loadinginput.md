@@ -1,7 +1,7 @@
 # ui: input across a world transfer
 
 What the player's input does while the loading screen is up and after it drops: which of the interface's handlers
-the screen's veto starves, what the world frame still does at the frozen cursor, why nothing is pumped during
+the screen's veto starves, when the world frame updates under it, why nothing is pumped during
 the blocking stretch, what a movement key held through a map change does, and which cursor shows. The screen's
 veto is derived below (`0x4069e0` registers it, `0x406a50` is it); the transfer packets are in `collision/teleport`.
 
@@ -26,13 +26,15 @@ The passing categories are key up, button up, the wheel, the relative move, the 
 
 ## The world frame under the screen
 
-The world frame's update still runs on every frame the screen is up, because the layer walk calls the top's update
-and that walks the frames. Its one gate is that the world frame is the top's hovered frame; it then picks at the
-top's stored cursor point, which the veto froze, and sets the cursor from the result. Between the object manager's
-teardown and the new local player's arrival the pick finds no object candidates and returns 0 on every frame, and
-the update resets the cursor to its default. Before the teardown, and after the player exists, the pick is live at the frozen point.
+While the screen's layer has flag bit 0 clear, as each raise leaves it, the frame pass does not call the top,
+so no frame's update runs, the world frame's included (`core/framepass#layer-occlusion`). An arrival aboard a
+transport sets the bit, and then the update runs on every frame under the screen. Its one gate is that the world
+frame is the top's hovered frame; it then picks at the top's stored cursor point, which the veto froze, and sets
+the cursor from the result. Between the object manager's teardown and the new local player's arrival the pick
+finds no object candidates and the update resets the cursor to its default; otherwise the pick is live at the
+frozen point.
 
-Addresses: `0x481790`, `0x4817a8`, `0x4817ae`, `0x4817b1`, `0x4817c5`, `0x4817cb`, `0x481840`, `0x48184a`, `0x481855`, `0x481863`, `0x481875`, `0x481050`, `0x481063`, `0x481079`, `0x4810e6`, `0x481190`, `0x4812c1`, `0x4812c8`, `0x523d30`, `0x467700`, `0x401bf7`
+Addresses: `0x481790`, `0x4817a8`, `0x4817ae`, `0x4817b1`, `0x4817c5`, `0x4817cb`, `0x481840`, `0x48184a`, `0x481855`, `0x481863`, `0x481875`, `0x481050`, `0x481063`, `0x481079`, `0x4810e6`, `0x481190`, `0x4812c1`, `0x4812c8`, `0x523d30`, `0x467700`, `0x401bf7`, `0x406800`, `0x406808`, `0x5debb6`, `0x442425`, `0x4424b9`
 Confidence: verified
 Proof: one
 Test: none
@@ -42,6 +44,9 @@ Test: none
 target pending (`0x481855` to `0x481863`) and the base cursor `0x523d30` without one (`0x481875`). Nothing in it reads the screen's state. `0x481190` returns before tracing when the flag word is 0
 (`0x4812c1`, `0x4812c8`); `0x481050` ORs `0x5c` in only when the local player's object resolves (`0x481063` to `0x4810e6`),
 and the object manager that holds it is destroyed by `0x467700` at `0x401bf7` in the transfer's deferred body.
+The screen's layer is the unit square with flags 6 at priority 9.0, above the top's 1.0 (`core/framepass#screen-layers`);
+`0x406808` clears bit 0 on each raise in `0x406800`, and `0x5debb6` is the one call that sets it. The frame pass takes a
+covering layer with bit 0 clear out of its region (`0x442425`) and skips the layers left with nothing visible (`0x4424b9`).
 
 ## Nothing is pumped during the load
 
