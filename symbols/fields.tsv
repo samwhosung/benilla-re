@@ -1277,6 +1277,14 @@ SWorldTextIcon	0x0008	4	float	m_z	playername	Holds the anchor z	verified	one	pla
 SWorldTextIcon	0x000c	4	float	m_size	playername	Holds twice the height times the string's half height	verified	one	playername/worldtext#rank-icon-records
 SWorldTextIcon	0x0010	4	uint32_t	m_color	playername	Holds the colour dword; byte 3 is the alpha	verified	one	playername/worldtext#rank-icon-records
 SWorldTextIcon	0x0014	4	void *	m_texture	playername	Holds the rank badge texture	verified	one	playername/worldtext#rank-icon-records
+ScreenLayer	0x0000	4	void *	__vfptr	unassigned	Holds the vtable 0x802574	verified	one	core/framepass#screen-layers
+ScreenLayer	0x0008	16	float[4]	m_rect	unassigned	Holds the layer's rectangle as left, bottom, right and top	verified	one	core/framepass#screen-layers
+ScreenLayer	0x0018	16	float[4]	m_visible	unassigned	Holds the rectangle the frame pass leaves visible, which decides whether it calls the layer	verified	one	core/framepass#layer-occlusion
+ScreenLayer	0x0028	4	float	m_priority	unassigned	Holds the priority that orders the list, lowest drawn first	verified	one	core/framepass#screen-layers
+ScreenLayer	0x002c	4	uint32_t	m_flags	unassigned	Holds the flags: bit 0 lets the layers below show, bit 1 an ortho projection, bit 2 the full viewport	verified	one	core/framepass#screen-layers
+ScreenLayer	0x0030	4	void *	m_param	unassigned	Holds the parameter the callback gets in ecx	verified	one	core/framepass#pass-order
+ScreenLayer	0x0034	4	void *	m_callback	unassigned	Holds the callback the frame pass calls with the rectangles and the elapsed time	verified	one	core/framepass#pass-order
+ScreenLayer	0x0038	8	void *[2]	m_link	unassigned	Holds the layer's link in the list 0x885610	verified	one	core/framepass#screen-layers
 SelectedCharacterRecord	0x0008	56	char[56]	m_name	ui	Holds the character's name, empty before the first copy	verified	one	ui/unitplayer#the-selected-character-record
 SelectedCharacterRecord	0x0100	1	uint8_t	m_race	ui	Holds the ChrRaces id	verified	one	ui/unitplayer#the-selected-character-record
 SelectedCharacterRecord	0x0101	1	uint8_t	m_class	ui	Holds the ChrClasses id	verified	one	ui/unitplayer#the-selected-character-record

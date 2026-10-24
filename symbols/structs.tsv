@@ -116,6 +116,7 @@ SOUNDDEFINITION		152		sound	Holds a SoundEntries row's sound definition: ten fil
 SPELLHISTORY		48		spell	Holds one spell-history record: link, spell, item, three timers and a held flag	verified	one	spell/cooldowns#history-record-layout
 SWING		1560		playername	Holds a weapon trail: a ring of 128 points, colour, lifetime and times	verified	one	playername/swing#trail-objects
 SWorldTextIcon		24		playername	Holds a queued rank icon: pixel position, size, colour and texture	verified	one	playername/worldtext#rank-icon-records
+ScreenLayer		64	0x802574	unassigned	Holds a screen layer: its rectangle, visible rectangle, priority, flags, parameter, callback and link	verified	one	core/framepass#screen-layers
 SelectedCharacterRecord		272		ui	Holds the character list entry copied when the player enters the world: name, race, class, sex and level	verified	one	ui/unitplayer#the-selected-character-record
 Shard		32		spell	Holds one shard: link, position, model, start time and started flag	verified	one	spell/visuals#shard-model-start-and-end
 Sound		144		sound	Holds a playing stream: six list links, channel, stream, flags, fade, position, GUID, volume, bus and pauses	verified	one	sound/engine#the-sound-object
