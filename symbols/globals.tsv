@@ -433,7 +433,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
 0x8022cc	const float	s_float447a0000		unassigned	Holds the float 1000 (0x447a0000)	inferred	none	
-0x802564	float[4]	s_unitScreenRect		unassigned	Holds the rectangle (0, 0, 1, 1) a screen layer takes for a null rectangle	verified	one	core/framepass#screen-layers
+0x802564	float[4]	s_unitScreenRect		unassigned	Holds the rectangle (0, 0, 1, 1) a screen layer takes for a null rectangle	verified	one	core/framepass#layer-order
 0x802574	void *[4]	ScreenLayer::vftable		unassigned	Holds the screen layer's vtable, whose slot 0 is its destructor 0x442950	verified	one	core/framepass#screen-layers
 0x80258c	float[2]	s_stockFontHeights		unassigned	Holds the heights of the two stock text fonts in screen units, both 0.01953125	verified	one	ui/fonttext#stock-text-block-fonts
 0x80264c	uint32_t[8]	s_blockEdgeByType		gx	Holds the block edge in texels of each pixel type: 1, or 4 for the DXT types	inferred	none	gx/textures#texture-readiness-and-info
@@ -2596,9 +2596,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
 0x885400	OsTcp *	s_osTcp		os	Holds the OsTcp object, set by the OsTcp start-up and null before it and after the shutdown	verified	one	net/dial#logon-dial-start
 0x885604	uint32_t	s_presentSuppressed		unassigned	Holds the flag that skips the frame pass's present block while a movie plays	verified	one	gx/capture#capture-request-and-frame-order
-0x885608	float	s_framePassElapsed		unassigned	Holds the frame time summed since the last frame pass, which the pass hands its layers and clears	verified	one	core/framepass#elapsed-time
+0x885608	float	s_framePassElapsed		unassigned	Holds the frame time summed since the last frame pass, which the pass hands its layers and clears	verified	two	core/framepass#elapsed-time
 0x88560c	void *	s_screenshotCallback		unassigned	Holds the completion callback of the pending screenshot request, or 0	verified	one	gx/capture#capture-request-and-frame-order
-0x885610	uint32_t[3]	s_screenLayers		unassigned	Holds the screen-layer list: the link offset 0x38, then the end link, lowest priority first	verified	one	core/framepass#screen-layers
+0x885610	uint32_t[3]	s_screenLayers		unassigned	Holds the screen-layer list: the link offset 0x38, then the end link, lowest priority first	verified	one	core/framepass#layer-order
 0x88562c	void *[2]	s_stockFonts		unassigned	Holds the handles of the two stock text fonts	verified	one	ui/fonttext#stock-text-block-fonts
 0x885658	uint32_t[4]	s_asyncWaitCounters		client	Holds the array of pending-read counters the async wait adds up: its capacity, count, data and growth step	verified	one	glue/enterworld#waiting-for-every-read
 0x885668	void *	s_asyncWaitProgressCallback		client	Points to the progress callback of the async wait, 0 when none is set	verified	one	glue/enterworld#waiting-for-every-read

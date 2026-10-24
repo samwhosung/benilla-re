@@ -112,39 +112,58 @@ the application init `0x402350` passes 0 (`0x402812`), so both return at once.
 
 ## What one tick runs
 
-For the client's context a tick runs these steps in order, each to its end before the next, none
-with a cap on how much it handles:
+For the client's context a tick runs these steps in order, each to its end before the next:
 
 | step | call | what runs |
 |---|---|---|
 | timers | `0x428510` at `0x420d0c` | each due timer's callback (`core/events#timers`) |
-| window input | `0x423920` at `0x420d23` | each record the pump yields, through its category's handlers, until it yields none |
-| packets | category 6 at `0x420d55` | `0x403620`: each queued packet of each client, oldest first, through `0x537aa0` in state 6 |
+| window input | `0x423920` at `0x420d23` | each record the pump yields, through its category's handlers |
+| packets | category 6 at `0x420d55` | `0x403620`, the packets of each client; then `0x443e70`, finished asynchronous reads |
 | frame time | category 5 at `0x420d63` | twelve handlers, among them unit movement, `CGGameUI::Update`, the glue manager and the elapsed counter |
 | frame pass | category 0x11 at `0x420d6a` | `0x442350`: the top's `OnUpdate` walk, its draw walk (the world, then the interface), the layers above it, the present |
 
-So every input record and packet waiting at the tick reaches its handlers before the interface's
-next `OnUpdate`, any number of each; a packet that arrives during the poll waits for the next tick.
-`OnUpdate` runs once a tick with the tick's frame time, twice when a fade's end starts or ends a
-cinematic shot, and not at all while a layer with flag bit 0 clear covers the top, as the loading
-screen does (`core/framepass`).
+The interface's `OnUpdate` runs inside the frame pass, after the window input and the packets of
+its tick: the top's layer callback runs each shown frame's update slot with the elapsed time, and
+the base slot runs the frame's `OnUpdate` script with it as `arg1` (`core/framepass`).
 
-Addresses: `0x423920`, `0x42c9f0`, `0x423983`, `0x4239a0`, `0x403620`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x5384e0`, `0x538586`, `0x538790`, `0x53879f`, `0x537c50`, `0x537aa0`, `0x6ca190`, `0x442330`, `0x442350`, `0x764330`, `0x764340`, `0x765650`, `0x76570a`, `0x765710`, `0x76b2c0`, `0x7657d0`, `0x482d70`
+Addresses: `0x403620`, `0x443e70`, `0x40285d`, `0x443300`, `0x443314`, `0x402b8e`, `0x442330`, `0x442350`, `0x764330`, `0x764340`, `0x765650`, `0x76570a`, `0x765710`, `0x76b2c0`, `0x7657d0`, `0x482d70`
+Confidence: verified
+Proof: two
+Test: none
+
+The order of the calls is `One tick`'s. Both category-6 handlers have priority 0.0, and among equal
+priorities the newer runs first (`core/events#handler-order`): `0x443300` registers `0x443e70`
+(`0x443314`) from the start handler at `0x40285d`, and `0x403620` is registered later in the same
+handler, by `0x402ad0` (`0x402b8e`). The twelve category-5 handlers each return 1, so none stops the
+walk before `0x442330`. In the pass the top's callback `0x764330` hands its second stack argument,
+the elapsed time, to `0x765650` (`0x764340`), which pushes it for each shown frame's update slot
+0x38 (`0x76570a`, `0x765710`); the base slot `0x76b2c0` runs `OnUpdate` with it as `arg1`, widened
+to a double. `0x7657d0` then draws from stratum 0, where the world frame's batch callback
+`0x482d70` runs (`ui/worldframe#drawing-the-world`).
+
+## How much one tick handles
+
+The window input and the packet poll have no cap: every input record and packet waiting at the
+tick reaches its handlers before the interface's next `OnUpdate`, and a packet that arrives during
+the poll waits for the next tick. The asynchronous-read drain after it stops once more than 20 ms
+have passed since it started, after at least one read. `OnUpdate` runs once a tick with the tick's
+frame time, twice when a fade's end starts or ends a cinematic shot, and not at all while the
+loading screen, or another layer with flag bit 0 clear, covers the unit square (`core/framepass`).
+
+Addresses: `0x423920`, `0x42c9f0`, `0x423983`, `0x4239a0`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x5384e0`, `0x538586`, `0x538790`, `0x53879f`, `0x537c50`, `0x537aa0`, `0x6ca190`, `0x443e70`, `0x443e81`, `0x443ef9`, `0x443f02`, `0x443f0d`
 Confidence: verified
 Proof: one
 Test: none
 
-The order is `One tick`'s. `0x423920` calls the pump `0x42c9f0` until it returns 0 (`0x423983`),
-handing each record to `0x4239a0`, whose handlers call `0x4245b0` themselves; a quit only sets the
-out-flag. `0x403620` calls `0x5b3db0` (`0x538040` on each client of its list) and then Warden's
-tick `0x6ca190`. `0x538040` jumps to `0x5384d0`, which holds the queue's lock from
-`0x5384e0` while it walks the nodes from the head along `+4` (`0x538586`) and frees them;
-`0x538790`, the network thread's append, takes the same lock (`0x53879f`). The twelve category-5
-handlers each return 1, so none stops the walk before `0x442330`. In the pass the top's callback
-`0x764330` hands its second stack argument, the elapsed time, to `0x765650` (`0x764340`), which
-pushes it for each shown frame's update slot 0x38 (`0x76570a`, `0x765710`); the base slot `0x76b2c0`
-runs `OnUpdate` with it as `arg1`, widened to a double. `0x7657d0` then draws from stratum 0, where
-the world frame's batch callback `0x482d70` runs (`ui/worldframe#drawing-the-world`).
+`0x423920` calls the pump `0x42c9f0` until it returns 0 (`0x423983`), handing each record to
+`0x4239a0`, whose handlers call `0x4245b0` themselves; a quit only sets the out-flag. `0x403620`
+calls `0x5b3db0` (`0x538040` on each client of its list) and then Warden's tick `0x6ca190`.
+`0x538040` jumps to `0x5384d0`, which holds the queue's lock from `0x5384e0` while it walks the
+nodes from the head along `+4` (`0x538586`) and frees them; slot 12, `0x537c50`, sends each packet
+to `0x537aa0` in state 6. `0x538790`, the network thread's append, takes the same lock
+(`0x53879f`). `0x443e70` reads the clock at `0x443e81`, runs one finished read's callback per turn
+(`0x443ef9`), and loops while the clock less the start is at most 20 (`0x443f02` to `0x443f0d`,
+`cmp eax,0x14; jbe`).
 
 ## Next due time
 

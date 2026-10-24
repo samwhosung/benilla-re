@@ -3185,7 +3185,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x442150	5			unassigned			Runs its object file code not read here	inferred	none		
 0x442160	11			unassigned			Runs its object file code not read here	inferred	none		
 0x442170	25			unassigned	orchestration		Registers the frame pass and its elapsed counter through 0x4427b0, then makes the stock fonts	verified	one	core/framepass#registration	
-0x442190	5			unassigned	orchestration		Jumps to 0x4427d0, which runs the frame pass at once	verified	one	core/framepass#a-pass-inside-a-pass	
+0x442190	5			unassigned	orchestration		Jumps to 0x4427d0, which runs the frame pass at once	verified	two	core/framepass#a-pass-inside-a-pass	
 0x4421a0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4421b0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x4421c0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -3193,15 +3193,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4421f0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x442200	11			unassigned			Runs its object file code not read here	inferred	none		
 0x442210	10			unassigned			Runs its object file code that calls 0x442220; not read here	inferred	none		
-0x442220	34			unassigned	orchestration		Sets the screen-layer list 0x885610 empty with link offset 0x38	verified	one	core/framepass#screen-layers	
+0x442220	34			unassigned	orchestration		Sets the screen-layer list 0x885610 empty with link offset 0x38	verified	one	core/framepass#layer-order	
 0x442250	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x442260	165			unassigned			Runs its object file code not read here	inferred	none		
-0x442310	30	UnregisterFramePass		unassigned	orchestration		Unregisters 0x442330 from event category 5 and 0x442350 from category 0x11	verified	one	core/framepass#registration	
-0x442330	20	AccumulateFrameTime		unassigned	primitive	uint32_t __fastcall (float *payload, void *argument)	Adds the frame time to the frame pass elapsed time 0x885608, rounded to a float; returns 1	verified	one	core/framepass#elapsed-time	core::frame_time_accumulate_matches_binary
+0x442310	30	UnregisterFramePass		unassigned	orchestration		Unregisters 0x442330 from event category 5 and 0x442350 from category 0x11	verified	two	core/framepass#registration	
+0x442330	20	AccumulateFrameTime		unassigned	primitive	uint32_t __fastcall (float *payload, void *argument)	Adds the frame time to the frame pass elapsed time 0x885608, rounded to a float; returns 1	verified	two	core/framepass#elapsed-time	core::frame_time_accumulate_matches_binary
 0x442350	921	RunFramePass		unassigned	orchestration	uint32_t __fastcall (void *payload, void *argument)	Clips the screen layers, calls each visible one with the elapsed time, presents and clears the time	verified	one	core/framepass#pass-order	core::frame_pass_matches_binary
 0x4426f0	190	WriteScreenshot		unassigned			Writes the captured frame to Screenshots\WoWScrnShot_<date>_<time>.tga	verified	one	gx/capture#screenshot-file	
-0x4427b0	30	RegisterFramePass		unassigned	orchestration		Registers 0x442330 on event category 5 and 0x442350 on category 0x11, argument 0 and priority 0.0	verified	one	core/framepass#registration	
-0x4427d0	9	RunFramePassNow		unassigned	orchestration		Runs the frame pass 0x442350 at once with null arguments	verified	one	core/framepass#a-pass-inside-a-pass	
+0x4427b0	30	RegisterFramePass		unassigned	orchestration		Registers 0x442330 on event category 5 and 0x442350 on category 0x11, argument 0 and priority 0.0	verified	two	core/framepass#registration	
+0x4427d0	9	RunFramePassNow		unassigned	orchestration		Runs the frame pass 0x442350 at once with null arguments	verified	two	core/framepass#a-pass-inside-a-pass	
 0x4427e0	14			unassigned	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
 0x4427f0	13			unassigned	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
 0x442800	321	ScrnLayerCreate	idb	unassigned	orchestration	void __fastcall (float *rect, uint32_t flags, float priority, void *param, void *callback, void *handle)	Makes a 0x40-byte screen layer, links it into 0x885610 by priority and writes its handle	verified	one	core/framepass#screen-layers	core::frame_pass_matches_binary
@@ -3294,7 +3294,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4432c0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4432e0	5			client			Runs its object file code not read here	inferred	none		
 0x4432f0	11			client			Runs its object file code not read here	inferred	none		
-0x443300	93			client			Runs its object file code that calls EventRegisterEx, PropGetSelectedContext, 0x659ab0 and 1 more; not read here	inferred	none		
+0x443300	93			client	orchestration		Registers the asynchronous-read drain 0x443e70 on event category 6 at priority 0.0 and clears its state	inferred	none	core/loop#what-one-tick-runs	
 0x443360	435			client			Runs its object file code that calls SetThreadPropContext, SEventWait, SCritSect::Enter and 5 more; not read here	inferred	none		
 0x443520	132			client			Runs its object file code that calls SEvent::Set, SEventWait, 0x4435b0 and 3 more; not read here	inferred	none		
 0x4435b0	99			client			Runs its object file code not read here	inferred	none		
@@ -3307,7 +3307,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x443bd0	342	AsyncFileReadWait		client		void __fastcall (void *read)	Waits for one asynchronous read, moving it to the head of the queue and draining finished reads	verified	one	glue/enterworld#waiting-for-one-read	
 0x443d30	225	AsyncFileReadWaitAll		client		void __cdecl (void)	Services the asynchronous reader until nothing is pending, reporting progress to the wait callback	verified	one	glue/enterworld#waiting-for-every-read	
 0x443e20	78	IsAsyncLoadPending		client			Returns 1 while either of two load lists is non-empty or a load count is non-zero, under one lock	verified	one	glue/enterworld#world-entry-waits	
-0x443e70	212			client			Runs its object file code that calls SEvent::Set, OsGetAsyncTimeMs, SCritSect::Enter and 1 more; not read here	inferred	none		
+0x443e70	212			client			Runs finished asynchronous reads' callbacks until more than 20 ms have passed, then its poll list; returns 1	verified	one	core/loop#how-much-one-tick-handles	
 0x443f50	60			client			Runs its object file code not read here	inferred	none		
 0x443f90	41			client			Runs its object file code not read here	inferred	none		
 0x443fc0	5			client			Runs its object file code not read here	inferred	none		
@@ -23918,17 +23918,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65bd00	11			unassigned			Runs its object file code not read here	inferred	none		
 0x65bd10	77			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x65eb90, 0x65bd60; not read here	inferred	none		
 0x65bd60	35			unassigned			Runs its object file code not read here	inferred	none		
-0x65bd90	334			unassigned			Combines a rectangle into a region by mode: 2 adds it and 4 takes it out; an empty rectangle adds nothing	inferred	none	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
+0x65bd90	334			unassigned	primitive		Combines a rectangle into a region by mode: 2 adds it and 4 takes it out; an empty rectangle adds nothing	verified	one	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
 0x65bee0	1373			unassigned			Runs its object file code that calls 0x65bee0, 0x65e7d0, SMemReAlloc and 2 more; not read here	inferred	none		
 0x65c440	217			unassigned			Runs its object file code that calls 0x65e7d0; not read here	inferred	none		
 0x65c520	137			unassigned			Runs its object file code not read here	inferred	none		
 0x65c5c0	76			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x65bd90; not read here	inferred	none		
-0x65c610	250			unassigned			Creates an empty region and writes its handle through its first argument	inferred	none	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
-0x65c710	220			unassigned			Deletes a region by its handle	inferred	none	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
+0x65c610	250			unassigned	host		Creates an empty region and writes its handle through its first argument	inferred	none	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
+0x65c710	220			unassigned	host		Deletes a region by its handle	inferred	none	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
 0x65c7f0	187			unassigned			Runs its object file code that calls 0x65ec20, 0x65e790, 0x65e450 and 3 more; not read here	inferred	none		
 0x65c8b0	309			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x65eb90, 0x65ea20 and 3 more; not read here	inferred	none		
 0x65c9f0	137			unassigned	unreached		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x65ca80	291			unassigned			Writes the bounds of a region's pieces, all four 0 when they enclose nothing	verified	one	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
+0x65ca80	291			unassigned	primitive		Writes the bounds of a region's pieces, all four 0 when they enclose nothing	verified	one	core/framepass#layer-occlusion	core::region_bounding_rect_matches_binary, core::frame_pass_matches_binary
 0x65cbb0	91			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x65ca80, __ftol; not read here	inferred	none		
 0x65cc10	247			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x65eb90, 0x65ce90 and 1 more; not read here	inferred	none		
 0x65cd10	380			unassigned	unreached		Runs its object file code that calls 0x65e920, 0x65e960, 0x65e990 and 1 more; not read here	inferred	none		
