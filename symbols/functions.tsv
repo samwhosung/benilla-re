@@ -12984,7 +12984,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x525b10	115	PortraitLighting		ui	orchestration		Adds a 0.45 grey ambient and a white directional light to the portrait model	verified	one	ui/portraits#the-bake	
 0x525b90	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x525ba0	261	BindPlayerPortraitFallback		ui	orchestration		Binds a player's cached bake, else the stand-in texture for its sex and race	verified	one	ui/portraits#stand-in-portraits	
-0x525cb0	117	BindPetPortraitFallback		ui	orchestration		Binds a display id's cached bake, else the pet stand-in texture	verified	one	ui/portraits#stand-in-portraits	
+0x525cb0	117	BindPetPortraitFallback		ui	orchestration	void __fastcall (void *widget, uint32_t displayId)	Binds a display id's cached bake, else the pet stand-in texture	verified	one	ui/portraits#stand-in-portraits	
 0x525d30	589	SetPortraitTexture		ui	primitive	void __fastcall (CSimpleTexture *texture, const char *name)	Sets a texture to the cached 64 by 64 portrait of an image with its alpha replaced by the circular mask	verified	one	ui/portraittextures#portrait-sink	
 0x525f80	50			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x525fc0	5	InitDouble525fd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x525fd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -12996,7 +12996,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5260c0	23	FreeField5260c0		ui	orchestration		Frees the block that the dword at this+0x8 points at, tagged NTempest::CImVector, when it is not null	verified	one	ui/containers#block-frees	
 0x5260e0	211			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x5261c0	189	EmptyTable5261c0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
-0x526280	101			ui	orchestration		Runs its object file code that calls HandleClose, 0x5260c0, 0x527320 and 2 more; not read here	inferred	none		
+0x526280	101	FreePortraitDisplayNode		ui	orchestration		Closes a display-id portrait node's texture, frees its buffer at +0x1c, unlinks the node and frees it	verified	one	ui/portraits#display-id-cache-lifetime	
 0x5262f0	194			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x5263c0	189	EmptyTable5263c0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x526480	88			ui	orchestration		Runs its object file code that calls HandleClose, 0x5260c0, SMemFree and 1 more; not read here	inferred	none		

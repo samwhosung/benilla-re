@@ -90,3 +90,32 @@ Proof: one
 Test: none
 
 Each table is emptied by calling the table's remove slot on its first entry until the slot is empty, for every bucket. The third table's use is not read here.
+
+## Display-id cache lifetime
+
+The display-id table (`0xc0ce88`, buckets `0xc0cea4`, mask `0xc0ceac`) gains entries from the bake
+`0x524f60` alone: for a held unit without the player bit 0x10 in its type mask, once the lookup
+missed and the model is drawn. The bake runs for `SetPortraitTexture` on a held unit and for
+`SetLootPortrait`. The key is `UNIT_FIELD_DISPLAYID`, read again at the insert, so any non-player
+unit of that display id fills it, a pet or a creature, and `0x525cb0` then finds it for a pet the
+client does not hold. An entry is never redrawn or removed until `ClearPortraitCaches` runs from
+`CGGameUI::ShutdownGame` when the client leaves the world (`ClientDestroyGame`); the exit
+destructor empties it at process exit.
+
+Addresses: `0xc0ce88`, `0xc0cea4`, `0xc0ceac`, `0x524f60`, `0x524fce`, `0x525077`, `0x525663`, `0x525719`, `0x52572c`, `0x525737`, `0x525739`, `0x5250b9`, `0x525ce9`, `0x526d70`, `0x525cb0`, `0x51a02b`, `0x4c2bf0`, `0x524b70`, `0x524bfa`, `0x491187`, `0x402039`, `0x401ee0`, `0x5246d0`, `0x5247a0`, `0x524791`, `0x808dc4`, `0x526280`
+Confidence: verified
+Proof: one
+Test: none
+
+The little-endian dwords `0xc0ce88` to `0xc0ceac` occur in the image only in `.text`, in the
+initializer `0x5246d0` and the exit `0x5247a0`, which `0x524791` registers, in `0x524b70`, in the
+bake's lookup (`0x525079` to `0x5250d7`) and insert (`0x525725`), and in `0x525cb0`; the same scan
+finds the GUID table's insert at `0x5256f4`, the control. A scan of every `e8` and `e9` in `.text`
+finds one caller of `0x526d70`, `0x52572c`, and two of `0x524f60`, `0x51a02b` and `0x4c2bf0`; no
+section stores either address. `0x524fce` and `0x525663` test the type mask's bit 0x10; for a
+non-player `0x525719` reads `+0x1f4` of the fields, and the node takes it as its hash at `+0`
+(`0x525737`), at `+0x14` the byte `[ebp-0x2d]`, which no instruction of the bake writes
+(`0x525739`), and the texture at `+0x18`. The lookups `0x5250b9` and `0x525ce9` compare the hash
+alone, and no slot of the table's vtable `0x808dc4` reads `+0x14`: its remove slot `0x526280`
+closes the texture and frees the node. `0x524bfa` passes the table to the clear loop; `0x524b70`'s one
+caller is `0x491187`, and `0x491180`'s is `0x402039`.
