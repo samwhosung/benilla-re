@@ -493,6 +493,16 @@ fn frame_builder_linear_diff() {
             run(&mut emu, 16, 10.0, &knots, &cps, gt);
         }
     }
+    // The chord's threshold: a length of exactly 2^-22 divides, and so does a NaN one, whose other
+    // components become NaN (`0x454606`).
+    {
+        let mut cps = mk_cps(&mut s, 4);
+        cps[1] = [0.0, 0.0, 0.0];
+        cps[2] = [f32::from_bits(0x3480_0000), 0.0, 0.0];
+        run(&mut emu, 4, 10.0, &knots, &cps, 0.5);
+        cps[2] = [f32::NAN, 1.0, 1.0];
+        run(&mut emu, 4, 10.0, &knots, &cps, 0.5);
+    }
     for _ in 0..4000 {
         let count = 8 + lcg(&mut s) % 16; // >= 8
         let cps = mk_cps(&mut s, (count + 4) as usize);

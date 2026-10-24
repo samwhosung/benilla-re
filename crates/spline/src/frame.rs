@@ -68,7 +68,7 @@ pub fn frenet_frame_from_derivative(der: [f32; 3], eps: f32, one: f32) -> [f32; 
 
 /// The tangent of `0x454580` in linear mode (`eps2` is the `f32` at `0x8029d4`, `2^-22`, and `one`
 /// the `f32` at `0x7ff9d8`): `pb − pa` with each difference stored as `f32`, divided by the
-/// length when `|len| > eps2`. The length is `√((x² + y²) + z²)` at 53 bits, stored as `f32`
+/// length unless `|len| < eps2` (`0x454606`, `test ah,5; jnp`: equal and NaN divide). The length is `√((x² + y²) + z²)` at 53 bits, stored as `f32`
 /// before the reciprocal `1/len` is taken (so it divides by the narrowed length); the comparison
 /// uses the unnarrowed one. A shorter difference is returned as it is.
 #[must_use]
@@ -76,7 +76,7 @@ pub fn frame_tangent_linear(pa: [f32; 3], pb: [f32; 3], eps2: f32, one: f32) -> 
     let diff = [0, 1, 2].map(|i| (f64::from(pb[i]) - f64::from(pa[i])) as f32);
     let [dxf, dyf, dzf] = diff.map(f64::from);
     let len = ((dxf * dxf + dyf * dyf) + dzf * dzf).sqrt();
-    if len.abs() > f64::from(eps2) {
+    if len.abs() >= f64::from(eps2) || len.is_nan() {
         let recip = f64::from(one) / f64::from(len as f32);
         [
             (dxf * recip) as f32,
@@ -89,7 +89,8 @@ pub fn frame_tangent_linear(pa: [f32; 3], pb: [f32; 3], eps2: f32, one: f32) -> 
 }
 
 /// The frame `0x454580` builds from the tangent `tan`: `T = tan`, `N = (−T.y, T.x, 0)` divided by
-/// its length `√(x² + y²)` when that is above `eps2` (stored as `f32`; a shorter `N` is kept), and
+/// its length `√(x² + y²)` unless that is below `eps2` (`0x454710`; equal and NaN divide, stored as
+/// `f32`; a shorter `N` is kept), and
 /// `B = T × N` as `(−(N.y·T.z), N.x·T.z, T.x·N.y − N.x·T.y)` from the stored values, laid out as
 /// `[T, pad, N, pad, B, pad]` in words of four.
 #[must_use]
@@ -103,7 +104,7 @@ pub fn frame_finish(tan: [f32; 3], eps2: f32, one: f32) -> [f32; 12] {
     let ny0 = tx;
     let (nxf0, nyf0) = (f64::from(nx0), f64::from(ny0));
     let n2 = (nxf0 * nxf0 + nyf0 * nyf0).sqrt();
-    let (nx, ny) = if n2.abs() > f64::from(eps2) {
+    let (nx, ny) = if n2.abs() >= f64::from(eps2) || n2.is_nan() {
         let inv = f64::from(one) / n2;
         ((nxf0 * inv) as f32, (nyf0 * inv) as f32)
     } else {
