@@ -227,10 +227,11 @@ A frame is the tangent `T` at `+0`, the normal `N` at `+0x10`, the binormal `B` 
 position at `+0x30`; `+0xc`, `+0x1c` and `+0x2c` are untouched. `N = (−T.y, T.x, 0)` divided by its
 length, `B = T × N`. The Bezier frame `0x453b90` takes the tangent from `0x453cd0` at the arc-length
 parameter and writes it when its length is at least 0.01. The Catmull-Rom frame `0x454580` forms the
-unit chord and in mode 0 uses it; otherwise it takes the derivative (`0x454250`) and uses it when it
-is at least 0.01 long and its dot product with the chord is at least 0.5, else the chord.
+unit chord and in mode 0 uses it; otherwise it takes the derivative (`0x454250`). One shorter
+than 0.01 leaves `T` as the frame held it; a longer or NaN one, made unit, is `T` unless its dot
+with the chord is below 0.5, which takes the chord.
 
-Addresses: `0x454580`, `0x453b90`, `0x4545af`, `0x4545e7`, `0x4545f6`, `0x4545fb`, `0x454606`, `0x454666`, `0x4546a9`, `0x4546e0`, `0x45470b`, `0x453c05`, `0x453c10`, `0x453c74`, `0x8029d0`, `0x8029d4`, `0x7ffa24`
+Addresses: `0x454580`, `0x453b90`, `0x4545af`, `0x4545e7`, `0x4545f6`, `0x4545fb`, `0x454606`, `0x454666`, `0x4546a9`, `0x4546b4`, `0x4546e0`, `0x45470b`, `0x453c05`, `0x453c10`, `0x453c74`, `0x8029d0`, `0x8029d4`, `0x7ffa24`
 Confidence: verified
 Proof: one
 Test: `spline::frenet_frame_diff`, `spline::frame_builder_linear_diff`, `spline::frame_builder_spline_diff`
@@ -241,7 +242,8 @@ tangent, which leaves the output's tangent as it was; equal and NaN write. The B
 from the 53-bit products without a zero test, so a vertical tangent gives NaN. The Catmull-Rom frame
 stores the chord length as a float at `0x4545f6`, skips the division when it is under 2⁻²²
 (`0x8029d4`, `0x4545fb`) and else calls `0x4549c0`; `0x454666` is the 0.01 test and `0x4546a9` the
-0.5 test (`0x7ffa24`; a shorter derivative leaves `T` unwritten at `0x4546e0`). It rounds `N` to
+0.5 test (`0x7ffa24`, `jp` at `0x4546b4` for 0.5 and above and NaN; a shorter derivative leaves `T`
+unwritten at `0x4546e0`). It rounds `N` to
 floats before building `B` and skips the division of `N` under 2⁻²² (`0x45470b`). `B.z =
 T.x·N.y − T.y·N.x`, `B.x = −(N.y·T.z)`, `B.y = N.x·T.z`.
 

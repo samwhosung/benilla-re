@@ -12,7 +12,8 @@ Roots: `0x4072c0`, `0x407de0`, `0x408000`
 A transfer raises the screen through `0x4072c0`. It stores the destination map in `0x82f00c`, then,
 if the active player rides a transport game object whose entry equals the first argument, finds the
 transport's taxi path and the leg whose first stop lies on the map of the second argument, and builds
-the route. A route that builds sets the map id to −1; any failure leaves the plain screen.
+the route; the destination map takes no part in the match. A route that builds sets the map id to
+−1; any failure leaves the plain screen.
 `0x407de0` takes the leg as an argument and builds the route for the player's transport when its
 entry matches. Both end in a raise.
 

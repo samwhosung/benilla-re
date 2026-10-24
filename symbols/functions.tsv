@@ -12984,7 +12984,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x525b10	115	PortraitLighting		ui	orchestration		Adds a 0.45 grey ambient and a white directional light to the portrait model	verified	one	ui/portraits#the-bake	
 0x525b90	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x525ba0	261	BindPlayerPortraitFallback		ui	orchestration		Binds a player's cached bake, else the stand-in texture for its sex and race	verified	one	ui/portraits#stand-in-portraits	
-0x525cb0	117	BindPetPortraitFallback		ui	orchestration		Binds a display id's cached bake, else the pet stand-in texture	verified	one	ui/portraits#stand-in-portraits	
+0x525cb0	117	BindPetPortraitFallback		ui	orchestration	void __fastcall (void *widget, uint32_t displayId)	Binds a display id's cached bake, else the pet stand-in texture	verified	one	ui/portraits#stand-in-portraits	
 0x525d30	589	SetPortraitTexture		ui	primitive	void __fastcall (CSimpleTexture *texture, const char *name)	Sets a texture to the cached 64 by 64 portrait of an image with its alpha replaced by the circular mask	verified	one	ui/portraittextures#portrait-sink	
 0x525f80	50			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x525fc0	5	InitDouble525fd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x525fd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -12996,8 +12996,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5260c0	23	FreeField5260c0		ui	orchestration		Frees the block that the dword at this+0x8 points at, tagged NTempest::CImVector, when it is not null	verified	one	ui/containers#block-frees	
 0x5260e0	211			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x5261c0	189	EmptyTable5261c0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
-0x526280	101			ui	orchestration		Runs its object file code that calls HandleClose, 0x5260c0, 0x527320 and 2 more; not read here	inferred	none		
-0x5262f0	194			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x526280	101	FreePortraitDisplayNode		ui	orchestration		Closes a display-id portrait node's texture, frees its +0x1c array, unlinks the node and frees it	verified	one	ui/portraits#display-id-cache-lifetime	
+0x5262f0	194	NewPortraitDisplayNode		ui	orchestration		Allocates a display-id portrait node of arg + 0x2c bytes, zeroes it and links it into the bucket list	verified	one	ui/portraits#display-id-cache-lifetime	
 0x5263c0	189	EmptyTable5263c0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x526480	88			ui	orchestration		Runs its object file code that calls HandleClose, 0x5260c0, SMemFree and 1 more; not read here	inferred	none		
 0x5264e0	197			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
@@ -19840,10 +19840,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f4b80	4	MovingTransportHandlerGetPath		objectlayer	orchestration		Returns the address of +0x20 of its object	verified	one	objectlayer/transports#the-moving-transport	
 0x5f4b90	43	DestroyMovingTransportHandler		objectlayer	orchestration		Destroys the moving transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
 0x5f4bc0	255	ReleaseMovingTransportHandler		objectlayer	primitive		Tears a moving transport handler down: transport list, legs and passengers	verified	one	objectlayer/transports#the-moving-transport	
-0x5f4cc0	700	MovingTransportHandlerOnRecordArrived		objectlayer	primitive		Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	
+0x5f4cc0	700	MovingTransportHandlerOnRecordArrived		objectlayer	primitive	void __thiscall (void *this)	Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	objectlayer::ship_path_build_difftest
 0x5f4f80	46	MovingTransportHandlerOnReactivated		objectlayer	orchestration		Reactivates a moving transport: entity, transport list and a tick	verified	one	objectlayer/transports#the-ship-path	
 0x5f4fb0	233	MovingTransportHandlerOnDeactivate		objectlayer	primitive		Deactivates a moving transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
-0x5f50a0	1118	MovingTransportHandlerOnTick		objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	objectlayer::g3_transport_ms_scale, objectlayer::g3_transport_leg_fraction, objectlayer::g3_transport_heading, objectlayer::g3_transport_heading_angle
+0x5f50a0	1118	MovingTransportHandlerOnTick		objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	objectlayer::g3_transport_ms_scale, objectlayer::g3_transport_leg_fraction, objectlayer::g3_transport_heading, objectlayer::g3_transport_heading_angle, objectlayer::ship_path_tick_difftest
 0x5f5500	179	MovingTransportHandlerOnBoard		objectlayer	primitive		Boards a mover onto a moving transport, flagging it while the entity is not ready	verified	one	objectlayer/transports#passengers	
 0x5f55c0	34	MovingTransportHandlerContainsPoint		objectlayer	orchestration		Tests a point against a moving transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
 0x5f55f0	68	ConstructChairHandler		objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chair handler with five empty seats and range 100.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
@@ -19995,7 +19995,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f8d20	62	InitMatrix3x3		objectlayer	orchestration		Stores nine floats	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f8d60	57	InitIdentityMatrix4x4		objectlayer	orchestration		Stores a 4x4 identity	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f8da0	25	PassengerNodeLink		objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/transports#carrying-and-changing-legs	
-0x5f8dc0	463	ShipSpanDistanceAtTime		objectlayer	primitive	float __thiscall (void *this, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	objectlayer::transport_speed_easing_difftest, objectlayer::transport_speed_easing_special_values_difftest
+0x5f8dc0	463	ShipSpanDistanceAtTime		objectlayer	primitive	float __thiscall (void *this, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	objectlayer::transport_speed_easing_difftest, objectlayer::transport_speed_easing_special_values_difftest, objectlayer::ship_path_tick_difftest
 0x5f8f90	5	InitGameObjProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f8fa0	19	InitGameObjProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f8fc0	5	InitGameObjProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -20012,7 +20012,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f90c0	19	InitGameObjQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f90e0	33	GetTaxiPathNodeRow		objectlayer	orchestration		Returns row i of a 36-byte store, or 0 out of range	verified	one	objectlayer/transports#the-ship-path	
 0x5f9110	12	InitPassengerListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/transports#the-transports-path	
-0x5f9120	600	TimeShipPathLeg		objectlayer	primitive	void __thiscall (void *this, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	objectlayer::leg_time_difftest, objectlayer::leg_time_special_values_difftest
+0x5f9120	600	TimeShipPathLeg		objectlayer	primitive	void __thiscall (void *this, void *points, void *stops, uint32_t leg)	Sets a ship leg's curve to its nodes and times it: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	objectlayer::leg_time_difftest, objectlayer::leg_time_special_values_difftest, objectlayer::ship_path_build_difftest
 0x5f9380	23	FreeLegStops		objectlayer	orchestration		Frees a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
 0x5f93a0	304	ResizeShipPathLegs		objectlayer	primitive		Resizes a ship path's legs, making new ones empty with a spline in mode 1	verified	one	objectlayer/transports#the-moving-transport	
 0x5f94d0	16	ClearLegStopArray		objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/transports#the-moving-transport	

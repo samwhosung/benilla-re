@@ -40,6 +40,7 @@ pub mod player2_fp;
 pub mod player3_fp;
 pub mod player_driven;
 pub mod player_fp;
+pub mod ship_path;
 pub mod spline_anchor;
 pub mod unit_fp;
 pub mod unitbig1_fp;

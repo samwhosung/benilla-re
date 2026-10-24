@@ -33,10 +33,10 @@ fn accel(speed: f32, accel: f32) -> Accel {
 }
 
 /// The span's time in ms at a stop, `0x5f91af` to `0x5f924f`. `length` is the cumulative length to
-/// the stop (`0x453300`'s result), `last` the previous one, `speed` and `accel` are `[esi+0x18]`
-/// and `[esi+0x20]`, and `first` is `edi == 0`, the first span of the leg.
-pub fn arc_time_ms(length: f32, last: f32, speed: f32, accel_in: f32, first: bool) -> i32 {
-    let seg = g(length) - g(last); // fsubr st,st(1)
+/// the stop, `0x453300`'s 53-bit result in `st0`, `last` the previous one as stored, `speed` and
+/// `accel` are `[esi+0x18]` and `[esi+0x20]`, and `first` is `edi == 0`, the first span of the leg.
+pub fn arc_time_ms(length: f64, last: f32, speed: f32, accel_in: f32, first: bool) -> i32 {
+    let seg = length - g(last); // fsubr st,st(1)
     let a = accel(speed, accel_in);
     // fcomp and fcompp then `test ah,5; jp`: jp is taken for a >= or unordered compare, which
     // takes the square root.

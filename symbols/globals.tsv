@@ -646,6 +646,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	ui/unitplayer#the-four-readers
 0x808bf4	float	s_five		ui	Holds 5.0, the factor of the drunk level reduction	verified	one	ui/unitlevels#unitlevel
+0x808dc4	void *[4]	s_portraitDisplayTableVtable		ui	Holds the display-id portrait table's vtable: free node, new node, destroy, empty	verified	one	ui/portraits#display-id-cache-lifetime
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
 0x808e6c	const float	s_tooltipLineGap		ui	Holds 2.0, the gap in FrameXML units between shown tooltip lines	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e70	const float	s_tooltipColumnGap		ui	Holds 38.4, the gap between a line's left and right texts	verified	one	ui/tooltipcontent#sizing-the-tooltip

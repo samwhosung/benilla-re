@@ -103,7 +103,7 @@ fn check(
     let stop = run_stop(emu, r, length, last, speed, accel, edi);
     assert_eq!(
         stop,
-        arc_time_ms(length, last, speed, accel, edi == 0),
+        arc_time_ms(f64::from(length), last, speed, accel, edi == 0),
         "stop {ctx} length={length:e} last={last:e} speed={speed:e} accel={accel:e} edi={edi}"
     );
     let end = run_end(emu, r, length, last, speed, accel, edi);

@@ -78,10 +78,11 @@ pub fn arc_length(step_const: f32, mut sample: impl FnMut(f32) -> [f32; 3]) -> f
 
 /// `0x453840` (`ecx` = the curve, the stack arguments `t`, an unused word, the segment count and
 /// the two output pointers): the segment index and the local parameter, `(idx, frac)`. A count of
-/// 1 gives `(0, t)`. Otherwise `s = scale·t` at 53 bits, and the segment lengths are walked
-/// with a running sum stored as `f32` after each, stopping at the first `idx` where `s <
-/// running + len[idx]` (strictly; an equal or unordered `s` goes on) or at the last segment; `frac
-/// = (s − running) / len[idx]` stored as `f32`.
+/// 1 gives `(0, t)`. Otherwise `s = scale·t` at 53 bits, and the segment lengths are walked,
+/// stopping at the first `idx` where `s < running + len[idx]` (strictly; an equal or unordered `s`
+/// goes on) or at the last segment. The sum is compared at 53 bits and stored as `f32` as the
+/// running sum only when the walk moves on (`0x453899`); `frac = (s − running) / len[idx]` stored as
+/// `f32`.
 #[must_use]
 pub fn seg_locate(scale: f32, seg_len: &[f32], t: f32, n_seg: u32) -> (u32, f32) {
     if n_seg == 1 {
@@ -93,12 +94,12 @@ pub fn seg_locate(scale: f32, seg_len: &[f32], t: f32, n_seg: u32) -> (u32, f32)
     let last = n_seg.wrapping_sub(1);
     if last != 0 {
         loop {
-            let next = (f64::from(seg_len[idx as usize]) + f64::from(running)) as f32;
-            if s < f64::from(next) {
+            let next = f64::from(seg_len[idx as usize]) + f64::from(running);
+            if s < next {
                 break;
             }
             idx += 1;
-            running = next;
+            running = next as f32;
             if idx >= last {
                 break;
             }

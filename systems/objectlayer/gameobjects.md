@@ -41,7 +41,7 @@ Test: none
 `+0x208` to `+0x214`, stores 1.0 at `+0x218`, `+0x22c`, `+0x240`, `+0x254` and 0 between, zeros
 `+0x260` to `+0x274`, loads `[fields+0x20]` into `+0x27c` (`0x5f7013`), zeros `+0x280` and `+0x284`,
 then passes the GUID to 0x468270 (`0x5f703e`). `0x5f7046` copies `block+0x24` to `+0x30`;
-`0x5f706e` tests `[block+0xd8]` bit 2 and stores `[block+0xf0] − time`. `0x5f7780` calls the
+`0x5f706e` tests `[block+0xd8]` for 0x2 and stores `[block+0xf0] − time`. `0x5f7780` calls the
 record cache's cancel 0x558bf0 when `+0x214` is null, the handler's slot 0 with 1, unlinks `+0x208`
 and the 20 lists and calls `0x613b40`. `0x83b880` holds 20-byte records: name, index in the
 section, count, type, flags.
