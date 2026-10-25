@@ -270,7 +270,7 @@ handler's `0x5f3700`. `0x5f4360` ends in `call 0x5f3130` with its own arguments 
 ## Door interact distance
 
 After the moving test (`0xe3`) and the player and lock arms of `0x5f3130`, a door in state 2 with
-no opener spell gives `0xe5`. Then `(dx² + dy²) + dz²` from the player's world position to
+no opener spell gives `0xe5`. Then `(dx² + dz²) + dy²` from the player's world position to
 `GAMEOBJECT_POS_X` to `_Z` is compared with r²: farther gives `0xe1`; equal and NaN pass. r is the handler's `+0xc`, 5.0 for a door, or the
 maximum range of the spell that opens its lock, when the player knows one or holds a key item with a
 use spell; such a spell skips the state test. The model, its box, scale, display and flags are not
