@@ -3209,7 +3209,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4429c0	26	ScrnLayerSetRect	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x4429e0	4			unassigned			Runs its object file code not read here	inferred	none		
 0x4429f0	4	StoreDwordAt2c		unassigned	primitive		Stores a dword at +0x2c of the object it is given	inferred	none		
-0x442a00	7			unassigned			Runs its object file code not read here	inferred	none		
+0x442a00	7	SetPresentSuppressed		unassigned	orchestration	void __fastcall (uint32_t suppressed)	Stores ecx in the flag that makes the frame pass skip its present	verified	one	ui/movieframe#presenting-mid-frame	
 0x442a10	7	RequestScreenshot		unassigned		void __fastcall (void *callback)	Stores a completion callback, arming one screenshot	verified	one	gx/capture#capture-request-and-frame-order	
 0x442a20	5			unassigned			Runs its object file code not read here	inferred	none		
 0x442a30	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -16407,9 +16407,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a8c0	18			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58a8e0	25			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58a900	25			gx	unreached		Runs its object file code not read here	inferred	none		
-0x58a920	26			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x58a920	26	SetClearColorDevice		gx	orchestration	void __stdcall (uint32_t color)	Sets the device clear colour through the device's slot +0x64	verified	one	ui/movieframe#starting-and-stopping	
 0x58a940	19			gx	orchestration		Runs its object file code that calls 0x592410; not read here	inferred	none		
-0x58a960	15			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x58a960	15	PresentDevice		gx	orchestration	void __fastcall (uint32_t mask)	Presents the frame through the device's slot +0x68 with a clear mask	verified	one	ui/movieframe#presenting-mid-frame	
 0x58a970	15	ClearDevice		gx	orchestration		Clears the device buffers a mask names through the device's slot +0x6c	verified	one	ui/modelview#clip-and-depth-clear	
 0x58a980	164	CGxTexFlags::CGxTexFlags	idb	gx	primitive	void * __thiscall (CGxTexFlags *this, uint32_t filter, uint32_t wrapU, uint32_t wrapV, uint32_t b5, uint32_t b6, uint32_t b7, uint32_t aniso, uint32_t b8)	Packs filter, wrap, flag and anisotropy arguments into a texture flags word, capping anisotropy at the device maximum	verified	one	gx/textures#texture-flags-word	
 0x58aa30	185	GxTexCreate2D		gx	host	void * __fastcall (uint32_t w, uint32_t h, uint32_t format, uint32_t flags, void *owner, void *callback, void **out)	Checks a 2D texture request against the device caps and creates it through slot +0xb8, or fails with 0x57	verified	one	gx/texturesize#texture-create-checks	
@@ -16985,7 +16985,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59b7a0	65	IsGlExtensionListed		gx	host	bool __fastcall (const char *name)	Returns whether a GL extension is listed, unless an environment variable of its name converts to 0	verified	one	gx/opengl#extension-tests	
 0x59b7f0	92	FindExtensionName		gx	primitive	bool __fastcall (const char *list, const char *name)	Returns whether a name begins a space-separated word of a list, ignoring case	verified	one	gx/opengl#extension-tests	
 0x59b850	53	IsWglExtensionListed		gx	host	bool __fastcall (const char *name)	Returns whether a WGL extension is listed in the cached wglGetExtensionsStringARB string	verified	one	gx/opengl#extension-tests	
-0x59b890	126			gx	orchestration		Runs its object file code that calls 0x592640, GxSetViewport; not read here	inferred	none		
+0x59b890	126	CGxDeviceOpenGl::BeginFrame		gx	orchestration	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Clears with the mask over the full viewport when capability bit 6 is set	verified	one	ui/movieframe#presenting-mid-frame	
 0x59b910	242	CGxDeviceOpenGl::Clear		gx	host	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Applies the viewport and scissor, then clears the colour and depth buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
 0x59ba10	89	CGxDeviceOpenGl::PresentFrame		gx	host	void __thiscall (CGxDeviceOpenGl *this, uint32_t mask)	Counts the frame, draws the cursor, swaps or finishes, captures if armed and starts the next frame	verified	one	gx/slots#capture-window-and-frame-slots	
 0x59ba70	40			gx	orchestration		Runs its object file code not read here	inferred	none		

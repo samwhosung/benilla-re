@@ -83,21 +83,21 @@ Test: none
 
 ## Starting and stopping
 
-`StartMovie("name")` needs a string (`Usage: <frame>:StartMovie("filename")`). It runs the file reader, the decoder start, the audio start and the subtitle load, sets the playing flag at `+0x314`, and
-clears the display three times to black. It returns nil when the file reader or the decoder start fails and 1 otherwise: the audio start and the subtitle load results are ignored. `StopMovie()` ends a playing movie: it destroys the decoder, the audio and the captions, clears the playing and finished flags and runs
+`StartMovie("name")` needs a string (`Usage: <frame>:StartMovie("filename")`). It runs the file reader, the decoder start, the audio start and the subtitle load, sets the playing flag at `+0x314`, stops the frame pass presenting, sets the clear colour to black, clears, presents
+(`Presenting mid-frame`) and clears again. It returns nil when the file reader or the decoder start fails and 1 otherwise: the audio start and the subtitle load results are ignored. `StopMovie()` ends a playing movie: it destroys the decoder, the audio and the captions, clears the playing and finished flags and runs
 `OnMovieFinished` (`+0x320`). The movie also ends by itself at the last frame or when the audio ends. `EnableSubtitles([flag])` stores the flag (true when absent) at `+0x31c`.
 
-Addresses: `0x78d770`, `0x78d842`, `0x78d820`, `0x78d870`, `0x78d92a`, `0x78d940`, `0x78d9ce`, `0x78d9d3`, `0x78ce40`, `0x78ce4b`, `0x78ce5d`, `0x78ce6f`, `0x78ce77`, `0x78ce81`, `0x78ced0`, `0x78cedd`, `0x78cee4`, `0x78ceeb`, `0x78cf1e`, `0x78cda0`, `0x78dc60`, `0x78dc80`, `0x87ab4c`
+Addresses: `0x78d770`, `0x78d842`, `0x78d820`, `0x78d870`, `0x78d92a`, `0x78d940`, `0x78d9ce`, `0x78d9d3`, `0x78ce40`, `0x78ce4b`, `0x78ce5d`, `0x78ce6f`, `0x78ce77`, `0x78ce81`, `0x78ce8b`, `0x78ce99`, `0x78cea3`, `0x78cead`, `0x78ceb7`, `0x58a920`, `0x58a970`, `0x58a960`, `0x442a00`, `0x78ced0`, `0x78cedd`, `0x78cee4`, `0x78ceeb`, `0x78cf1e`, `0x78cda0`, `0x78dc60`, `0x78dc80`, `0x87ab4c`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; only the first two end the start on a zero answer; the results of the audio start and the subtitle load are dropped and `0x78cebd` returns 1. `0x78ce81` sets the playing flag and `0x78cea3` to `0x78ceb7` clear the device. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
+`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; only the first two end the start on a zero answer; the results of the audio start and the subtitle load are dropped and `0x78cebd` returns 1. `0x78ce81` sets the playing flag, `0x78ce8b` calls `0x442a00(1)`, `0x78ce99` sets the clear colour `0xff000000` through `0x58a920`, and `0x78cea3`, `0x78cead` and `0x78ceb7` call the clear `0x58a970(3)`, the present `0x58a960(3)` and the clear again. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
 
 ## Drawing
 
-The frame registers a layer callback (`0x78d650` registers layer 2 with `0x78d680`). When it runs for a playing movie it advances the clock with `0x78cf30` and, when a frame is ready, draws the tile textures with `0x78d1a0`:
-it saves the viewport, sets a full-window viewport and an orthographic projection, draws a quad per tile scaled by the screen aspect, and restores the viewport. It then clears the device buffers.
+The frame adds a draw callback to its layer 2 batch (`0x78d650` registers `0x78d680` for layer 2, `ui/draworder#what-a-batch-drains`). When it runs for a playing movie it advances the clock with `0x78cf30` and, when a frame is ready, draws the tile textures with `0x78d1a0`:
+it saves the viewport, sets a full-window viewport and an orthographic projection, draws a quad per tile scaled by the screen aspect, and restores the viewport. It then presents (`Presenting mid-frame`).
 
 Addresses: `0x78d650`, `0x78d660`, `0x78d672`, `0x78d680`, `0x78d68d`, `0x78d698`, `0x78d1a0`, `0x78d1ad`, `0x78d1cb`, `0x78d1e5`, `0x78d321`, `0x78d4d3`, `0x78d4f0`, `0x76b3a0`, `0x773110`
 Confidence: inferred
@@ -105,3 +105,14 @@ Proof: none
 Test: none
 
 `0x78d660` registers the layer and `0x78d672` the callback for layer 2. `0x78d68d` calls the clock and `0x78d698` the draw. `0x78d1ad` reads the aspect, `0x78d1cb` and `0x78d1e5` save and set the viewport, `0x78d321` builds the orthographic matrix and `0x78d4d3` and `0x78d4f0` build and draw the quads. The geometry was not decoded further.
+
+## Presenting mid-frame
+
+The draw callback `0x78d680` ends with a tail jump to `0x58a960(3)`: the device's present slot (`+0x68`) with mask 3. The present shows the frame and draws the cursor, then clears colour and depth when bit 6 of the device's capability word is set. While a movie plays this is the only present: `StartMovie` sets the flag that makes the frame pass skip its own, `StopMovie` clears it. The callback presents when `0x78cf30` returns 1: not at audio time 0, at the end or for the frame shown. The image holds what the draw walk drew before the callback and the movie; what it draws after (later callbacks, layers, levels, strata) is not in it, and no present follows.
+
+Addresses: `0x78d680`, `0x78d68d`, `0x78d692`, `0x78d698`, `0x78d69d`, `0x78d6a3`, `0x78cf30`, `0x78cf61`, `0x78d063`, `0x78d070`, `0x78d163`, `0x78d199`, `0x58a960`, `0x58a96b`, `0x5a1910`, `0x5a1680`, `0x5a1705`, `0x59ba10`, `0x59b890`, `0x59b899`, `0x442a00`, `0x78ce8b`, `0x78cf06`, `0x885604`, `0x442350`, `0x442696`, `0x4426be`, `0x406917`, `0x4427c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78d69d` loads 3 and `0x78d6a3` jumps to `0x58a960`, which ends `push eax; call [edx+0x68]` (`0x58a96b`). `0x5a1910` and `0x59ba10` are the backends' present: the cursor, the buffer swap, then `0x5a1680` or `0x59b890` with the mask, which test `[dev+0x269c] & 0x40` (`0x5a1705`, `0x59b899`; set from construction, `gx/renderstate#capability-bits`) and call the clear slot `+0x6c`. `0x78cf30` returns 0 at `0x78cf61`, `0x78d063` and `0x78d070`, else 1 (`0x78d163`, `0x78d199`). `0x78ce8b` and `0x78cf06` store 1 and 0 in `0x885604` through `0x442a00`; the frame pass skips its present block while it is set (`core/framepass#pass-order`). A scan of the image finds five direct calls of `0x58a960` (`0x406917`, `0x442696`, `0x4426be`, `0x78cead`, `0x78d6a3`) and no stored address; its control finds `0x442350` stored at `0x4427c0`. A batch drains its callbacks after its quads and text (`ui/draworder#what-a-batch-drains`), inside the top's draw walk.
