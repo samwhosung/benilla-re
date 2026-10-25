@@ -117,11 +117,11 @@ counter wraps at 256. `0x46bbbf` is the failed arm's cancel and `0x46b749` the b
 The dialogs resolve their keys through the script function `GetText`, so a key the shipped
 `GlueStrings.lua` does not define gives an empty text, never null. Five keys of the two login tables
 are undefined: `LOGIN_OK`, `LOGIN_STATE_FAILED`, `LOGIN_STATE_PIN`, `LOGIN_STATE_PIN_WAIT` and
-`LOGIN_STATE_DISCONNECTED`. Only `LOGIN_STATE_PIN` can be shown: logon state 7 opens a `CANCEL` dialog
-with no text for one frame, until the arm fires `PLAYER_ENTER_PIN` and sets state 8. `OKAY_WITH_URL` is
+`LOGIN_STATE_DISCONNECTED`. `LOGIN_STATE_PIN` is the key of logon state 7, whose `CANCEL` dialog is
+opened and closed inside one pass of `Idle`, so no frame draws it. `OKAY_WITH_URL` is
 raised in one place, the world failure arm of state 2, so no logon refusal can show a URL.
 
-Addresses: `0x46b140`, `0x46b1c5`, `0x46b1c9`, `0x46ba7c`, `0x46bac3`, `0x46bf63`, `0x46bec2`, `0x703bf0`, `0x836b40`, `0x836b78`
+Addresses: `0x46b140`, `0x46b1be`, `0x46b1c5`, `0x46b1c9`, `0x46ba7c`, `0x46ba85`, `0x46bac3`, `0x46bf63`, `0x46bec2`, `0x703bf0`, `0x836b40`, `0x836b78`
 Confidence: verified
 Proof: one
 Test: none
@@ -131,6 +131,13 @@ reference census over the image: `"OKAY_WITH_URL"` has one reference (`0x46bf63`
 one (`0x46bec2`), `CONNECTION_HELP` one (`0x46b17f`); the controls `"OKAY"` and `"CANCEL"` hit
 10 and 11. `0x46b140` has one caller, `0x46ba80`, in state 1's arm, and state 8 skips the call.
 The undefined keys are read over the whole extracted GlueXML tree.
+
+The call at `0x46ba80` opens the state 7 dialog with no text. In the same pass the state 7 arm signals
+event 5 (`0x46bac3`, `0x46bac8`), which the stock `GlueDialog.lua` answers with `Hide`, then fires
+`PLAYER_ENTER_PIN` and sets state 8. The connect latch (`0x46ba85`) is the one exit that skips the arm.
+`LOGIN_STATE_FAILED` is never selected (state 5 takes its key from the result table), nor
+`LOGIN_STATE_PIN_WAIT` (state 8 skips the call) or `LOGIN_STATE_DISCONNECTED` (state 11 opens nothing,
+`0x46b1be`); `LOGIN_OK` is the key of result 0.
 
 ## Realm list cancel
 
