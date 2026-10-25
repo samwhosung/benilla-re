@@ -302,7 +302,7 @@ Test: `objectlayer::go_canuse_dist2_difftest`
 `0x5f59a0` false (a chest, or `noDamageImmune` set) 0x169. `GAMEOBJECT_FLAGS` bit 0x2 with
 `0x5f83d0` returning 1 gives `[handler+8]`. The range is `[handler+0xc]`, or the opening spell's
 maximum (`0x5f3328`) for the distance test only: the range handed back is always `[handler+0xc]`,
-written at `0x5f32f4` before the spell's; without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dy² + dz²)`
+written at `0x5f32f4` before the spell's; without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dz²) + dy²` (`0x5f335e`)
 against range², `test ah,5; jp`; farther gives 0xe1, a NaN passes. Slices: go_canuse_dist2_difftest `0x5f3346`-`0x5f3377`.
 
 ## Using an object while mounted
