@@ -233,6 +233,66 @@ Test: none
 `startOpen ? state != 1 : state != 3`. `0x5f4360(error, range)` gives 0xe3 or runs `0x5f3130`.
 `0x5f43a0(state)` runs slot 34 and stores `[+0x10] == 1` at the object's `+0x284`.
 
+## Interact range by type
+
+A game object handler holds its use range at `+0xc`. The base constructor stores 5.0, and nine
+types store another value over it, as the table gives. Type 21 and any type above 30 share the
+static handler, which has no range. `0x5f3130` squares the range for its distance test and hands
+it back. A door's slot 6 passes it through unchanged. The chair's runs the base test at its 100.0,
+then returns 3.0 and tests its seats.
+
+| range | types | stored at |
+|---|---|---|
+| 5.0, `[0x80b084]` | 0, 1, 3, 5, 6, 8, 10, 11, 13 to 16, 18 to 20, 22, 23, 25, 28 to 30 | `0x5f2f67`, in `0x5f2f50`, which every constructor calls |
+| 5.5555553, `[0x80b07c]` | 2 quest giver, 9 text, 24 flag stand, 26 flag drop, 27 minigame | `0x5f45c2`, `0x5f5852`, `0x5f6c12`, `0x5f6c72`, `0x5f6cd2` |
+| 10.0, `[0x80b088]` | 4 binder | `0x5f478b` |
+| 100.0, `[0x80b0b0]` | 7 chair, 17 fishing node | `0x5f562a`, `0x5f66d2` |
+| 0.0 | 12 area damage | `0x5f4504` |
+| none | 21 and above 30 | static handler `0xc4d840` |
+
+Addresses: `0x5f2f50`, `0x5f2f61`, `0x5f2f67`, `0x5f4860`, `0x5f45c2`, `0x5f5852`, `0x5f6c12`, `0x5f6c72`, `0x5f6cd2`, `0x5f478b`, `0x5f562a`, `0x5f66d2`, `0x5f4504`, `0x5f3130`, `0x5f4360`, `0x5f438d`, `0x5f5670`, `0x5f569d`, `0x5f3700`, `0x80b07c`, `0x80b084`, `0x80b088`, `0x80b0a0`, `0x80b0b0`, `0xc4d840`, `0x5f76cc`
+Confidence: verified
+Proof: one
+Test: `objectlayer::go_handler_use_range_difftest`
+
+`0x5f2f50` loads `[0x80b084]` (`0x5f2f61`) and stores it at `+0xc` (`0x5f2f67`); every
+constructor calls it first, and the map object's `0x5f4860` stores nothing more, so the two
+transports that call it keep 5.0. The nine others store a pooled float after that call; the area
+damage constructor stores a zeroed register. The test runs all 30 constructors whole on a zeroed
+object and reads `+0xc`, and finds each in the type switch's case (`0x5f76cc`). Census: a `mov`,
+`fst` or `fstp` to `[reg+0xc]` in `0x5f1600` to `0x5fa100` is one of these stores, the control
+`0x5f2f67`, or another structure's. Of the 68 loads of `[obj+0x210]` in the image, two are
+followed within 30 instructions by a `+0xc` store, both of other classes. The vtable dwords hold
+`0x5f3130` at slot 6 except the door's `0x5f4360`, the chair's `0x5f5670` and the static
+handler's `0x5f3700`. `0x5f4360` ends in `call 0x5f3130` with its own arguments (`0x5f438d`);
+`0x5f5670` stores `[0x80b0a0]` through the range pointer after that call returns (`0x5f569d`).
+
+## Door interact distance
+
+After the moving test (`0xe3`) and the player and lock arms of `0x5f3130`, a door in state 2 with
+no opener spell gives `0xe5`. Then `(dx² + dy²) + dz²` from the player's world position to
+`GAMEOBJECT_POS_X` to `_Z` is compared with r²: farther gives `0xe1`; equal and NaN pass. r is the handler's `+0xc`, 5.0 for a door, or the
+maximum range of the spell that opens its lock, when the player knows one or holds a key item with a
+use spell; such a spell skips the state test. The model, its box, scale, display and flags are not
+read. The cursor greys on any refusal. A walk to a too-far door stops at 0.9 times `+0xc`.
+
+Addresses: `0x5f3130`, `0x5f32f4`, `0x5f330c`, `0x5f3315`, `0x5f3328`, `0x5f3336`, `0x5f3343`, `0x5f3346`, `0x5f3392`, `0x5f4360`, `0x5f83d0`, `0x5f85ac`, `0x5d8c80`, `0x6e3480`, `0x5f9f50`, `0x5f3690`, `0x5f1f10`, `0x7c4930`, `0x5f8810`, `0x5f86b0`, `0x5f873e`, `0x610300`
+Confidence: verified
+Proof: one
+Test: `objectlayer::go_canuse_dist2_difftest`
+
+`0x5f32f4` stores `+0xc` to the caller's range and to the local `[ebp-4]`. `0x5f330c` calls
+`0x5f83d0(&spell, 0, 0, 0, 0)`: a nonzero return (a closed lock) or a zero spell jumps to `0x5f3392`,
+which refuses state 2 and otherwise continues at the position reads; else `0x5f3328` calls
+`0x6e3480` with the player in `ecx`, the spell in `edx`, target 0 and `&[ebp-4]` as the maximum, which
+overwrites the local. `0x5f3336` and `0x5f3343` call slot 5 of the door and the player. The door's
+(`0x5f9f50`, through slot 17 `0x5f3690`) reads the fields at `GO+0x110` `+0x24` to `+0x2c`; types 11
+and 15 replace slot 17. The player's (`0x5f1f10`) passes the mover's `+0x10` through
+`TransportToWorld`. A key item's opener reports its use spell (`0x5f85ac`, `0x5d8c80`). `0x5f3346` sums and compares; `test ah,5; jp` passes when C0 and C2 are equal.
+`0x5f3130` loads no scale, display, box or matrix. `0x5f8810` calls slot 6 with null error and range,
+and `0x5f86b0` hands the walk the range slot 6 returned, `+0xc`. Slice: go_canuse_dist2_difftest
+`0x5f3346`-`0x5f3377`.
+
 ## Quest givers, text and mailboxes
 
 When the interface opens a quest giver's frame, one without `customAnim` plays its open state 2
@@ -265,7 +325,8 @@ Confidence: verified
 Proof: one
 Test: `objectlayer::diff_interact_range`, `objectlayer::ot_transport_segment_offset0_difftest`, `objectlayer::ot_transport_segment_local_y_difftest`
 
-`0x5f5670` runs `0x5f3130`, sets the range to 3.0 (`0x80b0a0`), and from the last seat down
+`0x5f5670` runs `0x5f3130` at the chair's own range 100.0, sets the returned range to 3.0
+(`0x80b0a0`), and from the last seat down
 compares `(dz² + dx²) + dy²` with 9.0 at `0xc4d808` (`0x5f571a`): below succeeds. `0x5f5760` calls
 `0x47cf60(matrix, count, +0x10)`, which starts at `y = −((count − 1.0)·0.5)`, a float, and for each
 seat stores `TransformPoint(matrix, (0, y, 0))`, then `y += 1.0`. The handler keeps five seats. Slices: diff_interact_range `0x5f56fa`-`0x5f5724`; ot_transport_segment_offset0_difftest `0x47cf66`-`0x47cfa2`; ot_transport_segment_local_y_difftest `0x47cf66`-`0x47cfe3`.

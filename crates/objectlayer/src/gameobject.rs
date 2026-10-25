@@ -208,3 +208,61 @@ pub fn transport_speed_easing(
     let term_a = j * HALF * fvar4;
     ((term_c + term_b) + term_a, 0xa4)
 }
+
+/// The handler constructors by game object type, from the type switch's jump table (`0x5f76cc`).
+/// Type 21 has no constructor: its case stores the static handler.
+pub const HANDLER_CONSTRUCTORS: [Option<u32>; 31] = [
+    Some(0x5f4290),
+    Some(0x5f43d0),
+    Some(0x5f45a0),
+    Some(0x5f4430),
+    Some(0x5f4770),
+    Some(0x5f47d0),
+    Some(0x5f4490),
+    Some(0x5f55f0),
+    Some(0x5f57b0),
+    Some(0x5f5830),
+    Some(0x5f5a50),
+    Some(0x5f5ab0),
+    Some(0x5f44f0),
+    Some(0x5f6570),
+    Some(0x5f4860),
+    Some(0x5f4ab0),
+    Some(0x5f65c0),
+    Some(0x5f66b0),
+    Some(0x5f6760),
+    Some(0x5f67c0),
+    Some(0x5f6880),
+    None,
+    Some(0x5f68e0),
+    Some(0x5f6930),
+    Some(0x5f6bf0),
+    Some(0x5f6640),
+    Some(0x5f6c50),
+    Some(0x5f6cb0),
+    Some(0x5f6db0),
+    Some(0x5f6d10),
+    Some(0x5f6e70),
+];
+
+/// The use range a game object type's handler holds at `+0xc` once its constructor has run
+/// (`systems/objectlayer/gameobjecttypes.md`, `#interact-range-by-type`): the base constructor
+/// `0x5f2f50` stores 5.0 (`[0x80b084]`) and these constructors store over it: 5.5555553
+/// (`[0x80b07c]`) for the quest giver, text, flag stand, flag drop and minigame, 10.0
+/// (`[0x80b088]`) for the binder, 100.0 (`[0x80b0b0]`) for the chair and fishing node, and 0.0
+/// for area damage (`xor eax,eax`). `None` for type 21 and every type above 30, which share the
+/// static handler and no constructor.
+#[must_use]
+pub fn handler_use_range(go_type: u32) -> Option<f32> {
+    const DEFAULT: f32 = 5.0;
+    const SERVICE: f32 = f32::from_bits(0x40b1_c71c);
+    match go_type {
+        2 | 9 | 24 | 26 | 27 => Some(SERVICE),
+        4 => Some(10.0),
+        7 | 17 => Some(100.0),
+        12 => Some(0.0),
+        21 => None,
+        0..=30 => Some(DEFAULT),
+        _ => None,
+    }
+}
