@@ -295,10 +295,10 @@ cache's own routines.
 `GUILD_ROSTER_UPDATE` is signalled by `0x4d1160(flag)`. With flag 0 it fires without an argument and means the
 roster or the cache changed. With flag 1 it clears the request deadline `0xb73130` and fires with the number 1,
 which means the roster is stale. The callers with 0: a roster message (`0x4d0d3c`), a show-offline change (`0x4d0f9f`),
-a sort (`0x4d1022`) and a guild record arrival (`0x4d148c`). The callers with 1: every guild event of types 0 to 11
+a sort (`0x4d1022`) and a guild record arrival (`0x4d148c`). The callers with 1: every guild event but types 12 and 13 and a type 10 whose gate fails
 (`0x5e74c4`) and a command result of 19, 20 or result 20 on command 5 (`0x5e7792`).
 
-Addresses: `0x4d1160`, `0x4d1164`, `0x4d1170`, `0x4d117a`, `0x4d1188`, `0x4d0d3c`, `0x4d0f9f`, `0x4d1022`, `0x4d148c`, `0x4d1480`, `0x5e74c4`, `0x5e7792`, `0x5e27b0`, `0x5e2770`, `0x5e08e0`, `0x515e50`, `0x48f450`, `0x48f470`
+Addresses: `0x4d1160`, `0x4d1164`, `0x4d1170`, `0x4d117a`, `0x4d1188`, `0x4d0d3c`, `0x4d0f9f`, `0x4d1022`, `0x4d148c`, `0x4d1480`, `0x5e74c4`, `0x5e74dc`, `0x5e72b9`, `0x5e72e4`, `0x5e7792`, `0x5e27b0`, `0x5e2770`, `0x5e08e0`, `0x515e50`, `0x48f450`, `0x48f470`
 Confidence: verified
 Proof: one
 Test: none
