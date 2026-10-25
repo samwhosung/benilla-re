@@ -43,16 +43,18 @@ its bit is clear in the collapse mask `0x84d0f0` (the group is collapsed) and 0 
 ## Craft order
 
 Rows and headers are sorted by the recount `0x4f6630`. The row comparator is `0x4f6920` for craft type 1 and `0x4f67a0`
-for the others. Both order by group visibility, the group's position in the name-sorted header array, the header row first,
-the difficulty bucket (ascending), then the spell name case-insensitively; only `0x4f6920` adds the spell's level
-(`+0x74`) last, ascending. There is no rank key. Headers sort by the skill line's display name. With a single group the
-header count becomes 0, so no header shows and the buckets, names and levels decide the order.
+for the others. Both order by group visibility (shown before hidden), the group's position in the name-sorted header array,
+a header row before a recipe, the difficulty bucket (ascending), then the spell name case-insensitively; only `0x4f6920` adds the spell's
+level (`+0x74`) last, ascending. A header row skips the scan of the header array and keeps position 0 and visibility 1, so every header
+sorts ahead of every hidden row and of the shown recipes of every later group. With a single group the header count becomes 0
+and no header shows.
 
-Addresses: `0x4f675b`, `0x4f6765`, `0x4f6785`, `0x4f6756`, `0x4f6920`, `0x4f67a0`, `0x4f6984`, `0x4f69cc`, `0x4f69e5`, `0x4f6a34`, `0x4f6a52`, `0x4f6a5b`, `0x4f6a65`, `0x4f6ac0`, `0x4f6b1e`, `0x4f65fb`, `0x4f6602`, `0x4f6630`, `0x64a4c0`
+Addresses: `0x4f675b`, `0x4f6765`, `0x4f6785`, `0x4f6756`, `0x4f6920`, `0x4f67a0`, `0x4f67b9`, `0x4f67fd`, `0x4f6818`, `0x4f68e9`, `0x4f697d`, `0x4f6998`, `0x4f6a89`, `0x4f6984`, `0x4f69cc`, `0x4f69e5`, `0x4f6a34`, `0x4f6a52`, `0x4f6a5b`, `0x4f6a65`, `0x4f6ac0`, `0x4f6b1e`, `0x4f65fb`, `0x4f6602`, `0x4f6630`, `0x64a4c0`
 Confidence: verified
 Proof: one
 Test: `ui::listorder_craft_beast_training_e2e`, `ui::sortcmp_4f67a0`, `ui::sortcmp_4f6920`
 
+The header array sorts by the skill line's display name (`0x4f6ac0`). `cmp DWORD PTR [ebx],0x0; jl` at `0x4f67fd` and `[esi]` at `0x4f6818` (`0x4f697d`, `0x4f6998` in `0x4f6920`) match a row to a group only for a spell id of 0 or more; position 0 and visibility 1 are the starting values (`0x4f67b9` to `0x4f67cd`), which a recipe with no group in the array keeps. Two hidden rows tie. On equal positions `0x4f68e9` (`0x4f6a89`) returns `(idB == -1) * 2 - 1`: two headers compare +1 and never reach the name key.
 `0x4f6a57 test eax,eax; jne` reaches the level key only when the name compare gives 0. The level key never returns 0 for equal
 levels, which is harmless for the shipped spells. `0x4f65fb cmp ecx,1; jne` followed by the store of 0 at `0x4f6602` is the
 single-group suppression. The three comparators contain three calls in total, all to the case-insensitive compare, and no

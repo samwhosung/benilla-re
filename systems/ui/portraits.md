@@ -31,14 +31,15 @@ A GUID entry that is dirty, or a unit absent from the table, is baked. The bake 
 
 ## Marking and draining
 
-`0x524e10(&guid)` marks a portrait dirty: it appends the GUID to the pending list (`0xc0cdd0`, head `0xc0cdd4`) unless it is already there and sets the dirty byte of the GUID cache entry, if one exists. Each frame `0x524cd0` walks the list; a node whose unit is held but not ready (the latches below) stays,
-and every other node leaves the list and signals the unit events `UNIT_PORTRAIT_UPDATE` (0xb8) and `UNIT_MODEL_CHANGED` (0xb9) for the GUID. `0x524f60` returns at once for a unit whose GUID is on the pending list.
+`0x524e10(&guid)` marks a portrait dirty. A GUID already on the pending list (`0xc0cdd0`, head `0xc0cdd4`) returns at once and keeps its place. Otherwise the mark links a new node at the head of the list, with the GUID at `+8` and `+0xc`, and sets the dirty byte of the GUID cache entry, if one exists.
+Each frame `0x524cd0` walks the list from the head, so the newest mark drains first. A node whose unit is held but not ready (the latches below) stays, and every other node leaves the list and signals the unit events `UNIT_PORTRAIT_UPDATE` (0xb8) and `UNIT_MODEL_CHANGED` (0xb9) for the GUID. `0x524f60` returns at once for a unit whose GUID is on the pending list.
 
-Addresses: `0x524e10`, `0x524e44`, `0x524f49`, `0x524cd0`, `0x524d37`, `0x524d42`, `0x524d50`, `0x524d68`, `0x524d77`, `0x524d87`, `0x524dd6`, `0x524de4`, `0x524de9`, `0x483228`, `0x491a50`, `0x524f96`, `0x515e50`, `0xc0cdcc`, `0xc0cdd0`, `0xc0cdd4`, `0x607e0f`
+Addresses: `0x524e10`, `0x524e39`, `0x524e44`, `0x524eab`, `0x524ecd`, `0x524f49`, `0x524cd0`, `0x524cf2`, `0x524d37`, `0x524d42`, `0x524d50`, `0x524d68`, `0x524d77`, `0x524d87`, `0x524dd6`, `0x524de4`, `0x524de9`, `0x483228`, `0x491a50`, `0x524f96`, `0x515e50`, `0xc0cdcc`, `0xc0cdd0`, `0xc0cdd4`, `0x607e0f`
 Confidence: verified
 Proof: one
 Test: none
 
+The new node's previous link is the terminator `0xc0cdd0` and its next link the old first node (`0x524eab`); the old first node's previous link, or the terminator's when the list is empty, becomes the new node, and `0x524ecd` stores the node at the head `0xc0cdd4`. A match on the GUID at `+8` and `+0xc` (`0x524e39`) leaves through the return, before the dirty byte is set at `0x524f49`. The drain starts at `[0xc0cdd4]` (`0x524cf2`) and follows `+4`.
 `0x491a50` is a jump to `0x524e10`, called from the name callback `0x51a100` and from nine callers (`0x5d991b`, `0x5df119`, `0x5e081e`, `0x5e08c9`, `0x5e587f`, `0x5eeda9`, `0x5fb5d0`, `0x5ffbbe`, `0x607e0f`); `0x524cd0` has one caller, the world frame update at `0x483228`. The draining never bakes: the next `SetPortraitTexture` does.
 `0x524cd0` also needs the render device (`0x58a260`, `0x58a280`).
 

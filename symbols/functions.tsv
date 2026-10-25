@@ -6960,7 +6960,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4924c0	190	SelectAreaSpiritHealer		ui	primitive		Selects a spirit guide within 20 yards that may assist the player	verified	one	ui/distancegates#thresholds	ui::dist2_4924c0
 0x492580	76	HandleGroundClick		ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x4925d0	591	SelectObjectByClick		ui	primitive	void __stdcall (uint64_t guid)	Offers the payload to the clicked object, then makes it the target	verified	one	ui/mouseover#selecting-by-click	
-0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Makes the clicked object the target and runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	
+0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Selects the clicked object when its select virtual allows, then runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	
 0x492890	552	PublishWorldMouseover		ui	orchestration	void __stdcall (uint64_t newGuid, uint64_t previousGuid)	Clears the old mouseover, stores the new one and builds its tooltip by object type	verified	one	ui/mouseover#the-publisher	
 0x492b50	163	WorldButtonHook		ui	primitive	uint32_t __thiscall (void *this)	Clears the payload on a right press or sends the press to the world frame in mouselook	verified	one	ui/mouseover#the-world-input-hook	
 0x492c00	31	WorldMouseDeltaHook		ui	orchestration	uint32_t __thiscall (void *this)	Turns the camera for a mouse delta event and consumes it	verified	one	ui/mouseover#mouselook-and-the-pointer-feed	
@@ -11112,8 +11112,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f6080	54	GetCraftSelectionRow		ui	primitive		Returns the row of the selected craft spell, or -1	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f60c0	1381	BuildCraftList		ui	primitive	void __cdecl ()	Builds the craft window rows and headers from the craft list of the current type	verified	one	ui/craft#craft-lists	
 0x4f6630	353	SortCraftList		ui	primitive	void __cdecl ()	Recounts the craft headers and sorts them and the rows	verified	one	ui/craft#craft-order	ui::listorder_craft_beast_training_e2e
-0x4f67a0	381	CompareCraftRows		ui	primitive	int __cdecl (void **a, void **b)	Orders craft rows by group, bucket and name	verified	one	ui/craft#craft-order	ui::sortcmp_4f67a0
-0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by group, bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
+0x4f67a0	381	CompareCraftRows		ui	primitive	int __cdecl (void **a, void **b)	Orders craft rows by visibility, group position (a header row is position 0), bucket and name	verified	one	ui/craft#craft-order	ui::sortcmp_4f67a0
+0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by visibility, group position (a header row is position 0), bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
 0x4f6ac0	105	CompareCraftGroups		ui	orchestration	int __cdecl (void **a, void **b)	Orders craft group headers by the skill line's display name	verified	one	ui/craft#craft-order	
 0x4f6b30	66	GetCraftGroupOfRow		ui	primitive		Returns the group ordinal of a craft header row, or -1	verified	one	tradeskill/craft#collapse-and-cast	
 0x4f6b80	88	IsCraftGroupExpanded		ui	primitive		Returns whether the group of a craft header row is expanded	verified	one	tradeskill/craft#craft-rows	
