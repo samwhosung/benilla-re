@@ -1368,14 +1368,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835248	char *[2]	s_textureExtensions		gx	Holds the pointers to the strings ".tga" and ".blp"	verified	one	gx/textures#texture-name-candidates
 0x835250	uint32_t	s_forcedFilterMode		gx	Holds the filter mode that forced textures take; 3 until a setter writes it	verified	one	gx/textures#texture-flags-word
 0x835254	uint32_t	s_forcedAnisotropy		gx	Holds the anisotropy level that forced textures take when the mode is 5; 1 until a setter writes it	verified	one	gx/textures#texture-flags-word
-0x835258	uint32_t[8]	s_texturePixelTypeToFormat		gx	Maps a pixel type code 0 to 7 to its GxTex format: 5, 6, 1, 3, 2, 4, 0, 7	verified	one	gx/textures#format-choice-and-size-limit
-0x835280	char[8][32]	s_gxTexFormatNames		gx	Holds the names GxTex_Unknown to GxTex_Dxt5 in format order, 32 bytes each	verified	one	gx/textures#format-choice-and-size-limit
+0x835258	uint32_t[8]	s_texturePixelTypeToFormat		gx	Maps a pixel type code 0 to 7 to its GxTex format: 5, 6, 1, 3, 2, 4, 0, 7	verified	one	gx/textures#format-choice
+0x835280	char[8][32]	s_gxTexFormatNames		gx	Holds the names GxTex_Unknown to GxTex_Dxt5 in format order, 32 bytes each	verified	one	gx/textures#format-choice
 0x8354e4	char[53]	s_pathTexture		gx	Holds the source path of Texture.cpp	verified	one	gx/overview#object-files
 0x835604	char[9]	s_textHtexture		gx	Holds the string "HTEXTURE", the tag of texture handles and objects	verified	one	gx/textures#texture-objects
 0x835624	char[15]	s_textUniqueTexture		gx	Holds the string "Unique Texture"	verified	one	gx/textures#texture-creation-variants
 0x835634	char[23]	s_textUniqueTextureNoName		gx	Holds the string "Unique Texture No Name"	verified	one	gx/textures#texture-creation-variants
 0x83564c	char[8]	s_textTexture		gx	Holds the string "texture", the kind word of a load failure message	verified	one	gx/textures#texture-load-failure
 0x835654	char[32]	s_textErrorLoadingFileFormat		gx	Holds the format "Error loading %s file \"%s\": %s\n" of a load failure message	verified	one	gx/textures#texture-load-failure
+0x835674	char[56]	s_textTextureFailureAllocFormat		gx	Holds the format "Texture failure: \"%s\" allocating %dx%d texture failed.\n" of a refused device texture	verified	one	gx/texturesize#refused-requests
+0x8356ac	char[45]	s_textTextureFailureDecompression		gx	Holds the format "Texture failure: \"%s\" decompression failed.\n" of a refused BLP decode	verified	one	gx/texturesize#blp-load-order
+0x8356dc	char[44]	s_textTextureFailureVersion		gx	Holds the format "Texture failure: \"%s\" invalid file version\n" of a refused BLP header	verified	one	gx/texturesize#blp-load-order
 0x835708	char[14]	s_textSolidTexture		gx	Holds the string "Solid Texture"	inferred	none	
 0x835908	uint8_t[32]	s_sysMsgColors		sysmsg	Holds four 8-byte records: R, G, B, a pad byte and a float duration, for message levels 0 to 3	verified	one	sysmsg#colour-table
 0x835928	int32_t	s_sysMsgEnabled		sysmsg	Holds the display switch, 1 at start-up; nothing reads it but the unreached getter	verified	one	sysmsg#display-switch-and-window
@@ -2615,7 +2618,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x905bd4	const char *	s_blpBasenameReplaced		gx	Holds the BLP file name to replace, or null; written by TextureSetBasenameSubstitution	verified	one	gx/textures#texture-basename-substitution
 0x905bd8	const char *	s_blpBasenameReplacement		gx	Holds the file name that replaces the BLP file name of 0x905bd4	verified	one	gx/textures#texture-basename-substitution
 0x905be4	char[2097152]	s_textureFileArea		gx	Holds the static 2 MiB area whose slices buffer async texture file reads	verified	one	gx/textures#texture-file-creation
-0xb05bec	uint32_t[75]	s_texturePoolLists		gx	Holds the 25 size-class lists of free pooled device textures, 12 bytes each	verified	one	gx/textures#device-texture-pool
+0xb05bec	uint32_t[75]	s_texturePoolLists		gx	Holds the 25 size-class lists of free pooled device textures, 12 bytes each	verified	one	gx/texturesize#pool-lists
 0xb05d18	uint32_t	s_textureFileBytesUsed		gx	Holds the bytes of the static file area already given to async texture records	verified	one	gx/textures#texture-file-creation
 0xb05d1c	uint32_t	s_bufferedTextureRecords		gx	Counts the async texture records holding a slice of the static file area	verified	one	gx/textures#texture-objects
 0xb05d20	uint32_t	s_pinnedTextureRecords		gx	Counts the async texture records pinned by a wait	verified	one	gx/textures#texture-objects
