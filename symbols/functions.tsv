@@ -34307,7 +34307,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c270	11	InitInfinity78c270		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x78c280	96			ui	orchestration		Runs its object file code that calls 0x78ced0, FrameScriptReleaseScript, SMemFree; not read here	inferred	none		
 0x78c2e0	124	CSimpleMovieFrame::GetScriptByName		ui	orchestration		Returns a MovieFrame's handler slot by name, adding its three movie handlers	verified	one	ui/xmltypes#handler-names-by-type	
-0x78c360	1080	ReadMovieAvi		ui	primitive		Reads the movie AVI file into the video and audio buffers	verified	one	ui/movieframe#the-file	
+0x78c360	1080	ReadMovieAvi		ui	primitive		Reads the movie AVI file into the video and audio buffers	verified	one	ui/movieframe#the-file	ui::movie_avi_read_whole
 0x78c7a0	495	StartMovieDecoder		ui	host		Creates the DivX decoder instance and the tile textures for a movie	verified	one	ui/movieframe#the-decoder	
 0x78c990	158	StopMovieDecoder		ui	primitive		Destroys the decoder instance, the output bitmap and the tile textures	verified	one	ui/movieframe#the-decoder	
 0x78ca30	111	StartMovieAudio		ui	primitive		Opens and plays the movie audio as a memory stream	verified	one	ui/movieframe#audio	

@@ -8,17 +8,14 @@ Roots: `0x78c360`, `0x78c7a0`, `0x78ca30`, `0x78cb00`, `0x78cf30`, `0x78d1a0`, `
 
 ## The file
 
-`0x78c360(name)` opens `<name>.avi` and reads it whole. It requires the `RIFF` and `AVI ` tags, reads the `hdrl` list, and takes from the first
-`vids` stream header the frame rate (`dwRate / dwScale`, stored as a float at `+0x33c`) and the frame count (`dwLength`, at `+0x348`), and from the
-stream format that follows the width and the height (`+0x340`, `+0x344`). It then walks the `idx1` index in 16-byte entries: an entry whose chunk
-id ends in `d` (video) is read into one buffer as a size and the data, and one ending in `w` (audio) is appended to a second. Any other chunk of the file is skipped.
+`0x78c360(name)` opens `<name>.avi`. It requires the `RIFF` and `AVI ` tags, reads the `hdrl` list and the `idx1` index, and skips every other chunk by its size, `movi` included. Each `vids` stream header gives the frame rate (`dwRate / dwScale`, a float at `+0x33c`) and frame count (`dwLength`, `+0x348`), the last winning. A `strf` after a video header and before any audio header gives the width and height (`+0x340`, `+0x344`). An `idx1` entry whose chunk id has `d` as its third letter (`00dc`, `00db`) is video and one with `w` as its third (`01wb`) is audio; the entry's offset counts from the `movi` list's type field. Video goes to one buffer as size and data, audio to a second.
 
-Addresses: `0x78c360`, `0x78c370`, `0x78c39f`, `0x78c3e3`, `0x78c3fb`, `0x78c459`, `0x78c4a0`, `0x78c4d0`, `0x78c577`, `0x78c58e`, `0x78c5ba`, `0x78c5c3`, `0x78c5cd`, `0x78c616`, `0x78c620`, `0x78c650`, `0x78c6d0`, `0x78c716`, `0x78c68e`, `0x78c6ac`
+Addresses: `0x78c360`, `0x78c370`, `0x78c39f`, `0x78c3e3`, `0x78c3fb`, `0x78c459`, `0x78c4a0`, `0x78c4bb`, `0x78c4d0`, `0x78c577`, `0x78c58e`, `0x78c5ba`, `0x78c5c3`, `0x78c5cd`, `0x78c5d3`, `0x78c5ef`, `0x78c601`, `0x78c616`, `0x78c620`, `0x78c650`, `0x78c664`, `0x78c68e`, `0x78c6ac`, `0x78c6d0`, `0x78c6eb`, `0x78c70f`, `0x78c716`, `0x78c728`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::movie_avi_read_whole`
 
-`0x78c370` formats `%s.avi` and `0x78c39f` opens it. `0x78c3e3` and `0x78c3fb` compare the tags; `0x78c459`, `0x78c4a0` and `0x78c4d0` look for the `hdrl`, `movi` and `idx1` chunks. `0x78c58e` tests `vids` and `0x78c5ba` to `0x78c5cd` store the rate and the frame count. `0x78c650` and `0x78c664` test the chunk id letters 0x64 (`d`) and 0x77 (`w`) of each index entry; `0x78c68e` and `0x78c6ac` allocate the two buffers.
+`0x78c370` formats `%s.avi` and `0x78c39f` opens it. `0x78c3e3` and `0x78c3fb` compare the tags with `SStrCmpI`, which ignores case; `0x78c459`, `0x78c4a0` and `0x78c4d0` look for the `hdrl`, `movi` and `idx1` chunks. `0x78c58e` tests `vids` and `0x78c5ba` to `0x78c5cd` store the rate and the frame count each time. `0x78c5d3` tests `auds` and `0x78c5ef` tests `strf`; `0x78c601` to `0x78c620` store the width and height only when a video header came before and no audio header has. `0x78c650` is `cmp BYTE PTR [edi+eax*1+0x2],0x64` and `0x78c664` the same with `0x77`: the id's third byte, so `00db` is video and `01wb` audio whatever their last letters. `0x78c68e` and `0x78c6ac` allocate the buffers; the video one takes four bytes more for each size. `0x78c4bb` reads the file position after the `movi` type, `P`; `0x78c6eb` and `0x78c728` seek to `offset + P + 4`: the index counts from the type field, `P - 4`, where the chunk header is, and the data is 8 bytes on. The test runs the whole function over files it builds, with the Storm open, read, seek, close and allocation stubbed over an in-memory file; `SStrCmpI` and `__alloca_probe` run as the exe has them.
 
 ## The decoder
 
