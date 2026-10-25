@@ -153,7 +153,7 @@ constants' dwords. `ω·t` and the sum stay at 53 bits; `t` is a float.
 
 `0x7c5360(ms, override, out)` returns 0 for `ms = 0`. Else `t = fl(ms · 0.001)` (`0x3a83126f`, `ms`
 unsigned), and builds a mode. With `0x30` set or `override` not null it calls
-`0x7c4f30(t, override)` and sets bit 2 unless `0x2000` (falling) is set; with `0xc0` it calls
+`0x7c4f30(t, override)` and sets bit 2 unless `0x2000` (falling) is set; with `0xc0`, swimming or not, it calls
 `0x7c4f80(t)` and sets bit 8; `0x3` sets bit 1 and `0xc` bit 4. The mode picks the displacement:
 
 | modes (1 move, 2 turn, 4 strafe, 8 pitch) | handler | returns |
@@ -167,20 +167,21 @@ unsigned), and builds a mode. With `0x30` set or `override` not null it calls
 
 With no handler `out` is untouched; every caller zeroes it first.
 
-Addresses: `0x7c5360`, `0x7c53af`, `0x7c53d9`, `0x7c53e6`, `0x7c5468`, `0x7c547c`, `0x616de0`, `0x618bb0`, `0x619090`, `0x618920`
+Addresses: `0x7c5360`, `0x7c53af`, `0x7c53b9`, `0x7c53d9`, `0x7c53e6`, `0x7c5468`, `0x7c547c`, `0x616de0`, `0x618bb0`, `0x619090`, `0x618920`
 Confidence: verified
 Proof: one
-Test: `collision::tf_substep_dt_difftest`
+Test: `collision::tf_substep_dt_difftest`, `collision::pitch_land_step_trace`
 
 `0x7c538a` is `fild qword` of `ms` with a zero high dword. `0x7c53af`: `test ah,0x20; jne` keeps
-bit 2 clear while falling, so a falling turn still turns the facing but the path stays straight.
+bit 2 clear while falling, so a falling turn still turns the facing but the path stays straight. `0x7c53b9` is `test al,0xc0; je`; no read of 0x2000 gates it.
 `0x7c53d9`: `dec edi; cmp edi,0xe; ja`, so mode 0 wraps and exits with 1. `0x7c53e6` indexes the
 dword table `0x7c5468` (`0x7c53f8`, `0x7c53ed`, `0x7c5412`, `0x7c5430`, `0x7c544a`) by the byte
 table `0x7c547c`: `00 01 02 00 00 02 02 01 03 01 04 00 03 02 04`. `0x7c53ed` returns 0. The
 callers `0x616de0`, `0x618bb0` and `0x619090` zero `out` and pass the elapsed `+0x58` (`0x619090`
 adds a time difference to it) and `0x618920()`, which is `+0x144` when the float `+0x148` is not 0
 (NaN counts as not 0), else null.
-The tests run `0x7c538a` to `0x7c5396`.
+`tf_substep_dt_difftest` runs `0x7c538a` to `0x7c5396`; `pitch_land_step_trace` runs the whole
+function on movers that do not swim.
 
 ## Straight line displacement
 
@@ -237,6 +238,34 @@ Test: `collision::pitch_arc_difftest`
 `0x7c526a` is `fabs; fcomp 2⁻²⁰` (`0x35800000`), `test ah,5; jnp` skipping for less. The
 correction adds to the register `z` kept by `fst` at `0x7c5262`: `fadd st,st(1)` or
 `0x7c52a6` `d8 e9`, `fsubr st,st(1)`, `z − τ·s`. `ret 8`.
+
+## Pitch arc on land
+
+A mover with 0x40 or 0x80 integrates its pitch and takes modes 9 and 13 on land: `0x7c5360` has no
+swim test. After the landing's re-anchor the basis is (1, 0), so the step is
+`(H·hx, H·hy)`, `z = V`, and a walker's commit drops `z` (`0x616cb0`). Below the clamp
+`H = Rv·sin(p·t)`; past it `H = Rv·cos a` for anchor pitch `a`, and 0 from a saturated anchor. With
+`a·p < 0`, H peaks at `|Rv|` and falls back: a = −0.4, p = 2.25 peaks at 0.70 s, clamps at
+0.88 s. Modes 2, 8 and 10 return 0, so `0x616de0` does not step a falling mover with only a pitch
+bit; `0x618bb0` steps once.
+
+Addresses: `0x7c5360`, `0x7c53af`, `0x7c53b9`, `0x7c53ed`, `0x7c5180`, `0x7c51a8`, `0x7c51ab`, `0x7c4f80`, `0x7c5880`, `0x7c5933`, `0x7c593a`, `0x7c61f0`, `0x7c61f8`, `0x7c6290`, `0x7c62a5`, `0x616cb0`, `0x616cfa`, `0x616d03`, `0x616de0`, `0x616ebd`, `0x616ebf`, `0x616f39`, `0x616d16`, `0x618bb0`, `0x634040`
+Confidence: verified
+Proof: one
+Test: `collision::pitch_land_step_trace`
+
+`0x7c53af` reads 0x2000 only to skip the bit 2 store; nothing gates `0x7c53b9`. `0x7c5880` without
+0x200000 stores 0 at `+0x74` and 1.0 at `+0x70` (`0x7c5933`, `0x7c593a`), so in `0x7c5180`
+`P = H·1 − V·0` and `z = V·1 + H·0`. `Δ = fl(p·t)` below the clamp (`0x7c51a8`, `0x7c51ab`); for
+`a + p·t > π/2`, `Δ = π/2 − a`, so `H = Rv·cos a`, and at `a = ±π/2` `H = V = 0`. After a swim jump
+`0x7c61f0` re-anchors (`0x7c61f8`) before it clears 0x200000, so the airborne leg runs mode 9 on the
+swim basis (cos p0, sin p0) when `|p0| ≥ 2⁻²⁰`; (1, 0) applies after the landing's re-anchor
+(`0x7c62a5`). The table byte for modes 2, 8 and 10 selects the return-0 block `0x7c53ed`.
+`0x616ebd test eax,eax; je 0x616f8e` leaves `0x616de0` before `0x616f39 call 0x616cb0`, the caller
+of the resolver `0x634040` (`0x616d16`). `0x618bb0` ignores the return and steps once with the
+delta left. `0x616cfa` and `0x616d03` keep the vertical step only for 0x200800 or a flying spline.
+The test runs the whole `0x7c5360` on non-swimming movers, with and without the `override` branch
+(`0x7c539b`, `0x7c4f3d`).
 
 ## Turn and pitch displacement
 

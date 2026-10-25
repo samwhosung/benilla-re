@@ -178,7 +178,7 @@ falls through to load 0.0. Every step is at 53 bits until the caller's `fstp` at
 
 `0x7c61f0(v)` re-anchors with `0x7c5cd0(0)` while the old flags still stand, then clears
 0x200000 and 0x4000000, sets 0x2000, zeroes `+0x78`, copies z to `+0x7c` and stores v verbatim
-at `+0xa0`. It leaves 0x4000 and the current speed `+0x84` alone. Because the anchor runs before
+at `+0xa0`. It leaves 0x4000, the pitch bits 0xc0 and the current speed `+0x84` alone. Because the anchor runs before
 0x2000 is set, a fall begun on the ground recomputes the direction from the held bits, and one
 begun in the air keeps it. `0x7c61c0` calls `0x7c61f0(0)` and returns 1, unless a spline is live
 (present at `+0xa4`, its flags without 0x4 and with 0x200) or `+0x40` has any of 0x203800:
@@ -204,7 +204,7 @@ for no spline, `0x7c61cd` `test al,4` and `0x7c61d1` `test ah,2` read the spline
 set (`0x7c6236`, `0x7c623a`); when the spline test of `0x7c61c0` refuses; or when root or falling,
 0x3000, is set (`0x7c625c`). Otherwise it starts the fall through `0x7c61f0` with the initial
 vertical speed −7.955547 (`0xc0fe93d8`), or −9.096748 (`0xc1118c48`) while swimming
-(`0x7c6261`), and returns 1. Swimming does not refuse a jump, and the jump clears it. A land jump
+(`0x7c6261`), and returns 1. Swimming does not refuse a jump, and the jump clears it but not the pitch bits. A land jump
 rises 1.64041 yd in 0.41239 s, a swim jump 2.14479 yd in 0.47155 s. The command paths pass
 check 1; the hover handler `0x61a620` passes 0.
 

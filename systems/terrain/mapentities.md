@@ -74,18 +74,23 @@ face trace. `0x6a89a3` and `0x6a89aa` (`test ah,5; jp`) accept only a strictly s
 
 `0x69cdb0` queues a chunk's doodads for the segment trace. A def is queued when its flags word
 `+0xc` has bit 0x80 and not 0x100, it has a model and its stamp `+0x8c` differs from the query's
-`0xc89f20`; the mode follows its collision data (`+0x180`, `+0x184`) and the query mask: with data
-3 for bit 0x100000, 1 for 0x600000; without, 3 for bit 1 and 1, or 2 under 0x1000000, for bits 2
-and 4. It then stamps the def.
+`0xc89f20`. The mode follows the owner. A def with a game object GUID in `+0x180`, `+0x184` takes
+3 under the class bit 0x100000, else 1 under 0x600000, else is not queued. A static doodad, whose
+pair is zero, takes 3 under bit 0x1, else 1 under 0x2 or 0x4, or 2 when the word also has
+0x1000000. A def that passes the checks is stamped, queued or not.
 
-Addresses: `0x69cdb0`, `0x69cdf0`, `0x69cdf4`, `0x69cdfb`, `0x69ce1b`, `0x69ce2a`, `0x69ce39`, `0x69ce45`, `0x69ce4a`, `0x69ce5d`, `0x69ce6b`, `0x713cb0`, `0xc89f20`
+Addresses: `0x69cdb0`, `0x69cdf0`, `0x69cdf4`, `0x69cdfb`, `0x69ce0d`, `0x69ce13`, `0x69ce1b`, `0x69ce2a`, `0x69ce39`, `0x69ce45`, `0x69ce4a`, `0x69ce5d`, `0x69ce62`, `0x69ce6b`, `0x713cb0`, `0xc89f20`, `0x6707c0`, `0x6708ba`, `0x6708c6`, `0x6a7d00`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x69cdf0` tests `ah` bit 0 (0x100), `0x69cdf4` the sign of `al` (0x80), `0x69cdfb` the stamp. The
-branches on the mask are `0x69ce1b`, `0x69ce2a`, `0x69ce39`, `0x69ce45`, `0x69ce4a`; `0x69ce5d` calls
-the model queue `0x713cb0` with the mode and 0. What the mode means to the model is not read here.
+`0x69cdf0` tests `ah` bit 0 (0x100), `0x69cdf4` the sign of `al` (0x80), `0x69cdfb` the stamp.
+`0x69ce0d` and `0x69ce13` combine the pair's two dwords with `or`; zero takes `0x69ce39`. A game object's model sets
+the pair: `0x6707c0` stores its GUID at `0x6708ba` and `0x6708c6` after building the def, and the
+constructor `0x6a7d00` leaves it zero. The branches on the mask are `0x69ce1b`, `0x69ce2a`, `0x69ce39`,
+`0x69ce45`, `0x69ce4a`; `0x69ce5d` calls the model queue `0x713cb0` with the mode and 0, and a mask that
+matches none jumps to the stamp `0x69ce62`. Mode 3 tests collision triangles, and modes 1 and 2 the
+skinned render mesh, mode 2 only its blend 0 batches (`models/scene#ray-hits`).
 
 ## Entity environment
 

@@ -169,6 +169,28 @@ Test: none
 `0x7c6e93` store 0 at `+0x54` and `+0x20`; `0x7c6e9a` `call 0x7c61c0` with its result
 ignored; `0x7c6ea3` `call 0x7c5c20`. `0x7c61c0` re-anchors only inside `0x7c61f0`.
 
+## Pitch bits after swimming
+
+A jump leaves the pitch bits set when it ends swimming. `0x7c6230` accepts a swimmer and calls
+`0x7c61f0`, which clears 0x200000 and 0x4000000 and not 0xc0, and the landing `0x7c6290` clears 0x2000
+and 0x4000 only. `0x7c6e80` clears 0xc0 with 0x200000, and `0x7c61c0` refuses a swimmer. The bits stay
+until `0x7c6e30`, `0x7c6f70`, `0x7c7340`, `0x7c69a0` or a status that replaces the word clears them.
+The input tick sends a pitch stop only while swimming, and its latch 0x80000 outlives the water, so
+releasing the key on land clears nothing.
+
+Addresses: `0x7c6230`, `0x7c61f0`, `0x7c6206`, `0x7c61c0`, `0x7c61d6`, `0x7c6290`, `0x7c6e80`, `0x7c6e83`, `0x7c6e30`, `0x7c6f70`, `0x7c7340`, `0x7c69a0`, `0x61a770`, `0x618c30`, `0x619320`, `0x514640`, `0x514766`, `0x5147e9`, `0x515010`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c6206 and eax,0xfbdfffff` clears 0x4000000 and 0x200000; `0x7c6e83 and [esi+0x40],0xffdfff3f`
+adds 0xc0. `0x7c61d6 test [ecx+0x40],0x203800` refuses a swimmer. The callers of `0x7c61f0`
+besides these are `0x6179dd`, which follows `0x7c6e80`, the walk resolver, which never runs on a
+swimmer, and the probe `0x635ff7`, which restores the flags it saved (`0x635f6a`). `0x514766
+test [edx+0x40],0x200000; je` gates the emitter `0x515010`, and `0x5147e9` the stop on the
+stunned branch, which clears the latch at `0x5147fa` swimming or not; the emitter leaves it alone on land. The status writers mask with 0x75a07dff, which
+holds 0xc0.
+
 ## Facing and pitch setters
 
 `0x7c6f30(f)` stores f at `+0x1c` when |f − `+0x1c`| is 2⁻²⁰ or more, or NaN, and then

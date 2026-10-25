@@ -136,7 +136,7 @@ switch.
 
 ## Pitch start and stop
 
-Pitch up is 0x40 and pitch down 0x80, both only while swimming. `0x61a290`, for opcodes 0xbf and
+Pitch up is 0x40 and pitch down 0x80, set only while swimming. `0x61a290`, for opcodes 0xbf and
 0xc0, applies tag 0xb (up) or 0xc (down) through `0x618f20`; applied, `0x7c6df0(up)` sets one bit
 and clears the other when swimming and re-anchors, and the mover is linked. `0x61a320`, for 0xc1,
 applies tag 0xd; applied, `0x7c6e30` clears both bits, returning 1 if one was set, and an idle

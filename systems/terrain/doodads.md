@@ -226,10 +226,10 @@ and stores `0x810a64` (0.5) in `+0xa4`; `0x69e48d` does the same for an entity's
 
 `0x6a7d00` constructs a doodad def on the shared map base (`0x6c3020`). It gives the def its
 point light list, sets its cull state `+0x94` to 1, sets type bit 0x40 in `+0x8`, clears the
-model, the sound handle, the lighting callback `+0x174` and the lists, makes the matrices
+model, the sound handle, the lighting callback `+0x174`, the game object GUID pair `+0x180`, `+0x184` and the lists, makes the matrices
 identity, and stores the doodad def vtable `0x810a74`.
 
-Addresses: `0x6a7d00`, `0x6a7d0a`, `0x6a7d14`, `0x6a7d21`, `0x6a7d55`, `0x6a7d79`, `0x6a7e0e`, `0x6a7eb0`, `0x6a7eb9`, `0x6a7ec8`, `0x6c3020`, `0x810a74`
+Addresses: `0x6a7d00`, `0x6a7d0a`, `0x6a7d14`, `0x6a7d21`, `0x6a7d55`, `0x6a7d79`, `0x6a7e0e`, `0x6a7eb0`, `0x6a7eb9`, `0x6a7ec8`, `0x6a7ed4`, `0x6a7eda`, `0x6c3020`, `0x810a74`
 Confidence: verified
 Proof: one
 Test: none
@@ -237,7 +237,7 @@ Test: none
 `0x6a7d0a` calls the base; `0x6a7d14` and `0x6a7d21` make the list at `+0x7c` with link offset 0x7c. `0x6a7d55` stores
 the base vtable first and `0x6a7eb0` the def's `0x810a74` last. `0x6a7d79` sets `+0x94` to 1, `0x6a7e0e`
 onward the identity entries (1.0 at `+0xcc`, `+0xe0`, `+0xf4`, `+0x108`, `+0x10c`, `+0x120`, `+0x134`,
-`+0x148`), `0x6a7eb9` ORs 0x40 into `+0x8`, `0x6a7ec8` clears `+0x174`.
+`+0x148`), `0x6a7eb9` ORs 0x40 into `+0x8`, `0x6a7ec8` clears `+0x174`, `0x6a7ed4` and `0x6a7eda` the pair.
 
 ## Doodad def release
 
