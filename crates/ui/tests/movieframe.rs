@@ -443,6 +443,11 @@ struct Spec {
     index: Option<Vec<usize>>,
     /// A chunk before `hdrl`, between it and `movi`, and after the index.
     junk_before: bool,
+    /// An odd-size chunk (7 bytes and its pad byte) before `hdrl`: the walk skips the size alone.
+    odd_before: bool,
+    /// A `LIST` whose size is 2, under the 4 of its type, before `hdrl`: the relative seek by
+    /// size - 4 goes back two bytes, onto a `JUNK` header the list's type and the next bytes make.
+    short_list: bool,
     junk_between: bool,
     junk_after: bool,
 }
@@ -485,6 +490,17 @@ fn build(spec: &Spec) -> Vec<u8> {
     let mut body = spell(spec, b"AVI ").to_vec();
     if spec.junk_before {
         body.extend(chunk(b"JUNK", &[7; 12]));
+    }
+    if spec.odd_before {
+        body.extend(chunk(b"JUNK", &[5; 7]));
+    }
+    if spec.short_list {
+        body.extend(*b"LIST");
+        body.extend(le(2));
+        body.extend(*b"abJU");
+        body.extend(*b"NK");
+        body.extend(le(6));
+        body.extend([3; 6]);
     }
     body.extend(hdrl);
     if spec.junk_between {
@@ -692,6 +708,8 @@ fn base() -> Spec {
         ],
         index: Some(vec![0, 1, 2, 3, 4]),
         junk_before: false,
+        odd_before: false,
+        short_list: false,
         junk_between: false,
         junk_after: false,
     }
@@ -845,6 +863,36 @@ fn movie_avi_read_whole() {
         assert_eq!(read_movie_avi(&bad), None);
         cases += 1;
     }
+
+    // A chunk is skipped by its size alone: after an odd-size chunk and its pad byte the next
+    // header is read from the pad byte, so `hdrl` is never found; a reader that pads finds it.
+    let mut spec = base();
+    spec.odd_before = true;
+    let got = rig.check("odd chunk before hdrl", &spec);
+    assert_eq!(
+        (got.frame_rate, got.width),
+        (None, None),
+        "no hdrl after an odd chunk"
+    );
+    assert!(
+        got.video.is_empty() && got.audio.is_empty(),
+        "no idx1 either"
+    );
+    // A relative seek is a signed distance: a LIST size under 4 goes back, onto a header there.
+    let mut spec = base();
+    spec.short_list = true;
+    let got = rig.check("short list", &spec);
+    assert_eq!(
+        got.frame_rate,
+        Some((30000.0f64 / 1001.0) as f32),
+        "hdrl found after the short list"
+    );
+    assert_eq!(
+        (got.video, got.audio),
+        by_the_format(&base()),
+        "the data after it"
+    );
+    cases += 2;
 
     // Fuzz: stream order and count, ids from the pool above, chunk sizes, index order and repeats.
     let mut seed = 0x78c3_6001u32;

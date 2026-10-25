@@ -133,17 +133,17 @@ fn le32(b: &[u8], at: usize) -> u32 {
 /// An open file with a position, as `SFile::Read` and `SFile::SetFilePointer` see it.
 struct Cursor<'a> {
     data: &'a [u8],
-    pos: u64,
+    pos: i64,
 }
 
 impl Cursor<'_> {
     /// Reads `n` bytes. A short read keeps what exists, advances past it and fails.
     fn read(&mut self, n: usize) -> (Vec<u8>, bool) {
         let start = usize::try_from(self.pos)
-            .unwrap_or(usize::MAX)
+            .expect("a seek before the start of the file")
             .min(self.data.len());
         let end = start.saturating_add(n).min(self.data.len());
-        self.pos += (end - start) as u64;
+        self.pos += (end - start) as i64;
         (self.data[start..end].to_vec(), end - start == n)
     }
 }
@@ -151,8 +151,17 @@ impl Cursor<'_> {
 /// `0x78c360(name)` over the bytes of the file it opens: `None` when it returns 0 (the open
 /// fails, a short first read, or a `RIFF` or `AVI ` tag that does not match, ignoring case), else
 /// what it stores. Runs the chunk walk (`0x78c422`), the `hdrl` walk (`0x78c555`), the two passes
-/// over `idx1` (`0x78c650`, `0x78c6d0`) and stops a walk at the first read that fails. Defined
-/// for a `hdrl` and an `idx1` that are whole and a multiple of 16 bytes, as a real file has.
+/// over `idx1` (`0x78c650`, `0x78c6d0`) and stops a walk at the first read that fails. A relative
+/// seek, a skipped chunk's size or a `LIST` size under 4 included, is a signed distance.
+///
+/// Defined for a `hdrl` and an `idx1` that are whole, an `idx1` that is a multiple of 16 bytes,
+/// seeks that stay inside the file and entries whose data lie inside it.
+///
+/// # Panics
+///
+/// On a read past the end of the file in the second pass over `idx1`: the client leaves the
+/// bytes it did not read as the allocator gave them, which are undefined, so there is no value
+/// to return.
 pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
     let mut f = Cursor { data: file, pos: 0 };
     let (head, ok) = f.read(12);
@@ -161,7 +170,7 @@ pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
     }
     let mut hdrl = Vec::new();
     let mut idx1 = Vec::new();
-    let mut movi = 0u64; // `[ebp-0x1c]`: the position after the `movi` type, else 0
+    let mut movi = 0i64; // `[ebp-0x1c]`: the position after the `movi` type, else 0
     loop {
         let (h, ok) = f.read(8);
         if !ok {
@@ -173,7 +182,7 @@ pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
             if !ok {
                 break;
             }
-            let body = size.wrapping_sub(4) & 0xffff_ffff;
+            let body = (size as u32).wrapping_sub(4) as usize;
             if tag_is(&ty, b"hdrl") {
                 let (b, ok) = f.read(body);
                 hdrl = b;
@@ -184,7 +193,7 @@ pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
                 if tag_is(&ty, b"movi") {
                     movi = f.pos;
                 }
-                f.pos += body as u64;
+                f.pos += i64::from(body as u32 as i32);
             }
         } else if tag_is(&h, b"idx1") {
             let (b, ok) = f.read(size);
@@ -193,7 +202,7 @@ pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
                 break;
             }
         } else {
-            f.pos += size as u64;
+            f.pos += i64::from(size as u32 as i32);
         }
     }
 
@@ -242,9 +251,9 @@ pub fn read_movie_avi(file: &[u8]) -> Option<MovieAvi> {
         let (offset, size) = (le32(e, 8), le32(e, 12));
         if e[2] == 0x64 || e[2] == 0x77 {
             // 0x78c6eb, 0x78c728: seek to offset + P + 4 from the start, P = `movi`
-            f.pos = u64::from(offset.wrapping_add(movi as u32).wrapping_add(4));
-            let (mut data, _) = f.read(size as usize);
-            data.resize(size as usize, 0); // the buffer's bytes past a short read stay as allocated
+            f.pos = i64::from(offset.wrapping_add(movi as u32).wrapping_add(4));
+            let (data, whole) = f.read(size as usize);
+            assert!(whole, "entry data past the end of the file");
             if e[2] == 0x64 {
                 out.video.extend_from_slice(&size.to_le_bytes());
                 out.video.extend_from_slice(&data);

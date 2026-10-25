@@ -34317,12 +34317,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78ce40	135	StartMoviePlayback		ui	orchestration		Reads, decodes and starts a movie, returning whether all steps worked	verified	one	ui/movieframe#starting-and-stopping	
 0x78ced0	85	StopMoviePlayback		ui	orchestration		Ends a playing movie and runs OnMovieFinished	verified	one	ui/movieframe#starting-and-stopping	
 0x78cf30	624	AdvanceMovie		ui	primitive		Advances the movie clock, decodes the due frames and runs the caption handlers	verified	one	ui/movieframe#clock-and-frame-choice	
-0x78d1a0	924	DrawMovie		ui	primitive		Draws the tile textures of the movie as quads over the window	verified	one	ui/movieframe#drawing	
+0x78d1a0	924	DrawMovie		ui	primitive		Draws the tile textures of the movie as quads over the window	inferred	none	ui/movieframe#drawing	
 0x78d540	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d550	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d560	237	DecodeMovieFrame		ui	host		Decodes the next movie frame and copies its tiles to the textures when shown	verified	one	ui/movieframe#decoding-a-frame	
-0x78d650	46	RegisterMovieLayer		ui	orchestration		Registers a movie frame layer and its draw callback	verified	one	ui/movieframe#drawing	
-0x78d680	42	MovieLayerCallback		ui	orchestration		Advances and draws the movie of a frame when it is playing	verified	one	ui/movieframe#drawing	
+0x78d650	46	CSimpleMovieFrame::EmitLayer		ui	orchestration	void __thiscall (CSimpleMovieFrame *this, void *batch, uint32_t layer)	Emits the frame's layer and, for layer 2, adds the movie's draw callback to the batch	verified	one	ui/movieframe#presenting-mid-frame	
+0x78d680	42	MovieLayerCallback		ui	orchestration		Advances and draws the movie of a frame when it is playing, then presents	verified	one	ui/movieframe#presenting-mid-frame	
 0x78d6b0	5	InitDouble78d6c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78d6c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78d6c0	15	InitDouble78d6c0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x78d6d0	5	InitQuotient78d6e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78d6e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
