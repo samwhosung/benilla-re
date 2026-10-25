@@ -237,17 +237,15 @@ the select.
 
 ## Interacting by click
 
-Interacting (`0x492820`, action 4) makes any object the target and calls the object's interact virtual with the
-Shift state as its argument. `0x4949f0(action, guid)` runs select for 1 and interact for 4 when an active player
-exists.
+Interacting (`0x492820`, action 4) looks the GUID up as any object and, when one is found, calls the select `0x493540` and then the object's interact virtual (slot 0x60) with the Shift state as its argument. The interact runs for every found object. The select stores a target only when the object's slot 0x58 answers nonzero, and only units and players give a nonzero answer: a game object, a corpse, an item or a dynamic object is interacted with and never becomes the target. While a spell awaits a target, the select binds the object to the spell instead. `0x4949f0(action, guid)` runs select for 1 and interact for 4 when an active player exists.
 
-Addresses: `0x492820`, `0x4949f0`, `0x493540`, `0x41f8f0`
+Addresses: `0x492820`, `0x4949f0`, `0x493540`, `0x41f8f0`, `0x4935ca`, `0x4935ee`, `0x4935f3`, `0x469fe0`, `0x5f1ec0`, `0x60be60`, `0x80c4f8`, `0x80af78`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x492870` selects and `0x492881` calls slot 0x60 of the object with the result of `0x41f8f0(0)`, the Shift state
-(`core/input#key-codes`). `0x494a15` and `0x494a2c` test the action for 1 and 4.
+`0x492870` calls the select and discards its answer, and `0x492881` calls slot 0x60 of the object with the result of `0x41f8f0(0)`, the Shift state
+(`core/input#key-codes`). `0x4935ee` calls slot 0x58 and `0x4935f3` returns when it answers 0, before the selection store at `0x493605`. The unit table `0x80c4f8` and the player table `0x80af78` hold `0x5f1ec0` there, a jump through slot 0x54 (`0x60be60`), which can still answer 0 for a unit. The item, container, game object, dynamic object, corpse and base tables hold `0x469fe0`, which is `xor eax,eax; ret`. `0x4935ca` tests the spell-targeting word first. `0x494a15` and `0x494a2c` test the action for 1 and 4.
 
 ## Pressing a nameplate
 

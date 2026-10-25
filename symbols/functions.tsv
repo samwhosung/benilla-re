@@ -6960,7 +6960,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4924c0	190	SelectAreaSpiritHealer		ui	primitive		Selects a spirit guide within 20 yards that may assist the player	verified	one	ui/distancegates#thresholds	ui::dist2_4924c0
 0x492580	76	HandleGroundClick		ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x4925d0	591	SelectObjectByClick		ui	primitive	void __stdcall (uint64_t guid)	Offers the payload to the clicked object, then makes it the target	verified	one	ui/mouseover#selecting-by-click	
-0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Makes the clicked object the target and runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	
+0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Selects the clicked object when its select virtual allows, then runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	
 0x492890	552	PublishWorldMouseover		ui	orchestration	void __stdcall (uint64_t newGuid, uint64_t previousGuid)	Clears the old mouseover, stores the new one and builds its tooltip by object type	verified	one	ui/mouseover#the-publisher	
 0x492b50	163	WorldButtonHook		ui	primitive	uint32_t __thiscall (void *this)	Clears the payload on a right press or sends the press to the world frame in mouselook	verified	one	ui/mouseover#the-world-input-hook	
 0x492c00	31	WorldMouseDeltaHook		ui	orchestration	uint32_t __thiscall (void *this)	Turns the camera for a mouse delta event and consumes it	verified	one	ui/mouseover#mouselook-and-the-pointer-feed	
