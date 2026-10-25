@@ -6781,7 +6781,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the 1-based list index of the gx colour, depth and multisample options, or 1 on a miss	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c640	361	Script::SetMultisampleFormat	idb	ui	primitive	int __fastcall (lua_State *L)	Writes the chosen multisample entry to its three options and runs gxRestart when it differs	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c7b0	264	Script::RandomRoll	idb	ui	primitive	int __fastcall (lua_State *L)	Sends a random roll request for a range up to 1000000	verified	one	ui/groupverbs#small-sends	
-0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends the cinematic completion message	verified	one	ui/groupverbs#small-sends	
+0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends the opening-cinematic request, opcode 0xf9	verified	one	ui/groupverbs#small-sends	
 0x48c930	38	Script::InCinematic	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns 1 while a cinematic plays, else nil	verified	one	ui/groupverbs#small-sends	
 0x48c960	18	Script::IsWindowsClient	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the number 1	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c980	11	Script::IsMacClient	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
