@@ -41,18 +41,18 @@ Test: none
 
 ## Section digests
 
-`0x5af940(scope, name)` returns the MD5 of a section file, read 1,024 bytes at a time, or 16 zero bytes when it cannot be opened. The cached digests of the eight sections are one file, `cache.md5` in the account directory: 8 × 16 bytes in section order, read by `0x5af880` and written by `0x5af9c0`. A read that fails leaves the digests as they were; each digest is cleared first, so a missing file reads as zeros.
+`0x5af940(scope, name)` returns the MD5 of a section file, read 1,024 bytes at a time, or 16 zero bytes when it cannot be opened. The cached digests of the eight sections are one file, `cache.md5` in the account directory: 8 × 16 bytes in section order, read by `0x5af880` and written by `0x5af9c0`. When the open fails, the eight digests keep what they held. When it opens, a file shorter than 128 bytes reads as zeros past its end.
 
-Addresses: `0x5af940`, `0x5af880`, `0x5af9c0`, `0x5af96d`, `0x5af995`, `0x5af9ad`, `0x661da0`, `0x661dd0`, `0x661e90`
+Addresses: `0x5af940`, `0x5af880`, `0x5af898`, `0x5af8a4`, `0x5af9c0`, `0x5afa95`, `0x5afdbb`, `0x5af96d`, `0x5af995`, `0x5af9ad`, `0x661da0`, `0x661dd0`, `0x661e90`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5af95e` opens the file with write 0; `0x5af96d` is `MD5Init`, `0x5af995` an update per 1,024-byte read (`0x5af976`), `0x5af9ad` `MD5Final`. `0x5af880` passes scope 1, name `cache.md5` and write 0, and loops 8 times over `+0x1c` with `0x10` bytes (`0x5af89b` to `0x5af8c1`); `0x5af9c0` is the same with write 1.
+`0x5af95e` opens the file with write 0; `0x5af96d` is `MD5Init`, `0x5af995` an update per 1,024-byte read (`0x5af976`), `0x5af9ad` `MD5Final`. `0x5af880` passes scope 1, name `cache.md5` and write 0, and loops 8 times over `+0x1c` with `0x10` bytes (`0x5af89b` to `0x5af8c1`); `0x5af9c0` is the same with write 1. `0x5af898 je 0x5af8d1` skips the loop and the close on a failed open, so nothing is cleared: the digests are zeros at the start, since the initialised data has none, and afterwards the values of the last load, check or save. Each digest is cleared (`0x5af8a4` to `0x5af8b0`) before its 16-byte read, so a short file leaves zeros past its end. The digests change only in the load, the section check (`0x5afa95`) and the save timer (`0x5afdbb`).
 
 ## Server digests
 
-`SMSG_ACCOUNT_DATA_TIMES` (`0x209`) is eight 16-byte digests, one per section, in section order. For each section the client hashes its file, runs the check below with the local, cached and server digests, and after the eighth saves the cached digests. A digest of 16 zero bytes means the server has no copy.
+`SMSG_ACCOUNT_DATA_MD5` (`0x209`) is eight 16-byte digests, one per section, in section order. For each section the client hashes its file, runs the check below with the local, cached and server digests, and after the eighth saves the cached digests. A digest of 16 zero bytes means the server has no copy.
 
 Addresses: `0x5af8e0`, `0x5af909`, `0x5af91b`, `0x5af92c`
 Confidence: verified
