@@ -33,7 +33,7 @@ Bit-exact coverage: `ui::textglue_482_gated_triple` covers `0x4833dc` to `0x4833
 
 Every blocking facet has an owner id in a parallel array. The facet list keeps a second array of
 8-byte ids, one per facet, and the facet appenders fill it: terrain leaves zero, the doodad leg
-writes the record's id, the entity leg the game object's GUID. The walk resolver reads both with one index, the
+writes the def's game object GUID (zero for a static doodad), the entity leg the game object's GUID. The walk resolver reads both with one index, the
 facet at `index·0x34` and the owner at `index·8`, and uses the owner to elect the transport the mover
 stands on (`collision/steps`). So a landing on a moving deck is resolved from the owner of the
 facet that won the sweep.
@@ -105,11 +105,11 @@ flag bit 1) and `0x670e9c shl ebx,0xd`. `0x2000` sends the record to the per-chu
 
 A game object's doodad definition is registered only for the transport types. `0x5f4970` calls `0x5f8030` with the object's GUID for types 11 and 15 and a null GUID
 for the rest, and `0x5f8030` gives `0x6707c0` a zero register flag (`0x5f8058 push 0`), so `0x6707c0` builds the definition and stops. A model that is not a `.wmo`
-becomes a doodad definition (`0x694980`) with the GUID at `+0x180` and `+0x184` and `0x2000` in `+0x90`; a `.wmo` becomes a map object definition (`0x6953e0`) with the
+becomes a doodad definition (`0x694980`), after which `0x6707c0` stores the GUID at `+0x180` and `+0x184` (`0x6708c6`, `0x6708ba`) and ORs `0x2000` into `+0x90`; a `.wmo` becomes a map object definition (`0x6953e0`) with the
 GUID at `+0x158`. The registration `0x698e20` has two callers: `0x6708f1`, skipped by the zero flag, and `0x6709a0`, whose four callers are the two transport ticks and a
 spell model placement (`objectlayer/transports`).
 
-Addresses: `0x5f4970`, `0x5f497f`, `0x5f4984`, `0x5f4989`, `0x5f8030`, `0x5f8058`, `0x5f8076`, `0x6707c0`, `0x6707c9`, `0x6707d3`, `0x6707ec`, `0x670868`, `0x670872`, `0x6708ad`, `0x6708cf`, `0x6708e7`, `0x6708f1`, `0x694980`, `0x6953e0`, `0x69545c`, `0x6aab3c`, `0xca7d98`, `0x698e20`, `0x698d20`, `0x6709a0`, `0x6709db`, `0x6a86d0`
+Addresses: `0x5f4970`, `0x5f497f`, `0x5f4984`, `0x5f4989`, `0x5f8030`, `0x5f8058`, `0x5f8076`, `0x6707c0`, `0x6707c9`, `0x6707d3`, `0x6707ec`, `0x670868`, `0x670872`, `0x6708ad`, `0x6708ba`, `0x6708c6`, `0x6708cf`, `0x6708e7`, `0x6708f1`, `0x694980`, `0x6953e0`, `0x69545c`, `0x6aab3c`, `0xca7d98`, `0x698e20`, `0x698d20`, `0x6709a0`, `0x6709db`, `0x6a86d0`
 Confidence: verified
 Proof: one
 Test: none
