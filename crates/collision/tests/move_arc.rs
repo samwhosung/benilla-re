@@ -10,7 +10,8 @@
 //! The emulator computes each in host `double`, so where its result reaches a compared value the
 //! host's math stands in for the x87's, and the test shows the code around it.
 //!
-//! `pitch_land_step_trace` runs the whole dispatcher `0x7c5360` on movers that do not swim.
+//! `pitch_land_step_trace` runs the whole dispatcher `0x7c5360` on movers that do not swim, with
+//! `fsincos` at `0x7c58a1` and `0x7c521d` and `fprem` at `0x73f91f`, the `fmod` of `0x7c4f30`.
 
 use benilla_re_collision::move_arc::{
     pitch_arc, turn_pitch_arc, velocity_basis, velocity_vector, CMovement,
@@ -449,10 +450,11 @@ fn land_step(emu: &mut Emu, this: u64, out: u64, ms: u32) -> (u32, [f32; 3], f32
 }
 
 /// `0x7c5360` with a pitch bit and no swimming (flags without 0x200000): the pitch is integrated
-/// and the pitch arc runs on the land basis (1, 0), whose `z` is the vertical term and whose
-/// horizontal reach stops growing at the clamp and is 0 from a saturated anchor; a mover that has
-/// only pitch bits for its mode returns 0, falling or not, and one that falls with a turn bit
-/// returns 1.
+/// and the pitch arc runs on the land basis (1, 0), whose `z` is the vertical term. The horizontal
+/// reach is `|Rv|·sin(p·t)` below the clamp and fixed at `|Rv|·cos a` past it, so from a tilt
+/// against the bit it peaks and falls back; it is 0 from a saturated anchor. A mover whose mode is
+/// only pitch or only turn returns 0, falling or not, with or without `override`; one that falls
+/// with a turn bit returns 1.
 #[test]
 fn pitch_land_step_trace() {
     let Some(wow) = Wow::load() else {
@@ -488,7 +490,7 @@ fn pitch_land_step_trace() {
         (0x2041, 0.0),
         (0x45, 0.0),
     ] {
-        for &ms in &[16u32, 100, 400, 1000, 2000, 5000] {
+        for &ms in &[16u32, 100, 400, 700, 900, 1000, 2000, 5000] {
             let (basis, ret, o, live) = run(&mut emu, flags, anchor, ms);
             assert_eq!(&basis[2..], &[1.0, 0.0], "land basis, flags {flags:#x}");
             assert_eq!(ret, 1, "mode 9 or 13 returns 1, flags {flags:#x}");
@@ -538,6 +540,23 @@ fn pitch_land_step_trace() {
     );
     assert_eq!(live, half_pi, "the live pitch is held at the clamp");
 
+    // From a tilt against the bit the reach peaks at |Rv| (p·t = π/2, 0.70 s) and falls back to
+    // |Rv|·cos a once the clamp holds (0.88 s): the walker steps back toward the anchor.
+    let (_, _, peak, _) = run(&mut emu, 0x41, -0.4, 700);
+    let (_, _, held, live) = run(&mut emu, 0x41, -0.4, 900);
+    assert!(reach(peak) > reach(held), "{} {}", reach(peak), reach(held));
+    assert!(
+        (reach(peak) - 7.0 / 2.25).abs() < 1e-3,
+        "peak {}",
+        reach(peak)
+    );
+    assert!(
+        (reach(held) - 7.0 / 2.25 * 0.4f64.cos()).abs() < 1e-3,
+        "held {}",
+        reach(held)
+    );
+    assert_eq!(live, half_pi);
+
     // From a saturated anchor the horizontal part is 0, up or down.
     for &(flags, anchor) in &[(0x41u32, half_pi), (0x81, -half_pi)] {
         let (_, ret, o, live) = run(&mut emu, flags, anchor, 100);
@@ -554,6 +573,8 @@ fn pitch_land_step_trace() {
         (0x2040, 0),
         (0x2080, 0),
         (0x2050, 0),
+        (0x10, 0),
+        (0x50, 0),
         (0x2010, 1),
         (0x2000, 1),
     ] {
@@ -563,6 +584,18 @@ fn pitch_land_step_trace() {
             o.iter().all(|v| v.to_bits() == SENT),
             "flags {flags:#x} leaves the output alone: {o:?}"
         );
+    }
+    // The non-null `override` branch (`0x7c539b`) sets bit 2 unless falling: a pitch bit alone is
+    // mode 10, falling it stays mode 8, and both return 0.
+    let ovr = emu.alloc(0x10);
+    emu.write_u32(ovr, 1.0f32.to_bits());
+    for &flags in &[0x40u32, 0x2040] {
+        land_mover(&mut emu, this, flags, 0.0);
+        for k in 0..3 {
+            emu.write_u32(out + (k as u64) * 4, SENT);
+        }
+        let ret = emu.call(0x7c5360, this as u32, 0, &[100, ovr as u32, out as u32]);
+        assert_eq!(ret, 0, "override, flags {flags:#x}");
     }
     let (_, ret, o, _) = run(&mut emu, 0x2041, 0.0, 100);
     assert_eq!(ret, 1, "falling with forward and pitch is mode 9");

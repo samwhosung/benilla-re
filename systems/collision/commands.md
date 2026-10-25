@@ -188,7 +188,7 @@ adds 0xc0. `0x7c61d6 test [ecx+0x40],0x203800` refuses a swimmer. The callers of
 besides these are `0x6179dd`, which follows `0x7c6e80`, the walk resolver, which never runs on a
 swimmer, and the probe `0x635ff7`, which restores the flags it saved (`0x635f6a`). `0x514766
 test [edx+0x40],0x200000; je` gates the emitter `0x515010`, and `0x5147e9` the stop on the
-stunned branch; both leave the latch alone otherwise. The status writers mask with 0x75a07dff, which
+stunned branch, which clears the latch at `0x5147fa` swimming or not; the emitter leaves it alone on land. The status writers mask with 0x75a07dff, which
 holds 0xc0.
 
 ## Facing and pitch setters
