@@ -1,4 +1,4 @@
-//! The texture layer's size and format decisions (`systems/gx/textures.md`): the device size
+//! The texture layer's size and format decisions (`systems/gx/texturesize.md`): the device size
 //! limit `0x448b60`, the BLP format chooser `0x44a790`, the device texture request gate
 //! `0x448450` and the creation checks of `GxTexCreate` (`0x58ab10`).
 

@@ -8,10 +8,12 @@ Roots: `0x449610`, `0x449d90`, `0x449b30`, `0x449bf0`, `0x449cc0`, `0x44a9c0`, `
 
 A `CTexture` is `0x15c` bytes, allocated under the tag `HTEXTURE` (`0x835604`) and wrapped by `CreateHandle`. The constructor `0x448190` stores the vtable `0x8026b4` (slot 0 the deleting destructor `0x4482b0`, slot 1 `0x4482a0`, which returns `this + 0xc`). Fields: `+0xc` name (260 bytes), `+0x110` flags (bit 0 set when the image has no alpha, bit 1 set when the caller's file flag was non-zero), `+0x114` mip levels dropped, `+0x118` pixel type code (below), `+0x11c` alpha bits, `+0x120` decoded mip buffer, `+0x138` async load record, `+0x140` device texture, `+0x144`, `+0x148` width and height after the drop, `+0x14c` the `GxTex` format of the device texture, `+0x150` the `GxTex` flags word.
 
-Addresses: `0x448190`, `0x4482a0`, `0x4482b0`, `0x4482e0`, `0x41af10`
+Addresses: `0x448190`, `0x448241`, `0x44a140`, `0x4482a0`, `0x4482b0`, `0x4482e0`, `0x41af10`
 Confidence: verified
 Proof: one
 Test: none
+
+The BLP and no-file creators store the format at `+0x14c`; the TGA loader `0x44a140` never writes it, so a TGA texture keeps the constructor's 0 (`0x448241`) while its device texture has format 1.
 
 `0x4482e0` releases in order: the hash entry at `+8`, the device texture at `+0x140` through `0x448670`, the decoded buffer through `0x44b110`, the async record at `+0x138` (its file closed, `0xb05d20` or `0xb05d1c` decremented by pinned state, then `0x4439b0`), and the sub-object at `+0x124`. Every creator below ends with `CreateHandle(object, 0x835604)`.
 

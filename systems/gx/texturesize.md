@@ -71,9 +71,9 @@ Test: `gx::texture_pool_route_difftest`
 
 ## Refused requests
 
-A caller sees the 0. The BLP callback `0x44a560` logs `Texture failure: "%s" allocating %dx%d texture failed.` (`0x835674`, severity 3, the name and the size after the drop) and returns 0 (`0x44a715` to `0x44a756`); `0x44a500` then fills the texture with the solid one (`0x44a50e`, an 8 by 8 green). The TGA loader `0x44a140` destroys its new `CTexture` (`0x44a1fc` to `0x44a210`) and returns 0, so the candidate fails and the next is tried.
+A caller sees the 0. The BLP callback `0x44a560` logs `Texture failure: "%s" allocating %dx%d texture failed.` (`0x835674`, severity 3, the name and the size after the drop) and returns 0 (`0x44a715` to `0x44a756`); `0x44a500` then fills the texture with the solid one (`0x44a50e`, an 8 by 8 green, colour `0xff00ff00`, the one write of which is `0x447c00`). The TGA loader `0x44a140` destroys its new `CTexture` (`0x44a1fc` to `0x44a210`) and returns 0, so the candidate fails and the next is tried.
 
-Addresses: `0x44a560`, `0x44a500`, `0x44a140`, `0x44a715`, `0x44a724`, `0x44a73e`, `0x44a756`, `0x44a50e`, `0x44a1fc`, `0x44a20b`, `0x835674`
+Addresses: `0x44a560`, `0x44a500`, `0x44a140`, `0x44a715`, `0x44a724`, `0x44a73e`, `0x44a756`, `0x44a50e`, `0x44a1fc`, `0x44a20b`, `0x447c00`, `0x835674`
 Confidence: verified
 Proof: one
 Test: none
@@ -121,7 +121,7 @@ For a BLP 1024 pixels on a side the outcome depends on the device limit and on t
 |---|---|---|
 | 1024 or more | `dropped` 0; `0x448450` refuses 1024; the solid texture | the same |
 | 512 | `dropped` 1; file level 1 (512 by 512) is level 0 | `0x5a7ec0` refuses level 1; the solid texture |
-| 256 | `dropped` 2; file level 2 (256 by 256) is level 0 | the same |
+| 256 | `dropped` 2; file level 2 (256 by 256) is level 0 | `0x5a7ec0` refuses level 2; the solid texture |
 
 Addresses: `0x44a560`, `0x448b60`, `0x448450`, `0x4484c5`, `0x4484d0`, `0x5a7ec0`, `0x689090`, `0x589bf0`, `0x592050`, `0x5a0880`, `0x44a6d9`
 Confidence: verified
