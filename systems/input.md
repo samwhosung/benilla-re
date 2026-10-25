@@ -145,9 +145,9 @@ It ends by running the tick with the press flag set (`0x5151a0`).
 
 ## The tick
 
-`0x514640(time, apply)` acts on the unit the client drives (`0xc4da98`, type mask 8); with none it returns. With `apply` nonzero it evaluates `0x514560` (may translate) and `0x5145b0` (not stunned); with `apply` zero both read as false. If it may translate, it runs the forward and strafe emitters (`0x514da0`, `0x514e80`). If it may not, it stops auto-movement (`0x60fb60(0, 1)`) when the unit is also stunned, stops a pending forward move (bit 0x10000) and strafe move (0x20000) and clears the autorun bit 0x1000. Then a unit that is not stunned runs the turn emitter (`0x514f50`) and, while swimming, the pitch emitter (`0x515010`); a stunned unit stops a pending turn (bit 0x40000) and pitch (0x80000) instead.
+`0x514640(time, apply)` acts on the unit the client drives (`0xc4da98`, type mask 8); with none it returns. With `apply` nonzero it evaluates `0x514560` (may translate) and `0x5145b0` (not stunned); with `apply` zero both read as false. If it may translate, it runs the forward and strafe emitters (`0x514da0`, `0x514e80`). If it may not, it stops auto-movement (`0x60fb60(0, 1)`) when the unit is also stunned, stops a pending forward move (bit 0x10000) and strafe move (0x20000) and clears the autorun bit 0x1000. Then a unit that is not stunned runs the turn emitter (`0x514f50`) and, while swimming, the pitch emitter (`0x515010`); a stunned unit stops a pending turn (bit 0x40000) and, while swimming, pitch (0x80000) instead.
 
-Addresses: `0x514640`, `0x51464c`, `0x514692`, `0x514697`, `0x5146ab`, `0x5146b0`, `0x5146c3`, `0x5146c9`, `0x5146d6`, `0x5146db`, `0x51470c`, `0x51473d`, `0x514748`, `0x514755`, `0x51475b`, `0x514766`, `0x514777`, `0x514785`, `0x51479c`, `0x5147be`, `0x5147f5`, `0x60fb60`, `0x514f50`, `0x515010`, `0x514da0`, `0x514e80`
+Addresses: `0x514640`, `0x5147e9`, `0x51464c`, `0x514692`, `0x514697`, `0x5146ab`, `0x5146b0`, `0x5146c3`, `0x5146c9`, `0x5146d6`, `0x5146db`, `0x51470c`, `0x51473d`, `0x514748`, `0x514755`, `0x51475b`, `0x514766`, `0x514777`, `0x514785`, `0x51479c`, `0x5147be`, `0x5147f5`, `0x60fb60`, `0x514f50`, `0x515010`, `0x514da0`, `0x514e80`
 Confidence: verified
 Proof: one
 Test: none
