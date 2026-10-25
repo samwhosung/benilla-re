@@ -6,12 +6,14 @@ Roots: `0x449610`, `0x449d90`, `0x449b30`, `0x449bf0`, `0x449cc0`, `0x44a9c0`, `
 
 ## Texture objects
 
-A `CTexture` is `0x15c` bytes, allocated under the tag `HTEXTURE` (`0x835604`) and wrapped by `CreateHandle`. The constructor `0x448190` stores the vtable `0x8026b4` (slot 0 the deleting destructor `0x4482b0`, slot 1 `0x4482a0`, which returns `this + 0xc`). Fields: `+0xc` name (260 bytes), `+0x110` flags (bit 0 set when the image has no alpha, bit 1 set when the caller's file flag was non-zero), `+0x114` mip levels dropped, `+0x118` pixel type code (below), `+0x11c` alpha bits, `+0x120` decoded mip buffer, `+0x138` async load record, `+0x140` device texture, `+0x144`, `+0x148` width and height after the drop, `+0x14c` mip count, `+0x150` the `GxTex` flags word.
+A `CTexture` is `0x15c` bytes, allocated under the tag `HTEXTURE` (`0x835604`) and wrapped by `CreateHandle`. The constructor `0x448190` stores the vtable `0x8026b4` (slot 0 the deleting destructor `0x4482b0`, slot 1 `0x4482a0`, which returns `this + 0xc`). Fields: `+0xc` name (260 bytes), `+0x110` flags (bit 0 set when the image has no alpha, bit 1 set when the caller's file flag was non-zero), `+0x114` mip levels dropped, `+0x118` pixel type code (below), `+0x11c` alpha bits, `+0x120` decoded mip buffer, `+0x138` async load record, `+0x140` device texture, `+0x144`, `+0x148` width and height after the drop, `+0x14c` the `GxTex` format of the device texture, `+0x150` the `GxTex` flags word.
 
-Addresses: `0x448190`, `0x4482a0`, `0x4482b0`, `0x4482e0`, `0x41af10`
+Addresses: `0x448190`, `0x448241`, `0x44a140`, `0x4482a0`, `0x4482b0`, `0x4482e0`, `0x41af10`
 Confidence: verified
 Proof: one
 Test: none
+
+The BLP and no-file creators store the format at `+0x14c`; the TGA loader `0x44a140` never writes it, so a TGA texture keeps the constructor's 0 (`0x448241`) while its device texture has format 1.
 
 `0x4482e0` releases in order: the hash entry at `+8`, the device texture at `+0x140` through `0x448670`, the decoded buffer through `0x44b110`, the async record at `+0x138` (its file closed, `0xb05d20` or `0xb05d1c` decremented by pinned state, then `0x4439b0`), and the sub-object at `+0x124`. Every creator below ends with `CreateHandle(object, 0x835604)`.
 
@@ -89,7 +91,7 @@ Test: none
 
 ## Texture creation variants
 
-`0x449b30(w, h, mips, format, filter, force)`, `0x449bf0(w, h, mips, format, filter, owner, callback, name, force)` and `0x449cc0(name, w, h, mips, format, filter, force)` create a texture with no file. Each allocates a `CTexture`, builds the flags word with `0x449ae0`, gets a device texture from `0x448450`, and stores the device texture, format, size, mip count and flags. The callback is the no-op `0x448830` except in `0x449bf0`, which passes the caller's callback and owner. The name is `Unique Texture` (`0x835624`) for `0x449b30`, and the given name or `Unique Texture No Name` (`0x835634`) for the others.
+`0x449b30(w, h, format, typeCode, filter, force)`, `0x449bf0(w, h, format, typeCode, filter, owner, callback, name, force)` and `0x449cc0(name, w, h, format, typeCode, filter, force)` create a texture with no file. `format` is the device texture's `GxTex` format and `typeCode` the pixel type code of the data the owner supplies. Each allocates a `CTexture`, builds the flags word with `0x449ae0`, gets a device texture from `0x448450`, and stores the device texture, the type code at `+0x118`, the size, the format at `+0x14c` and the flags. The callback is the no-op `0x448830` except in `0x449bf0`, which passes the caller's callback and owner. The name is `Unique Texture` (`0x835624`) for `0x449b30`, and the given name or `Unique Texture No Name` (`0x835634`) for the others.
 
 Addresses: `0x449b30`, `0x449bf0`, `0x449cc0`, `0x448830`, `0x449ae0`, `0x448450`
 Confidence: verified
@@ -107,7 +109,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4496a8` sets the `+0x110` bit. The callbacks decode once the bytes are in memory. `0x4497f0` calls `0x449840`, which opens the buffer as BLP (`0x5a83b0`), sets bit 0 of `+0x110` when the alpha depth is 0, drops mip levels with `0x448b60`, allocates the decoded buffer through `0x44af90` and decodes into it (`0x5a8430`); the file is then closed and the record freed. `0x44a500` runs `0x44a560`, which does the same but creates the device texture with `0x448450` and uploads through `GxTexUpdateRect`; on failure it substitutes the solid texture. `0x448c10` gives the waiting records buffer slices up to the budget.
+`0x4496a8` sets the `+0x110` bit. The callbacks decode once the bytes are in memory. `0x4497f0` calls `0x449840`, which opens the buffer as BLP (`0x5a83b0`), sets bit 0 of `+0x110` when the alpha depth is 0, drops mip levels with `0x448b60`, allocates the decoded buffer through `0x44af90` and decodes into it (`0x5a8430`); the file is then closed and the record freed. `0x44a500` runs `0x44a560`, which does the same but creates the device texture with `0x448450` and uploads through `GxTexUpdateRect`; on failure it substitutes the solid texture (`texturesize.md`, BLP load order). `0x448c10` gives the waiting records buffer slices up to the budget.
 
 ## Texture flags word
 
@@ -120,22 +122,11 @@ Test: none
 
 The ordinals come from the readers: `0x59f170` reads `(flags >> 3) & 1`, `(flags >> 4) & 1`, `(flags >> 6) & 1` and `(flags >> 9) & 0x1f`; `0x5a29d0` reads the same bits, so one word serves both backends. Who writes `[0x835250]` and `[0x835254]` is the CVar code; the stored values are not interpreted here.
 
-## Device texture pool
+## Format choice
 
-`0x448450(width, height, mips, flags, owner, callback, format)` returns a device texture. When both sizes are powers of two, above 16 and below 1024, and `mips` is 7 or less, it reuses a free pooled texture with the same size class, mip count and filter bits, moving it to the busy list with the new callback, owner and flags; otherwise `0x58ac40` makes a new one. The size class is `log2(width / 32) * 5 + log2(height / 32)` into the 25 lists at `0xb05bec`. `0x448670` returns a texture to its class when the sizes qualify, stamped with the time (`0x42c010`), else destroys it; `0x448ec0` destroys pooled textures idle more than 30000 ms.
+`0x4489a0` opens BLP bytes and decides two values from the colour encoding byte and the alpha depth: the `GxTex` format and the pixel type code. Alpha encoding 0 (DXT1) gives `Dxt1` when the device block `0x58a230` has `+0x40` set, otherwise `Rgb565` for alpha depth 0 and `Argb1555` for more; encoding 1 gives `Dxt3` when `+0x44` is set, otherwise `Argb4444`; encoding 7 gives `Dxt5` when `+0x48` is set, otherwise `Argb4444`; a colour encoding other than 2 gives `Argb8888`. The size it returns is the one `0x448b60` leaves (`texturesize.md`). The file callback `0x44a560` chooses through `0x44a790` instead.
 
-Addresses: `0x448450`, `0x448670`, `0x448ec0`, `0x449010`, `0x58ac40`, `0xb05bec`, `0x58aa30`, `0x58ab10`
-Confidence: verified
-Proof: one
-Test: none
-
-The pixel-format code is mapped through the table `0x835258` (`5, 6, 1, 3, 2, 4, 0, 7` for codes 0 to 7), and the flags passed to the device have bit 6 cleared (`and 0xffffffbf` at `0x448494`).
-
-## Format choice and size limit
-
-`0x4489a0` opens BLP bytes and decides two values from the colour encoding byte and the alpha depth: the `GxTex` format and the pixel type code. Alpha encoding 0 (DXT1) gives `Dxt1` when the device block `0x58a230` has `+0x40` set, otherwise `Rgb565` for alpha depth 0 and `Argb1555` for more; encoding 1 gives `Dxt3` when `+0x44` is set, otherwise `Argb4444`; encoding 7 gives `Dxt5` when `+0x48` is set, otherwise `Argb4444`; a colour encoding other than 2 gives `Argb8888`. `0x448b60(width, height, dropped)` halves both sizes, counting each halving, until neither exceeds `caps+0x60`, never below 1.
-
-Addresses: `0x4489a0`, `0x448b60`, `0x58a230`, `0x449840`, `0x835258`, `0x835280`
+Addresses: `0x4489a0`, `0x448b60`, `0x44a790`, `0x58a230`, `0x449840`, `0x835258`, `0x835280`
 Confidence: verified
 Proof: one
 Test: none
@@ -144,7 +135,7 @@ The `GxTex` formats are the order of the names at `0x835280`: Unknown, Argb8888,
 
 ## Texture readiness and info
 
-`0x44ad50` waits for an asynchronous load: it logs `AsyncTextureWait(): %s`, moves the async record to the pinned list (`+0x13c = 1`) and waits through `0x443bd0`. `0x44ae00(texture, wait)` returns the decoded buffer at `+0x120`, waiting first when it is null and `wait` is set. `0x44b3b0(texture, &w, &h)` returns the width and height at `+0x144` and `+0x148`, `0x44b430` also the mip count, format, opaque bit and alpha depth. A texture with no device texture and `wait` clear returns 0. `0x44acf0` is `GetTextureDeviceObject`.
+`0x44ad50` waits for an asynchronous load: it logs `AsyncTextureWait(): %s`, moves the async record to the pinned list (`+0x13c = 1`) and waits through `0x443bd0`. `0x44ae00(texture, wait)` returns the decoded buffer at `+0x120`, waiting first when it is null and `wait` is set. `0x44b3b0(texture, &w, &h)` returns the width and height at `+0x144` and `+0x148`, `0x44b430` also the format (`+0x14c`), the pixel type code (`+0x118`), the opaque bit and the alpha depth. A texture with no device texture and `wait` clear returns 0. `0x44acf0` is `GetTextureDeviceObject`.
 
 Addresses: `0x44ad50`, `0x44ae00`, `0x44b3b0`, `0x44b430`, `0x44acf0`, `0x44ae70`, `0x44aec0`, `0x44af90`, `0x44b110`
 Confidence: verified
