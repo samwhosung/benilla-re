@@ -2156,10 +2156,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x869fb8	char[32]	s_pathVideoHardwareDbc		unassigned	Holds the path DBFilesClient\VideoHardware.dbc	verified	one	console/hardware#hardware-table
 0x869ffc	float	s_liquidHalf		terrain	Holds 0.5	verified	one	terrain/liquid#animated-textures
 0x86a000	const char *[8]	s_liquidFrameNames		terrain	Holds each liquid type's frame name format; type 5's is null	verified	one	terrain/liquid#animated-textures
-0x86a030	uint32_t	s_waterMaxLod		terrain	Holds the waterMaxLOD setting, 4 or 0	inferred	none	
-0x86a034	uint32_t	s_waterWaves		terrain	Holds the waterWaves setting	inferred	none	
-0x86a038	uint32_t	s_waterSpecular		terrain	Holds the waterSpecular setting	inferred	none	
-0x86a03c	uint32_t	s_waterRipples		terrain	Holds the waterRipples setting	inferred	none	
+0x86a030	uint32_t	s_waterMaxLod		terrain	Holds the waterMaxLOD setting, 4 by default and 0 to 4, which only its console command reads	verified	one	terrain/world#world-console-commands
+0x86a034	uint32_t	s_waterWaves		terrain	Holds the waterWaves setting, 2 by default, which only its console command reads	verified	one	terrain/world#world-console-commands
+0x86a038	uint32_t	s_waterSpecular		terrain	Holds the waterSpecular setting, 1 by default, which only its console command reads	verified	one	terrain/world#world-console-commands
+0x86a03c	uint32_t	s_waterRipples		terrain	Holds the waterRipples setting, 1 by default, which the ripple emitter reads	verified	one	terrain/world#world-console-commands
 0x86a040	uint32_t[5]	s_liquidMeshSizes		terrain	Holds 0, 1, 3, 7 and 15, the n of the five liquid mesh templates	verified	one	terrain/liquid#liquid-mesh-templates
 0x86a090	uint32_t[2]	s_waveGridDims		terrain	Holds the grid dimensions 64 and 64 the wave FFT takes	verified	one	terrain/liquid#wave-field
 0x86a098	float	s_magmaDriftSpeed		terrain	Holds −0.02, the magma drift particles' sink speed	inferred	none	
@@ -4145,6 +4145,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc63190	uint32_t	s_batchMatrixCount		terrain	Holds the count of batch matrices in use	verified	one	terrain/collide#triangle-batches
 0xc63194	uint32_t	s_detailDoodadTest		terrain	Holds the detail doodad debug test switch	inferred	none	
 0xc6319c	void *	s_shadowBaseTexture		terrain	Holds the texture the shadow pass binds on stage 0	verified	one	terrain/render#chunk-layers-in-multipass
+0xc631c8	float[30]	s_worldFrameTimes		terrain	Holds the ring of the last 30 frame times in seconds	verified	one	terrain/world#smoothed-frame-rate
 0xc63240	float[6]	s_farBox		terrain	Holds the box around the position of half-size the far clip: minimum x, y, z then maximum	verified	one	terrain/mapupdate#map-object-update
 0xc63258	uint32_t	s_batchOverflow		terrain	Holds bit 0 set when a query ran out of batch headers, matrices or indices	verified	one	terrain/collide#triangle-batches
 0xc6325c	uint32_t	s_teleportFlag		terrain	Holds 1 when the new area window shares no more than an edge index with the previous one	verified	one	terrain/mapupdate#map-update-order
@@ -4158,7 +4159,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7b2a4	uint32_t	s_worldFlags		terrain	Holds the world's enable flags the console and options set; bit 0x40 lets chunks load shadow maps	verified	one	terrain/chunk#mcnk-header
 0xc7b2a8	uint32_t[4]	s_innerWindow		terrain	Holds the inner window in chunk indices: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#tile-load-pass
 0xc7b2c0	uint32_t	s_worldTimeMs		terrain	Holds the world time in milliseconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-model-start-and-end
-0xc7b2c4	uint32_t	s_simpleDoodads		terrain	Holds the simple doodad switch	inferred	none	
+0xc7b2c4	uint32_t	s_simpleDoodads		terrain	Holds the simple doodad switch, 0 at start-up, which only its console command reads	verified	one	terrain/world#world-console-commands
 0xc7b2c8	uint32_t	s_frameCounter		terrain	Holds the world frame counter, incremented once a frame	verified	one	terrain/world#world-frame
 0xc7b2e4	uint32_t[4]	s_reloadWindow		terrain	Holds the outer window copied for the forced reload: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#forced-reload
 0xc7b2f4	float	s_terrainSquare		terrain	Holds the square of 10.0 that the terrain file stores at start-up	verified	one	terrain/statics#static-initializers
@@ -4166,6 +4167,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7b358	uint32_t[8]	s_walkableFacetList		terrain	Holds the private facet list the walkable-only query gathers into	verified	one	terrain/collide#world-triangle-query
 0xc7b378	uint32_t	s_batchIndexCursor		terrain	Holds the next free slot of the batch index pool	verified	one	terrain/collide#triangle-batches
 0xc7b480	uint32_t	s_worldScalarDerived		terrain	Holds a value the world scalar setter derives and nothing reads	inferred	none	
+0xc7b488	uint32_t	s_worldFrameTimeIndex		terrain	Holds the next slot of the frame time ring 0xc631c8, 0 to 29	verified	one	terrain/world#smoothed-frame-rate
 0xc7b494	uint32_t	s_detailDoodadDensity		terrain	Holds the detail doodad density, the bound of the scatter loop	inferred	none	
 0xc7b498	float	s_farClip		terrain	Holds the far clip distance the world setter stored	verified	one	terrain/world#distance-settings
 0xc7b49c	float	s_horizonFarClip		terrain	Holds the far plane of the low-detail tiles' projection	verified	one	terrain/world#distance-settings

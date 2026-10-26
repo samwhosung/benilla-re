@@ -24607,7 +24607,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6723f0	121	FindNearestLiquid		terrain	orchestration	void __fastcall (const float *point, float *out, float radius, uint32_t arg4)	Fills an array with the nearest liquid per type around a point, by map object groups then terrain areas	verified	one	terrain/world#nearest-liquid	
 0x672470	17	GetCameraLiquid		terrain	orchestration	uint32_t __thiscall (void *this)	Writes the camera liquid state to its argument when non-null and returns it	verified	one	terrain/world#entity-queries	
 0x672490	40	AddSplashThunk		terrain	orchestration	void __fastcall (void *a, void *b, uint32_t c, uint32_t d, uint32_t e, uint32_t f, uint32_t g, uint32_t h, uint32_t i)	Forwards a splash to 0x68bda0	inferred	none		
-0x6724c0	69	GetSmoothedFrameRate		terrain	primitive	float __cdecl (void)	Returns the frame rate over the last 30 frame times, 1000 when their mean is below 0.001	inferred	none		
+0x6724c0	69	GetSmoothedFrameRate		terrain	primitive	float __cdecl (void)	Returns 1 over the mean of the 30 ring frame times, or 1000 when the mean is below 0.001	verified	one	terrain/world#smoothed-frame-rate	terrain::smoothed_frame_rate_difftest
 0x672510	6	GetCameraValue		terrain	unreached	float __cdecl (void)	Returns the dword 0xc7cfdc	inferred	none	terrain/overview#unreached-functions	
 0x672520	6	GetVisibleChunkCount		terrain	unreached	uint32_t __cdecl (void)	Returns the visible chunk count 0xc7b6f8	inferred	none	terrain/overview#unreached-functions	
 0x672530	6	GetSceneCounter		terrain	unreached	uint32_t __cdecl (void)	Returns the dword 0xc7b600	inferred	none	terrain/overview#unreached-functions	
@@ -24636,14 +24636,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x672d80	97	ScaleMatrix3		terrain	primitive	void __fastcall (float *m, uint32_t arg2, float s)	Multiplies the nine floats of a 3x3 matrix by a scalar	inferred	none		terrain::mat3_scale_world_difftest, models::partfinalize_normalize_basis9_difftest
 0x672df0	242	CWorld::FadeOutModel		terrain	orchestration	void __thiscall (CWorld *this, uint32_t arg2)	Schedules a ready model to fade out, or releases it when not ready or the value is below 0.01	verified	one	terrain/world#model-fade-out	
 0x672ef0	344	CWorld::UpdateFadingModels		terrain	primitive	void __cdecl (void)	Sets each fading model's alpha by (3 - 2t)t² of its age and releases it when done	verified	one	terrain/world#model-fade-out	terrain::doodad_despawn_fade_difftest
-0x673050	66	ConsoleToggleDetailDoodads		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag bit 20, detail doodads, and prints the new state	inferred	none		
+0x673050	66	ConsoleToggleDetailDoodads		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag bit 20, detail doodads, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x6730a0	66	ConsoleToggleBspRender		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80000, BSP render	inferred	none	terrain/overview#unreached-functions	
 0x6730f0	57	ConsoleToggleTerrain		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x2, terrain	inferred	none	terrain/overview#unreached-functions	
 0x673130	57	ConsoleToggleTerrainDoodads		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1, terrain doodads	inferred	none	terrain/overview#unreached-functions	
 0x673170	66	ConsoleToggleDoodadBoxes		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 22, doodad box visuals	inferred	none	terrain/overview#unreached-functions	
 0x6731c0	63	ConsoleToggleDoodadCollision		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80, doodad collision visuals	inferred	none	terrain/overview#unreached-functions	
 0x673200	73	ConsoleSetMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads maxLOD: 2 or 3 stored, 0 and 1 give 2, others 3	verified	one	terrain/lod#chunk-levels	
-0x673250	57	ConsoleToggleCulling		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x20, terrain culling, and prints the new state	inferred	none		
+0x673250	57	ConsoleToggleCulling		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x20, terrain culling, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x673290	197	ConsoleSetShadowColor		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Packs four floats from 0 to 1 into the shadow colour, the first in the top byte	verified	one	terrain/world#world-initialization	terrain::color_scale255_difftest
 0x673360	64	ConsoleToggleMapObjLighting		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x200, map object lighting	inferred	none	terrain/overview#unreached-functions	
 0x6733a0	64	ConsoleToggleMapObjTextures		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x800, map object textures	inferred	none	terrain/overview#unreached-functions	
@@ -24657,11 +24657,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6735b0	57	ConsoleSetWeather3		terrain	unreached	uint32_t __fastcall (uint32_t unused, const char *args)	Reads a value and passes it to the weather as setting 3	inferred	none	terrain/overview#unreached-functions	
 0x6735f0	124	ConsoleShowWeather		terrain	unreached	uint32_t __cdecl (void)	Prints the weather state	inferred	none	terrain/overview#unreached-functions	
 0x673670	66	ConsoleToggleWater		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000000, water	inferred	none	terrain/overview#unreached-functions	
-0x6736c0	65	ConsoleSetWaterMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterMaxLOD into 0x86a030, 4 or 0	inferred	none		
-0x673710	25	ConsoleSetWaterWaves		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterWaves into 0x86a034	inferred	none		
-0x673730	25	ConsoleSetWaterSpecular		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterSpecular into 0x86a038	inferred	none		
-0x673750	25	ConsoleSetWaterRipples		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterRipples into 0x86a03c	inferred	none		
-0x673770	66	ConsoleToggleParticulates		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x2000000, liquid particulates, and prints the new state	inferred	none		
+0x6736c0	65	ConsoleSetWaterMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterMaxLOD into 0x86a030 and holds it to 0 to 4	verified	one	terrain/world#world-console-commands	terrain::water_max_lod_difftest
+0x673710	25	ConsoleSetWaterWaves		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterWaves into 0x86a034 with no bound	verified	one	terrain/world#world-console-commands	
+0x673730	25	ConsoleSetWaterSpecular		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterSpecular into 0x86a038 with no bound	verified	one	terrain/world#world-console-commands	
+0x673750	25	ConsoleSetWaterRipples		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterRipples into 0x86a03c with no bound	verified	one	terrain/world#world-console-commands	
+0x673770	66	ConsoleToggleParticulates		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x2000000, liquid particulates, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x6737c0	33	ConsoleFlushTextures		terrain	unreached	uint32_t __cdecl (void)	Calls two device texture functions	inferred	none	terrain/overview#unreached-functions	
 0x6737f0	45	SetWorldFlagsA		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
 0x673820	45	SetWorldFlagsB		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
@@ -24670,9 +24670,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x673960	58	ConsoleToggleDetailTest		terrain	unreached	uint32_t __cdecl (void)	Toggles the detail doodad debug test 0xc63194	inferred	none	terrain/overview#unreached-functions	
 0x6739a0	67	ConsoleSetAlphaRef		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads an alpha reference from 0 to 255	verified	one	terrain/world#detail-doodad-and-alpha-settings	
 0x6739f0	60	ConsoleToggleGroupRender		terrain	unreached	uint32_t __cdecl (void)	Toggles rendering of only the current map object group	inferred	none	terrain/overview#unreached-functions	
-0x673a30	57	ConsoleToggleShadow		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x40, terrain shadow, and prints the new state	inferred	none		
-0x673a70	66	ConsoleToggleLowDetail		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x4000000, terrain low detail, and prints the new state	inferred	none		
-0x673ac0	58	ConsoleToggleSimpleDoodads		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles the simple doodad flag 0xc7b2c4 and prints the new state	inferred	none		
+0x673a30	57	ConsoleToggleShadow		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x40, terrain shadow, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
+0x673a70	66	ConsoleToggleLowDetail		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x4000000, terrain low detail, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
+0x673ac0	58	ConsoleToggleSimpleDoodads		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles the simple doodad word 0xc7b2c4 between 0 and 1, which nothing else reads, and prints the state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x673b00	230	ConsoleDumpTextureStats		terrain	unreached	uint32_t __fastcall (uint32_t unused, uint32_t arg2)	Writes the terrain texture memory statistics to a log file	inferred	none	terrain/overview#unreached-functions	
 0x673bf0	142	ConsoleOpenWorldLog		terrain	unreached	uint32_t __fastcall (uint32_t unused, uint32_t arg2)	Opens a world log file	inferred	none	terrain/overview#unreached-functions	
 0x673c80	274	PushOwnerId		terrain	host	void __thiscall (void *this, const uint64_t *id)	Appends an 8-byte id to a growable array	inferred	none		
