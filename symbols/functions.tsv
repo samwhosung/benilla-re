@@ -29500,8 +29500,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ee280	632	CreateFrameFromXML		ui	primitive	CSimpleFrame * __fastcall (XMLNode *node, CSimpleFrame *parent, CStatus *status)	Creates a frame of a node's type under the parent attribute or argument and loads the node into it	verified	one	ui/framexml#creating-a-frame-from-xml	
 0x6ee500	492	RegisterXMLTemplate		ui	primitive		Keeps a virtual node by name with its context word, refusing a name the client's own code holds	verified	one	ui/framexml#templates	
 0x6ee6f0	137	FindXMLTemplate		ui	primitive	XMLNode * __fastcall (const char *name)	Returns the template node of a name, ignoring case, or null	verified	one	ui/framexml#templates	
-0x6ee780	113			unassigned	primitive		Runs its object file code that calls 0x6efd80; not read here	inferred	none		
-0x6ee800	113			unassigned	primitive		Runs its object file code that calls 0x6f01d0; not read here	inferred	none		
+0x6ee780	113	ClearXMLTemplates		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the XML template table	verified	one	ui/framexml#emptying-the-two-tables	
+0x6ee800	113	ClearFrameFactories		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the frame type factory table	verified	one	ui/framexml#emptying-the-two-tables	
 0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type factory by name with a one-shot flag, ignoring a name already taken	verified	one	ui/framexml#frame-types	
 0x6eea00	5	InitDouble6eea10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6eea10, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6eea10	15	InitDouble6eea10		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	

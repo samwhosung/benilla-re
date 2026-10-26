@@ -12,7 +12,7 @@ is in `frames` (`Loading from XML`), `anchors` and `visibility`; each widget typ
 are in `xmltypes`; the order a game interface is built in is here, under its builder in
 `GameUI.cpp`.
 
-Roots: `0x6edb90`, `0x6ede10`, `0x6ee280`, `0x6ee500`, `0x6ee6f0`, `0x6ee880`, `0x6ef070`, `0x6edb30`, `0x6edb40`, `0x6edb50`, `0x6f2a30`, `0x6f2c50`, `0x6f2cf0`
+Roots: `0x6edb90`, `0x6ede10`, `0x6ee280`, `0x6ee500`, `0x6ee6f0`, `0x6ee780`, `0x6ee800`, `0x6ee880`, `0x6ef070`, `0x6edb30`, `0x6edb40`, `0x6edb50`, `0x6f2a30`, `0x6f2c50`, `0x6f2cf0`
 
 ## Building the game interface
 
@@ -200,6 +200,28 @@ stores the factory at `+0x18` and the flag at `+0x1c` of a new entry. `0x6ef070`
 flag 0, `Button` with `0x6eeab0` through `MovieFrame` with `0x6ef000`; `0x495940` makes eight,
 `WorldFrame` (`0x4959d0`) with flag 1; `0x46a4fe` registers `ModelFFX` with 0. In `0x6ee280` a set
 flag (`0x6ee439`) unlinks the entry and frees it (`0x6ee4c8`).
+
+## Emptying the two tables
+
+`0x6ee800` empties the frame type table and `0x6ee780` the template table. Each unlinks every
+entry from the table's list of all entries, sets that list's count to 0, and then deletes the
+entries of every bucket through the table's own delete. The client stop empties both
+(`DestroyClientSystems`); the template table is also emptied when the glue resumes and when the
+game interface is built. The frame types registered at startup and by `UI_Init` therefore stay
+until the client stops, but for the one-shot `WorldFrame`.
+
+Addresses: `0x6ee800`, `0x6ee780`, `0xcee9bc`, `0xceea00`, `0x6f01d0`, `0x6efd80`, `0x6ee853`, `0x6ee7d3`, `0x4036f7`, `0x4036fc`, `0x46a99f`, `0x48ffd9`, `0x6ee4bd`, `0x6eda90`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6ee800` zeroes `+0x10` of `0xcee9bc`, unlinks the head of the list `+0xc` with `0x6f01d0` until
+the head is a terminator (bit 0 set) or null, then for each of the `+0x18` buckets at `+0x1c`
+(12 bytes each) passes the bucket's head `+0x8` to the table's slot 0 until it is a terminator
+(`0x6ee853`). `0x6ee780` does the same on `0xceea00` with `0x6efd80` (`0x6ee7d3`). The callers:
+`0x6ee800` from `0x4036fc` alone; `0x6ee780` from `0x4036f7`, `0x46a99f` in `CGlueMgr::Resume` and
+`0x48ffd9` in `CGGameUI::Initialize`. The other sites that load the factory table's delete are
+the one-shot removal (`0x6ee4bd`) and the exit destructor (`0x6eda90`).
 
 ## The frame factories
 
