@@ -156,8 +156,8 @@ Each read's result goes to a register or a stack slot; after the last call `neg;
 `0x5756ca` and `0x584b69`, which store `0x882748` in every string column. The four readers without
 strings never load `[ebp+0xc]` (`0x575540` does once, the control). The record offsets run on from 0
 in read order, the scalars at the record and the strings through stack temporaries. The `Spell`
-reads are 40 dwords, 8, 32 and 32 bytes, three dwords, eighteen reads of 12, 8, three dwords, the 35
-columns of the strings (four runs of eight offsets with a dword between), then 4, 4, 4, 4, 4, 8, 4, 4,
+reads are 40 dwords, 8, 32 and 32 bytes, three dwords, eighteen reads of 12, 8, three dwords, the 36
+columns of the strings (four runs of eight offsets, each followed by a dword, to `+0x26c`), then 4, 4, 4, 4, 4, 8, 4, 4,
 4, 4, 12, 4, 4 and 4. The tests run each reader whole with `SFile::Read` and `ConsoleWrite` stubbed:
 each column failing alone, a null base, wrapping offsets and a fuzz.
 

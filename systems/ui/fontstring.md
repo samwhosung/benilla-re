@@ -233,7 +233,7 @@ is released and the handle takes it. A text of 0x400 bytes or more, or no pool, 
 leaves the handle as it was. Otherwise the pool's record for the text has its count raised, the old
 record is released, and the handle takes the new one.
 
-Addresses: `0x41e3a0`, `0x41e3a7`, `0x41e3ae`, `0x41e3c0`, `0x41e3d3`, `0x41e3e7`, `0x41e400`, `0x41e40b`, `0x41e417`, `0x41e41a`, `0x41dc50`, `0x41ddd0`, `0x783a6a`
+Addresses: `0x41e3a0`, `0x41e3a7`, `0x41e3ae`, `0x41e3c0`, `0x41e3d3`, `0x41e3e7`, `0x41e400`, `0x41e40b`, `0x41e417`, `0x41e41a`, `0x883e78`, `0x41dc50`, `0x41dca1`, `0x41ddd0`, `0x783a6a`
 Confidence: verified
 Proof: one
 Test: `ui::assign_shared_string_difftest`
@@ -243,6 +243,7 @@ Test: `ui::assign_shared_string_difftest`
 `SStrLen` with 0x400 (`jb`). `0x41e3e7` calls `0x41ddd0`, which makes the pool on first use; a null
 result raises 0x57. `0x41e400` is `0x41e030(pool, text)`, which finds or adds the text's record and is
 not read here; `0x41e40b` raises a non-null result's `+4` before the release at `0x41e417`, and
-`0x41e41a` stores it, null included. `0x41dc50` zeroes the null record and its text pointer `+0x1c` at
-start-up. The `Font` constructor passes a null text (`0x783a6a`). The test runs `0x41e3a0` whole with
+`0x41e41a` stores it, null included. `0x41dc50` zeroes the null record and its `+0x1c` at start-up.
+That `+0x1c` is the text rests on the exit, whose `0x41dca1` loads `[0x883e94]` and frees it when
+non-null, and on `0x41e030`, which is not read. The `Font` constructor passes a null text (`0x783a6a`). The test runs `0x41e3a0` whole with
 the pool calls, the release and the error stubbed.

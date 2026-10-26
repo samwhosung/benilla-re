@@ -57,15 +57,16 @@ the quicksort branch for more is not read here. The open loop reads `[edx+edi*4â
 ## Listing a folder
 
 `EnumerateFolderFiles(folder, pattern, callback, param, withHidden)` (`0x42ad10`) cuts `folder` after
-its last `\` (never inside its root), appends `pattern`, and lists the result with `FindFirstFileW`
-and `FindNextFileW`, so a relative folder is the working directory's, the wildcard match is the
-system's and the order is the file system's. For each entry it calls `callback(&entry, param)`, the
+its last `\` (never inside its root; a folder with no `\` stays whole), appends `pattern`, and lists the result with `FindFirstFileW`
+and `FindNextFileW`: the working directory, the system's wildcard match and the file system's order
+apply. For each entry it calls `callback(&entry, param)`, the
 entry `{size, flags, name}`: the low 32 bits of the size, flags 0x10 directory, 0x1 read-only and 0x2
-hidden, and the name in UTF-8 within 0x104 bytes. A hidden entry is skipped while `withHidden` is 0. A
+hidden, and the name in UTF-8 within 0x104 bytes. A hidden entry is skipped while `withHidden` is 0;
+nothing else is, `.` and `..` included. A
 callback that returns nonzero stops the listing with the result 1; otherwise the result is 0, also
 when nothing matches.
 
-Addresses: `0x42ad10`, `0x42ad2a`, `0x42ad35`, `0x42ad47`, `0x42ad68`, `0x42ad7b`, `0x42ada3`, `0x42ada8`, `0x42adba`, `0x42add2`, `0x42addd`, `0x42ade9`, `0x42adfa`, `0x42ae09`, `0x42ae17`, `0x42ae29`, `0x42b3d0`, `0x42b1c0`, `0x42acd0`, `0x748769`, `0x74873e`
+Addresses: `0x42ad10`, `0x42ad2a`, `0x42ad35`, `0x42b3df`, `0x42ad47`, `0x42ad68`, `0x42ad7b`, `0x42ada3`, `0x42ada8`, `0x42adba`, `0x42add2`, `0x42addd`, `0x42ade9`, `0x42adfa`, `0x42ae09`, `0x42ae17`, `0x42ae29`, `0x42b3d0`, `0x42b1c0`, `0x42acd0`, `0x748769`, `0x74873e`
 Confidence: verified
 Proof: one
 Test: none
@@ -73,7 +74,7 @@ Test: none
 `0x42ad2a` copies `ecx` into a 0x104-byte buffer and `0x42ad47` appends `edx`, both with the bound
 0x7fffffff, so a folder and pattern past 259 bytes run into the 0x104-unit UTF-16 buffer that
 `0x42ad68` fills next. `0x42b3d0` writes a NUL after the last `\` that `0x64a450` finds, or at the end
-of the root `0x42b1c0` measures when that `\` lies inside it. The two listing calls (`0x42ad7b`,
+of the root `0x42b1c0` measures when that `\` lies inside it; with none `0x42b3df` skips the cut. The two listing calls (`0x42ad7b`,
 `0x42ae09`) go through slots whose first values, `0x748769` and `0x74873e`, look the functions up in
 `kernel32.dll`; `0x42ae17` is `FindClose`. `0x42ada3` converts the name through `0x42acd0`, `0x42ada8`
 copies `nFileSizeLow`, and `0x42adba`, `0x42add2` and `0x42addd` test 0x10, 0x1 and 0x2.

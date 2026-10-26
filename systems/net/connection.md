@@ -155,7 +155,7 @@ for 0x400 bytes or more (error 0x57). It copies the URL decoding escapes: `%ab` 
 `T[a] << 4 | T[b]` in 8 bits, `T` the table `0x801490` indexed by the signed byte, so a byte from
 0x80 up reads the 128 bytes before the table; a `%` with fewer than two bytes left ends the copy. It
 returns 1 when `ShellExecuteA(window, "open", copy, NULL, NULL, 1)` gives above 32. Otherwise, unless
-the URL begins `file://`, it creates an empty temp-folder `TempHTMLFile<ms in hex>.html`, asks
+the undecoded URL begins exactly `file://`, it creates an empty temp-folder `TempHTMLFile<ms in hex>.html`, asks
 `FindExecutableA` for its program, deletes the file, and returns 1 when that program, given the
 copy, gives above 32.
 
@@ -170,7 +170,7 @@ buffer. `0x42a04b` and `0x42a052` read the two bytes, `0x42a050` and `0x42a057` 
 `0x42a059` is `movsx edx,dl` before `mov dl,[edx+0x801490]; shl dl,4; or dl,[ecx+0x801490]`. The table
 holds 1 to 9 at `1` to `9`, 10 to 15 at `A` to `F` and `a` to `f`, and 0 elsewhere; the bytes before it are
 vtables, floats and the processor vendor strings. `0x42a08e` is `ShellExecuteA` with `open`, `0x42a096`
-the `> 32` test, `0x42a0b3` a 7-byte `repz cmpsb` against `file://`. `0x42a0c7` is `GetTempPathA`,
+the `> 32` test, `0x42a0b3` a 7-byte `repz cmpsb` of `esi`, the URL as passed, against `file://`, byte for byte. `0x42a0c7` is `GetTempPathA`,
 `0x42a0f3` `SStrPrintf("%sTempHTMLFile%x.html", temp, OsGetAsyncTimeMs())`, `0x42a104` `fopen(path,
 "wb")` then `fclose`, `0x42a129` `FindExecutableA`, `0x42a138` `DeleteFileA`, `0x42a15e` the second
 `ShellExecuteA`, and `0x42a166` computes `32 < result`. The callers are `0x5abd00` and `0x46d5e0`.
