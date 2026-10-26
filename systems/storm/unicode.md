@@ -29,7 +29,8 @@ Test: `storm::utf8_to_utf16_whole`
 `0x65b415` subtracts the dword of `0x80e764`: 0, 0x3080, 0xe2080, 0x3c82080, 0xfa082080, 0x82082080. `0x65b41f` compares the write address with `dst + 2·cap`; `0x65b42b`
 takes a value up to 0xffff, `0x65b43b` ends on a stored 0, `0x65b445` stores 0xfffd, and `0x65b451` tests room for the
 second unit; `0x65b45b` and `0x65b473` form the pair. `0x65b492`, `0x65b49e` and `0x65b4a5` set −1, −1 − n and 1.
-`0x65b4b6` and `0x65b4c4` store the counts. The test runs the function whole over a corpus of valid, overlong,
+`0x65b4b6` and `0x65b4c4` store the counts. With no end, a lead byte just before the NUL folds the NUL in as a trailing
+byte and the run goes on past the string: `c3 00` stores U+0040. The test runs the function whole over a corpus of valid, overlong,
 surrogate, five- and six-byte, stray and truncated forms and a fuzz, bounded and unbounded, into destinations of
 0 to 4 units and one more than the bytes.
 
