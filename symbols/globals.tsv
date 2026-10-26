@@ -661,6 +661,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808ff0	const float	s_msPerMinute		ui	Holds 60000.0, the milliseconds in a minute	verified	one	ui/tooltipspell#the-cast-time-and-recast-line
 0x80906c	const float	s_netSquareBase		net	Holds 10.0, the operand the net layout file squares at start-up	verified	one	net/layout#static-initializers
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
+0x8090b4	void *[9]	s_connectionResponseBaseVftable		net	Holds the abstract base vtable NetClient sets first: a deleting destructor, four pure slots, four empty ones	verified	one	net/session#netclient-construction
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
 0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	one	dbcache/callbacks#item-node-allocation
@@ -1618,6 +1619,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
+0x8449f8	char[16]	s_formatSecondsDHMS		ui	Holds the format %dd %dh %dm %ds that FormatSecondsDHMS prints	verified	one	collision/teleport#neighbouring-handlers
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
 0x844d28	char[41]	s_textUsageChangeChatColor		ui	Holds the string "Usage(ChangeChatColor(chatType, r, g, b)", the usage error of ChangeChatColor	verified	one	ui/chatcolors#changechatcolor
 0x84506c	int32_t	s_mapContinent		unassigned	Holds the selected continent index, -1 for the world view, -2 for a direct area	verified	one	ui/worldmap#the-selection
@@ -1816,7 +1818,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84f788	const char *	s_cameraSettingsFileName		uicamera	Holds the pointer to the camera settings file name	verified	one	uicamera/view#the-settings-file
 0x84f78c	uint32_t	s_cameraClipWord		uicamera	Holds the word the cameraClip command sets or flips, 1 at load, which nothing reads	verified	one	uicamera/cvars#cameraclip
 0x84f790	void *[3]	s_cameraViewChecks		uicamera	Holds the check functions 0x50b310, 0x50b380 and 0x50b3c0 of the distance, pitch and yaw view CVars	verified	one	uicamera/cvars#saved-view-cvars
-0x84f7a0	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84f7a0	void *[42]	s_cameraFunctions		uicamera	Pairs the 21 camera Lua function names with their functions, CameraZoomIn to FlipCameraYaw	verified	one	uicamera/driver#camera-script-functions
 0x84f848	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84fa00	char[20]	s_textCameraSettingsTxt		unassigned	Holds the string "camera-settings.txt", the file name the camera settings load from	verified	one	uicamera/view#the-settings-file
 0x84fad4	char[4]	s_text00		unassigned	Holds the string "0.0"	inferred	none	
@@ -3533,6 +3535,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d488	uint32_t[3]	s_netClientNodeList		net	Holds the list of NETCLIENTNODE records, one per NetClient: the link offset 0, then the head's two link words	verified	one	net/session#netclient-construction
 0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	one	net/dispatch#handler-tables
 0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
@@ -3787,7 +3790,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc28114	void *	s_clientServices		unassigned	Holds the client services object, at +0x1ad8 of which ClntObjMgrCreate stores the object block	verified	one	objectlayer/manager#manager-block
 0xc28118	void *	s_realmList		net	Holds the realm list the realm selection searches	verified	one	net/session#connecting
 0xc2811c	uint8_t	s_logonRebuild		net	Holds the byte that makes the next logon destroy and rebuild the logon object	verified	one	net/connection#starting-the-logon
-0xc28120	uint32_t	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	inferred	none	
+0xc28120	void *	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	verified	one	net/login#survey-id
 0xc28128	ClientConnection *	s_clientConnection		net	Holds the session, the one live NetClient	verified	one	net/session#connecting
 0xc2812c	void *	s_realmListCVar		net	Holds the handle of the realmList CVar once registered	verified	one	net/connection#realm-selection
 0xc28130	void *	s_realmNameCVar		net	Holds the handle of the realmName CVar once registered	verified	one	net/connection#realm-selection

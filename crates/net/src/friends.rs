@@ -448,6 +448,26 @@ pub fn compare_friends(
     }
 }
 
+/// The ignore order of `CompareIgnoredByName` (`0x5ae940`, the `qsort` comparator of the 25
+/// guids): a zero guid after a non-zero one, two zero guids equal; then the cached names, a missing
+/// name after a present one, two missing ones equal, two present ones by [`strnicmp`] with no
+/// bound. `a_name` and `b_name` are what the name cache returns, `None` for a miss; the client asks
+/// for both only when neither guid is zero.
+pub fn compare_ignores(a: u64, b: u64, a_name: Option<&[u8]>, b_name: Option<&[u8]>) -> i32 {
+    match (a == 0, b == 0) {
+        (true, true) => return 0,
+        (true, false) => return 1,
+        (false, true) => return -1,
+        _ => {}
+    }
+    match (a_name, b_name) {
+        (Some(x), Some(y)) => strnicmp(x, y, 0x7fff_ffff),
+        (None, None) => 0,
+        (None, Some(_)) => 1,
+        (Some(_), None) => -1,
+    }
+}
+
 /// A who result as the comparator reads it: the name at `+0`, the guild at `+0x30`, and the
 /// level, race, class and zone dwords at `+0x90` to `+0x9c`.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

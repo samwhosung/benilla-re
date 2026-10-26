@@ -142,3 +142,53 @@ Proof: one
 Test: none
 
 `0x5ae5f6` `cmp eax,0x19; jbe` accepts 0 to 25; the load is `[ecx+eax*8+0x650]`, which for 25 is `+0x718`. The loops step `0x8` and stop at `0x19` (25) entries.
+
+## Selecting and removing friends
+
+`SetSelectedFriend(index)` (`0x5ad210`) and `RemoveFriend(index)` (`0x5ad2d0`) turn a number into a slot as `__ftol(index) − 1`. `0x5ae4d0` stores the guid of that slot at `+0x648` for a slot of at most 50 and zero above, so index 0 or less clears the selection; slot 50 is `+0x648` itself and keeps it. A number (a numeric string included) sent to `RemoveFriend` reaches `0x5ae7e0`, which sends `CMSG_DEL_FRIEND` (`0x6a`, the guid) for a slot below 50 whose guid is not 0. Another string reaches `0x5ae6f0`, which sends it for the first of the 50 slots with a name equal to the string without case, or shows `ERR_FRIEND_NOT_FOUND` (`0x108`). Neither binding tests `0xc28168`.
+
+Addresses: `0x5ad210`, `0x5ad24a`, `0x5ad2d0`, `0x5ad2e6`, `0x5ad303`, `0x5ae4d0`, `0x5ae4d6`, `0x5ae4ed`, `0x5ae7e0`, `0x5ae7e6`, `0x5ae7f9`, `0x5ae6f0`, `0x5ae710`, `0x5ae71d`, `0x5ae722`, `0x5ae760`
+Confidence: verified
+Proof: one
+Test: none
+
+Both bindings test `lua_isnumber` (`0x6f34d0`) first and convert with `lua_tonumber` and `__ftol`; `0x5ad24a` and `0x5ad2f8` are `dec eax`. `SetSelectedFriend` raises its usage error for a non-number; `RemoveFriend` tries `lua_isstring` at `0x5ad303` and raises `Usage: RemoveFriend(["name"] or [index])` for neither. `0x5ae4d6` is `cmp eax,0x32; jbe`, and `0x5ae4ed` scales the slot by 32 and loads the guid at `+8` and `+0xc`. `0x5ae7e6` is `cmp eax,0x32; jae` and `0x5ae7f9` ORs the guid's halves. `0x5ae6f0` skips a null name pointer at `+4`, calls `SStrCmpI(slot name, name, 0x7fffffff)` at `0x5ae710` and loops to 50 (`0x5ae71d`). `0x5ae760(guid)` puts `0x6a` and the guid into a stack data store (`0x418190`, `0x418370`) and sends it (`0x5ab630`).
+
+## Ignore script functions
+
+`GetNumIgnores` (`0x5ad400`) returns the count `0x5ae550` gives, 0 without a list. `GetIgnoreName(index)` (`0x5ad460`) reads the guid `0x5ae570` returns for `__ftol(index) − 1`: the guid at `+0x650 + 8·i` for `i` of at most 25, else 0. `i` = 25 reads `+0x718`, the pending count, and `+0x71c`, which the constructor does not write. A zero guid, or one whose name the cache does not hold, returns the global string `UNKNOWN`; else the cached name. `SetSelectedIgnore(index)` (`0x5ad520`) calls `0x5ae5f0` with `index − 1`, and `GetSelectedIgnore` (`0x5ad570`) returns `0x5ae630` plus 1. `AddIgnore`, `DelIgnore` and `AddOrDelIgnore` (`0x5ad5f0`, `0x5ad640`, `0x5ad5a0`) take a string and call `0x5af300`, `0x5af400` and `0x5af1a0`, or do nothing without a list.
+
+Addresses: `0x5ad400`, `0x5ad411`, `0x5ad460`, `0x5ad4bb`, `0x5ad4c4`, `0x5ad4e5`, `0x5ad4ee`, `0x5ad4fd`, `0x5ae570`, `0x5ae576`, `0x5ad520`, `0x5ae5f9`, `0x5ad570`, `0x5ad5a0`, `0x5ad5ca`, `0x5ad5f0`, `0x5ad61a`, `0x5ad640`, `0x5ad66a`, `0x5aca10`, `0x55f080`, `0x703bf0`, `0x838044`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ad411` tests `0xc28168`; `GetIgnoreName`, `SetSelectedIgnore` and `GetSelectedIgnore` load it with no test. `SetSelectedIgnore(26)` passes 25, which `0x5ae5f9` (`jbe` after `cmp eax,0x19`) accepts, so it selects the eight bytes at `+0x718` and `+0x71c`. `0x5ae576` is `cmp edx,0x19; jbe`. `0x5ad4c4` skips the lookup for a zero guid; `0x5ad4e5` calls `0x55f080` on the name cache `0xc0e228` with a zeroed owner and no callback, which returns null on a miss and sends nothing (`dbcache/overview`, Asking for a record). `0x5ad4ee` takes `UNKNOWN` (`0x838044`) through `0x703bf0`, and `0x5ad4fd` pushes the record's string. `0x5aca10` writes `+0x718` and `+0x720` but not `+0x71c`. The name bindings test `lua_isstring` and raise their usage error otherwise; `0x5ad5ca`, `0x5ad61a` and `0x5ad66a` test the list.
+
+## Ignore requests
+
+`0x5af1a0`, `0x5af300` and `0x5af400` scan the 25 ignore guids in slot order, skip a zero guid, ask the name cache for each with no callback, and stop at the first cached name equal to the argument without case (`SStrCmpI(cached, name, 0x7fffffff)`). A listed player whose name is not cached never matches.
+
+| function | a match | no match |
+|---|---|---|
+| `AddOrDelIgnore` `0x5af1a0` | `CMSG_DEL_IGNORE` (`0x6d`) with its guid | `CMSG_ADD_IGNORE` (`0x6c`) with the argument |
+| `AddIgnore` `0x5af300` | `ERR_IGNORE_ALREADY_S` (`0x111`) with the cached name | `0x6c` with the argument |
+| `DelIgnore` `0x5af400` | `0x6d` with its guid, through `0x5af4b0` | `ERR_IGNORE_NOT_FOUND` (`0x110`) |
+
+Addresses: `0x5af1a0`, `0x5af1ef`, `0x5af202`, `0x5af212`, `0x5af21f`, `0x5af27f`, `0x5af2b9`, `0x5af300`, `0x5af345`, `0x5af35a`, `0x5af379`, `0x5af3d9`, `0x5af400`, `0x5af447`, `0x5af45a`, `0x5af46c`, `0x5af497`, `0x5af4b0`
+Confidence: verified
+Proof: one
+Test: none
+
+Each loop tests the guid's two dwords, calls `0x55f080` on `0xc0e228` with three zeros after the owner (`0x5af1ef`, `0x5af345`, `0x5af447`), skips a null record and compares it first (`0x5af202`, `0x5af35a`, `0x5af45a`); the bound is `cmp edi,0x19` (`0x5af212`). `0x5af21f` and `0x5af379` put `0x6c` and the argument with `0x418430`; `0x5af27f` puts `0x6d` and `0x5af2b9` the slot's guid; each sends through `0x5ab630`. `0x5af3d9` pushes the record and `0x111` for `0x496720`. `0x5af46c` pushes `0x110` alone. `0x5af4b0(guid)` puts `0x6d` and the guid and sends.
+
+## Ignore order
+
+`0x5ae910` sorts the 25 guids at `+0x650` with `qsort` (`0x73f727`, elements of 8 bytes) and `CompareIgnoredByName` (`0x5ae940`), then signals `IGNORELIST_UPDATE` (event `0x160`). The comparator puts a zero guid last, two zero guids equal. It then asks the name cache for both names with no callback: a missing name goes last, two missing are equal, and two present names compare with `SStrCmpI` with no bound. Names equal without case compare 0 and keep the order `qsort` leaves.
+
+Addresses: `0x5ae910`, `0x5ae920`, `0x5ae92d`, `0x5ae940`, `0x5ae96f`, `0x5ae975`, `0x5ae98d`, `0x5ae9ab`, `0x5ae9b5`, `0x5ae9c2`, `0x5ae9d0`, `0x5ae9e2`, `0x5ae9f1`
+Confidence: verified
+Proof: one
+Test: `net::friends_compare_ignores`
+
+`0x5ae910` pushes `0x5ae940`, 8, 25 and `this + 0x650` for `0x73f727` and tail-jumps to `0x703e50` with `ecx` = `0x160` (`0x5ae92d`). In `0x5ae940`, `0x5ae96f` sends a zero first guid to `0x5ae9e2` (1 when the second is not zero, else 0) and `0x5ae975` a zero second guid to `0x5ae9f1` (`or eax,-1`). `0x5ae98d` and `0x5ae9ab` look up the first and second guids with three zero arguments; `0x5ae9b5` sends a null first name to `0x5ae9d0` (1, or 0 with both null), a null second name returns −1, and `0x5ae9c2` returns `SStrCmpI(first, second, 0x7fffffff)`. The test runs `0x5ae940` whole with the lookup stubbed by a table of names, over zero guids, missing names, case-folded equal names and random names.

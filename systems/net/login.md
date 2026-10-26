@@ -195,6 +195,17 @@ Test: none
 owner's slot 10 with 0, `+0xa4` (the SRP object's `K`) and 40; on mismatch it stores state 2 and
 calls slot 10 with `0x0b`. `0x5bada2` returns 2 for result `0x0a` before any call.
 
+## Survey id
+
+The dword after `M2` in a proof reply with result 0 is the survey id: the link stores it at `+0x78` when `M2` verifies, before it enters state 6. `GetSurveyId` (`0x5ab620`) returns it from the login session `0xc28120` through the session's link at `+0x1ec`; its one caller, the survey runner `0x473f10`, puts it in the block it passes `Survey.dll` (`glue/downloads`, Running the survey). Neither function tests for a null pointer, and before a verified proof the read is of `+0x78` as the allocation left it: the constructor `0x5bc410` does not write it.
+
+Addresses: `0x5bad53`, `0x5ab620`, `0x5ab4a0`, `0x5b2090`, `0xc28120`, `0x474064`, `0x5bc410`
+Confidence: verified
+Proof: one
+Test: none
+
+In `0x5bacb0`, `0x5bad4b` loads the dword read after the 20 proof bytes and `0x5bad53` stores it at `+0x78` on the path where `0x5d3ad0` returned 0, ahead of the state-6 call at `0x5bad56`. `0x5ab620` calls `0x5ab4a0`, which is `mov eax,[0xc28120]; ret`, and tail-jumps to `0x5b2090` with the result in `ecx`; `0x5b2090` is `mov eax,[ecx+0x1ec]; mov eax,[eax+0x78]; ret`. `0x5bc410` stores the vtables and the fields from `+0x180` and builds its sub-objects at `+0x4` (`0x5b8490`, to `+0x30`) and `+0x48` (`0x5b8350`, to `+0x74`); none of them writes `+0x78`. `0xc28120` is written by `0x5ab4b0`, which creates the session (`0x5ab567`) and clears it on a rebuild (`0x5ab4ed`), and cleared by `0x5ab3d0` (`0x5ab445`). A scan of `call`, `jmp` and stored dwords finds `0x474064` alone for `0x5ab620`, and the control `0x5ab630` finds its calls.
+
 ## Logon results
 
 Outside a reconnect, the logon object's slot 10 (`0x5b2c90`) keeps the key, up to 40 bytes, at

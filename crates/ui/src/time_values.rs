@@ -26,3 +26,14 @@ pub fn ms_to_seconds(ms: i64) -> f64 {
 pub fn attack_time_seconds(ms: i64) -> f64 {
     ms as f64 * f64::from(MS_TO_S_F32)
 }
+
+/// The four numbers `0x49e9d0` formats a count of `seconds` into with `%dd %dh %dm %ds`, by
+/// signed division that truncates toward zero: days `s / 86400`, hours `(s − 86400·days) / 3600`,
+/// minutes `(s − 3600·(hours + 24·days)) / 60` and seconds `s % 60`. A negative count gives
+/// negative parts. The entry is in `systems/collision/teleport.md`, Neighbouring handlers.
+pub fn duration_parts(seconds: i32) -> [i32; 4] {
+    let days = seconds / 86_400;
+    let hours = (seconds - days * 86_400) / 3_600;
+    let minutes = (seconds - (hours + days * 24) * 3_600) / 60;
+    [days, hours, minutes, seconds % 60]
+}

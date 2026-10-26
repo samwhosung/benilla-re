@@ -37,7 +37,7 @@ moves `cameraDistanceMoveSpeed` yards a second and stays between 0 and the maxim
 `cameraYawMoveSpeed` degrees a second and wraps into 0 to 2π. Pitch moves `cameraPitchMoveSpeed` times 0.25 degrees
 a second, so 90 is 22.5 degrees a second, and is clamped to plus or minus 89 degrees.
 
-Addresses: `0x5112d0`, `0x50fd40`, `0x50fd90`, `0x50b4a0`, `0x50b4b0`, `0x50b4d0`, `0x50b4e0`, `0x50b500`, `0xbe0fbc`, `0xbe1094`, `0xbe0f78`
+Addresses: `0x5112d0`, `0x50fd40`, `0x50fd90`, `0x50b4a0`, `0x50b4b0`, `0x50b4d0`, `0x50b4e0`, `0x50b500`, `0x50b510`, `0x50b520`, `0x50b530`, `0x50b540`, `0x50b550`, `0x50b560`, `0x50b570`, `0x50b580`, `0x50b590`, `0xbe0fbc`, `0xbe1094`, `0xbe0f78`
 Confidence: verified
 Proof: one
 Test: `ui::cam_5112d0`
@@ -48,9 +48,20 @@ Test: `ui::cam_5112d0`
 `0x5114c0`), 3 at `0x5114ce`, 4 at `0x51153a` (`+0x1e0` rises, clamped at `0x8089d8`) and 5 at `0x51157d`. The live distance, yaw and pitch
 (`+0xec`, `+0xf0`, `+0xf4`) are copied at `0x511422`, `0x51152f`, `0x5115d6` unless the glide bits 0x4000000, 0x1000000, 0x2000000 are set.
 `0x50fd40(axis, start, extra)` sets the active bit and the start time, and the queued end when `extra` is nonzero;
-`0x50fd90(axis, end)` sets the stopping bit and the end time. `0x50b4a0` (axis 0) and `0x50b500` (axis 1) set the axis number and reach `0x50b4b0`, `0x50b4d0` with `0x50b4e0`, which call the two with the time `0xcf0bc8`.
+`0x50fd90(axis, end)` sets the stopping bit and the end time. Each command loads its axis into `edx` and jumps to `0x50b4b0` (Start) or `0x50b4e0` (Stop), which call the two on `0x4818f0`'s camera with the time `0xcf0bc8` and return no values. Axes 0 to 5 are In `0x50b4a0`, `0x50b4d0`; Out `0x50b500`, `0x50b510`; Right `0x50b520`, `0x50b530`; Left `0x50b540`, `0x50b550`; Up `0x50b560`, `0x50b570`; Down `0x50b580`, `0x50b590`.
 
 `ui::cam_5112d0` runs `0x5112d0` whole with every queued end 0, so `0x50fd90` is not called.
+
+## Camera script functions
+
+The camera's 21 Lua functions, from `CameraZoomIn` to `FlipCameraYaw`, are the name and function pairs of `0x84f7a0`. `0x50c080` registers them and `0x50c0b0` removes them, each called once from the game UI's own registration and removal.
+
+Addresses: `0x84f7a0`, `0x50c080`, `0x50c097`, `0x50c0b0`, `0x4902a1`, `0x490d35`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50c080` calls `0x704120` with the name at `0x84f7a0 + i` in `ecx` and the function after it in `edx` for `i` from 0 to `0xa8` in steps of 8 (`0x50c097`); `0x50c0b0` calls `0x704160` with each name. The pairs run from `0x84f7a0` (`CameraZoomIn`, `0x50b400`) to `0x84f840` (`FlipCameraYaw`, `0x50b6a0`); the table lists Left before Right, and each name's function sets the axis the keyboard axes give it. A scan of `call`, `jmp` and stored dwords finds `0x4902a1` alone for `0x50c080` and `0x490d35` alone for `0x50c0b0`, with the control `0x5ab630`.
 
 ## Maximum distance and the wheel
 

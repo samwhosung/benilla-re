@@ -125,17 +125,21 @@ Fifteen more CVars hold the five views. The name is `camera`, then `Distance`, `
 view's suffix: none for view 0 (first person), `A` to `D` for views 1 to 4. So `cameraDistance` is view 0 and
 `cameraPitchB` the pitch of view 2. The default of each is the string of the view table in
 `uicamera/view#the-starting-view`, and each distance accepts 0 to 50, each pitch plus or minus 89 degrees and each
-yaw 0 to 360. The camera keeps the current value of each in its view slots.
+yaw 0 to 360. The camera keeps the current value of each in its view slots, which its constructor fills once
+(`0x50fb80`): 15 floats from `+0xb0`, view by view, each CVar's float value, pitch and yaw times π/180.
 
-Addresses: `0xbe0f7c`, `0x50b9b0`
+Addresses: `0xbe0f7c`, `0x50b9b0`, `0x50fb80`, `0x50fb94`, `0x50fba3`, `0x50fbb4`, `0x50c3db`, `0x84f474`, `0x7ffaac`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_deg2rad_gated`
 
 The loop at `0x50b9b0` runs five times over the suffix table at 0x84f454 (the first is empty) and three times over
 the axis table at 0x84f468, builds the name with `0x64a760` from `camera` (0x84fdc0), the axis and the suffix, and
 registers it with the default `[esi+edi+0x84f488]` and the check `[esi+0x84f790]`; the handle goes to
-`[esi+edi+0xbe0f7c]`, 12 bytes per view and 4 per axis. The checks are `0x50b310`, `0x50b380` and `0x50b3c0` in that order.
+`[esi+edi+0xbe0f7c]`, 12 bytes per view and 4 per axis. The checks are `0x50b310`, `0x50b380` and `0x50b3c0` in that order. `0x50fb80` runs five times over three axes (`0x50fbb4`): it loads `[cvar+0x24]` through
+`0xbe0f7c`, multiplies by `0x7ffaac` (π/180 as f32) when the axis flag at `0x84f474` (0, 1, 1) is set (`0x50fba3`), and stores
+with `fstp` at `this + 0xb0`, stepping 4 bytes; its one caller is `CCamera::CCamera` (`0x50c3db`). The test runs
+`0x50fb92` to `0x50fbab`, one axis.
 
 ## Smoothing CVars
 
@@ -232,3 +236,20 @@ Test: `ui::glue_eps_predicates`
 
 `0x5106f0` and `0x5107f0` sum the three floats and compare the absolute value with 0.001 (`0x510707`, `0x5107fb`). `0x510760` is
 the pitch band (`0x5107b1`, `0x5107cb`) and `0x510850` the yaw band; `0x510750` is `xor eax,eax; ret`.
+
+## Pivot bias hold
+
+`0x511010(camera)` holds the pivot bias: it answers 1 when the Track bit (bit 8 of the mode word `+0x90`) is set and either
+`cameraSmoothTrackingStyle` is 0 or the auto-move mode `0xc4d888` is 0 (keep facing the target,
+`objectlayer/unitmovement#auto-move-modes`), else 0. `0x5107f0` asks it once the bias is at least 0.001 in size, or NaN, and answers
+that nothing needs clearing when it answers 1.
+
+Addresses: `0x511010`, `0x511016`, `0x51101e`, `0x511028`, `0x51102a`, `0x51102f`, `0x511035`, `0x5107fb`, `0x510806`, `0x51080e`, `0x510815`, `0x60f8f0`, `0xbe10c4`, `0xc4d888`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x511016` is `test ah,1` on `[ecx+0x90]` and returns 0 when clear. `0x51101e` loads the CVar `0xbe10c4` and `0x511028`
+tests its integer value `+0x28`; 0 returns 1 (`0x511035`). Otherwise `0x51102a` calls `0x60f8f0`, `mov eax,[0xc4d888]`, and
+`0x51102f` turns it into 1 for 0 and 0 for any other value (`neg; sbb; inc`). `0x5107fb` compares `|bias|` with 0.001 and `test ah,5; jp` at `0x510806` reaches the call for C0 and C2 both clear or both set, so an unordered NaN calls it too. `0x51080e` is its one call, in `0x5107f0`,
+and `0x510815` returns 0 on a nonzero answer.

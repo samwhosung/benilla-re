@@ -703,7 +703,7 @@ ClientConnection	0x0d64	3312	void *[828]	m_handlerContexts	net	Holds the context
 ClientConnection	0x1a54	4	void *	m_eventQueue	net	Holds the queue of events the network thread hands to the main thread	verified	one	net/dispatch#main-thread-drain
 ClientConnection	0x1a58	4	void *	m_wowConnection	net	Holds the WowConnection that carries the socket	verified	one	net/dispatch#network-thread-handoff
 ClientConnection	0x1a5c	4	uint32_t	m_refCount	net	Holds the references: one per queued event and one for the poll in progress; zero on a marked client deletes it	verified	one	net/dispatch#main-thread-drain
-ClientConnection	0x1a60	4	uint32_t	m_deleting	net	Holds 1 once the connection is marked for deletion	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x1a60	1	uint8_t	m_deleting	net	Holds 1 once the connection is marked for deletion	verified	one	net/dispatch#main-thread-drain
 ClientConnection	0x1a64	4	uint32_t	m_lastPingTime	net	Holds the clock of the last ping or of connecting	verified	one	net/session#ping-and-latency
 ClientConnection	0x1a68	4	uint32_t	m_pingSequence	net	Holds the sequence number of the last ping sent	verified	one	net/session#ping-and-latency
 ClientConnection	0x1a6c	64	uint32_t[16]	m_latencySamples	net	Holds the ring of latency samples	verified	one	net/session#ping-and-latency
@@ -712,7 +712,8 @@ ClientConnection	0x1ab0	4	uint32_t	m_sampleWrite	net	Holds the write index of th
 ClientConnection	0x1ab4	4	uint32_t	m_bytesSent	net	Holds the bytes sent since connecting	verified	one	net/session#ping-sequence-and-statistics
 ClientConnection	0x1ab8	4	uint32_t	m_bytesReceived	net	Holds the bytes received since connecting	verified	one	net/session#ping-sequence-and-statistics
 ClientConnection	0x1abc	4	uint32_t	m_connectTime	net	Holds the time the connection came up	verified	one	net/session#ping-sequence-and-statistics
-ClientConnection	0x1ac0	28	uint8_t[28]	m_statsLock	net	Holds the lock around the ping and byte statistics	verified	one	net/session#ping-sequence-and-statistics
+ClientConnection	0x1ac0	24	uint8_t[24]	m_statsLock	net	Holds the lock around the ping and byte statistics	verified	one	net/session#ping-sequence-and-statistics
+ClientConnection	0x1ad8	4	void *	m_objectManager	net	Holds the object manager block ClntObjMgrCreate stores, null from the NetClient constructor	verified	one	net/session#netclient-construction
 ClientConnection	0x1adc	4	void *	m_response	net	Holds the response object the connection notifies of replies	verified	one	net/connection#response-object
 ClientConnection	0x1ae4	4	uint32_t	m_characterCount	net	Holds the number of character records read from the last character list	verified	one	net/connection#character-list-packet
 ClientConnection	0x1ae8	4	void *	m_characters	net	Holds the array of 0x110-byte character records	verified	one	net/connection#character-list-packet
@@ -731,6 +732,7 @@ ClientConnection	0x1b18	4	uint32_t	m_worldHandle	net	Holds the handle set when t
 ClientConnection	0x1b1c	1	uint8_t	m_quitAfterLogout	net	Holds the quit flag of the pending logout	verified	one	net/connection#logout
 ClientConnection	0x1b1d	1	uint8_t	m_logoutPending	net	Holds 1 while a logout is requested and not yet answered	verified	one	net/connection#logout
 ClientConnection	0x1b20	4	void *	m_cleanup	net	Holds the operation cleanup callback, run once	verified	one	net/connection#operations
+ClientLink	0x0078	4	uint32_t	m_surveyId	net	Holds the survey id a verified logon proof reply carries after M2	verified	one	net/login#survey-id
 Cone	0x0000	12	NTempest::C3Vector	m_apex	cmath	Holds the apex	verified	one	cmath/types#cones-and-oriented-boxes
 Cone	0x0010	12	NTempest::C3Vector	m_axis	cmath	Holds the unit axis	verified	one	cmath/types#cones-and-oriented-boxes
 Cone	0x001c	4	float	m_height	cmath	Holds the cap length along the axis; 0 for no cap	verified	one	cmath/types#cones-and-oriented-boxes
