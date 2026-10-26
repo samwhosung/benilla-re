@@ -23294,16 +23294,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x646600	46			storm	boundary		Runs its object file code not read here	inferred	none		
 0x646630	3			storm	boundary		Runs its object file code not read here	inferred	none		
 0x646640	1			storm	unreached		Runs its object file code not read here	inferred	none		
-0x646650	85			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6466b0	3			storm	boundary		Runs its object file code not read here	inferred	none		
+0x646650	85	ReadNt5OrLater		storm	host	bool * __thiscall (bool *this)	Stores whether GetVersionExA gives a major version of 5 or more, 0 when it fails, and returns the flag	verified	one	storm/files#opening-a-loose-file	
+0x6466b0	3	ReadFlagByte		storm	orchestration	bool __thiscall (bool *this)	Returns the byte at ecx	verified	one	storm/files#opening-a-loose-file	
 0x6466c0	10	InitLooseIndexThunk		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table and registers its destructor, a static initializer	verified	two	storm/mount#index-lifetime	
 0x6466d0	190	InitLooseIndex		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table empty, with bucket mask 0xffffffff	verified	two	storm/mount#index-lifetime	
 0x646790	12	InitLooseIndexAtExit		storm	orchestration	void __cdecl (void)	Registers the loose-file index table's destructor with _atexit	verified	two	storm/mount#index-lifetime	
 0x6467a0	359	InitLooseIndexExit		storm	orchestration	void __cdecl (void)	Frees the loose-file index table's nodes and buckets at exit	verified	two	storm/mount#index-lifetime	
 0x646910	1143	IndexLooseFolder		storm	orchestration	void __fastcall (const char *root, const char *prefix, void *listing)	Adds a folder's files to the loose-file index keyed below the root, walking subfolders but a Data prefix	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
 0x646d90	183	SFileStat		storm	host	int32_t __fastcall (const char *path, void *st)	Fills a _stat record for a UTF-8 path through _wstat or _stat, returning 0 on success	verified	two	storm/mount#loose-file-index	
-0x646e50	55			storm	boundary		Runs SFile2.cpp code that calls 0x646650, _atexit; not read here	inferred	none		
-0x646e90	1			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
+0x646e50	55	IsNt5OrLater		storm	host	bool __cdecl (void)	Returns whether GetVersionExA gave a major version of 5 or more, read on the first call	verified	one	storm/files#opening-a-loose-file	
+0x646e90	1	IsNt5OrLaterExit		storm	orchestration	void __cdecl (void)	Returns at once; the exit 0x646e50 registers for its flag	verified	one	storm/files#opening-a-loose-file	
 0x646ea0	246	BuildLooseIndex		storm	orchestration	void __cdecl (void)	Builds the loose-file index from the base folder, then its Data folder, and marks it built	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
 0x646fa0	20	SFileSetDiskPathMode		storm	unreached		Stores the byte that sends every name to the disk-path builder; nothing calls it	inferred	none	storm/mount#loose-files	
 0x646fc0	120	ClearLooseIndex		storm	orchestration	void __cdecl (void)	Empties the loose-file index and clears its built byte, so the next open builds it again	verified	two	storm/mount#index-lifetime	
@@ -23335,7 +23335,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6476e0	191	ReadBzFile		storm	orchestration	uint32_t __fastcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read)	Inflates up to a size of a .bz file, refilling 4 KiB of input, and returns 1 when it delivered bytes	verified	two	storm/bz#reading-a-bz-file	storm::bz_read_difftest, storm::bz_damaged_difftest
 0x6477a0	24	SFile::Open	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx; not read here	inferred	none		
 0x6477c0	1498	SFile::OpenEx	idb	storm	orchestration		Opens a name by its resolved kind; a .bz file is checked for BZ00 and set up to inflate	verified	two	storm/bz#opening-a-bz-file	storm::bz_open_header_difftest
-0x647db0	163			storm	boundary		Runs SFile2.cpp code that calls SUniConvertUTF8to16, 0x646e50, __wfopen and 1 more; not read here	inferred	none		
+0x647db0	163	OpenLocalFile		storm	host	void * __fastcall (const char *name, const char *mode, const wchar_t *wideMode)	Opens a disk file with fopen, or with _wfopen of its UTF-16 name on Windows 2000 and later when option 11 is set	verified	one	storm/files#opening-a-loose-file	
 0x647e60	796	SFileResolveOpen		storm	orchestration	int32_t __fastcall (const char *name, char *out, uint32_t size, uint32_t flags, uint32_t *kind, void **archive)	Resolves an open name through the disk-path builder, or the loose-file index and then the archives	verified	two	storm/mount#loose-files	storm::resolve_matches_index, storm::index_hit_has_no_fallback
 0x648180	725			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrPack, 0x646d90 and 3 more; not read here	inferred	none		
 0x648460	373	SFile::Read	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read, void *overlapped, uint32_t unused)	Reads from an open file by its kind, the .bz inflater for kind 1, or queues an overlapped read	verified	one	storm/bz#reading-a-bz-file	
@@ -23348,7 +23348,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648890	30	SFile::GetBasePath	idb	storm	boundary		Runs SFile2.cpp code that calls SStrCopy; not read here	inferred	none		
 0x6488b0	106	SFileSetBasePath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the base path with a trailing backslash and passes the path to 0x6571d0	verified	two	storm/mount#loose-file-index	
 0x648920	98	SFileSetDataPath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the data folder name with a trailing backslash	verified	two	storm/mount#loose-file-index	
-0x648990	6			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
+0x648990	6	GetDataPath		storm	orchestration	char * __cdecl (void)	Returns the address of the data path 0xc520c8	verified	one	storm/files#the-data-path-accessor	
 0x6489a0	98	SFileSetExtraIndexPath		storm	unreached	int32_t __stdcall (const char *path)	Stores a third folder for the loose-file index; nothing calls it	verified	two	storm/mount#loose-file-index	
 0x648a10	18	SFileExists		storm	orchestration	int32_t __stdcall (const char *name)	Resolves a name with open flags 0, the archives only, and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
 0x648a30	44	SFileExistsEx		storm	orchestration	int32_t __stdcall (const char *name, uint32_t flags)	Resolves a name with open flags without opening it and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
@@ -23361,7 +23361,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648cd0	20			storm	boundary		Runs SFile2.cpp code that calls SEventWait; not read here	inferred	none		
 0x648cf0	25			storm	unreached		Runs SFile2.cpp code that calls SEventWait; not read here	inferred	none		
 0x648d10	187			storm	boundary		Runs SFile2.cpp code that calls SCritSect::Enter, SEvent::Set, SCritSect::Leave and 3 more; not read here	inferred	none		
-0x648dd0	176	SFileOpenArchiveShim		storm	orchestration		Opens a .mpq name as an archive and anything else as a loose directory	verified	one	storm/mount#patch-archives	
+0x648dd0	176	SFileOpenArchiveShim		storm	orchestration		Opens a .mpq name as an MPQ archive and any other name as a zip archive through SZip	verified	one	storm/files#zip-archive-listing	
 0x648e80	106	SFileOpenChild		storm	orchestration		Creates a child archive record for a prefix under a parent archive	verified	one	storm/mount#base-and-speech-archives	
 0x648ef0	57			storm	boundary		Runs SFile2.cpp code that calls 0x668440, 0x653780, SMemFree; not read here	inferred	none		
 0x648f30	38			storm	unreached		Runs SFile2.cpp code that calls 0x6550b0; not read here	inferred	none		
@@ -23421,7 +23421,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ae40	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ae50	320	SStrTokenize	idb	storm	primitive	void __stdcall (const char **cursor, char *out, uint32_t size, const char *delims, int32_t *quoted)	Copies the next token of a string cursor into a buffer, split at delimiters and quotes, and advances the cursor	verified	one	storm/strings#tokenizer	storm::sstrtokenize_whole
-0x64af90	199	SStrHash	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x64af90	199	SStrHash	idb	storm	primitive	uint32_t __stdcall (const char *text, uint32_t flags, uint32_t seed)	Hashes a string with a seed and a table of sixteen dwords, case and slashes folded unless flag 1	verified	one	storm/strings#seeded-string-hash	storm::str_hash
 0x64b060	362			storm	unreached		Runs its object file code that calls SErrSetLastError, __allmul; not read here	inferred	none		
 0x64b1d0	493	bjhash	idb	storm	primitive	uint32_t __fastcall (const uint8_t *key, uint32_t length, uint32_t initval)	Hashes bytes with Bob Jenkins' lookup2 from an initial value	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b3f0	100	SStrHashHT	idb	storm	primitive	uint32_t __stdcall (const char *s)	Hashes a string folded to upper case with / read as \ through bjhash with initial value 0	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
@@ -23835,22 +23835,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x659eb0	1			storm	boundary		Runs its object file code not read here	inferred	none		
 0x659ec0	76	SLogClose		storm	host		Closes a log handle	inferred	none		
 0x659f10	82	FlushLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x659f70	226	LockLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
+0x659f70	226	LockLog	idb	storm	orchestration	void * __fastcall (uint32_t log, uint32_t *lock, int create)	Finds a log record by id under its lock, or makes a 0x10124-byte one when create is set	verified	one	storm/log#opening-a-log-file	
 0x65a060	91			storm	boundary		Runs its object file code not read here	inferred	none		
-0x65a0c0	217	SLogCreate	idb	storm	boundary		Runs its object file code that calls 0x65a1c0, SErrSetLastError, LockLog and 2 more; not read here	inferred	none		
+0x65a0c0	217	SLogCreate	idb	storm	orchestration	bool __stdcall (const char *name, uint32_t flags, uint32_t *log)	Makes a log record for a path and flags, opening the file at once only with flag 1	verified	one	storm/log#opening-a-log-file	
 0x65a1a0	18	UnlockLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x65a1c0	152			storm	boundary		Runs its object file code that calls 0x65a3e0, 0x65a260; not read here	inferred	none		
-0x65a260	153			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrCopy, 0x65a370 and 3 more; not read here	inferred	none		
+0x65a1c0	152	CreateLogFile		storm	host	bool __fastcall (const char *path, void **handle, uint32_t flags)	Opens a log's file for writing, appended to with flag 4 and emptied without; -1 and 0 for no path or a failure	verified	one	storm/log#opening-a-log-file	
+0x65a260	153	CreatePathFolders		storm	boundary		Makes each folder of a path with CreateDirectoryA	inferred	none	storm/log#opening-a-log-file	
 0x65a300	109			storm	boundary		Runs its object file code that calls SStrLen, SStrChr; not read here	inferred	none		
 0x65a370	58			storm	boundary		Runs its object file code that calls SStr::sub_64A450, 0x65a300; not read here	inferred	none		
 0x65a3b0	34			storm	boundary		Runs its object file code that calls SStrChr2; not read here	inferred	none		
 0x65a3e0	202			storm	boundary		Runs its object file code that calls SStrChr, SStrCopy, SStr::sub_64A450 and 1 more; not read here	inferred	none		
 0x65a4b0	167			storm	boundary		Runs its object file code that calls 0x65a9a0, SStrCopy, SLogClose and 1 more; not read here	inferred	none		
 0x65a560	592			storm	unreached		Runs its object file code that calls LockLog, PrepareLog, OutputTime and 6 more; not read here	inferred	none		
-0x65a7b0	96	OutputIndent	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x65a810	38	OutputReturn	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x65a840	228	OutputTime	idb	storm	boundary		Runs its object file code that calls SStrLen; not read here	inferred	none		
-0x65a930	50	PrepareLog	idb	storm	boundary		Runs its object file code that calls 0x65a1c0; not read here	inferred	none		
+0x65a7b0	96	OutputIndent	idb	storm	orchestration	void __thiscall (void *this)	Writes a log's indent, at most 128 spaces	verified	one	storm/log#writing-a-log-line	
+0x65a810	38	OutputReturn	idb	storm	orchestration	void __thiscall (void *this)	Writes CR LF at a log's position	verified	one	storm/log#writing-a-log-line	
+0x65a840	228	OutputTime	idb	storm	host	void __fastcall (void *log, int stamp)	Writes the local-time stamp of a log line, or as many spaces when stamp is 0, unless the log has no stamps	verified	one	storm/log#writing-a-log-line	
+0x65a930	50	PrepareLog	idb	storm	orchestration	bool __thiscall (void *this)	Opens a log's file before its first line; a failure clears its path so it never opens	verified	one	storm/log#opening-a-log-file	
 0x65a970	48	SLogFlush	idb	storm	boundary		Runs its object file code that calls LockLog, FlushLog, UnlockLog; not read here	inferred	none		
 0x65a9a0	78			storm	boundary		Runs its object file code that calls FlushLog; not read here	inferred	none		
 0x65a9f0	47			storm	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
@@ -23863,7 +23863,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65ab60	80			storm	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
 0x65abb0	58			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
 0x65abf0	41			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
-0x65ac20	191	SLogVWrite	idb	storm	boundary		Runs its object file code that calls LockLog, PrepareLog, OutputTime and 6 more; not read here	inferred	none		
+0x65ac20	191	SLogVWrite	idb	storm	orchestration	void __stdcall (uint32_t log, const char *format, va_list args)	Writes one stamped, indented line ending in CR LF into a log's buffer, opening its file first	verified	one	storm/log#writing-a-log-line	
 0x65ace0	22	SLogWrite	idb	storm	boundary	void __cdecl (void *log, const char *format, ...)	Writes a formatted line to a log, handing its variadic arguments to 0x65ac20 as a list	verified	one	ui/framexml#building-the-game-interface	
 0x65ad00	9			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65ad10	25			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23892,8 +23892,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65af70	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x65af80	244			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65b080	429			storm	boundary		Runs its object file code not read here	inferred	none		
-0x65b250	227			storm	boundary		Runs its object file code not read here	inferred	none		
-0x65b350	396	SUniConvertUTF8to16	idb	storm	boundary		Runs its object file code not read here	inferred	none		
+0x65b250	227	Utf8ToUtf16Length		storm	primitive	int __stdcall (const char *src, uint32_t len, uint32_t *read)	Counts the UTF-16 units of UTF-8 with the NUL, folding bytes signed so a four-byte form counts 1	verified	one	storm/unicode#counting-utf-16-units	storm::utf8_to_utf16_len_whole
+0x65b350	396	SUniConvertUTF8to16	idb	storm	primitive	int __stdcall (uint16_t *dst, uint32_t cap, const char *src, uint32_t len, uint32_t *written, uint32_t *read)	Converts UTF-8 to UTF-16 without validating it, 0xfffd past U+10FFFF; 0 at a NUL, 1 when full	verified	one	storm/unicode#converting-utf-8-to-utf-16	storm::utf8_to_utf16_whole
 0x65b500	258			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65b610	247			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65b710	20			storm	unreached		Runs its object file code that calls 0x65b730; not read here	inferred	none		
@@ -24208,16 +24208,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x667910	359			storm	boundary		Runs its object file code that calls 0x6691f0, 0x668ff0, 0x669030 and 1 more; not read here	inferred	none		
 0x667a80	19			storm	boundary		Runs its object file code not read here	inferred	none		
 0x667aa0	294			storm	boundary		Runs its object file code that calls _fclose; not read here	inferred	none		
-0x667bd0	63			storm	boundary		Runs its object file code that calls _fopen, SStrCopy; not read here	inferred	none		
-0x667c10	388			storm	boundary		Runs its object file code that calls _fseek, _ftell, _fgetc and 3 more; not read here	inferred	none		
+0x667bd0	63	OpenZipFile		storm	orchestration	bool __thiscall (void *this, const char *name)	Opens a zip's file with fopen in binary mode and keeps its name, up to 0x100 bytes, at +0xc	verified	one	storm/files#zip-archive-listing	
+0x667c10	388	FindZipEndRecord		storm	boundary		Finds the zip end record PK 5 6 within the last 0x10016 bytes of a zip's file	inferred	none	storm/files#zip-archive-listing	
 0x667da0	82			storm	boundary		Runs its object file code that calls _fseek, 0x667e20; not read here	inferred	none		
-0x667e00	22			storm	boundary		Runs its object file code not read here	inferred	none		
-0x667e20	1114			storm	boundary		Runs SZip.cpp code that calls 0x740c97, 0x667710, 0x667720 and 14 more; not read here	inferred	none		
+0x667e00	22	SlashesToBackslashes		storm	orchestration	void __fastcall (char *text)	Replaces each / of a string with \ in place	verified	one	storm/files#zip-archive-listing	
+0x667e20	1114	ReadZipDirectoryEntry		storm	boundary		Reads one central directory entry of a zip into a new entry of the zip entry table	inferred	none	storm/files#zip-archive-listing	
 0x668280	26			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x6682a0	120			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668320	29			storm	boundary		Runs SZip.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x668340	19			storm	boundary		Runs SZip.cpp code that calls SMemFree; not read here	inferred	none		
-0x668360	212			storm	boundary		Runs SZip.cpp code that calls SMemAlloc, 0x667a80, 0x6691c0 and 5 more; not read here	inferred	none		
+0x668360	212	OpenZipArchive		storm	orchestration	void * __fastcall (const char *name)	Opens a zip file and reads its central directory into the zip entry table; 0 on failure	inferred	none	storm/files#zip-archive-listing	
 0x668440	30			storm	boundary		Runs SZip.cpp code that calls 0x667aa0, SMemFree; not read here	inferred	none		
 0x668460	7			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668470	157			storm	boundary		Runs SZip.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
@@ -24229,7 +24229,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x668750	502			storm	boundary		Runs SZip.cpp code that calls _fseek, 0x740c97, 0x732320 and 1 more; not read here	inferred	none		
 0x668950	447			storm	unreached		Runs SZip.cpp code that calls 0x668470, _fseek, SMemAlloc and 5 more; not read here	inferred	none		
 0x668b10	19			storm	unreached		Runs SZip.cpp code that calls SMemFree; not read here	inferred	none		
-0x668b30	97			storm	boundary		Runs its object file code not read here	inferred	none		
+0x668b30	97	EnumerateZipFiles		storm	orchestration	int __fastcall (void *zip, void *callback, void *data)	Calls a callback with each entry name of a zip until it returns 0, and returns 1	verified	one	storm/files#zip-archive-listing	
 0x668ba0	69			storm	boundary		Runs its object file code that calls _fopen, SMemAlloc; not read here	inferred	none		
 0x668bf0	41			storm	boundary		Runs its object file code that calls _fclose, SMemFree; not read here	inferred	none		
 0x668c20	12			storm	unreached		Runs its object file code not read here	inferred	none		
