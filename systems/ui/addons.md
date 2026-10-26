@@ -1,8 +1,8 @@
-# ui: add-ons and saved variables
+# ui: add-ons
 
 How the client finds add-ons, reads their toc directives, decides which may load, loads them with
-their dependencies and saved variables, keeps each character's enable state, and writes the saved
-variables back.
+their dependencies and saved variables, and keeps each character's enable state. How the saved
+variables are read and written is `ui/savedvariables`.
 
 `AddOns.cpp` (`WoW\Source\UIUtil`, from 0x51c740 to the add-on list's helpers ending at 0x522170)
 owns the registry: a hash of records by folder name, with a list in registration order at
@@ -10,7 +10,7 @@ owns the registry: a hash of records by folder name, with a list in registration
 are in `glue/script`; the in-game ones, the flat `SavedVariables.lua` and the shutdown that writes
 everything are in `GameUI.cpp`. Files of an add-on load through `framexml`'s toc runner.
 
-Roots: `0x51c740`, `0x51c910`, `0x51d7b0`, `0x51f240`, `0x51f600`, `0x51f650`, `0x51ebe0`, `0x51ef20`, `0x51ea20`, `0x51e470`, `0x51e780`, `0x51da70`, `0x51d910`, `0x51deb0`, `0x4913b0`, `0x491730`, `0x48e350`, `0x48e390`, `0x48e530`, `0x48e5e0`, `0x48e690`, `0x48e720`, `0x48e760`, `0x48e7f0`, `0x48e830`, `0x48e840`, `0x48e8e0`, `0x48e980`, `0x4884e0`
+Roots: `0x51c740`, `0x51c910`, `0x51d7b0`, `0x51f240`, `0x51f600`, `0x51ebe0`, `0x51ef20`, `0x51ea20`, `0x51e470`, `0x51e780`, `0x51da70`, `0x51d910`, `0x51deb0`, `0x48e350`, `0x48e390`, `0x48e530`, `0x48e5e0`, `0x48e690`, `0x48e720`, `0x48e760`, `0x48e7f0`, `0x48e830`, `0x48e840`, `0x48e8e0`, `0x48e980`
 
 ## Finding add-ons
 
@@ -315,93 +315,3 @@ pushes 1 or nil; else the usage (`0x48e8c7`). `GetAddOnInfo` pushes the name (`0
 `0x51f240` with `dl` 1 (`0x48ea90`) and on failure `0x51e780` (`0x48eafe`), pushing `0x842ebc` when
 both codes are 0 (`0x48eb3a`). `GetAddOnDependencies` pushes `0x51e350`'s list `+0x48`. `0x48e350`
 pushes `0x51def0`'s count (`0x48e373`).
-
-## Saved variables, read
-
-An add-on's account file `WTF\Account\<account>\SavedVariables\<Name>.lua` and then its character
-file `WTF\Account\<account>\<realm>\<character>\SavedVariables\<Name>.lua`, or the realm-less
-`WTF\Account\<account>\<character>\SavedVariables\<Name>.lua` when that is missing, run as Lua
-after the add-on's own files and before its `ADDON_LOADED`, so their values replace what the files
-set. They run in the shared state under the add-on's context word, and an error in one goes to the
-error handler with nothing logged. The flat `WTF\Account\<account>\SavedVariables.lua` is not run:
-each line `name = value` sets a string, from a quoted value, nil for an empty one, or a number
-read as a single-precision float; other lines are ignored. `VARIABLES_LOADED` follows, file or not.
-
-Addresses: `0x51f491`, `0x51f4a2`, `0x51f4b5`, `0x51f4df`, `0x51f518`, `0x51f53b`, `0x8539d4`, `0x8539a8`, `0x853980`, `0x4913b0`, `0x4913c4`, `0x4913e6`, `0x49144a`, `0x4914bf`, `0x4914ef`, `0x491534`, `0x491541`, `0x49156a`, `0x491580`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x51f491` formats `0x8539d4`, `0x51f4a2` tests existence and `0x51f4b5` runs it with no MD5 and no
-status; `0x51f4df` and `0x51f518` format the two character paths and `0x51f53b` runs the one
-found. `0x4913b0` builds the path (`0x4913c4`), reads it (`0x4913e6`) and splits it at CR and LF;
-the name ends at a space or `=` (`0x49144a`). A value beginning `"` (`0x4914bf`) is cut at its
-last `"` and set with `0x704300` (`0x4914ef`); one beginning with a digit, or `-` or `.` then a
-digit, goes through `atof` and `fstp dword` (`0x491534`) to `0x704250` (`0x491541`). `0x49156a`
-signals 0x1ae on every path.
-
-## Saved variables, written
-
-The saved-variables files are written only in the interface's shutdown, after
-`PLAYER_LEAVING_WORLD` and `PLAYER_LOGOUT`: the flat file, then each loaded add-on's files.
-`AddOns.txt` follows them there, and the glue's `SaveAddOns` writes it too. For each loaded
-add-on its account file and character file are rewritten from its declared names, an existing file
-first renamed to `.bak`, each name read from the globals with the context word 0; with no names the
-file is deleted. The realm-less character file is deleted. A written add-on is then marked not
-loaded. The flat file holds the names `RegisterForSave` collected, which raises unless called with
-context 0.
-
-Addresses: `0x490bd0`, `0x490c20`, `0x490c2a`, `0x490c7e`, `0x490c83`, `0x490c88`, `0x51f650`, `0x51f711`, `0x51f74b`, `0x51f794`, `0x51f7c5`, `0x51f7e1`, `0x51f7fc`, `0x51f859`, `0x51f8eb`, `0x51f937`, `0x51f94f`, `0x51f9ac`, `0x51f9f7`, `0x51fa03`, `0x491730`, `0x4917a1`, `0x491812`, `0x4884e0`, `0x48851c`, `0x4915d0`, `0x8421a8`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x490bd0` calls `0x490a80` (`0x490c20`), signals `PLAYER_LOGOUT` (`0x490c2a`), then `0x491730`
-(`0x490c7e`), `0x51f650` (`0x490c83`) and `0x51ef20` (`0x490c88`). `0x51f650` skips records
-with `+0x18` 0 (`0x51f711`); a nonzero `+0x6c` (`0x51f74b`) renames (`0x51f794`), creates
-(`0x51f7c5`), stores context 0 (`0x51f7e1`) and serializes each name (`0x51f7fc`); zero deletes
-(`0x51f859`). The character file repeats this with `+0x7c` (`0x51f8eb` to `0x51f9ac`); `0x51f9f7`
-deletes the realm-less file and `0x51fa03` clears `+0x18`. `0x491730` renames (`0x4917a1`) and
-serializes each registered name (`0x491812`); `RegisterForSave` adds a name with `0x4915d0`
-(`0x48851c`).
-
-## The saved variables format
-
-Each variable is CR LF, its name, ` = ` and its value; the flat and account files end with CR LF,
-a character file with CR alone. Nil, booleans and finite numbers (`%.16g`) are written as such, NaN
-and infinities as `nil --[[ nan ]]` and `nil --[[ inf ]]`. Strings are quoted, escaping only `\`,
-`"`, LF as `\n` and NUL as `\000`. Functions, userdata and threads are written as `nil` with a
-comment.
-
-Addresses: `0x7043f0`, `0x704422`, `0x704448`, `0x704455`, `0x51f80d`, `0x491846`, `0x51f960`, `0x704480`, `0x704a40`, `0x7044e9`, `0x704507`, `0x70452c`, `0x704560`, `0x70457f`, `0x704a5c`, `0x704a6c`, `0x70459e`, `0x7049a9`, `0x7049f0`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x7043f0` writes `0x82edfc` (2 bytes), the name and `0x872ce0`, then calls `0x704480` at depth 1,
-building text in `0xceeb60`;
-`0x51f80d`, `0x491846` and `0x51f960` pass 2, 2 and 1 bytes for the end. `0x704480` switches on
-the type through `0x704a40`; numbers test `_isnan` (`0x7044e9`) and `_finite` (`0x704507`) before
-`%.16g` (`0x70452c`); strings open with `"` (`0x704560`), map bytes up to `\` through `0x704a6c`
-and `0x704a5c` (`0x70457f`) and flush at 1,016 bytes (`0x70459e`). Functions are named through
-`lua_getinfo` (`0x7049a9`); other types take `0x7049f0`.
-
-## Saved tables
-
-A table is written as `{` and CR LF, each entry one tab deeper as `[key] = value,` and CR LF, then
-`}` at the parent's indent, in `next` order. A table already open on the current path is
-`nil --[[ skipped recursive table ]]`, so a table reached twice by different paths is written
-twice. A frame's table is its name, unquoted. Entries keyed by NaN, an infinity, a table, a
-function or userdata are skipped with a comment.
-
-Addresses: `0x704607`, `0x704613`, `0x704642`, `0x704670`, `0x7046bc`, `0x7046e7`, `0x704727`, `0x704744`, `0x704766`, `0x70488f`, `0x7048a3`, `0x704928`, `0x70497b`, `0x8722d4`
-Confidence: verified
-Proof: one
-Test: none
-
-A table first reads element 0 as a light userdata and writes `GetName` (`0x704613`, `0x704642`).
-Otherwise the light userdata whose reference is `0x8722d4` marks it as a key (`0x704670`,
-`0x7046bc`) until `0x70497b` removes the mark on the way out. `0x7046e7` writes the brace; the
-indent grows by a tab per depth up to 128 (`0x704727`); `lua_next` walks the entries (`0x704744`).
-Keys dispatch at `0x704766`, a light userdata equal to the mark being dropped (`0x70488f`) and
-others reaching the skip comment (`0x7048a3`); `0x704928` writes the closing brace.
