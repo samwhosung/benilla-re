@@ -5,13 +5,16 @@ The client links Microsoft's C runtime, and its `printf` family formats through 
 and `_vsnprintf` hand it a string `FILE` (flags 0x42, the buffer and a count) and end the text with
 a NUL. The floating-point conversions go through a slot the start-up fills, to `_cfltcvt` and the
 `e`, `f` and `g` forms, which take their digits from `_fltout2` (`crt/decimal`). The client's own
-callers include `luaV_tostring` (`%.14g`), the Lua 4.0 `string.format`, Storm's printf and the
-console variable handlers.
+callers include `luaV_tostring` (`%.14g`), the Lua 4.0 `string.format`, Storm's printf, the
+console variable handlers, and the saved-variables writer `FrameScriptSerializeValue`, whose
+numbers go to disk as `%.16g` through Storm's `SStrPrintf` (`0x70452c`). That makes the `g` form
+and the digits under it a fact on disk, which wants a second independent reading; its entries
+here rest on one.
 
 Everything here runs in the C locale: nothing writes the locale handle `0x883b08`
 (`storm/format`), so the decimal point `0x831714` is `.`, no byte is a lead byte and `0x831710`
-is 1. The wide conversions (`%C`, `%S`, `%Z`, and `l` or `w` before `c` or `s`) convert through
-`_wctomb`, which is not read here.
+is 1. The wide conversions (`%C`, `%S`, `%wZ`, and `l` or `w` before `c` or `s`) convert through
+`_wctomb` or read UTF-16, which is not read here; `%Z` without `w` reads a counted narrow string.
 
 Roots: `0x73fec4`, `0x73f6ad`, `0x740107`, `0x7412c1`, `0x409a11`
 
@@ -40,7 +43,7 @@ written. `F`, `L` and `N` do nothing.
 Addresses: `0x742ba5`, `0x742be2`, `0x742bfc`, `0x742c13`, `0x7432c6`, `0x8161e0`, `0x742c1a`, `0x742c35`, `0x742c81`, `0x742cb8`, `0x742cc0`, `0x742cf5`, `0x742d28`, `0x742d41`, `0x742d44`, `0x7432ad`
 Confidence: verified
 Proof: one
-Test: `crt::crt_sprintf_difftest`, `crt::crt_sprintf_float_difftest`
+Test: `crt::crt_sprintf_states_difftest`, `crt::crt_sprintf_difftest`, `crt::crt_sprintf_float_difftest`
 
 `0x742be2` takes the class as the low nibble of the byte at `0x8161e0 + c - 0x20` for `c` from
 0x20 to 0x78, else 0; `0x742bfc` reads the next state as the high nibble of the byte at
@@ -48,12 +51,13 @@ Test: `crt::crt_sprintf_difftest`, `crt::crt_sprintf_float_difftest`
 flags (`0x742c35`) are `+` 1, space 2, `-` 4, `0` 8 and `#` 0x80. The size case (`0x742cf5`) sets
 0x8000 for `I64` (`0x742d28`, two more bytes taken), 0x20 for `h`, 0x10 for `l` and 0x800 for `w`;
 an `I` without `64` goes to `0x742d41`, which clears the state and falls into the normal case
-`0x742d44`. The test runs `sprintf` whole over every class in every state, with `%y`, `%I32d`,
-bytes 0x01, 0x7f and 0xff, and a width and precision that wrap.
+`0x742d44`. `crt_sprintf_states_difftest` runs `sprintf` whole over every class in every state,
+and the other tests add `%y`, `%I32d`, bytes 0x01, 0x7f and 0xff, and a width and precision that
+wrap.
 
 ## Padding, sign and text
 
-Every conversion ends the same way. The pad is the width less the prefix and the text, in 32
+Every conversion but `n` ends the same way. The pad is the width less the prefix and the text, in 32
 bits. Without `-` or `0` the pad goes out as spaces; then the prefix; then, with `0` and without
 `-`, the pad as zeros; then the text; then, with `-`, the pad as spaces. A signed conversion
 (`d`, `i`, `e`, `f`, `g`) takes the prefix `-` for a negative value, else `+` with `+`, else a
@@ -66,7 +70,8 @@ Confidence: verified
 Proof: one
 Test: `crt::crt_sprintf_difftest`, `crt::crt_vsnprintf_difftest`
 
-`0x7431b9` writes the sign into the prefix only with flag 0x40, the signed conversions'.
+`0x7431af` skips the end when `[ebp-0x28]` is set, which `n` does. `0x7431b9` writes the sign
+into the prefix only with flag 0x40, the signed conversions'.
 `0x7431e7` computes `width - prefix - text`; `0x7431f0` tests `0xc`, `0x74321d` tests 8 then 4,
 `0x743295` tests 4. `_write_char` (`0x7432e6`) decrements the `FILE`'s count and, when it goes
 below zero, calls `__flsbuf`, which on a string `FILE` sets 0x20 and returns -1 without writing
@@ -256,7 +261,7 @@ room: nothing is written, and the return is -1, or 0 for an empty text. 0x800000
 Addresses: `0x73fec4`, `0x73fee5`, `0x73fef5`, `0x73f6ad`, `0x73f6c6`, `0x73f6dc`, `0x740107`, `0x740121`, `0x7412c1`, `0x7412e1`, `0x7433af`, `0x7434bb`
 Confidence: verified
 Proof: one
-Test: `crt::crt_vsnprintf_difftest`, `crt::crt_sprintf_difftest`
+Test: `crt::crt_vsnprintf_difftest`, `crt::crt_snprintf_vsprintf_difftest`, `crt::crt_sprintf_difftest`
 
 Each builds the `FILE` on its stack: the cursor and base at the buffer, flags 0x42, the count
 0x7fffffff (`0x73fee5`, `0x7412e1`) or the caller's (`0x73f6c6`, `0x740121`). After `__output`,

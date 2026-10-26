@@ -147,7 +147,9 @@ flag, and `0x411886` caps at 21. `0x41188e` clears the exponent word after takin
 below 0x3ffe; `0x41189d` shifts the 96 bits left by 8 and `0x4118b3` right by that distance. Each
 digit (`0x4118de`) is `(4v + v) * 2`, its top byte (`0x41190f`) taken and cleared. `0x411930`
 compares the last digit with 0x35; `0x41194b` handles a carry out of the first; `0x411968` backs
-over zeros, to `0x411978` when none is left. The count is the kept digits, a NUL after them.
+over zeros, to `0x411978` when none is left. The count is the kept digits, a NUL after them. With
+`ndigits` 0 and no flag the one digit made is also the one rounded: 5 or more is incremented in
+place and the exponent raised, so a `9` becomes `:`. The only caller, `_fltout2`, passes 17.
 
 ## The digits a conversion reads
 

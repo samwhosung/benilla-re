@@ -1,8 +1,9 @@
 //! The C runtime's `printf` (`systems/crt/printf.md`): `sprintf` (`0x73fec4`) and `_vsnprintf`
 //! (`0x73f6ad`) run whole with `__output` (`0x742ba5`), its writers and argument readers, the
 //! floating-point conversions through `_cfltcvt` (`0x40b7fe`) and the digits through `_fltout2`
-//! (`0x40ff70`), against `benilla_re_crt::output`. `0x409a29` runs first, as the start-up does,
-//! to fill the conversion slots from `0x82f3f8`.
+//! (`0x40ff70`), against `benilla_re_crt::output`; `_snprintf` (`0x740107`) and `_vsprintf`
+//! (`0x7412c1`) against the same models. `0x409a29` runs first, as the start-up does, to fill
+//! the conversion slots from `0x82f3f8`.
 //!
 //! The double is loaded and stored by `fld`/`fstp` at `0x40b560`, `0x40b683` and `0x40b781`; the
 //! emulator keeps a signalling NaN signalling there where the x87 quiets it
@@ -17,6 +18,8 @@ use common::{doubles, ten_powers, Lcg};
 
 const SPRINTF: u64 = 0x73fec4;
 const VSNPRINTF: u64 = 0x73f6ad;
+const SNPRINTF: u64 = 0x740107;
+const VSPRINTF: u64 = 0x7412c1;
 const CFLTCVT_INIT: u64 = 0x409a29;
 const BUF: usize = 0x1000;
 const SENTINEL: u8 = 0xa5;
@@ -187,8 +190,10 @@ fn crt_sprintf_float_difftest() {
         .into_iter()
         .filter(|&b| quiet(b))
         .collect();
+    // `%.14g`, the client's number text, and `%.16g`, the saved variables' (`0x70452c`).
     for &v in &values {
         r.check(b"%.14g", &[v as u32, (v >> 32) as u32], &[], None);
+        r.check(b"%.16g", &[v as u32, (v >> 32) as u32], &[], None);
     }
     for (k, spec) in specs.iter().enumerate() {
         for _ in 0..40 {
@@ -375,5 +380,94 @@ fn crt_vsnprintf_difftest() {
         for count in (0..20).chain([0x7fff_ffff, 0x8000_0000, 0xffff_ffff]) {
             r.check(fmt, args, &[b"abc"], Some(count));
         }
+    }
+}
+
+/// Every byte class in every state: a prefix that leaves `__output` in each of the eight states,
+/// then bytes of each class, then a conversion to close what is left open. The size state is
+/// entered by `h`, which keeps a following `c` narrow.
+#[test]
+fn crt_sprintf_states_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    // Normal, percent, flag, width, dot, precision, size, type.
+    let prefixes: [&[u8]; 8] = [b"a", b"%", b"%-", b"%5", b"%.", b"%.3", b"%h", b"%d"];
+    let classes: [&[u8]; 9] = [
+        b"y\x01~",
+        b"%",
+        b".",
+        b"*",
+        b"0",
+        b"19",
+        b" #+-",
+        b"hlwFLN",
+        b"dixXuocBp",
+    ];
+    let mut n = 0;
+    for prefix in prefixes {
+        for class in classes {
+            for &c in class {
+                let mut fmt = prefix.to_vec();
+                fmt.push(c);
+                fmt.extend_from_slice(b"d|%d");
+                let args: Vec<u32> = (1..=8).collect();
+                r.check(&fmt, &args, &[], None);
+                n += 1;
+            }
+        }
+    }
+    assert_eq!(n, 8 * 28);
+}
+
+/// `_snprintf` (`0x740107`) and `_vsprintf` (`0x7412c1`), the other two front ends, against the
+/// `_vsnprintf` and `sprintf` models: the same `FILE`, the arguments pushed or by `va_list`.
+#[test]
+fn crt_snprintf_vsprintf_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let pi = std::f64::consts::PI.to_bits();
+    let cases: &[(&[u8], Vec<u32>)] = &[
+        (b"", vec![]),
+        (b"hello world", vec![]),
+        (b"%d items", vec![12345]),
+        (b"%-10s|", vec![STR]),
+        (b"x%.3fy", vec![pi as u32, (pi >> 32) as u32]),
+    ];
+    for (fmt, args) in cases {
+        let (args, mem) = r.place(args, &[b"abc"]);
+        let mut f = fmt.to_vec();
+        f.push(0);
+        r.e.write(r.fmt, &f);
+        for count in (0..16).chain([0x7fff_ffff, 0x8000_0000, 0xffff_ffff]) {
+            r.e.write(r.buf, &[SENTINEL; BUF]);
+            let mut a = vec![r.buf as u32, count, r.fmt as u32];
+            a.extend_from_slice(&args);
+            let ret = r.e.call(SNPRINTF, 0, 0, &a) as i32;
+            let want = vsnprintf(count, fmt, &args, &mem, &r.t);
+            let b = r.e.read(r.buf, BUF);
+            let n = want.text.len();
+            assert!(b[n..].iter().all(|&c| c == SENTINEL), "{fmt:?} {count}");
+            assert_eq!(
+                (&b[..n], ret),
+                (&want.text[..], want.ret),
+                "{fmt:?} {count}"
+            );
+        }
+        r.e.write(r.buf, &[SENTINEL; BUF]);
+        let va = r.strings + 0x700;
+        for (i, &v) in args.iter().enumerate() {
+            r.e.write_u32(va + 4 * i as u64, v);
+        }
+        let ret =
+            r.e.call(VSPRINTF, 0, 0, &[r.buf as u32, r.fmt as u32, va as u32]) as i32;
+        let want = sprintf(fmt, &args, &mem, &r.t);
+        let b = r.e.read(r.buf, BUF);
+        let n = want.text.len();
+        assert!(b[n..].iter().all(|&c| c == SENTINEL), "{fmt:?}");
+        assert_eq!((&b[..n], ret), (&want.text[..], want.ret), "{fmt:?}");
     }
 }
