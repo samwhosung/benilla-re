@@ -12114,15 +12114,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50a680	19			unassigned			Runs its object file code not read here	inferred	none		
 0x50a6a0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50a6b0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x50a6c0	93			unassigned	unreached		Runs its object file code that calls 0x50ab50; not read here	inferred	none		
-0x50a720	96			unassigned			Runs its object file code that calls 0x50ab50; not read here	inferred	none		
+0x50a6c0	93	ConstructCameraBaseDefault		unassigned	unreached	void * __thiscall (void *this)	Builds a camera base with near clip 1/9, far clip 277.78 and field of view pi/2	verified	one	uicamera/view#the-camera-base	
+0x50a720	96	ConstructCameraBase		unassigned	orchestration	void * __thiscall (void *this, float nearClip, float farClip, float fov)	Builds a camera base with an identity basis and the given near clip, far clip and field of view	verified	one	uicamera/view#the-camera-base	
 0x50a780	18			unassigned			Runs its object file code that calls 0x50a7a0; not read here	inferred	none		
 0x50a7a0	152			unassigned			Runs its object file code that calls 0x50a840; not read here	inferred	none		
 0x50a840	237			unassigned			Runs its object file code that calls SErrSetLastError, 0x456280; not read here	inferred	none		ui::glue_509_50a840_orthonormal_basis
 0x50a930	22			unassigned			Runs its object file code that calls 0x50a950; not read here	inferred	none		
 0x50a950	154			unassigned			Runs its object file code that calls 0x50a9f0; not read here	inferred	none		
 0x50a9f0	348			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		ui::glue_509_50a9f0_lookat_frame
-0x50ab50	27			unassigned			Runs its object file code that calls 0x7bf4b0; not read here	inferred	none		
+0x50ab50	27	RebuildCameraBasis		unassigned	orchestration	void __thiscall (void *this, float yaw, float pitch, float roll)	Builds the camera base's basis at +0x14 from yaw, pitch and roll	verified	one	uicamera/view#the-camera-base	
 0x50ab70	406	ApplyCameraProjectionAndView		models	orchestration		Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	ui::glue_50a_50ab70_proj_aspect
 0x50ad10	23			unassigned			Runs its object file code that calls M2CreateScene; not read here	inferred	none		
 0x50ad30	5			unassigned			Runs its object file code not read here	inferred	none		

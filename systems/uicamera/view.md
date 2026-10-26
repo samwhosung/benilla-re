@@ -103,3 +103,25 @@ Test: none
 The load is called at `0x50c3ea` and the save at `0x50c48a`. The constructor call is `0x481b4e` inside `0x481960`, the destructor call
 `0x481e12` inside `0x481d30`. That the interface teardown reaches the frame's destructor was not followed through the
 container that holds the frame.
+
+## The camera base
+
+The camera's constructor first builds its base: zeroes at `+0x4` to `+0x10`, an identity 3×3
+matrix at `+0x14` to `+0x34`, the near clip at `+0x38`, the far clip at `+0x3c`, the field of view
+at `+0x40`, 1.0 at `+0x44` and the vtable `0x808904`, then rebuilds the matrix from yaw, pitch and
+roll 0. The near clip is the `nearclip` value and the far clip the `farclip` value at that moment,
+and the field of view is π/2. A second form with the constants 1/9, 277.77777 and π/2 builds the
+same base, but nothing reaches it.
+
+Addresses: `0x50a720`, `0x50a757`, `0x50a76b`, `0x50a774`, `0x50ab50`, `0x50c0e0`, `0x50c0f6`, `0x50c101`, `0x50c109`, `0x8089b4`, `0x808904`, `0x50a6c0`, `0x50a6f9`, `0x50a706`, `0x7bf4b0`, `0xbe0cc0`, `0xbe1078`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50c0e0` pushes `[0x8089b4]` (0x3fc90fdb), then `[[0xbe0cc0]+0x24]` and `[[0xbe1078]+0x24]`
+(`0x50c0f6`, `0x50c101`) and calls `0x50a720` (`0x50c109`), which stores its three arguments in
+order at `+0x38`, `+0x3c` and `+0x40` (`0x50a757` to `0x50a76b`) and calls `0x50ab50(0, 0, 0)`
+(`0x50a774`); `0x50ab50` passes the three to `0x7bf4b0` on `+0x14`. `0x50a6c0` stores 0x3de38e39,
+0x438ae38e and 0x3fc90fdb (`0x50a6f9` to `0x50a706`) and is otherwise the same. No `call` or `jmp`
+targets `0x50a6c0` and no section holds its address at any alignment; the control `0x50a720` has
+its one call from `0x50c109`. The `ret` and padding before it leave no fall-through.
