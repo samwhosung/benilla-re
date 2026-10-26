@@ -251,3 +251,15 @@ pub fn aabsp_nearest_dist(
     }
     min
 }
+
+/// `FirstLiquidTileType` (`0x6ba970`, `systems/models/wmo.md#group-liquid-draw-type`): the low
+/// nibble of the first of `count` tile bytes whose nibble is not 0xf, else 0xf. The client passes
+/// the group's `MLIQ` tile flags and the x tile count `+0x100`, a signed compare.
+pub fn first_liquid_tile_type(tiles: &[u8], count: i32) -> u32 {
+    let n = usize::try_from(count).unwrap_or(0);
+    tiles[..n]
+        .iter()
+        .map(|&t| u32::from(t & 0xf))
+        .find(|&t| t != 0xf)
+        .unwrap_or(0xf)
+}

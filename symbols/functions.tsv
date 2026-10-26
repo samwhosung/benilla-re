@@ -25699,7 +25699,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x692dd0	5	AaBspFreeThunk		models	orchestration		Jumps to the BSP tree free	inferred	none		
 0x692de0	16	AaBspDestruct		models	orchestration		Frees a BSP tree and zeroes its record	inferred	none		
 0x692df0	295	AaBspBuild		models	unreached		Builds a BSP tree over a mesh's faces in scratch pools; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x692f20	57	AaBspSetMesh		models	orchestration		Points a BSP tree at a group's vertices, faces and node arrays	inferred	none		
+0x692f20	57	AaBspSetNodes		models	orchestration	void __thiscall (void *this, void *nodes, uint32_t nodeCount, uint16_t *refs, uint32_t refCount, const float *bounds)	Points a group's BSP at its MOBN nodes and MOBR face references and copies the group's box	verified	one	models/wmo#bsp-tree-setup	
 0x692f60	86	AaBspQuerySegment		models	unreached		Collects the faces a segment's BSP walk visits; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x692fc0	86	AaBspQueryBox		models	unreached		Collects the faces of the BSP leaves a box touches; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x693020	19	AaBspSetCounts		models	unreached		Stores two counts in a BSP tree record; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -27403,7 +27403,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b8c50	5	CMapObjGroup::ReturnFalse		models	orchestration		Returns 0, popping two arguments	inferred	none		
 0x6b8c60	485	CMapObjGroup::CollectLeafBox		models	primitive		Collects a BSP leaf's welded faces that touch a box	inferred	none		models::aabsp_box_query_difftest
 0x6b8e50	866	CMapObjGroup::CommitFacets		models	primitive		Writes a leaf's collected faces into the global facet tables	inferred	none		
-0x6b91c0	238	CMapObjGroup::CollectSegment		models	primitive		Collects the facets a segment crosses through a group's BSP	inferred	none		
+0x6b91c0	238	CMapObjGroup::CollectBoxFacets		models	primitive	uint8_t __thiscall (CMapObjGroup *this, void *list, const float *box, void *arg, uint32_t classWord, uint32_t mask)	Gathers a group's faces in a box through its BSP, then its liquid tiles, and clears the visited bits	verified	one	models/collisionquery#group-box-gather	
 0x6b92b0	384	CMapObjGroup::IntersectSegment		models	primitive		Intersects a segment with a group's BSP and liquid	inferred	none	models/wmo#queries	models::bspdispatch_normalize_difftest
 0x6b9430	252	CMapObjGroup::CollectVolume		models	primitive		Collects a group's facets and liquid in a convex volume	inferred	none		
 0x6b9530	172	CMapObjGroup::BoxAnyHit		models	primitive		Returns whether a box touches a face of a group's BSP that the mask lets through	verified	one	terrain/lightattach#containment-queries	
@@ -27428,7 +27428,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ba740	40	ListTail		models	orchestration		Returns the last node of a list	inferred	none		
 0x6ba770	420	VertexBufferBlockFill		models	primitive		Locks a block and copies interleaved vertex data into it	inferred	none	models/wmo#vertex-buffer-pools	
 0x6ba920	71	VertexBufferBlockBindIndices		models	host		Binds the index buffer of a vertex buffer block	inferred	none		
-0x6ba970	62	FirstNonEmptyLiquidLayer		models	primitive		Returns the first liquid layer that has data	inferred	none		
+0x6ba970	62	CMapObjGroup::FirstLiquidTileType		models	primitive	uint32_t __thiscall (CMapObjGroup *this)	Returns the first non-hole tile nibble of a group's first MLIQ tile row, else 0xf	verified	one	models/wmo#group-liquid-draw-type	models::first_liquid_tile_type_difftest
 0x6ba9b0	177	CMapObjGroup::BuildLiquidVertices		models	primitive		Fills a group's liquid vertex lattice from its grid	inferred	none		models::mliq_vertex_advance_x_difftest, models::mliq_vertex_advance_y_difftest
 0x6baa70	1699	CMapObjGroup::RayHitLiquid		models	primitive		Intersects a ray with a group's liquid surface	inferred	none		models::mliq_hit_scale_difftest, models::mliq_ray_grid_scale_difftest, models::mliq_ray_grid_sub_difftest, models::mliq_ray_normalize_difftest, models::mliq_straddle_difftest
 0x6bb120	5	InitMapObjGroupTwoPiThunk		models	orchestration		Jumps to 0x6bb130; a static initializer	verified	one	models/overview#shared-header-constants	
@@ -27456,7 +27456,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bc700	210	AaBspIntersectLeaf		models	primitive		Intersects a segment with a BSP leaf's faces, keeping the closest hit	inferred	none	models/wmo#bsp-segment-descent	models::aabsp_leaf_tscale_difftest, models::aabsp_segment_clip_difftest
 0x6bc7e0	433	AaBspCollectBoxNode		models	primitive		Descends a group's BSP with a box, collecting the faces inside	inferred	none		
 0x6bc9a0	164	AaBspCollectLeafBox		models	primitive		Collects a BSP leaf's faces not behind a box's planes	inferred	none		
-0x6bca50	164	AaBspQueryLeafBox		models	primitive		Collects a BSP leaf's faces whose points a box contains	inferred	none		models::aabsp_box_query_difftest
+0x6bca50	164	AaBspQueryLeafBox		models	primitive	void __thiscall (void *this, uint16_t face)	Marks a face visited and keeps it when the mask passes it and its triangle meets the query box	verified	one	models/collisionquery#group-box-gather	models::aabsp_query_leaf_box_difftest
 0x6bcb00	5	InitMapObjGroupTenSquaredThunk		models	orchestration		Jumps to 0x6bcb10; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bcb10	19	InitMapObjGroupTenSquared		models	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	models/overview#shared-header-constants	
 0x6bcb30	5	InitMapObjGroupTileUnitInvSquaredThunk		models	orchestration		Jumps to 0x6bcb40; a static initializer	verified	one	models/overview#shared-header-constants	

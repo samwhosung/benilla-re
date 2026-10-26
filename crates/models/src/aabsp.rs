@@ -229,3 +229,49 @@ pub fn aabsp_segment_clip(
 pub fn leaf_hit_scale(t: f32, scale: f32) -> f32 {
     (f64::from(t) * f64::from(scale)) as f32
 }
+
+/// The visited-face stack's capacity (`0xce26e8`, 0x2000 entries).
+pub const VISITED_CAPACITY: usize = 0x2000;
+
+/// The context `AaBspQueryLeafBox` (`0x6bca50`) reads, with the two global stacks it writes.
+pub struct LeafBoxQuery<'a> {
+    /// `[ctx+0x0]`: the status word, or none for a null pointer.
+    pub status: Option<u32>,
+    /// `[ctx+0x4]`: the `MOPY` records, two bytes a face, the flag byte first.
+    pub faces: &'a mut [u8],
+    /// `[ctx+0x8]`: the vertices.
+    pub vertices: &'a [[f32; 3]],
+    /// `[ctx+0xc]`: the indices, three a face.
+    pub indices: &'a [u16],
+    /// `[ctx+0x10]`: the box, minimum then maximum.
+    pub aabb: [f32; 6],
+    /// `[ctx+0x14]`: the reject mask's low byte.
+    pub mask: u8,
+    /// `0xce26e8` with its count `0xce26e0`.
+    pub visited: Vec<u16>,
+    /// `0xcde648` with its count `0xce66fc`.
+    pub kept: Vec<u16>,
+}
+
+/// `AaBspQueryLeafBox` (`0x6bca50`, `systems/models/collisionquery.md#group-box-gather`) for one
+/// face: a face whose flag byte shares a bit with the mask is skipped; a full visited stack sets
+/// status bit 1 and stops; else the face is pushed, its flag gets bit 0x80, and it is kept unless
+/// `BoxContainsTriangle` finds its triangle outside one side of the box.
+pub fn aabsp_query_leaf_box(q: &mut LeafBoxQuery, face: u16) {
+    let f = usize::from(face);
+    if q.faces[2 * f] & q.mask != 0 {
+        return;
+    }
+    if q.visited.len() >= VISITED_CAPACITY {
+        if let Some(s) = q.status.as_mut() {
+            *s |= 1;
+        }
+        return;
+    }
+    q.visited.push(face);
+    q.faces[2 * f] |= 0x80;
+    let v = |k: usize| &q.vertices[usize::from(q.indices[3 * f + k])];
+    if !crate::box_points::aabb_points3_separated(&q.aabb, [v(0), v(1), v(2)]) {
+        q.kept.push(face);
+    }
+}

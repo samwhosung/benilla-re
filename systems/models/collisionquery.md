@@ -125,3 +125,28 @@ Of the offsets read off the group pointer on the chain, `0x6a3b10` reads none, `
 `0x6a905c test [eax+0x10],8` is the attach query's fixed test and shows the scan can see such a gate.
 The two-sided ray-triangle test `0x7c29f0` has three callers (`0x6bc764`, `0x6b8acf`, `0x709fc5`),
 none on this path, and `0x7c2e90` has none.
+
+## Group box gather
+
+`0x6b91c0(list, box, arg, class, mask)` gathers a group's faces in a box. It builds a leaf context
+(a status word, the faces `+0xc4`, the vertices `+0xd0`, the indices `+0xc8`, the box and `mask |
+0x80`), descends the tree at `+0x44` within its box `+0x90`, commits the kept faces with
+`list` and `arg`, adds the liquid tiles for a class with any of 0xf0000, then pops every visited
+face, clearing its bit 0x80, and returns whether the batch count `0xc5a474` moved. The leaf
+`0x6bca50(face)` skips a face whose flag byte shares a bit with the mask; unless the visited stack
+is full, it pushes the face, sets its bit 0x80 and keeps it unless `0x6b8b70` separates its
+triangle from the box.
+
+Addresses: `0x6b91c0`, `0x6b91f7`, `0x6b9208`, `0x6b9224`, `0x6b923b`, `0x6b9253`, `0x6b9269`, `0x6b9272`, `0x6bca50`, `0x6bca63`, `0x6bca72`, `0x6bca80`, `0x6bca88`, `0x6bca9a`, `0x6bcad1`, `0x6bcae1`, `0xc5a474`
+Confidence: verified
+Proof: one
+Test: `models::aabsp_query_leaf_box_difftest`
+
+The context at `[ebp-0x28]` holds the status pointer, `+0xc4`, `+0xd0`, `+0xc8`, the box and the
+mask word, as the leaf reads `[ctx]`, `+0x4`, `+0x8`, `+0xc`, `+0x10` and `+0x14`. `0x6b91f7` adds
+0x4c to the tree, and `0x6b9224` passes node 0, the box and that pointer to `0x6bc1c0`. `0x6b9269`
+compares `0xc5a474` with its value at entry. In the leaf, `0x6bca63 test [ecx+0x14],dl` reads the
+mask's low byte; `0x6bca72` compares the count with 0x2000 and `0x6bca80` ORs 1 into the status
+word, or returns for a null one. `0x6bcad1` passes the vertices `12·index` of the three indices at
+`6·face`, and `0x6bcae1` appends to the kept list.
+`aabsp_query_leaf_box_difftest` runs `0x6bca50` whole, `0x6b8b70` included.

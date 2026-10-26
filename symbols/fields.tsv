@@ -385,6 +385,13 @@ CMapObjGroup	0x0030	4	uint32_t	m_portalRefCount	models	Holds the number of porta
 CMapObjGroup	0x0034	4	uint8_t[4]	m_fogs	models	Holds the fog indices	verified	one	models/wmo#group-header
 CMapObjGroup	0x0038	4	uint32_t	m_liquid	models	Holds the liquid word of the header	verified	one	models/wmo#group-header
 CMapObjGroup	0x003c	6	uint16_t[3]	m_batchCounts	models	Holds the three batch counts	verified	one	models/wmo#group-header
+CMapObjGroup	0x0044	4	void *	m_bspNodes	models	Holds the MOBN nodes, the BSP tree start	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0048	4	void *	m_bspNodesCopy	models	Holds the MOBN nodes again	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x004c	4	uint16_t *	m_bspFaceRefs	models	Holds the MOBR face references	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0050	4	uint32_t	m_bspNodeCount	models	Holds the MOBN size over 16	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0054	4	uint32_t	m_bspFaceRefCount	models	Holds the MOBR size over 2	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x008c	4	uint32_t	m_bspZero	models	Holds 0 from the BSP setup	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0090	24	float[6]	m_bspBounds	models	Holds the BSP's box, a copy of the group's bounding box	verified	one	models/wmo#bsp-tree-setup
 CMapObjGroup	0x00bc	1	uint8_t	m_vertexFadeDone	models	Holds whether the portal vertex fade has run	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x00c0	4	char *	m_name	models	Holds the group name	verified	one	models/wmo#group-header
 CMapObjGroup	0x00c4	4	uint16_t *	m_faces	models	Holds the MOPY face records	verified	one	models/wmo#portal-vertex-fade
@@ -392,6 +399,14 @@ CMapObjGroup	0x00c8	4	uint16_t *	m_indices	models	Holds the MOVI indices	verifie
 CMapObjGroup	0x00d0	4	float *	m_vertices	models	Holds the MOVT vertices	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x00dc	4	void *	m_batches	models	Holds the MOBA batches, 24 bytes each	verified	one	models/wmo#group-header
 CMapObjGroup	0x00f4	4	uint32_t *	m_colors	models	Holds the MOCV vertex colours	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00f8	4	uint32_t	m_liquidXVerts	models	Holds the MLIQ x vertex count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x00fc	4	uint32_t	m_liquidYVerts	models	Holds the MLIQ y vertex count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0100	4	uint32_t	m_liquidXTiles	models	Holds the MLIQ x tile count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0104	4	uint32_t	m_liquidYTiles	models	Holds the MLIQ y tile count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0108	12	float[3]	m_liquidCorner	models	Holds the MLIQ corner	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0114	2	uint16_t	m_liquidMaterial	models	Holds the MLIQ material	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0118	4	void *	m_liquidVertices	models	Holds the MLIQ vertices, 8 bytes each	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x011c	4	uint8_t *	m_liquidTiles	models	Holds the MLIQ tile flag bytes	verified	one	models/wmo#group-liquid-draw-type
 CMapObjGroup	0x0124	4	uint32_t	m_faceCount	models	Holds the number of faces	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x013c	4	uint32_t	m_batchCount	models	Holds the number of batches	verified	one	models/wmo#group-header
 CMapObjGroup	0x014c	4	uint32_t	m_groupId	models	Holds the group id of the header	verified	one	models/wmo#group-header
