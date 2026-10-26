@@ -471,3 +471,54 @@ fn crt_snprintf_vsprintf_difftest() {
         assert_eq!((&b[..n], ret), (&want.text[..], want.ret), "{fmt:?}");
     }
 }
+
+/// The saved variables' number text (`ui/savedvariables#saved-numbers`): `%.16g` of each value as the
+/// exe's `sprintf` writes it, against the expected text and against the model. The ties and the
+/// 17-digit case show the two roundings.
+#[test]
+fn crt_sprintf_saved_number_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let cases: &[(&[u8], f64, &str)] = &[
+        (b"%.16g", 0.1, "0.1"),
+        (b"%.16g", 1.0 / 3.0, "0.3333333333333333"),
+        (b"%.16g", 2.0 / 3.0, "0.6666666666666666"),
+        (b"%.16g", 100.0, "100"),
+        (b"%.16g", 1e15, "1000000000000000"),
+        (b"%.16g", 1e16, "1e+016"),
+        (b"%.16g", 1e17, "1e+017"),
+        (b"%.16g", 1.2345678901234568e17, "1.234567890123457e+017"),
+        (b"%.16g", 0.0001, "0.0001"),
+        (b"%.16g", 0.00001, "1e-005"),
+        (b"%.16g", 1.5e-7, "1.5e-007"),
+        (b"%.16g", 9007199254740992.0, "9007199254740992"),
+        (b"%.16g", 9007199254740994.0, "9007199254740994"),
+        (b"%.16g", 5e-324, "4.940656458412465e-324"),
+        (b"%.16g", f64::MAX, "1.797693134862316e+308"),
+        (b"%.16g", -0.0, "0"),
+        (b"%.16g", 1234567890123456.5, "1234567890123457"),
+        (b"%.16g", 235_953_666_403_114.0 + 0.375, "235953666403114.4"),
+        (
+            b"%.17g",
+            235_953_666_403_114.0 + 0.375,
+            "235953666403114.37",
+        ),
+    ];
+    assert_eq!(cases.len(), 19);
+    for &(fmt, v, text) in cases {
+        let b = v.to_bits();
+        let args = [b as u32, (b >> 32) as u32];
+        let (buf, ret, _) = r.run(fmt, &args, None);
+        let n = buf.iter().position(|&c| c == 0).unwrap();
+        assert_eq!(
+            (String::from_utf8_lossy(&buf[..n]), ret),
+            (text.into(), text.len() as i32),
+            "{v:e}"
+        );
+        let want = sprintf(fmt, &args, &Strings(vec![]), &r.t);
+        assert_eq!(want.text, [text.as_bytes(), &[0]].concat(), "{v:e}");
+        r.check(fmt, &args, &[], None);
+    }
+}
