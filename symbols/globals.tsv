@@ -1363,6 +1363,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831720	const uint16_t *	_pwctype		crt	Points to the type table iswctype reads below 0x100, the same 0x831726; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
+0x831928	int32_t[6]	_DoubleFormat		crt	Holds the double's format for __ld12cvt: exponents 1024 and -1023, 53 bits, widths 11 and 64, bias 1023	verified	one	crt/strtod#rounding-to-a-format
+0x831940	int32_t[6]	_FloatFormat		crt	Holds the float's format for __ld12cvt: exponents 128 and -127, 24 bits, widths 8 and 32, bias 127	verified	one	crt/strtod#rounding-to-a-format
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
 0x832490	Ld12Real[29]	s_tenPowers		crt	Holds 10^1 to 10^4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten
 0x8325f0	Ld12Real[29]	s_tenNegPowers		crt	Holds 10^-1 to 10^-4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten

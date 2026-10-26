@@ -630,7 +630,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40b44e	90	__forcdecpt	idb	crt	primitive	void __cdecl (char *buffer)	Inserts the decimal point after a number text's leading digits, or before a leading e	verified	one	crt/printf#the-g-form-and-its-trims	crt::crt_sprintf_float_difftest
 0x40b4a8	78	__cropzeros		crt	primitive	void __cdecl (char *buffer)	Removes the trailing zeros of a number text's fraction, and the point when no digit is left after it	verified	one	crt/printf#the-g-form-and-its-trims	crt::crt_sprintf_float_difftest
 0x40b4f6	24			crt	boundary		Runs its object file code not read here	inferred	none		
-0x40b50e	62	__fassign	idb	crt	boundary		Runs its object file code that calls 0x40fe71, 0x40fecc; not read here	inferred	none		
+0x40b50e	62	__fassign	idb	crt	orchestration	void __cdecl (int32_t is_double, void *out, char *text)	Reads a scanf float text into a double or straight into a float, the answer unread	verified	one	crt/strtod#the-scanf-float-assignment	
 0x40b54c	97	__cftoe	idb	crt	primitive	char * __cdecl (double *value, char *buffer, int ndec, int caps)	Writes a double in the e form with ndec digits after the point: __fltout2, __fptostr, then __cftoe2	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
 0x40b5ad	194	__cftoe2	idb	crt	primitive	char * __cdecl (char *buffer, int ndec, int caps, _strflt *flt, char g_fmt)	Writes rounded digits as d.ddd and the decimal exponent less one in three digits from the template e+000	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
 0x40b66f	85	__cftof	idb	crt	primitive	char * __cdecl (double *value, char *buffer, int ndec)	Writes a double in the f form with ndec digits after the point: __fltout2, __fptostr, then __cftof2	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
@@ -735,20 +735,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40f923	8	__tolower	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x40f92b	111	tolower		crt	boundary		Returns the lower-case form of a character in the C locale	inferred	none	models/cache#shared-model-lookup	
 0x40f99a	203			crt	boundary		Runs its object file code that calls __isctype, ___crtLCMapStringA; not read here	inferred	none		
-0x40fa65	73	__ZeroTail	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40faae	86	__IncMan	idb	crt	boundary		Runs its object file code that calls ___addl; not read here	inferred	none		
-0x40fb04	140	__RoundMan	idb	crt	boundary		Runs its object file code that calls __ZeroTail, __IncMan; not read here	inferred	none		
-0x40fb90	27	__CopyMan	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40fbab	12	__FillZeroMan	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40fbb7	27	__IsZeroMan	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40fbd2	141	__ShrMan	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40fc5f	364	__ld12cvt	idb	crt	boundary		Runs its object file code that calls __IsZeroMan, __FillZeroMan, __CopyMan and 2 more; not read here	inferred	none		
-0x40fdcb	22			crt	boundary		Runs its object file code that calls __ld12cvt; not read here	inferred	none		
-0x40fde1	22			crt	boundary		Runs its object file code that calls __ld12cvt; not read here	inferred	none		
+0x40fa65	73	__ZeroTail	idb	crt	primitive	int32_t __cdecl (const uint32_t *man, int32_t bit)	Tests that every bit of a 96-bit mantissa after the given one is clear	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40faae	86	__IncMan	idb	crt	primitive	int32_t __cdecl (uint32_t *man, int32_t bit)	Adds 1 at a bit of a 96-bit mantissa, the carry upward; answers the carry out of the top	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40fb04	140	__RoundMan	idb	crt	primitive	int32_t __cdecl (uint32_t *man, int32_t precision)	Rounds a 96-bit mantissa up only with the next bit and a later one set; answers the carry out	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40fb90	27	__CopyMan	idb	crt	orchestration	void __cdecl (uint32_t *dst, const uint32_t *src)	Copies a 96-bit mantissa	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
+0x40fbab	12	__FillZeroMan	idb	crt	orchestration	void __cdecl (uint32_t *man)	Clears a 96-bit mantissa	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
+0x40fbb7	27	__IsZeroMan	idb	crt	orchestration	int32_t __cdecl (const uint32_t *man)	Tests that a 96-bit mantissa is zero	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
+0x40fbd2	141	__ShrMan	idb	crt	primitive	void __cdecl (uint32_t *man, int32_t count)	Shifts a 96-bit mantissa right by a count of bits	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40fc5f	364	__ld12cvt	idb	crt	primitive	int32_t __cdecl (const Ld12Real *x, void *out, const int32_t *format)	Rounds a 12-byte real to a double or float format; 1 for the infinity, 2 below the normal range	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40fdcb	22	_ld12tod		crt	orchestration	int32_t __cdecl (const Ld12Real *x, double *out)	Rounds a 12-byte real to a double through __ld12cvt with the format 0x831928	verified	one	crt/strtod#rounding-to-a-format	crt::crt_strtod_difftest
+0x40fde1	22	_ld12tof		crt	orchestration	int32_t __cdecl (const Ld12Real *x, float *out)	Rounds a 12-byte real to a float through __ld12cvt with the format 0x831940	verified	one	crt/strtod#rounding-to-a-format	
 0x40fdf7	122	__ld12told	idb	crt	unreached		Runs its object file code that calls __RoundMan; not read here	inferred	none		
-0x40fe71	45			crt	boundary		Runs its object file code that calls ___strgtold12, 0x40fdcb; not read here	inferred	none		
+0x40fe71	45	_atodbl		crt	orchestration	int32_t __cdecl (double *out, char *text)	Reads a numeral into a double through ___strgtold12 and _ld12tod	verified	one	crt/strtod#the-scanf-float-assignment	
 0x40fe9e	46	__atoldbl	idb	crt	unreached		Runs its object file code that calls ___strgtold12, __ld12told; not read here	inferred	none		
-0x40fecc	45			crt	boundary		Runs its object file code that calls ___strgtold12, 0x40fde1; not read here	inferred	none		
+0x40fecc	45	_atoflt		crt	orchestration	int32_t __cdecl (float *out, char *text)	Reads a numeral into a float through ___strgtold12 and _ld12tof	verified	one	crt/strtod#the-scanf-float-assignment	
 0x40fef9	119	__fptostr	idb	crt	primitive	void __cdecl (char *buffer, int digits, _strflt *flt)	Writes digits of a mantissa text padded with 0 and rounds half up on the next byte, a carry raising decpt	verified	one	crt/printf#rounding-the-digit-text	crt::crt_sprintf_float_difftest
 0x40ff70	92	__fltout2	idb	crt	orchestration	_strflt * __cdecl (double value, _strflt *flt, char *buffer)	Fills a _strflt with a double's sign, decimal exponent and up to 17 digits from I10_OUTPUT	verified	one	crt/decimal#the-digits-a-conversion-reads	crt::crt_sprintf_float_difftest
 0x40ffcc	182	___dtold	idb	crt	primitive	void __cdecl (Ld10Real *out, double *value)	Widens a double to the 80-bit real exactly, a subnormal normalized and -0 made +0	verified	one	crt/decimal#widening-a-double	crt::crt_dtold_difftest, crt::crt_sprintf_float_difftest
@@ -780,8 +780,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x411070	94	___add_12		crt	primitive	void __cdecl (Ld12Real *x, Ld12Real *y)	Adds a 12-byte real to another as a 96-bit integer, dropping the carry out	verified	one	crt/decimal#the-12-byte-real	crt::crt_i10_output_difftest
 0x4110ce	46	___shl_12		crt	primitive	void __cdecl (Ld12Real *x)	Shifts the 96 bits of a 12-byte real left by one	verified	one	crt/decimal#the-12-byte-real	crt::crt_ld12mul_difftest, crt::crt_i10_output_difftest
 0x4110fc	45	___shr_12		crt	primitive	void __cdecl (Ld12Real *x)	Shifts the 96 bits of a 12-byte real right by one	verified	one	crt/decimal#the-12-byte-real	crt::crt_ld12mul_difftest, crt::crt_i10_output_difftest
-0x411129	199	___mtold12	idb	crt	boundary		Runs its object file code that calls 0x4110ce, 0x411070; not read here	inferred	none		
-0x4111f0	1185	___strgtold12	idb	crt	boundary		Runs its object file code that calls __isctype, ___mtold12, ___multtenpow12; not read here	inferred	none		
+0x411129	199	___mtold12	idb	crt	primitive	void __cdecl (const char *digits, uint32_t count, Ld12Real *out)	Makes digit values a 12-byte real by x * 10 + d in 96 bits, normalized from exponent 0x404e	verified	one	crt/strtod#digits-to-a-12-byte-real	crt::crt_strgtold12_difftest, crt::crt_strtod_difftest
+0x4111f0	1185	___strgtold12	idb	crt	primitive	int32_t __cdecl (Ld12Real *out, const char **end, const char *s, int32_t mult12, int32_t scale, int32_t decpt, int32_t implicit_e)	Reads a decimal numeral into a 12-byte real and a power of ten; flags 4 for no digit, 1 and 2 for range	verified	one	crt/strtod#the-numeral-scan	crt::crt_strgtold12_difftest, crt::crt_strtod_difftest
 0x4116c1	60	___STRINGTOLD	idb	crt	unreached		Runs its object file code that calls ___strgtold12, __ld12told; not read here	inferred	none		
 0x4116fd	659	I10_OUTPUT		crt	primitive	int __cdecl (Ld10Real value, int ndigits, uint32_t flags, _FloatOutStruct *fos)	Writes up to 21 decimal digits of an 80-bit real by 12-byte arithmetic, rounding on one more digit	verified	one	crt/decimal#making-the-digits	crt::crt_i10_output_difftest, crt::crt_sprintf_float_difftest
 0x411990	145	___init_time	idb	crt	unreached		Runs its object file code that calls 0x40d9b5, __get_lc_time, __free_lc_time and 1 more; not read here	inferred	none		
@@ -31357,7 +31357,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741d97	47	__unlock_file	idb	crt	boundary		Runs its object file code that calls __unlock; not read here	inferred	none		
 0x741dc6	35	__unlock_file2	idb	crt	boundary		Runs its object file code that calls __unlock; not read here	inferred	none		
 0x741de9	80	_strerror	idb	crt	unreached		Runs its object file code that calls __getptd, _malloc and 1 more; not read here	inferred	none		
-0x741e39	170	_strtod	idb	crt	boundary		Runs its object file code that calls __isctype, _strlen, __fltin2 and 1 more; not read here	inferred	none		
+0x741e39	170	_strtod	idb	crt	primitive	double __cdecl (const char *s, char **end)	Reads a decimal numeral as a double: +0 for any result below the normal range, the infinity past it	verified	one	crt/strtod#strtod	crt::crt_strtod_difftest
 0x741ef0	291	_strncat	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x742014	120	_longjmp	idb	crt	boundary		Runs its object file code that calls __global_unwind2, __rt_probe_read4@4, __local_unwind2 and 1 more; not read here	inferred	none		
 0x74208c	1			crt	unreached		Runs its object file code not read here	inferred	none		
@@ -31517,7 +31517,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x747445	86			crt	boundary		Runs its object file code that calls one function; not read here	inferred	none		
 0x74749b	68	__getbuf	idb	crt	boundary		Runs its object file code that calls _malloc; not read here	inferred	none		
 0x7474df	129	__fcloseall	idb	crt	boundary		Runs its object file code that calls __lock, _fclose, __unlock and 1 more; not read here	inferred	none		
-0x747560	127	__fltin2	idb	crt	boundary		Runs its object file code that calls ___strgtold12, 0x40fdcb; not read here	inferred	none		
+0x747560	127	__fltin2	idb	crt	primitive	void * __cdecl (void *flt, const char *s, uint32_t length, int32_t scale, int32_t decpt)	Reads a numeral into a double with the flags 0x80 overflow, 0x100 underflow, 0x200 no digit	verified	one	crt/strtod#strtod	crt::crt_strtod_difftest
 0x7475df	101	__rt_probe_read4@4	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x747644	147	__commit	idb	crt	boundary		Runs its object file code that calls __lock_fhandle, __get_osfhandle, ___doserrno and 2 more; not read here	inferred	none		
 0x7476d7	23			crt	unreached		Runs its object file code that calls __sopen; not read here	inferred	none		
