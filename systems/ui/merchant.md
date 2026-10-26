@@ -5,7 +5,7 @@ The merchant window's buy-back list, the compare tooltips it shows beside an ite
 sell, buy and repair cursors are `ui/merchantcursor`; the vendor's list and its packets are
 `objectlayer/inventory#vendors`; the item tooltip builder is `ui/tooltipitem`.
 
-Roots: `0x4fafd0`, `0x4fc160`, `0x4fb310`, `0x4fb950`, `0x536080`, `0x535d70`, `0x4fadb0`, `0x4fbd60`, `0x4fbfe0`
+Roots: `0x4fafd0`, `0x4fc160`, `0x4fb310`, `0x4fb950`, `0x536080`, `0x535d70`, `0x4fadb0`, `0x4fbd60`, `0x4fbfe0`, `0x4fae70`, `0x4fada0`
 
 ## Buy-back list
 
@@ -228,3 +228,30 @@ Test: none
 `0x4faca0` calls `0x4fafd0`, signals 0x13d (`0x4facaa`) and returns 1 with `ret 0x10` (`0x4facaf`).
 `0x4facc0` removes it with the same section, offset, GUID, callback and argument (`0x4facdd`). Those two
 `push 0x4faca0` operands are the only occurrences of the address (`tools/callers.py`).
+
+## Vendor row records and stock
+
+`GetMerchantItemInfo` asks for a row's item record through `0x4faed0(entry)`: entry 0 answers 0;
+otherwise the item cache is asked under the open vendor's GUID with the callback
+`0x4fada0`, and a miss adds one to the wait count `0xbddfb0`. Each answer, record or refusal, runs `0x4fb0f0`: a count above 0 drops by one, and when it reaches 0, or was 0 already, `MERCHANT_UPDATE`
+(317) is signalled if a vendor is open. Opening the window cancels the old rows' callbacks and zeroes
+the count; closing does neither. `0x4fae70(slot, count, vendor)`, the stock update of `SMSG_BUY_ITEM`
+and `SMSG_BUY_FAILED`, ignores another vendor; for the open one it stores the count in the first row
+with that slot word and signals `MERCHANT_UPDATE`, matched or not.
+
+Addresses: `0x4faed0`, `0x4faee9`, `0x4faf08`, `0x4faf1a`, `0x4faf23`, `0x4fada0`, `0x4fb0f0`, `0x4fb0f7`, `0x4fb0fa`, `0x4fb101`, `0x4fb108`, `0x4fb115`, `0x4fae70`, `0x4fae77`, `0x4fae91`, `0x4faea5`, `0x4faeb7`, `0x4faebd`, `0x4fad1b`, `0x4fad5d`, `0x4fad88`, `0xbddfb0`, `0xbdd118`, `0x55ba30`, `0x5dcdc5`, `0x5dd042`
+Confidence: verified
+Proof: one
+Test: `ui::merchant_row_record_ask_difftest`, `ui::merchant_record_answer_difftest`
+
+`0x4faee9` tests the entry. `0x4faf08` pushes `0x4fada0` after data and dedupe 0, then the GUID
+copy and the entry for `0x55ba30` on the item cache (`0x4faf1a`); `0x4faf23` increments on a null
+answer, which is returned. `0x4fada0` is `call 0x4fb0f0; ret 8`. In `0x4fb0f0` a count of 0 jumps
+past the decrement (`0x4fb0f7 jbe`) to `0x4fb101 jne` with ZF set; after the store (`0x4fb0fa`) the
+same `jne` returns while the count is nonzero. `0x4fb108` ORs the two GUID dwords and `0x4fb115`
+tail-jumps to `FrameScript_SignalEvent(0x13d)`. `0x4facf0` cancels `0x4fada0` for each old row's
+entry (`0x4fad1b`) and stores 0 (`0x4fad88`); the writers of `0xbddfb0` are these three. `0x4fae77`
+compares the GUID with the open vendor's; the loop `0x4fae91` to `0x4fae9e` reads the slot word
+`+0x0` of all 128 rows of `0xbdd118`, past the count, which the open zeroes (`0x4fad5d rep stos`), and `0x4faeb7` stores at `+0xc`. The callers
+pass the count 0 (`0x5dcdc5`, once per zeroed row) and the new count (`0x5dd042`). The tests run the
+two functions whole, the cache and the signal stubbed.

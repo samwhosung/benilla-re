@@ -122,6 +122,31 @@ Test: none
 
 The formats are `%sTextLeft%d` (`0x8547ec`), `%sTextRight%d` (`0x8547dc`), `%sTexture%d` (`0x8547d0`) and `%sStatusBar` (`0x8547c4`). The pass counter `[ebp+0xc]` makes `0x529674` skip the resize on pass 0; on pass 1 an array whose capacity `+0x328` differs from the count is resized with `0x536c80` or, for 0, freed with `0x536d10`. A type id is assigned on first use: the globals `0xcf2ccc` (FontString), `0xcf4cdc` (Texture) and `0xcf4e5c` (StatusBar) are filled from the last id `0xceef6c`.
 
+## Adding font strings
+
+`AddFontStrings(left, right)` raises the line limit `+0x320` by one and makes the two font strings
+the new last entries of the left and right line arrays, with a wrap flag of 0. The line count is not
+touched, so the pair shows only when the count reaches it; the strings keep their parent, layer,
+points, font and text, and nothing checks whether they are already in the arrays. Each array whose
+count differs from the new limit is resized to exactly that many entries.
+
+Addresses: `0x530c40`, `0x530db0`, `0x529940`, `0x52994d`, `0x529955`, `0x529960`, `0x52997d`, `0x529982`, `0x5299b3`, `0x5299ea`, `0x529a01`, `0x529a14`, `0x529a26`, `0x536c80`, `0x4368c0`
+Confidence: verified
+Proof: one
+Test: `ui::tooltip_add_font_strings_difftest`
+
+The binding checks arguments 2 and 3 as `FontString` objects, raising for anything else, and calls
+`0x529940(left, right)` (`0x530db0`). `0x52994d` increments the limit and `0x529955` stores it. For
+each array (`+0x324`, `+0x330`, `+0x33c`, laid out as capacity, count, data) `0x529960` and its
+twins compare the count `+4` with the limit; a difference calls `0x536c80` (`0x52997d`, `0x5299b3`)
+or its copy `0x4368c0` (`0x5299ea`) with the limit and stores it as the count (`0x529982`). The
+branches for a limit of 0 free the array instead and run only when the limit wraps past 0xffffffff.
+`0x529a01`, `0x529a14` and `0x529a26` store the left string, the right string and 0 at index
+limit − 1 of the data `+0x32c`, `+0x338` and `+0x344`. The test runs `0x529940` with the two
+resizers stubbed to store the capacity; it does not run the limit-0 branches `0x52996a` to
+`0x52997a`, `0x5299a1` to `0x5299b0` and `0x5299d7` to `0x5299e7`, whose stores then write below
+freed data.
+
 ## Item object link
 
 `0x52ae00(item)` builds the link text of an item object, or answers 0 for a null object. It reads the item's cached record by the entry at `[[item+8]+0xc]` (quality at `+0x1c` of the record, 1 when none), writes the item's name to a 0x100-byte buffer

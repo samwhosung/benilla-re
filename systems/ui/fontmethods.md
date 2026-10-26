@@ -4,7 +4,7 @@ How the Lua methods that set and read a font's colour, alpha, shadow, spacing an
 types have them, and what the three font objects of a `Button` do. The font state itself (`CSimpleFont` fields, inheriting a
 `Font` object) is in `ui/fontstring`; the screen scale the sizes use is `screencoord`.
 
-Roots: `0x79f4d0`, `0x79f680`, `0x79f730`, `0x79f910`, `0x79f9c0`, `0x79fad0`, `0x79fb40`, `0x79f3b0`, `0x79d840`,
+Roots: `0x79f090`, `0x79fc20`, `0x79fce0`, `0x79fd70`, `0x79f4d0`, `0x79f680`, `0x79f730`, `0x79f910`, `0x79f9c0`, `0x79fad0`, `0x79fb40`, `0x79f3b0`, `0x79d840`,
 `0x79d9c0`, `0x780880`, `0x794ed0`
 
 ## Which types answer
@@ -167,3 +167,31 @@ light userdata, `0x79f12f` errors on null, `0x79f149` takes the Font type id, as
 `s_lastTypeId` on first use, and `0x79f167` asks the object's slot `+0x10`. `0x79f18b` tests for a string
 (type 4) and `0x79f1a5` calls `0x783870(name, 0)`; `0x79f1bd` errors on null. `0x79f1db` is
 `CSimpleFont::SetFontObject`; `0x79f1eb` is the usage error.
+
+## Justify and the followed font
+
+The five types other than `FontString` share the justify methods. `SetJustifyH(name)` and
+`SetJustifyV(name)` take any of the six justify names, ignoring case, and keep their own axis of it,
+bits 0 to 2 or 3 to 5 of the justify word: a name of the other axis clears the axis. An unchanged
+word with the justify group set is not stored; otherwise it is, and the group marked set and changed
+(0x202). Either way the font stops following its parent's justify and pushes its changes. Any other
+argument raises the usage error. `GetJustifyV()` answers the first set of `TOP`,
+`MIDDLE`, `BOTTOM`, else `UNKNOWN`. `GetFontObject()`, on those five
+and under Button's three font object getters, answers the followed `Font` or nil.
+
+Addresses: `0x79fc20`, `0x79fc34`, `0x79fc4e`, `0x79fc57`, `0x79fc66`, `0x79fc6d`, `0x79fc72`, `0x79fc75`, `0x79fc7c`, `0x79fc84`, `0x79fc97`, `0x79fce0`, `0x79fd21`, `0x79fd57`, `0x79fd70`, `0x79fd76`, `0x79fd79`, `0x79f090`, `0x79f094`, `0x79f0a6`, `0x79f0b7`, `0x79f0c9`, `0x780562`, `0x7806e2`, `0x780862`, `0x6f1990`, `0x6f1a00`, `0x87c77c`, `0x87c7a0`
+Confidence: verified
+Proof: one
+Test: `ui::font_justify_set_h_difftest`, `ui::font_justify_set_v_difftest`, `ui::font_justify_get_v_difftest`
+
+Each takes the receiver's name in `ecx`, the font in `edx` and the state on the stack, and returns 0
+values (the setters) or 1. `0x79fc34` tests argument 2 with `lua_isstring` and `0x79fc4e` parses it
+with `0x6f1990`. `0x79fc57` to `0x79fc66` form `old ^ ((old ^ bit) & 7)` from the word `+0x54`;
+`0x79fc6d` tests 0x200 of `+0x38` when it is unchanged; `0x79fc72` stores and `0x79fc75` ORs 0x202;
+`0x79fc7c` clears bit 1 of the follow mask `+0x2c` and `0x79fc84` calls slot 5, `PushChanges`.
+`0x79fc97` raises. `0x79fce0` is the same with mask 0x38 (`0x79fd21`) and its usage (`0x79fd57`).
+`0x79fd76` masks the word with 0x38 for `0x6f1a00` (`0x79fd79`). `0x79f094` loads the followed font
+`+0x28`; `0x79f0a6` builds its script object when `+0x4` is 0 and `0x79f0b7` pushes its registry
+reference `+0x8`; `0x79f0c9` pushes nil. Button's `GetTextFontObject`, `GetDisabledFontObject` and
+`GetHighlightFontObject` call `0x79f090` too (`0x780562`, `0x7806e2`, `0x780862`). The tests run the three justify functions whole.
+

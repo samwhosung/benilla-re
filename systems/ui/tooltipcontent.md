@@ -197,6 +197,24 @@ are, with `0x52fe90(0)` (`0x530a49`), and the layout is invalidated (`0x530a52`)
 
 Bit-exact coverage: `ui::textglue_scale_mul` covers `0x772b81` to `0x772b98` of `0x772b60`.
 
+## Padding
+
+`SetPadding(width)` reads its argument with `lua_tonumber`, so anything but a number or numeric
+string is 0, converts it from FrameXML units to layout units like the other lengths, and stores it in
+`+0x3bc` through `0x530630`; nothing else happens until the next sizing, which adds it once to the
+plate's width. The constructor stores 0 there, and clearing the tooltip leaves it.
+
+Addresses: `0x530f10`, `0x530fa0`, `0x530fa8`, `0x530fba`, `0x530fc5`, `0x530630`, `0x530636`, `0x529385`, `0x5309f4`
+Confidence: verified
+Proof: one
+Test: `ui::luabind_530_setters`
+
+`0x530fa0` is `lua_tonumber(2)` with no type test; `0x530fa8` to `0x530fba` divide it by `1024·A`
+(`fdivr`) and pass the float to `MultiplyByScreenScaleX`, whose result `0x530fc5` hands to `0x530630`.
+`0x530636` stores the stack float into `[ecx+0x3bc]` and returns with `ret 4`. A census of
+`+0x3bc]` over the file finds the three: the constructor's zero (`0x529385`), this store and the
+`fadd` of `0x5309f4`. `ui::luabind_530_setters` covers `0x530fa8` to `0x530fc5`.
+
 ## Appending text
 
 `GameTooltip:AppendText(text)` is `0x531e30`. The receiver must be a table whose `this` is a game tooltip; the text

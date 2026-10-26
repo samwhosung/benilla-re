@@ -88,6 +88,25 @@ once, from `0x49f60f` (`target token expansion`); the buffer is `[ebp-0x138]` an
 `[[player+0xe68]+0x1d]`, capped at 100 and multiplied by `0x8029d0` (0.01), and with it non-zero `0x508680` writes the
 text the packet sends; its inner steps are not read here. The final gate is `0x494a50(6)` (`0x49f6af`).
 
+## The drunk h's next byte
+
+`0x508ad0(c)` answers 0 for a space, `S` or `s` and 1 for any other byte, the terminating 0
+included. The drunk transform asks it about the byte after an `s` or `S` that starts a word, and an
+answer of 0 skips that letter's draw: such a letter followed by a space, `s` or `S` never gains an
+`h`, while one at the end of the text still draws.
+
+Addresses: `0x508ad0`, `0x508ad3`, `0x508ad8`, `0x508add`, `0x508adf`, `0x508ae5`, `0x5086dd`, `0x5086e4`, `0x508740`, `0x508751`, `0x508753`, `0x50875a`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x508ad0` compares `cl` with 0x20, 0x53 and 0x73, each `je 0x508ae5` (`xor eax,eax`); otherwise
+`0x508adf` loads 1. In `0x508680` the byte switch `0x5086dd` and `0x5086e4` sends `S` and `s`, and no
+other byte, to case 1 of its four, `0x508740`, which runs
+the test only while the word-start flag `cl` is set and more than one byte of room is left; the source
+pointer has already passed the letter, so `0x508751` loads the next byte, and `0x50875a` skips the draw
+on 0.
+
 ## Target token expansion
 
 `0x5083a0(text, buf, size)` copies the C string `text` into `buf` and replaces `%N`, `%T`, `%n` and `%t`, and no

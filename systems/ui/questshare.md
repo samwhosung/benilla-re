@@ -57,7 +57,7 @@ object and the caller asks for a report; closing the panel, declining it and the
 quest accept does not. A share that arrives while another quest panel is open is refused with 5 by the
 offer display and the panel is not opened. The out-of-range check also reports 3, never 4.
 
-Addresses: `0x501130`, `0x501136`, `0x501149`, `0x501151`, `0x501159`, `0x501171`, `0x501173`, `0x5011aa`, `0x5011af`, `0x5011bf`, `0x501217`, `0x501a17`, `0x5014b1`, `0x4933da`, `0x500bc7`, `0x5013d3`, `0x5dbf2b`, `0x5dbf3d`, `0x5dbf56`, `0x5dbf85`, `0x5dbfbb`, `0xbe0810`, `0xbe0814`
+Addresses: `0x501130`, `0x501136`, `0x501149`, `0x501151`, `0x501159`, `0x501171`, `0x501173`, `0x5011aa`, `0x5011af`, `0x5011bf`, `0x501217`, `0x501a17`, `0x5014b1`, `0x4933da`, `0x500bc0`, `0x500bc7`, `0x5013d3`, `0x5dbf2b`, `0x5dbf3d`, `0x5dbf56`, `0x5dbf85`, `0x5dbfbb`, `0xbe0810`, `0xbe0814`
 Confidence: verified
 Proof: one
 Test: none
@@ -65,7 +65,8 @@ Test: none
 `0x501130` returns when the dialog's source GUID (`0xbe0810`, `0xbe0814`) is 0, when the report flag is 0, or when the GUID
 does not resolve to a player (mask 0x10); it then writes opcode 0x276 (`push 0x276`), the GUID as u64 and `3`
 as u8, clears the GUID and fires `QUEST_FINISHED` (id 304). The callers with the report flag are `CloseQuest`
-(`0x501a17`), the decline (`0x5014b1`), the leash (`0x4933da`) and the leave-world cleanup (`0x500bc7`); the accept
+(`0x501a17`), the decline (`0x5014b1`), the leash (`0x4933da`) and the leave-world cleanup `0x500bc0`, `mov edx,1; xor
+ecx,ecx` and a tail jump (`0x500bc7`), which `LeaveWorldUI` calls at `0x490ac6`; the accept
 passes 0 (`xor edx,edx`, `0x5013c5`). The only image references to 0x276 as an operand are the two sends
 (`0x501173`, `0x5dbf56`), the register and the unregister.
 

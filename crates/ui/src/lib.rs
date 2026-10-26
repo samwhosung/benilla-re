@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod addon_lookup;
 pub mod anchors;
 pub mod auction_deposit;
 pub mod auto_loot;
@@ -33,6 +34,7 @@ pub mod distance_gates;
 pub mod editbox_caret;
 pub mod editbox_measure;
 pub mod fare_range;
+pub mod font_justify;
 pub mod font_xml;
 pub mod fontstring;
 pub mod fontstring_layout;
@@ -54,6 +56,8 @@ pub mod list_lookups;
 pub mod list_sort;
 pub mod list_sort_cmp;
 pub mod loot_coin;
+pub mod merchant_records;
+pub mod message_scroll;
 pub mod minimap_arrow;
 pub mod minimap_blips;
 pub mod minimap_frame;
@@ -72,12 +76,14 @@ pub mod scrollframe_layout;
 pub mod scrollframe_scroll;
 pub mod simplemodel;
 pub mod slider;
+pub mod slider_thumb;
 pub mod spellbook;
 pub mod strata;
 pub mod taxi_map;
 pub mod time_values;
 pub mod toc_loader;
 pub mod tooltip;
+pub mod tooltip_font_strings;
 pub mod tooltip_layout;
 pub mod ui_scale;
 pub mod uiscale;
