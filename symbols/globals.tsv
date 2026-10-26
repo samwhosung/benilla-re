@@ -395,6 +395,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffdbc	void *[7]	s_routeSplineBaseVtable		loadingscreen	Holds seven pure-call slots, the vtable the spline constructor stores before the curve class replaces it	verified	one	loadingscreen/overview#growable-arrays
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
+0x8001e0	char[6]	s_exponentTemplate		crt	Holds e+000, the exponent __cftoe2 copies and adds the digits into	verified	one	crt/printf#the-e-and-f-forms
+0x8003dc	char[7]	s_qnanText		crt	Holds 1#QNAN, the digits I10_OUTPUT writes for a quiet NaN	verified	one	crt/decimal#zeros-and-non-finite-values
+0x8003e4	char[6]	s_infText		crt	Holds 1#INF, the digits I10_OUTPUT writes for an infinity	verified	one	crt/decimal#zeros-and-non-finite-values
+0x8003ec	char[6]	s_indText		crt	Holds 1#IND, the digits I10_OUTPUT writes for the negative indefinite NaN	verified	one	crt/decimal#zeros-and-non-finite-values
+0x8003f4	char[7]	s_snanText		crt	Holds 1#SNAN, the digits I10_OUTPUT writes for a signalling NaN	verified	one	crt/decimal#zeros-and-non-finite-values
 0x801088	uint32_t[60]	s_baseSwitches		unassigned	Holds the 15 base switch records of flags, id, name and 0, d3d id 0 to nowarnings id 14, that 0x419c70 registers	verified	one	storm/scmd#the-clients-switch-readers
 0x8012cc	const float	s_threeQuarters		unassigned	Holds 0.75	verified	one	lighting/clouds#cloud-colours
 0x80131c	void *[12]	s_baseObjectVtable		unassigned	Holds the 12 slots of a base vtable that object destructors store back into their object	verified	one	ui/initexits#other-exits
@@ -1157,6 +1162,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x812330	const uint16_t			unassigned	Holds a word its object file's code reads; not read here	inferred	none	
 0x8126b4	void *[3]	s_minigameVtable		minigame	Holds the object's vtable: state read 0x728700, move check 0x728740, board push 0x728770	verified	one	minigame#the-object
 0x8129d8	void *[42]	s_lcdTextVtable		ui	Holds the vtable of the LCD text element, whose slot +0x70 is the font setter 0x72f590	verified	one	ui/lcd#lcd-text-fonts
+0x8161e0	uint8_t[89]	s_formatStates		crt	Holds __output's byte classes in low nibbles from 0x20 and its next states in high nibbles at class * 8 + state	verified	one	crt/printf#the-format-state-machine
+0x81623c	uint16_t[7]	s_wideNullText		crt	Holds the UTF-16 text (null)	verified	one	crt/printf#characters-strings-and-counts
 0x818878	const float[3]	s_saturationWeights		ui	Holds 0.7154, 0.0721 and 0.2125 that the x87 colour saturation routine 0x74d794 multiplies green, blue and red by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x818a28	const float[4]	s_saturationWeights3dnow		ui	Holds 0.2125, 0.7154 and 0.0721, then 0, as the pairs the 3DNow saturation code 0x75e12b multiplies by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x81c370	const float	s_infinityTop		unassigned	Holds +inf, 0x7f800000, the literal that TopInitInfinity copies at start-up	verified	one	ui/README#static-initializers
@@ -1329,12 +1336,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
+0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
+0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
 0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
 0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831720	const uint16_t *	_pwctype		crt	Points to the type table iswctype reads below 0x100, the same 0x831726; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
+0x832490	Ld12Real[29]	s_tenPowers		crt	Holds 10^1 to 10^4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten
+0x8325f0	Ld12Real[29]	s_tenNegPowers		crt	Holds 10^-1 to 10^-4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	two	screencoord#screen-scale-state
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	two	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	two	screencoord#screen-scale-state
@@ -2296,6 +2307,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x871460	char[4]	s_textOff		ui	Holds the string "off"	inferred	none	
 0x871624	char[9]	s_textNoValue		ui	Holds the string "no value", the type name of an absent index	verified	one	ui/luabase#type-and-tostring
 0x8716e0	char[4]	s_textSAt8716e0		unassigned	Holds the string "@%s"	inferred	none	
+0x871708	char[7]	s_nullText		unassigned	Holds the text (null), which __output and Lua's pushstr write for a null string	verified	one	crt/printf#characters-strings-and-counts
 0x871896	char[12]	s_textASrcLgcC		unassigned	Holds the string "a\src\lgc.c"	inferred	none	
 0x871938	char[7]	s_stringLibraryName		unassigned	Holds string	verified	one	ui/luastate#the-library-scripts-see
 0x871960	char[6]	s_text14g		unassigned	Holds the string "%.14g"	inferred	none	
@@ -2357,6 +2369,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x874458	char[13]	s_textMinutesAbbr		ui	Holds the global string key "MINUTES_ABBR"	verified	one	ui/lcd#battlefield-status
 0x874468	char[13]	s_textSecondsAbbr		ui	Holds the global string key "SECONDS_ABBR"	verified	one	ui/lcd#battlefield-status
 0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
+0x8761c0	const char *	s_nullString		crt	Points to the text (null) at 0x871708, which __output writes for a null %s; nothing writes it	verified	one	crt/printf#characters-strings-and-counts
+0x8761c4	const uint16_t *	s_wideNullString		crt	Points to the UTF-16 text (null) at 0x81623c, which __output writes for a null wide string	verified	one	crt/printf#characters-strings-and-counts
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math

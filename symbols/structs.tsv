@@ -62,6 +62,8 @@ FriendSlot		32		net	Holds a friend: online byte, status flags, name, guid, level
 GuildMemberInfo		344		ui	Holds one guild roster member: GUID, name, level, class, zone, rank, presence, notes and last-online days	verified	one	ui/guild#the-member-record
 ITEMCOOLDOWNHASHNODE		36		spell	Holds one item-cooldown hash node: key, slot link, node-list link and payload	verified	one	spell/cooldowns#item-cooldown-table
 LOADINGSCREENTAXIPATHINFO		8		loadingscreen	Holds a leg's first and last stop node ids	verified	one	loadingscreen/route#taxi-leg-table
+Ld10Real		10		crt	Holds an 80-bit real: the 64-bit mantissa with its leading 1 and the sign over a 15-bit exponent	verified	one	crt/decimal#widening-a-double
+Ld12Real		12		crt	Holds a 12-byte real: a 16-bit extension, a 64-bit mantissa and the sign over a 15-bit exponent	verified	one	crt/decimal#the-12-byte-real
 LightningObject		80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
 LightningObject::Bolt		16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
 LooseIndexEntry		32		storm	Holds one loose file of the index: its key hash, list links, key, full path and kind	verified	two	storm/mount#loose-file-index
@@ -140,4 +142,6 @@ WardenModule		12		warden	Holds a loaded module: its image base, its size and its
 WardenModuleHeader		40		warden	Holds the ten dwords that open a decompressed module image	verified	two	warden/modules#the-module-image
 WhoResult		160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/who#who-list-reply
 WowConnection		304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
+_FloatOutStruct		26		crt	Holds the decimal exponent, sign, digit count and digits I10_OUTPUT writes	verified	one	crt/decimal#making-the-digits
+_strflt		16		crt	Holds a double's sign, decimal exponent, digit return and digit text for the conversions	verified	one	crt/decimal#the-digits-a-conversion-reads
 luaL_reg		8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

@@ -551,9 +551,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4098c0	253	_WinMainCRTStartup	idb	crt	boundary		Starts the process: runs __cinit at 0x409965, then calls WinMain at 0x40999b	verified	one	random#the-c-runtime-rand	
 0x4099c8	37	__amsg_exit	idb	crt	boundary		Runs its object file code that calls __FF_MSGBANNER, __NMSG_WRITE; not read here	inferred	none		
 0x4099ed	36	_fast_error_exit	idb	crt	boundary		Runs its object file code that calls __FF_MSGBANNER, __NMSG_WRITE; not read here	inferred	none		
-0x409a11	23			crt	boundary		Runs its object file code that calls 0x409a29, __ms_p5_mp_test_fdiv, __setdefaultprecision; not read here	inferred	none		
+0x409a11	23	__fpmath		crt	orchestration	void __cdecl (void)	Fills the conversion slots through 0x409a29, then calls __ms_p5_mp_test_fdiv and __setdefaultprecision	verified	one	crt/printf#the-conversion-slots	
 0x409a28	1			crt	boundary		Runs its object file code not read here	inferred	none		
-0x409a29	56			crt	boundary		Runs its object file code not read here	inferred	none		
+0x409a29	56	__cfltcvt_init		crt	orchestration	void __cdecl (void)	Fills the six floating-point conversion slots from 0x82f3f8 with _cfltcvt and its helpers	verified	one	crt/printf#the-conversion-slots	
 0x409a61	16			crt	unreached		Runs its object file code not read here	inferred	none		
 0x409a71	126	__onexit	idb	crt	boundary		Runs its object file code that calls __lockexit, 0x40bba3, 0x40b874 and 1 more; not read here	inferred	none		
 0x409aef	18	_atexit	idb	crt	boundary	int __cdecl (void (*function)(void))	Registers a function to run at exit	inferred	none	net/layout#static-initializers	
@@ -584,7 +584,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40a1e6	146	__fpclass	idb	crt	boundary		Runs its object file code that calls __sptype; not read here	inferred	none		
 0x40a280	47	__alloca_probe	idb	crt	boundary		Allocates eax bytes on the stack, touching each page	inferred	none	spell/go#spell-go-packet	net::srp6_client_session, net::srp6_interleave
 0x40a2b0	39	__ftol	idb	crt	boundary		Converts st0 to a 64-bit integer by truncation and returns its low dword	verified	one	camera#angle-properties	glue::char_customize_color_difftest, glue::glue_init_viewport_difftest, sound::channel_volume_mix, sound::ramp_step, sound::volume_to_byte, spell::spellvisual_timeline_difftest
-0x40a2d7	9	__purecall		crt			Ends the process with runtime error 25, a pure virtual call	verified	one	core/scheduler#context-vtables	
+0x40a2d7	9	__purecall		crt	boundary		Ends the process with runtime error 25, a pure virtual call	verified	one	core/scheduler#context-vtables	
 0x40a2e0	45	__cinit	idb	crt	boundary	void __cdecl (void)	Runs the C and C++ static initializer tables through __initterm	verified	one	random#static-initializers	
 0x40a30d	17	_exit	idb	crt	boundary		Runs its object file code that calls _doexit; not read here	inferred	none		
 0x40a31e	17	__exit	idb	crt	boundary		Runs its object file code that calls _doexit; not read here	inferred	none		
@@ -627,17 +627,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40b3d5	18	__setdefaultprecision	idb	crt	boundary		Runs its object file code that calls __controlfp; not read here	inferred	none		
 0x40b3e7	62	__ms_p5_test_fdiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40b425	41	__ms_p5_mp_test_fdiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40b44e	90	__forcdecpt	idb	crt	boundary		Runs its object file code that calls tolower, __isctype; not read here	inferred	none		
-0x40b4a8	78			crt	boundary		Runs its object file code not read here	inferred	none		
+0x40b44e	90	__forcdecpt	idb	crt	primitive	void __cdecl (char *buffer)	Inserts the decimal point after a number text's leading digits, or before a leading e	verified	one	crt/printf#the-g-form-and-its-trims	crt::crt_sprintf_float_difftest
+0x40b4a8	78	__cropzeros		crt	primitive	void __cdecl (char *buffer)	Removes the trailing zeros of a number text's fraction, and the point when no digit is left after it	verified	one	crt/printf#the-g-form-and-its-trims	crt::crt_sprintf_float_difftest
 0x40b4f6	24			crt	boundary		Runs its object file code not read here	inferred	none		
 0x40b50e	62	__fassign	idb	crt	boundary		Runs its object file code that calls 0x40fe71, 0x40fecc; not read here	inferred	none		
-0x40b54c	97	__cftoe	idb	crt	boundary		Runs its object file code that calls __fltout2, __fptostr, __cftoe2; not read here	inferred	none		
-0x40b5ad	194	__cftoe2	idb	crt	boundary		Runs its object file code that calls __shift and 1 more; not read here	inferred	none		
-0x40b66f	85	__cftof	idb	crt	boundary		Runs its object file code that calls __fltout2, __fptostr, __cftof2; not read here	inferred	none		
-0x40b6c4	167	__cftof2	idb	crt	boundary		Runs its object file code that calls __shift, _memset; not read here	inferred	none		
-0x40b76b	147	__cftog	idb	crt	boundary		Runs its object file code that calls __fltout2, __fptostr, __cftof2 and 1 more; not read here	inferred	none		
-0x40b7fe	81	__cfltcvt	idb	crt	boundary		Runs its object file code that calls __cftof, __cftog, __cftoe; not read here	inferred	none		
-0x40b84f	37	__shift	idb	crt	boundary		Runs its object file code that calls _strlen, 0x4100f0; not read here	inferred	none		
+0x40b54c	97	__cftoe	idb	crt	primitive	char * __cdecl (double *value, char *buffer, int ndec, int caps)	Writes a double in the e form with ndec digits after the point: __fltout2, __fptostr, then __cftoe2	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
+0x40b5ad	194	__cftoe2	idb	crt	primitive	char * __cdecl (char *buffer, int ndec, int caps, _strflt *flt, char g_fmt)	Writes rounded digits as d.ddd and the decimal exponent less one in three digits from the template e+000	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
+0x40b66f	85	__cftof	idb	crt	primitive	char * __cdecl (double *value, char *buffer, int ndec)	Writes a double in the f form with ndec digits after the point: __fltout2, __fptostr, then __cftof2	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
+0x40b6c4	167	__cftof2	idb	crt	primitive	char * __cdecl (char *buffer, int ndec, _strflt *flt, char g_fmt)	Writes rounded digits with the point after decpt of them, a 0 before it, and the zeros a negative decpt needs	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
+0x40b76b	147	__cftog	idb	crt	primitive	char * __cdecl (double *value, char *buffer, int ndec, int caps)	Writes a double in the g form: ndec significant digits, the e form by the rounded exponent, else the f form	verified	one	crt/printf#the-g-form-and-its-trims	crt::crt_sprintf_float_difftest
+0x40b7fe	81	__cfltcvt	idb	crt	orchestration	char * __cdecl (double *value, char *buffer, int format, int precision, int caps)	Sends a double's e or E conversion to __cftoe, f to __cftof and anything else to __cftog	verified	one	crt/printf#the-e-and-f-forms	crt::crt_sprintf_float_difftest
+0x40b84f	37	__shift	idb	crt	orchestration	void __cdecl (char *s, int n)	Moves a string and its NUL up by n bytes; nothing for 0	verified	one	crt/printf#rounding-the-digit-text	crt::crt_sprintf_float_difftest
 0x40b874	815			crt	boundary		Runs its object file code that calls _malloc, __lock, ___sbh_find_block and 12 more; not read here	inferred	none		
 0x40bba3	226			crt	boundary		Runs its object file code that calls __lock, ___sbh_find_block, 0x40f14f and 2 more; not read here	inferred	none		
 0x40bc91	18	_malloc	idb	crt	boundary		Runs its object file code that calls __nh_malloc; not read here	inferred	none		
@@ -733,7 +733,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40f7b0	254	_strncpy	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40f8ae	117	__isctype	idb	crt	boundary		Runs its object file code that calls ___crtGetStringTypeA; not read here	inferred	none		
 0x40f923	8	__tolower	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x40f92b	111	tolower		crt			Returns the lower-case form of a character in the C locale	inferred	none	models/cache#shared-model-lookup	
+0x40f92b	111	tolower		crt	boundary		Returns the lower-case form of a character in the C locale	inferred	none	models/cache#shared-model-lookup	
 0x40f99a	203			crt	boundary		Runs its object file code that calls __isctype, ___crtLCMapStringA; not read here	inferred	none		
 0x40fa65	73	__ZeroTail	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40faae	86	__IncMan	idb	crt	boundary		Runs its object file code that calls ___addl; not read here	inferred	none		
@@ -749,12 +749,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40fe71	45			crt	boundary		Runs its object file code that calls ___strgtold12, 0x40fdcb; not read here	inferred	none		
 0x40fe9e	46	__atoldbl	idb	crt	unreached		Runs its object file code that calls ___strgtold12, __ld12told; not read here	inferred	none		
 0x40fecc	45			crt	boundary		Runs its object file code that calls ___strgtold12, 0x40fde1; not read here	inferred	none		
-0x40fef9	119	__fptostr	idb	crt	boundary		Runs its object file code that calls _strlen, 0x4100f0; not read here	inferred	none		
-0x40ff70	92	__fltout2	idb	crt	boundary		Runs its object file code that calls ___dtold, 0x4116fd and 1 more; not read here	inferred	none		
-0x40ffcc	182	___dtold	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x40fef9	119	__fptostr	idb	crt	primitive	void __cdecl (char *buffer, int digits, _strflt *flt)	Writes digits of a mantissa text padded with 0 and rounds half up on the next byte, a carry raising decpt	verified	one	crt/printf#rounding-the-digit-text	crt::crt_sprintf_float_difftest
+0x40ff70	92	__fltout2	idb	crt	orchestration	_strflt * __cdecl (double value, _strflt *flt, char *buffer)	Fills a _strflt with a double's sign, decimal exponent and up to 17 digits from I10_OUTPUT	verified	one	crt/decimal#the-digits-a-conversion-reads	crt::crt_sprintf_float_difftest
+0x40ffcc	182	___dtold	idb	crt	primitive	void __cdecl (Ld10Real *out, double *value)	Widens a double to the 80-bit real exactly, a subnormal normalized and -0 made +0	verified	one	crt/decimal#widening-a-double	crt::crt_dtold_difftest, crt::crt_sprintf_float_difftest
 0x410090	88	_memset	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x4100f0	821			crt	boundary		Runs its object file code not read here	inferred	none		net::pin_shuffle
-0x410425	9	__fptrap	idb	crt	boundary		Runs its object file code that calls __amsg_exit; not read here	inferred	none		
+0x410425	9	__fptrap	idb	crt	boundary	void __cdecl (void)	Ends the process through __amsg_exit with runtime error 2	verified	one	crt/printf#the-conversion-slots	
 0x41042e	36			crt	unreached		Runs its object file code that calls __lock, __unlock; not read here	inferred	none		
 0x410452	6			crt	unreached		Runs its object file code not read here	inferred	none		
 0x410458	27	__callnewh	idb	crt	boundary		Runs its object file code not read here	inferred	none		
@@ -776,14 +776,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x410f0b	37	__strcats	idb	crt	unreached		Runs its object file code that calls _strcat; not read here	inferred	none		
 0x410f30	204	___lc_strtolc	idb	crt	unreached		Runs its object file code that calls _memset, _strcspn, _strncpy and 1 more; not read here	inferred	none		
 0x410ffc	83	___lc_lctostr	idb	crt	unreached		Runs its object file code that calls __strcats and 1 more; not read here	inferred	none		
-0x41104f	33	___addl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x411070	94			crt	boundary		Runs its object file code that calls ___addl; not read here	inferred	none		
-0x4110ce	46			crt	boundary		Runs its object file code not read here	inferred	none		
-0x4110fc	45			crt	boundary		Runs its object file code not read here	inferred	none		
+0x41104f	33	___addl	idb	crt	primitive	int __cdecl (uint32_t x, uint32_t y, uint32_t *sum)	Adds two dwords into a third and returns the carry	verified	one	crt/decimal#the-12-byte-real	crt::crt_ld12mul_difftest, crt::crt_i10_output_difftest
+0x411070	94	___add_12		crt	primitive	void __cdecl (Ld12Real *x, Ld12Real *y)	Adds a 12-byte real to another as a 96-bit integer, dropping the carry out	verified	one	crt/decimal#the-12-byte-real	crt::crt_i10_output_difftest
+0x4110ce	46	___shl_12		crt	primitive	void __cdecl (Ld12Real *x)	Shifts the 96 bits of a 12-byte real left by one	verified	one	crt/decimal#the-12-byte-real	crt::crt_ld12mul_difftest, crt::crt_i10_output_difftest
+0x4110fc	45	___shr_12		crt	primitive	void __cdecl (Ld12Real *x)	Shifts the 96 bits of a 12-byte real right by one	verified	one	crt/decimal#the-12-byte-real	crt::crt_ld12mul_difftest, crt::crt_i10_output_difftest
 0x411129	199	___mtold12	idb	crt	boundary		Runs its object file code that calls 0x4110ce, 0x411070; not read here	inferred	none		
 0x4111f0	1185	___strgtold12	idb	crt	boundary		Runs its object file code that calls __isctype, ___mtold12, ___multtenpow12; not read here	inferred	none		
 0x4116c1	60	___STRINGTOLD	idb	crt	unreached		Runs its object file code that calls ___strgtold12, __ld12told; not read here	inferred	none		
-0x4116fd	659			crt	boundary		Runs its object file code that calls ___multtenpow12, ___ld12mul, 0x4110ce and 3 more; not read here	inferred	none		
+0x4116fd	659	I10_OUTPUT		crt	primitive	int __cdecl (Ld10Real value, int ndigits, uint32_t flags, _FloatOutStruct *fos)	Writes up to 21 decimal digits of an 80-bit real by 12-byte arithmetic, rounding on one more digit	verified	one	crt/decimal#making-the-digits	crt::crt_i10_output_difftest, crt::crt_sprintf_float_difftest
 0x411990	145	___init_time	idb	crt	unreached		Runs its object file code that calls 0x40d9b5, __get_lc_time, __free_lc_time and 1 more; not read here	inferred	none		
 0x411a21	846	__get_lc_time	idb	crt	unreached		Runs its object file code that calls ___getlocaleinfo; not read here	inferred	none		
 0x411d6f	400	__free_lc_time	idb	crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
@@ -813,8 +813,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x412db1	230	_crtGetLocaleInfoA@16	idb	crt	unreached		Runs its object file code that calls _strncpy; not read here	inferred	none		
 0x412e97	57	_LcidFromHexString	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x412ed0	33	_GetPrimaryLen	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x412ef1	544	___ld12mul	idb	crt	boundary		Runs its object file code that calls ___addl, 0x4110ce, 0x4110fc; not read here	inferred	none		
-0x413111	124	___multtenpow12	idb	crt	boundary		Runs its object file code that calls ___ld12mul; not read here	inferred	none		
+0x412ef1	544	___ld12mul	idb	crt	primitive	void __cdecl (Ld12Real *x, Ld12Real *y)	Multiplies a 12-byte real by another, keeping the partial products of word sum 4 and up, rounded to nearest even	verified	one	crt/decimal#multiplying-12-byte-reals	crt::crt_ld12mul_difftest, crt::crt_multtenpow12_difftest, crt::crt_i10_output_difftest
+0x413111	124	___multtenpow12	idb	crt	primitive	void __cdecl (Ld12Real *x, int pow, uint32_t mult12)	Multiplies a 12-byte real by 10^pow through the octal digits of pow and the tables at 0x832490 and 0x8325f0	verified	one	crt/decimal#powers-of-ten	crt::crt_multtenpow12_difftest, crt::crt_i10_output_difftest
 0x41318d	143	__Getdays	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x41321c	149	__Getmonths	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x4132b1	562	__Gettnames	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc, _memcpy and 1 more; not read here	inferred	none		
@@ -31243,23 +31243,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f030	25			unassigned	unreached		Runs its object file code that calls _localtime, _asctime; not read here	inferred	none		
 0x73f049	220	_time	idb	crt	boundary		Runs its object file code that calls ___loctotime_t; not read here	inferred	none		
 0x73f125	352	_localtime	idb	crt	boundary		Runs its object file code that calls ___tzset, _gmtime, __isindst; not read here	inferred	none		
-0x73f285	49	_fclose	idb	crt			Closes a C runtime file	inferred	none	collision/kinematics#teardown	
+0x73f285	49	_fclose	idb	crt	host		Closes a C runtime file	inferred	none	collision/kinematics#teardown	
 0x73f2b6	76	__fclose_lk	idb	crt	boundary		Runs its object file code that calls __flush, __freebuf, __close and 1 more; not read here	inferred	none		
 0x73f302	49	__fsopen	idb	crt	boundary		Runs its object file code that calls __getstream, __openfile, __unlock_file; not read here	inferred	none		
-0x73f333	19	_fopen	idb	crt			Opens a C runtime file	inferred	none	collision/kinematics#unreached-functions	
+0x73f333	19	_fopen	idb	crt	host		Opens a C runtime file	inferred	none	collision/kinematics#unreached-functions	
 0x73f350	170	__alldiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x73f3fa	60	_fprintf	idb	crt	boundary		Runs its object file code that calls __lock_file, __stbuf, __output and 2 more; not read here	inferred	none		
 0x73f436	175	_setvbuf	idb	crt	unreached		Runs its object file code that calls __lock_file, __flush, __freebuf and 2 more; not read here	inferred	none		
 0x73f4e5	143	__ismbcspace	idb	crt	boundary		Runs its object file code that calls ___crtGetStringTypeA, __isctype; not read here	inferred	none		
 0x73f574	47			crt	unreached		Runs its object file code that calls __lock_file, _fwrite, __unlock_file; not read here	inferred	none		
 0x73f5a3	266	_fwrite	idb	crt	unreached		Runs its object file code that calls _memcpy, __flush, __write and 1 more; not read here	inferred	none		
-0x73f6ad	80	__vsnprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
-0x73f700	39	strrchr		crt			Returns the last occurrence of a character in a string	inferred	none	models/cache#shared-model-lookup	
+0x73f6ad	80	__vsnprintf	idb	crt	primitive	int __cdecl (char *buffer, size_t count, const char *format, va_list args)	Formats into count bytes through __output, with a NUL only when room is left; -1 when the text is longer	verified	one	crt/printf#the-string-front-ends	crt::crt_vsnprintf_difftest
+0x73f700	39	strrchr		crt	boundary		Returns the last occurrence of a character in a string	inferred	none	models/cache#shared-model-lookup	
 0x73f727	340	_qsort		crt	primitive	void __cdecl (void *base, uint32_t num, uint32_t width, int (*compare)(const void *, const void *))	Sorts an array in place by quicksort on a middle pivot, with a selection sort for ranges of 8 elements or fewer	verified	one	ui/auctionlists#the-c-runtime-qsort	ui::crt_qsort_difftest
 0x73f87b	78	_shortsort	idb	crt	primitive	void __cdecl (char *lo, char *hi, uint32_t width, int (*compare)(const void *, const void *))	Sorts a range of at most 8 elements by moving the first maximum to the end until the range is empty	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
 0x73f8c9	44	_swap	idb	crt	boundary	void __cdecl (char *a, char *b, uint32_t width)	Exchanges two blocks of width bytes, doing nothing for the same address or a width of 0	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
 0x73f900	10	_fmod	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
+0x73f90a	10	__CIfmod	idb	crt	boundary		Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x73f914	30			crt	boundary		Runs its object file code that calls 0x74450c; not read here	inferred	none		
 0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	
 0x73fb35	40			crt	boundary		Runs its object file code not read here	inferred	none		
@@ -31280,9 +31280,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fd7b	61	___iscsymf	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdb8	61	___iscsym	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	ui::billing_minutes_left
-0x73fec4	82	_sprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
+0x73fec4	82	_sprintf	idb	crt	primitive	int __cdecl (char *buffer, const char *format, ...)	Formats into a buffer with no bound through __output, ends it with a NUL and returns the count	verified	one	crt/printf#the-string-front-ends	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest
 0x73ff20	31	__allshl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
+0x73ff3f	207	floor		crt	boundary		Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x74000e	21	_isleadbyte	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x740023	17	_iswalpha	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
 0x740034	14			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
@@ -31298,12 +31298,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7400cc	12	_iswascii	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x7400d8	13	_srand	idb	crt	orchestration	void __cdecl (uint32_t seed)	Stores the per-thread seed rand steps	verified	one	random#the-c-runtime-rand	
 0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	random::msvc_rand_lcg_difftest
-0x740107	81	__snprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
+0x740107	81	__snprintf	idb	crt	primitive	int __cdecl (char *buffer, size_t count, const char *format, ...)	Formats into count bytes through __output, with a NUL only when room is left; -1 when the text is longer	verified	one	crt/printf#the-string-front-ends	crt::crt_snprintf_vsprintf_difftest
 0x740158	98	_fgets	idb	crt	unreached		Runs its object file code that calls __lock_file, __filbuf, __unlock_file; not read here	inferred	none		
 0x7401ba	184	___dtoxmode	idb	crt	boundary		Runs its object file code that calls __mbsrchr, __mbsicmp; not read here	inferred	none		
 0x740272	699	__stat	idb	crt	boundary		Runs its object file code that calls __mbspbrk, __errno, ___doserrno and 8 more; not read here	inferred	none		
 0x74052d	112	_IsRootUNCName	idb	crt	boundary		Runs its object file code that calls _strlen; not read here	inferred	none		
-0x7405a0	20	__CIasin	idb	crt			Computes asin(st0)	inferred	none	collision/kinematics#spline-follower	
+0x7405a0	20	__CIasin	idb	crt	boundary		Computes asin(st0)	inferred	none	collision/kinematics#spline-follower	
 0x74066b	14	_mktime	idb	crt	boundary		Runs its object file code that calls __make_time_t; not read here	inferred	none		
 0x740679	14			crt	unreached		Runs its object file code that calls __make_time_t; not read here	inferred	none		
 0x740687	484	__make_time_t	idb	crt	boundary		Runs its object file code that calls ___tzset, _localtime, _gmtime; not read here	inferred	none		
@@ -31320,7 +31320,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x740fea	49	__wfsopen	idb	crt	boundary		Runs its object file code that calls __getstream, __wopenfile, __unlock_file; not read here	inferred	none		
 0x74101b	19	__wfopen	idb	crt	boundary		Runs its object file code that calls __wfsopen; not read here	inferred	none		
 0x74102e	659	__fstat	idb	crt	boundary		Runs its object file code that calls __lock_fhandle, __errno, __unlock_fhandle and 2 more; not read here	inferred	none		
-0x7412c1	81	_vsprintf	idb	crt	boundary		Runs its object file code that calls __output, __flsbuf; not read here	inferred	none		
+0x7412c1	81	_vsprintf	idb	crt	primitive	int __cdecl (char *buffer, const char *format, va_list args)	Formats a va_list into a buffer with no bound through __output and ends it with a NUL	verified	one	crt/printf#the-string-front-ends	crt::crt_snprintf_vsprintf_difftest
 0x741312	308	__strupr	idb	crt	boundary		Runs its object file code that calls __lock, __unlock, ___crtLCMapStringA and 3 more; not read here	inferred	none		
 0x741446	308	__strlwr	idb	crt	boundary		Runs its object file code that calls __lock, __unlock, ___crtLCMapStringA and 3 more; not read here	inferred	none		
 0x741580	178	__allrem	idb	crt	boundary		Runs its object file code not read here	inferred	none		
@@ -31335,7 +31335,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741752	7			crt	unreached		Runs its object file code not read here	inferred	none		
 0x741759	7			crt	unreached		Runs its object file code not read here	inferred	none		
 0x741760	20	__CIsqrt	idb	crt	boundary		Returns the square root of st0	inferred	none		
-0x741820	20	__CIacos	idb	crt			Computes acos(st0)	inferred	none	collision/kinematics#spline-follower	
+0x741820	20	__CIacos	idb	crt	boundary		Computes acos(st0)	inferred	none	collision/kinematics#spline-follower	
 0x7418eb	45			crt	boundary		Runs its object file code not read here	inferred	none		
 0x741918	7			crt	unreached		Runs its object file code not read here	inferred	none		
 0x74191f	7			crt	boundary		Runs its object file code not read here	inferred	none		
@@ -31382,17 +31382,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x742a26	200	__getstream	idb	crt	boundary		Runs its object file code that calls __lock, __lock_file2, __unlock_file2 and 2 more; not read here	inferred	none		
 0x742aee	141	__stbuf	idb	crt	boundary		Runs its object file code that calls __isatty, _malloc; not read here	inferred	none		
 0x742b7b	42	__ftbuf	idb	crt	boundary		Runs its object file code that calls __flush; not read here	inferred	none		
-0x742ba5	1825	__output	idb	crt	boundary		Runs its object file code that calls _get_int_arg, _write_char, _get_short_arg and 7 more; not read here	inferred	none		
-0x7432e6	53	_write_char	idb	crt	boundary		Runs its object file code that calls __flsbuf; not read here	inferred	none		
-0x74331b	49	_write_multi_char	idb	crt	boundary		Runs its object file code that calls _write_char; not read here	inferred	none		
-0x74334c	56	_write_string	idb	crt	boundary		Runs its object file code that calls _write_char; not read here	inferred	none		
-0x743384	13	_get_int_arg	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x743391	16	_get_int64_arg	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x742ba5	1825	__output	idb	crt	primitive	int __cdecl (FILE *stream, const char *format, va_list args)	Formats a printf format and its arguments into a FILE; returns the bytes written, or -1 once a write fails	verified	one	crt/printf#the-format-state-machine	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest, crt::crt_vsnprintf_difftest
+0x7432e6	53	_write_char	idb	crt	primitive	void __cdecl (int ch, FILE *stream, int *count)	Puts a byte into a FILE and counts it; a put that finds the FILE's count below zero sets the count to -1	verified	one	crt/printf#padding-sign-and-text	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest, crt::crt_vsnprintf_difftest
+0x74331b	49	_write_multi_char	idb	crt	boundary	void __cdecl (int ch, int n, FILE *stream, int *count)	Puts a byte n times through _write_char, stopping once the count is -1	verified	one	crt/printf#padding-sign-and-text	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest, crt::crt_vsnprintf_difftest
+0x74334c	56	_write_string	idb	crt	boundary	void __cdecl (const char *s, int n, FILE *stream, int *count)	Puts n bytes of a string through _write_char, stopping once the count is -1	verified	one	crt/printf#padding-sign-and-text	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest, crt::crt_vsnprintf_difftest
+0x743384	13	_get_int_arg	idb	crt	boundary	int __cdecl (va_list *args)	Returns the next dword of a va_list and advances it by 4	verified	one	crt/printf#integer-conversions	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest, crt::crt_vsnprintf_difftest
+0x743391	16	_get_int64_arg	idb	crt	boundary	int64_t __cdecl (va_list *args)	Returns the next eight bytes of a va_list and advances it by 8	verified	one	crt/printf#integer-conversions	crt::crt_sprintf_difftest
 0x7433a1	14	_get_short_arg	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7433af	280	__flsbuf	idb	crt	boundary		Runs its object file code that calls __isatty, __getbuf, __write and 1 more; not read here	inferred	none		
 0x7434c7	101	__write	idb	crt	boundary		Runs its object file code that calls __lock_fhandle, __write_lk, __unlock_fhandle and 2 more; not read here	inferred	none		
 0x74352c	395	__write_lk	idb	crt	boundary		Runs its object file code that calls __lseek_lk, __errno, ___doserrno and 1 more; not read here	inferred	none		
-0x7436c0	62	__cintrindisp2	idb	crt			Dispatches a two-operand x87 math intrinsic	inferred	none	collision/kinematics#facing-and-pitch-integration	
+0x7436c0	62	__cintrindisp2	idb	crt	boundary		Dispatches a two-operand x87 math intrinsic	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x7436fe	61	__cintrindisp1	idb	crt	unreached		Runs its object file code that calls __trandisp1 and 1 more; not read here	inferred	none		
 0x74373b	72	__ctrandisp2	idb	crt	unreached		Runs its object file code that calls __fload, __trandisp2, ctranexit; not read here	inferred	none		
 0x743783	312	ctranexit	idb	crt	unreached		Runs its object file code that calls __87except; not read here	inferred	none		

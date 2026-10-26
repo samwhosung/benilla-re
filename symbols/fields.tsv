@@ -871,6 +871,11 @@ ITEMCOOLDOWNHASHNODE	0x001c	4	uint32_t	m_time	spell	Holds the time the pending c
 ITEMCOOLDOWNHASHNODE	0x0020	1	uint8_t	m_onHold	spell	Holds the on-hold flag the pending cooldown is inserted with	verified	one	spell/go#pending-item-cooldowns
 LOADINGSCREENTAXIPATHINFO	0x0000	4	uint32_t	m_firstStop	loadingscreen	Holds the id of the first stop node of the run	verified	one	loadingscreen/route#taxi-leg-table
 LOADINGSCREENTAXIPATHINFO	0x0004	4	uint32_t	m_lastStop	loadingscreen	Holds the id of the last stop node seen before the run closed	verified	one	loadingscreen/route#taxi-leg-table
+Ld10Real	0x0000	8	uint64_t	mantissa	crt	Holds the 64-bit mantissa	verified	one	crt/decimal#widening-a-double
+Ld10Real	0x0008	2	uint16_t	exponent	crt	Holds the sign bit over the exponent biased by 0x3fff	verified	one	crt/decimal#widening-a-double
+Ld12Real	0x0000	2	uint16_t	ext	crt	Holds the 16 bits below the mantissa	verified	one	crt/decimal#the-12-byte-real
+Ld12Real	0x0002	8	uint64_t	mantissa	crt	Holds the 64-bit mantissa	verified	one	crt/decimal#the-12-byte-real
+Ld12Real	0x000a	2	uint16_t	exponent	crt	Holds the sign bit over the exponent biased by 0x3fff	verified	one	crt/decimal#the-12-byte-real
 LightningObject	0x0000	8	void *[2]	m_link	spell	Holds the chain's link in the chain list	verified	one	spell/visuals#chain-effect-creation
 LightningObject	0x0008	16	uint32_t[4]	m_guids	spell	Holds the uint64 GUID array: capacity, count, data, quantum	verified	one	spell/visuals#chain-hop-table
 LightningObject	0x0018	16	uint32_t[4]	m_bolts	spell	Holds the hop array: capacity, count, data, quantum	verified	one	spell/visuals#chain-hop-table
@@ -1465,3 +1470,11 @@ WowConnection	0x0125	1	uint8_t	m_recvFeedback	net	Holds the last ciphertext byte
 WowConnection	0x0126	1	uint8_t	m_recvSpan	net	Holds the bytes after the size header that are deciphered on receive, 2	verified	one	net/wire#header-cipher
 WowConnection	0x0127	1	uint8_t	m_keyLength	net	Holds the key length, 40	verified	one	net/wire#header-cipher
 WowConnection	0x0128	4	uint8_t *	m_key	net	Holds the key, the NetClient's 40 bytes at +0x48	verified	one	net/wire#header-cipher
+_FloatOutStruct	0x0000	2	int16_t	exp	crt	Holds the decimal exponent	verified	one	crt/decimal#making-the-digits
+_FloatOutStruct	0x0002	1	char	sign	crt	Holds - for a set sign bit, else a space	verified	one	crt/decimal#making-the-digits
+_FloatOutStruct	0x0003	1	uint8_t	ManLen	crt	Holds the number of digits kept	verified	one	crt/decimal#making-the-digits
+_FloatOutStruct	0x0004	22	char[22]	man	crt	Holds the digits, a NUL after the kept ones	verified	one	crt/decimal#making-the-digits
+_strflt	0x0000	4	int32_t	sign	crt	Holds the sign as - or a space	verified	one	crt/decimal#the-digits-a-conversion-reads
+_strflt	0x0004	4	int32_t	decpt	crt	Holds the decimal exponent: the value is 0.ddd times 10^decpt	verified	one	crt/decimal#the-digits-a-conversion-reads
+_strflt	0x0008	4	int32_t	flag	crt	Holds I10_OUTPUT's return, 0 for a non-finite value	verified	one	crt/decimal#the-digits-a-conversion-reads
+_strflt	0x000c	4	char *	mantissa	crt	Points to the digit text	verified	one	crt/decimal#the-digits-a-conversion-reads
