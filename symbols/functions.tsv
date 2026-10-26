@@ -35392,7 +35392,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b14a0	1757	CParticleEmitter2::CopyConstruct		models	primitive		Constructs a particle emitter as a copy of a prototype, sharing its model and registering it	inferred	none	models/particles#registries	
 0x7b1b80	229	CParticleEmitter2::~CParticleEmitter2		models	host		Releases a particle emitter's model, textures, children and particle arrays	inferred	none		
 0x7b1c70	1	CParticleEmitter2::NoOp		models	orchestration		Returns; called by the emitter destructor	inferred	none		
-0x7b1c80	61	CParticleEmitter2::SetModel		models	orchestration		Loads the model a particle emitter emits as particles	inferred	none		
+0x7b1c80	61	CParticleEmitter2::SetModel		models	orchestration	void __thiscall (CParticleEmitter2 *this, M2Scene *scene, const char *path)	Creates the model an emitter emits as particles and switches it to model particles	verified	one	models/particles#emitter-model-loads	
 0x7b1cc0	270	CParticleEmitter2::RollSpeed		models	primitive	float __thiscall (CParticleEmitter2 *this)	Returns the emission speed times one plus a signed uniform times the speed variation	verified	one	models/emission#speed-and-birth	models::burst_velocity_difftest, models::emit_shape_plane_difftest, models::emit_shape_sphere_difftest, models::emit_shape_spline_difftest, models::emitter_speed_difftest, models::emitter_speed_states_difftest
 0x7b1dd0	138	CParticleEmitter2::Preallocate		models	primitive		Reserves particle storage for the emitter's rate and lifespan, with 15 percent slack	inferred	none	models/particles#emitter-classes	models::prealloc_sizing_difftest
 0x7b1e60	153	CParticleEmitter2::ShrinkStorage		models	primitive		Picks the smaller capacity for an emitter's particle and index arrays	inferred	none		
@@ -35417,7 +35417,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b44e0	1	ParticleRenderStateNoOpA		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b44f0	1	ParticleRenderStateNoOpB		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b4500	1	ParticleRenderStateNoOpC		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
-0x7b4510	801	CParticleEmitter2::DrawModelParticle		models	primitive		Places, tints and fades the model of one model particle	inferred	none		models::alpha_distance_scale_difftest, models::color_byte_to_f32_difftest, models::flag200_scale_difftest, models::lod_index_scale_difftest, models::quat_billboard_matrix_difftest
+0x7b4510	801	CParticleEmitter2::DrawModelParticle		models	primitive	uint32_t __thiscall (CParticleEmitter2 *this, void *particle, const float *frame)	Places, tints and shows one model particle's instance, or hides it under the twinkle	verified	one	models/modelparticles#model-particle-placement	models::alpha_distance_scale_difftest, models::color_byte_to_f32_difftest, models::flag200_scale_difftest, models::lod_index_scale_difftest, models::quat_billboard_matrix_difftest
 0x7b4840	760	CParticleEmitter2::DrawModelParticles		models	primitive		Places every model particle's model, in depth order when the emitter sorts	inferred	none	models/particles#update	models::depth_dot_drawall_difftest
 0x7b4b40	77	CParticleEmitter2::RenderTree		models	orchestration		Renders an emitter and its child emitters	inferred	none	models/render#ribbon-particle-and-custom-draws	
 0x7b4b90	3	CParticleEmitter2::VirtualNoOp		models	orchestration		Returns, popping one argument; a vtable slot of every particle emitter	verified	one	models/particles#emitter-classes	
@@ -35461,12 +35461,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b5d00	32	CParticleEmitter2::SetSorted		models	primitive		Copies bit 0 of its argument into flag 0x10, the depth-ordered draw	verified	one	models/emission#record-flags	
 0x7b5d20	13	CParticleEmitter2::GetFlag10		models	unreached		Returns bit 4 of an emitter's flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b5d30	76	CParticleEmitter2::SetFollowMapping		models	primitive		Stores the slope and intercept of the line through two speed and factor points	verified	one	models/emission#record-to-emitter	models::remap_fit_difftest, models::remap_gate_difftest
-0x7b5d80	26	CParticleEmitter2::AddChild		models	orchestration		Appends a child emitter to an emitter	inferred	none		
-0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration		Loads the model whose emitters become an emitter's children	inferred	none	models/particles#child-emitters	
-0x7b5dd0	106	CParticleEmitter2::OnChildModelLoaded		models	orchestration		Adopts a loaded child model's particle emitters as an emitter's children	inferred	none		
+0x7b5d80	26	CParticleEmitter2::AddChild		models	orchestration	void __thiscall (CParticleEmitter2 *this, CParticleEmitter2 *child)	Appends a child emitter to an emitter's inline slots, with no bound	verified	one	models/particles#emitter-model-loads	
+0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration	void __thiscall (CParticleEmitter2 *this, M2Scene *scene, const char *path)	Creates an emitter's child model and installs the callback that adopts its emitters	verified	one	models/particles#emitter-model-loads	
+0x7b5dd0	106	CParticleEmitter2::OnChildModelLoaded		models	orchestration	void __fastcall (CM2Model *model, CParticleEmitter2 *emitter)	Appends and enables up to four of a loaded model's emitters as an emitter's children	verified	one	models/particles#emitter-model-loads	
 0x7b5e40	6	EmitterAddRef		models	orchestration		Increments an emitter's reference count	inferred	none		
 0x7b5e50	13	EmitterRelease		models	orchestration		Decrements an emitter's reference count and destroys it through its vtable at zero	inferred	none	models/particles#registries	
-0x7b5e60	245	CParticleEmitter2::TransformParticles		models	primitive		Transforms the live particles of an emitter and its children by a matrix	inferred	none		models::orient_velocity_difftest
+0x7b5e60	245	CParticleEmitter2::TransformParticles		models	primitive	void __thiscall (CParticleEmitter2 *this, const float *m)	Moves the live particles' positions and velocities of an emitter and its children through a matrix	verified	one	models/particles#frame-change	models::orient_velocity_difftest, models::transform_particles_difftest
 0x7b5f60	59	CParticleEmitter2::HasLiveParticles		models	orchestration		Returns whether an emitter or one of its children holds a live particle	verified	one	objectlayer/effects#stopping-and-draining	
 0x7b5fa0	53	CParticleEmitter2::CountModelParticles		models	orchestration		Counts the live model particles of an emitter and its children	inferred	none		
 0x7b5fe0	98	CParticleEmitter2::GetParticleModel		models	orchestration		Returns the model of a model particle by index across an emitter and its children	inferred	none		
@@ -35507,7 +35507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b7b90	16	CRibbonEmitter::SetAbove		models	orchestration		Sets a ribbon's height above its node at +0x15c	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7ba0	16	CRibbonEmitter::SetBelow		models	orchestration		Sets a ribbon's height below its node at +0x160	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7bb0	16	CRibbonEmitter::SetGravity		models	orchestration		Sets a ribbon's gravity at +0x164	inferred	none		
-0x7b7bc0	594	CRibbonEmitter::TransformVertices		models	primitive		Transforms a ribbon's vertices by a matrix	inferred	none		models::ribbonbasis_difftest
+0x7b7bc0	594	CRibbonEmitter::TransformVertices		models	primitive	void __thiscall (CRibbonEmitter *this, const float *m)	Moves a ribbon's node positions, axes and ring vertices through a matrix	verified	one	models/ribbons#ribbon-frame-change	models::ribbonbasis_difftest
 0x7b7e20	49	CRibbonEmitter::UpdateIfStarted		models	unreached		Updates a ribbon once its first frame has been placed; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b7e60	593	CRibbonEmitter::Update		models	primitive	void __thiscall (CRibbonEmitter *this, float dt, uint32_t noEmit)	Ages out old edges, emits new ones along the node curve, writes the head edge and ages every edge	verified	one	models/ribbons#ribbon-update	models::dt_clamp_difftest, models::emit_frac_advance_difftest, models::emit_interp_head_difftest, models::emit_segment_offset_difftest, models::emit_t_recip_difftest, models::expire_sum_difftest, models::ribbonage_expire_sum_difftest, models::ribbonage_gravity_emit_difftest, models::ribbonage_interp_factor_difftest, models::ribbonage_next_counter_difftest, models::ribbonage_phase_frac_difftest, models::ribbonage_recip_floorarg_difftest, models::ribbonage_segment_iter_difftest, models::segment_point_write_difftest
 0x7b80c0	536	CRibbonEmitter::Render		models	primitive		Draws the live edges as one indexed strip per material, with the frame offset and one colour	verified	one	models/ribbons#ribbon-draw	models::render_world_translate_difftest
@@ -35574,7 +35574,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b9a40	16	SplineEmitterSetSpread		models	orchestration		Stores a spline emitter's spread angle about the tangent	inferred	none		
 0x7b9a50	16	SplineEmitterSetOffset		models	orchestration		Stores a spline emitter's offset along the spawn direction	verified	one	models/particles#emitter-classes	
 0x7b9a60	31	SplineEmitterSetRate		models	primitive		Stores the base rate and the rate times the end parameter	verified	one	models/emission#spline-spawn	models::spline_set_scale_difftest
-0x7b9a80	26	SplineEmitterSetPath		models	orchestration		Sets the points of a spline emitter's spline	inferred	none		
+0x7b9a80	26	SplineEmitterSetPath		models	orchestration	void __thiscall (SplineParticleEmitter *this, const float *points, uint32_t count)	Sets the points of a spline emitter's Bezier curve	verified	one	models/particles#emitter-model-loads	
 0x7b9aa0	5	InitEmitterShapesTwoPiThunk		models	orchestration		Jumps to 0x7b9ab0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9ab0	15	InitEmitterShapesTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x7b9ac0	5	InitEmitterShapesInvTwoPiThunk		models	orchestration		Jumps to 0x7b9ad0; a static initializer	verified	one	models/overview#shared-header-constants	
