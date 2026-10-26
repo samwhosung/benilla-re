@@ -4126,6 +4126,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4f848	uint32_t[10]	s_commandTable		console	Holds the command table object: vtable, list, chain counter, bucket vector and mask	verified	one	console/commands#command-records
 0xc518a0	uint32_t	s_historyHead		console	Holds the index of the next history slot to write	verified	one	console/commands#history
 0xc518a4	void *	s_fallbackHandler		console	Holds the handler for unknown commands; nothing sets it	verified	one	console/screen#writing-and-executing
+0xc518b0	float	s_infinity640c60		unassigned	Holds +inf, stored at start-up by InitInfinity640c60	verified	one	console/overview#object-files
 0xc518c8	uint32_t[5]	s_videoHardwareStore		unassigned	Holds the VideoHardware table: the rows, their count, the id index, the largest id and the loaded flag	verified	one	console/hardware#hardware-table
 0xc518e0	uint32_t[98]	s_hardwareFormats		unassigned	Holds the seven default device format records, 0x38 bytes each	verified	one	console/hardware#default-formats
 0xc520c8	char[260]	s_dataPath		storm	Holds the data folder name, Data\ after start-up, which the loose-file index walks	verified	two	storm/mount#loose-file-index
@@ -4450,6 +4451,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8538	int32_t	s_gameClockMinute		gametime	Holds the clock's minute, the first word of the 0x70-byte game clock object	verified	one	gametime/overview#clock-state
 0xce853c	int32_t	s_gameClockHour		gametime	Holds the clock's hour, the second word of its time	verified	one	gametime/overview#clock-state
 0xce85a8	void *[4]	s_gameTimeCallbacks		unassigned	Holds four time-changed callbacks for the bridge, 0 when unset; only the unreached 0x6c61e0 sets one	verified	two	gametime/messages#time-changed-bridge
+0xce86c4	uint32_t[3]	s_currencyMultipliers		unassigned	Holds the copper value of copper, silver and gold, 1, 100 and 10000 once LootInitialize runs	verified	one	ui/loot#coin-row-text
 0xce86d4	uint32_t	s_trailObjectCount		playername	Counts the live trail objects	verified	one	playername/swing#trail-objects
 0xce86d8	uint8_t[20]	s_trailObjectPool		playername	Holds the block pool of trail objects	verified	one	playername/overview#block-pools
 0xce86ec	uint8_t[20]	s_swingPool		playername	Holds the block pool of swing records	verified	one	playername/overview#block-pools

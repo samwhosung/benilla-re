@@ -22886,8 +22886,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6409f0	12	CommandListReset		console	orchestration	void __thiscall (void *this)	Points a list terminator at itself	verified	one	console/commands#growth-twins	
 0x640a00	316	CommandBucketsResize		console	primitive	void __thiscall (void *this, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	console/commands#growth-twins	
 0x640b40	264	CommandBucketsRealloc		console	primitive	void __thiscall (void *this, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	console/commands#growth-twins	
-0x640c50	5			unassigned			Runs its object file code not read here	inferred	none		
-0x640c60	11			unassigned			Runs its object file code not read here	inferred	none		
+0x640c50	5	InitInfinity640c60Thunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x640c60, a static initializer	verified	one	console/overview#object-files	
+0x640c60	11	InitInfinity640c60		unassigned	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	console/overview#object-files	
 0x640c70	5			unassigned			Runs its object file code not read here	inferred	none		
 0x640c80	15			unassigned			Runs its object file code not read here	inferred	none		
 0x640c90	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -23189,7 +23189,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x644b70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x644b90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x644ba0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x644bc0	102			unassigned			Runs its object file code that calls __ftol; not read here	inferred	none		
+0x644bc0	102	ComputeAuctionDeposit		unassigned	primitive	uint32_t __fastcall (uint32_t rate, uint32_t value, uint32_t minutes)	Returns rate times value in 32 bits over 100, times minutes over 120, for 120, 480 or 1440 minutes, else 0	verified	one	ui/auctionlists#deposit	ui::auction_deposit_difftest
 0x644c30	5			unassigned			Runs its object file code not read here	inferred	none		
 0x644c40	11			unassigned			Runs its object file code not read here	inferred	none		
 0x644c50	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -28180,7 +28180,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5a60	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a90	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned			Runs its object file code that calls SStrPrintf, CVar::Register; not read here	inferred	none		
+0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned	orchestration	void __cdecl (void)	Registers violenceLevel with the locale table entry as its default and OnViolenceLevelChanged as callback	verified	one	cvar/defaults#formatted-defaults	
 0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel value clamped to the locale maximum and sets the blood-spurt name substitution	verified	one	gx/textures#texture-basename-substitution	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b60	10			unassigned			Runs its object file code that calls 0x6c5b70; not read here	inferred	none		
@@ -28201,12 +28201,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c6120	114	ReceiveNewGameTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock to the packet's packed date with force and runs the time-changed bridge, or logs a malformed packet	verified	two	gametime/messages#game-time-set	gametime::gametime_6c6120_game_time_set
 0x6c61a0	60	ClearGameTimeHandlers		unassigned	orchestration	void __cdecl (void)	Clears the five game-time opcode handlers, then jumps to 0x6433f0 on the clock	verified	one	gametime/messages#server-messages	
 0x6c61e0	56	SetTimeChangedCallback		unassigned	unreached	void __fastcall (uint32_t add, void *callback)	Stores a callback in the first empty time-changed slot, or clears the slot that holds it	inferred	none	gametime/overview#unreached-functions	
-0x6c6220	8	CurrencyMultiplier	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6260	59	SplitCopper		unassigned	primitive		Splits an amount into copper, silver and gold: divides by 10000, 100 and 1, each step on the last remainder	inferred	none	objectlayer/quests#quest-completion	
+0x6c6220	8	CurrencyMultiplier	idb	unassigned	orchestration	uint32_t __fastcall (uint32_t index)	Returns the copper value of currency unit 0, 1 or 2 from the table LootInitialize fills	verified	one	ui/loot#coin-row-text	
+0x6c6230	35	GetCurrencyKey		unassigned	primitive	const char * __fastcall (uint32_t index)	Returns the global string key COPPER, SILVER or GOLD for 0, 1 or 2, else ERROR_CAPS	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
+0x6c6260	59	SplitCopper		unassigned	primitive	void __fastcall (int32_t copper, int32_t *parts)	Splits an amount into copper, silver and gold, dividing the remainder by 10000 and 100 when it reaches them	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
 0x6c62a0	34			unassigned	unreached		Runs its object file code that calls CurrencyMultiplier; not read here	inferred	none		
 0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
-0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x6c63a0	41	LootInitialize	idb	unassigned	primitive	void __cdecl (void)	Fills the currency multipliers with 1, 100 and 10000 and sets their ready flag	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
 0x6c63d0	8	LootDestroy	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c63e0	5	InitPlayerNameInfinityThunk		playername	orchestration		Jumps to 0x6c63f0; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
 0x6c63f0	11	InitPlayerNameInfinity		playername	orchestration	void __cdecl (void)	Copies +inf into 0xce8700	verified	one	playername/overview#infinity-copies-and-pools	
@@ -37307,9 +37307,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7e6640	19	InitSkyDrawTenSquared5		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
 0x7e6660	5	InitSkyDrawHalfTenthThunk		lighting	orchestration		Jumps to 0x7e6670; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x7e6670	19	InitSkyDrawHalfTenth		lighting	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
-0x7e6690	21			unassigned			Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
+0x7e6690	21	CreateXmlParser		unassigned	boundary	void * __cdecl (const char *encoding)	Creates an expat parser without namespace processing through 0x7e66d0	verified	one	ui/framexml#xml-trees	
 0x7e66b0	29			unassigned	unreached		Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
-0x7e66d0	415			unassigned			Runs its object file code that calls _malloc, 0x7ed470, 0x7e6870 and 5 more; not read here	inferred	none		
+0x7e66d0	415	CreateXmlParserWithSeparator		unassigned	boundary	void * __cdecl (const char *encoding, const void *memsuite, const char *separator)	Creates an expat parser; a null separator leaves namespace processing off	verified	one	ui/framexml#xml-trees	
 0x7e6870	381			unassigned			Runs its object file code that calls 0x7f9370, 0x7ed5b0, 0x7f8870; not read here	inferred	none		
 0x7e69f0	188			unassigned	unreached		Runs its object file code that calls 0x7e6ab0, 0x7ed490, 0x7e6870 and 1 more; not read here	inferred	none		
 0x7e6ab0	45			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -37733,7 +37733,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fda90	6	_FSOUND_Stream_Open@16	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fda96	6	_FSOUND_Stream_Close@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fda9c	6	_FSOUND_Stream_Stop@4	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x7fdaa2	6	_FSOUND_Stream_GetTime@4	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x7fdaa2	6	_FSOUND_Stream_GetTime@4	idb	unassigned	host	int32_t __stdcall (void *stream)	Jumps through the import slot of fmod.dll FSOUND_Stream_GetTime	verified	one	ui/movieframe#clock-and-frame-choice	
 0x7fdaa8	6	_FSOUND_3D_SetRolloffFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fdaae	6	_FSOUND_3D_SetDopplerFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fdab4	6	_FSOUND_3D_SetDistanceFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		

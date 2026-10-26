@@ -54,7 +54,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x78cf50` and `0x78cfc3` read the audio time, `0x78cf68` and `0x78cf7b` the wall time. `0x78cfa5` multiplies by 0.001, `0x78cfab` adds one half and `0x78cfb1` truncates. `0x78cfff` to `0x78d01e` adjust the offset by one frame. `0x78d046` sets the finished flag at `+0x318` when the target reaches the frame count and `0x78d05c` stops the movie. `0x78d094` decodes the skipped frames without showing them, and `0x78d0b7` the last with `show` set.
+`0x78cf50` and `0x78cfc3` read the audio time through `0x7fdaa2`, an indirect `jmp` through the import slot of `fmod.dll`'s `_FSOUND_Stream_GetTime@4`; `0x78cf68` and `0x78cf7b` the wall time. `0x78cfa5` multiplies by 0.001, `0x78cfab` adds one half and `0x78cfb1` truncates. `0x78cfff` to `0x78d01e` adjust the offset by one frame. `0x78d046` sets the finished flag at `+0x318` when the target reaches the frame count and `0x78d05c` stops the movie. `0x78d094` decodes the skipped frames without showing them, and `0x78d0b7` the last with `show` set.
 
 ## Audio
 

@@ -23,7 +23,7 @@ through `0x640b40`, and passes no source path: it is placed here by its record t
 `CONSOLECOMMAND`, by its run of static initializers and by its callers, the screen's executor and
 every system that registers a command. The next file opens with its +∞ thunk `0x640c50`.
 
-Addresses: `0x638500`, `0x63cfb0`, `0x63f270`, `0x640b40`, `0x8648c8`, `0x638eaf`, `0x63ccad`, `0x63cff0`, `0x640c50`, `0x827000`, `0x82b74c`, `0x82b7c8`, `0x82b7cc`, `0x82b81c`, `0x82b824`, `0x82b878`, `0x8655c0`
+Addresses: `0x638500`, `0x63cfb0`, `0x63f270`, `0x640b40`, `0x8648c8`, `0x638eaf`, `0x63ccad`, `0x63cff0`, `0x640c50`, `0x640c60`, `0x827000`, `0x82b74c`, `0x82b7c8`, `0x82b7cc`, `0x82b81c`, `0x82b824`, `0x82b878`, `0x8655c0`
 Confidence: verified
 Proof: one
 Test: none
@@ -33,7 +33,8 @@ of the registry range passes a path. The initializer table `0x827000` lists the 
 slots `0x82b74c` to `0x82b7c8`, `ConsoleVar.cpp`'s at `0x82b7cc` to `0x82b81c`, and the registry's at
 `0x82b824` to `0x82b878`, each opening with its +∞ thunk (`0x638500`, `0x63cff0`, `0x63f270`) that reads
 its own copy of the header constants. `0x63cfb0` ends the screen file where `0x63cff0` begins; the
-registry's last function ends where `0x640c50` begins. Of the 252 functions in the two files, 248
+registry's last function ends where `0x640c50` begins, the thunk in slot `0x82b87c` that jumps to `0x640c60`,
+which copies +∞ into `0xc518b0`. Of the 252 functions in the two files, 248
 are reached; the other four are listed in `Unreached code`.
 
 ## Shared header constants

@@ -297,17 +297,18 @@ dword.
 
 ## XML trees
 
-A file is parsed by expat with no declared encoding, and the tree keeps for each element its tag,
+A file is parsed by expat with no declared encoding and no namespace processing, and the tree keeps for each element its tag,
 its attributes as name and value pairs, its children in order and its character data concatenated
 as one body. Every tag and attribute lookup ignores case and takes the first match. The parser
 object is never freed.
 
-Addresses: `0x6f2a30`, `0x6f2a3e`, `0x6f2a79`, `0x6f2a98`, `0x6f28a0`, `0x6f29c0`, `0x6f29d0`, `0x6f2b10`, `0x6f2c50`, `0x6f2cf0`, `0x882094`
+Addresses: `0x6f2a30`, `0x6f2a3e`, `0x7e6690`, `0x7e66d0`, `0x7e685d`, `0x6f2a79`, `0x6f2a98`, `0x6f28a0`, `0x6f29c0`, `0x6f29d0`, `0x6f2b10`, `0x6f2c50`, `0x6f2cf0`, `0x882094`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6f2a30` creates the parser with a null encoding (`0x6f2a3e`), sets the start, end and character
+`0x6f2a30` creates the parser with a null encoding (`0x6f2a3e`): expat's `XML_ParserCreate` (`0x7e6690`)
+calls `0x7e66d0(encoding, 0, 0)`, whose null separator takes `0x7e685d` and leaves the namespace flag `+0xec` clear. It sets the start, end and character
 handlers (`0x6f2a79`) and parses the whole buffer as final (`0x6f2a98`); neither exit frees it. The
 start handler `0x6f28a0` makes a node (`0x6f2b10`: parent `+0x0`, first child `+0x4`, tag `+0x8`)
 appended as the last child, and copies the attribute pairs to `+0x14` with their count at `+0x10`.
