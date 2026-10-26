@@ -30619,7 +30619,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71ffc0	55			unassigned			Runs its object file code not read here	inferred	none		
 0x720000	443			unassigned			Runs its object file code that calls 0x71fea0; not read here	inferred	none		
 0x7201f0	63			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x720250	4222	PcreCompile		unassigned	primitive	void * __fastcall (const char *pattern, int32_t options, const char **error, int32_t *errorOffset, const uint8_t *tables)	Compiles a regular expression, the default tables for null ones	verified	one	ui/chatfilter#regular-expression-options	
+0x720250	4222	PcreCompile		unassigned	primitive	void * __fastcall (const char *pattern, int32_t options, const char **error, int32_t *errorOffset, const uint8_t *tables)	Compiles a pattern, taking the tables 0x873b40 for null ones and keeping null for them in the result	verified	one	ui/chatfilter#regular-expression-options	
 0x721420	64			unassigned			Runs its object file code not read here	inferred	none		
 0x721460	574			unassigned			Runs its object file code not read here	inferred	none		
 0x721710	142			unassigned			Runs its object file code not read here	inferred	none		
@@ -30642,7 +30642,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x724130	176			unassigned			Runs its object file code that calls 0x723ce0, 0x724130; not read here	inferred	none		
 0x724230	260			unassigned			Runs its object file code not read here	inferred	none		
 0x724350	1568	PcreExec		unassigned	primitive	int32_t __fastcall (const void *code, const void *extra, const char *subject, int32_t length, int32_t startOffset, int32_t options, int32_t *ovector, int32_t ovecSize)	Matches a compiled pattern against a subject with the extra block's, the pattern's or the default tables	verified	one	ui/chatfilter#the-matchers-character-tables	
-0x724970	14113	PcreMatch		unassigned	primitive	int32_t __fastcall (const uint8_t *eptr, const uint8_t *ecode, int32_t offsetTop, void *md, uint32_t ims, void *eptrb, int32_t flags)	Matches compiled pattern code at a subject position, taking characters of 0x100 up as neither word nor space	verified	one	ui/chatfilter#the-matchers-character-tables	
+0x724970	14113	PcreMatch		unassigned	primitive	int32_t __fastcall (const uint8_t *eptr, const uint8_t *ecode, int32_t offsetTop, void *md, uint32_t ims, void *eptrb, int32_t flags)	Runs pattern code at a subject position; its boundary and space cases take characters from 0x100 up as neither	verified	one	ui/chatfilter#the-matchers-character-tables	
 0x728290	123			unassigned			Runs its object file code not read here	inferred	none		
 0x728310	390			unassigned			Runs its object file code not read here	inferred	none		
 0x7284a0	5	InitMinigameInfinityThunk		minigame	orchestration	void __cdecl ()	Jumps to the +inf initializer of Minigame_C.cpp	verified	one	minigame#constants-nothing-reads	

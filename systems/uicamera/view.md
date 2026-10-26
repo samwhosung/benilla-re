@@ -113,7 +113,7 @@ roll 0. The near clip is the `nearclip` value and the far clip the `farclip` val
 and the field of view is π/2. A second form with the constants 1/9, 277.77777 and π/2 builds the
 same base, but nothing reaches it.
 
-Addresses: `0x50a720`, `0x50a757`, `0x50a76b`, `0x50a774`, `0x50ab50`, `0x50c0e0`, `0x50c0f6`, `0x50c101`, `0x50c109`, `0x8089b4`, `0x808904`, `0x50a6c0`, `0x50a6f9`, `0x50a706`, `0x7bf4b0`, `0xbe0cc0`, `0xbe1078`
+Addresses: `0x50a720`, `0x50a757`, `0x50a76b`, `0x50a774`, `0x50ab50`, `0x50c0e0`, `0x50c0f6`, `0x50c101`, `0x50c109`, `0x8089b4`, `0x808904`, `0x50a6c0`, `0x50a6f9`, `0x50a707`, `0x7bf4b0`, `0xbe0cc0`, `0xbe1078`
 Confidence: verified
 Proof: one
 Test: none
@@ -122,6 +122,6 @@ Test: none
 (`0x50c0f6`, `0x50c101`) and calls `0x50a720` (`0x50c109`), which stores its three arguments in
 order at `+0x38`, `+0x3c` and `+0x40` (`0x50a757` to `0x50a76b`) and calls `0x50ab50(0, 0, 0)`
 (`0x50a774`); `0x50ab50` passes the three to `0x7bf4b0` on `+0x14`. `0x50a6c0` stores 0x3de38e39,
-0x438ae38e and 0x3fc90fdb (`0x50a6f9` to `0x50a706`) and is otherwise the same. No `call` or `jmp`
+0x438ae38e and 0x3fc90fdb (`0x50a6f9` to `0x50a707`) and is otherwise the same. No `call` or `jmp`
 targets `0x50a6c0` and no section holds its address at any alignment; the control `0x50a720` has
 its one call from `0x50c109`. The `ret` and padding before it leave no fall-through.

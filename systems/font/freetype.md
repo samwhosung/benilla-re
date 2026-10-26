@@ -1,8 +1,8 @@
 # font: the FreeType calls
 
-The client links FreeType 2: its modules carry version 0x10000 and require 0x20000. It is built
-with `__fastcall` as the default convention, so every FreeType function takes its first two
-arguments in `ecx` and `edx` and the rest on the stack. The face file (`overview`, Object files)
+The client links FreeType 2: its modules carry version 0x10000 and require 0x20000. Every FreeType
+function read here is built `__fastcall`: its first two arguments in `ecx` and `edx`, the rest on
+the stack. The face file (`overview`, Object files)
 opens each font face from memory, selects its Unicode charmap and keeps it in a table by path; the
 glyph file (`gx/glyphs`) loads and renders each glyph; the font class reads the kerning. The
 default module table `0x81e068` adds, in order, the auto-hinter, CFF, CID, PSAux, PSNames,
@@ -117,16 +117,16 @@ driver's loader, the slot `+0x50` of its class `0x81e8b8`; its own test of the s
 
 ## Composite glyphs
 
-A TrueType composite loads each component with the scale applied, in order, and then moves it.
+A TrueType composite loads each component, scaled, in order, then moves it.
 A component with a scale, an x and y scale or a 2×2 matrix transforms its new points by
 `x' = x·m0 + y·m1`, `y' = x·m2 + y·m3`, where `m0` to `m3` are the matrix's values in file order
 shifted left by 2, from 2.14 to 16.16. With `ARGS_ARE_XY_VALUES` (2) the offset is the two
-arguments, each scaled by its axis's scale unless `NO_SCALE` and then, under `ROUND_XY_TO_GRID`
-(4), rounded to `(v + 32) & −64`; hinting does not matter. Without it the offset is point `k` of
-the composite minus point `l` of the component. `USE_MY_METRICS` (0x200) keeps the component's
+arguments, used as they are under `NO_SCALE`, else each scaled by its axis's scale and, under
+`ROUND_XY_TO_GRID` (4), rounded to `(v + 32) & −64`, hinted or not. Without it the offset is point
+`k` of the composite minus point `l` of the component. `USE_MY_METRICS` (0x200) keeps the component's
 phantom points.
 
-Addresses: `0x7d3ed0`, `0x7d4078`, `0x7d411b`, `0x7d4138`, `0x7d415b`, `0x7d4195`, `0x7d41c1`, `0x7d41d7`, `0x7d41f0`, `0x7d4202`, `0x7d4208`, `0x7d4213`, `0x7d4229`, `0x7d4246`, `0x7d4260`, `0x7d4d90`, `0x7d4e66`, `0x7d0340`, `0x7d4310`
+Addresses: `0x7d3ed0`, `0x7d4078`, `0x7d411b`, `0x7d4138`, `0x7d415b`, `0x7d4195`, `0x7d41c1`, `0x7d41d7`, `0x7d41f0`, `0x7d41e0`, `0x7d4202`, `0x7d4208`, `0x7d420c`, `0x7d4213`, `0x7d4229`, `0x7d4246`, `0x7d4260`, `0x7d4d90`, `0x7d4e66`, `0x7d0340`, `0x7d4310`
 Confidence: verified
 Proof: one
 Test: `font::vector_transform_difftest`
@@ -137,10 +137,11 @@ into `+0x10` to `+0x1c` (`0x7d4e66`: the first, second, third and fourth values,
 `0x7d4138` restores the phantom points unless 0x200; `0x7d415b` tests 0xc8 and `0x7d4195`
 transforms each new point with `0x7d0340`. `0x7d41c1` tests 2: the point pair is checked
 (`0x7d41d7`, error 0x15) and subtracted (`0x7d41f0`), the point `l` read at index start + base +
-`l`. Else `0x7d4202` takes the arguments, `0x7d4208` tests `NO_SCALE`, `0x7d4213` scales and
-`0x7d4229` rounds. `0x7d4246` adds the offset to the new points and `0x7d4260` copies them to the
-original zone. The point `l` counts the composite's start twice, so in a composite nested inside
-another the client reads a point past the one the font names.
+`l`. Else `0x7d4202` takes the arguments, and `0x7d4208` jumps past the scale `0x7d4213` and the
+rounding `0x7d4229` under `NO_SCALE` (`0x7d420c`). `0x7d4246` adds the offset to the new points and `0x7d4260` copies them to the
+original zone. The point `l` counts the composite's start twice; the start is above 0 only for a
+composite nested in another and not first in it, and the check `l < new points` (`0x7d41e0`) does
+not bound the doubled index, so the read can land past the loaded points.
 
 ## Fixed-point multiply
 

@@ -627,7 +627,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8089a8	const float	s_float00000000At8089a8		uicamera	Holds the float 0 (0x00000000)	inferred	none	
 0x8089ac	const float	s_float3e2aaaabAt8089ac		uicamera	Holds the float 0.16666667 (0x3e2aaaab)	inferred	none	
 0x8089b0	const float	s_float3fea6e99		uicamera	Holds the float 1.8315002 (0x3fea6e99)	inferred	none	
-0x8089b4	float	s_cameraDefaultFov		unassigned	Holds pi/2 as a float, the field of view the camera is built with	verified	one	uicamera/view#the-camera-base
+0x8089b4	const float	s_cameraDefaultFov		unassigned	Holds pi/2 as a float, the field of view the camera is built with	verified	one	uicamera/view#the-camera-base
 0x8089b8	const float	s_cameraFovMax		uicamera	Holds 3.1241393, 179 degrees, the upper clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
 0x8089bc	const float	s_cameraFovMin		uicamera	Holds 0.0, the lower clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
 0x8089c0	const float	s_cameraSlopeLimit		uicamera	Holds 0.349066, the limit the camera probe clamps its slope to, plus and minus	verified	one	uicamera/effects#probing-the-slope

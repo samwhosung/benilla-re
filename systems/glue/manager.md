@@ -122,16 +122,15 @@ reaches `SMemFree` (`0x7a6e9e`). What `0x7a6b20` and `0x7a69a0` do with the repl
 
 ## The download's replies
 
-The status callback `0x7a6b20` keeps each handle WinINet creates and signals its event, and on
-the first completion of the send keeps its error and starts the worker thread `0x7a69a0`. The
-worker reads the status. From 200 to 299 each read of up to 0x4000 bytes goes to
+The status callback `0x7a6b20` keeps each new handle and, on the send's first completion, its
+error, and starts the worker `0x7a69a0`, which reads the status. From 200 to 299 each read of up to 0x4000 bytes goes to
 `callback(param, data, size, 0, 0)`, the last one empty; else the result is 3 for 404 and 1
-otherwise, and 2 when the send timed out. The worker then closes the connection, and its
-closing status removes the status callback, signals two events, frees the context and calls
-`callback(param, 0, 0, 1, result)`. Nothing closes the session or the four events. The request
-flags set neither TLS nor a stop on redirects.
+otherwise, and 2 when the send timed out. The worker then closes the connection, whose closing
+status frees the context and calls `callback(param, 0, 0, 1, result)`. A read failing with an
+error other than pending stores no result, so the final call reports 0, as for a whole body.
+Nothing closes the session or the four events.
 
-Addresses: `0x7a6b20`, `0x7a6b67`, `0x7a6b6e`, `0x7a6b86`, `0x7a6bab`, `0x7a6bc7`, `0x7a6be3`, `0x7a6c00`, `0x7a6c3a`, `0x7a6c4b`, `0x7a69a0`, `0x7a69ec`, `0x7a6a0e`, `0x7a6a21`, `0x7a6a56`, `0x7a6a5d`, `0x7a6a74`, `0x7a6aaf`, `0x7a6ac2`, `0x7a6ad3`, `0x7a6aec`, `0x7a6b07`, `0x7a6e34`
+Addresses: `0x7a6b20`, `0x7a6b67`, `0x7a6b6e`, `0x7a6b86`, `0x7a6bab`, `0x7a6bc7`, `0x7a6be3`, `0x7a6c00`, `0x7a6c3a`, `0x7a6c4b`, `0x7a69a0`, `0x7a69ec`, `0x7a6a0e`, `0x7a6a21`, `0x7a6a56`, `0x7a6a5d`, `0x7a6a72`, `0x7a6a74`, `0x7a6abe`, `0x7a6d57`, `0x7a6aaf`, `0x7a6ac2`, `0x7a6ad3`, `0x7a6aec`, `0x7a6b07`, `0x7a6e34`
 Confidence: verified
 Proof: one
 Test: none
@@ -143,11 +142,11 @@ bytes, the done byte `+0x20` (`0x7a6bc7`), 51 sets the done byte, and 100 on the
 later ones setting the read event `+0x14`.
 `0x7a69ec` asks `HttpQueryInfoA` for the status as a number; `0x7a6a0e` to `0x7a6a21` keep 200
 up to 299. `0x7a6a56` sets the 0x4000-byte buffer of `InternetReadFileExA` (`0x7a6a5d`), a pending
-read waits on `+0x14` (`0x7a6a74`), and `0x7a6aaf` calls the callback with the size. `0x7a6ad3`
+read waits on `+0x14` (`0x7a6a74`) and another error closes at once (`0x7a6a72` to `0x7a6abe`), leaving the result `+0x2c` at the 0 of `0x7a6d57`, and `0x7a6aaf` calls the callback with the size. `0x7a6ad3`
 gives 3 for 0x194 and `0x7a6aec` 2 for the error 12002. `0x7a6ac2` and `0x7a6b07`, the only
 `InternetCloseHandle` calls, close the connection `+4`; status 70 for it (`0x7a6be3`) clears the
 callback (`0x7a6c00`), frees the context (`0x7a6c3a`) and makes the final call (`0x7a6c4b`).
-`0x7a6e34`'s 0x84000200 lacks 0x800000 and 0x200000.
+`0x7a6e34`'s 0x84000200 lacks 0x800000 and 0x200000: no TLS, redirects followed.
 
 ## Glue build
 
