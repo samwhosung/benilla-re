@@ -217,7 +217,7 @@ zero return; `0x6424cd` is `imul eax,eax,0x3c`. `0x6424ed` is `idiv` by 60, quot
 `0x642426` calls `_mktime`, `0x64242e` is `imul ecx,ecx,0x15180`, and `0x642440` adds 3600 when the byte
 argument is 0. `0x64244e` calls `0x642490`, which copies the 36 bytes of `localtime`, or zeroes them for a
 null result, so a time `localtime` refuses gives year −100, month 0, day −1 and weekday 0. `0x64245c`
-subtracts 100 and `0x642465` subtracts 1. Every caller passes `keepTime` 0. `0x642c10` pushes `+0x18` down
+subtracts 100 and `0x642465` subtracts 1. Every live caller passes `keepTime` 0; the unreached `0x642540` passes 1 (`0x64256d`). `0x642c10` pushes `+0x18` down
 to `+4` and passes `+0` in `edx`, its output pointer staying in `ecx`. The tests run `0x6424c0` and
 `0x6424e0` whole, and `0x6423c0` whole with `_mktime` and `_localtime` replaced by UTC versions, so they
 show the arithmetic around the calendar, not the host's zone.

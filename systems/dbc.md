@@ -71,7 +71,7 @@ dword in the image. The one caller of `0x641260` is `0x63a26b`.
 
 ## Damage class check
 
-`0x53f510` indexes the `Resistances` rows by damage class once the tables are loaded. A table of other
+`0x53f510` builds a pointer array over the `Resistances` rows, in record order, once the tables are loaded. A table of other
 than 7 rows prints `Warning: The Resistances table has the wrong number of entries`, and at most 7 rows
 are taken. The array at `0xc0d530` is sized to that count and holds a pointer to each row in record
 order, and `0x855808` takes the position of the last row whose `Flags` (`+0x4`) has bit 0; with none it
@@ -145,32 +145,32 @@ The absences are of the readers named: callees past them were not read. Column m
 
 ## Reading Wow.ini
 
-Start-up loads `Wow.ini` into a profile (`0x4442c0`, `0x444460`), read to its first NUL, line by
-line at CR and LF. A line opening with `//` is a comment. `[name]` makes `name` the
-section, ignoring what follows `]`; with no `]` the section stays. Any other line is a
-key: it ends at the first `=` after its first character, the value at the line end, and nothing is
-trimmed. A line with no `=`, or before any section, adds nothing. A value splits at each `,`; one opening
-with `"` runs to the next `"`, skipping a `,` right after it. Names compare ignoring case. Each line
-appends its values to its key, and an empty value appends none.
+Start-up loads `Wow.ini` into a profile (`0x4442c0`, `0x444460`), read to its first NUL by lines.
+`//` opens a comment. `[name]` makes `name` the section, ignoring what follows `]`; with no `]`
+the section stays. Any other line is a key, ending at the first `=` after its first character, then
+the value, nothing trimmed. A line with no `=`, or before any section, adds nothing. Names compare
+ignoring case. Each line appends its value's pieces to its key: a `,` ends a piece, so `a,,b` gives an
+empty middle one; a piece opening with `"` runs to the next `"`, a `,` right after it skipped, and any
+other text there starts the next piece. An empty value appends nothing.
 
-Addresses: `0x4442c0`, `0x444460`, `0x444480`, `0x444507`, `0x44451f`, `0x444540`, `0x4445f0`, `0x44463c`, `0x444661`, `0x444671`, `0x44469b`, `0x4446c8`, `0x4446e5`, `0x444710`, `0x44471e`, `0x444732`, `0x444790`, `0x4448d9`, `0x44488e`, `0x444e10`, `0x402496`
+Addresses: `0x4442c0`, `0x444460`, `0x444480`, `0x444507`, `0x44451f`, `0x444540`, `0x4445f0`, `0x44463c`, `0x444661`, `0x444671`, `0x44469b`, `0x4446c8`, `0x4446e5`, `0x444710`, `0x44471e`, `0x444732`, `0x444750`, `0x444769`, `0x44476d`, `0x444779`, `0x444790`, `0x4448d9`, `0x44488e`, `0x444e10`, `0x402496`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x444460` refuses a null name (error 0x57) and jumps to `0x444480`, which copies the name into 260
 bytes, cuts trailing `__ismbcspace` characters with no lower bound (spaces alone walk below the buffer),
-loads the file with `SFile::LoadByName` (`0x444507`), parses it (`0x44451f`) and frees the buffer; a
-failed load returns 0. `0x444540` walks a NUL-terminated copy it keeps to the first NUL (`0x4446c8`)
-through six states: line start (`0x4445f0`: CR or LF stays, `//` by a two-byte `SStrCmp`, `[`, else a
-key), comment and after `]` (`0x444661`, to the line end), section (`0x44463c`: a line end restores the
-last closed section, `]` closes it), key (`0x444671`: a line end drops it, `=` ends it) and value
-(`0x44469b`: a line end hands section, key and value to `0x444710`). A state takes effect from the next
-character, so a key's first character is never its `=`. `0x4446e5` hands over a value open at the end.
-`0x444710` returns for a null section (`0x44471e`) or an empty value (`0x444732`) and calls
-`0x444790(section, key, piece, 0, 1)` per piece; the 0 skips the clearing at `0x4448d9`. `0x444790`
-finds a section by `SStrHashHT` and `0x444e10` (`SStrCmpI`), a key by `SStrCmpI` (`0x44488e`), and
-creates what is missing.
+loads the file with `SFile::LoadByName` (`0x444507`), parses it (`0x44451f`) and frees the buffer, or
+returns 0. `0x444540` walks its NUL-terminated copy (`0x4446c8`) through six states: line start
+(`0x4445f0`: CR or LF stays, `//` by a two-byte `SStrCmp`, `[`, else a key), comment and after `]`
+(`0x444661`), section (`0x44463c`: a line end restores the last closed section, `]` closes it), key
+(`0x444671`: a line end drops it, `=` ends it) and value (`0x44469b`: a line end hands it to
+`0x444710`). A state takes effect from the next character, so a key's first character is never its `=`.
+`0x4446e5` hands over a value open at the end. `0x444710` returns for a null section (`0x44471e`) or an
+empty value (`0x444732`), else calls `0x444790(section, key, piece, 0, 1)` per piece (`0x444779`); a `,`
+ends a piece (`0x444750`, `0x44476d`), and after a closing quote the next starts at once (`0x444769`).
+The 0 skips the clearing at `0x4448d9`. `0x444790` finds a section by `SStrHashHT` and `0x444e10`, a key
+by `SStrCmpI` (`0x44488e`), creating either.
 
 ## Wow.ini values
 

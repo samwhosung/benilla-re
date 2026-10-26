@@ -7,7 +7,7 @@
 //!   `TextBlockGetMaxCharsWithinHeight` (`0x44d960`), `[0x44d996, 0x44d9f3)`.
 //!
 //! The sizes include both zeros, the infinities, NaN, the denormals, and quotients at 1.0 and a step
-//! either side, among them one below 1.0 that rounds to 1.0f.
+//! either side.
 
 mod common;
 
@@ -49,8 +49,7 @@ fn text_block_font_size_difftest() {
     let mut n = 0u32;
     for &scale in &scales {
         let mut these = sizes.clone();
-        // At, and a step either side of, a quotient of 1.0, and a quotient just below 1.0 that
-        // rounds up to 1.0f.
+        // At, and a step either side of, a quotient of 1.0, and a size just below the scale.
         for k in [-2i32, -1, 0, 1, 2] {
             these.push(f32::from_bits((scale.to_bits() as i32 + k) as u32));
         }

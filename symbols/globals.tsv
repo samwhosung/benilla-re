@@ -3573,7 +3573,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
 0xc0d488	uint32_t[3]	s_netClientNodeList		net	Holds the list of NETCLIENTNODE records, one per NetClient: the link offset 0, then the head's two link words	verified	one	net/session#netclient-construction
 0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	one	net/dispatch#handler-tables
-0xc0d530	uint32_t[3]	s_resistancesByClass		unassigned	Holds the Resistances row pointers by damage class: capacity, count and array	verified	one	dbc#damage-class-check
+0xc0d530	uint32_t[3]	s_resistancesRows		unassigned	Holds pointers to the Resistances rows in record order: capacity, count and array	verified	one	dbc#damage-class-check
 0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message
