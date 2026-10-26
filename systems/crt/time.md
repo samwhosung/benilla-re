@@ -68,7 +68,8 @@ calls `0x41484d`, which answers 0 at `0x414852` while `_daylight` is 0.
 ## The zone, read once
 
 `___tzset` runs `__tzset_lk` on its first call only, so the zone is read once per process, by the
-first `localtime`, `mktime` or `strftime` `%Z`. With the environment variable `TZ` set and not
+first `localtime`, `mktime`, `strftime` `%Z` or `___loctotime_t` (`0x7426e9`, its call at
+`0x742728`, which `time` and the `stat` functions reach from 12 sites). With the environment variable `TZ` set and not
 empty, the zone is its text: up to three bytes of standard name, then hours west of UTC with an
 optional `-` for east, optional `:minutes` and `:seconds`, then up to three bytes of daylight
 name. `_daylight` is the first byte of that name, 0 without one, and `_dstbias` keeps its value.

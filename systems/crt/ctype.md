@@ -26,9 +26,11 @@ Test: `crt::crt_isalpha_difftest`
 `0x73fbab` loads `_pctype` (`0x83171c`), `mov ax,[ecx+eax*2]` (`0x73fbb5`) and `and eax,0x103`
 (`0x73fbb9`). The table's runs are its 514 bytes at `0x831724`. `0x5abc10` pushes
 `movsx eax,al` (`0x5abc60`). A byte `b` from 0x80 reads the word at `0x831726 + 2·(b − 0x100)`,
-from 0x831626 to 0x831724; of those words the listing's absolute operands write only the dwords
-at 0x831700 and 0x831704, read by bytes 0xed to 0xf0, and the rest hold `__mb_cur_max`,
-`__decimal_point`, `_pctype`, `_pwctype` and other file values: 0xfb reads `_pctype`'s low word
+from 0x831626 to 0x831724. Of those words the listing's absolute operands write the dwords at
+0x831700 and 0x831704, read by bytes 0xed to 0xf0, and the ones the category initializers
+`___init_numeric` (`0x411eff`: `0x411fff`, `0x412005`, `0x4120bf`, `0x4120c9`) and `0x41237d`
+(`0x412454`, `0x41251d`, `0x412526`, `0x412595`, `0x41259a`) write, both unreached, so
+`__mb_cur_max`, `__decimal_point`, `_pctype`, `_pwctype` and the rest keep their file values: 0xfb reads `_pctype`'s low word
 0x1726 and 0xfd `_pwctype`'s.
 
 ## Upper case

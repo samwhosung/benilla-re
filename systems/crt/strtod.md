@@ -6,7 +6,8 @@ real (`Ld12Real`, `crt/decimal`), `___multtenpow12` scales it, and `__ld12cvt` r
 double's or the float's format. `strtod` fronts the scan through `__fltin2` and reads its flags.
 The arithmetic is the runtime's own, so the answer is not always the double nearest the text:
 the scaling truncates partial products, the rounding to the format skips one bit of its sticky
-test, and `strtod` answers +0 for any result below the normal range.
+test, and `strtod` answers +0 for a result below the normal range, but a signed zero where the
+12-byte product itself flushes to zero.
 
 `luaO_str2d` (`0x6f5900`, `lua/object`) is the only caller of `strtod`, so every numeral in a
 script and every `tonumber` of text is read here. `scanf`'s float conversions call `_fassign`
@@ -92,22 +93,24 @@ mantissa is three dwords, the highest first. `__RoundMan` (`0x40fb04`) tests bit
 `not (-1 << (31 − n mod 32))` (`0x40fa85`) covers only the bits after bit `n`; `__IncMan`
 (`0x40faae`) adds at bit `precision − 1` through `___addl`. `0x40fca4` takes exponent field 0;
 `0x40fce0` rounds; `0x40fcf5` is the zero, `0x40fd05` the subnormal path, which copies the saved
-mantissa back (`__CopyMan`, `0x40fb90`) and shifts by `min − e` and then by the exponent width
+mantissa back (`__CopyMan`, `0x40fb90`) and shifts by `min − e`, `e` the exponent after the
+first rounding, and then by the exponent width
 plus 1 (`__ShrMan`, `0x40fbd2`, at `0x40fd1f` and `0x40fd39`); `0x40fd48` the infinity;
 `0x40fd74` clears the leading bit and adds the bias. `0x40fd8d` assembles
-`exponent << (31 − width) | sign | top`.
+`exponent << (31 − exponent width) | sign | top`, the width `[fmt+0xc]` (`0x40fd90`).
 
 ## strtod
 
-`strtod(s, &end)` skips the C locale's blanks, 9 to 13 and space, and reads the rest with
-`__fltin2`. With no digit it answers +0 and sets `end` to `s`. An overflow, the scan's exponent
-above 5200 or the rounding's infinity, answers the infinity with the sign of the first byte after
-the blanks and sets `errno` to 34 (`ERANGE`). An underflow, the scan's exponent below -5200 or any
-result `__ld12cvt` answers 2 for, answers +0 for either sign and sets `ERANGE`: every result that
-rounds below 2^-1022 reads as +0. Otherwise it answers the rounded double, which is not always the
-nearest: `6e23` reads as the double below it.
+`strtod(s, &end)` skips blanks, 9 to 13 and space, and reads on with `__fltin2`. No digit
+answers +0 with `end` at `s`. An overflow, the scan's exponent above 5200 or the rounding's
+infinity, answers the infinity of the first byte's sign and sets `errno` to 34 (`ERANGE`). An
+underflow, the scan's exponent below -5200 or a result rounding below 2^-1022 (`__ld12cvt`'s 2),
+answers +0 for either sign with `ERANGE`. A scale `___ld12mul` flushes to zero, from about
+1e-4951 to the -5200 bound, leaves a zero real with the numeral's sign, answered as that zero,
+`errno` untouched: `-1e-5000` is -0. Otherwise it answers the rounded double: `6e23` reads as the
+double below the nearest.
 
-Addresses: `0x741e39`, `0x741e46`, `0x741e85`, `0x741e9d`, `0x741eae`, `0x741ed3`, `0x747560`, `0x74757c`, `0x747586`, `0x7475a0`, `0x7475a6`, `0x7475b6`, `0x875e90`, `0x4104e6`
+Addresses: `0x741e39`, `0x741e46`, `0x741e85`, `0x741e9d`, `0x741eae`, `0x741ed3`, `0x747560`, `0x74757c`, `0x747586`, `0x7475a0`, `0x7475a6`, `0x7475b6`, `0x875e90`, `0x4104e6`, `0x412f4f`, `0x411679`, `0x40fcb4`
 Confidence: verified
 Proof: one
 Test: `crt::crt_strtod_difftest`
@@ -118,7 +121,9 @@ last four arguments 0 (`0x74757c`); flags 4 give `0x200` (`0x747586`); otherwise
 `0x100` (`0x7475b6`); it stores the flags, the bytes read and the double. `strtod` stores `end`
 from the byte count (`0x741e94`); `test dx,0x240` (`0x741e9d`) gives `fldz` and `end = s`;
 `test dl,0x81` (`0x741eae`) loads `0x875e90`, negated when the first byte is `-`, and stores 0x22
-through `__errno` (`0x4104e6`); `test dh,1` (`0x741ed3`) gives `fldz` with the same `errno`. Over
+through `__errno` (`0x4104e6`); `test dh,1` (`0x741ed3`) gives `fldz` with the same `errno`.
+`cmp dx,0x3fbf; ja` (`0x412f4f`) makes a flushed product zero, `0x411679` ORs the sign into it,
+and `__ld12cvt` answers 0 for the all-zero mantissa (`0x40fcb4`). Over
 160,000 random numerals of 1 to 25 digits with exponents from -40 to 40, 575 answers differ from
 the nearest double.
 

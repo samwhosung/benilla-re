@@ -737,7 +737,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40f99a	203			crt	boundary		Runs its object file code that calls __isctype, ___crtLCMapStringA; not read here	inferred	none		
 0x40fa65	73	__ZeroTail	idb	crt	primitive	int32_t __cdecl (const uint32_t *man, int32_t bit)	Tests that every bit of a 96-bit mantissa after the given one is clear	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
 0x40faae	86	__IncMan	idb	crt	primitive	int32_t __cdecl (uint32_t *man, int32_t bit)	Adds 1 at a bit of a 96-bit mantissa, the carry upward; answers the carry out of the top	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
-0x40fb04	140	__RoundMan	idb	crt	primitive	int32_t __cdecl (uint32_t *man, int32_t precision)	Rounds a 96-bit mantissa up only with the next bit and a later one set; answers the carry out	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
+0x40fb04	140	__RoundMan	idb	crt	primitive	int32_t __cdecl (uint32_t *man, int32_t precision)	Rounds a 96-bit mantissa up only with the next bit and any bit from two past it set; answers the carry	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest, crt::crt_strtod_difftest
 0x40fb90	27	__CopyMan	idb	crt	orchestration	void __cdecl (uint32_t *dst, const uint32_t *src)	Copies a 96-bit mantissa	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
 0x40fbab	12	__FillZeroMan	idb	crt	orchestration	void __cdecl (uint32_t *man)	Clears a 96-bit mantissa	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
 0x40fbb7	27	__IsZeroMan	idb	crt	orchestration	int32_t __cdecl (const uint32_t *man)	Tests that a 96-bit mantissa is zero	verified	one	crt/strtod#rounding-to-a-format	crt::crt_ld12cvt_difftest
@@ -31357,7 +31357,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741d97	47	__unlock_file	idb	crt	boundary		Runs its object file code that calls __unlock; not read here	inferred	none		
 0x741dc6	35	__unlock_file2	idb	crt	boundary		Runs its object file code that calls __unlock; not read here	inferred	none		
 0x741de9	80	_strerror	idb	crt	unreached		Runs its object file code that calls __getptd, _malloc and 1 more; not read here	inferred	none		
-0x741e39	170	_strtod	idb	crt	primitive	double __cdecl (const char *s, char **end)	Reads a decimal numeral as a double: +0 for any result below the normal range, the infinity past it	verified	one	crt/strtod#strtod	crt::crt_strtod_difftest
+0x741e39	170	_strtod	idb	crt	primitive	double __cdecl (const char *s, char **end)	Reads a decimal numeral as a double: +0 below the normal range, a signed zero past the 12-byte range	verified	one	crt/strtod#strtod	crt::crt_strtod_difftest
 0x741ef0	291	_strncat	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x742014	120	_longjmp	idb	crt	boundary		Runs its object file code that calls __global_unwind2, __rt_probe_read4@4, __local_unwind2 and 1 more; not read here	inferred	none		
 0x74208c	1			crt	unreached		Runs its object file code not read here	inferred	none		
