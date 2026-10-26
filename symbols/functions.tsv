@@ -12276,7 +12276,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50faa0	29	CCamera::NextView		uicamera	primitive	void __thiscall (CCamera *this)	Switches to the next saved view, stopping at the last	inferred	none	uicamera/driver#setting-a-view	
 0x50fac0	28	CCamera::PrevView		uicamera	primitive	void __thiscall (CCamera *this)	Switches to the previous saved view, stopping at the first	inferred	none	uicamera/driver#setting-a-view	
 0x50fae0	153	CCamera::ResetView		uicamera	primitive	void __thiscall (CCamera *this, int view)	Restores a view's slot from the default strings	inferred	none	uicamera/driver#setting-a-view	ui::glue_deg2rad_gated
-0x50fb80	63			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		ui::glue_deg2rad_gated
+0x50fb80	63	CCamera::LoadViewSlots		uicamera	primitive	void __thiscall (CCamera *this)	Fills the 15 view slots from +0xb0 with the saved-view CVars' values, pitch and yaw times pi/180	verified	one	uicamera/cvars#saved-view-cvars	ui::glue_deg2rad_gated
 0x50fbc0	108	CCamera::ViewIsUncustomised		uicamera	primitive	bool __thiscall (CCamera *this, int view)	Returns whether a view's saved distance, pitch and yaw match their defaults	verified	one	uicamera/follow#gates	ui::glue_50fbc0_settled
 0x50fc30	43	CCamera::ViewSmoothingAllowed		uicamera	primitive	bool __thiscall (CCamera *this, int view)	Returns whether customised smoothing is on or the view is uncustomised	verified	one	uicamera/follow#gates	
 0x50fc60	106	CCamera::ZoomIn		uicamera	primitive	void __thiscall (CCamera *this, float amount, uint32_t now)	Zooms in by an amount of yards at the glide speed	verified	one	uicamera/driver#maximum-distance-and-the-wheel	ui::glue_unit_convert_ftol
@@ -12300,7 +12300,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x510940	31	AutoReturnAllowed		uicamera	primitive	bool __thiscall (CCamera *this)	Returns 0 when the camera's bit 5 is set, else whether the view is uncustomised or customised smoothing is on	verified	one	uicamera/cvars#clear-and-band-tests	
 0x510960	1640	CCamera::ArmAutoReturn		uicamera	primitive	void __thiscall (CCamera *this, CInputControl *input, bool stopping)	Picks the input state and arms the yaw, pitch and pivot bias to return to the view	verified	one	uicamera/follow#the-input-state	ui::glue_510960_arith
 0x510fd0	54	CCamera::WantsAbsoluteFrame		uicamera	primitive	bool __thiscall (CCamera *this)	Returns whether a tracked camera sits in the absolute frame by its tracking style	inferred	none	uicamera/follow#the-frame-of-a-followed-unit	
-0x511010	43			uicamera	primitive		Runs Camera.cpp code that calls 0x60f8f0; not read here	inferred	none		
+0x511010	43	HoldPivotBias		uicamera	orchestration	uint32_t __thiscall (CCamera *this)	Answers 1 when the Track bit is set and the tracking style or the auto-move mode is 0, else 0	verified	one	uicamera/cvars#pivot-bias-hold	
 0x511040	161	CCamera::SetTrackFlag		uicamera	primitive	void __thiscall (CCamera *this, uint32_t externalBits)	Sets or clears the Track bit from the external movement bits and re-arms	verified	one	uicamera/follow#when-it-runs	
 0x5110f0	26	CCamera::BeginBobbing		uicamera	primitive	void __thiscall (CCamera *this)	Sets the bobbing bit and the start time	verified	one	uicamera/transitions#bob-decay	
 0x511110	93	CCamera::BeginBobDecay		uicamera	primitive	void __thiscall (CCamera *this)	Clears the bobbing bit and arms the decay of the bob offsets	verified	one	uicamera/transitions#bob-decay	ui::glue_511_511110_abs_div
