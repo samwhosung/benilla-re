@@ -145,3 +145,4 @@ WowConnection		304		net	Holds one socket connection: state, handler, receive buf
 _FloatOutStruct		26		crt	Holds the decimal exponent, sign, digit count and digits I10_OUTPUT writes	verified	one	crt/decimal#making-the-digits
 _strflt		16		crt	Holds a double's sign, decimal exponent, digit return and digit text for the conversions	verified	one	crt/decimal#the-digits-a-conversion-reads
 luaL_reg		8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	
+tm		36		crt	Holds broken-down time: seconds to years since 1900, the weekday, the day of the year and the daylight flag	verified	one	crt/time#breaking-a-time-down-in-utc

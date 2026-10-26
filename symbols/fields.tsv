@@ -1479,3 +1479,12 @@ _strflt	0x0000	4	int32_t	sign	crt	Holds the sign as - or a space	verified	one	cr
 _strflt	0x0004	4	int32_t	decpt	crt	Holds the decimal exponent: the value is 0.ddd times 10^decpt	verified	one	crt/decimal#the-digits-a-conversion-reads
 _strflt	0x0008	4	int32_t	flag	crt	Holds I10_OUTPUT's return, 0 for a non-finite value	verified	one	crt/decimal#the-digits-a-conversion-reads
 _strflt	0x000c	4	char *	mantissa	crt	Points to the digit text	verified	one	crt/decimal#the-digits-a-conversion-reads
+tm	0x0000	4	int32_t	tm_sec	crt	Holds the seconds of the minute	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0004	4	int32_t	tm_min	crt	Holds the minutes of the hour	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0008	4	int32_t	tm_hour	crt	Holds the hour of the day	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x000c	4	int32_t	tm_mday	crt	Holds the day of the month from 1	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0010	4	int32_t	tm_mon	crt	Holds the month from 0	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0014	4	int32_t	tm_year	crt	Holds the years since 1900	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0018	4	int32_t	tm_wday	crt	Holds the weekday, Sunday 0	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x001c	4	int32_t	tm_yday	crt	Holds the day of the year from 0	verified	one	crt/time#breaking-a-time-down-in-utc
+tm	0x0020	4	int32_t	tm_isdst	crt	Holds the daylight flag: positive in daylight time, 0 not, negative unknown to mktime	verified	one	crt/time#breaking-a-time-down-in-utc

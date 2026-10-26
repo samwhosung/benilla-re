@@ -1357,15 +1357,26 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
 0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
+0x82f2a0	uint32_t[30]	_XcptActTab		crt	Holds ten rows of an exception code, a signal number and an action, each action 0 in the file	verified	one	random#other-threads-rand
 0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
 0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
 0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831720	const uint16_t *	_pwctype		crt	Points to the type table iswctype reads below 0x100, the same 0x831726; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
+0x831928	int32_t[6]	_DoubleFormat		crt	Holds the double's format for __ld12cvt: exponents 1024 and -1023, 53 bits, widths 11 and 64, bias 1023	verified	one	crt/strtod#rounding-to-a-format
+0x831940	int32_t[6]	_FloatFormat		crt	Holds the float's format for __ld12cvt: exponents 128 and -127, 24 bits, widths 8 and 32, bias 127	verified	one	crt/strtod#rounding-to-a-format
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
+0x832398	const char **	__lc_time_curr		crt	Points to the current time record, the C locale's 0x8323a0; only ___init_time writes it	verified	one	crt/time#the-strftime-format-loop
+0x8323a0	const char *[43]	__lc_time_c		crt	Holds the C locale's day and month names, AM, PM and the date and time patterns strftime reads	verified	one	crt/time#the-strftime-format-loop
 0x832490	Ld12Real[29]	s_tenPowers		crt	Holds 10^1 to 10^4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten
 0x8325f0	Ld12Real[29]	s_tenNegPowers		crt	Holds 10^-1 to 10^-4096 in the rows ___multtenpow12 picks by octal digit; nothing writes it	verified	one	crt/decimal#powers-of-ten
+0x83274c	int32_t	_timezone		crt	Holds the zone's seconds west of UTC, 28800 in the file; only __tzset_lk writes it	verified	one	crt/time#the-systems-zone
+0x832750	int32_t	_daylight		crt	Holds whether the zone has daylight time, 1 in the file; only __tzset_lk writes it	verified	one	crt/time#the-systems-zone
+0x832754	int32_t	_dstbias		crt	Holds the seconds daylight time adds to _timezone, -3600 in the file; only __tzset_lk writes it	verified	one	crt/time#the-systems-zone
+0x8327d8	char *[2]	_tzname		crt	Points to the standard and daylight zone names, PST and PDT in the file, which __tzset_lk fills	verified	one	crt/time#the-zone-read-once
+0x832800	int32_t[13]	_lpdays		crt	Holds the days before each month less one in a leap year, from -1 to 365; nothing writes it	verified	one	crt/time#breaking-a-time-down-in-utc
+0x832834	int32_t[13]	_days		crt	Holds the days before each month less one in another year, from -1 to 364; nothing writes it	verified	one	crt/time#breaking-a-time-down-in-utc
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	two	screencoord#screen-scale-state
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	two	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	two	screencoord#screen-scale-state
@@ -2596,6 +2607,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x8838f4	uint8_t	s_sysMsgDisplayMade		unassigned	Holds 1 while the system message display layer exists	verified	one	sysmsg#display-layer
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
+0x883ba4	int32_t	s_stringTypeMode		crt	Holds which call ___crtGetStringTypeW makes: 0 undecided, 1 GetStringTypeW, 2 GetStringTypeA	verified	one	crt/ctype#wide-character-types
+0x883ba8	int32_t	tzapiused		crt	Holds 1 when __tzset_lk took the zone from GetTimeZoneInformation, which 0x41484d reads	verified	one	crt/time#the-systems-zone
+0x883bb0	uint8_t[172]	tzinfo		crt	Holds the TIME_ZONE_INFORMATION record __tzset_lk reads the zone into	verified	one	crt/time#the-systems-zone
+0x883c60	int32_t	first_time		crt	Holds 1 once ___tzset has run __tzset_lk; nothing else writes it	verified	one	crt/time#the-zone-read-once
 0x883c90	char[260]	s_cmdLineString		unassigned	Holds the string the last CmdLineGetString call read	verified	one	storm/scmd#the-clients-switch-readers
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
 0x883e78	uint32_t[8]	s_nullSharedStringRecord		base	Holds the record a null shared string points at: vtable, count, and a null text at +0x1c	verified	one	ui/fontstring#shared-path-strings
@@ -4906,6 +4921,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf6100	uint8_t	s_difficultyColorsReady		ui	Holds bit 0, set once the five difficulty colours are written	verified	one	ui/unitlevels#the-difficulty-colour
 0xcf6128	uint32_t	s_plateLevelColor		ui	Holds the white ARGB word the level text starts with	verified	one	ui/nameplates#bar-colour-and-values
 0xcf61dc	float	s_skyDrawTenSquared		lighting	Holds 100.0; written at start-up	verified	one	lighting/overview#shared-header-constants
+0xcf7284	int32_t	__alternate_form		crt	Holds the # mark of the strftime conversion being expanded	verified	one	crt/time#the-strftime-format-loop
+0xcf7288	int32_t	__no_lead_zeros		crt	Holds whether __store_num writes a number's own digits instead of a padded count	verified	one	crt/time#number-conversions
+0xcf728c	int32_t	__setlc_active		crt	Holds the count of _setlocale calls in progress, 0 since nothing calls _setlocale	verified	one	crt/time#the-strftime-format-loop
+0xcf7290	int32_t	__unguarded_readlc_active		crt	Counts the locale readers running without the locale lock, raised and lowered around each	verified	one	crt/time#the-strftime-format-loop
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
 0xcf76e0	uint8_t[24]	s_contextHandleLock		core	Holds the critical section guarding the context handle counter	verified	one	core/scheduler#context-insert
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts
