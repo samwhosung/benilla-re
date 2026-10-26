@@ -208,13 +208,20 @@ fn lockout_rig(emu: &mut Emu) -> LockoutRig {
             0
         });
     }
-    // Two maps: id 1 named "Molten Core", id 3 present in range without a record.
+    // Map 1 is "Molten Core", map 2 has an empty name, map 4, the bound, is "Onyxia's Lair",
+    // and map 3, in range, has no record.
     let index = emu.alloc(0x40);
-    let rec = emu.alloc(0x100);
-    let name = emu.alloc(0x40);
-    emu.write(name, b"Molten Core\0");
-    emu.write_u32(rec + 0x10, name as u32);
-    emu.write_u32(index + 4, rec as u32);
+    for (id, text) in [
+        (1u64, &b"Molten Core\0"[..]),
+        (2, b"\0"),
+        (4, b"Onyxia's Lair\0"),
+    ] {
+        let rec = emu.alloc(0x100);
+        let name = emu.alloc(0x40);
+        emu.write(name, text);
+        emu.write_u32(rec + 0x10, name as u32);
+        emu.write_u32(index + 4 * id, rec as u32);
+    }
     emu.write_u32(MAP_INDEX, index as u32);
     emu.write_u32(MAP_MAX, 4);
     emu.write_u32(LOCALE, 0);
@@ -242,7 +249,14 @@ fn instances_lockout_warning() {
     for _ in 0..400 {
         seconds.push(next(&mut s) as i32);
     }
-    let maps: &[(i32, &str)] = &[(1, "Molten Core"), (3, "3"), (5, "5"), (-2, "-2")];
+    let maps: &[(i32, &str)] = &[
+        (1, "Molten Core"),
+        (2, ""),
+        (4, "Onyxia's Lair"),
+        (3, "3"),
+        (5, "5"),
+        (-2, "-2"),
+    ];
     let mut total = 0u32;
     for ty in -1..=6i32 {
         for &(map, map_name) in maps {

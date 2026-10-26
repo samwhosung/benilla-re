@@ -38,10 +38,18 @@ fn worldmap_list_names() {
         return;
     };
     let mut emu = Emu::new(&wow);
-    // Four continents: map ids 0, 1, a negative one and one past the bound; map 1 has no record.
-    let map_ids = [0i32, 1, -5, 40];
+    // Six continents: map ids 0, 1, a negative one, one past the bound, the bound itself, and 2,
+    // whose record's name is the empty string; map 1 has no record.
+    let map_ids = [0i32, 1, -5, 40, 30, 2];
     let map_max = 30i32;
-    let zones: Vec<Vec<i32>> = vec![vec![10, 11, 12], vec![13, -1], vec![], vec![50, 14]];
+    let zones: Vec<Vec<i32>> = vec![
+        vec![10, 11, 12],
+        vec![13, -1],
+        vec![],
+        vec![50, 14],
+        vec![20, 21],
+        vec![15],
+    ];
     let wma_max = 20i32;
     let recs = emu.alloc(CONT_STRIDE * map_ids.len() as u64);
     let zone_arrays = emu.alloc(0x100);
@@ -64,11 +72,31 @@ fn worldmap_list_names() {
         emu.write_u32(map0 + u64::from(localized(0x10, loc)), 0xa000_0000 | loc);
     }
     emu.write_u32(map_index, map0 as u32);
+    // Map 30, the bound, has a record; map 2's name field points at an empty string.
+    let map30 = emu.alloc(0x60);
+    for loc in 0..8u32 {
+        emu.write_u32(map30 + u64::from(localized(0x10, loc)), 0xa300_0000 | loc);
+    }
+    emu.write_u32(map_index + 4 * 30, map30 as u32);
+    let empty = emu.alloc(4);
+    let map2 = emu.alloc(0x60);
+    for loc in 0..8u32 {
+        emu.write_u32(map2 + u64::from(localized(0x10, loc)), empty as u32);
+    }
+    emu.write_u32(map_index + 4 * 2, map2 as u32);
     emu.write_u32(MAP_INDEX, map_index as u32);
     emu.write_u32(MAP_MAX, map_max as u32);
-    // WorldMapArea rows 10 to 14: row 12 absent; their areas 100, 101, -, 500 (past the bound), 103.
+    // WorldMapArea rows 10 to 15 and 20, the bound: row 12 absent; their areas 100, 101 (no
+    // record), -, 500 (past the bound), 103, 200 (the bound) and 104.
     let wma_index = emu.alloc(4 * (wma_max as u64 + 1));
-    let area_of = [(10, 100i32), (11, 101), (13, 500), (14, 103)];
+    let area_of = [
+        (10, 100i32),
+        (11, 101),
+        (13, 500),
+        (14, 103),
+        (15, 200),
+        (20, 104),
+    ];
     let area_max = 200i32;
     let area_index = emu.alloc(4 * (area_max as u64 + 1));
     for &(w, a) in &area_of {
@@ -94,11 +122,14 @@ fn worldmap_list_names() {
     let mut total = 0u32;
     for loc in [0u32, 3] {
         emu.write_u32(LOCALE, loc);
-        for index in [0u32, 1, 2, 3, 4, 5, u32::MAX] {
+        for index in [0u32, 1, 2, 3, 4, 5, 6, 7, u32::MAX] {
             let got = emu.call(0x4a_65a0, index, 0, &[]);
-            let want = continent_map(&map_ids, index, map_max)
-                .filter(|&id| id == 0)
-                .map_or(0, |_| 0xa000_0000 | loc);
+            let want = match continent_map(&map_ids, index, map_max) {
+                Some(0) => 0xa000_0000 | loc,
+                Some(30) => 0xa300_0000 | loc,
+                Some(2) => empty as u32,
+                _ => 0,
+            };
             assert_eq!(got, want, "continent {index} locale {loc}");
             total += 1;
             for zone in [0u32, 1, 2, 3, u32::MAX] {
@@ -224,13 +255,17 @@ fn trainer_header_collapsed() {
         masks.push(next(&mut s));
     }
     let mut total = 0u32;
-    for &mask in &masks {
-        emu.write_u32(EXPANDED, mask);
-        for index in (0..=rows.len() as u32 + 1).chain([u32::MAX]) {
-            let got = emu.call(0x4d_8c30, index, 0, &[]);
-            let want = header_collapsed(&rows, &groups, mask, index);
-            assert_eq!(got, want, "index {index} mask {mask:#x}");
-            total += 1;
+    // The 40 groups, then a group count of 0, where no header finds its group.
+    for live in [groups.len(), 0] {
+        emu.write_u32(GROUP_COUNT, live as u32);
+        for &mask in &masks {
+            emu.write_u32(EXPANDED, mask);
+            for index in (0..=rows.len() as u32 + 1).chain([u32::MAX]) {
+                let got = emu.call(0x4d_8c30, index, 0, &[]);
+                let want = header_collapsed(&rows, &groups[..live], mask, index);
+                assert_eq!(got, want, "index {index} mask {mask:#x} groups {live}");
+                total += 1;
+            }
         }
     }
     eprintln!("trainer_header_collapsed: {total} bit-exact (0x4d8c30 whole)");

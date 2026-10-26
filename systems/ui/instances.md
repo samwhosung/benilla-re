@@ -45,7 +45,7 @@ with no arguments, also for a count of 0. For each entry with a map record it fo
 `RAID_INSTANCE_INFO_FMT` with the name, the id and the seconds as text (`0x49e9d0`), and discards
 the result.
 
-Addresses: `0x49e070`, `0x49e08e`, `0x49e0b1`, `0x49e0c1`, `0x49e0c9`, `0x49e0ec`, `0x49e0fe`, `0x49e110`, `0x49e147`, `0x49e179`, `0x49e19d`, `0x49e1a2`, `0x49e1a7`, `0x844870`, `0xb4fdec`, `0xb4fdf0`, `0xb4fdf4`, `0xb4fdf8`, `0xb6e5e8`, `0x4a1920`
+Addresses: `0x49e070`, `0x49e08e`, `0x49e0b1`, `0x49e0c1`, `0x49e0c9`, `0x49e0ec`, `0x49e0fe`, `0x49e110`, `0x49e147`, `0x49e179`, `0x49e19d`, `0x49e1a2`, `0x49e1a7`, `0x844870`, `0xb4fdec`, `0xb4fdf0`, `0xb4fdf4`, `0xb4fdf8`, `0xb6e5e8`, `0x4a1920`, `0x498892`, `0x4988a3`, `0x4988b3`
 Confidence: verified
 Proof: one
 Test: none
@@ -54,19 +54,21 @@ A zero count jumps from `0x49e08e` to the store and the signal (`0x49e19d` to `0
 0x21b). `0x49e0b1 jb` skips the reserve for a count below the list's, and `0x49e0c9` stores the count
 otherwise. The three reads are `0x49e0ec`, `0x49e0fe` and `0x49e110`. The buffer `[ebp-0x908]` that
 `0x49e179` fills is read by nothing before the return. The list is `{capacity, count, data,
-granularity}` at `0xb4fdec`. `GetSavedInstanceInfo` (`0x4a1920`) pushes `+4` unsigned and `+8`
+granularity}` at `0xb4fdec`. Only `ShutdownChat` lowers the count: it zeroes `0xb6e5e8` (`0x498892`),
+frees the storage (`0x4988a3`) and zeroes `0xb4fdf0` (`0x4988b3`). `GetSavedInstanceInfo` (`0x4a1920`) pushes `+4` unsigned and `+8`
 signed after the name.
 
 ## Growing the saved list
 
 `0x4a3370(extra, round)` returns when `count + extra` fits the capacity. Otherwise, with `round`
 set, it rounds the need up to a multiple of the granularity `+0xc`. A granularity of 0 takes the
-largest power of two not above the need, which makes the need the next power of two, or, for a need
+largest power of two not above the need, so the need is rounded up to a power of two, or, for a need
 of 21 or more, stores 21 as the granularity and uses it. It stores the need as the capacity and
-calls `SMemReAlloc` for need × 12 bytes, in 32 bits; when that returns null it allocates anew,
-copies the smaller of the need and the count, and frees the old storage. The count is not changed.
+calls `SMemReAlloc` for need × 12 bytes, in 32 bits; when that returns null it allocates anew
+and, only when the old storage is not null, copies the smaller of the need and the count and frees
+it. The count is not changed.
 
-Addresses: `0x4a3370`, `0xb4fdf8`, `0x4a3384`, `0x4a338f`, `0x4a3398`, `0x4a33a2`, `0x4a33bb`, `0x4a33cb`, `0x4a33ee`, `0x4a33f0`, `0x4a3405`, `0x4a344f`
+Addresses: `0x4a3370`, `0xb4fdf8`, `0x4a3384`, `0x4a338f`, `0x4a3398`, `0x4a33a2`, `0x4a33bb`, `0x4a33cb`, `0x4a33ee`, `0x4a33f0`, `0x4a3405`, `0x4a3412`, `0x4a344f`
 Confidence: verified
 Proof: one
 Test: `ui::instances_reserve_saved_list`
@@ -74,7 +76,7 @@ Test: `ui::instances_reserve_saved_list`
 `0x4a3384 jbe` is the fit test (need against `[this]`), `0x4a338f` the `round` test. `0x4a3398`
 compares the need with 0x15; below it the loop at `0x4a33a2` clears the lowest set bit until one
 remains; `0x4a33bb` stores 0x15. `0x4a33cb div` and the add round up. `0x4a33ee` stores the capacity
-before `SMemReAlloc` (`0x4a33f0`, flags 0x10); `0x4a3405` allocates, the loop copies 12-byte records,
+before `SMemReAlloc` (`0x4a33f0`, flags 0x10); `0x4a3405` allocates, `0x4a3412` skips the rest for null old storage, the loop copies 12-byte records,
 and `0x4a344f` frees. The test runs it whole with the three allocator calls stubbed, over needs 1 to
 70, granularities 0, 1, 7 and 21, both `round` values and a null return, and compares the capacity,
 the granularity and the sizes passed.
@@ -105,10 +107,11 @@ compares the four numbers.
 `RAID_INSTANCE_WELCOME` with days, hours and minutes split as `0x49e9d0` splits them. Each division
 is signed and truncates toward zero, so a seconds word of 2^31 or more prints negative numbers. Types
 1 to 3 read the template through `GetText` with the number as its ordinal, so the plural form follows
-it; type 4 reads the plain global. The line is the template filled with the map's name and the
+it; a negative number fails `GetText`'s `jge` (`0x703c0d`) and reads the plain global with no plural
+rule, as type 4 always does. The line is the template filled with the map's name and the
 numbers, shown as a system line. Any other type shows nothing.
 
-Addresses: `0x49e1c0`, `0x49e1e9`, `0x49e228`, `0x49e246`, `0x49e24f`, `0x49e45c`, `0x49e259`, `0x49e27b`, `0x49e2c8`, `0x49e337`, `0x49e3a6`, `0x49e408`, `0x49e2b4`, `0x49e449`, `0x8448dc`, `0x8448c0`, `0x8448a0`, `0x844888`
+Addresses: `0x49e1c0`, `0x49e1e9`, `0x49e228`, `0x49e246`, `0x49e24f`, `0x49e45c`, `0x49e259`, `0x49e27b`, `0x49e2c8`, `0x49e337`, `0x49e3a6`, `0x49e408`, `0x49e2b4`, `0x49e449`, `0x8448dc`, `0x8448c0`, `0x8448a0`, `0x844888`, `0x703c0d`
 Confidence: verified
 Proof: one
 Test: `ui::instances_lockout_warning`
@@ -119,8 +122,8 @@ Test: `ui::instances_lockout_warning`
 quotient in `edx` for `0x703bf0`'s ordinal (`0x49e27b`); arm 4 sets `or edx,-1` (`0x49e408`).
 `SStrPrintf` gets the 0x800-byte line, the template, the name and the numbers; `0x49a870` gets type 10
 and ten zero arguments. The test runs `0x49e1c0` whole with the reads, `GetText`, `SStrPrintf` and `0x49a870`
-stubbed, over types −1 to 6, a named map, one without a record and two out of range, and 417 reset
-words, and compares the key, the ordinal, the line and its type.
+stubbed, over types −1 to 6, named maps (one at the id bound), an empty name, one without a record
+and two out of range, and 417 reset words, and compares the key, the ordinal, the line and its type.
 
 ## Reset refusals
 

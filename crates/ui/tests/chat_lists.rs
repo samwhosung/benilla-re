@@ -202,7 +202,7 @@ fn channel_list_print() {
     let r = rig(&mut emu);
     let mut s = 0x49c7_e000u32;
     let mut total = 0u32;
-    let (mut split, mut cut, mut waited) = (0u32, 0u32, 0u32);
+    let (mut split, mut cut, mut waited, mut bound) = (0u32, 0u32, 0u32, 0u32);
     for case in 0..600u32 {
         let n = match case {
             0 => 0,
@@ -223,7 +223,11 @@ fn channel_list_print() {
                 } else {
                     2 + (next(&mut s) % 11) as usize
                 };
-                let second_len = if next(&mut s).is_multiple_of(3) {
+                // A long name with a second string of 260 to 279 characters takes the 0x130 bound
+                // of the name buffer (`0x49c95e`).
+                let second_len = if long && next(&mut s).is_multiple_of(4) {
+                    260 + (next(&mut s) % 20) as usize
+                } else if next(&mut s).is_multiple_of(3) {
                     (next(&mut s) % 20) as usize
                 } else {
                     0
@@ -260,6 +264,14 @@ fn channel_list_print() {
             assert_eq!(got, want, "case {case}: lines");
             split += u32::from(want.len() > 1);
             cut += u32::from(plain.iter().any(|m| m.name.len() + m.second.len() + 4 > 50));
+            bound += u32::from(plain.iter().any(|m| {
+                let kept = m
+                    .second
+                    .iter()
+                    .filter(|&&c| c != b' ' && c != b'\t')
+                    .count();
+                m.name.len() + 1 + kept >= 0x130
+            }));
             for l in &lines {
                 assert_eq!(
                     (l.1, l.2.as_slice()),
@@ -278,10 +290,10 @@ fn channel_list_print() {
         total += 1;
     }
     assert!(
-        split > 0 && cut > 0 && waited > 0,
-        "split {split}, cut {cut}, waited {waited}"
+        split > 0 && cut > 0 && waited > 0 && bound > 0,
+        "split {split}, cut {cut}, waited {waited}, bound {bound}"
     );
     eprintln!(
-        "channel_list_print: {total} bit-exact (0x49c7e0 whole; {split} split, {cut} cut, {waited} waiting)"
+        "channel_list_print: {total} bit-exact (0x49c7e0 whole; {split} split, {cut} cut, {waited} waiting, {bound} at the bound)"
     );
 }

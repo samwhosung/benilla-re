@@ -262,13 +262,14 @@ Two drops by kind have no caller: `0x494f60` clears the cursor with `ClearCursor
 a pet action (kind 4), and `0x494ff0` the same when it holds a macro (kind 8). Each sits after its
 kind's setter; neither is part of the setter or of the grab.
 
-Addresses: `0x494f60`, `0x494f67`, `0x494f70`, `0x494ff0`, `0x494ff7`, `0x495000`, `0x494f3c`, `0x494fea`
+Addresses: `0x494f60`, `0x494f67`, `0x494f70`, `0x494ff0`, `0x494ff7`, `0x495000`, `0x494f3c`, `0x494fea`, `0x494e49`
 Confidence: verified
 Proof: one
 Test: none
 
 Each is `cmp dword [0xb4d900],kind; jne ret; mov edx,1; mov ecx,edx; jmp 0x495190`. The functions above
-end with `ret` at `0x494f3c` and `0x494fea`, followed by padding, so nothing falls into either.
+end with `ret` at `0x494f3c` and `0x494fea`; after the first come its own jump table (0x494f40 to
+0x494f5b, read at `0x494e49`) and padding, after the second padding, so nothing falls into either.
 Census (`tools/callers.py`): no `call`, `jmp` or conditional jump in the listing targets either
 address, and neither occurs as a dword at any alignment in any section; the controls `0x494f80` (nine
 direct calls) and `0x49ccc0` (nine stored operands) are found by the same run.

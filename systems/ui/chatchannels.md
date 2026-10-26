@@ -218,8 +218,8 @@ Opcode 0x99, handled by `0x49bf80`: a u8 notice, the channel name (at most 128 b
 fields the notice needs (`tables/channel_notices.tsv`). A notice above 31 shows an empty system line.
 Each arm picks a token and a chat type and calls the chat line function `0x49a870` with the token as
 the text and the channel name as the channel. Notices 0 and 1 read a GUID and show nothing unless the
-channel is joined and confirmed. Notice 12 reads a GUID and two bytes and calls `0x49e910` instead of
-showing a line. Notice 2 reads two u32, discarding the first, and a topic string when bytes remain.
+channel is joined and confirmed. Notice 12 reads a GUID and two bytes and calls `0x49e910`, which shows its
+own lines (`#mode-change-lines`). Notice 2 reads two u32, discarding the first, and a topic string when bytes remain.
 
 Addresses: `0x49bf80`, `0x49bf95`, `0x49bfa8`, `0x49bfcd`, `0x49bfe5`, `0x49bff3`, `0x49c60c`, `0x49bffa`, `0x49c005`, `0x49c01b`, `0x49c036`, `0x49c041`, `0x49c050`, `0x49c065`, `0x49c24d`, `0x49c283`, `0x49c4df`, `0x49c4e4`, `0x49c595`, `0x49c5b0`, `0x49c5c7`, `0x49c5d3`, `0x49c5f8`, `0x49e910`, `0x49c430`, `0x49c457`, `0x49c115`, `0x49c13c`, `0x49c157`, `0x49c39a`, `0x49c3a9`, `0x49c42b`, `0x49c43a`, `0x49c446`, `0x49c452`, `0x49c461`, `0x49c46d`, `0x49c5b5`, `0x49c5c2`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x4191b0`, `0x5ab650`
 Confidence: verified
@@ -236,14 +236,15 @@ set by notices 3 (YOU_LEFT only), 4, 5, 19, 26 and 27 and consumed after the eve
 
 ## Channel list message
 
-Opcode 0x9b, handled by `0x49c690`: the channel name (at most 128 bytes), a flag byte and an i32
-count of members, each a GUID and a flag byte. An unknown channel skips the rest. The flag byte goes
+Opcode 0x9b, handled by `0x49c690`: the channel name (at most 128 bytes), a flag byte, an i32
+count of members, each a GUID and a flag byte; an unknown channel skips the rest. The flag byte goes
 to the slot's `+0x90`; each member becomes a 0x18-byte node appended to the slot's member list at
 `+0x84`, its name asked of the name cache with the callback `0x49ccc0`. When every name is cached, or
 the count is 0 or less, the list prints at once (`0x49c7e0`); otherwise the callback prints it when a
-name arrives. Nodes of an earlier message whose names never came stay and print with the new ones.
+name arrives, first freeing the node of a member whose answer is a refusal. Nodes of an earlier
+message whose names never came print with the new ones.
 
-Addresses: `0x49c690`, `0x49c6ad`, `0x49c6c3`, `0x49c6d9`, `0x49c6ed`, `0x49c6fb`, `0x49c710`, `0x49c75d`, `0x49c77b`, `0x49c787`, `0x49c7a2`, `0x49c7ab`, `0x49c7c5`, `0x49c7c9`, `0x498604`, `0x49862a`
+Addresses: `0x49c690`, `0x49c6ad`, `0x49c6c3`, `0x49c6d9`, `0x49c6ed`, `0x49c6fb`, `0x49c710`, `0x49c75d`, `0x49c77b`, `0x49c787`, `0x49c7a2`, `0x49c7ab`, `0x49c7c5`, `0x49c7c9`, `0x498604`, `0x49862a`, `0x49d04d`, `0x49d07f`
 Confidence: verified
 Proof: one
 Test: none
@@ -253,7 +254,9 @@ Test: none
 is `SMemAlloc(0x18)` under the tag `.?AUPENDINGUSERLIST@@` (`0x49c710`), linked before the list's
 terminator at `+0x88` (`0x49c75d` to `0x49c775`), with the GUID read into `+8` and the byte into `+0x10`.
 `0x49c7a2` asks for the name with the node's GUID as the owner; a null answer counts one pending
-(`0x49c7ab`), and `0x49c7c5 jne` skips the print while any is.
+(`0x49c7ab`), and `0x49c7c5 jne` skips the print while any is. The callback compares each node's GUID
+with the answer's and, when the answer's status byte is 0 (`0x49d04d`), unlinks the node and frees it
+(`0x49d07f`).
 
 ## Printing the member list
 

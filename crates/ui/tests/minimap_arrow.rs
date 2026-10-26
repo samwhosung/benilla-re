@@ -44,6 +44,12 @@ fn minimap_arrow_centre() {
         (f64::INFINITY, f64::NEG_INFINITY),
         (1.0 + f64::EPSILON, 1.0 / 3.0),
         (2.0 * f64::from(f32::MAX), 1e-40),
+        (f64::NAN, 1.0),
+        (2.0, -f64::NAN),
+        (
+            f64::from_bits(0x7ff8_0000_2000_0000),
+            f64::from_bits(0xfffc_0000_0000_0001),
+        ),
     ];
     let mut s = 0x4ee1_0000u32;
     for _ in 0..5_000 {

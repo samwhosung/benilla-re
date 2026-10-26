@@ -149,7 +149,7 @@ latches serve the talent master (`0xc4d7a0`) and the pet untrainer (`0xc4d7b0`).
 
 Opcode 0x17e, handled by `0x4e2800`, has no body: it sets the gossip target to zero, which closes the
 window and signals `GOSSIP_CLOSED` when one is open, and returns 1. It leaves the option and quest
-slots as they are; only the leave-world leg resets them (`worldenter#window-closes-when-leaving`).
+slots as they are; of the closes, only the leave-world leg resets them (`worldenter#window-closes-when-leaving`).
 
 Addresses: `0x4e2800`, `0x4e2824`, `0x4e1f03`, `0x4e1f08`, `0x4e1fa0`
 Confidence: verified

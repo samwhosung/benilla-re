@@ -180,7 +180,7 @@ the channel name and the notice's own fields.
 |---|---|
 | `notice` | The notice byte, `0` to `31`; a larger byte shows an empty system line. |
 | `arm` | The code that handles it. |
-| `token` | The text that becomes the event's first argument; `a|b` where the arm picks one by the channel's state. Empty for none. |
+| `token` | The text that becomes the event's first argument; `a|b` where the arm picks one by the channel's state. Notice 12 lists its four, set then unset for flag 0x02 and then 0x04, of which it shows those whose bit changed. Empty for none. |
 | `chat_type` | The chat type of the line: `CHANNEL_JOIN`, `CHANNEL_LEAVE`, `CHANNEL_NOTICE` or `CHANNEL_NOTICE_USER`. Empty where the arm shows no line. |
 | `reads` | The fields the arm reads after the channel name, in order: `guid`, `u8`, `u32`, `cstring`. |
 

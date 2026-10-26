@@ -2966,7 +2966,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4fdd8	uint32_t	s_deferredJoinCount		ui	Holds the count of channel names in the deferred-join list	verified	one	ui/chatwindows#settings-file-lines
 0xb4fddc	char **	s_deferredJoins		ui	Points at the deferred-join list of channel name strings	verified	one	ui/chatwindows#settings-file-lines
 0xb4fdec	uint32_t	s_savedInstanceCapacity		ui	Holds the capacity of the saved-instance array in records	verified	one	ui/instances#the-saved-instance-list
-0xb4fdf0	uint32_t	s_savedInstanceArrayCount		ui	Holds the saved-instance array's count, raised to a larger message count and never lowered	verified	one	ui/instances#the-saved-instance-list
+0xb4fdf0	uint32_t	s_savedInstanceArrayCount		ui	Holds the saved-instance array's count, raised to a larger message count and zeroed by ShutdownChat	verified	one	ui/instances#the-saved-instance-list
 0xb4fdf4	RaidInstanceInfo *	s_savedInstances		ui	Points to the saved-instance records: map id, instance id and seconds to reset	verified	one	ui/instances#the-saved-instance-list
 0xb4fdf8	uint32_t	s_savedInstanceGranularity		ui	Holds the saved-instance array's growth granularity, 0 until a need of 21 sets 21	verified	one	ui/instances#growing-the-saved-list
 0xb4fe00	uint32_t	s_joinedChannelCount		ui	Holds the number of joined-channel slots, each 0xa0 bytes	verified	one	ui/chatchannels#joined-channel-slots
