@@ -47,8 +47,9 @@ Test: none
 `0x4b4015` to `0x4b4034` read the list by book type; `0x4b405a` loads `Name[locale]` at `+0x1e0` and
 `0x4b406d` the rank at `+0x204` from the locale index at 0xc0e080; both go through `0x6f3890`, which
 pushes nil only for a null pointer. `0x4b4086` is the nil, nil exit. `SpellRec::Read` (`0x583750`) adds
-the string block base to every string column unconditionally (`0x584a0e`, `0x584a1c` for the rank); its
-base is the `edi` of `0x54ffd0` (`0x550116`, records plus count times 0x2b4). The bad-argument path
+the string block base to every string column without testing the offset (`0x584a0e`, `0x584a1c` for the
+rank; `dbc#six-readers-column-by-column`); its base is the `edi` of `0x54ffd0` (`0x550116`, the records'
+allocation plus count times 0x2b4), so the null-base branch at `0x584998` is not taken for any record it reads. The bad-argument path
 raises and does not return.
 
 ## Book icons

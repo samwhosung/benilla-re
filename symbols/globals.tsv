@@ -422,7 +422,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	one	core/events#observer-classes
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
-0x801490	const uint8_t			os	Holds a byte its object file's code reads; not read here	inferred	none	
+0x801490	const uint8_t[256]	s_hexDigitValue		os	Holds each byte's hex digit value: 0 to 15 for 0-9, A-F and a-f, and 0 for every other byte	verified	one	net/connection#opening-a-url
 0x8015a8	const float	s_infinityClock		core	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
 0x8015ac	const float	s_piClock		core	Holds pi, 0x40490fdb, which the clock file doubles into 2 pi at start-up	verified	one	core/time#static-initializers
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
@@ -2515,7 +2515,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87cefc	float	s_ambienceCategoryVolume		sound	Holds the Ambience category factor, 0.5 until the CVar handler sets it	verified	one	sound/engine#volume-of-a-sound
 0x87cf00	int32_t	s_soundEffectsOff		sound	Holds 1 while sound effects are off, 0 while on, -1 at start and after shutdown	verified	one	sound/engine#opening-a-stream
 0x87d3a0	char[12]	s_soundTag		sound	Holds the allocation tag of the engine's sound records	verified	one	sound/overview#object-files
-0x87d3b0	char[20]	s_textBlizzardWebClient		os	Holds the string "Blizzard Web Client"	inferred	none	
+0x87d3b0	char[20]	s_textBlizzardWebClient		os	Holds the string "Blizzard Web Client", the URL download's agent	verified	one	glue/manager#the-url-download
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
 0x87d5fc	float	s_particleDensity		models	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density
@@ -2588,6 +2588,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883c90	char[260]	s_cmdLineString		unassigned	Holds the string the last CmdLineGetString call read	verified	one	storm/scmd#the-clients-switch-readers
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
+0x883e78	uint32_t[8]	s_nullSharedStringRecord		base	Holds the record a null shared string points at: vtable, count, and a null text at +0x1c	verified	one	ui/fontstring#shared-path-strings
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
 0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	verified	one	core/scheduler#growable-arrays
@@ -4815,6 +4816,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf55fc	void *	s_soundPositionCallback		sound	Holds the object position callback, null when none	verified	one	sound/engine#sounds-that-follow-objects
 0xcf5600	uint32_t	s_soundOpenBlocked		sound	Holds 0; read by every open and written nowhere	verified	one	sound/engine#opening-a-stream
 0xcf5604	uint32_t	s_soundRecordCount		sound	Holds the number of live sound records	verified	one	sound/engine#the-sound-object
+0xcf569c	uint8_t[40]	s_soundFileTable		os	Holds the sound file cache's hash table of entries by name hash, mask at +0x24	verified	one	sound/overview#the-file-cache-open
+0xcf56d4	uint32_t[3]	s_soundFileIdleList		os	Holds the list of sound file cache entries with no open handle: link offset, tail, head	verified	one	sound/overview#the-file-cache-open
+0xcf56e8	void *	s_soundFileEntries		os	Holds the array of 0x1a4-byte sound file cache entries a handle indexes	inferred	none	sound/overview#the-file-cache-open
 0xcf572c	float	s_cameraPropertyInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf5730	float	s_cameraInvTwoPi		camera	Holds 1/2π (0x3e22f983), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5734	float	s_cameraTwoPi		camera	Holds 2π (0x40c90fdb), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties

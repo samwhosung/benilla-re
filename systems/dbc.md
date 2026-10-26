@@ -127,6 +127,40 @@ and `+8`, and stores `stringBase + offset` at `+4` (`0x579e2e` to `0x579e34`). `
 file's kind at `[file+0]` and jumps through `0x6485d8` (`0x6484b9`): kind 0 `_fread`, 1 `0x6476e0`, 2 and 3 the archive read
 `0x656b40`, 4 the zip read `0x668750`.
 
+## Six readers column by column
+
+Each of these `Read`s makes every one of its column reads, a failed one included, before it tests
+any: the result is false when any read returned 0, and then no string column is stored. The scalar
+columns land in the record as they are read, so a failed record keeps what its reads wrote. A
+string column holds `stringBase + offset` in 32 bits, or the empty string `0x882748` in every
+string column when `stringBase` is null.
+
+| reader | record | reads, in order |
+|---|---|---|
+| `CharHairGeosets` `0x5753b0` | 24 | six dwords |
+| `CharSections` `0x575540` | 40 | six dwords, three strings at `+0x18` to `+0x20`, a dword |
+| `CharacterFacialHairStyles` `0x575a80` | 36 | six dwords, 12 bytes at `+0x18` |
+| `WeaponImpactSounds` `0x587450` | 92 | three dwords, 40 bytes at `+0xc`, 40 at `+0x34` |
+| `LightParams` `0x589030` | 36 | nine dwords |
+| `Spell` `0x583750` | 692 | 118 reads; four localized strings at `+0x1e0`, `+0x204`, `+0x228`, `+0x24c` |
+
+Addresses: `0x5753b0`, `0x575476`, `0x575540`, `0x575687`, `0x5756a5`, `0x5756ca`, `0x575a80`, `0x575b67`, `0x587450`, `0x5874f5`, `0x589030`, `0x589159`, `0x583750`, `0x58497a`, `0x584998`, `0x584b69`, `0x648460`, `0x63cb50`, `0x882748`
+Confidence: verified
+Proof: one
+Test: `dbc::char_hair_geosets_read_difftest`, `dbc::char_sections_read_difftest`, `dbc::character_facial_hair_styles_read_difftest`, `dbc::spell_read_difftest`, `dbc::weapon_impact_sounds_read_difftest`, `dbc::light_params_read_difftest`
+
+Each read's result goes to a register or a stack slot; after the last call `neg; sbb; inc` and
+`test; sete` per result OR a failure flag together, and one `je` (`0x575476`, `0x575687`, `0x575b67`,
+`0x5874f5`, `0x589159`, `0x58497a`) skips `ConsoleWrite(text, 0)` (`0x63cb50`) with the reader's
+`Error reading` line and `xor al,al`. `0x5756a5` and `0x584998` test `[ebp+0xc]`; null goes to
+`0x5756ca` and `0x584b69`, which store `0x882748` in every string column. The four readers without
+strings never load `[ebp+0xc]` (`0x575540` does once, the control). The record offsets run on from 0
+in read order, the scalars at the record and the strings through stack temporaries. The `Spell`
+reads are 40 dwords, 8, 32 and 32 bytes, three dwords, eighteen reads of 12, 8, three dwords, the 36
+columns of the strings (four runs of eight offsets, each followed by a dword, to `+0x26c`), then 4, 4, 4, 4, 4, 8, 4, 4,
+4, 4, 12, 4, 4 and 4. The tests run each reader whole with `SFile::Read` and `ConsoleWrite` stubbed:
+each column failing alone, a null base, wrapping offsets and a fuzz.
+
 ## Spell visual columns that are read
 
 No reader found touches three columns of the spell visual tables: the effect name's `+0x0c`, the kit's `+0x04` and the visual's `+0x20`. Each table's `Read` fills every column, so they are loaded and unused.

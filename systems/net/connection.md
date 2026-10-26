@@ -148,6 +148,33 @@ Test: none
 
 The prefix test is `0x64a4c0` (case-insensitive) against `0x85d6bc` for its length (`0x5abc2e`). Each later character must be `/`, `.`, `-` or satisfy `_isalpha` (`0x5abc64`; mask `0x103`), so digits are rejected, in the path as well as the host. The host is copied until a NUL, `/`, or the end of the 128-byte buffer (`0x5abc78` to `0x5abc9c`); the terminator is then stored at `[ecx]`, which is the saved frame pointer's low byte when 128 characters were copied. The table `0x85cc34` holds ten string pointers (`cmp esi,0x28`); `0x5abcac` tests a leading `*`, finds the first `.` with `0x64a3f0` and compares the rest with the pattern from its second byte, both with the length bound `0x7fffffff`, so the comparison covers the whole string.
 
+## Opening a URL
+
+`OpenUrlInBrowser(url)` (`0x429ff0`) returns 0 for a null or empty URL, with no active window, and
+for 0x400 bytes or more (error 0x57). It copies the URL decoding escapes: `%ab` becomes
+`T[a] << 4 | T[b]` in 8 bits, `T` the table `0x801490` indexed by the signed byte, so a byte from
+0x80 up reads the 128 bytes before the table; a `%` with fewer than two bytes left ends the copy. It
+returns 1 when `ShellExecuteA(window, "open", copy, NULL, NULL, 1)` gives above 32. Otherwise, unless
+the undecoded URL begins exactly `file://`, it creates an empty temp-folder `TempHTMLFile<ms in hex>.html`, asks
+`FindExecutableA` for its program, deletes the file, and returns 1 when that program, given the
+copy, gives above 32.
+
+Addresses: `0x429ff0`, `0x42a000`, `0x42a014`, `0x42a01c`, `0x42a04b`, `0x42a050`, `0x42a057`, `0x42a059`, `0x42a08e`, `0x42a096`, `0x42a0b3`, `0x42a0c7`, `0x42a0f3`, `0x42a104`, `0x42a129`, `0x42a138`, `0x42a15e`, `0x42a166`, `0x801490`
+Confidence: verified
+Proof: one
+Test: none
+
+`ecx` is the URL; `0x42a000` and `0x42a005` test it, `GetActiveWindow` at `0x42a007` gives the window
+(`0x42a014`), and `0x42a01c` is `cmp eax,0x400` on `SStrLen`. The copy goes to a 0x400-byte stack
+buffer. `0x42a04b` and `0x42a052` read the two bytes, `0x42a050` and `0x42a057` end on a NUL, and
+`0x42a059` is `movsx edx,dl` before `mov dl,[edx+0x801490]; shl dl,4; or dl,[ecx+0x801490]`. The table
+holds 1 to 9 at `1` to `9`, 10 to 15 at `A` to `F` and `a` to `f`, and 0 elsewhere; the bytes before it are
+vtables, floats and the processor vendor strings. `0x42a08e` is `ShellExecuteA` with `open`, `0x42a096`
+the `> 32` test, `0x42a0b3` a 7-byte `repz cmpsb` of `esi`, the URL as passed, against `file://`, byte for byte. `0x42a0c7` is `GetTempPathA`,
+`0x42a0f3` `SStrPrintf("%sTempHTMLFile%x.html", temp, OsGetAsyncTimeMs())`, `0x42a104` `fopen(path,
+"wb")` then `fclose`, `0x42a129` `FindExecutableA`, `0x42a138` `DeleteFileA`, `0x42a15e` the second
+`ShellExecuteA`, and `0x42a166` computes `32 < result`. The callers are `0x5abd00` and `0x46d5e0`.
+
 ## Status text and names
 
 `0x5abd20(code)` returns the token string of a status code from 1 to `0x52`, and the empty string otherwise. `0x5abd40` returns 1 when its connection is the current one. `0x5abd50(name)` returns the name validator's result plus `0x45`, a `CHAR_NAME_*` status code. `0x5abd90` copies a `0x110`-byte character record into `0xc27d80`, the selected-character record; `0x5abdc0` returns `0xc27d88`, the name field at `+0x08` of it, or null when it is empty. `0x5abd70` and `0x5abd80` set and return the account name `0xc27d08`, copied in `0x40` bytes when the logon object authenticates (`session`, Session key).

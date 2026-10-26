@@ -1543,7 +1543,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
 0x419ed0	295	CStatus::Prepend		client			Puts a formatted line of a severity first in a status	verified	one	ui/framexml#the-load-status-and-its-log	
 0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status, raising its highest severity	verified	one	ui/framexml#the-load-status-and-its-log	
-0x41a100	74			client			Runs Status.cpp code not read here	inferred	none		
+0x41a100	74	CStatus::Merge		client	orchestration	void __thiscall (CStatus *this, CStatus *other)	Adds each line of another status through this status's own Add, the line's text as the format	verified	one	ui/framexml#merging-one-status-into-another	
 0x41a150	23	CStatus::IsEmpty	idb	client			Runs Status.cpp code not read here	inferred	none		
 0x41a170	126	CStatus::Clear	idb	client			Runs Status.cpp code that calls SMemFree; not read here	inferred	none		
 0x41a1f0	117	CStatus::GetErrorStr	idb	client			Runs Status.cpp code that calls SStrLen, SStrCopy; not read here	inferred	none		
@@ -1703,7 +1703,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41e310	32			base			Runs its object file code that calls 0x41e2d0; not read here	inferred	none		
 0x41e330	34			base			Runs its object file code that calls 0x41e430; not read here	inferred	none		
 0x41e360	56			base	unreached		Runs its object file code not read here	inferred	none		
-0x41e3a0	131			base			Runs its object file code that calls SStrLen, SErrSetLastError, 0x41ddd0 and 1 more; not read here	inferred	none		
+0x41e3a0	131	AssignSharedString		base	primitive	void __thiscall (void *this, const char *text)	Points a shared string handle at the pool's counted record of a text, or the null record for NULL	verified	one	ui/fontstring#shared-path-strings	ui::assign_shared_string_difftest
 0x41e430	41			base			Runs its object file code that calls 0x41e310; not read here	inferred	none		
 0x41e460	23			base	unreached		Runs its object file code not read here	inferred	none		
 0x41e480	37			base	unreached		Runs its object file code that calls 0x41e2d0; not read here	inferred	none		
@@ -2169,7 +2169,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x429f80	23			os	unreached		Runs its object file code not read here	inferred	none		
 0x429fa0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x429fb0	54			os	unreached		Runs its object file code not read here	inferred	none		
-0x429ff0	392			os			Runs its object file code that calls SStrLen, SErrSetLastError, OsGetAsyncTimeMs and 3 more; not read here	inferred	none		
+0x429ff0	392	OpenUrlInBrowser		os	host	bool __fastcall (const char *url)	Opens a URL with its escapes decoded through ShellExecute, else through the .html program; returns 1 on success	verified	one	net/connection#opening-a-url	
 0x42a180	24			os	unreached		Runs its object file code that calls __clearfp, __control87; not read here	inferred	none		
 0x42a1a0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1b0	15			os	unreached		Runs its object file code not read here	inferred	none		
@@ -2207,7 +2207,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42ac20	70	OsSetCurrentDirectory		os		uint32_t __fastcall (const char *path)	Sets the working directory to a UTF-8 path with SetCurrentDirectoryW	verified	one	storm/mount#install-folder-and-data-path	
 0x42ac70	83			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42acd0; not read here	inferred	none		
 0x42acd0	59			os			Runs its object file code that calls 0x65b080; not read here	inferred	none		
-0x42ad10	304			os			Runs its object file code that calls SStrCopy, 0x42b3d0, SStrPack and 2 more; not read here	inferred	none		
+0x42ad10	304	EnumerateFolderFiles		os	host	bool __fastcall (const char *folder, const char *pattern, void *callback, void *param, uint32_t withHidden)	Calls a callback for each entry a folder pattern lists, hidden ones on request, until one returns nonzero	verified	one	storm/mount#listing-a-folder	
 0x42ae40	118			os	unreached		Runs its object file code not read here	inferred	none		
 0x42aec0	85			os	unreached		Runs its object file code that calls SStrLen; not read here	inferred	none		
 0x42af20	218			os	unreached		Runs its object file code that calls 0x42ae40, SStrCopy, SStrPack and 1 more; not read here	inferred	none		
@@ -14922,7 +14922,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575380	6	CharHairGeosetsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharHairGeosets table file	inferred	none		
 0x575390	3	CharHairGeosetsRecConstruct		dbc	orchestration	CharHairGeosetsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x5753a0	1	CharHairGeosetsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x5753b0	228	CharHairGeosetsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharHairGeosetsRec column by column from the file and rebases its string offsets	inferred	none		
+0x5753b0	228	CharHairGeosetsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the six dwords of one CharHairGeosetsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::char_hair_geosets_read_difftest
 0x5754a0	5	InitDbcTwoPiC0E428Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x5754b0	15	InitDbcTwoPiC0E428		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x5754c0	5	InitDbcInvTwoPiC0E424Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -14932,7 +14932,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575510	6	CharSectionsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharSections table file	inferred	none		
 0x575520	3	CharSectionsRecConstruct		dbc	orchestration	CharSectionsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x575530	1	CharSectionsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x575540	419	CharSectionsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharSectionsRec column by column from the file and rebases its string offsets	inferred	none		
+0x575540	419	CharSectionsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharSectionsRec and rebases its three texture names once every read succeeds	verified	one	dbc#six-readers-column-by-column	dbc::char_sections_read_difftest
 0x5756f0	5	InitDbcTwoPiC0E434Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x575700	15	InitDbcTwoPiC0E434		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x575710	5	InitDbcInvTwoPiC0E430Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -14962,7 +14962,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575a50	6	CharacterFacialHairStylesGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharacterFacialHairStyles table file	inferred	none		
 0x575a60	3	CharacterFacialHairStylesRecConstruct		dbc	orchestration	CharacterFacialHairStylesRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x575a70	1	CharacterFacialHairStylesRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x575a80	261	CharacterFacialHairStylesRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharacterFacialHairStylesRec column by column from the file and rebases its string offsets	inferred	none		
+0x575a80	261	CharacterFacialHairStylesRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the nine dwords of one CharacterFacialHairStylesRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::character_facial_hair_styles_read_difftest
 0x575b90	5	InitDbcTwoPiC0E458Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x575ba0	15	InitDbcTwoPiC0E458		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x575bb0	5	InitDbcInvTwoPiC0E454Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -15942,7 +15942,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x583720	6	SpellGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the Spell table file	inferred	none		
 0x583730	3	SpellRecConstruct		dbc	orchestration	SpellRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x583740	1	SpellRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x583750	5353	SpellRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one SpellRec column by column from the file and rebases its string offsets	inferred	none		
+0x583750	5353	SpellRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one SpellRec in 118 reads and rebases its 32 string offsets once every read succeeds	verified	one	dbc#six-readers-column-by-column	dbc::spell_read_difftest
 0x584c40	5	InitDbcTwoPiC0E8F0Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x584c50	15	InitDbcTwoPiC0E8F0		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x584c60	5	InitDbcInvTwoPiC0E8ECThunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -16152,7 +16152,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x587420	6	WeaponImpactSoundsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the WeaponImpactSounds table file	inferred	none		
 0x587430	3	WeaponImpactSoundsRecConstruct		dbc	orchestration	WeaponImpactSoundsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x587440	1	WeaponImpactSoundsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x587450	195	WeaponImpactSoundsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one WeaponImpactSoundsRec column by column from the file and rebases its string offsets	inferred	none		
+0x587450	195	WeaponImpactSoundsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the 23 dwords of one WeaponImpactSoundsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::weapon_impact_sounds_read_difftest
 0x587520	5	InitDbcTwoPiC0E9ECThunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x587530	15	InitDbcTwoPiC0E9EC		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x587540	5	InitDbcInvTwoPiC0E9E8Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -16270,7 +16270,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589000	6	LightParamsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the LightParams table file	inferred	none		
 0x589010	3	LightParamsRecConstruct		dbc	orchestration	LightParamsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x589020	1	LightParamsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x589030	327	ReadLightParamsRecord		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one LightParamsRec column by column from the file and rebases its string offsets	inferred	none		
+0x589030	327	LightParamsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the nine dwords of one LightParamsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::light_params_read_difftest
 0x589180	5	InitDbcTwoPiC0EB30Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x589190	15	InitDbcTwoPiC0EB30		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x5891a0	5	InitDbcInvTwoPiC0EB2CThunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -28745,7 +28745,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d6ce0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6d6d00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6d6d10	14			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6d20	179	GetGuildEmblem		client			Reads a guild's five emblem values from the guild cache, keeping a callback on a miss; returns 1 when found	inferred	none		
+0x6d6d20	179	GetGuildEmblem		client	orchestration	bool __fastcall (uint32_t guildId, void *callback, uint64_t guid, void *data, int32_t *emblemStyle, int32_t *emblemColor, int32_t *borderStyle, int32_t *borderColor, int32_t *background)	Copies a cached guild's five emblem values when none is -1 and returns 1, else leaves all five -1 and returns 0	verified	one	objectlayer/party#the-emblem-lookup	
 0x6d6de0	6	GetGuildEmblemCost		client	orchestration		Returns 100000, the emblem's price in copper	verified	one	objectlayer/party#guild-tabards	
 0x6d6df0	5	InitShadowInfinityThunk		lighting	orchestration		Jumps to 0x6d6e00; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x6d6e00	11	InitShadowInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
@@ -35033,10 +35033,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6970	41	TSLink_Sound::NextLink	idb	sound	primitive		Returns the link after a sound list link	verified	one	sound/engine#the-sound-object	
 0x7a69a0	376			unassigned			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
 0x7a6b20	313	fnInternetCallback	idb	unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x7a6cc0	505			os			Runs OsURLDownload.cpp code that calls SMemAlloc, SMemFree; not read here	inferred	none		
+0x7a6cc0	505	StartUrlDownload		os	host	bool __fastcall (const char *url, void *callback, void *param, int32_t timeoutMs)	Sends an asynchronous WinINet GET of a URL with a callback and timeouts; returns 1 once the send is accepted	verified	one	glue/manager#the-url-download	
 0x7a6ec0	5			client			Runs its object file code not read here	inferred	none		
 0x7a6ed0	11			client			Runs its object file code not read here	inferred	none		
-0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
+0x7a6ee0	21	HttpGetAsync		client	orchestration	bool __fastcall (const char *url, void *callback, void *param)	Starts a URL download with a 5000 ms connect and receive timeout	verified	one	glue/manager#the-url-download	
 0x7a6f00	5			client			Runs its object file code not read here	inferred	none		
 0x7a6f10	15			client			Runs its object file code not read here	inferred	none		
 0x7a6f20	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -35124,13 +35124,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a8680	34			os			Runs its object file code not read here	inferred	none		
 0x7a86b0	12			os			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7a86c0	165			os			Runs its object file code not read here	inferred	none		
-0x7a8770	825			os			Runs its object file code that calls SStrHashHT, 0x7ab5b0, 0x7aa440 and 10 more; not read here	inferred	none		
+0x7a8770	825	SoundFileCacheOpen		os	host	uint32_t __stdcall (const char *name)	Opens a sound file into the cache entry its name hash finds, or an idle one, and returns the entry and slot	verified	one	sound/overview#the-file-cache-open	
 0x7a8ab0	386			os			Runs its object file code that calls 0x7a8e50, 0x7a8c40, SFile::OpenEx and 2 more; not read here	inferred	none		
 0x7a8c40	513			os			Runs its object file code that calls SCritSect::Enter, 0x7aa320, SCritSect::Leave and 5 more; not read here	inferred	none		
-0x7a8e50	27			os			Runs its object file code not read here	inferred	none		
+0x7a8e50	27	SoundFileCacheEntry		os	primitive	void * __fastcall (uint32_t handle, uint32_t *slot)	Returns a sound file handle's 0x1a4-byte entry and writes its slot, the low byte less one	verified	one	sound/overview#the-file-cache-open	sound::file_cache_entry_difftest
 0x7a8e70	107			os			Runs its object file code that calls 0x7a8e50; not read here	inferred	none		
 0x7a8ee0	28			os			Runs its object file code that calls 0x7a8e50; not read here	inferred	none		
-0x7a8f00	165			os			Runs its object file code that calls 0x7a8e50, SFile::Close; not read here	inferred	none		
+0x7a8f00	165	SoundFileCacheClose		os	host	void __stdcall (uint32_t handle)	Frees a sound file handle's slot and at the entry's last closes its file and puts it at the idle list's tail	verified	one	sound/overview#the-file-cache-open	
 0x7a8fb0	478			os			Runs its object file code that calls 0x7a9190, 0x7aa9e0, 0x7aa440 and 5 more; not read here	inferred	none		
 0x7a9190	535			os			Runs OsISoundCache.cpp code that calls SMemAlloc, 0x7aa2f0, 0x7aa340 and 4 more; not read here	inferred	none		
 0x7a93b0	246			os			Runs its object file code that calls 0x7ab5b0, 0x7ab220, 0x7a9f10; not read here	inferred	none		

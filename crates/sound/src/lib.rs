@@ -9,10 +9,12 @@
 
 #![forbid(unsafe_code)]
 
+mod file_cache;
 mod spatial;
 mod variation;
 mod volume;
 
+pub use file_cache::*;
 pub use spatial::*;
 pub use variation::*;
 pub use volume::*;

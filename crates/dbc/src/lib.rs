@@ -188,3 +188,5 @@ impl Dbc {
         self.string_field(rec, base_field + locale as u32)
     }
 }
+
+pub mod record;
