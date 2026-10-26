@@ -79,8 +79,10 @@ pub fn viewport(px: f32, py: f32, sx0: f32, sx1: f32, sy0: f32, sy1: f32) -> [i3
 /// The aspect fit of one rect edge, `0x5910a0` (the head of a family of four with `0x5910e0`,
 /// `0x591120` and `0x591160`; `__thiscall`, `this` the rect, no stack arguments).
 ///
-/// The family re-fits one edge of an integer rect `r = [f0, f4, f8, fC]` (the X pair `f0` and `f8`, the Y
-/// pair `f4` and `fC`) to the device scale `f32` at `[0xc0ef60]`. Each first tests the scale against
+/// The family re-fits one edge of an integer rect `r = [f0, f4, f8, fC]`, the window procedures'
+/// `WM_SIZING` rectangle `{top, left, bottom, right}` ([`crate::window`]), to the aspect ratio `f32`
+/// at `[0xc0ef60]`: `min_x` sets the top, `max_x` the bottom, `min_y` the left and `max_y` the right
+/// (the names follow the field pairs `f0`, `f8` and `f4`, `fC`). Each first tests the scale against
 /// `0.0` (`fld [0xc0ef60]; fcomp 0.0; jnp`) and leaves the rect alone when it is zero; it then derives
 /// the edge from the other axis' extent at 53-bit precision (an `f64` divide or multiply) and truncates
 /// with `__ftol` (`0x40a2b0`):

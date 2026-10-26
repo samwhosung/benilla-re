@@ -3428,10 +3428,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x447b00	34			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
 0x447b30	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
 0x447b40	165			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
-0x447bf0	10			gx	orchestration		Runs Texture.cpp code that calls 0x447c00; not read here	inferred	none		
-0x447c00	11			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
-0x447c10	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
-0x447c20	1			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
+0x447bf0	10	InitFailedTextureColourThunk		gx	orchestration	void __cdecl (void)	Calls 0x447c00, then jumps to 0x447c10; a static initializer	verified	one	gx/textures#texture-load-failure	
+0x447c00	11	InitFailedTextureColour		gx	orchestration	void __cdecl (void)	Stores 0xff00ff00, opaque green, as the colour of the failed-load texture	verified	one	gx/textures#texture-load-failure	
+0x447c10	12	InitFailedTextureColourAtExit		gx	orchestration	void __cdecl (void)	Registers the destructor 0x447c20 with _atexit	verified	one	gx/textures#texture-load-failure	
+0x447c20	1	InitFailedTextureColourExit		gx	orchestration	void __cdecl (void)	Returns at once	verified	one	gx/textures#texture-load-failure	
 0x447c30	10			gx	orchestration		Runs Texture.cpp code that calls 0x447c40; not read here	inferred	none		
 0x447c40	50			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
 0x447c80	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
@@ -3476,8 +3476,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x449000	1			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
 0x449010	172	FreeTextureCaches		gx	orchestration	void __cdecl ()	Destroys every pooled device texture in the 25 size-class lists	verified	one	gx/texturesize#pool-lists	
 0x4490c0	291	DecodeImageFile		gx	unreached		Decodes an image file as TGA or BLP by its extension, trying the other on failure and reporting both failing	verified	one	gx/textures#tga-mip-file-names	
-0x4491f0	430			gx	primitive		Runs Texture.cpp code that calls 0x5a3660, 0x5a3600, 0x5a3a30 and 8 more; not read here	inferred	none		
-0x4493a0	425			gx	primitive		Runs Texture.cpp code that calls 0x44ae70, SStrPrintf, 0x648a30 and 6 more; not read here	inferred	none		
+0x4491f0	430	TextureDecodeTga		gx	primitive	uint32_t __fastcall (const char *name, uint32_t fileFlag, void **chain, uint32_t *width, uint32_t *height, uint32_t *arg6, uint32_t *opaque, uint32_t *alphaBits, uint32_t *typeCode)	Decodes a TGA file into level 0 of a 32-bit mip chain, reads its mip files and builds the rest	verified	one	gx/tga#tga-texture-decode	gx::tga_opaque_flag_difftest, gx::tga_pixel_copy_difftest
+0x4493a0	425	TextureReadTgaMips		gx	primitive	uint32_t __fastcall (const void *record, const char *pattern, uint32_t fileFlag, void **levels)	Reads a TGA texture's lower levels from its numbered mip files and returns 1 plus the count read	verified	one	gx/tga#tga-mip-files	gx::tga_mip_copy_difftest
 0x449550	40	FormatTgaMipPattern		gx	orchestration	void __fastcall (const char *name, char *buffer)	Copies a name, cuts it at its last dot and appends _mip%d.tga	verified	one	gx/textures#tga-mip-file-names	
 0x449580	15	CutAtLastDot		gx	orchestration	void __fastcall (char *name)	Writes 0 over a name's last dot when it has one	verified	one	gx/textures#tga-mip-file-names	
 0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name and strips a dot four bytes from the end, returning 0 for tga and 1 otherwise	verified	one	gx/textures#texture-name-split	
@@ -3507,7 +3507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44a9c0	90	TextureCreateSolid		gx	orchestration	void * __fastcall (const uint32_t *colour, uint32_t unused)	Returns the cached solid texture of a colour, creating it with TextureFillSolid on a miss	verified	one	gx/textures#texture-creation	
 0x44aa20	261	TextureSolidFind		gx	orchestration	void * __thiscall (void *this)	Returns a handle on the cached solid texture of a colour, or 0	verified	one	gx/textures#texture-creation	
 0x44ab30	318	TextureSolidInsert		gx	orchestration	void __fastcall (const uint32_t *colour, void *texture)	Caches a solid texture under its colour	verified	one	gx/textures#texture-creation	
-0x44ac70	128			gx	primitive		Runs Texture.cpp code that calls 0x449590, SErrSetLastError, strrchr and 1 more; not read here	inferred	none		
+0x44ac70	128	TextureHasFileName		gx	orchestration	uint32_t __fastcall (void *texture, const char *name)	Returns whether a texture's name cut at its last dot equals a name without its three-byte extension	verified	one	gx/textures#texture-name-match	
 0x44acf0	82	GetTextureDeviceObject		gx	orchestration	void * __fastcall (void *texture, uint32_t load, void *callback)	Returns a texture's device object, loading it first when asked; 0 for a null texture	verified	one	models/render#texture-stages	
 0x44ad50	169	TextureWaitLoaded		gx	orchestration	void __thiscall (void *this)	Logs the wait, pins the async record with its own buffer and waits for the read to finish	verified	one	gx/textures#texture-readiness-and-info	
 0x44ae00	68	TextureGetBits		gx	orchestration	void * __fastcall (void *texture, uint32_t wait)	Returns the decoded pixel buffer, waiting for the load first when wait is set and none exists	verified	one	gx/textures#texture-readiness-and-info	
@@ -16320,12 +16320,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589b80	30			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589ba0	56			gx	orchestration		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x589be0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x589bf0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x589bf0	15	GxDevSetTextureSkip		gx	orchestration	void __fastcall (uint32_t levels)	Calls the device's slot +0x2c with the number of top mip levels the uploads skip	verified	one	gx/facade#texture-mip-skip	
 0x589c00	22	GxDevSetGamma		gx	orchestration	void __stdcall (float gamma)	Calls the device's slot +0x34 with a gamma value	verified	one	gx/device#gamma-setting	
 0x589c20	15	GxDevSetGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Calls the device's slot +0x30 with a gamma ramp	verified	one	ui/videoverbs#gamma	
 0x589c30	15			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589c40	11			gx	unreached		Runs its object file code not read here	inferred	none		
-0x589c50	11			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x589c50	11	GxDevGetTextureSkip		gx	orchestration	uint32_t __cdecl (void)	Returns the device's mip skip count through 0x5920c0	verified	one	gx/facade#texture-mip-skip	
 0x589c60	13			gx	unreached		Runs its object file code that calls 0x5920d0; not read here	inferred	none		
 0x589c70	13	GxDevGetSavedGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Copies the device's saved gamma ramp into a buffer	verified	one	ui/videoverbs#gamma	
 0x589c80	11			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -16380,7 +16380,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a1e0	34	GxMasterEnableSet	idb	gx	orchestration		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58a210	28			gx	orchestration		Runs its object file code that calls SErrSetLastError, 0x5936c0; not read here	inferred	none		
 0x58a230	11	GxDeviceCaps		gx	orchestration	void * __cdecl ()	Returns the device's capability block at +0x23c through a tail call to 0x5923d0	verified	one	gx/device#capability-block	models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
-0x58a240	15	GxCapsWindowSize		gx	orchestration		Writes the window rectangle as four floats	inferred	none		
+0x58a240	15	GxCapsDrawRect		gx	orchestration	void __fastcall (float *rect)	Writes the device's draw rectangle as four floats through slot +0x5c	verified	one	gx/facade#draw-rectangle	
 0x58a250	15	GxCapsScreenSize	idb	gx	host		Writes the screen rectangle as four floats	inferred	none	camera#orthographic-setup	
 0x58a260	18			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58a280	18			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16457,7 +16457,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b2e0	46			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b310	22	GxShaderRelease		gx	orchestration		Releases a device shader handle through the device	inferred	none		
 0x58b330	42			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58b360	11			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x58b360	11	GxShaderIsLoaded		gx	orchestration	uint32_t __fastcall (void *shader)	Returns a shader's loaded flag +0x2c, or 0 for a null shader	verified	one	gx/facade#shader-loaded-flag	
 0x58b370	20			gx	unreached		Runs its object file code that calls 0x595480; not read here	inferred	none		
 0x58b390	33			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b3c0	21			gx	orchestration		Runs its object file code that calls 0x5980f0; not read here	inferred	none		
@@ -16476,7 +16476,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b560	8			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b570	8			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b580	11			gx	unreached		Runs its object file code not read here	inferred	none		
-0x58b590	18	SetCursorShown		gx	orchestration		Calls slot +0xec of the device object with a show flag	inferred	none		
+0x58b590	18	SetCursorShown		gx	orchestration	void __fastcall (uint32_t shown)	Calls the device's slot +0xec with whether the cursor is shown	verified	one	gx/facade#cursor-shown-flag	
 0x58b5b0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b5c0	21	SetDeviceCursorPair		gx	orchestration		Passes its two register arguments to slot 61 of the global device, which stores them and refreshes the cursor texture	inferred	none		
 0x58b5e0	5	GxOpenLog		gx	orchestration	void __cdecl (void)	Jumps to the device log opener	verified	one	gx/device#device-log	
@@ -16507,7 +16507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58c400	372	LoadGlEntryPoints		gx	host	void __cdecl (void)	Loads the GL and WGL extension entry points once through a hidden window and a temporary context	verified	one	gx/opengl#loading-the-entry-points	
 0x58c580	189	LoadWglExtensions		gx	host	void __cdecl (void)	Loads wglGetExtensionsStringARB and the pixel format, pbuffer and swap control entry points	verified	one	gx/opengl#gl-and-wgl-extension-loads	
 0x58c640	137	CGxDeviceOpenGl::DestroyContext		gx	host	void __thiscall (CGxDeviceOpenGl *this)	Releases the device's context, restores the desktop gamma ramp and releases the device context	verified	one	gx/opengl#context-creation-and-release	
-0x58c6d0	820			gx	host		Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
+0x58c6d0	820	GxWindowProcOpenGl		gx	host	intptr_t __stdcall (void *hwnd, uint32_t msg, uintptr_t wParam, intptr_t lParam)	Handles the OpenGL device window's messages, sizing the drag rectangle as the Direct3D procedure does	verified	one	gx/window#window-sizing	
 0x58ca60	316	CGxDeviceOpenGl::HandleWindowEvent		gx	primitive	void __thiscall (CGxDeviceOpenGl *this, uint32_t event, const float *rect, uint32_t sizeType)	Follows a window event: size, display change, destroy, focus gained or lost	verified	one	gx/slots#window-events	gx::rect_b_smaller_matches_binary
 0x58cbb0	149	CGxDeviceOpenGl::DeviceCreate		gx	host	uint32_t __thiscall (CGxDeviceOpenGl *this, void *wndproc, void *format)	Saves the gamma ramp, registers the OpenGL window class and sets the format; destroys the device on failure	verified	one	gx/slots#life-cycle-slots	
 0x58cc50	130			gx	host		Runs its object file code not read here	inferred	none		
@@ -16628,14 +16628,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x590ff0	12			gx	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x591000	21			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591020	115			gx	orchestration		Runs its object file code that calls 0x5922e0, __ftol; not read here	inferred	none		
-0x5910a0	63			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_x_matches_binary
-0x5910e0	61			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_x_matches_binary
-0x591120	63			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_y_matches_binary
-0x591160	61			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_y_matches_binary
-0x5911a0	29			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5911c0	28			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5911e0	27			gx	primitive		Runs its object file code not read here	inferred	none		
-0x591200	27			gx	primitive		Runs its object file code not read here	inferred	none		
+0x5910a0	63	SizingRectFitTop		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's top to its bottom less its width over the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_min_x_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5910e0	61	SizingRectFitBottom		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's bottom to its top plus its width over the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_max_x_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591120	63	SizingRectFitLeft		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's left to its right less its height times the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_min_y_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591160	61	SizingRectFitRight		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's right to its left plus its height times the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_max_y_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911a0	29	SizingRectMinLeft		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's left to its right less the minimum width less 1 when it is narrower than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911c0	28	SizingRectMinRight		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's right to its left plus the minimum width less 1 when it is narrower than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911e0	27	SizingRectMinTop		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's top to its bottom less the minimum height less 1 when it is shorter than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591200	27	SizingRectMinBottom		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's bottom to its top plus the minimum height less 1 when it is shorter than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
 0x591220	64	CGxDevice::AddFormat		gx	orchestration	uint32_t __fastcall (CGxDevice *arg1, const void *record)	Appends a format record to the list unless an equal one is held	inferred	none	gx/device#display-modes	
 0x591260	116	DeviceLightInitialize		gx	orchestration	void __thiscall (void *this)	Initializes a device light: directional along +z, black ambient, white diffuse, attenuation 0, 0.7, 0.03	verified	one	models/lights#fixed-function-lights	models::light_clamp_pack_difftest
 0x5912e0	9			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16669,7 +16669,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592080	31	CGxDevice::SetGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, const uint16_t *ramp)	Copies a whole 0x600-byte gamma ramp into the working ramp at +0x328	verified	one	gx/device#gamma-ramp	
 0x5920a0	16	CGxDevice::SetFullColorTextures		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t on)	Stores whether textures are created 32-bit at +0x320	verified	one	gx/slots#life-cycle-slots	
 0x5920b0	7			gx	unreached		Runs its object file code not read here	inferred	none		
-0x5920c0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x5920c0	7	CGxDevice::GetTextureSkip		gx	orchestration	uint32_t __thiscall (CGxDevice *this)	Returns the number of top mip levels the texture uploads skip, +0x31c	verified	one	gx/facade#texture-mip-skip	
 0x5920d0	31			gx	unreached		Runs its object file code not read here	inferred	none		
 0x5920f0	31	CGxDevice::GetSavedGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, void *ramp)	Copies the 0x600-byte ramp at +0x928 into a buffer unless the buffer is that ramp	verified	one	ui/videoverbs#gamma	
 0x592110	7			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -16681,10 +16681,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592220	8			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x592230	137	CGxDevice::SetRenderTarget		gx	primitive	void __thiscall (CGxDevice *this, uint32_t target, CGxTexture *texture, uint32_t face)	Records a target texture and sets the draw rectangle to its size, or to the window with no target	verified	one	gx/slots#capture-window-and-frame-slots	
 0x5922c0	25			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x5922e0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x5922f0	50			gx	orchestration		Runs its object file code that calls 0x592340; not read here	inferred	none		
-0x592330	7			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x592340	38			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x5922e0	7	CGxDevice::DrawRect		gx	orchestration	float * __thiscall (CGxDevice *this)	Returns the address of the draw rectangle, +0x1ec	verified	one	gx/facade#draw-rectangle	
+0x5922f0	50	CGxDevice::SetWindowRects		gx	orchestration	void __thiscall (CGxDevice *this, const float *rect)	Stores a rectangle as the window rectangle +0x1dc and the draw rectangle	verified	one	gx/facade#draw-rectangle	
+0x592330	7	CGxDevice::WindowRect		gx	orchestration	float * __thiscall (CGxDevice *this)	Returns the address of the window rectangle, +0x1dc	verified	one	gx/facade#draw-rectangle	
+0x592340	38	CGxDevice::SetDrawRect		gx	orchestration	void __thiscall (CGxDevice *this, const float *rect)	Stores a rectangle as the draw rectangle +0x1ec	verified	one	gx/facade#draw-rectangle	
 0x592370	88	CGxDevice::DeviceOverride		gx	primitive	void __thiscall (CGxDevice *this, uint32_t slot, uint32_t value)	Logs a device override and applies slot 8 to the fields +0x308, +0x30c and +0x310	verified	one	gx/device#device-overrides	
 0x5923d0	7	CGxDevice::GetCaps		gx	orchestration	void * __thiscall (CGxDevice *this)	Returns this + 0x23c, the capability block	verified	one	gx/device#capability-block	models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
 0x5923e0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16915,7 +16915,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5986b0	25			gx	primitive		Runs its object file code not read here	inferred	none		
 0x5986d0	77			gx	primitive		Runs its object file code not read here	inferred	none		
 0x598720	41			gx	primitive		Runs its object file code not read here	inferred	none		
-0x598750	942			gx	host		Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
+0x598750	942	GxWindowProcD3d		gx	host	intptr_t __stdcall (void *hwnd, uint32_t msg, uintptr_t wParam, intptr_t lParam)	Handles the Direct3D device window's messages and passes the rest to the saved procedure	verified	one	gx/window#direct3d-window-messages	
 0x598b50	359	CGxDeviceD3d::CreateWindow		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, void *format)	Creates the device window with the style and size the format asks for and shows it	verified	one	gx/device#direct3d-window	
 0x598cc0	32	CGxDeviceD3d::DestroyWindow		gx	host	void __thiscall (CGxDeviceD3d *this)	Destroys the device window and clears its handle	verified	one	gx/device#direct3d-window	
 0x598ce0	241	CGxDeviceD3d::CGxDeviceD3d		gx	orchestration	void * __thiscall (CGxDeviceD3d *this)	Constructs the Direct3D device: base constructor, vtable 0x809ef8, tag 1 and colour order flag 0	verified	one	gx/device#device-object	
@@ -17131,7 +17131,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a4070	313	TgaSetOrigin		image	primitive	int __thiscall (void *this, int top)	Reverses the rows and sets the origin bit	verified	one	image/tga#flipping	image::image_tga_flip
 0x5a41b0	20	TgaRequirePixels		image	primitive	int __thiscall (void *this)	Returns whether the image has pixels and otherwise sets an error	verified	one	image/tga#alpha-channel	
 0x5a41d0	20	TgaRequirePixelsCopy		image	unreached	int __thiscall (void *this)	Returns whether the image has pixels and otherwise sets an error	verified	one	image/overview#unreached-functions	
-0x5a41f0	39	TgaRequirePixels32		image	primitive	int __thiscall (void *this)	Returns whether the image has 32-bit pixels and otherwise sets an error	verified	one	image/tga#alpha-channel	
+0x5a41f0	39	TgaRequirePixels32		image	primitive	void * __thiscall (void *this)	Returns the pixels of a decoded 32-bit image, else 0 with an error set	verified	one	image/tga#alpha-channel	
 0x5a4220	39	TgaRequirePixels32Copy		image	unreached	int __thiscall (void *this)	Returns whether the image has 32-bit pixels and otherwise sets an error	verified	one	image/overview#unreached-functions	
 0x5a4250	200	TgaStripAlpha		image	primitive	int __thiscall (void *this)	Packs 32-bit pixels down to 24 bits in place	verified	one	image/tga#alpha-channel	image::image_tga_alpha_strip
 0x5a4320	39	TgaFreeId		image	orchestration	void __thiscall (void *this)	Frees the ID buffer and clears the ID length	verified	one	image/tga#image-record	

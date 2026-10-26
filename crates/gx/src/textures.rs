@@ -169,3 +169,20 @@ pub fn create_accepts(r: &CreateRequest, caps: &CreateCaps) -> bool {
     }
     r.has_callback
 }
+
+/// `TextureDecodeTga` (`0x4491f0`), `0x449237` to `0x449242`: the opaque flag it reports from the
+/// file's descriptor before decoding, 1 when the attribute nibble is 0 (`and cl,0xf; neg cl; sbb
+/// ecx,ecx; inc ecx`).
+#[must_use]
+pub fn tga_opaque(descriptor: u8) -> u32 {
+    u32::from(descriptor & 0xf == 0)
+}
+
+/// `TextureDecodeTga` (`0x4491f0`), `0x4492c0` to `0x449300`: the copy of `count` 32-bit pixels
+/// into level 0 of the chain. Each pixel's four bytes are packed into a dword and unpacked in the
+/// same order, so level 0 holds the decoded TGA bytes as they are, B, G, R, A, which as a
+/// little-endian dword is `Argb8888` (type code 2).
+#[must_use]
+pub fn tga_copy_pixels(src: &[u8], count: usize) -> Vec<u8> {
+    src[..4 * count].to_vec()
+}

@@ -39,6 +39,26 @@ Test: none
 
 `0x4495a8` compares the copy's length with 4 (`jb` skips the dot test), `0x4495ad` tests `[len - 4] == 0x2e` and `0x4495b4` backs the pointer up by four. `0x4495be` tests the byte at the split point; anything but `.` returns 1 at `0x449606`. `0x4495cf` to `0x4495fb` compare the lowered bytes: the `tga` path reaches `0x449601` and returns 0, the `blp` path stores 0 at `0x4495ea` and returns 1, and every other case jumps to `0x449603`, which stores 0 over the dot with the return value still 1. The lowering touches the buffer, never the caller's string.
 
+## Texture name match
+
+`0x44ac70(texture, name)` answers whether a texture was made from a file of that name: 1 when
+the name, split as `Texture name split` does (a three-byte extension four from the end stripped),
+equals the texture's own name `+0xc` cut at its last `.` of any length, ignoring case, over at most
+0x104 bytes; else 0. A null texture sets Storm error 0x57 and returns 0. The cut is made in the
+texture's name and undone after the compare. Flags play no part.
+
+Addresses: `0x44ac70`, `0x44ac8a`, `0x44ac93`, `0x44acaa`, `0x44acb3`, `0x44acc1`, `0x44acd1`, `0x44acd6`, `0x44acdf`, `0x44ace6`, `0x449590`, `0x73f700`, `0x64a4c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x44ac8a` splits the name into a 0x104-byte stack copy before the null test (`0x44ac93`).
+`0x44acaa` writes 0 at the split point, `0x44acb3` finds the last `.` of the name at `+0xc` with
+`strrchr` and `0x44acc1` writes 0 over it; `0x44acd1` is `SStrCmpI` with 0x104 and `0x44acd6`
+turns its zero into 1. `0x44acdf` and `0x44ace6` write `.` back at both points, in the copy even
+where the split point was its end. The callers are `CSimpleTexture::SetTexture` (`0x77021e`) and
+the taxi map's texture (`0x4dbb4b`).
+
 ## Texture name candidates
 
 `0x449d90` appends `.tga` (index 0) or `.blp` (index 1) at the split point from the table `0x835248` and loads `<buffer>` through `0x44a140` (TGA) or `0x44a310` (BLP), starting at the index `0x449590` returned and trying the other once. A name with no three-byte extension, or `.blp` or any other extension, goes `.blp` first; only `.tga` goes `.tga` first. A kept long extension stays in front of the candidate. The base name and its slashes reach Storm as written; only the stripped three bytes were lowered, and they are gone. Both loaders return 0 without writing to `log` when the open fails.
@@ -58,14 +78,17 @@ Test: none
 
 ## Texture load failure
 
-When both candidates fail, `0x449d90` calls `0x44a0e0` with `log`, the word `texture` and the caller's original name, and returns the solid texture of colour `[0x90582c]`: an 8 by 8 texture of format 2 (`0x44a900`), the colour `0xff00ff00`. `[0x90582c]` is zero until the static initializer `0x447bf0` calls `0x447c00`, which stores `0xff00ff00`. `0x44a0e0` calls `log` slot `+0xc` with severity 3 and the format `Error loading %s file "%s": %s\n`, the last Storm error text as the third argument, then clears the Storm error with `SErrSetLastError(0)` (`0x44a124`). `CStatus::Add` raises the status's highest severity to 3. The name in the message is the argument as the caller wrote it, extension included, not the stripped name.
+When both candidates fail, `0x449d90` calls `0x44a0e0` with `log`, the word `texture` and the caller's original name, and returns the solid texture of colour `[0x90582c]`: an 8 by 8 texture of format 2 (`0x44a900`), the colour `0xff00ff00`. `[0x90582c]` is zero until the static initializer `0x447bf0` calls `0x447c00`, which stores `0xff00ff00`, and nothing else writes it. `0x44a0e0` calls `log` slot `+0xc` with severity 3 and the format `Error loading %s file "%s": %s\n`, the last Storm error text as the third argument, then clears the Storm error with `SErrSetLastError(0)` (`0x44a124`). `CStatus::Add` raises the status's highest severity to 3. The name in the message is the argument as the caller wrote it, extension included, not the stripped name.
 
-Addresses: `0x449e65`, `0x449e70`, `0x449e77`, `0x44a0e0`, `0x44a11c`, `0x41a000`, `0x41a0f6`, `0x90582c`, `0x835654`, `0x83564c`
+Addresses: `0x449e65`, `0x449e70`, `0x449e77`, `0x44a0e0`, `0x44a11c`, `0x41a000`, `0x41a0f6`, `0x90582c`, `0x835654`, `0x83564c`, `0x447bf0`, `0x447c00`, `0x447c10`, `0x447c20`, `0x8274f4`, `0x44a50e`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x449e65` pushes the saved original name (`[ebp-0xc]`), `0x449e69` the word at `0x83564c` and `0x449e70` calls `0x44a0e0`; `0x449e77` loads `0x90582c` and calls `0x44a9c0`, whose result is the return value. `0x44a0e0` pushes severity 3 and the format at `0x835654` and calls `[ecx+0xc]` (`0x44a11c`); `0x41a0f6` stores the severity at `+0x10` when it is higher. The caller decides what the placeholder is worth: the widget path (`ui/texture#settexture-failure`) discards it.
+`0x449e65` pushes the saved original name (`[ebp-0xc]`), `0x449e69` the word at `0x83564c` and `0x449e70` calls `0x44a0e0`; `0x449e77` loads `0x90582c` and calls `0x44a9c0`, whose result is the return value. `0x44a0e0` pushes severity 3 and the format at `0x835654` and calls `[ecx+0xc]` (`0x44a11c`); `0x41a0f6` stores the severity at `+0x10` when it is higher. `0x447bf0`, at
+slot `0x8274f4` of the initializer table, calls `0x447c00` and jumps to `0x447c10`, which registers
+the empty `0x447c20` with `_atexit`. `0x90582c` lies past the file bytes of `.data`; its one writer
+is `0x447c00`, and `0x449e77` and `0x44a50e` pass its address. The caller decides what the placeholder is worth: the widget path (`ui/texture#settexture-failure`) discards it.
 
 ## Texture basename substitution
 
