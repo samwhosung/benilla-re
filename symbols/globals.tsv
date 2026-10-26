@@ -341,9 +341,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x703078	void *[9]	s_cases702f40		ui	Holds the 9 case addresses of the switch in 0x702f40	inferred	none	ui/luabase#type-and-tostring
 0x7039c4	const uint32_t[2]	s_debugstackNameCases		ui	Holds debugstack's two description arms, by name and by kind	verified	one	ui/luastate#debugstacks-lines
 0x7039cc	const uint8_t[8]	s_debugstackNameKinds		ui	Maps the first letter of a name kind, f to m, to the two arms of 0x7039c4	verified	one	ui/luastate#debugstacks-lines
-0x704a40	const uint32_t[7]	s_serializeTypeCases		ui	Holds the serializer case addresses for the Lua types nil to function	verified	one	ui/addons#the-saved-variables-format
-0x704a5c	const uint32_t[4]	s_serializeEscapeCases		ui	Holds the string escape case addresses: NUL, LF, quote or backslash, and plain	verified	one	ui/addons#the-saved-variables-format
-0x704a6c	const uint8_t[93]	s_serializeEscapeKinds		ui	Maps the bytes 0 to 92 to the escape cases of 0x704a5c	verified	one	ui/addons#the-saved-variables-format
+0x704a40	const uint32_t[7]	s_serializeTypeCases		ui	Holds the serializer case addresses for the Lua types nil to function	verified	one	ui/savedvariables#the-saved-variables-format
+0x704a5c	const uint32_t[4]	s_serializeEscapeCases		ui	Holds the string escape case addresses: NUL, LF, quote or backslash, and plain	verified	one	ui/savedvariables#the-saved-variables-format
+0x704a6c	const uint8_t[93]	s_serializeEscapeKinds		ui	Maps the bytes 0 to 92 to the escape cases of 0x704a5c	verified	one	ui/savedvariables#the-saved-variables-format
 0x7052a4	void *[5]	s_handlerFormatCases		ui	Holds the case addresses of the argument runner's format letters	verified	one	ui/script#running-a-handler
 0x7052b8	uint8_t[18]	s_handlerFormatIndex		ui	Holds the case of each letter from d to u for the argument runner	verified	one	ui/script#running-a-handler
 0x70b728	void *[6]	s_m2DrawKindTable		models	Holds the draw routine of each element kind, 0 to 5	verified	one	models/render#list-draw
@@ -1574,7 +1574,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x840404	char[21]	s_textIgPlayerInviteAccept		unassigned	Holds the string "igPlayerInviteAccept"	inferred	none	
 0x84133c	char[20]	s_textERRPASSIVEABILITY		ui	Holds the string "ERR_PASSIVE_ABILITY"	inferred	none	
 0x842180	char[14]	s_textERRBANKFULL		ui	Holds the string "ERR_BANK_FULL"	inferred	none	
-0x8421a8	char[35]	s_registerForSaveUsage		ui	Holds the usage message of RegisterForSave	verified	one	ui/addons#saved-variables-written
+0x8421a8	char[35]	s_registerForSaveUsage		ui	Holds the usage message of RegisterForSave	verified	one	ui/savedvariables#saved-variables-written
 0x8421cc	char[56]	s_registerForSaveBlizzardOnly		ui	Holds the message RegisterForSave raises for a nonzero context word	verified	one	ui/luastate#the-context-word
 0x8422e8	char[40]	s_textUsageRegisterCVarCvarDefault		ui	Holds the string "Usage: RegisterCVar("cvar" [, default])"	inferred	none	
 0x842310	char[30]	s_textCouldnTFindCVarNamedS		ui	Holds the string "Couldn't find CVar named '%s'"	inferred	none	
@@ -1918,9 +1918,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	one	ui/addons#enable-state
 0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	one	ui/addons#enable-state
 0x853968	char[9]	s_addOnsTxtLineFormat		ui	Holds %s: %s with CR LF, the AddOns.txt line format	verified	one	ui/addons#enable-state
-0x853980	char[40]	s_legacyCharacterSavedVariablesFormat		ui	Holds the format of the realm-less character saved variables path	verified	one	ui/addons#saved-variables-read
-0x8539a8	char[43]	s_characterSavedVariablesFormat		ui	Holds the format of the character saved variables path	verified	one	ui/addons#saved-variables-read
-0x8539d4	char[37]	s_accountSavedVariablesFormat		ui	Holds the format of the account saved variables path	verified	one	ui/addons#saved-variables-read
+0x853980	char[40]	s_legacyCharacterSavedVariablesFormat		ui	Holds the format of the realm-less character saved variables path	verified	one	ui/savedvariables#saved-variables-read
+0x8539a8	char[43]	s_characterSavedVariablesFormat		ui	Holds the format of the character saved variables path	verified	one	ui/savedvariables#saved-variables-read
+0x8539d4	char[37]	s_accountSavedVariablesFormat		ui	Holds the format of the account saved variables path	verified	one	ui/savedvariables#saved-variables-read
 0x8539fc	char[18]	s_textLoadingAddOnS		ui	Holds the string "Loading add-on %s"	inferred	none	
 0x853b88	char *[41]	s_cursorNames		ui	Holds the cursor names by cursor id, from Point at 1 to UnableSkinAlliance at 0x28	verified	one	spell/targeting#the-targeting-cursor
 0x854040	char[3]	s_arrayTagE		ui	Holds .E, the allocation tag of the region base's array at +0xa8	verified	one	ui/regions#the-region-base
@@ -2364,7 +2364,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x872cbc	char[11]	s_compatChunkName		ui	Holds compat.lua	verified	one	ui/luastate#what-a-new-state-holds
 0x872cc8	char[8]	s_getTextName		ui	Holds GetText	verified	one	ui/chatserver#the-text-lookup
 0x872cd0	char[15]	s_getPluralIndexName		ui	Holds GetPluralIndex	verified	one	ui/script#text-counts-and-running-code
-0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	one	ui/addons#the-saved-variables-format
+0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	one	ui/savedvariables#the-saved-variables-format
+0x872e28	char[6]	s_savedNumberFormat		ui	Holds %.16g, the format of a saved number	verified	two	ui/savedvariables#saved-numbers
+0x872e30	char[16]	s_savedInfinity		ui	Holds nil --[[ inf ]], the text saved for an infinity	verified	one	ui/savedvariables#the-saved-variables-format
+0x872e40	char[16]	s_savedNaN		ui	Holds nil --[[ nan ]], the text saved for a NaN	verified	one	ui/savedvariables#the-saved-variables-format
 0x872e50	char[17]	s_textErrorLoadingS		ui	Holds the string "Error loading %s"	verified	one	ui/framexml#loading-one-file
 0x872e64	char[5]	s_thisGlobalName		ui	Holds this, the global a handler runs with	verified	one	ui/script#running-a-handler
 0x872e74	uint32_t			ui	Holds a dword that LoadFrameScriptFunctions, UnloadFrameScriptFunctions read; not read here	inferred	none	
@@ -4684,7 +4687,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceea60	char[64]	s_fontFlagsText		ui	Holds the flags text FormatFontFlags builds and returns, emptied and rewritten by each call	verified	one	ui/fontmethods#font-flags-text
 0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	one	ui/luastate#the-context-word
 0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	one	ui/luastate#the-context-word
-0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	one	ui/addons#the-saved-variables-format
+0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	one	ui/savedvariables#the-saved-variables-format
 0xceef60	uint32_t	s_eventCapacity		ui	Holds the capacity of the event record array	verified	one	ui/script#the-event-table
 0xceef64	uint32_t	s_eventCount		ui	Holds the number of event records	verified	one	ui/script#the-event-table
 0xceef68	void *	s_eventRecords		ui	Points to the event records, 0x10 bytes each: name and listener list	verified	one	ui/script#the-event-table

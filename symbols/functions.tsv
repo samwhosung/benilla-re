@@ -579,8 +579,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x409e12	22	__scalb	idb	crt	unreached		Runs its object file code that calls _ldexp; not read here	inferred	none		
 0x409e28	231	__logb	idb	crt	unreached		Runs its object file code that calls __ctrlfp, __sptype, __handle_qnan1 and 2 more; not read here	inferred	none		
 0x409f0f	661	__nextafter	idb	crt	unreached		Runs its object file code that calls __ctrlfp, __decomp, __set_exp and 2 more; not read here	inferred	none		
-0x40a1a4	20	_finite	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when x is finite	inferred	none	collision/mover#position-validity	
-0x40a1b8	46	_isnan	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when x is NaN	inferred	none	collision/mover#local-player-step	
+0x40a1a4	20	_finite	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when the exponent of x is not all ones, so x is finite	verified	one	ui/savedvariables#the-saved-variables-format	
+0x40a1b8	46	_isnan	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when x is a quiet or signalling NaN of either sign	verified	one	ui/savedvariables#the-saved-variables-format	
 0x40a1e6	146	__fpclass	idb	crt	boundary		Runs its object file code that calls __sptype; not read here	inferred	none		
 0x40a280	47	__alloca_probe	idb	crt	boundary		Allocates eax bytes on the stack, touching each page	inferred	none	spell/go#spell-go-packet	net::srp6_client_session, net::srp6_interleave
 0x40a2b0	39	__ftol	idb	crt	boundary		Converts st0 to a 64-bit integer by truncation and returns its low dword	verified	one	camera#angle-properties	glue::char_customize_color_difftest, glue::glue_init_viewport_difftest, sound::channel_volume_mix, sound::ramp_step, sound::volume_to_byte, spell::spellvisual_timeline_difftest
@@ -6625,7 +6625,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration	int __fastcall (lua_State *L)	Sets the FrameXML trace level from a number argument and returns the level	verified	one	ui/framexml#the-load-status-and-its-log	
 0x4884a0	44	GameScriptGetBuildInfo		ui	orchestration	int __fastcall (lua_State *L)	Returns the strings 1.12.1, 5875 and Sep 19 2006	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x4884d0	8	Script::ReloadUI	idb	ui	orchestration	int __fastcall (lua_State *L)	Requests an interface reload through 0x491380 and returns nothing	verified	one	ui/bindings#reloading-the-interface	
-0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration	int __fastcall (lua_State *L)	Adds a name to the flat saved variables, raising unless the context word is 0	verified	one	ui/addons#saved-variables-written	
+0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration	int __fastcall (lua_State *L)	Adds a name to the flat saved variables, raising unless the context word is 0	verified	one	ui/savedvariables#saved-variables-written	
 0x488540	68	Script::SetLayoutMode	idb	ui	orchestration	int __fastcall (lua_State *L)	Stores its numeric argument, or 1, in the top frame's layout mode field	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x488590	47	Script::IsShiftKeyDown	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns 1 when the Shift key is held, else nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x4885c0	50	Script::IsControlKeyDown	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns 1 when the Control key is held, else nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
@@ -6922,17 +6922,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (void *this, const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	ui::glue_48fbf0_finite_diff, ui::glue_490770_eps_gates
 0x4908c0	441	EnterWorldUI		ui	orchestration		Fires PLAYER_LOGIN when armed and PLAYER_ENTERING_WORLD, releases chat and rebuilds the interface state	verified	one	ui/worldenter#the-enter-cascade	
 0x490a80	321	LeaveWorldUI		ui	primitive		Clears the world latch, runs 36 interface cleanups and fires PLAYER_LEAVING_WORLD	verified	one	ui/worldenter#leaving-the-world	
-0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
+0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/savedvariables#saved-variables-written	
 0x490ce0	301	CGGameUI::UnregisterScriptFunctions		ui	orchestration	void __cdecl ()	Unregisters the frame types, the game C functions of 0x83de68 and 53 files of functions	verified	one	ui/scriptapi#unregistrars	
 0x490e10	75	LayoutCacheWrite		ui	orchestration	void __fastcall (void *unused, void *file, CSimpleTop *top)	Writes a record for every frame of the top's list that passes the saved-frame test	verified	one	ui/layoutcache#which-frames-are-saved	
 0x490e60	799	LayoutCacheSaveFrame		ui	primitive		Saves one frame's position and size as a layout record, rounded to device units	verified	one	ui/layoutcache#which-frames-are-saved	ui::glue_4c0_490e60_round_pos_legs
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	orchestration		Runs the shutdown of every interface module in order, resets three CVars and clears 14 message handlers	verified	one	ui/gameui#game-shutdown	
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration	void __stdcall ()	Sets the reload byte 0xb4b3f4 when the protected-action gate allows tag 10	verified	one	ui/bindings#reloading-the-interface	
 0x4913a0	16	DrainWorldFadingModels		ui	orchestration		Drains the fading models of the world frame when one exists	verified	one	ui/gameui#cursor-and-camera	
-0x4913b0	451	LoadFlatSavedVariables		ui	primitive		Sets string and float globals from the flat SavedVariables.lua lines and signals VARIABLES_LOADED	verified	one	ui/addons#saved-variables-read	
-0x491580	79	GetFlatSavedVariablesPath		ui	orchestration		Builds the account's SavedVariables.lua path, creating its folder	verified	one	ui/addons#saved-variables-read	
-0x4915d0	343	AddFlatSavedVariable		ui	primitive		Adds a name to the list the flat saved variables write	verified	one	ui/addons#saved-variables-written	
-0x491730	411	SaveFlatSavedVariables		ui	primitive		Writes the names RegisterForSave collected to the flat SavedVariables.lua, keeping a .bak	verified	one	ui/addons#saved-variables-written	
+0x4913b0	451	LoadFlatSavedVariables		ui	primitive		Sets string and float globals from the flat SavedVariables.lua lines and signals VARIABLES_LOADED	verified	one	ui/savedvariables#saved-variables-read	
+0x491580	79	GetFlatSavedVariablesPath		ui	orchestration		Builds the account's SavedVariables.lua path, creating its folder	verified	one	ui/savedvariables#saved-variables-read	
+0x4915d0	343	AddFlatSavedVariable		ui	primitive		Adds a name to the list the flat saved variables write	verified	one	ui/savedvariables#saved-variables-written	
+0x491730	411	SaveFlatSavedVariables		ui	primitive		Writes the names RegisterForSave collected to the flat SavedVariables.lua, keeping a .bak	verified	one	ui/savedvariables#saved-variables-written	
 0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4918e0	32	IsPartyOrRaidMember		ui	orchestration		Returns 1 for a GUID in the party or the raid	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
 0x491900	32	IsRaidMemberOrPet	idb	ui	primitive		Returns 1 when a GUID is a party or raid member or pet, 0 for a zero GUID	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
@@ -12747,7 +12747,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51f1d0	111			ui	primitive		Runs AddOns.cpp code that calls GetSelectedCharacterName, 0x51e780; not read here	inferred	none		
 0x51f240	957	LoadAddOnByName		ui	primitive	int __fastcall (const char *name, char demand, CStatus *status)	Loads an add-on with its dependencies, files, bindings and saved variables, then signals ADDON_LOADED	verified	one	ui/addons#loading-an-add-on	
 0x51f600	71	LoadAddOnsAtStartup		ui	orchestration	void __thiscall (CStatus *this)	Loads every add-on not loaded on demand, in registration order	verified	one	ui/addons#load-order-and-cycles	
-0x51f650	1002	SaveAddOnVariables		ui	primitive		Writes each loaded add-on's account and character saved variables, deleting files with no names	verified	one	ui/addons#saved-variables-written	
+0x51f650	1002	SaveAddOnVariables		ui	primitive		Writes each loaded add-on's account and character saved variables, deleting files with no names	verified	one	ui/savedvariables#saved-variables-written	
 0x51fa40	257	ResetAddOnRegistry		ui	primitive		Frees the add-on registry, the sorted names and the enable state nodes	verified	one	ui/addons#finding-add-ons	
 0x51fb50	156	MoveAsideLooseInterface		ui	orchestration		Moves the loose GlueXML and FrameXML folders and Blizzard add-on folders aside to .old names	verified	one	ui/addonfiles#loose-interface-folders	
 0x51fbf0	167	MoveAsideBlizzardAddOn		ui	orchestration		Moves a Blizzard add-on folder that holds its own .toc aside to a .old name and notes it	verified	one	ui/addonfiles#loose-interface-folders	
@@ -30192,8 +30192,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x704300	71	FrameScriptSetStringGlobal		ui	orchestration	void __fastcall (const char *name, const char *value)	Sets a global to a string, or nil for a null or empty one	verified	one	ui/script#reading-and-writing-globals	
 0x704350	84	FrameScript::GetVariable	idb	ui	orchestration	int __fastcall (const char *name, const char **out)	Reads a global as text when it is a string or number and answers whether it is one	verified	one	ui/script#reading-and-writing-globals	
 0x7043b0	53	FrameScriptClearGlobal		ui	unreached		Sets a global to nil; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x7043f0	130	FrameScriptSaveVariable		ui	orchestration		Writes CR LF, a global name, " = " and its serialized value to a file	verified	one	ui/addons#the-saved-variables-format	
-0x704480	1470	FrameScriptSerializeValue		ui	primitive		Writes a Lua value as saved-variables text: escaped strings, %.16g numbers and tab-indented tables	verified	one	ui/addons#the-saved-variables-format	
+0x7043f0	130	FrameScriptSaveVariable		ui	orchestration		Writes CR LF, a global name, " = " and its serialized value to a file	verified	one	ui/savedvariables#the-saved-variables-format	
+0x704480	1470	FrameScriptSerializeValue		ui	primitive		Writes a Lua value as saved-variables text: escaped strings, %.16g numbers and tab-indented tables	verified	one	ui/savedvariables#the-saved-variables-format	
 0x704ae0	224	FrameScriptExecuteBuffer		ui	orchestration		Compiles and runs a buffer under the error handler, reporting failures to a status	verified	one	ui/framexml#loading-one-file	
 0x704bc0	162	FrameScriptExecuteFile		ui	orchestration		Reads a file and runs it as the chunk @path, hashing it into an MD5 context when given	verified	one	ui/framexml#loading-one-file	
 0x704c70	52	FrameScriptCompileFunction		ui	orchestration		Compiles text as a named chunk and returns its registry reference, or -1 leaving the message	verified	one	ui/framexml#script-elements	

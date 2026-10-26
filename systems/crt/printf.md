@@ -7,9 +7,9 @@ a NUL. The floating-point conversions go through a slot the start-up fills, to `
 `e`, `f` and `g` forms, which take their digits from `_fltout2` (`crt/decimal`). The client's own
 callers include `luaV_tostring` (`%.14g`), the Lua 4.0 `string.format`, Storm's printf, the
 console variable handlers, and the saved-variables writer `FrameScriptSerializeValue`, whose
-numbers go to disk as `%.16g` through Storm's `SStrPrintf` (`0x70452c`). That makes the `g` form
-and the digits under it a fact on disk, which wants a second independent reading; its entries
-here rest on one.
+numbers go to disk as `%.16g` through Storm's `SStrPrintf` (`0x70452c`). That text on disk rests on
+two independent readings (`ui/savedvariables#saved-numbers`); the entries here, which say more than that
+path runs, rest on one.
 
 Everything here runs in the C locale: nothing writes the locale handle `0x883b08`
 (`storm/format`), so the decimal point `0x831714` is `.`, no byte is a lead byte and `0x831710`

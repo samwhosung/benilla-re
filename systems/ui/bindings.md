@@ -23,7 +23,7 @@ Test: `ui::glue_geom_480_495590_tick_scale`
 The byte `0xb4b3f4` has three references in the image: the clear `0x490124`, the set `0x49138e` and the test `0x49565b`.
 `0x491380` is `mov ecx,0xa; call 0x494a50; test eax,eax; je` before the store. `0x494a50` maps tag 10 through
 `0x494b54` to arm 1, `0x494a92`, which returns 0 only when none of the three input flags is set while the context
-word is nonzero (`ui/protected#protected-action-gate`). The teardown and rebuild are `ui/addons#saved-variables-written`
+word is nonzero (`ui/protected#protected-action-gate`). The teardown and rebuild are `ui/savedvariables#saved-variables-written`
 and `ui/framexml`; the rebuild opens a new Lua state at `0x48fe97`. The screen aspect path is `ui/uiscale`.
 
 ## Unit combat flag
