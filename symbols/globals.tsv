@@ -400,6 +400,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
 0x8001e0	char[6]	s_exponentTemplate		crt	Holds e+000, the exponent __cftoe2 copies and adds the digits into	verified	one	crt/printf#the-e-and-f-forms
+0x8003d8	const char[2]	s_textUnderscore		storm	Holds "_", the default character 0x647db0 gives WideCharToMultiByte	verified	one	storm/files#opening-a-loose-file
 0x8003dc	char[7]	s_qnanText		crt	Holds 1#QNAN, the digits I10_OUTPUT writes for a quiet NaN	verified	one	crt/decimal#zeros-and-non-finite-values
 0x8003e4	char[6]	s_infText		crt	Holds 1#INF, the digits I10_OUTPUT writes for an infinity	verified	one	crt/decimal#zeros-and-non-finite-values
 0x8003ec	char[6]	s_indText		crt	Holds 1#IND, the digits I10_OUTPUT writes for the negative indefinite NaN	verified	one	crt/decimal#zeros-and-non-finite-values
@@ -672,6 +673,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090b4	void *[9]	s_connectionResponseBaseVftable		net	Holds the abstract base vtable NetClient sets first: a deleting destructor, four pure slots, four empty ones	verified	one	net/session#netclient-construction
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
+0x809128	const float	s_infinityDbCache		dbcache	Holds +inf, 0x7f800000, the literal the DBCache file copies at start-up	verified	one	dbcache/clones#initializers-of-the-saved-caches
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
 0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	one	dbcache/callbacks#item-node-allocation
 0x80917c	void *[4]	s_nameCacheVtable		dbcache	Holds the vtable of the names cache object; slot 0 frees a node	inferred	none	
@@ -881,12 +883,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e45c	float	s_timeScaleMin		gametime	Holds 1/60, the clock's default and lowest time scale	verified	one	gametime/overview#time-scale
 0x80e460	float	s_minutesPerDay		unassigned	Holds 1440.0, the game minutes in a day	verified	one	gametime/overview#day-phase
 0x80e4b0	uint32_t[3]	s_auctionDurations		ui	Holds 120, 480 and 1440, the run times the deposit accepts	verified	one	ui/auctionlists#deposit
-0x80e4e0	const uint32_t			storm	Holds a dword that SStrHash reads; not read here	inferred	none	
+0x80e4e0	const uint32_t[16]	s_strHashTable		storm	Holds the sixteen dwords SStrHash indexes by a byte's high and low nibbles	verified	one	storm/strings#seeded-string-hash
 0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	verified	one	storm/strings#float-value
 0x80e648	uint8_t[256]	s_archiveSignatureKey		storm	Holds the built-in 256-byte key that checks an archive's signature when no key is given	verified	one	storm/format#archive-signature-check
 0x80e748	uint8_t[4]	s_archiveSignatureExponent		storm	Holds the built-in exponent 0x10001 of the archive signature check	verified	one	storm/format#archive-signature-check
+0x80e764	const uint32_t[6]	s_utf8Offsets		storm	Holds what is subtracted from a folded UTF-8 sequence of 1 to 6 bytes	verified	one	storm/unicode#converting-utf-8-to-utf-16
+0x80e780	const uint8_t[256]	s_utf8TrailingBytes		storm	Holds the bytes that follow each UTF-8 lead byte: 0 to 0xbf none, then 1 to 5	verified	one	storm/unicode#converting-utf-8-to-utf-16
 0x80f9ec	uint32_t[12]	s_compressorTable		storm	Holds six mask and compressor pairs of the codecs, in the order 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#compression-codecs
 0x80fa1c	uint32_t[12]	s_codecTable		storm	Holds six mask and function pairs of the codecs: 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#codecs
+0x80fd6c	const char[4]	s_zipEndSignature		storm	Holds PK 5 6, the signature of a zip's end record	verified	one	storm/files#zip-archive-listing
 0x80fe28	const float	s_infinity1		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x80fe30	const float	s_terrainSquareBase		terrain	Holds 10.0, the operand the terrain file squares at start-up	verified	one	terrain/statics#static-initializers
 0x80febc	float	s_farBandStart		terrain	Holds 0.96, the depth range start of the far-band pass	inferred	none	
@@ -1147,6 +1152,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
+0x811d34	const uint32_t[6]	s_luaPoolBlockSizes		lua	Holds the six Lua pool block sizes: 16, 32, 64, 96, 128 and 256	verified	one	lua/pools#allocating-from-the-pools
 0x811d4c	uint8_t[28]	priority		lua	Holds the left and right priority of each of the 14 binary operators of the parser	verified	one	lua/compiler#expressions
 0x811d68	char *[31]	token2string		lua	Holds the text of each token from 257, the reserved words to <eof>	verified	one	lua/compiler#lexer-errors-and-limits
 0x811de4	uint8_t[35]	luaP_opmodes		lua	Holds the mode byte of each of the 35 opcodes: format, operand kinds, sets A and test	verified	one	lua/codegen#jump-lists
@@ -2043,6 +2049,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e2e8	uint32_t[28]	s_serverLinkCommands		net	Holds ServerLink's seven commands: byte, name, handler and this offset each	verified	one	net/logonlink#server-link-commands
 0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
+0x85f398	const char[3]	s_textRb		storm	Holds "rb", the mode the loose and zip opens pass fopen	verified	one	storm/files#opening-a-loose-file
 0x85f3f0	void *	s_networkShutdownFunction		unassigned	Holds the network library's shutdown function, 0x5bf300 in the image, which the stop handler calls	verified	one	core/close#stop-handler-order
 0x85f4d8	const uint32_t[21]	s_stripTable		font	Holds seven triples of mask, replacement character and prefix flag per token class	verified	one	font/markup#stripping
 0x85f534	const char[20]	s_batchTag		font	Holds the allocation tag of a batch	verified	one	font/api#batches
@@ -2147,6 +2154,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x865b40	uint32_t	s_extraOpenFlags		storm	Holds the flags every resolve adds; 1 in the file, 0 once start-up calls 0x648be0(0)	verified	two	storm/mount#loose-files
 0x865b44	uint8_t	s_keepLooseFlags		storm	Holds a byte that start-up clears so the open calls drop the loose-file flag bits	verified	two	storm/mount#loose-files
+0x865bf0	const uint16_t[3]	s_wtextRb		storm	Holds L"rb", the mode the loose open passes _wfopen	verified	one	storm/files#opening-a-loose-file
 0x866520	uint16_t	s_lookupLocale		storm	Holds the locale a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866522	uint8_t	s_lookupPlatform		storm	Holds the platform a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866834	char[14]	s_textBlockTable		storm	Holds the string (block table), whose type 3 hash decrypts the block table	verified	one	storm/format#hash-and-block-tables
@@ -2517,6 +2525,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x881fec	char[28]	s_textJunkAfterDocumentElement		unassigned	Holds the string "junk after document element"	inferred	none	
 0x882094	char[13]	s_textExpat1955		unassigned	Holds the string "expat_1.95.5"	inferred	none	
 0x8824a0	void *	s_getStringTypeW		crt	Holds GetStringTypeW, bound from kernel32.dll by its first call (0x4156bd); 0x413ed3 calls it	verified	one	net/who#who-filter-decoding
+0x8824c0	void *	s_wideCharToMultiByte		crt	Holds WideCharToMultiByte, bound from kernel32.dll by its first call (0x4155bb)	verified	one	storm/files#opening-a-loose-file
+0x8824ec	void *	s_setWindowTextW		crt	Holds SetWindowTextW, bound from user32.dll by its first call (0x748942)	verified	one	storm/unicode#counting-utf-16-units
 0x8824fc	uint32_t *	s_startupStringsRecords		dbc	Points at the Startup_Strings records, 0x2c bytes each	verified	one	dbc#startup-strings
 0x882500	uint32_t	s_startupStringsCount		dbc	Holds the Startup_Strings record count	verified	one	dbc#startup-strings
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
@@ -3753,6 +3763,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e054	uint32_t[5]	s_areaPoiStore		dbc	Holds the AreaPOI.dbc store: records of 0x74 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-landmarks
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
+0xc0e07c	float	s_infinityDbCacheCopy		dbcache	Holds the DBCache file's copy of +inf, written at start-up and read by nothing	verified	one	dbcache/clones#initializers-of-the-saved-caches
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	one	dbc#localized-strings
 0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
@@ -4135,12 +4146,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc518b0	float	s_infinity640c60		unassigned	Holds +inf, stored at start-up by InitInfinity640c60	verified	one	console/overview#object-files
 0xc518c8	uint32_t[5]	s_videoHardwareStore		unassigned	Holds the VideoHardware table: the rows, their count, the id index, the largest id and the loaded flag	verified	one	console/hardware#hardware-table
 0xc518e0	uint32_t[98]	s_hardwareFormats		unassigned	Holds the seven default device format records, 0x38 bytes each	verified	one	console/hardware#default-formats
+0xc520a0	uint8_t	s_nt5OrLaterGuard		storm	Holds bit 0 once 0xc52414 is read, the guard of 0x646e50	verified	one	storm/files#opening-a-loose-file
 0xc520c8	char[260]	s_dataPath		storm	Holds the data folder name, Data\ after start-up, which the loose-file index walks	verified	two	storm/mount#loose-file-index
 0xc521cc	void *	s_looseIndex		storm	Holds the loose-file index, a Storm hash table whose vtable pointer starts it	verified	two	storm/mount#index-lifetime
 0xc521e8	void *	s_looseIndexBuckets		storm	Points at the loose-file index's buckets, 12 bytes each, the chain head at +8	verified	two	storm/mount#loose-file-index
 0xc521f0	uint32_t	s_looseIndexMask		storm	Holds the loose-file index's bucket mask, 0xffffffff while it has no buckets	verified	two	storm/mount#loose-file-index
 0xc521f8	char[260]	s_looseIndexBasePath		storm	Holds the base path the loose-file index was built from	verified	two	storm/mount#index-lookup-and-open
 0xc52310	char[260]	s_extraIndexPath		storm	Holds a third folder for the loose-file index; only an unreached function writes it	verified	two	storm/mount#loose-file-index
+0xc52414	bool	s_nt5OrLater		storm	Holds whether the system's major version is 5 or more, read on the first call of 0x646e50	verified	one	storm/files#opening-a-loose-file
 0xc52418	char[260]	s_basePath		storm	Holds the base path with a trailing backslash: the exe's folder unless the command line names one	verified	two	storm/mount#loose-file-index
 0xc5251c	uint8_t	s_looseIndexBuilt		storm	Holds 1 while the loose-file index is built; 0 makes the next resolve build it	verified	two	storm/mount#loose-file-index
 0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	two	storm/mount#loose-files
@@ -4168,6 +4181,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc53f30	uint32_t[3]	s_switchList		storm	Holds the list of the other switches: link offset and terminator	verified	one	storm/scmd#reading-a-switch-by-id
 0xc53fbc	uint32_t *	s_cryptTable		storm	Holds the crypt table, 0x500 dwords built at first use	verified	one	storm/format#name-hash
 0xc53fe0	void *	s_archiveList		storm	Holds the head of the open archive list, in descending priority	verified	one	storm/mount#archive-list
+0xc5a100	char[64]	s_logStamp		storm	Holds the last log time stamp OutputTime formatted, shared by every log	verified	one	storm/log#writing-a-log-line
+0xc5a174	uint32_t	s_logStampTick		storm	Holds the GetTickCount value of the last log time stamp	verified	one	storm/log#writing-a-log-line
+0xc5a334	void *	s_zipEntryTable		storm	Holds the zip entry table, a Storm hash table of every open zip's entries whose vtable pointer starts it	verified	one	storm/files#zip-archive-listing
+0xc5a338	uint32_t	s_zipEntryListLinkOffset		storm	Holds the link offset of the zip entry list, 0xc after start-up	verified	one	storm/files#zip-archive-listing
+0xc5a340	void *	s_zipEntryListHead		storm	Points at the first entry of the zip entry list, tagged with bit 0 when empty	verified	one	storm/files#zip-archive-listing
 0xc5a3f0	void *[15]	s_dbgHelp		storm	Holds the dbghelp.dll module, its use count, twelve Sym entry points and MiniDumpWriteDump	verified	one	storm/errorlog#crash-dump
 0xc5a430	uint32_t	s_reportBusy		storm	Holds the busy counter the crash dump and two report writers take with InterlockedIncrement	verified	one	storm/errorlog#crash-dump
 0xc5a45c	int32_t	s_maxLightsValue		cvar	Holds the MaxLights value the option stores; nothing reads it	verified	one	cvar/options#integer-range-settings

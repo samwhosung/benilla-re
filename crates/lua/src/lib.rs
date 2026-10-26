@@ -1,5 +1,10 @@
 //! The client's Lua 5.0 (`lobject.c`, `ltable.c`): the helpers whose exact output decides how a
-//! table is laid out, and so the order `next` visits its keys in (`systems/lua/object.md`).
+//! table is laid out, and so the order `next` visits its keys in (`systems/lua/object.md`); the
+//! collector's marking of tables and stacks ([`gc`], `systems/lua/gc.md`); and the block pools
+//! the client allocates its Lua blocks from ([`pools`], `systems/lua/pools.md`).
+
+pub mod gc;
+pub mod pools;
 
 /// `luaO_int2fb` (`0x6f5810`), `__fastcall(ecx = x)` returning `eax`: a size as a byte whose low
 /// three bits are a mantissa and whose high bits are a power of two, rounded up.

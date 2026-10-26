@@ -8,9 +8,10 @@ fraction digits come from a table of powers of ten that `0x64a670` fills on firs
 (`core/threads#string-conversion-table`), and its other powers from the C runtime's `pow`. All three
 answer 0 for a null string and set error 0x57. `SStrTokenize` splits the text of console lines,
 CVar commands and many files into tokens. `SStrLen` measures a string, `SStrPack` appends to one
-within a buffer size and `SStrStr` finds one in another.
+within a buffer size and `SStrStr` finds one in another. `SStrHash` hashes a name for the client's
+caches.
 
-Roots: `0x64aaa0`, `0x64ac60`, `0x64ade0`, `0x64ae50`, `0x64a6f0`, `0x64a760`, `0x64b4f0`, `0x64b4a0`
+Roots: `0x64aaa0`, `0x64ac60`, `0x64ade0`, `0x64ae50`, `0x64a6f0`, `0x64a760`, `0x64b4f0`, `0x64b4a0`, `0x64af90`
 
 ## Float grammar
 
@@ -212,6 +213,27 @@ the dword scan finds `0x4ebe70` in the vtable slot `0x807ac4`. The two copies di
 displacements of their three `call`s (`0x64b4b1`, `0x64b4bd`, `0x64b4d3`). `sstrstr_whole` runs both whole over every
 haystack of `a`, `A` and `b` to length five against needles to length three, 6000 random pairs over seven bytes, the
 escape check's `|r`, and the null arguments.
+
+## Seeded string hash
+
+`SStrHash(text, flags, seed)` (`0x64af90`) hashes a name for the texture, sound, map object and
+language caches. `s1` starts at the seed, or 0x7fed7fed for a seed of 0, and `s2` at 0xeeeeeeee. With
+flag bit 0 clear each byte is first folded, `a` to `z` down by 0x20 and `/` to `\`. For each byte `c`
+before the NUL, modulo 2^32: `s1 = (s1 + s2) ^ (T[c >> 4] − T[c & 15])`, then
+`s2 = s2·33 + c + s1 + 3`, with `T` the sixteen dwords at `0x80e4e0`. A result of 0 is returned as 1; a
+null `text` sets error 0x57 and returns 0. Every caller passes flags 0 and seed 0.
+
+Addresses: `0x64af90`, `0x64af99`, `0x64afae`, `0x64afb9`, `0x64afd0`, `0x64afd2`, `0x64afe7`, `0x64aff3`, `0x64aff7`, `0x64b004`, `0x64b011`, `0x64b047`, `0x80e4e0`, `0x449ec0`, `0x449fc5`, `0x47ae43`, `0x49b792`, `0x6a323e`, `0x7a5274`, `0x7a66cf`
+Confidence: verified
+Proof: one
+Test: `storm::str_hash`
+
+`0x64af99` refuses a null `text` (`push 0x57`, `SErrSetLastError`); `0x64afae` replaces a zero seed; `0x64afb9` tests
+flag bit 0, choosing the exact loop `0x64afd0` or the folding loop `0x64b003`, whose `0x64b004` to `0x64b016` fold. Each
+loop does `add eax,edx` (`0x64afd0`), `imul edx,edx,0x21` (`0x64afd2`), the table difference (`0x64afe7`), `add edx,ecx`,
+`xor eax,edi` (`0x64aff3`) and `lea edx,[edx+eax+3]` (`0x64aff7`); `0x64b047` turns 0 into 1. The seven callers push 0,
+0 and the name. The test runs the function whole over names of every length to 40, both cases, both slashes, bytes
+above 0x7f and a fuzz, with flags 0 to 3 and four seeds, and a null name with `SErrSetLastError` stubbed.
 
 ## Unreached functions
 
