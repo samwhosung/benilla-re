@@ -18665,7 +18665,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5cfe20	190			unassigned			Runs its object file code not read here	inferred	none		
 0x5cfee0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5cfef0	359			unassigned			Runs its object file code that calls 0x5d0810, 0x5d0660, 0x5d06a0 and 1 more; not read here	inferred	none		
-0x5d0060	552			unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI, AddHandleRef and 11 more; not read here	inferred	none		
+0x5d0060	552	OpenFontFace		unassigned	orchestration	void * __fastcall (const char *path, void *library)	Opens a font face from a path as a referenced handle, or returns the open one with a reference added	verified	one	font/freetype#opening-a-face	
 0x5d0290	211			unassigned			Runs its object file code that calls 0x7ce2f0, 0x648700, SMemFree; not read here	inferred	none		
 0x5d0370	18			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x5d0390	45			unassigned			Runs its object file code that calls SErrSetLastError, HandleClose; not read here	inferred	none		
@@ -36721,7 +36721,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ccff0	47			unassigned	unreached		Runs its object file code that calls 0x7e4d20, 0x7cf0e0, 0x7ccfc0; not read here	inferred	none		
 0x7cd020	12			unassigned	unreached		Runs its object file code that calls 0x7cf160; not read here	inferred	none		
 0x7cd030	173			unassigned			Runs its object file code that calls 0x7cd210, 0x7cd1e0, 0x7cd2a0; not read here	inferred	none		
-0x7cd0e0	115			unassigned			Runs its object file code not read here	inferred	none		
+0x7cd0e0	115	FTMulFix		unassigned	primitive	int32_t __fastcall (int32_t a, int32_t b)	Returns a times b over 65536, rounded for small operands and truncated above them	verified	one	font/freetype#fixed-point-multiply	font::mul_fix_difftest
 0x7cd160	118			unassigned			Runs its object file code that calls 0x7cd1e0, 0x7cd2a0; not read here	inferred	none		
 0x7cd1e0	41			unassigned			Runs its object file code not read here	inferred	none		
 0x7cd210	143			unassigned			Runs its object file code not read here	inferred	none		
@@ -36751,11 +36751,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cd9f0	92			unassigned			Runs its object file code that calls 0x7cd500, 0x7cd5e0; not read here	inferred	none		
 0x7cda50	71			unassigned			Runs its object file code that calls 0x7cd9f0, 0x7cd500; not read here	inferred	none		
 0x7cdaa0	160			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7cdb40	410			unassigned			Runs its object file code that calls 0x7cdce0, 0x7cd030, 0x7cea80 and 2 more; not read here	inferred	none		
+0x7cdb40	410	FTLoadGlyph		unassigned	primitive	int32_t __fastcall (void *face, uint32_t glyph, int32_t flags)	Loads a glyph into the face's slot by its load flags, scales its advances and renders it under FT_LOAD_RENDER	verified	one	font/freetype#loading-a-glyph	
 0x7cdce0	117			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
 0x7cdd60	54			unassigned	unreached		Runs its object file code that calls 0x7ce960, 0x7cdb40; not read here	inferred	none		
 0x7cdda0	53			unassigned	unreached		Runs its object file code that calls 0x7cde20; not read here	inferred	none		
-0x7cdde0	59			unassigned			Runs its object file code that calls 0x7cde20; not read here	inferred	none		
+0x7cdde0	59	FTNewMemoryFace		unassigned	orchestration	int32_t __fastcall (void *library, const void *data, int32_t size, int32_t faceIndex, void **face)	Opens a face from a memory buffer through FT_Open_Face	verified	one	font/freetype#opening-a-face	
 0x7cde20	539			unassigned			Runs its object file code that calls 0x7ce040, 0x7ce170, 0x7ce130 and 5 more; not read here	inferred	none		
 0x7ce040	228			unassigned			Runs its object file code that calls 0x7cd450, 0x7cf200, 0x7e4c50 and 1 more; not read here	inferred	none		
 0x7ce130	55			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
@@ -36770,21 +36770,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ce5c0	307			unassigned	unreached		Runs its object file code that calls 0x7cd160, 0x7ce700; not read here	inferred	none		
 0x7ce700	95			unassigned			Runs its object file code that calls 0x7cd0e0; not read here	inferred	none		
 0x7ce760	203			unassigned			Runs its object file code that calls 0x7cd160, 0x7ce700; not read here	inferred	none		
-0x7ce830	153			unassigned			Runs its object file code that calls 0x7cd0e0; not read here	inferred	none		
-0x7ce8d0	71			unassigned			Runs its object file code not read here	inferred	none		
+0x7ce830	153	FTGetKerning		unassigned	primitive	int32_t __fastcall (void *face, uint32_t left, uint32_t right, uint32_t mode, int32_t *kerning)	Returns the kerning of a glyph pair, unscaled in mode 2, scaled in mode 1, scaled and rounded otherwise	verified	one	font/freetype#kerning	font::get_kerning_difftest
+0x7ce8d0	71	FTSelectCharmap		unassigned	orchestration	int32_t __fastcall (void *face, uint32_t encoding)	Makes the first charmap with an encoding tag the face's charmap, or returns 6 when none has it	verified	one	font/freetype#charmap-selection	
 0x7ce920	63			unassigned			Runs its object file code not read here	inferred	none		
-0x7ce960	28			unassigned			Runs its object file code not read here	inferred	none		
+0x7ce960	28	FTGetCharIndex		unassigned	orchestration	uint32_t __fastcall (void *face, uint32_t code)	Returns the driver's glyph for a character code through the face's charmap, or 0 without one	verified	one	font/freetype#character-index	
 0x7ce980	111			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7ce9f0	51			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7cea30	75			unassigned			Runs its object file code not read here	inferred	none		
+0x7cea30	75	FTLookupRenderer		unassigned	orchestration	void * __fastcall (void *library, uint32_t format, void **node)	Returns the first renderer of a glyph format after a list node, or from the list head	verified	one	font/freetype#rendering	
 0x7cea80	39			unassigned			Runs its object file code that calls 0x7cea30; not read here	inferred	none		
 0x7ceab0	8			unassigned	unreached		Runs its object file code that calls 0x7cea30; not read here	inferred	none		
-0x7ceac0	161			unassigned			Runs its object file code that calls 0x7cfa50, 0x7cfad0; not read here	inferred	none		
-0x7ceb70	172			unassigned			Runs its object file code that calls 0x7cea30, 0x7ceac0; not read here	inferred	none		
-0x7cec20	30			unassigned			Runs its object file code that calls 0x7ceb70; not read here	inferred	none		
+0x7ceac0	161	FTSetRenderer		unassigned	orchestration	int32_t __fastcall (void *library, void *renderer, uint32_t numParams, void *params)	Moves a renderer to the head of the list and makes it the current outline renderer	verified	one	font/freetype#rendering	
+0x7ceb70	172	FTRenderGlyphInternal		unassigned	orchestration	int32_t __fastcall (void *library, void *slot, uint32_t mode)	Renders a slot through the current renderer, trying the next on a refusal and making the one that renders current	verified	one	font/freetype#rendering	
+0x7cec20	30	FTRenderGlyph		unassigned	orchestration	int32_t __fastcall (void *slot, uint32_t mode)	Renders a glyph slot in a mode through the library of the face's driver	verified	one	font/freetype#rendering	
 0x7cec40	454			unassigned			Runs its object file code that calls 0x7cef70, 0x7cd450, 0x7cee10 and 3 more; not read here	inferred	none		
-0x7cee10	157			unassigned			Runs its object file code that calls 0x7cd450, 0x7cfa70, 0x7ceeb0 and 1 more; not read here	inferred	none		
-0x7ceeb0	20			unassigned			Runs its object file code that calls 0x7cea30; not read here	inferred	none		
+0x7cee10	157	FTAddRenderer		unassigned	orchestration	int32_t __fastcall (void *module)	Appends a renderer module to the library's renderer list and resets the current outline renderer	verified	one	font/freetype#rendering	
+0x7ceeb0	20	FTSetCurrentRenderer		unassigned	orchestration	void __fastcall (void *library)	Makes the first outline renderer of the list current	verified	one	font/freetype#rendering	
 0x7ceed0	128			unassigned			Runs its object file code not read here	inferred	none		
 0x7cef50	18			unassigned			Runs its object file code that calls 0x7ceed0; not read here	inferred	none		
 0x7cef70	98			unassigned			Runs its object file code that calls 0x7cefe0; not read here	inferred	none		
@@ -36818,10 +36818,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cf7c0	126			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7cf840	449			unassigned			Runs its object file code that calls 0x7cf380, 0x7cf420; not read here	inferred	none		
 0x7cfa50	21			unassigned			Runs its object file code not read here	inferred	none		
-0x7cfa70	29			unassigned			Runs its object file code not read here	inferred	none		
+0x7cfa70	29	FTListAdd		unassigned	orchestration	void __fastcall (void *list, void *node)	Appends a node at the tail of a doubly linked list	verified	one	font/freetype#rendering	
 0x7cfa90	26			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7cfab0	27			unassigned			Runs its object file code not read here	inferred	none		
-0x7cfad0	60			unassigned			Runs its object file code not read here	inferred	none		
+0x7cfad0	60	FTListUp		unassigned	orchestration	void __fastcall (void *list, void *node)	Moves a node of a doubly linked list to its head	verified	one	font/freetype#rendering	
 0x7cfb10	43			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7cfb40	106			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
 0x7cfbb0	807			unassigned			Runs its object file code not read here	inferred	none		
@@ -36835,7 +36835,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d01b0	151			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7d0250	167			unassigned	unreached		Runs its object file code that calls 0x7cea30, 0x7ceac0; not read here	inferred	none		
 0x7d0300	62			unassigned	unreached		Runs its object file code that calls 0x7d0250; not read here	inferred	none		
-0x7d0340	84			unassigned			Runs its object file code that calls 0x7cd0e0; not read here	inferred	none		
+0x7d0340	84	FTVectorTransform		unassigned	primitive	void __fastcall (int32_t *vector, const int32_t *matrix)	Multiplies a 26.6 vector by a 16.16 matrix in place with FT_MulFix	verified	one	font/freetype#fixed-point-multiply	font::vector_transform_difftest
 0x7d03a0	39			unassigned			Runs its object file code that calls 0x7d0340; not read here	inferred	none		
 0x7d03d0	56			unassigned	unreached		Runs its object file code that calls 0x7cd450; not read here	inferred	none		
 0x7d0410	14			unassigned	unreached		Runs its object file code that calls 0x7cd500; not read here	inferred	none		
@@ -36893,7 +36893,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d30c0	293			unassigned			Runs its object file code not read here	inferred	none		
 0x7d31f0	161			unassigned			Runs its object file code that calls 0x7d32a0; not read here	inferred	none		
 0x7d32a0	98			unassigned			Runs its object file code not read here	inferred	none		
-0x7d3310	699			unassigned			Runs its object file code that calls 0x7d32a0, 0x7d03a0, 0x7d0170 and 2 more; not read here	inferred	none		
+0x7d3310	699	T1LoadGlyph		unassigned	primitive	int32_t __fastcall (void *slot, void *size, uint32_t glyph, int32_t flags)	Loads a Type 1 glyph into a slot, marking the outline high precision under 24 ppem	verified	one	font/freetype#loading-a-glyph	
 0x7d35d0	19			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
 0x7d35f0	379			unassigned			Runs its object file code that calls 0x7cf380, 0x7cd450, 0x7d3770 and 4 more; not read here	inferred	none		
 0x7d3770	323			unassigned			Runs its object file code that calls __isctype; not read here	inferred	none		
@@ -36903,15 +36903,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d3a50	159			unassigned			Runs its object file code not read here	inferred	none		
 0x7d3af0	130			unassigned			Runs its object file code that calls 0x7cd160, 0x7d4f90; not read here	inferred	none		
 0x7d3b80	19			unassigned			Runs its object file code that calls 0x7d4f90; not read here	inferred	none		
-0x7d3ba0	107			unassigned			Runs its object file code that calls 0x7d4f90, 0x7d3c80; not read here	inferred	none		
-0x7d3c10	59			unassigned			Runs its object file code not read here	inferred	none		
+0x7d3ba0	107	TTDriverLoadGlyph		unassigned	primitive	int32_t __fastcall (void *slot, void *size, uint32_t glyph, int32_t flags)	Checks a TrueType glyph load's size and slot and calls TT_Load_Glyph	verified	one	font/freetype#loading-a-glyph	
+0x7d3c10	59	TTGetCharIndex		unassigned	orchestration	uint32_t __fastcall (void *charmap, uint32_t code)	Loads a TrueType charmap's subtable on first use and jumps to its format's lookup, or returns 0	verified	one	font/freetype#character-index	
 0x7d3c50	46			unassigned			Runs its object file code that calls 0x7ceed0; not read here	inferred	none		
-0x7d3c80	506			unassigned			Runs its object file code that calls 0x7cd570, 0x7d3e80, 0x7cf270 and 2 more; not read here	inferred	none		
+0x7d3c80	506	TTLoadGlyph		unassigned	primitive	int32_t __fastcall (void *size, void *slot, uint32_t glyph, int32_t flags)	Loads a TrueType glyph, an embedded bitmap or an outline marked high precision under 24 ppem	verified	one	font/freetype#loading-a-glyph	
 0x7d3e80	80			unassigned			Runs its object file code not read here	inferred	none		
-0x7d3ed0	962			unassigned			Runs its object file code that calls 0x7d42a0, 0x7cd0e0, 0x7cd680 and 5 more; not read here	inferred	none		
+0x7d3ed0	962	LoadTrueTypeGlyph		unassigned	primitive	int32_t __fastcall (void *loader, uint32_t glyph)	Loads a TrueType glyph, simple or composite, recursing into each component and moving it by its offset	verified	one	font/freetype#composite-glyphs	
 0x7d42a0	26			unassigned			Runs its object file code that calls 0x7d42c0; not read here	inferred	none		
 0x7d42c0	76			unassigned			Runs its object file code not read here	inferred	none		
-0x7d4310	52			unassigned			Runs its object file code not read here	inferred	none		
+0x7d4310	52	TranslatePoints		unassigned	primitive	void __fastcall (uint32_t count, int32_t *points, int32_t dx, int32_t dy)	Adds an offset to every point of an array, skipping an axis whose offset is 0	verified	one	font/freetype#composite-glyphs	
 0x7d4350	343			unassigned			Runs its object file code that calls 0x7d3e80, 0x7cd0e0, 0x7d4310; not read here	inferred	none		
 0x7d44b0	571			unassigned			Runs its object file code that calls 0x7cd820, 0x7d0170, 0x7d00e0 and 3 more; not read here	inferred	none		
 0x7d46f0	60			unassigned			Runs its object file code not read here	inferred	none		
@@ -36924,7 +36924,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d4b20	8			unassigned			Runs its object file code not read here	inferred	none		
 0x7d4b30	75			unassigned			Runs its object file code that calls 0x7cf460; not read here	inferred	none		
 0x7d4b80	516			unassigned			Runs its object file code that calls 0x7cf460, 0x7cd680, 0x7cf440; not read here	inferred	none		
-0x7d4d90	330			unassigned			Runs its object file code that calls 0x7cd750, 0x7cf460, 0x7cf440; not read here	inferred	none		
+0x7d4d90	330	TTLoadCompositeGlyph		unassigned	primitive	int32_t __fastcall (void *loader)	Reads a composite glyph's components: flags, index, arguments and the scale or matrix as 16.16	verified	one	font/freetype#composite-glyphs	
 0x7d4ee0	142			unassigned			Runs its object file code that calls 0x7cd500, 0x7cf360; not read here	inferred	none		
 0x7d4f70	7			unassigned			Runs its object file code not read here	inferred	none		
 0x7d4f80	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -36961,7 +36961,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d6850	25			unassigned			Runs its object file code not read here	inferred	none		
 0x7d6870	74			unassigned			Runs its object file code that calls 0x7d03a0, 0x7d0170; not read here	inferred	none		
 0x7d68c0	47			unassigned			Runs its object file code that calls 0x7d00e0; not read here	inferred	none		
-0x7d68f0	317			unassigned			Runs its object file code that calls 0x7d0170, 0x7d00e0, 0x7cd500 and 1 more; not read here	inferred	none		
+0x7d68f0	317	SmoothRender		unassigned	primitive	int32_t __fastcall (void *renderer, void *slot, uint32_t mode, const void *origin)	Renders an outline slot as an anti-aliased bitmap, refusing with 0x13 any mode but 0	verified	one	font/freetype#rendering	
 0x7d6a30	48			unassigned			Runs its object file code that calls 0x7d6a60, 0x7cf230; not read here	inferred	none		
 0x7d6a60	36			unassigned			Runs its object file code not read here	inferred	none		
 0x7d6a90	494			unassigned			Runs its object file code that calls 0x7cf740, 0x7cf840, 0x7cd450 and 4 more; not read here	inferred	none		
@@ -36975,12 +36975,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d7170	440			unassigned			Runs its object file code that calls 0x7cd450, 0x7cf380, 0x7cf460 and 1 more; not read here	inferred	none		
 0x7d7330	492			unassigned			Runs its object file code that calls 0x7cf270, 0x7cf840, 0x7cd450 and 3 more; not read here	inferred	none		
 0x7d7520	62			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
-0x7d7560	442			unassigned			Runs its object file code that calls 0x7cf270, 0x7cf840, 0x7cd450 and 5 more; not read here	inferred	none		
+0x7d7560	442	TTLoadCMap		unassigned	orchestration		Reads the cmap directory: the count and every encoding record in file order	verified	one	font/freetype#charmap-selection	
 0x7d7720	1202			unassigned			Runs its object file code that calls 0x7cf840; not read here	inferred	none		
 0x7d7be0	54			unassigned			Runs its object file code that calls 0x7cf840; not read here	inferred	none		
 0x7d7c20	55			unassigned			Runs its object file code that calls 0x7cf840; not read here	inferred	none		
 0x7d7c60	229			unassigned			Runs its object file code that calls 0x7cf380, 0x7cf460, 0x7cf420 and 1 more; not read here	inferred	none		
-0x7d7d50	431			unassigned			Runs its object file code that calls 0x7cf380, 0x7cf460, 0x7cf420 and 2 more; not read here	inferred	none		
+0x7d7d50	431	TTLoadKern		unassigned	orchestration	int32_t __fastcall (void *face, void *stream)	Loads the pairs of the first kern subtable with coverage 1, skipping the others	verified	one	font/freetype#kerning	
 0x7d7f00	353			unassigned			Runs its object file code that calls 0x7cf380, 0x7cf460, 0x7cf4f0 and 5 more; not read here	inferred	none		
 0x7d8070	87			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
 0x7d80d0	1305			unassigned			Runs its object file code that calls 0x7cf230, 0x7cd450, 0x7cf280 and 4 more; not read here	inferred	none		
@@ -36990,9 +36990,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7d8770	206			unassigned			Runs its object file code not read here	inferred	none		
 0x7d8840	26			unassigned			Runs its object file code not read here	inferred	none		
 0x7d8860	187			unassigned			Runs its object file code that calls 0x7cef50; not read here	inferred	none		
-0x7d8920	991			unassigned			Runs its object file code that calls 0x7d6a60, 0x7d8d00, 0x7cd450 and 1 more; not read here	inferred	none		
+0x7d8920	991	SfntLoadFace		unassigned	primitive		Sets up an SFNT face, among it one charmap per cmap record tagged by encoding, the first unic one current	verified	one	font/freetype#charmap-selection	
 0x7d8d00	241			unassigned			Runs its object file code that calls 0x7cd450; not read here	inferred	none		
-0x7d8e00	41			unassigned			Runs its object file code not read here	inferred	none		
+0x7d8e00	41	FindTrueTypeEncoding		unassigned	primitive	uint32_t __fastcall (uint32_t platform, uint32_t encoding)	Returns the encoding tag of a cmap platform and encoding from the table at 0x81eb70, or 0	verified	one	font/freetype#charmap-selection	font::encoding_tag_difftest
 0x7d8e30	365			unassigned			Runs its object file code that calls 0x7cd500; not read here	inferred	none		
 0x7d8fa0	1134			unassigned			Runs its object file code that calls 0x7cf270, 0x7cf380, 0x7cf4f0 and 6 more; not read here	inferred	none		
 0x7d9410	283			unassigned			Runs its object file code that calls 0x7cd450, 0x7cf380, 0x7cf4f0 and 4 more; not read here	inferred	none		
@@ -37022,10 +37022,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7da9c0	37			unassigned			Runs its object file code not read here	inferred	none		
 0x7da9f0	3			unassigned			Runs its object file code not read here	inferred	none		
 0x7daa00	223			unassigned			Runs its object file code that calls 0x7dc4e0, 0x7daae0; not read here	inferred	none		
-0x7daae0	249			unassigned			Runs its object file code that calls 0x7dabe0, 0x7db100; not read here	inferred	none		
-0x7dabe0	86			unassigned			Runs its object file code not read here	inferred	none		
+0x7daae0	249	RasterRenderGlyph		unassigned	primitive	int32_t __fastcall (void *raster)	Converts an outline to 1-bit pixels: precision from flag 0x100, rows, then columns unless flag 0x200	verified	one	font/freetype#mono-scan-conversion	
+0x7dabe0	86	RasterSetHighPrecision		unassigned	primitive	void __fastcall (void *raster, int32_t high)	Sets the raster's precision: 10 bits and jitter 24 when high, else 6 bits and jitter 2	verified	one	font/freetype#mono-scan-conversion	font::set_high_precision_difftest
 0x7dac40	70			unassigned			Runs its object file code not read here	inferred	none		
-0x7dac90	239			unassigned			Runs its object file code not read here	inferred	none		
+0x7dac90	239	RasterVerticalSweepSpan		unassigned	primitive	void __fastcall (void *raster, int32_t y, int32_t x1, int32_t x2, void *left, void *right)	Sets a row's pixels between two crossings, one pixel when the gap is within the jitter	verified	one	font/freetype#mono-scan-conversion	font::vertical_span_difftest
 0x7dad80	335			unassigned			Runs its object file code not read here	inferred	none		
 0x7daef0	14			unassigned			Runs its object file code not read here	inferred	none		
 0x7daf00	3			unassigned			Runs its object file code not read here	inferred	none		
@@ -37059,7 +37059,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7dc510	25			unassigned			Runs its object file code not read here	inferred	none		
 0x7dc530	74			unassigned			Runs its object file code that calls 0x7d03a0, 0x7d0170; not read here	inferred	none		
 0x7dc580	47			unassigned			Runs its object file code that calls 0x7d00e0; not read here	inferred	none		
-0x7dc5b0	384			unassigned			Runs its object file code that calls 0x7d0170, 0x7d00e0, 0x7cd500 and 1 more; not read here	inferred	none		
+0x7dc5b0	384	Raster1Render		unassigned	primitive	int32_t __fastcall (void *renderer, void *slot, uint32_t mode, const void *origin)	Renders an outline slot as a bitmap, refusing with 0x13 any mode but 1 for raster1	verified	one	font/freetype#rendering	
 0x7dc730	282			unassigned			Runs its object file code that calls _strncpy; not read here	inferred	none		
 0x7dc850	230			unassigned			Runs its object file code that calls 0x7cd450, 0x7dc730, 0x7cd4a0 and 2 more; not read here	inferred	none		
 0x7dc940	15			unassigned			Runs its object file code not read here	inferred	none		

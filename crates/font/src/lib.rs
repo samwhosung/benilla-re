@@ -13,6 +13,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod freetype;
 pub mod layout;
 pub mod markup;
 pub mod measure;
