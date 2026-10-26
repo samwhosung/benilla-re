@@ -46,17 +46,14 @@ three and the last loading `ecx` with a string name. `0x4019f3 call 0x703bf0` tu
 
 ## Neighbouring handlers
 
-The block that binds the transfer handlers binds two more messages, unrelated to transfers. `0x1cb` goes to `0x401800`, which reads a string, shows it as an error message and writes
-it to the console. `0x1cd` goes to `0x401850`, which reads the total time played and the time played at this level, writes `Time played:` and the two formatted times to the console and signals
-event 0x103 with both numbers.
+The block that binds the transfer handlers binds two unrelated messages. `SMSG_NOTIFICATION` (`0x1cb`) goes to `0x401800`, which reads a string of up to 1024 bytes, shows it as `UI_ERROR_MESSAGE` and writes it to the console in colour class 3. `SMSG_PLAYED_TIME` (`0x1cd`) goes to `0x401850`, which reads the total seconds played and the seconds at this level as two i32, writes `Time played:`, `Total: %s` and `Level: %s` to the console, each time formatted by `0x49e9d0` as `%dd %dh %dm %ds`, and signals `TIME_PLAYED_MSG` (event 0x103) with `%d%d`, total then level. `0x49e9d0` divides with truncation toward zero: days `s / 86400`, hours `(s − 86400·days) / 3600`, minutes `(s − 3600·(hours + 24·days)) / 60`, seconds `s % 60`.
 
-Addresses: `0x401728`, `0x40172a`, `0x401739`, `0x401800`, `0x401818`, `0x401828`, `0x40183b`, `0x401850`, `0x401863`, `0x40186e`, `0x401878`, `0x40188f`, `0x4018df`, `0x4945b0`, `0x63cd00`, `0x63cd50`, `0x49e9d0`, `0x703f50`
+Addresses: `0x401728`, `0x40172a`, `0x401739`, `0x401800`, `0x401818`, `0x40181d`, `0x401828`, `0x40183b`, `0x401850`, `0x401863`, `0x40186e`, `0x401878`, `0x40188f`, `0x4018b7`, `0x4018df`, `0x4945b0`, `0x63cd00`, `0x63cd50`, `0x49e9d0`, `0x49e9de`, `0x49ea01`, `0x49ea1e`, `0x49ea2f`, `0x49ea52`, `0x8449f8`, `0x703f50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::format_duration_difftest`
 
-`0x401818 call 0x4191b0` reads a string of at most 0x400 bytes and `0x401828 call 0x4945b0` adds it as an error message; `0x40183b call 0x63cd00` writes it with the format `%s`. In `0x401850`,
-`0x401863` and `0x40186e` read the two numbers, `0x40188f` and `0x4018b7` format them as times for the lines `Total: %s` and `Level: %s`, and `0x4018df call 0x703f50` signals the event (`push 0x103`) with the format `%d%d`.
+`0x401818 call 0x4191b0` reads the string into a 0x400-byte buffer; `0x40181d` sets `edx` = 1 and `0x401828 call 0x4945b0` adds it as an error message; `0x40183b call 0x63cd00` writes it with the format `%s` and class 3. In `0x401850`, `0x401863` and `0x40186e` read the two numbers, `0x40188f` and `0x4018b7` format them into 256 bytes for the lines `Total: %s` and `Level: %s`, and `0x4018df call 0x703f50` signals the event (`push 0x103`) with the format `%d%d`. `0x49e9d0(buffer, size, seconds)` divides by multiplying: `0xc22e4507` and `sar 16` for 86400 (`0x49e9de`), `0x91a2b3c5` and `sar 11` for 3600 (`0x49ea01`), `idiv` by 60 for the seconds (`0x49ea1e`), `0x88888889` and `sar 5` for 60 (`0x49ea2f`), each adding the sign bit; `0x49ea52` calls `SStrPrintf(buffer, size, 0x8449f8, days, hours, minutes, seconds)`. Both handlers return 1. The test runs `0x49e9d0` whole with `SStrPrintf` stubbed.
 
 ## World-port executor
 

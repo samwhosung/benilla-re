@@ -219,14 +219,14 @@ set it; the build clears it. The per-frame function `0x46b930`, when the state i
 is set, suspends and rebuilds the glue (`0x46a7b0(1)`) and sets the current screen again, unless
 the glue is suspended; either way it clears the flag.
 
-Addresses: `0xb41d8c`, `0x4035f0`, `0x46ac76`, `0x46a7e0`, `0x46b97f`, `0x46b98b`, `0x46b993`, `0x46b99d`, `0x46b9ac`
+Addresses: `0xb41d8c`, `0x4035f0`, `0x4035fa`, `0x402baa`, `0x491380`, `0x46ac76`, `0x46a7e0`, `0x46b97f`, `0x46b98b`, `0x46b993`, `0x46b99d`, `0x46b9ac`
 Confidence: verified
 Proof: one
 Test: `glue::glue_onresize_difftest`
 
 A census finds five references: stores of 1 at `0x4035f0` and `0x46ac76`, stores of 0 at
 `0x46a7e0` and `0x46b9ac`, and the test at `0x46b97f`. `0x4035f0` is the handler the startup
-registers with the console command `reloadUI`. In `0x46b930`, `0x46b977` skips the block for a
+registers with the console command `reloadUI` in category 1 (`0x402baa`); after its store it calls `CGGameUI::Reload` (`0x491380`, `ui/bindings`) and returns 1. In `0x46b930`, `0x46b977` skips the block for a
 state other than 0; `0x46b98b` skips the rebuild while `0xb41d94` is set; `0x46b9a7` calls
 `0x46b840` with the current screen's name.
 `glue_onresize_difftest` runs `0x46ac5b` to `0x46ac86`.

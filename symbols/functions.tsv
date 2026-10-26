@@ -44,8 +44,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
 0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	verified	one	core/close#tail	
 0x401570	646	ClientInitializeGame	idb	client			Initializes the game systems, among them the spell tables through 0x6dda50	inferred	none	spell/tables#startup-build-of-the-indexes	
-0x401800	78	NotifyHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs Client.cpp code that calls CDataStore::GetCString, CGGameUI::AddErrorMessage, ConsoleWriteA; not read here	inferred	none		
-0x401850	163	PlayedTimeHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs Client.cpp code that calls CDataStore::GetInt32, ConsolePrintf, 0x49e9d0 and 1 more; not read here	inferred	none		
+0x401800	78	NotifyHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows the opcode 0x1cb string as UI_ERROR_MESSAGE and writes it to the console in colour class 3	verified	one	collision/teleport#neighbouring-handlers	
+0x401850	163	PlayedTimeHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Writes the opcode 0x1cd played times to the console as days to seconds and signals TIME_PLAYED_MSG with both	verified	one	collision/teleport#neighbouring-handlers	
 0x401900	152	TransferPendingHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the destination map, cancels interaction and casts, and raises the loading screen	verified	one	collision/teleport#far-transfer-handlers	
 0x4019a0	127	TransferAbortedHandler	idb	client		uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads an abort reason byte, shows a TRANSFER_ABORT message for reasons 1, 2, 3 and 5, and ends the loading screen	verified	one	collision/teleport#transfer-abort	
 0x401a40	187	MovementInit	idb	client		void __cdecl (void)	Runs 0x616860 on the movement log path and registers 0x616800 as the handler of event 5	verified	one	collision/mover#initialisation-and-teardown	
@@ -93,7 +93,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403500	104	DesktopGammaCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Restores the saved desktop gamma ramp for a nonzero DesktopGamma, else applies the gamma setting	verified	one	ui/videoverbs#gamma	
 0x403570	49	ProfanityFilterCallback		client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035b0	49	SpamFilterCallback		client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
-0x4035f0	21	ReloadUiCommand		client		uint32_t __fastcall (const char *name, const char *args)	Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	inferred	none		
+0x4035f0	21	ReloadUiCommand		client		uint32_t __fastcall (const char *name, const char *args)	Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	verified	one	glue/manager#rebuild-requests	
 0x403610	5			client			Runs Client.cpp code not read here	inferred	none		
 0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	one	net/dispatch#main-thread-drain	
 0x403640	88	ClientContextStop		client			Runs the game teardown, client systems and network services, then the other shutdowns and removes the callback	verified	one	core/close#stop-handler-order	
@@ -7208,7 +7208,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49e8a0	108			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a870; not read here	inferred	none		
 0x49e910	122			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49e8a0; not read here	inferred	none		
 0x49e990	59			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49e9d0	147			ui	primitive		Runs ChatFrame.cpp code that calls SStrPrintf; not read here	inferred	none		
+0x49e9d0	147	FormatSecondsDHMS		ui	primitive	void __fastcall (char *buffer, uint32_t size, int32_t seconds)	Formats a count of seconds as %dd %dh %dm %ds by truncating signed division	verified	one	collision/teleport#neighbouring-handlers	ui::format_duration_difftest
 0x49ea70	17	SetGuildRecruitmentLatch		ui	orchestration		Stores the recruitment mode and runs the cascade when it is 1	verified	one	ui/channelverbs#guild-recruitment-mode	
 0x49ea90	217	RunGuildRecruitmentCascade		ui	primitive		Leaves or joins the capital guild recruitment channel by the player's guild and area, or arms the retry	verified	one	ui/channelverbs#guild-recruitment-cascade	
 0x49eb70	767	JoinChannel		ui	primitive		Composes the wire name, registers the window entry and slot, and sends the join	verified	one	ui/channelverbs#the-join-body	

@@ -1619,6 +1619,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
+0x8449f8	char[16]	s_formatSecondsDHMS		ui	Holds the format %dd %dh %dm %ds that FormatSecondsDHMS prints	verified	one	collision/teleport#neighbouring-handlers
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
 0x844d28	char[41]	s_textUsageChangeChatColor		ui	Holds the string "Usage(ChangeChatColor(chatType, r, g, b)", the usage error of ChangeChatColor	verified	one	ui/chatcolors#changechatcolor
 0x84506c	int32_t	s_mapContinent		unassigned	Holds the selected continent index, -1 for the world view, -2 for a direct area	verified	one	ui/worldmap#the-selection
