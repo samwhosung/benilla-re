@@ -248,6 +248,30 @@ Each loop pushes the callback, a length of 8 and the active player's GUID (`0x46
 the bound itself is registered. A player's watchers fire in registration order: `0x5dd8a0` (the inventory watcher
 `0x5ddcf0` of `objectlayer/playerfields`) runs before these, on every construction path.
 
+## Bank slot watcher
+
+The world entry registers one more object watcher on the active player: byte 2 of `PLAYER_BYTES_2`,
+the count of bought bank bag slots, one byte long. A change of that byte signals
+`PLAYERBANKBAGSLOTS_CHANGED` (id 350) with no arguments, banker or not, inside the update that
+carries it. Leaving the world removes the watcher. The rest-state watcher on byte 3 of the same dword,
+registered when the player becomes active, comes before it on that dword's list, so on one update
+it runs first.
+
+Addresses: `0x4f8460`, `0x4f8490`, `0x4f8495`, `0x4f84b0`, `0x4909ba`, `0x490ae4`, `0x467e70`, `0x467ed7`, `0x467fb0`, `0x5dea58`, `0x5deb60`, `0x5e9c00`, `0x5e9c08`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4f8460` calls `0x467e70(4, 0x1a, guid, 1, 0x4f8490, 0, 0)`: section 4 is the player's and its
+byte 0x1a is dword 6, `PLAYER_BYTES_2`, byte 2. `0x4f8490` is `mov ecx,0x15e` and
+`FrameScript_SignalEvent` (`0x4f8495`), then returns 1 with `ret 0x10`. Its only caller is
+`EnterWorldUI` (`0x4909ba`); `0x4f84b0` removes it through `0x467fb0` from `LeaveWorldUI`
+(`0x490ae4`). The callback's address is stored only by these two. The offsets 0x1a and 0x1b both
+give field 6 (`shr esi,2`, `0x467ed7`) to `0x465850`, so the two watchers share one list, which runs in registration
+order (`objectlayer/fields`). `CGPlayer_C::AddActiveWatchers` registers `0x5de4e0` before
+`EnterWorldUI` runs on both paths that reach it from the player: `0x5dea58` before `0x5deb60`, and
+`0x5e9c00` before the tail jump `0x5e9c08`.
+
 ## Bag events
 
 A change of a bag slot runs `0x4f8ec0(offset, length, guid, previous)`. A GUID it finds in the slot is resolved as an

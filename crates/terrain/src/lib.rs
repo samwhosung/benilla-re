@@ -55,6 +55,7 @@ pub mod texgen;
 pub mod texture;
 pub mod waterfx;
 pub mod wdlgeom;
+pub mod wmoarea;
 pub mod wmovis;
 pub mod worldconsole;
 pub mod worldcoord;

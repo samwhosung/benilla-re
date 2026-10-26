@@ -4,7 +4,7 @@ The client's text engine: a font (`CGxFont`) owns a FreeType face and a cache of
 256 by 256 atlas pages; a string (`CGxString`) holds text, a size and a layout; a batch
 (`CGxStringBatch`) groups strings of one font for drawing. The interface, the console and the
 world text (`playername`) call it through the `GxuFont` functions. Topic docs: `api`, `markup`,
-`metrics`, `measure`, `string` and `glyphs`.
+`metrics`, `measure`, `string`, `glyphs` and `freetype`.
 
 The code lies in eight object files, from `0x5c1560` to `0x5d1100`; the table below gives each
 file's code and its run of slots in the initializer table. Only three cite their source path.
@@ -17,7 +17,7 @@ The C API file (no source path) is `0x5c1560` to `0x5c3c90`. A file for the math
 (`gxumath`). `GxuFontUtil.cpp` holds the kernels and the screen scaling, `GxuFontMiscClasses.cpp`
 the glyph and atlas containers and the quad emission, `GxuFontString.cpp` the string. Two more
 files with no source path lie between and after them: `0x5c9f30` up to `0x5ccaf0` (the font class)
-and `0x5ce420` to the face file. The face and its FreeType calls  are
+and `0x5ce420` to the face file. The face and its FreeType calls (`freetype`) are
 unassigned, and `IGxuFontGlyph.cpp` (`gx`) ends the run.
 
 | file | code from | initializer slots |

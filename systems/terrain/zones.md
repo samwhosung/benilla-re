@@ -122,6 +122,28 @@ the locale name or the empty string. `0x69d87e` and `0x69d9e5` pass −1 for the
 `0x69d93e` and `0x69d9c7` pass the group's id, `[group record + 0x14c]`. `0x69d89a` and
 `0x69d8a4` take the AreaTable id `+0x28` when the name is empty, and `0x69d8a4` falls back to `0x69b120`.
 
+## WMOAreaTable lookups
+
+Both lookups binary-search the WMOAreaTable rows for an exact key of WMO id, name set and group
+id, compared in that order. Each field compares by its 32-bit difference, which wraps, so the
+rows must be sorted by that order; an empty table finds nothing. `0x7ccde0(wmo, nameSet, group,
+&row)` stores the row found or null and returns whether one was. `0x7ccd30(wmo, nameSet, group)`
+returns the row's name for the locale, `+0x2c + 4 × locale`, or the empty string. Neither retries
+another name set or the whole-WMO row.
+
+Addresses: `0x7ccd30`, `0x7ccd72`, `0x7ccd87`, `0x7ccda0`, `0x7ccde0`, `0x7cce23`, `0x7cce33`, `0x7ccdb0`, `0xc0d5f0`, `0xc0e080`, `0x7fd84f`
+Confidence: verified
+Proof: one
+Test: `terrain::wmo_area_compare_difftest`
+
+Each builds a key on the stack with the WMO id from `ecx` at `+0x4`, the name set from `edx` at
+`+0x8` and the group from the stack at `+0xc`, and calls `_bsearch(key, rows, count, 0x50,
+0x7ccdb0)` (`0x7ccd72`, `0x7cce23`) on the store `0xc0d5f0`, with the rows `+0x0` replaced by 0 when
+the count `+0x4` is 0 or less. `0x7ccdb0` returns the first nonzero `sub` of `+0x4`, `+0x8` and
+`+0xc`. `0x7ccd87` loads `[row + 4 × [0xc0e080] + 0x2c]`; a miss returns `0x882748`, an empty
+string (`0x7ccda0`). `0x7cce33` stores the result and `setne` makes the return. The test runs
+`0x7ccdb0` whole.
+
 ## Entity area id
 
 `0x6703a0` returns 1 and writes an area id for an entity, or returns 0. With the map-is-one-object

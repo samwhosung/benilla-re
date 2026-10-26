@@ -177,3 +177,30 @@ Test: none
 push 1. `0x71fc70` builds `0x2000` (`0x71fc8b`); its twelve call sites push 1 and 0. The escape table at `0x812330`
 is 75 words indexed from `'0'`: `\<` (index 12), `\>` (index 14) and `\b` (index 50) are all -4, which the
 matcher runs as opcode 4 (`0x72509d`). `0x7202f3` rejects any option outside `0x7a7f`.
+
+## The matcher's character tables
+
+`pcre_exec` (`0x724350`) takes its tables from the extra block when that sets flag 8, else from
+the compiled pattern, else the default tables `0x873b40`, which every filter uses: lower case at
+`+0x0`, the case flip at `+0x100` (`0x873c40`) and the character types at `+0x340`
+(`0x873e80`). The types give bit 0x10, word, to `0`–`9`, `A`–`Z`, `_`, `a`–`z` and 0xc0 to 0xff
+but 0xd7, 0xde and 0xf7, 124 characters, and bit 0x01, space, to 0x09, 0x0a, 0x0c, 0x0d, 0x20 and
+0xa0. The case flip changes only `A`–`Z` and `a`–`z`. In UTF-8 mode the matcher decodes each
+character, and one of 0x100 or above is neither: a word boundary takes it as a non-word
+character, `\s` fails on it and `\S` matches it.
+
+Addresses: `0x724350`, `0x7243d4`, `0x72441e`, `0x72442e`, `0x724512`, `0x720318`, `0x7210e0`, `0x724970`, `0x724fc0`, `0x724fce`, `0x725052`, `0x725060`, `0x7252ae`, `0x7252b8`, `0x72533e`, `0x72534c`, `0x873b40`, `0x873c40`, `0x873e80`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7243d4` takes the pattern's tables `+0x20`; `0x72441e` takes the extra block's `+0x10` under
+flag 8 and `0x72442e` the default when the pointer is null. `pcre_compile` uses the default for a
+null argument (`0x720318`) and keeps a null in the pattern when the tables are the default
+(`0x7210e0`). `0x724512` stores `tables + 0x340` as the match block's types `+0x18`. In `0x724970`
+the word boundary decodes the previous character; `0x724fc0` takes one of 0x100 or more as
+non-word before `0x724fce` tests bit 0x10, and `0x725052` and `0x725060` do the same for the
+current character. The not-space case matches at `0x7252ae` for 0x100 or more and fails at
+`0x7252b8` on bit 1; the space case fails at `0x72533e` for 0x100 or more and at `0x72534c`
+without bit 1. The table bytes are the file's; the instructions that name `0x873b40` pass it as
+the tables pointer, and none names an address inside the three tables.

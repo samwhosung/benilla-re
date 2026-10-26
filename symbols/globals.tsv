@@ -619,6 +619,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8087d8	const float	s_float00000000At8087d8		ui	Holds the float 0 (0x00000000)	verified	one	ui/smartrect#pushes-by-region
 0x8087e0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/smartrect#the-placement-search
 0x808870	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x808904	void *[4]	s_cameraBaseVtable		unassigned	Holds the camera base's vtable, four slots	verified	one	uicamera/view#the-camera-base
 0x80891c	const float	s_cameraHalfTurn		uicamera	Holds pi, the half turn the camera facing filter wraps its error by	verified	one	uicamera/driver#smoothing-the-facing
 0x80899c	const float	s_float3fc00000		uicamera	Holds the float 1.5 (0x3fc00000)	inferred	none	
 0x8089a0	const float	s_float3f000000		uicamera	Holds the float 0.5 (0x3f000000)	inferred	none	
@@ -626,6 +627,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8089a8	const float	s_float00000000At8089a8		uicamera	Holds the float 0 (0x00000000)	inferred	none	
 0x8089ac	const float	s_float3e2aaaabAt8089ac		uicamera	Holds the float 0.16666667 (0x3e2aaaab)	inferred	none	
 0x8089b0	const float	s_float3fea6e99		uicamera	Holds the float 1.8315002 (0x3fea6e99)	inferred	none	
+0x8089b4	const float	s_cameraDefaultFov		unassigned	Holds pi/2 as a float, the field of view the camera is built with	verified	one	uicamera/view#the-camera-base
 0x8089b8	const float	s_cameraFovMax		uicamera	Holds 3.1241393, 179 degrees, the upper clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
 0x8089bc	const float	s_cameraFovMin		uicamera	Holds 0.0, the lower clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
 0x8089c0	const float	s_cameraSlopeLimit		uicamera	Holds 0.349066, the limit the camera probe clamps its slope to, plus and minus	verified	one	uicamera/effects#probing-the-slope
@@ -1296,6 +1298,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81dda8	uint32_t[20]	s_difficultyGrayGaps		ui	Holds the gray-range gap by the player's level divided by 5, read by the difficulty colour	verified	one	ui/unitlevels#the-gray-range
 0x81de50	void *[40]	s_namePlateVtable		ui	Holds the 40 virtual function slots of the nameplate frame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81df88	float	s_plateLowHealthFraction		ui	Holds 0.2, the fill fraction at or below which the auto-colour is red	verified	one	ui/nameplates#bar-colour-and-values
+0x81e068	void *[12]	s_ftDefaultModules		unassigned	Holds the eleven FreeType module classes FT_Add_Default_Modules adds, in order, then null	verified	one	font/freetype#rendering
+0x81e8b8	uint32_t[25]	s_t1DriverClass		unassigned	Holds the Type 1 driver class, whose glyph loader is 0x7d3310	verified	one	font/freetype#loading-a-glyph
+0x81e920	uint32_t[25]	s_ttDriverClass		unassigned	Holds the TrueType driver class, flags 0x101: scalable, no hinter of its own	verified	one	font/freetype#loading-a-glyph
+0x81e9b4	uint32_t[15]	s_ftSmoothRendererClass		unassigned	Holds the smooth renderer class, the anti-aliased outline renderer	verified	one	font/freetype#rendering
+0x81eb70	uint32_t[30]	s_trueTypeEncodings		unassigned	Holds the TrueType encoding table: platform, encoding or -1 for any, and tag, ten rows	verified	one	font/freetype#charmap-selection
+0x81ecec	uint32_t[15]	s_ftRaster1RendererClass		unassigned	Holds the raster1 renderer class, the 1-bit outline renderer	verified	one	font/freetype#rendering
 0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
 0x822d28	double	s_degreesPerRadian		lua	Holds 180 over pi, the factor math.deg multiplies by	verified	one	lua/libs#more-math-functions
@@ -2380,7 +2388,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8730ac	const char[26]	s_pathModel2VertexProgram		models	Holds the path of the model vertex program file shaders\vertex\Model2.bls	verified	one	models/cache#feature-request
 0x873184	uint32_t[6]	s_m2KindPriority		models	Holds the transparent sort priority of each element kind	verified	one	models/scene#batch-grouping
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
-0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x873b40	uint8_t[256]	s_pcreDefaultTables		unassigned	Holds PCRE's default tables: lower case here, then case flip, class bits and character types	verified	one	ui/chatfilter#the-matchers-character-tables
+0x873c40	uint8_t[256]	s_pcreFlipCase		unassigned	Holds PCRE's case-flip table, which swaps only A to Z and a to z	verified	one	ui/chatfilter#the-matchers-character-tables
+0x873e80	uint8_t[256]	s_pcreCharTypes		unassigned	Holds PCRE's character types: bit 0x10 word and 0x01 space, Latin-1 letters among the words	verified	one	ui/chatfilter#the-matchers-character-tables
 0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
 0x87405c	int32_t	s_lcdScreen		ui	Holds the screen the keyboard LCD shows, -1 before the first change	verified	one	ui/lcd#changing-screen
 0x874060	int32_t	s_lcdPreviousScreen		ui	Holds the screen shown before the current one, -1 at first	verified	one	ui/lcd#changing-screen
@@ -3925,6 +3935,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4ba48	float	s_fontRasterInvTwoPi		font	Holds 1/2π stored by 0x5cfce0, which nothing reads	verified	one	font/overview#object-files
 0xc4ba4c	uint32_t			font	Holds a dword that AtlasPage::Dump reads and writes; not read here	inferred	none	objectlayer/trade#trade-state
 0xc4ba70	float	s_fontRasterTwoPi		font	Holds 2π stored by 0x5cfc90, which nothing reads	verified	one	font/overview#object-files
+0xc4ba7c	uint32_t[10]	s_fontFaceTable		unassigned	Holds the open font faces, a hash table by path with buckets at +0x1c and mask at +0x24	verified	one	font/freetype#opening-a-face
 0xc4baa8	float	s_glyphInfinity		gx	Holds +inf, copied by the glyph object file's initializer	verified	one	gx/glyphs#static-initializers
 0xc4baac	float	s_glyphInvTwoPi		gx	Holds 1 / 2 pi as a float	verified	one	gx/glyphs#static-initializers
 0xc4bab0	float	s_glyphTwoPi		gx	Holds 2 pi as a float	verified	one	gx/glyphs#static-initializers
