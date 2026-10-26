@@ -2169,7 +2169,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x429f80	23			os	unreached		Runs its object file code not read here	inferred	none		
 0x429fa0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x429fb0	54			os	unreached		Runs its object file code not read here	inferred	none		
-0x429ff0	392			os			Runs its object file code that calls SStrLen, SErrSetLastError, OsGetAsyncTimeMs and 3 more; not read here	inferred	none		
+0x429ff0	392	OpenUrlInBrowser		os	host	bool __fastcall (const char *url)	Opens a URL with its escapes decoded through ShellExecute, else through the .html program; returns 1 on success	verified	one	net/connection#opening-a-url	
 0x42a180	24			os	unreached		Runs its object file code that calls __clearfp, __control87; not read here	inferred	none		
 0x42a1a0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1b0	15			os	unreached		Runs its object file code not read here	inferred	none		
@@ -35033,10 +35033,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6970	41	TSLink_Sound::NextLink	idb	sound	primitive		Returns the link after a sound list link	verified	one	sound/engine#the-sound-object	
 0x7a69a0	376			unassigned			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
 0x7a6b20	313	fnInternetCallback	idb	unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x7a6cc0	505			os			Runs OsURLDownload.cpp code that calls SMemAlloc, SMemFree; not read here	inferred	none		
+0x7a6cc0	505	StartUrlDownload		os	host	bool __fastcall (const char *url, void *callback, void *param, int32_t timeoutMs)	Sends an asynchronous WinINet GET of a URL with a callback and timeouts; returns 1 once the send is accepted	verified	one	glue/manager#the-url-download	
 0x7a6ec0	5			client			Runs its object file code not read here	inferred	none		
 0x7a6ed0	11			client			Runs its object file code not read here	inferred	none		
-0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
+0x7a6ee0	21	HttpGetAsync		client	orchestration	bool __fastcall (const char *url, void *callback, void *param)	Starts a URL download with a 5000 ms connect and receive timeout	verified	one	glue/manager#the-url-download	
 0x7a6f00	5			client			Runs its object file code not read here	inferred	none		
 0x7a6f10	15			client			Runs its object file code not read here	inferred	none		
 0x7a6f20	5			unassigned			Runs its object file code not read here	inferred	none		

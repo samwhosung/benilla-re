@@ -422,7 +422,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	one	core/events#observer-classes
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
-0x801490	const uint8_t			os	Holds a byte its object file's code reads; not read here	inferred	none	
+0x801490	const uint8_t[256]	s_hexDigitValue		os	Holds each byte's hex digit value: 0 to 15 for 0-9, A-F and a-f, and 0 for every other byte	verified	one	net/connection#opening-a-url
 0x8015a8	const float	s_infinityClock		core	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
 0x8015ac	const float	s_piClock		core	Holds pi, 0x40490fdb, which the clock file doubles into 2 pi at start-up	verified	one	core/time#static-initializers
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
@@ -2515,7 +2515,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87cefc	float	s_ambienceCategoryVolume		sound	Holds the Ambience category factor, 0.5 until the CVar handler sets it	verified	one	sound/engine#volume-of-a-sound
 0x87cf00	int32_t	s_soundEffectsOff		sound	Holds 1 while sound effects are off, 0 while on, -1 at start and after shutdown	verified	one	sound/engine#opening-a-stream
 0x87d3a0	char[12]	s_soundTag		sound	Holds the allocation tag of the engine's sound records	verified	one	sound/overview#object-files
-0x87d3b0	char[20]	s_textBlizzardWebClient		os	Holds the string "Blizzard Web Client"	inferred	none	
+0x87d3b0	char[20]	s_textBlizzardWebClient		os	Holds the string "Blizzard Web Client", the URL download's agent	verified	one	glue/manager#the-url-download
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
 0x87d5fc	float	s_particleDensity		models	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density

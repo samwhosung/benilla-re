@@ -90,6 +90,36 @@ downloader behind `0x7a6ee0` calls it with `(size, 0, 0)` per read and `(0, 1, x
 compared with `SStrCmpI` over its `SStrLen` (`0x46a5e8`). While ready is set, `0x46b930` fires
 `SHOW_SERVER_ALERT` with the text after the prefix (`0x46b964`) and clears it.
 
+## The URL download
+
+`HttpGetAsync(url, callback, param)` (`0x7a6ee0`) is `StartUrlDownload(url, callback, param, 5000)`
+(`0x7a6cc0`). That splits the URL into host, port and path, keeps the callback and `param` in a
+0x38-byte context with four events, opens an asynchronous WinINet session as `Blizzard Web Client`
+with the system's proxy settings and the status callback `0x7a6b20`, connects for HTTP, sets the
+connect and receive timeouts when above 0, and sends a `GET` of the path with flags 0x84000200
+(reload, no cache write, no interface) and no headers. A connect or open that answers
+`ERROR_IO_PENDING` waits on an event without a limit. It returns 1 once the send is accepted or
+pending, else 0, freeing the context and leaving its handles open.
+
+Addresses: `0x7a6ee0`, `0x7a6ee6`, `0x7a6cc0`, `0x7a6d03`, `0x7a6d0a`, `0x7a6d2b`, `0x7a6d6a`, `0x7a6d97`, `0x7a6da3`, `0x7a6db9`, `0x7a6dcf`, `0x7a6ddf`, `0x7a6df2`, `0x7a6e03`, `0x7a6e09`, `0x7a6e1d`, `0x7a6e2b`, `0x7a6e34`, `0x7a6e50`, `0x7a6e7e`, `0x7a6e93`, `0x7a6e9e`, `0x7a6b20`, `0x87d3b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7a6ee6` pushes 0x1388 and the stack argument and calls `0x7a6cc0` with `ecx` and `edx` as they
+came. `0x7a6d03` sets the 0x3c-byte `URL_COMPONENTSA`, the host and the path each into a 0x400-byte
+stack buffer, for `InternetCrackUrlA` (`0x7a6d0a`), whose failure returns before the allocation
+(`0x7a6d2b`, `OsURLDownload.cpp` line 276). The four `CreateEventA(0, 0, 0, 0)` (`0x7a6d6a` on) go to
+`+0xc` to `+0x18`; a null allocation reaches them unchecked. `InternetOpenA` (`0x7a6da3`) takes access
+type 0 (`0x7a6d97`) and flag 0x10000000; the session goes to `+0`, the callback and `param` to `+0x30`
+and `+0x34`. `0x7a6db9` registers `0x7a6b20`, failing on −1. `InternetConnectA` (`0x7a6ddf`) takes
+service 3 (`0x7a6dcf`) and the context; its handle goes to `+4`, and a null with error 997
+(`0x7a6df2`) waits on `+0xc` (`0x7a6e03`). `0x7a6e09` tests the timeout; options 2 and 6
+(`0x7a6e1d`, `0x7a6e2b`) go on the connection. `HttpOpenRequestA` (`0x7a6e50`) takes `GET`, the path
+and 0x84000200 (`0x7a6e34`) into `+8`, waiting on `+0x10` the same way, and `HttpSendRequestA`
+(`0x7a6e7e`) passes no headers or body; success or error 997 (`0x7a6e93`) return 1. Every failure
+reaches `SMemFree` (`0x7a6e9e`). What `0x7a6b20` and `0x7a69a0` do with the replies is not read here.
+
 ## Glue build
 
 `0x46a7b0(reset)` zeroes the manager's state `0xb41da0` and the cells `0xb41d98`, `0xb41d9c`,
