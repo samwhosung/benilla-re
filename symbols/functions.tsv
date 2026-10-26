@@ -1543,7 +1543,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
 0x419ed0	295	CStatus::Prepend		client			Puts a formatted line of a severity first in a status	verified	one	ui/framexml#the-load-status-and-its-log	
 0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status, raising its highest severity	verified	one	ui/framexml#the-load-status-and-its-log	
-0x41a100	74			client			Runs Status.cpp code not read here	inferred	none		
+0x41a100	74	CStatus::Merge		client	orchestration	void __thiscall (CStatus *this, CStatus *other)	Adds each line of another status through this status's own Add, the line's text as the format	verified	one	ui/framexml#merging-one-status-into-another	
 0x41a150	23	CStatus::IsEmpty	idb	client			Runs Status.cpp code not read here	inferred	none		
 0x41a170	126	CStatus::Clear	idb	client			Runs Status.cpp code that calls SMemFree; not read here	inferred	none		
 0x41a1f0	117	CStatus::GetErrorStr	idb	client			Runs Status.cpp code that calls SStrLen, SStrCopy; not read here	inferred	none		
@@ -1703,7 +1703,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41e310	32			base			Runs its object file code that calls 0x41e2d0; not read here	inferred	none		
 0x41e330	34			base			Runs its object file code that calls 0x41e430; not read here	inferred	none		
 0x41e360	56			base	unreached		Runs its object file code not read here	inferred	none		
-0x41e3a0	131			base			Runs its object file code that calls SStrLen, SErrSetLastError, 0x41ddd0 and 1 more; not read here	inferred	none		
+0x41e3a0	131	AssignSharedString		base	primitive	void __thiscall (void *this, const char *text)	Points a shared string handle at the pool's counted record of a text, or the null record for NULL	verified	one	ui/fontstring#shared-path-strings	ui::assign_shared_string_difftest
 0x41e430	41			base			Runs its object file code that calls 0x41e310; not read here	inferred	none		
 0x41e460	23			base	unreached		Runs its object file code not read here	inferred	none		
 0x41e480	37			base	unreached		Runs its object file code that calls 0x41e2d0; not read here	inferred	none		
@@ -2207,7 +2207,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42ac20	70	OsSetCurrentDirectory		os		uint32_t __fastcall (const char *path)	Sets the working directory to a UTF-8 path with SetCurrentDirectoryW	verified	one	storm/mount#install-folder-and-data-path	
 0x42ac70	83			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42acd0; not read here	inferred	none		
 0x42acd0	59			os			Runs its object file code that calls 0x65b080; not read here	inferred	none		
-0x42ad10	304			os			Runs its object file code that calls SStrCopy, 0x42b3d0, SStrPack and 2 more; not read here	inferred	none		
+0x42ad10	304	EnumerateFolderFiles		os	host	bool __fastcall (const char *folder, const char *pattern, void *callback, void *param, uint32_t withHidden)	Calls a callback for each entry a folder pattern lists, hidden ones on request, until one returns nonzero	verified	one	storm/mount#listing-a-folder	
 0x42ae40	118			os	unreached		Runs its object file code not read here	inferred	none		
 0x42aec0	85			os	unreached		Runs its object file code that calls SStrLen; not read here	inferred	none		
 0x42af20	218			os	unreached		Runs its object file code that calls 0x42ae40, SStrCopy, SStrPack and 1 more; not read here	inferred	none		
@@ -28745,7 +28745,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d6ce0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6d6d00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6d6d10	14			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6d20	179	GetGuildEmblem		client			Reads a guild's five emblem values from the guild cache, keeping a callback on a miss; returns 1 when found	inferred	none		
+0x6d6d20	179	GetGuildEmblem		client	orchestration	bool __fastcall (uint32_t guildId, void *callback, uint64_t guid, void *data, int32_t *emblemStyle, int32_t *emblemColor, int32_t *borderStyle, int32_t *borderColor, int32_t *background)	Copies a cached guild's five emblem values when none is -1 and returns 1, else leaves all five -1 and returns 0	verified	one	objectlayer/party#the-emblem-lookup	
 0x6d6de0	6	GetGuildEmblemCost		client	orchestration		Returns 100000, the emblem's price in copper	verified	one	objectlayer/party#guild-tabards	
 0x6d6df0	5	InitShadowInfinityThunk		lighting	orchestration		Jumps to 0x6d6e00; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x6d6e00	11	InitShadowInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
@@ -35124,13 +35124,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a8680	34			os			Runs its object file code not read here	inferred	none		
 0x7a86b0	12			os			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7a86c0	165			os			Runs its object file code not read here	inferred	none		
-0x7a8770	825			os			Runs its object file code that calls SStrHashHT, 0x7ab5b0, 0x7aa440 and 10 more; not read here	inferred	none		
+0x7a8770	825	SoundFileCacheOpen		os	host	uint32_t __stdcall (const char *name)	Opens a sound file into the cache entry its name hash finds, or an idle one, and returns the entry and slot	verified	one	sound/overview#the-file-cache-open	
 0x7a8ab0	386			os			Runs its object file code that calls 0x7a8e50, 0x7a8c40, SFile::OpenEx and 2 more; not read here	inferred	none		
 0x7a8c40	513			os			Runs its object file code that calls SCritSect::Enter, 0x7aa320, SCritSect::Leave and 5 more; not read here	inferred	none		
-0x7a8e50	27			os			Runs its object file code not read here	inferred	none		
+0x7a8e50	27	SoundFileCacheEntry		os	primitive	void * __fastcall (uint32_t handle, uint32_t *slot)	Returns a sound file handle's 0x1a4-byte entry and writes its slot, the low byte less one	verified	one	sound/overview#the-file-cache-open	sound::file_cache_entry_difftest
 0x7a8e70	107			os			Runs its object file code that calls 0x7a8e50; not read here	inferred	none		
 0x7a8ee0	28			os			Runs its object file code that calls 0x7a8e50; not read here	inferred	none		
-0x7a8f00	165			os			Runs its object file code that calls 0x7a8e50, SFile::Close; not read here	inferred	none		
+0x7a8f00	165	SoundFileCacheClose		os	host	void __stdcall (uint32_t handle)	Frees a sound file handle's slot and at the entry's last closes its file and puts it at the idle list's tail	verified	one	sound/overview#the-file-cache-open	
 0x7a8fb0	478			os			Runs its object file code that calls 0x7a9190, 0x7aa9e0, 0x7aa440 and 5 more; not read here	inferred	none		
 0x7a9190	535			os			Runs OsISoundCache.cpp code that calls SMemAlloc, 0x7aa2f0, 0x7aa340 and 4 more; not read here	inferred	none		
 0x7a93b0	246			os			Runs its object file code that calls 0x7ab5b0, 0x7ab220, 0x7a9f10; not read here	inferred	none		

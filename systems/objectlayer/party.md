@@ -210,6 +210,27 @@ event `PLAYER_GUILD_UPDATE`, and redraws the tabard. `0x5e0830` reapplies the ta
 `0x5e07d0` rebuilds the character component, both then calling `0x491a50`, which jumps to
 `0x524e10`; `0x5e09f0` returns the guild's name for the name text.
 
+## The emblem lookup
+
+`GetGuildEmblem(guild, callback, guid, data, &style, &colour, &border, &borderColour, &background)`
+(`0x6d6d20`) asks the guild cache for the guild's record, leaving `callback` with `guid` and `data` on
+a miss, and sets all five outputs to −1. With a record whose five emblem values are all other than
+−1 it copies them in that order and returns 1; with no record, or any one of them −1, it returns 0
+and the outputs stay −1.
+
+Addresses: `0x6d6d20`, `0x6d6d37`, `0x6d6d4d`, `0x6d6d6b`, `0x6d6d73`, `0x6d6d93`, `0x6d6d9c`, `0x6d6dc3`, `0x6d6dcc`, `0x560e30`, `0xc0e1ec`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6d6d37` calls `0x560e30` on `0xc0e1ec` with `(guild, &guid, callback, data, 0)`. The five stores
+of −1 (`0x6d6d4d` on) come before the test of the record at `0x6d6d6b`; the `cmp ...,-1` run is
+`0x6d6d73` to `0x6d6d93` over `+0x2e4` to `+0x2f4`, each `je` to the `xor al,al` at `0x6d6dcc`, and
+`0x6d6d9c` on copies the five, `mov al,1` at `0x6d6dc3`, `ret 0x20`. The order is the save's: `0x5e03f0`
+bounds the same five by 170, 17, 6, 17 and 51 and compares them with `+0x2e4` to `+0x2f4` in turn. The
+callers are `0x5e0720`, `0x5e0650`, the corpse's `0x5d6ec0`, `DressUpModel::TryOnItem` (`0x504540`)
+and the character list's `0x472950` and `0x472420`.
+
 ## The guild record
 
 A guild's cache record holds its id, its name, ten rank names and five emblem values, read in

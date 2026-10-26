@@ -74,6 +74,7 @@ pub mod screen_rect;
 pub mod screen_size;
 pub mod scrollframe_layout;
 pub mod scrollframe_scroll;
+pub mod shared_string;
 pub mod simplemodel;
 pub mod slider;
 pub mod slider_thumb;

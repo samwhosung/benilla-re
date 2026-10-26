@@ -104,6 +104,33 @@ is set, freeing it through slot 0. `0x45d150` builds the string table on the sta
 which destroys it at `0x45c24f`. `0x45d9f0` unlinks a sheathe node's two links; `0x4594f0` frees a
 dword array's buffer, and the array when bit 0 of its argument is set.
 
+## The file cache open
+
+`SoundFileCacheOpen(name)` (`0x7a8770`), the open `Sound::Initialize` gives FMOD, keeps 0x1a4-byte
+entries found by the name's `SStrHashHT` alone, the name never compared; a null or empty name gets
+0. A known entry with 16 handles refuses; an idle one leaves the idle list and, above 0x40000 bytes, reopens its file. A new
+name is opened with `SFile::OpenEx(0, name, 1)`, the loose-index flag, and takes the idle list's
+head, its old name dropped; with no idle entry it returns 0, leaving that file open. The handle is
+`index << 8 | slot + 1`, the slot the entry's first free of 16. The close `0x7a8f00` frees the slot
+and at the last closes the file and makes the entry the idle list's tail.
+
+Addresses: `0x7a8770`, `0x7a879b`, `0x7a87a7`, `0x7a87bb`, `0x7a87e3`, `0x7a8805`, `0x7a88bc`, `0x7a8816`, `0x7a8848`, `0x7a8860`, `0x7a8873`, `0x7a88a1`, `0x7a88db`, `0x7a88e5`, `0x7a88fd`, `0x7a893c`, `0x7a8951`, `0x7a89af`, `0x7a89c3`, `0x7a8a49`, `0x7a8a9b`, `0x7a8e50`, `0x7a8f00`, `0x7a8f22`, `0x7a8f35`, `0x7a8f97`, `0xcf569c`, `0xcf56d4`, `0xcf56e8`
+Confidence: verified
+Proof: one
+Test: none
+
+The table `0xcf569c` is the template above, mask `[0xcf56c0]`; `0x7a87a7` sends a mask of −1 to the
+miss and `0x7a87e3` compares only a node's hash with `0x7a879b`'s. A node's `+0x18` is the entry
+(`0x7a8805`), whose `+0x114` counts its handles (`0x7a88bc`, `cmp eax,0x10`). `0x7a8816` unlinks an idle
+entry through the list `0xcf56d4`; `0x7a8848` compares `+0x110`, the size, with 0x40000 and `0x7a8860`
+opens into `+0x108` without testing it. `0x7a8873` takes the first slot of `+0x11c` whose byte is 0;
+`0x7a88a1` shifts `+0x10c`. On a miss `0x7a88db` opens into a local, `0x7a88e5` fails on a null file,
+`0x7a88fd` takes `[0xcf56dc]` and fails on none; `0x7a893c` and `0x7a8951` drop the old name's node.
+`0x7a89af` copies the name into `+0` with no bound, past which `+0x104` lies; `0x7a89c3` stores the size.
+`0x7a8a49` grows the table and `0x7a8a9b` builds the handle with slot 0. `0x7a8e50` maps a handle back:
+`[0xcf56e8] + (h >> 8)·0x1a4`, slot `(h & 0xff) − 1`. `0x7a8f22` counts down, `0x7a8f35` is `SFile::Close`,
+and `0x7a8f97` links the entry at the tail.
+
 ## Lists and growable arrays
 
 A list link is two words, the previous link and the next, with bit 0 of the next marking the end;

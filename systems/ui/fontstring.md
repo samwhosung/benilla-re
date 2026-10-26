@@ -223,3 +223,26 @@ with 0x20, 0x16 and 0x16. Each `Font` setter or getter calls one shared function
 `GetStringHeight`: the image has no such string, against one `GetStringWidth`.
 
 The `ui::` tests cover slices of these functions; each test header names its instructions.
+
+## Shared path strings
+
+A font block's font path and a backdrop's two file names are shared strings: a handle whose `+8`
+points at a counted record of a string pool. `0x41e3a0(handle, text)` points it at a new text. A null
+text takes the null record `0x883e78`, whose text pointer is null: its count goes up, the old record
+is released and the handle takes it. A text of 0x400 bytes or more, or no pool, raises error 0x57 and
+leaves the handle as it was. Otherwise the pool's record for the text has its count raised, the old
+record is released, and the handle takes the new one.
+
+Addresses: `0x41e3a0`, `0x41e3a7`, `0x41e3ae`, `0x41e3c0`, `0x41e3d3`, `0x41e3e7`, `0x41e400`, `0x41e40b`, `0x41e417`, `0x41e41a`, `0x41dc50`, `0x41ddd0`, `0x783a6a`
+Confidence: verified
+Proof: one
+Test: `ui::assign_shared_string_difftest`
+
+`0x41e3a7` tests the text; the null leg is `inc [0x883e7c]`, the null record's `+4` (`0x41e3ae`), then
+`call [eax+8]` on a non-null `[handle+8]` and the store of `0x883e78` (`0x41e3c0`). `0x41e3d3` compares
+`SStrLen` with 0x400 (`jb`). `0x41e3e7` calls `0x41ddd0`, which makes the pool on first use; a null
+result raises 0x57. `0x41e400` is `0x41e030(pool, text)`, which finds or adds the text's record and is
+not read here; `0x41e40b` raises a non-null result's `+4` before the release at `0x41e417`, and
+`0x41e41a` stores it, null included. `0x41dc50` zeroes the null record and its text pointer `+0x1c` at
+start-up. The `Font` constructor passes a null text (`0x783a6a`). The test runs `0x41e3a0` whole with
+the pool calls, the release and the error stubbed.

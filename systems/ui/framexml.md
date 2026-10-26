@@ -277,6 +277,27 @@ from `0x6edb40` and, when it is not above 0, tests the highest severity; the pre
 then pushes the level. `0x6ee291` and `0x6ee6c6` gate the traces `0x871154` and `0x87116c`.
 `0xceea30` has two references, `0x6edb30` and `0x6edb40`.
 
+## Merging one status into another
+
+`CStatus::Merge(other)` (`0x41a100`, slot 2 of `CStatus::vftable` `0x7ffa10`) walks `other`'s lines
+first to last and passes each to the receiver's own slot 3, `Add(this, severity, text)`, the line's
+text as the format and no arguments. `other` keeps its lines. So each line is formatted a second
+time: a `%` directive in it is expanded again (`%%` gives `%`) from whatever words lie above the
+call, the line is cut to 255 bytes, and a line that formats to nothing is dropped with its severity.
+The receiver's highest severity rises as each line is added.
+
+Addresses: `0x41a100`, `0x41a109`, `0x41a129`, `0x41a133`, `0x41a13e`, `0x41a000`, `0x41a04f`, `0x41a05f`, `0x41a0f0`, `0x7ffa10`, `0x6ee22d`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x41a109` loads `[other+0xc]`, the first line, and the loop ends at a pointer with bit 0 set or at
+0. `0x41a129` pushes the line's `+0` (text) and `+4` (severity) and `this`; `0x41a133` is `call
+[eax+0xc]`, `add esp,0xc` after it; `0x41a13e` steps through the link at `[other+4]` from the line.
+`CStatus::vftable` holds `0x41a000` in slot 3; `0x41a000` formats its format and arguments with
+`SStrVPrintf` into a 256-byte buffer (`0x41a04f`), returns at `0x41a05f` when the result is empty,
+and raises `+0x10` at `0x41a0f0`. The load merges a file's status through slot 2 at `0x6ee22d`.
+
 ## Sound while loading
 
 Building the game interface, entering and leaving the world and shutting the interface down each

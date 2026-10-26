@@ -2588,6 +2588,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883c90	char[260]	s_cmdLineString		unassigned	Holds the string the last CmdLineGetString call read	verified	one	storm/scmd#the-clients-switch-readers
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
+0x883e78	uint32_t[8]	s_nullSharedStringRecord		base	Holds the record a null shared string points at: vtable, count, and a null text at +0x1c	verified	one	ui/fontstring#shared-path-strings
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
 0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	verified	one	core/scheduler#growable-arrays
@@ -4815,6 +4816,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf55fc	void *	s_soundPositionCallback		sound	Holds the object position callback, null when none	verified	one	sound/engine#sounds-that-follow-objects
 0xcf5600	uint32_t	s_soundOpenBlocked		sound	Holds 0; read by every open and written nowhere	verified	one	sound/engine#opening-a-stream
 0xcf5604	uint32_t	s_soundRecordCount		sound	Holds the number of live sound records	verified	one	sound/engine#the-sound-object
+0xcf569c	uint8_t[40]	s_soundFileTable		os	Holds the sound file cache's hash table of entries by name hash, mask at +0x24	verified	one	sound/overview#the-file-cache-open
+0xcf56d4	uint32_t[3]	s_soundFileIdleList		os	Holds the list of sound file cache entries with no open handle: link offset, tail, head	verified	one	sound/overview#the-file-cache-open
+0xcf56e8	void *	s_soundFileEntries		os	Holds the array of 0x1a4-byte sound file cache entries a handle indexes	inferred	none	sound/overview#the-file-cache-open
 0xcf572c	float	s_cameraPropertyInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf5730	float	s_cameraInvTwoPi		camera	Holds 1/2π (0x3e22f983), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5734	float	s_cameraTwoPi		camera	Holds 2π (0x40c90fdb), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
