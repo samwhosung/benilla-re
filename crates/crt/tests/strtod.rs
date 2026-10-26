@@ -123,6 +123,24 @@ const EDGES: &[&str] = &[
     "1\u{e9}",
 ];
 
+/// Numerals with the client's answer fixed as bits and `ERANGE`: a round to the double below the
+/// nearest, a result just under and just at 2^-1022, the extended range's flush to a signed zero
+/// and the underflows either side of it, and 25 digits cut to 24.
+const FIXED: &[(&str, u64, bool)] = &[
+    ("6e23", 0x44df_c384_2bd1_f071, false),
+    ("2.2250738585072011e-308", 0, true),
+    ("2.2250738585072013e-308", 0x0010_0000_0000_0000, false),
+    ("1e-4950", 0, true),
+    ("-1e-5000", 0x8000_0000_0000_0000, false),
+    ("1e-5201", 0, true),
+    ("-1e-400", 0, true),
+    (
+        "123456789012345678901234567890",
+        0x45f8_ee90_ff6c_373e,
+        false,
+    ),
+];
+
 struct Rig<'a> {
     e: Emu<'a>,
     buf: u64,
@@ -233,6 +251,7 @@ fn crt_strtod_difftest() {
     let mut g = Lcg(0x5717_0d00);
     let mut cases: Vec<Vec<u8>> = EDGES.iter().map(|s| s.as_bytes().to_vec()).collect();
     cases.extend(boundaries());
+    cases.extend(FIXED.iter().map(|c| c.0.as_bytes().to_vec()));
     for _ in 0..30_000 {
         cases.push(numeral(&mut g));
     }
@@ -246,6 +265,15 @@ fn crt_strtod_difftest() {
             errno,
             if want.erange { 0x22 } else { 0 },
             "strtod({shown:?}) errno"
+        );
+    }
+    for &(text, bits, erange) in FIXED {
+        let (got, _, errno) = r.run(text.as_bytes());
+        assert_eq!(got, bits, "strtod({text:?}) fixed value");
+        assert_eq!(
+            errno,
+            if erange { 0x22 } else { 0 },
+            "strtod({text:?}) fixed errno"
         );
     }
 }
