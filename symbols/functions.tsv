@@ -3319,13 +3319,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4441d0	194			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4442a0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4442b0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x4442c0	214			unassigned			Runs Profile.cpp code that calls SMemAlloc, 0x446ad0, 0x446950 and 1 more; not read here	inferred	none		
+0x4442c0	214	ProfileCreate		unassigned	orchestration	void * __cdecl (void)	Allocates and constructs an empty profile of sections, keys and values, or returns null	verified	one	dbc#reading-wowini	
 0x4443a0	181			unassigned			Runs its object file code that calls 0x446300, 0x445910, SMemFree and 5 more; not read here	inferred	none		
-0x444460	19			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x444480	183			unassigned			Runs its object file code that calls SStrCopy, SStrLen, __ismbcspace and 3 more; not read here	inferred	none		
-0x444540	440			unassigned			Runs its object file code that calls 0x444010, SStrChr, SStrCmp and 1 more; not read here	inferred	none		
-0x444710	125			unassigned			Runs its object file code that calls 0x444790; not read here	inferred	none		
-0x444790	479			unassigned			Runs its object file code that calls SStrHashHT, 0x444e10, 0x446950 and 10 more; not read here	inferred	none		
+0x444460	19	ProfileLoad		unassigned	orchestration	int __fastcall (void *profile, const char *name)	Loads a profile file by name through 0x444480; error 0x57 and 0 for a null name	verified	one	dbc#reading-wowini	
+0x444480	183	ProfileReadFile		unassigned	orchestration	int __fastcall (void *profile, const char *name)	Loads a named file with trailing spaces cut from the name and parses it; 0 when it does not load	verified	one	dbc#reading-wowini	
+0x444540	440	ProfileParseText		unassigned	orchestration	int __fastcall (void *profile, const char *text, uint32_t size)	Parses a copy of an INI text into sections, keys and values, line by line, and returns 1	verified	one	dbc#reading-wowini	
+0x444710	125	ProfileAddValueList		unassigned	orchestration	void __fastcall (void *profile, const char *section, const char *key, char *value)	Splits a value at commas, a quoted part whole, and appends each part to the key	verified	one	dbc#reading-wowini	
+0x444790	479	ProfileAddValue		unassigned	orchestration	void __fastcall (void *profile, const char *section, const char *key, const char *value, int clear, uint32_t copy)	Appends a value to a key, creating the section and the key, after clearing the key when asked	verified	one	dbc#reading-wowini	
 0x444970	19			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x444990	146			unassigned	unreached		Runs its object file code that calls 0x446a20, 0x444a80, 0x444a30 and 1 more; not read here	inferred	none		
 0x444a30	80			unassigned	unreached		Runs its object file code that calls _fopen, 0x73f574, _fclose; not read here	inferred	none		
@@ -3335,7 +3335,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x444d40	16			unassigned	unreached		Runs its object file code that calls 0x444540; not read here	inferred	none		
 0x444d50	67			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x444790; not read here	inferred	none		
 0x444da0	109			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
-0x444e10	43			unassigned			Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x444e10	43	ProfileNameEquals		unassigned	orchestration	int __fastcall (const char **name, uint32_t unused, const char *other)	Returns 1 when a held name is the same pointer as a name or equal to it ignoring case	verified	one	dbc#reading-wowini	
 0x444e40	113			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
 0x444ec0	114			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
 0x444f40	98			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x761320, 0x444790; not read here	inferred	none		
@@ -3347,14 +3347,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4451b0	98			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x761320, 0x444790; not read here	inferred	none		
 0x445220	57			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x444790; not read here	inferred	none		
 0x445260	94			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrCmpI; not read here	inferred	none		
-0x4452c0	40			unassigned			Runs its object file code that calls 0x4452f0; not read here	inferred	none		
-0x4452f0	276			unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x445410	82			unassigned			Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x445470; not read here	inferred	none		
-0x445470	51			unassigned			Runs its object file code that calls 0x64ac60; not read here	inferred	none		
+0x4452c0	40	ProfileGetValue		unassigned	orchestration	const char * __fastcall (void *profile, const char *section, const char *key, uint32_t index)	Returns the value of a key at an index, or null for a missing section, key or index	verified	one	dbc#wowini-values	
+0x4452f0	276	ProfileFindKey		unassigned	orchestration	void * __fastcall (void *profile, const char *section, const char *key)	Finds a key of a section by hash and names compared ignoring case, or returns null	verified	one	dbc#wowini-values	
+0x445410	82	ProfileGetInt		unassigned	orchestration	int __fastcall (void *profile, const char *section, const char *key, int32_t *out, uint32_t index)	Stores 0, then a value read as an integer, and returns whether the value exists; error 0x57 for null input	verified	one	dbc#wowini-values	
+0x445470	51	ProfileParseInt		unassigned	primitive	int32_t __fastcall (const char *value)	Packs up to four quoted characters first byte highest, or reads a decimal through SStrToInt	verified	one	dbc#wowini-values	dbc::wow_ini_value_int_difftest
 0x4454b0	91			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x64acd0; not read here	inferred	none		
 0x445510	81			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrToFloat; not read here	inferred	none		
 0x445570	89			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x7614b0; not read here	inferred	none		
-0x4455d0	81			unassigned			Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrCopy; not read here	inferred	none		
+0x4455d0	81	ProfileGetString		unassigned	orchestration	int __fastcall (void *profile, const char *section, const char *key, char *out, uint32_t size, uint32_t index)	Empties a buffer, then copies a value into it and returns whether the value exists; error 0x57 for null input	verified	one	dbc#wowini-values	
 0x445630	43			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x4452c0; not read here	inferred	none		
 0x445660	37			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x445690; not read here	inferred	none		
 0x445690	29			unassigned	unreached		Runs its object file code that calls 0x4452f0; not read here	inferred	none		
@@ -3362,7 +3362,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x445730	223			unassigned	unreached		Runs its object file code that calls SStrHashHT, SStrCmpI, 0x446950 and 1 more; not read here	inferred	none		
 0x445810	68			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x445860	158			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x445900	11			unassigned			Runs its object file code not read here	inferred	none		
+0x445900	11	ProfileDelete		unassigned	orchestration	void __thiscall (void *this)	Deletes a non-null profile through its vtable slot 0 with 1	verified	one	dbc#wowini-values	
 0x445910	60			unassigned			Runs its object file code not read here	inferred	none		
 0x445950	98			unassigned			Runs its object file code that calls 0x445fc0, 0x446270, 0x446780 and 3 more; not read here	inferred	none		
 0x4459c0	65			unassigned			Runs its object file code that calls SMemFree, 0x446540; not read here	inferred	none		
@@ -14067,7 +14067,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x53f4c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x53f4d0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x53f4f0	32	ClientDBInitialize	idb	unassigned	orchestration		Loads every table, then runs four fix-ups and jumps to the light table conversion	verified	one	lighting/tables#light-positions-at-load	
-0x53f510	167	CheckDamageClassConsistency	idb	unassigned			Runs its object file code that calls ConsolePrintf, 0x554980, 0x5549a0; not read here	inferred	none		
+0x53f510	167	CheckDamageClassConsistency	idb	unassigned	orchestration	void __cdecl (void)	Indexes up to 7 Resistances rows by damage class, keeps the last flagged physical, warns on a count other than 7	verified	one	dbc#damage-class-check	
 0x53f5c0	126	InitTerrainSoundTypeIDs	idb	unassigned			Runs its object file code that calls FreeUint32Array, ReallocUint32Array; not read here	inferred	none		
 0x53f640	277	InitWeaponSubclasses	idb	unassigned			Runs its object file code that calls 0x554ac0, LocateWeaponSubclass, 0x554a30; not read here	inferred	none		
 0x53f760	72	LocateWeaponSubclass	idb	unassigned			Runs its object file code not read here	inferred	none		
@@ -28336,7 +28336,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9150	18			unassigned			Runs its object file code not read here	inferred	none		
 0x6c9170	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6c9180	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6c91a0	929	BuildWordFilterLists		unassigned		void __cdecl (void)	Compiles the NamesProfanity, ChatProfanity, NamesReserved and SpamMessages rows into the filter lists	verified	one	ui/chatfilter#the-word-lists	
+0x6c91a0	929	BuildWordFilterLists		unassigned		void __fastcall (int32_t region)	Compiles the NamesProfanity, ChatProfanity, NamesReserved and SpamMessages rows into the filter lists	verified	one	ui/chatfilter#the-word-lists	
 0x6c9550	128			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6c95d0	240			unassigned	unreached		Runs its object file code that calls 0x6c96c0, SUniConvertUTF8to16, 0x6c9e00 and 2 more; not read here	inferred	none		
 0x6c96c0	939	ValidateNameText		unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	

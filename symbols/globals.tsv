@@ -2528,7 +2528,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882704	uint32_t			client	Holds a dword that ClientRegisterConsoleCommands reads and writes; not read here	inferred	none	
 0x882720	uint32_t	s_readTos		cvar	Points at the readTOS option's record	inferred	none	
 0x88272c	uint32_t	s_pvpRealmGate		unassigned	Holds 1 when the selected realm type allows player killing, set at world entry	verified	one	ui/zonetext#the-realm-gate
-0x882730	uint32_t	s_iniRegion		client	Holds the Region value read from the WoW Config section of Wow.ini, 0 by default	inferred	none	
+0x882730	int32_t	s_iniRegion		client	Holds the WoW Config Region value of Wow.ini, 0 in the file and without the file or the key	verified	one	dbc#wowini-values
 0x882734	uint32_t	s_gameInitialized		client	Holds 1 from the end of ClientInitializeGame until ClientDestroyGame ends	verified	one	core/close#stop-handler-order
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
 0x88273c	uint32_t	s_dataLayout		client	Holds the data layout: 1 with both archives under ..\Data\, 2 with only model.MPQ there, 0 otherwise	verified	one	storm/mount#install-folder-and-data-path
@@ -3571,6 +3571,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
 0xc0d488	uint32_t[3]	s_netClientNodeList		net	Holds the list of NETCLIENTNODE records, one per NetClient: the link offset 0, then the head's two link words	verified	one	net/session#netclient-construction
 0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	one	net/dispatch#handler-tables
+0xc0d530	uint32_t[3]	s_resistancesByClass		unassigned	Holds the Resistances row pointers by damage class: capacity, count and array	verified	one	dbc#damage-class-check
 0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message

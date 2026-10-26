@@ -11,6 +11,8 @@
 
 #![forbid(unsafe_code)]
 
+pub mod profile;
+
 use std::borrow::Cow;
 use std::fmt;
 
