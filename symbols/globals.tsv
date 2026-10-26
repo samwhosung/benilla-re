@@ -1818,7 +1818,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84f788	const char *	s_cameraSettingsFileName		uicamera	Holds the pointer to the camera settings file name	verified	one	uicamera/view#the-settings-file
 0x84f78c	uint32_t	s_cameraClipWord		uicamera	Holds the word the cameraClip command sets or flips, 1 at load, which nothing reads	verified	one	uicamera/cvars#cameraclip
 0x84f790	void *[3]	s_cameraViewChecks		uicamera	Holds the check functions 0x50b310, 0x50b380 and 0x50b3c0 of the distance, pitch and yaw view CVars	verified	one	uicamera/cvars#saved-view-cvars
-0x84f7a0	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84f7a0	void *[42]	s_cameraFunctions		uicamera	Pairs the 21 camera Lua function names with their functions, CameraZoomIn to FlipCameraYaw	verified	one	uicamera/driver#camera-script-functions
 0x84f848	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84fa00	char[20]	s_textCameraSettingsTxt		unassigned	Holds the string "camera-settings.txt", the file name the camera settings load from	verified	one	uicamera/view#the-settings-file
 0x84fad4	char[4]	s_text00		unassigned	Holds the string "0.0"	inferred	none	

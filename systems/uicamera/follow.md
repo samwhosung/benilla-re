@@ -112,9 +112,9 @@ When the last primary button is released, `0x514b70` calls `0x50f940(extra)` wit
 and copies the live yaw, pitch and pivot bias into their transition targets so nothing returns to the view. While bit 5 is set the auto-return is refused (`uicamera/cvars#clear-and-band-tests`).
 `ToggleMouseMove` runs `0x50f910`: it leaves mouselook with the argument 0 when mode bit 0 is set and enters it otherwise.
 
-Addresses: `0x50f940`, `0x50f910`, `0x50f930`, `0x514b70`, `0x50b5a0`, `0x50fdd0`, `0x510940`
+Addresses: `0x50f940`, `0x50f910`, `0x50f930`, `0x514b70`, `0x50b5a0`, `0x50b5a7`, `0x4818f0`, `0x50fdd0`, `0x510940`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x514c48` is the call in `0x514b70`. `0x50f946` calls the leave routine `0x50fdd0`; `0x50f958` and `0x50f95d` set or clear bit 5 (0x20); `0x50f966` to `0x50f984` copy `+0xf4`, `+0xf0` and `+0x104` into `+0x1e0`, `+0x210` and `+0x1f8`. `0x50f910` tests bit 0 and `0x50f91b` calls `0x50f940(0)`, else `0x50f921` goes to the enter thunk `0x50f930`. `0x510940` returns 0 for a camera whose bit 5 is set.
+`0x514c48` is the call in `0x514b70`. `0x50f946` calls the leave routine `0x50fdd0`; `0x50f958` and `0x50f95d` set or clear bit 5 (0x20); `0x50f966` to `0x50f984` copy `+0xf4`, `+0xf0` and `+0x104` into `+0x1e0`, `+0x210` and `+0x1f8`. `0x50f910` tests bit 0 and `0x50f91b` calls `0x50f940(0)`, else `0x50f921` goes to the enter thunk `0x50f930`. `0x510940` returns 0 for a camera whose bit 5 is set. `ToggleMouseMove` (`0x50b5a0`) calls `0x50f910` on the camera `0x4818f0` returns and returns no values (`0x50b5a7`).

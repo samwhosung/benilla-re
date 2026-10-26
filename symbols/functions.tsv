@@ -12200,16 +12200,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50b4d0	7	Script::MoveViewInStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewInStop	verified	one	uicamera/driver#the-keyboard-axes	
 0x50b4e0	22	StopMoveViewAxis		uicamera	orchestration		Stops a camera axis on the active camera at the last input time and returns 0	verified	one	uicamera/driver#the-keyboard-axes	
 0x50b500	10	Script::MoveViewOutStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewOutStart	verified	one	uicamera/driver#the-keyboard-axes	
-0x50b510	10	Script::MoveViewOutStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewOutStop	inferred	none		
-0x50b520	10	Script::MoveViewRightStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewRightStart	inferred	none		
-0x50b530	10	Script::MoveViewRightStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewRightStop	inferred	none		
-0x50b540	10	Script::MoveViewLeftStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewLeftStart	inferred	none		
-0x50b550	10	Script::MoveViewLeftStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewLeftStop	inferred	none		
-0x50b560	10	Script::MoveViewUpStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewUpStart	inferred	none		
-0x50b570	10	Script::MoveViewUpStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewUpStop	inferred	none		
-0x50b580	10	Script::MoveViewDownStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewDownStart	inferred	none		
-0x50b590	10	Script::MoveViewDownStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MoveViewDownStop	inferred	none		
-0x50b5a0	15	Script::ToggleMouseMove	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Implements the Lua function ToggleMouseMove	inferred	none		
+0x50b510	10	Script::MoveViewOutStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Stops camera axis 1 (out) through 0x50b4e0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b520	10	Script::MoveViewRightStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Starts camera axis 2 (right) through 0x50b4b0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b530	10	Script::MoveViewRightStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Stops camera axis 2 (right) through 0x50b4e0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b540	10	Script::MoveViewLeftStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Starts camera axis 3 (left) through 0x50b4b0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b550	10	Script::MoveViewLeftStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Stops camera axis 3 (left) through 0x50b4e0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b560	10	Script::MoveViewUpStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Starts camera axis 4 (up) through 0x50b4b0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b570	10	Script::MoveViewUpStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Stops camera axis 4 (up) through 0x50b4e0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b580	10	Script::MoveViewDownStart	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Starts camera axis 5 (down) through 0x50b4b0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b590	10	Script::MoveViewDownStop	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Stops camera axis 5 (down) through 0x50b4e0	verified	one	uicamera/driver#the-keyboard-axes	
+0x50b5a0	15	Script::ToggleMouseMove	idb	uicamera	orchestration	int __fastcall (lua_State *L)	Toggles mouselook on the active camera through 0x50f910	verified	one	uicamera/follow#leaving-mouselook	
 0x50b5b0	71	Script::SetView	idb	uicamera	primitive	int __fastcall (lua_State *L)	Implements the Lua function SetView	inferred	none	uicamera/driver#setting-a-view	
 0x50b600	61	Script::SaveView	idb	uicamera	primitive	int __fastcall (lua_State *L)	Implements the Lua function SaveView	inferred	none	uicamera/driver#setting-a-view	
 0x50b640	61	Script::ResetView	idb	uicamera	primitive	int __fastcall (lua_State *L)	Implements the Lua function ResetView	inferred	none	uicamera/driver#setting-a-view	
@@ -12222,8 +12222,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50c000	49	CheckAngleRateRange		uicamera	primitive	bool __stdcall (const char *value, uint32_t arg2)	Accepts a rate from 0.1 to 360 degrees	verified	one	uicamera/cvars#input-and-bobbing-cvars	ui::cam_rad2deg_difftest
 0x50c040	28	CheckDistanceRateRange		uicamera	orchestration	bool __stdcall (const char *value, uint32_t arg2)	Accepts a rate from 1/360 to 50	verified	one	uicamera/cvars#input-and-bobbing-cvars	
 0x50c060	22	CheckSmoothStyleRange		uicamera	orchestration	bool __stdcall (const char *value, uint32_t arg2)	Accepts a style from 0 to 3	verified	one	uicamera/cvars#input-and-bobbing-cvars	
-0x50c080	33			uicamera	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x50c0b0	27			uicamera	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x50c080	33	RegisterCameraScriptFunctions		uicamera	orchestration	void __cdecl (void)	Registers the 21 camera Lua functions of 0x84f7a0	verified	one	uicamera/driver#camera-script-functions	
+0x50c0b0	27	UnregisterCameraScriptFunctions		uicamera	orchestration	void __cdecl (void)	Removes the 21 camera Lua functions of 0x84f7a0	verified	one	uicamera/driver#camera-script-functions	
 0x50c0d0	1			uicamera	orchestration		Runs its object file code not read here	inferred	none		
 0x50c0e0	813	CCamera::CCamera		uicamera	primitive	CCamera * __thiscall (CCamera *this)	Constructs the camera, sets its starting view, loads its saved view and registers cameraClip	verified	one	uicamera/view#the-starting-view	
 0x50c410	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
