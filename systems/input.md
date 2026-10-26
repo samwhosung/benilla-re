@@ -58,9 +58,9 @@ The binding table `0x8500b8` pairs each command's name with its handler. `TurnOr
 (`0x514190`) arms click mode 1 and presses bit `0x2`. Each does both only when `0x494a50(0)`, a
 check not read here, returns nonzero. Arming (`0x514810`) stores the mode only when no
 primary command, `0x1` or `0x2`, is held, and for a nonzero mode picks the world object under
-the cursor with `0x481f00`. `0x515090` sends a press to `0x514840` and a release to `0x514b70`.
+the cursor with `0x481f00`. `0x515090` sends a press to `0x514840` and a release to `0x514b70`. The 26 names are Lua functions: `0x514340` registers each pair of the table and `0x514370` removes them, from the game UI's own registration and removal (`0x490250`, `0x490ce0`).
 
-Addresses: `0x8500b8`, `0x514120`, `0x514190`, `0x494a50`, `0x514810`, `0x515090`, `0x481f00`
+Addresses: `0x8500b8`, `0x514120`, `0x514190`, `0x494a50`, `0x514810`, `0x515090`, `0x481f00`, `0x514340`, `0x514357`, `0x514370`, `0x49029c`, `0x490d30`
 Confidence: verified
 Proof: one
 Test: none
@@ -72,7 +72,7 @@ and skips the rest on 0 (`0x514131`), then calls `0x514810` with 2 and `0x515090
 1 and press 1; `0x514190` passes 1, then 2 and 1. In `0x514810`, `test byte ptr [ecx+4],3`
 skips the store for a nonzero mode while a primary is held, and `0x51482d` calls the pick.
 `0x515090` tests its second argument and calls `0x514840` (`0x5150a7`) or `0x514b70`
-(`0x5150b9`).
+(`0x5150b9`). `0x514340` calls `0x704120` with the name at `0x8500b8 + i` in `ecx` and the function after it in `edx`, for `i` from 0 to `0xd0` in steps of 8 (`0x514357`); `0x514370` calls `0x704160` with each name. Their one caller each is `0x49029c` and `0x490d30`.
 
 ## Click versus drag
 
@@ -201,6 +201,17 @@ Test: none
 
 The stand-up (`0x60be30`, at `0x514e0c`) and the away-from-keyboard clear for a player (`0x5eb830`, at `0x514e23`) run on every tick with a nonzero total, before the latch test at `0x514e34`, not only on a start. A positive total is silent when the latch is set and the unit is not moving backward. A negative total is also silent when the latch is set and movement flag 0x1 is clear (`0x514e60`). The latch is bit 16 of the input word and records that a start was sent; it is not a key. Holding S and then toggling autorun gives a total of 0 and stops the unit while S stays down; pressing S while autorun is on removes autorun first (below) and reverses.
 
+## The strafe axis
+
+`0x514e80(time, unit)` adds up the sideways direction: StrafeLeft (0x40) +1, TurnLeft (0x100) with the mouse turn command (0x1) held +1, StrafeRight (0x80) -1, TurnRight (0x200) with 0x1 held -1. A zero total with the latch bit 0x20000 set stops the strafe (`0x60dce0`) and clears the latch; with it clear, nothing. A nonzero total first stands the unit up when its stand state is not 0 and clears away-from-keyboard for a player, as the forward axis does; then, only when the latch is clear, it starts a strafe left for a positive total or right for a negative one (`0x60dcb0` with 1 or 0) and sets the latch.
+
+Addresses: `0x514e80`, `0x514e8c`, `0x514e98`, `0x514e9d`, `0x514ea3`, `0x514eac`, `0x514eb2`, `0x514eb6`, `0x514ec8`, `0x514ed0`, `0x514ee6`, `0x514ef4`, `0x514f02`, `0x514f0b`, `0x514f12`, `0x514f1c`, `0x514f28`, `0x514f34`, `0x514f3e`, `0x514f43`, `0x60dcb0`, `0x60dce0`, `0x617890`
+Confidence: verified
+Proof: one
+Test: `input::emit_strafe_axis_difftest`
+
+`0x514e8c` starts the total at 1 for 0x40; `0x514e98` to `0x514ea2` add 1 when 0x1 and `ah & 1` (0x100) are both set; `0x514ea3` subtracts 1 for the sign bit of `al` (0x80); `0x514eac` subtracts 1 for 0x1 with `ah & 2` (0x200). `0x514eb6` tests 0x20000 for the stop, and `0x514ed0` clears it. `0x514ee6` calls the unit's slot `+0xa4` (stand state) and `0x514ef4` sends stand state 0; `0x514f02` tests bit 4 of the type word `[[unit+8]+8]` before `0x5eb830(0)`. `0x514f1c` and `0x514f34` skip the start while the latch is set, whatever the sign, and `0x514f43` sets it. Unlike the forward axis, nothing here reads the unit's movement flags, so a latched strafe changes side only through a stop. `0x60dcb0(time, left)` passes `left` to `0x617890`, which starts a strafe left for a nonzero argument (`collision/events`). The test runs `0x514e80` whole over every combination of the six bits it reads and 0x2, under random other bits, with the four callees and the stand-state slot stubbed, and compares the word and the calls.
+
 ## What clears autorun
 
 Six writers clear the autorun bit. The second press of `ToggleAutoRun` (a release through `0x514b70`); any press whose bits include 0x10 or 0x20, inside `0x514840` at `0x514a5a`, before the axis is computed; the transition into both mouse buttons held (`0x514a73`); the tick, when the unit may not translate (`0x514748`);
@@ -230,12 +241,12 @@ No cursor position is stored. The pick result is held in the world frame (`+0x35
 The camera orbit of a held mouse button and mouselook are the same state, bit 0 of the camera's `+0x90` word. It is entered by `0x50fe30` from the press, and by the toggle `0x50f910` (the `ToggleMouseMove` binding), and left by `0x50fdd0`, called from the release through `0x50f940` and from the toggle. Entry has no motion threshold. `MouselookStart` and `MouselookStop` (`0x514210`, `0x514240`)
 press and release command bit 0x1 with click mode 0, so they arm no click. `IsMouselooking()` (`0x514270`) pushes 1 when command bit 0x1 is held, else nil: the channel, not the camera's bit.
 
-Addresses: `0x50f930`, `0x50f940`, `0x50f910`, `0x50fe30`, `0x50fdd0`, `0x514210`, `0x514240`, `0x514270`, `0x514c48`, `0x50b5a7`
+Addresses: `0x50f930`, `0x50f940`, `0x50f910`, `0x50fe30`, `0x50fdd0`, `0x514210`, `0x514223`, `0x514231`, `0x514240`, `0x51425b`, `0x514270`, `0x514278`, `0x514c48`, `0x50b5a7`, `0xcf0bc8`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x50f940(arg)` leaves the freelook, then sets bit 0x20 of the camera word when its argument is nonzero and clears it otherwise; every mouse command passes 0 but `CameraOrSelectOrMoveStop`, which computes it with `0x6f1c10`. Freelook can be entered by channel 2 alone, so the channel and the camera bit are correlated and not equal.
+`0x50f940(arg)` leaves the freelook, then sets bit 0x20 of the camera word when its argument is nonzero and clears it otherwise; every mouse command passes 0 but `CameraOrSelectOrMoveStop`, which computes it with `0x6f1c10`. Freelook can be entered by channel 2 alone, so the channel and the camera bit are correlated and not equal. `MouselookStart` calls `0x514810(0)` (`0x514223`), which stores click mode 0 whether or not a primary is held, then `0x515090(1, 1, [0xcf0bc8], 0)` (`0x514231`); `MouselookStop` passes press 0 (`0x51425b`). Both return no values. `0x514278` tests `[control+4] & 1`; the 1 is `lua_pushnumber(1.0)` and the nil `lua_pushnil`.
 
 ## A click and an orbit together
 

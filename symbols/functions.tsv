@@ -12426,13 +12426,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x514160	42	Script::TurnOrActionStop	idb	input	orchestration	int __fastcall (lua_State *L)	Releases command bit 0x1 (mouse turn), when 0x494a50(0) allows	verified	one	input#the-commands	
 0x514190	54	Script::CameraOrSelectOrMoveStart	idb	input	orchestration	int __fastcall (lua_State *L)	Arms click mode 1 and presses command bit 0x2, when 0x494a50(0) allows	verified	one	input#mouse-commands	
 0x5141d0	62	Script::CameraOrSelectOrMoveStop	idb	input	orchestration	int __fastcall (lua_State *L)	Releases command bit 0x2 (mouse camera), when 0x494a50(0) allows	verified	one	input#the-commands	
-0x514210	43	Script::MouselookStart	idb	input	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MouselookStart	inferred	none		
-0x514240	43	Script::MouselookStop	idb	input	orchestration	int __fastcall (lua_State *L)	Implements the Lua function MouselookStop	inferred	none		
-0x514270	47	Script::IsMouselooking	idb	input	orchestration	int __fastcall (lua_State *L)	Implements the Lua function IsMouselooking	inferred	none		
+0x514210	43	Script::MouselookStart	idb	input	orchestration	int __fastcall (lua_State *L)	Stores click mode 0 and presses the mouse turn command 0x1 at the last input time	verified	one	input#orbit-and-mouselook	
+0x514240	43	Script::MouselookStop	idb	input	orchestration	int __fastcall (lua_State *L)	Stores click mode 0 and releases the mouse turn command 0x1 at the last input time	verified	one	input#orbit-and-mouselook	
+0x514270	47	Script::IsMouselooking	idb	input	orchestration	int __fastcall (lua_State *L)	Pushes 1 when the mouse turn command 0x1 is held, else nil	verified	one	input#orbit-and-mouselook	
 0x5142a0	77	CreateInputControl		input	orchestration	void __cdecl (void)	Registers the Joystick setting and allocates and constructs the one input control	verified	one	input#joystick-setting	
 0x5142f0	70	JoystickCallback		input	orchestration	bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Opens joystick 0 for a value starting with 1 and closes an open one for any other, returning 1	verified	one	input#joystick-setting	
-0x514340	33			input	primitive		Runs InputControl.cpp code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x514370	27			input	primitive		Runs InputControl.cpp code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x514340	33	RegisterInputScriptFunctions		input	orchestration	void __cdecl (void)	Registers the 26 movement and mouse binding commands of 0x8500b8 as Lua functions	verified	one	input#mouse-commands	
+0x514370	27	UnregisterInputScriptFunctions		input	orchestration	void __cdecl (void)	Removes the 26 Lua functions of 0x8500b8	verified	one	input#mouse-commands	
 0x514390	35			input	orchestration		Runs InputControl.cpp code that calls SMemFree; not read here	inferred	none		
 0x5143c0	25	CInputControl::CInputControl		input	orchestration	CInputControl * __thiscall (CInputControl *this)	Clears the held commands, press time and click mode, and stores the client clock at +0x00	verified	one	input#input-state	
 0x5143e0	6	GetInputControl		input	orchestration	CInputControl * __cdecl (void)	Returns the CInputControl singleton from 0xbe1148	verified	one	input#input-state	
@@ -12453,7 +12453,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x514b40	44	CInputControl::IsDragging		input	orchestration	uint32_t __thiscall (CInputControl *this)	Returns 1 when 0x514ae0 says drag at the current clock and the motion stamp is recent	verified	one	input#click-versus-drag	
 0x514b70	559	CInputControl::ReleaseCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t time, uint32_t extra)	Releases command bits; on the last primary, dispatches the armed click unless 0x514ae0 says drag	verified	one	input#click-versus-drag	
 0x514da0	221	CInputControl::EmitForwardAxis		input	primitive		Sums autorun, forward, mouse and backward into a signed axis and starts or stops the unit	verified	one	input#the-forward-axis	
-0x514e80	205	CInputControl::EmitStrafeAxis		input	primitive		Starts or stops strafing from the strafe bits and, with mouse turn held, the turn bits	inferred	none		
+0x514e80	205	CInputControl::EmitStrafeAxis		input	primitive	void __thiscall (CInputControl *this, uint32_t time, CGUnit_C *unit)	Starts or stops strafing from the strafe bits and, with mouse turn held, the turn bits	verified	one	input#the-strafe-axis	input::emit_strafe_axis_difftest
 0x514f50	188	CInputControl::EmitTurn		input	primitive		Starts or stops turning from the turn bits	verified	one	input#the-tick	
 0x515010	116	CInputControl::EmitPitch		input	primitive		Starts or stops pitching from the pitch bits while swimming	verified	one	input#the-tick	
 0x515090	284	CInputControl::SetCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t press, uint32_t time, uint32_t extra)	Sends commands to 0x514840 when press is nonzero, else to 0x514b70	verified	one	input#the-commands	
