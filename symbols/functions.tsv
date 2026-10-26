@@ -3428,10 +3428,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x447b00	34			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
 0x447b30	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
 0x447b40	165			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
-0x447bf0	10			gx	orchestration		Runs Texture.cpp code that calls 0x447c00; not read here	inferred	none		
-0x447c00	11			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
-0x447c10	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
-0x447c20	1			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
+0x447bf0	10	InitFailedTextureColourThunk		gx	orchestration	void __cdecl (void)	Calls 0x447c00, then jumps to 0x447c10; a static initializer	verified	one	gx/textures#texture-load-failure	
+0x447c00	11	InitFailedTextureColour		gx	orchestration	void __cdecl (void)	Stores 0xff00ff00, opaque green, as the colour of the failed-load texture	verified	one	gx/textures#texture-load-failure	
+0x447c10	12	InitFailedTextureColourAtExit		gx	orchestration	void __cdecl (void)	Registers the destructor 0x447c20 with _atexit	verified	one	gx/textures#texture-load-failure	
+0x447c20	1	InitFailedTextureColourExit		gx	orchestration	void __cdecl (void)	Returns at once	verified	one	gx/textures#texture-load-failure	
 0x447c30	10			gx	orchestration		Runs Texture.cpp code that calls 0x447c40; not read here	inferred	none		
 0x447c40	50			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
 0x447c80	12			gx	orchestration		Runs Texture.cpp code that calls _atexit; not read here	inferred	none		
@@ -3476,8 +3476,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x449000	1			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
 0x449010	172	FreeTextureCaches		gx	orchestration	void __cdecl ()	Destroys every pooled device texture in the 25 size-class lists	verified	one	gx/texturesize#pool-lists	
 0x4490c0	291	DecodeImageFile		gx	unreached		Decodes an image file as TGA or BLP by its extension, trying the other on failure and reporting both failing	verified	one	gx/textures#tga-mip-file-names	
-0x4491f0	430			gx	primitive		Runs Texture.cpp code that calls 0x5a3660, 0x5a3600, 0x5a3a30 and 8 more; not read here	inferred	none		
-0x4493a0	425			gx	primitive		Runs Texture.cpp code that calls 0x44ae70, SStrPrintf, 0x648a30 and 6 more; not read here	inferred	none		
+0x4491f0	430	TextureDecodeTga		gx	primitive	uint32_t __fastcall (const char *name, uint32_t fileFlag, void **chain, uint32_t *width, uint32_t *height, uint32_t *arg6, uint32_t *opaque, uint32_t *alphaBits, uint32_t *typeCode)	Decodes a TGA file into level 0 of a 32-bit mip chain, reads its mip files and builds the rest	verified	one	gx/tga#tga-texture-decode	gx::tga_opaque_flag_difftest, gx::tga_pixel_copy_difftest
+0x4493a0	425	TextureReadTgaMips		gx	primitive	uint32_t __fastcall (const void *record, const char *pattern, uint32_t fileFlag, void **levels)	Reads a TGA texture's lower levels from its numbered mip files and returns 1 plus the count read	verified	one	gx/tga#tga-mip-files	gx::tga_mip_copy_difftest
 0x449550	40	FormatTgaMipPattern		gx	orchestration	void __fastcall (const char *name, char *buffer)	Copies a name, cuts it at its last dot and appends _mip%d.tga	verified	one	gx/textures#tga-mip-file-names	
 0x449580	15	CutAtLastDot		gx	orchestration	void __fastcall (char *name)	Writes 0 over a name's last dot when it has one	verified	one	gx/textures#tga-mip-file-names	
 0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name and strips a dot four bytes from the end, returning 0 for tga and 1 otherwise	verified	one	gx/textures#texture-name-split	
@@ -3507,7 +3507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44a9c0	90	TextureCreateSolid		gx	orchestration	void * __fastcall (const uint32_t *colour, uint32_t unused)	Returns the cached solid texture of a colour, creating it with TextureFillSolid on a miss	verified	one	gx/textures#texture-creation	
 0x44aa20	261	TextureSolidFind		gx	orchestration	void * __thiscall (void *this)	Returns a handle on the cached solid texture of a colour, or 0	verified	one	gx/textures#texture-creation	
 0x44ab30	318	TextureSolidInsert		gx	orchestration	void __fastcall (const uint32_t *colour, void *texture)	Caches a solid texture under its colour	verified	one	gx/textures#texture-creation	
-0x44ac70	128			gx	primitive		Runs Texture.cpp code that calls 0x449590, SErrSetLastError, strrchr and 1 more; not read here	inferred	none		
+0x44ac70	128	TextureHasFileName		gx	orchestration	uint32_t __fastcall (void *texture, const char *name)	Returns whether a texture's name cut at its last dot equals a name without its three-byte extension	verified	one	gx/textures#texture-name-match	
 0x44acf0	82	GetTextureDeviceObject		gx	orchestration	void * __fastcall (void *texture, uint32_t load, void *callback)	Returns a texture's device object, loading it first when asked; 0 for a null texture	verified	one	models/render#texture-stages	
 0x44ad50	169	TextureWaitLoaded		gx	orchestration	void __thiscall (void *this)	Logs the wait, pins the async record with its own buffer and waits for the read to finish	verified	one	gx/textures#texture-readiness-and-info	
 0x44ae00	68	TextureGetBits		gx	orchestration	void * __fastcall (void *texture, uint32_t wait)	Returns the decoded pixel buffer, waiting for the load first when wait is set and none exists	verified	one	gx/textures#texture-readiness-and-info	
@@ -16320,12 +16320,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589b80	30			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589ba0	56			gx	orchestration		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x589be0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x589bf0	15			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x589bf0	15	GxDevSetTextureSkip		gx	orchestration	void __fastcall (uint32_t levels)	Calls the device's slot +0x2c with the number of top mip levels the uploads skip	verified	one	gx/facade#texture-mip-skip	
 0x589c00	22	GxDevSetGamma		gx	orchestration	void __stdcall (float gamma)	Calls the device's slot +0x34 with a gamma value	verified	one	gx/device#gamma-setting	
 0x589c20	15	GxDevSetGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Calls the device's slot +0x30 with a gamma ramp	verified	one	ui/videoverbs#gamma	
 0x589c30	15			gx	unreached		Runs its object file code not read here	inferred	none		
 0x589c40	11			gx	unreached		Runs its object file code not read here	inferred	none		
-0x589c50	11			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x589c50	11	GxDevGetTextureSkip		gx	orchestration	uint32_t __cdecl (void)	Returns the device's mip skip count through 0x5920c0	verified	one	gx/facade#texture-mip-skip	
 0x589c60	13			gx	unreached		Runs its object file code that calls 0x5920d0; not read here	inferred	none		
 0x589c70	13	GxDevGetSavedGammaRamp		gx	orchestration	void __fastcall (void *ramp)	Copies the device's saved gamma ramp into a buffer	verified	one	ui/videoverbs#gamma	
 0x589c80	11			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -16380,7 +16380,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a1e0	34	GxMasterEnableSet	idb	gx	orchestration		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58a210	28			gx	orchestration		Runs its object file code that calls SErrSetLastError, 0x5936c0; not read here	inferred	none		
 0x58a230	11	GxDeviceCaps		gx	orchestration	void * __cdecl ()	Returns the device's capability block at +0x23c through a tail call to 0x5923d0	verified	one	gx/device#capability-block	models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
-0x58a240	15	GxCapsWindowSize		gx	orchestration		Writes the window rectangle as four floats	inferred	none		
+0x58a240	15	GxCapsDrawRect		gx	orchestration	void __fastcall (float *rect)	Writes the device's draw rectangle as four floats through slot +0x5c	verified	one	gx/facade#draw-rectangle	
 0x58a250	15	GxCapsScreenSize	idb	gx	host		Writes the screen rectangle as four floats	inferred	none	camera#orthographic-setup	
 0x58a260	18			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58a280	18			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16457,7 +16457,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b2e0	46			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b310	22	GxShaderRelease		gx	orchestration		Releases a device shader handle through the device	inferred	none		
 0x58b330	42			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58b360	11			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x58b360	11	GxShaderIsLoaded		gx	orchestration	uint32_t __fastcall (void *shader)	Returns a shader's loaded flag +0x2c, or 0 for a null shader	verified	one	gx/facade#shader-loaded-flag	
 0x58b370	20			gx	unreached		Runs its object file code that calls 0x595480; not read here	inferred	none		
 0x58b390	33			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b3c0	21			gx	orchestration		Runs its object file code that calls 0x5980f0; not read here	inferred	none		
@@ -16476,7 +16476,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b560	8			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b570	8			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b580	11			gx	unreached		Runs its object file code not read here	inferred	none		
-0x58b590	18	SetCursorShown		gx	orchestration		Calls slot +0xec of the device object with a show flag	inferred	none		
+0x58b590	18	SetCursorShown		gx	orchestration	void __fastcall (uint32_t shown)	Calls the device's slot +0xec with whether the cursor is shown	verified	one	gx/facade#cursor-shown-flag	
 0x58b5b0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b5c0	21	SetDeviceCursorPair		gx	orchestration		Passes its two register arguments to slot 61 of the global device, which stores them and refreshes the cursor texture	inferred	none		
 0x58b5e0	5	GxOpenLog		gx	orchestration	void __cdecl (void)	Jumps to the device log opener	verified	one	gx/device#device-log	
@@ -16507,7 +16507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58c400	372	LoadGlEntryPoints		gx	host	void __cdecl (void)	Loads the GL and WGL extension entry points once through a hidden window and a temporary context	verified	one	gx/opengl#loading-the-entry-points	
 0x58c580	189	LoadWglExtensions		gx	host	void __cdecl (void)	Loads wglGetExtensionsStringARB and the pixel format, pbuffer and swap control entry points	verified	one	gx/opengl#gl-and-wgl-extension-loads	
 0x58c640	137	CGxDeviceOpenGl::DestroyContext		gx	host	void __thiscall (CGxDeviceOpenGl *this)	Releases the device's context, restores the desktop gamma ramp and releases the device context	verified	one	gx/opengl#context-creation-and-release	
-0x58c6d0	820			gx	host		Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
+0x58c6d0	820	GxWindowProcOpenGl		gx	host	intptr_t __stdcall (void *hwnd, uint32_t msg, uintptr_t wParam, intptr_t lParam)	Handles the OpenGL device window's messages, sizing the drag rectangle as the Direct3D procedure does	verified	one	gx/window#window-sizing	
 0x58ca60	316	CGxDeviceOpenGl::HandleWindowEvent		gx	primitive	void __thiscall (CGxDeviceOpenGl *this, uint32_t event, const float *rect, uint32_t sizeType)	Follows a window event: size, display change, destroy, focus gained or lost	verified	one	gx/slots#window-events	gx::rect_b_smaller_matches_binary
 0x58cbb0	149	CGxDeviceOpenGl::DeviceCreate		gx	host	uint32_t __thiscall (CGxDeviceOpenGl *this, void *wndproc, void *format)	Saves the gamma ramp, registers the OpenGL window class and sets the format; destroys the device on failure	verified	one	gx/slots#life-cycle-slots	
 0x58cc50	130			gx	host		Runs its object file code not read here	inferred	none		
@@ -16628,14 +16628,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x590ff0	12			gx	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x591000	21			gx	primitive		Runs its object file code not read here	inferred	none		
 0x591020	115			gx	orchestration		Runs its object file code that calls 0x5922e0, __ftol; not read here	inferred	none		
-0x5910a0	63			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_x_matches_binary
-0x5910e0	61			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_x_matches_binary
-0x591120	63			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_y_matches_binary
-0x591160	61			gx	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_y_matches_binary
-0x5911a0	29			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5911c0	28			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5911e0	27			gx	primitive		Runs its object file code not read here	inferred	none		
-0x591200	27			gx	primitive		Runs its object file code not read here	inferred	none		
+0x5910a0	63	SizingRectFitTop		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's top to its bottom less its width over the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_min_x_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5910e0	61	SizingRectFitBottom		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's bottom to its top plus its width over the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_max_x_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591120	63	SizingRectFitLeft		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's left to its right less its height times the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_min_y_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591160	61	SizingRectFitRight		gx	primitive	void __thiscall (int32_t *this)	Sets a drag rectangle's right to its left plus its height times the aspect ratio, unless the ratio is 0	verified	one	gx/window#window-sizing	gx::aspect_fit_max_y_matches_binary, gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911a0	29	SizingRectMinLeft		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's left to its right less the minimum width less 1 when it is narrower than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911c0	28	SizingRectMinRight		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's right to its left plus the minimum width less 1 when it is narrower than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x5911e0	27	SizingRectMinTop		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's top to its bottom less the minimum height less 1 when it is shorter than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
+0x591200	27	SizingRectMinBottom		gx	primitive	void __thiscall (int32_t *this)	Moves a drag rectangle's bottom to its top plus the minimum height less 1 when it is shorter than the minimum	verified	one	gx/window#window-sizing	gx::sizing_rect_helpers_difftest, gx::sizing_wm_sizing_difftest
 0x591220	64	CGxDevice::AddFormat		gx	orchestration	uint32_t __fastcall (CGxDevice *arg1, const void *record)	Appends a format record to the list unless an equal one is held	inferred	none	gx/device#display-modes	
 0x591260	116	DeviceLightInitialize		gx	orchestration	void __thiscall (void *this)	Initializes a device light: directional along +z, black ambient, white diffuse, attenuation 0, 0.7, 0.03	verified	one	models/lights#fixed-function-lights	models::light_clamp_pack_difftest
 0x5912e0	9			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16669,7 +16669,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592080	31	CGxDevice::SetGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, const uint16_t *ramp)	Copies a whole 0x600-byte gamma ramp into the working ramp at +0x328	verified	one	gx/device#gamma-ramp	
 0x5920a0	16	CGxDevice::SetFullColorTextures		gx	orchestration	void __thiscall (CGxDevice *this, uint32_t on)	Stores whether textures are created 32-bit at +0x320	verified	one	gx/slots#life-cycle-slots	
 0x5920b0	7			gx	unreached		Runs its object file code not read here	inferred	none		
-0x5920c0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x5920c0	7	CGxDevice::GetTextureSkip		gx	orchestration	uint32_t __thiscall (CGxDevice *this)	Returns the number of top mip levels the texture uploads skip, +0x31c	verified	one	gx/facade#texture-mip-skip	
 0x5920d0	31			gx	unreached		Runs its object file code not read here	inferred	none		
 0x5920f0	31	CGxDevice::GetSavedGammaRamp		gx	orchestration	void __thiscall (CGxDevice *this, void *ramp)	Copies the 0x600-byte ramp at +0x928 into a buffer unless the buffer is that ramp	verified	one	ui/videoverbs#gamma	
 0x592110	7			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -16681,10 +16681,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592220	8			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x592230	137	CGxDevice::SetRenderTarget		gx	primitive	void __thiscall (CGxDevice *this, uint32_t target, CGxTexture *texture, uint32_t face)	Records a target texture and sets the draw rectangle to its size, or to the window with no target	verified	one	gx/slots#capture-window-and-frame-slots	
 0x5922c0	25			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x5922e0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x5922f0	50			gx	orchestration		Runs its object file code that calls 0x592340; not read here	inferred	none		
-0x592330	7			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x592340	38			gx	orchestration		Runs its object file code not read here	inferred	none		
+0x5922e0	7	CGxDevice::DrawRect		gx	orchestration	float * __thiscall (CGxDevice *this)	Returns the address of the draw rectangle, +0x1ec	verified	one	gx/facade#draw-rectangle	
+0x5922f0	50	CGxDevice::SetWindowRects		gx	orchestration	void __thiscall (CGxDevice *this, const float *rect)	Stores a rectangle as the window rectangle +0x1dc and the draw rectangle	verified	one	gx/facade#draw-rectangle	
+0x592330	7	CGxDevice::WindowRect		gx	orchestration	float * __thiscall (CGxDevice *this)	Returns the address of the window rectangle, +0x1dc	verified	one	gx/facade#draw-rectangle	
+0x592340	38	CGxDevice::SetDrawRect		gx	orchestration	void __thiscall (CGxDevice *this, const float *rect)	Stores a rectangle as the draw rectangle +0x1ec	verified	one	gx/facade#draw-rectangle	
 0x592370	88	CGxDevice::DeviceOverride		gx	primitive	void __thiscall (CGxDevice *this, uint32_t slot, uint32_t value)	Logs a device override and applies slot 8 to the fields +0x308, +0x30c and +0x310	verified	one	gx/device#device-overrides	
 0x5923d0	7	CGxDevice::GetCaps		gx	orchestration	void * __thiscall (CGxDevice *this)	Returns this + 0x23c, the capability block	verified	one	gx/device#capability-block	models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
 0x5923e0	7			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -16915,7 +16915,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5986b0	25			gx	primitive		Runs its object file code not read here	inferred	none		
 0x5986d0	77			gx	primitive		Runs its object file code not read here	inferred	none		
 0x598720	41			gx	primitive		Runs its object file code not read here	inferred	none		
-0x598750	942			gx	host		Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
+0x598750	942	GxWindowProcD3d		gx	host	intptr_t __stdcall (void *hwnd, uint32_t msg, uintptr_t wParam, intptr_t lParam)	Handles the Direct3D device window's messages and passes the rest to the saved procedure	verified	one	gx/window#direct3d-window-messages	
 0x598b50	359	CGxDeviceD3d::CreateWindow		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, void *format)	Creates the device window with the style and size the format asks for and shows it	verified	one	gx/device#direct3d-window	
 0x598cc0	32	CGxDeviceD3d::DestroyWindow		gx	host	void __thiscall (CGxDeviceD3d *this)	Destroys the device window and clears its handle	verified	one	gx/device#direct3d-window	
 0x598ce0	241	CGxDeviceD3d::CGxDeviceD3d		gx	orchestration	void * __thiscall (CGxDeviceD3d *this)	Constructs the Direct3D device: base constructor, vtable 0x809ef8, tag 1 and colour order flag 0	verified	one	gx/device#device-object	
@@ -17131,7 +17131,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a4070	313	TgaSetOrigin		image	primitive	int __thiscall (void *this, int top)	Reverses the rows and sets the origin bit	verified	one	image/tga#flipping	image::image_tga_flip
 0x5a41b0	20	TgaRequirePixels		image	primitive	int __thiscall (void *this)	Returns whether the image has pixels and otherwise sets an error	verified	one	image/tga#alpha-channel	
 0x5a41d0	20	TgaRequirePixelsCopy		image	unreached	int __thiscall (void *this)	Returns whether the image has pixels and otherwise sets an error	verified	one	image/overview#unreached-functions	
-0x5a41f0	39	TgaRequirePixels32		image	primitive	int __thiscall (void *this)	Returns whether the image has 32-bit pixels and otherwise sets an error	verified	one	image/tga#alpha-channel	
+0x5a41f0	39	TgaRequirePixels32		image	primitive	void * __thiscall (void *this)	Returns the pixels of a decoded 32-bit image, else 0 with an error set	verified	one	image/tga#alpha-channel	
 0x5a4220	39	TgaRequirePixels32Copy		image	unreached	int __thiscall (void *this)	Returns whether the image has 32-bit pixels and otherwise sets an error	verified	one	image/overview#unreached-functions	
 0x5a4250	200	TgaStripAlpha		image	primitive	int __thiscall (void *this)	Packs 32-bit pixels down to 24 bits in place	verified	one	image/tga#alpha-channel	image::image_tga_alpha_strip
 0x5a4320	39	TgaFreeId		image	orchestration	void __thiscall (void *this)	Frees the ID buffer and clears the ID length	verified	one	image/tga#image-record	
@@ -24934,7 +24934,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x67e420	5	InitTerrainInvTwoPi2Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x67e430; a static initializer	verified	one	terrain/statics#static-initializers	
 0x67e430	19	InitTerrainInvTwoPi2		terrain	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	terrain/statics#static-initializers	
 0x67e450	14	ResetZoneNames		terrain	orchestration	void __cdecl (void)	Sets the two zone name ids 0x868604 and 0x868608 to -1	inferred	none		
-0x67e460	164	FormatAreaName		terrain	orchestration	uint32_t __fastcall (uint32_t areaId, char *out, uint32_t size, uint32_t withParent)	Writes an area's name, or its name and its parent zone's as "%s, %s"	inferred	none		
+0x67e460	164	FormatAreaName		terrain	orchestration	uint32_t __fastcall (int32_t areaId, char *out, uint32_t size, uint32_t withParent)	Writes an area's name, or its name and its parent's as "%s, %s", into a buffer	verified	one	terrain/zones#area-name-format	
 0x67e510	344	AreaListRegisterLocation	idb	terrain	orchestration	void __fastcall (uint32_t mapId, void *entity)	Resolves an entity's zone and subzone, applies an indoor or outdoor change and announces it	verified	one	terrain/zones#area-update	
 0x67e670	376	UpdateIndoorArea		terrain	orchestration	uint8_t __fastcall (void *entity, const char **zoneText, const char **subText, uint32_t zoneId)	Sets the zone and subzone texts and the audio from an indoor entity's map object group, once per group	verified	one	terrain/zones#indoor-area-names	
 0x67e7f0	325	UpdateOutdoorArea		terrain	orchestration	uint8_t __fastcall (uint32_t zoneId, uint32_t leafId, uint32_t mapId)	Applies the audio of an outdoor area and sends the zone update when the zone, leaf or map changes	verified	one	terrain/zones#outdoor-area-change	
@@ -26133,14 +26133,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69bff0	215	TraceWorldSegmentBody		terrain	primitive	uint8_t __fastcall (const float *start, const float *end, float *hit, float *t, uint32_t mask)	Traces a segment against the map objects and terrain under a mask and writes the hit point	verified	one	terrain/trace#segment-trace	terrain::segment_lerp_difftest
 0x69c0d0	5	InitTerrainInfinity11Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69c0e0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69c0e0	11	InitTerrainInfinity11		terrain	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	terrain/statics#static-initializers	
-0x69c0f0	547	TraceMapObjects		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, uint32_t mask, uint32_t a, float *t, uint32_t b, uint32_t c, uint32_t d)	Traces a segment against the map objects and their doodads, keeping the nearest fraction	inferred	none		
+0x69c0f0	547	TraceMapObjects		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, uint32_t mask, uint32_t arg4, float *t, uint16_t *id, void **object, void **instance)	Traces a segment against the map objects, then the doodads it queues from their groups, keeping the nearest fraction	verified	one	terrain/trace#map-object-trace	
 0x69c320	438	TraceTerrainSegment		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, float *t, uint32_t mask, uint32_t flag)	Lists the cells a segment crosses and tests their triangles, lowering the fraction on a hit	verified	one	terrain/trace#terrain-walk	terrain::ray_dda_map_driver, terrain::raycast_e2e_map_driver
 0x69c4e0	141	ListCellRowRun		terrain	primitive	void __thiscall (void *this)	Lists the cells of a segment that stays in one row	inferred	none	terrain/trace#cell-walks	terrain::dda_axis_run_a
 0x69c570	142	ListCellColumnRun		terrain	primitive	void __thiscall (void *this)	Lists the cells of a segment that stays in one column	inferred	none	terrain/trace#cell-walks	terrain::dda_axis_run_b
 0x69c600	382	ListCellsAlongRows		terrain	primitive	void __fastcall (float *start, const float *end, const int32_t *cells)	Lists the cells of a segment whose y extent is the larger, adding a cell at each column change	inferred	none	terrain/trace#cell-walks	terrain::dda_step_xmajor
 0x69c780	404	ListCellsAlongColumns		terrain	primitive	void __fastcall (float *start, const float *end, const int32_t *cells)	Lists the cells of a segment whose x extent is the larger, adding a cell at each row change	inferred	none	terrain/trace#cell-walks	terrain::dda_step_ymajor
 0x69c920	1154	TraceListedCells		terrain	primitive	uint8_t __fastcall (const float *start, const float *end, float *t, uint32_t mask, uint32_t flag)	Intersects the listed cells' triangles with a segment, keeping the nearest fraction	inferred	none	terrain/trace#cell-walks	terrain::dda_cell_intersect_difftest, terrain::raycast_e2e_map_driver
-0x69cdb0	215	QueueChunkDoodads		terrain	orchestration	void __fastcall (void *chunk, void *query)	Queues a chunk's collidable doodad defs for a segment trace by mode and stamps them	verified	one	terrain/mapentities#chunk-doodad-trace-queue	
+0x69cdb0	215	QueueDoodadsForTrace		terrain	orchestration	void __fastcall (void *doodads, uint32_t mask)	Queues a doodad list's collidable defs for a segment trace by mode and stamps them	verified	one	terrain/mapentities#chunk-doodad-trace-queue	
 0x69ce90	233	TraceGameObjects		terrain	orchestration	void __fastcall (void *query, void *a)	Queues the game objects' models for the segment trace	inferred	none		
 0x69cf80	5	InitTerrainTwoPi11Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69cf90; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69cf90	15	InitTerrainTwoPi11		terrain	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	terrain/statics#static-initializers	
@@ -26535,7 +26535,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a36d0	223	CMapObj::Free		models	host		Closes a map object's file and frees its data and groups	inferred	none	models/overview#object-files	
 0x6a37b0	649	CMapObj::IntersectSegment		models	primitive		Tests a segment against a map object's groups and returns the hit and surface	inferred	none	models/wmo#queries	models::seg_face_cross_difftest, models::seg_face_dot_difftest, models::seg_normal_scale_difftest
 0x6a3a40	200	CMapObj::TraceGroupMasked		models	primitive	uint8_t __thiscall (CMapObj *this, const float *start, const float *end, uint32_t group, uint32_t flags, uint16_t *face, float *t)	Traces a segment against one group with a face reject mask built from the flags and returns the first face word	verified	one	terrain/mapentities#face-masks	
-0x6a3b10	266	CMapObj::CollectSegmentFacets		models	primitive		Collects the facets of a map object's groups a segment crosses	inferred	none	models/wmo#queries	
+0x6a3b10	266	CMapObj::CollectGroupBoxFacets		models	primitive		Collects the facets of a map object's loaded groups whose bounds overlap a box	verified	one	models/collisionquery#group-enumeration	
 0x6a3c20	207	CMapObj::CollectBoxFacets		models	primitive		Collects the facets of a map object's groups a box touches	inferred	none	models/wmo#queries	
 0x6a3cf0	199	CMapObj::QueryGroups		models	primitive		Tests a query against each loaded group of a map object	inferred	none		
 0x6a3dc0	285	CMapObj::CollectVolumeFacets		models	primitive		Collects the facets of a map object's groups inside a convex volume	inferred	none	models/wmo#queries	
@@ -26544,7 +26544,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a3f80	639	CMapObj::CrossPortals		models	primitive	uint8_t __thiscall (CMapObj *this, const float *segment, float *fraction, uint32_t *groups)	Finds the nearest portal a segment crosses and the two groups beside it	verified	one	models/wmo#portal-crossing	models::portal_extent_scale_difftest, models::portal_plane_side_difftest, models::portal_result_scale_difftest, models::portal_seg_normalize_difftest
 0x6a4200	108	CMapObj::IsReady		models	host		Returns whether a map object's groups and their textures are loaded	inferred	none		
 0x6a4270	62	CMapObj::AreGroupsLoaded		models	orchestration		Returns whether a map object and all its groups are loaded	inferred	none		
-0x6a42b0	39	CMapObj::GetGroup		models	orchestration		Returns a loaded group of a map object by index	inferred	none		
+0x6a42b0	39	CMapObj::IsGroupParsed		models	orchestration	uint8_t __thiscall (CMapObj *this, uint32_t index)	Returns a group's parsed byte +0x164, or 0 for an unloaded map object	verified	one	terrain/collide#map-object-gather	
 0x6a42e0	44	CMapObj::GroupHasData		models	unreached		Returns whether a group of a map object has its file data; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6a4310	265	CMapObj::GetBoundingSphere		models	primitive	float * __thiscall (CMapObj *this, float *sphere)	Returns the centre and radius of a map object's box, or zero when unloaded	verified	one	models/wmo#bounding-spheres-and-volume	models::wmo_bounding_sphere_difftest
 0x6a4420	132	CMapObj::GetBoundingBox		models	orchestration		Copies a map object's bounding box, or zeroes it when not loaded	inferred	none		
@@ -26553,7 +26553,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a4640	38	CMapObj::GetGroupFlags		models	orchestration		Returns a group's flags from the group info	inferred	none		
 0x6a4670	150	CMapObj::BoxOverlaps		models	orchestration		Returns whether a box overlaps a map object's bounding box	verified	one	terrain/lightattach#containment-walk	
 0x6a4710	149	CMapObj::ContainsPoint		models	unreached		Returns whether a point lies in a map object's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x6a47b0	47	CMapObj::QueryLiquid		models	primitive		Forwards a liquid query to a group when the map object is loaded	inferred	none		
+0x6a47b0	47	CMapObj::TestSegmentBounds		models	orchestration	uint8_t __thiscall (CMapObj *this, const float *start, const float *end)	Returns 0 for an unloaded map object, else whether 0x6dc5a0 passes a segment through its bounding box	verified	one	terrain/trace#map-object-trace	
 0x6a47e0	73	CMapObj::QueryGroupLiquid		models	primitive		Resolves a group and forwards a liquid query to it	inferred	none		
 0x6a4830	170	CMapObj::BoxOverlapsGroup		models	orchestration		Returns whether a box overlaps a group's bounding box	verified	one	terrain/lightattach#containment-walk	
 0x6a48e0	166	CMapObj::GroupContainsPoint		models	unreached		Returns whether a point lies in a group's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -26806,13 +26806,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6aa3e0	533	TraceTerrainFirstHit		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, float *t, void *plane)	Walks a segment's cells for the terrain's first hit and rescales its fraction	inferred	none	terrain/trace#terrain-first-hit	terrain::ray_dda_chunk_driver, terrain::raycast_e2e_chunk_driver
 0x6aa600	679	TraceListedCellsFirstHit		terrain	primitive	uint8_t __fastcall (const float *start, const float *end, float *t, void *plane)	Intersects the listed cells with a segment, recording the hit triangle's plane	inferred	none	terrain/trace#terrain-first-hit	terrain::dda_cell_intersect_first_difftest, terrain::raycast_e2e_chunk_driver
 0x6aa8b0	498	GatherWorldFacets		terrain	orchestration	uint8_t __fastcall (const float *box, void *list, uint32_t mask, void *owner)	Gathers the map objects' facets and the terrain facets of every chunk a box touches	verified	one	terrain/collide#terrain-gather	terrain::aabb_query_negates_difftest, terrain::aabb_query_cell_indices_difftest
-0x6aaab0	781	GatherMapObjectFacets		terrain	primitive	uint8_t __fastcall (const float *box, void *list, uint32_t mask, void *owner)	Gathers the facets of the map objects, their liquid and doodads inside a box	inferred	none		terrain::collectinbox_negate_difftest
+0x6aaab0	781	GatherMapObjectFacets		terrain	primitive	uint8_t __fastcall (const float *box, void *list, uint32_t mask, uint32_t *flags)	Gathers the facets of the map objects and their groups in a box, failing when one there is not loaded	verified	one	terrain/collide#map-object-gather	terrain::collectinbox_negate_difftest
 0x6aadc0	1821	GatherChunkFacets		terrain	primitive	uint8_t __fastcall (int32_t column, int32_t row, const int32_t *cells, const float *box, void *list, uint32_t mask)	Gathers a chunk's cell triangles in a box with their planes, its walls, liquid and doodads	verified	one	terrain/collide#chunk-facets	terrain::chunk_gather_aabb_difftest, terrain::chunk_gather_aabb_nonzero_origin_difftest
 0x6ab4e0	75	GatherLiquidFacets		terrain	orchestration	void __fastcall (uint32_t unused, const float *box, const int32_t *cells, CChunkLiquid *liquid, void *list)	Gathers a liquid slot's facets inside a box	inferred	none	terrain/collide#other-world-queries	
 0x6ab530	1265	CMapChunk::AddImpassableWalls		terrain	primitive	void __fastcall (CMapChunk *chunk, const float *box, void *list, uint32_t unused)	Adds a 32000-yard wall of two facets for each chunk side the query box crosses	verified	one	terrain/collide#impassable-walls	terrain::impassable_chunk_fence_difftest
 0x6aba30	522	AddQuadFacets		terrain	primitive	void __fastcall (void *list, const float *corner, const float *a, const float *b, const float *normal)	Appends a quad as two facets with its plane for the chunk's x-max wall	verified	one	terrain/collide#impassable-walls	terrain::quad_collision_emit_difftest, terrain::impassable_chunk_fence_difftest
-0x6abc40	329	GatherDoodadFacets		terrain	orchestration	uint32_t __fastcall (void *defs, const float *box, void *list, uint32_t mask)	Reports the doodads whose boxes overlap a box to the facet gather	inferred	none		
-0x6abd90	199	AddDoodadFacets		terrain	orchestration	uint32_t __fastcall (void *def, void *list, uint32_t arg3)	Adds a doodad model's facets to a list	inferred	none		
+0x6abc40	329	GatherDoodadFacets		terrain	orchestration	uint32_t __fastcall (void *doodads, const float *box, void *list, uint32_t mask)	Adds the facets of the doodads whose boxes overlap a box, failing at one not loaded	verified	one	terrain/collide#doodad-gather-leg	
+0x6abd90	199	AddDoodadFacets		terrain	orchestration	uint32_t __fastcall (const float *box, void *def, void *list)	Adds a doodad model's facets to a list	inferred	none		
 0x6abe60	322	GatherEntityFacets		terrain	orchestration	uint32_t __fastcall (void *entities, const float *box, void *list, uint32_t mask)	Reports the game objects whose boxes lie in a box to the facet gather	inferred	none		
 0x6abfb0	170	AddEntityFacets		terrain	orchestration	uint32_t __fastcall (void *entity, void *list, void *owner, uint32_t arg4, uint32_t arg5)	Adds a game object model's facets to a list with its owner id	inferred	none		
 0x6ac060	371	GatherVolumeFacets		terrain	orchestration	uint8_t __fastcall (const float *corners, void *list, uint32_t mask, uint32_t arg4)	Gathers the facets inside a convex volume given by eight corners	inferred	none	terrain/collide#other-world-queries	terrain::aabb8_cell_indices_difftest
@@ -26825,7 +26825,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6aca30	19	InitTerrainInvTwoPi17		terrain	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	terrain/statics#static-initializers	
 0x6aca50	219	PushFacet		terrain	host	void * __thiscall (void *this)	Appends a facet record to a list and returns it	verified	one	terrain/collide#impassable-walls	
 0x6acb30	16	ClearFourDwordsA		terrain	orchestration	void __thiscall (void *this)	Zeroes four dwords	inferred	none		
-0x6acb40	46	IsVector3AllGreater		terrain	orchestration	uint8_t __fastcall (const float *a, const float *b)	Returns whether each component of a is greater than b's	inferred	none		
+0x6acb40	46	IsVector3AllLessOrEqual		terrain	orchestration	uint8_t __fastcall (const float *a, const float *b)	Returns whether each component of a is at most b's, false on NaN	verified	one	terrain/collide#map-object-gather	
 0x6acb70	274	GrowColorVertices		terrain	host	void __thiscall (void *this, uint32_t count, uint32_t exact)	Grows a 16-byte coloured vertex array	inferred	none		
 0x6acc90	31	RoundUpToMultipleC		terrain	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
 0x6accb0	57	ClampHashCapacityD		terrain	unreached	uint32_t __thiscall (void *this, uint32_t arg2)	Returns a power-of-two capacity for n	inferred	none	terrain/overview#unreached-functions	
@@ -27117,7 +27117,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b1c90	136	FreeDetailDoodadBuffers		terrain	host	void __cdecl (void)	Releases the detail doodad vertex and index buffers	inferred	none		
 0x6b1d20	11	InvalidateDetailDoodads		terrain	orchestration	void __cdecl (void)	Sets the flag that makes the detail doodad buffers be rebuilt	verified	one	terrain/detail#detail-doodad-tables	
 0x6b1d30	577	PrepareDetailDoodadBuffers		terrain	host	void __cdecl (void)	Sizes the detail doodad pools to frillDensity x 64 placements, at most 0x2000, when the rebuild flag is set	verified	one	terrain/detail#detail-doodad-tables	
-0x6b1f80	40	IsDetailDoodadModelLoaded		terrain	orchestration	uint8_t __fastcall (uint32_t effect)	Loads a ground effect's doodad model on first use and returns whether it is ready	inferred	none		
+0x6b1f80	40	IsDetailDoodadModelLoaded		terrain	orchestration	uint32_t __fastcall (uint32_t id)	Returns whether a detail model record's model is loaded, starting its load on first use	verified	one	terrain/detail#detail-doodad-model-load	
 0x6b1fb0	120	AllocDetailDoodadBatch		terrain	host	void * __cdecl (void)	Takes a detail doodad batch from the free list or allocates one	inferred	none		
 0x6b2030	161	FreeDetailDoodadBatch		terrain	orchestration	void __thiscall (void *this)	Unlinks a chunk's detail doodad batch and returns it to the free list	inferred	none		
 0x6b20e0	240	LockDetailDoodadBuffers		terrain	host	uint32_t __fastcall (void *batch, uint32_t vertices, uint32_t indices, uint32_t arg4)	Locks room in the detail doodad buffers for a batch	inferred	none		
@@ -27126,10 +27126,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b23b0	1	DetailDoodadNoOp		terrain	orchestration	void __cdecl (void)	Returns at once; an exit callback	inferred	none		
 0x6b23c0	39	DetailDoodadTransformCallback		terrain	orchestration	void __fastcall (uint32_t arg1, uint32_t arg2, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, float *out)	Writes the detail doodads' transform to its out argument; a callback	inferred	none		
 0x6b23f0	13	ClearThreeDwords		terrain	unreached	void __thiscall (void *this)	Zeroes three dwords	inferred	none	terrain/overview#unreached-functions	
-0x6b2400	22	InitDetailDoodadRecord		terrain	orchestration	void __thiscall (void *this, uint32_t value)	Zeroes two dwords of a record and stores a value in the first	inferred	none		
+0x6b2400	22	InitDetailDoodadRecord		terrain	orchestration	void __thiscall (void *this, const char *path)	Stores a model path in a detail model record and clears its model and texture	verified	one	terrain/detail#detail-doodad-model-load	
 0x6b2420	49	CloseDetailDoodadHandles		terrain	host	void __thiscall (void *this)	Closes the detail doodad models' two handles	inferred	none		
-0x6b2460	117	LoadDetailDoodadModel		terrain	host	uint8_t __thiscall (void *this)	Copies a ground effect doodad's path and creates its model	inferred	none		
-0x6b24e0	7	DetailDoodadModelLoaded		terrain	orchestration	void __fastcall (uint32_t unused, void *slot)	Jumps to 0x6b24f0; the model's load callback	inferred	none		
+0x6b2460	117	LoadDetailDoodadModel		terrain	orchestration	uint32_t __thiscall (void *this)	Creates a detail model record's model from its path under World\NoDXT\Detail\ and registers its loaded callback	verified	one	terrain/detail#detail-doodad-model-load	
+0x6b24e0	7	DetailDoodadModelLoaded		terrain	orchestration	void __fastcall (uint32_t unused, void *record)	Jumps to 0x6b24f0 with the record; the detail model's loaded callback	verified	one	terrain/detail#detail-doodad-model-load	
 0x6b24f0	27	CreateDetailDoodadTexture		terrain	host	void __thiscall (void *this)	Creates the loaded model's texture into the slot	inferred	none		
 0x6b2510	31	ClearDetailDoodadSlot		terrain	orchestration	void __thiscall (void *this)	Zeroes a 36-byte detail doodad slot	inferred	none		
 0x6b2530	32	DestroyDetailDoodadSlot		terrain	host	void __thiscall (void *this)	Resets a detail doodad slot and frees its array	inferred	none		
@@ -28904,7 +28904,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc470	112	AccumulateBoxAxes		unassigned	primitive	void __fastcall (const float *row0, const float *row1, const float *row2, const NTempest::CAaBox *box, NTempest::CAaBox *out)	Adds each matrix term times the box minimum and maximum: smaller product to the minimum, larger to the maximum	verified	one	minimap/interior#interior-query	lighting::dn_light_accumulate_3x3_difftest
 0x6dc4e0	81			unassigned	unreached		Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc540	81	TransformBox		unassigned	primitive	void __fastcall (const NTempest::C44Matrix *matrix, const NTempest::CAaBox *box, NTempest::CAaBox *out)	Moves a box through a matrix: both corners start at the translation, then 0x6dc470 adds the terms	verified	one	minimap/interior#interior-query	
-0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		lighting::ray_box_clip_difftest
+0x6dc5a0	498	SegmentEntersBox		unassigned	primitive	uint32_t __fastcall (const float *box, const float *start, const float *end)	Returns 1 when a segment starts in a box or enters it, its entry point held to the faces within 1e-5	verified	one	terrain/trace#map-object-trace	lighting::ray_box_clip_difftest
 0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached	uint32_t __fastcall (const NTempest::CAaBox *box, const NTempest::C3Vector *center, float radius)	Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	verified	one	cmath/solids#sphere-and-box	
 0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached	uint32_t __fastcall (const NTempest::CAaBox *box, const NTempest::C4Plane *plane)	Classifies a box against a plane as in front, behind or straddling	verified	one	cmath/solids#box-and-plane	
 0x6dc900	1147	PointTriangleDistanceSquared		unassigned	unreached	float __fastcall (const NTempest::C3Vector *point, const NTempest::C3Vector *vertex, const NTempest::C3Vector *edge0, const NTempest::C3Vector *edge1)	Returns the squared distance from a point to a triangle given by a vertex and two edge vectors	verified	one	cmath/solids#point-to-triangle	

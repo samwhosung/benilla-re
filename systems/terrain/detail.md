@@ -29,6 +29,31 @@ builds from (1, 0, 0, 0, 0, 0, 1, 0), which are 0x201: linear, clamped, no mip l
 0x80 (`0x6b1f4d`), and `0x6b1f62` clears the flag. With the density at or above 128 the capacity
 saturates.
 
+## Detail doodad model load
+
+A detail model record is three dwords: `+0` the GroundEffectDoodad row's model path, `+4` the
+model, `+8` its texture. `0x6b1f80(id)` takes the record at `[0xcafffc][id]`: none gives 0; a record
+without a model starts the load and gives 0; one with a model gives `CM2Model::IsLoaded(model, 0,
+0)`. The load `0x6b2460` builds `World\NoDXT\Detail\` followed by the path as written in a
+0x104-byte buffer, creates the model through `0x707350` with flags 0, stores it at `+4`, and
+registers `0x6b24e0` as its loaded callback with the record; it returns 1, or 0 when no model is
+made. The callback stores at `+8` what `0x6c4c20` returns for a name the model's header holds.
+
+Addresses: `0x6b1f80`, `0x6b1f8a`, `0x6b1f92`, `0x6b1f96`, `0x6b1fa2`, `0x6b2460`, `0x6b2471`, `0x6b2473`, `0x6b2484`, `0x6b2491`, `0x6b2499`, `0x6b24ad`, `0x6b24b4`, `0x6b24c6`, `0x6b2400`, `0x6b24e0`, `0x6b24f0`, `0x6b1b42`, `0x6b1b54`, `0xcafffc`, `0x86b5d4`, `0xc7b298`, `0x64a5a0`, `0x707350`, `0x7105a0`, `0x7103d0`, `0x710e20`, `0x6c4c20`, `0x6bfbd8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6b1b42` constructs each record with the row's path `+0x8` (`0x6b2400` stores it and clears the
+other two) and `0x6b1b54` files it at the row's second field. `0x6b2471` returns 1 for a record
+that has a model. `0x6b2473` copies the folder `0x86b5d4` and `0x6b2491` appends the path at the
+length `SStrCopy` returns (`0x6b2484`); both copies pass the limit 0x7fffffff, so nothing bounds
+them by the buffer, and a path of more than 240 bytes overruns it. `0x6b24ad` calls `0x707350` on
+the scene `[0xc7b298]`; `0x6b24c6` is `CM2Model::SetLoadedCallback(model, 0x6b24e0, record)`.
+`0x6b24e0` moves the record to `ecx` and jumps to `0x6b24f0`, which takes the header from
+`0x710e20`, the record its `+0x60` points to and the name at that record's `+0xc`. The one caller of `0x6b1f80` is `0x6bfbd8`, in the
+chunk's model check `0x6bfb70`.
+
 ## Detail doodad scatter
 
 `0x6bfc10` scatters the detail doodads of a chunk. It needs the chunk to have layers and every

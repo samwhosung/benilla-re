@@ -156,8 +156,8 @@ Test: `image::image_tga_append_alpha`, `image::image_tga_alpha_strip`
 `0x5a3b80` and frees the old buffer. `0x5a4250` requires pixels. With a zero attribute it
 returns 1 for `bpp == 24`, otherwise warns (`0x8720012d`) and takes `(bpp − 8) & 0xf` as the attribute;
 an attribute other than 8 fails with `0xf7200082`. It lowers `bpp` by 8, clears the attribute and
-packs each pixel in place. `0x5a4250` does not change `+0x3c`. `0x5a41f0` is the check
-`pixels != 0 and bpp == 32`.
+packs each pixel in place. `0x5a4250` does not change `+0x3c`. `0x5a41f0` returns the pixels
+when they exist and `bpp` is 32, else 0 with error `0xf720007f` (no pixels) or `0xf720007d`.
 
 ## Flipping
 

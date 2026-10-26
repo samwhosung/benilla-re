@@ -33,14 +33,14 @@ vertex shader fails to load or a needed device capability is missing, or when `u
 is 0. Rain's box is 130 × 130 × 75 and it loads `rain.bls` and `patter.bls`; snow's is
 90 × 90 × 60 with `snowpoint.bls`; sand's 40 × 40 × 25 with `sand.bls`.
 
-Addresses: `0x674620`, `0x6747fc`, `0x67480d`, `0x677420`, `0x679140`, `0x674830`, `0x6775d0`, `0x679290`, `0x67ba50`
+Addresses: `0x674620`, `0x6747fc`, `0x67480d`, `0x674814`, `0x674819`, `0x677420`, `0x679140`, `0x674830`, `0x6775d0`, `0x679290`, `0x67ba50`
 Confidence: verified
 Proof: one
 Test: `lighting::weather_effect_ctor_674620_difftest`, `lighting::weather_effect_helper_677420_difftest`, `lighting::weather_effect_helper_679140_difftest`
 
 `0x674620(130, 75)` stores the box from ±65 and ±37.5, rain at `+0xbc` and patter at `+0xc4`
-shader handles, and clears byte 0 when either fails (`0x6747fc`) or the setting is 0
-(`0x67480d`). Snow needs device capability `+0xd4`, sand `+0xcc`. `0x674830`, `0x6775d0` and
+shader handles, and clears byte 0 when either fails (`0x6747fc`, the clear at `0x67480d`) or the
+setting is 0 (`0x674814`, the clear at `0x674819`). Snow needs device capability `+0xd4`, sand `+0xcc`. `0x674830`, `0x6775d0` and
 `0x679290` free the shaders, both packet lists and the mist; `0x67ba50` calls them.
 The tests run `0x674620` from `0x6746fa` to `0x674757`; `0x677420` from `0x6774ce` to `0x677528`; `0x679140` from `0x6791ef` to `0x67924e`.
 

@@ -32,6 +32,34 @@ The fraction is read once, after both traces.
 
 `terrain::segment_lerp_difftest` runs `0x69c06c` to `0x69c0bf`.
 
+## Map object trace
+
+`0x69c0f0(start, end, mask, arg4, t, id, object, instance)` traces a segment against the map
+objects and their groups' doodads. For each instance of the map object list, but one with bit 0
+of byte `+0xd` or no map object `+0x118`, whose box `+0x44` the segment crosses, it moves the
+segment into the instance's space by `+0xd4`; when the loaded map object's box takes it, it calls
+`CMapObj::IntersectSegment(instance, start', end', mask, arg4, t, id, 0)`, a non-zero result a
+hit stored through `object` and `instance`. Each def group whose box `+0x44` the segment crosses
+has its doodads queued (`0x69cdb0`, `+0xa8`) under any of 0xf0000f and its game objects passed to
+`0x69ce90` (`+0xb4`) under 0xf00000.
+
+Addresses: `0x69c0f0`, `0x69c0fe`, `0x69c114`, `0x69c119`, `0x69c151`, `0x69c15b`, `0x69c170`, `0x69c18a`, `0x69c1a5`, `0x69c1cb`, `0x69c1df`, `0x69c1e8`, `0x69c1ea`, `0x69c216`, `0x69c222`, `0x69c22e`, `0x69c233`, `0x69c243`, `0x69c248`, `0x69c261`, `0x69c28d`, `0x69c29a`, `0x69c2ca`, `0x69c2d2`, `0x69c2d9`, `0x69c2de`, `0x69c2e7`, `0x69c2fc`, `0x69c305`, `0xca7d9c`, `0xc7b298`, `0xc7cd30`, `0x6dc5a0`, `0x6dc6c7`, `0x6dc777`, `0x6dc787`, `0x80c5c8`, `0x6a47b0`, `0x6a37b0`, `0x69cdb0`, `0x69ce90`, `0x7089b0`, `0x7089c0`, `0x7bca80`
+Confidence: verified
+Proof: one
+Test: none
+
+With any of 0xf0000f (`0x69c0fe`) `0x7089b0` stores 1 at the scene's `+0x12c` first (`0x69c114`), and after the walk the segment, moved by the matrix `0xc7cd30`, is traced against the
+queued models (`0x7089c0`, `0x69c2ca`) from a copy of `*t`. A result below `*t` (`test ah,5; jp`,
+a NaN or an equal one keeps `*t`) is stored, `*id` becomes 0xffff, and 1 is returned, the
+`object` and `instance` of an earlier map object hit kept. Otherwise it returns whether a map
+object hit, with `*id` 0xffff when none did. `0x6dc5a0(box, start, end)` returns 1 when the start
+lies in the box or the segment enters it, the entry point held to the other faces within 1e-5
+(`0x80c5c8`); `0x6a47b0` returns 0 for a map object whose `+0x1d4` is clear, else that test on its box
+`+0x1a0`. The groups are the list at `+0x138` with the link offset `+0x130`, each node's target
+at `+4`; they are walked whether or not the map object was tested. The list `0xca7d9c` is walked
+from its head `0xca7da4`. The callers pass 0 for `arg4`, `id`, `object` and `instance` from
+`0x69c028`, and `0x67032c` passes the mask 0x100111 and an `instance` out.
+
 ## Terrain walk
 
 `0x69c320(start, end, t, mask)` turns both ends into cells, row from x and column from y as

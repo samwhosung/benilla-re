@@ -31,21 +31,22 @@ render side (`0x69885d`, `0x6a4a30`, `0x6c3e20`).
 
 ## Placement gates
 
-A placement is skipped or the whole trace fails before any group is read. Per placement
-`0x6aaab0` skips it when its disabled bit is set (`0x6aab61 test [def+0xd],1`), when it has no
-root, and when its world box or the transformed query box misses (`0x6acb40`, `0x699330`,
-`0x6a4670`). It fails the whole trace, returning 0 so that terrain too is not gathered for that substep,
-when the root's flag `+0x1d4` is clear or the placement's list head `+0x138` is tagged or null.
-The transform of the query box into the placement's frame only grows it.
+A placement is skipped or the whole gather fails before any group is read
+(`terrain/collide#map-object-gather`). `0x6aaab0` skips a placement whose disabled bit is set
+(`0x6aab61 test [def+0xd],1`), that has no root, or whose world box misses the query box
+(`0x6acb40`, `0x699330`). It fails the whole gather, returning 0 so that terrain too is not
+gathered for that substep, when the root's flag `+0x1d4` is clear or the placement's def group list
+`+0x138` is tagged or null. A miss of the transformed query box against the root (`0x6a4670`)
+skips only the root's own facets: the placement's def groups are still walked.
 
-Addresses: `0x6aaab0`, `0x6aab61`, `0x6aab6b`, `0x6aab87`, `0x6aab9a`, `0x6aabaa`, `0x6aabb2`, `0x6aabb8`, `0x6aabbe`, `0x6aabc0`, `0x6aabc6`, `0x6aabc8`, `0x6aada7`, `0x6aa8b0`, `0x6aa911`, `0x6aa913`, `0x6aaa97`, `0x6721b0`, `0x6a4670`, `0x6acb40`, `0x699330`
-Confidence: inferred
-Proof: none
+Addresses: `0x6aaab0`, `0x6aab61`, `0x6aab6b`, `0x6aab87`, `0x6aab9a`, `0x6aabaa`, `0x6aabb2`, `0x6aabb8`, `0x6aabbe`, `0x6aabc0`, `0x6aabc6`, `0x6aabc8`, `0x6aac57`, `0x6aada7`, `0x6aa8b0`, `0x6aa911`, `0x6aa913`, `0x6aaa97`, `0x6721b0`, `0x6a4670`, `0x6acb40`, `0x699330`, `0x695960`
+Confidence: verified
+Proof: one
 Test: none
 
-The branch layout is read; the meaning of `+0x138` as the placement's readiness is not
-derived. `0x6aada7` is `xor al,al; ret 8`. `0x6aa8b0` tests the result (`0x6aa911 test al,al; je
-0x6aaa97`) before its terrain loop runs.
+`0x6aada7` is `xor al,al; ret 8`. `0x6aa8b0` tests the result (`0x6aa911 test al,al; je
+0x6aaa97`) before its terrain loop runs. `0x6aac57 je 0x6aacd2` takes a `0x6a4670` miss to the
+group walk. The list at `+0x138` holds the def groups `0x695960` makes (`terrain/doodads#group-def-creation`).
 
 ## Face mask
 
