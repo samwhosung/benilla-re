@@ -28340,7 +28340,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9550	128			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6c95d0	240			unassigned	unreached		Runs its object file code that calls 0x6c96c0, SUniConvertUTF8to16, 0x6c9e00 and 2 more; not read here	inferred	none		
 0x6c96c0	939	ValidateNameText		unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	
-0x6c9a70	100			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9a70	100	GetNameCharsets		unassigned	primitive	void __fastcall (int32_t locale, uint32_t *primary, uint32_t *secondary)	Writes the primary and secondary name charsets of the region, or of the locale for a region outside 1 to 5	verified	one	glue/enterworld#name-charsets	glue::name_charset_pair_difftest
 0x6c9ae0	80	ValidateCharacterName		unassigned			Validates a character name with no extra characters and all word lists on; code 2 when over 12, 8 or 6 units	verified	one	glue/enterworld#character-name-check	
 0x6c9b30	63	ValidateCharacterNameTwoCaps		unassigned	unreached		Validates a character name with no extra characters and all word lists on; code 2 when over 12 or 8 units	verified	one	glue/enterworld#character-name-check	
 0x6c9b70	61	ValidateGuildName		unassigned	orchestration	uint32_t __fastcall (int32_t locale, const char *name)	Validates a guild name: a space is the extra character, both profanity lists are on, code 2 over 24 units	verified	one	ui/petition#guild-name-check	
@@ -28348,14 +28348,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9c10	24			unassigned	unreached		Runs its object file code that calls 0x6c9bb0; not read here	inferred	none		
 0x6c9c30	21	IsAsciiDigit		unassigned			Returns whether a 16-bit code is an ASCII digit	verified	one	ui/chatlanguage#splitting-a-line-into-words	
 0x6c9c50	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9c60	79	IsLatin1Letter		unassigned			Returns whether a 16-bit code is A to Z, a to z or a Latin-1 letter	verified	one	ui/chatlanguage#splitting-a-line-into-words	
+0x6c9c60	79	IsLatin1Letter		unassigned	primitive		Returns whether a 16-bit code is A to Z, a to z or a Latin-1 letter	verified	one	ui/chatlanguage#splitting-a-line-into-words	glue::name_charset_units_difftest
 0x6c9cb0	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9ce0	33			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9ce0	33	IsAsciiLetter		unassigned	primitive	int __fastcall (uint16_t unit)	Returns whether a unit is A to Z or a to z	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
 0x6c9d10	51			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9d50	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9d80	51			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9dc0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9dd0	43			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9d50	41	IsHangulNameSyllable		unassigned	primitive	bool __fastcall (uint16_t unit)	Returns whether a unit is one of the 2,350 Hangul syllables of the table at 0x86ca30	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9d80	51	IsCjkIdeograph		unassigned	primitive	int __fastcall (uint16_t unit)	Returns whether a unit is a CJK ideograph: U+4E00 to U+9FFF, U+3400 to U+4DFF or U+F900 to U+FAFF	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9dc0	5	IsCjkNameUnit		unassigned	orchestration	int __fastcall (uint16_t unit)	Jumps to IsCjkIdeograph, name charset 3	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9dd0	43	IsInNameCharset		unassigned	primitive	bool __fastcall (uint16_t unit, uint32_t set)	Returns whether a UTF-16 unit is in name charset 1 to 4; any other set takes none	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
 0x6c9e00	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c9e20	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c9e40	56			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		

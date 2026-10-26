@@ -243,5 +243,35 @@ The returns of `0x6c96c0` (`ret 0x18`), by the `mov eax` before each: 0 for a nu
 (`0x6c9827`), 0 or 1 by length (`0x6c98ac setne`), 8, 0xb, 9, 7, 0xa, 0xd, 6, 0xc. 7, 8, 0xa and 0xb need
 a nonempty extra list: with `edx` 0 a space or apostrophe fails the charset test and reports 3. The
 three word-list loops call `0x71fc70` over three tables of 16-byte records; a hit reaches
-`0x6c9a4f`. The charset predicate and the locale table `0x6c9a70` are not read here. `0x6c9b30` is `0x6c9ae0` without the
+`0x6c9a4f`. The charsets are the next entry's. `0x6c9b30` is `0x6c9ae0` without the
 charset 3 cap (`0x6c9b51` to `0x6c9b66`); no `call`, `jmp` or stored dword names it (the same scan finds `0x5abd58` for `0x6c9ae0`).
+
+## Name charsets
+
+A name is held to the charset of its first unit, the primary or secondary of `0x6c9a70(locale)`. A
+region `0x86c9e0` of 1 to 5 picks its pair at `0x86c9e4`: (1, 1), (2, 4), (1, 1), (3, 1), (3, 1).
+Otherwise the primary is the locale's entry at `0x86ca0c`, 1, 2, 1, 1, 3, 3, 1, 0, with entry 0 for a
+zero entry or an index outside 0 to 7, and the secondary is 4 for koKR (index 1), else 1.
+`0x6c9dd0(unit, set)` tests a UTF-16 unit against a set; a set not listed takes none:
+
+| set | units |
+|---|---|
+| 1 | `IsLatin1Letter` (`0x6c9c60`) |
+| 2 | the 2,350 syllables at `0x86ca30` (`0x6c9d50`) |
+| 3 | U+4E00 to U+9FFF, U+3400 to U+4DFF, U+F900 to U+FAFF (`0x6c9d80`) |
+| 4 | A to Z, a to z (`0x6c9ce0`) |
+
+Addresses: `0x6c9a70`, `0x6c9a78`, `0x6c9a82`, `0x6c9aa1`, `0x6c9ab7`, `0x6c9abe`, `0x6c9ac8`, `0x6c9dd0`, `0x6c9c60`, `0x6c9d50`, `0x6c9d60`, `0x6c9d80`, `0x6c9dc0`, `0x6c9ce0`, `0x86c9e0`, `0x86c9e4`, `0x86ca0c`, `0x86ca30`, `0x6c971e`, `0x6c91b8`
+Confidence: verified
+Proof: one
+Test: `glue::name_charset_pair_difftest`, `glue::name_charset_units_difftest`
+
+`0x6c9a78` and `0x6c9a80` bound the region with `jl` and `jg`; `0x6c9a82` reads `[region·8 + 0x86c9dc]`
+for the primary and `[region·8 + 0x86c9e0]` for the secondary. Otherwise `0x6c9aa1` to `0x6c9ab5` reset
+the index to 0, and `0x6c9abe` to `0x6c9acb` compute `(((index − 1) ≠ 0 ? −1 : 0) & −3) + 4`. The one
+caller, `0x6c971e`, has already refused an index outside 0 to 7. The region is 1 in the file; its only
+writer, `0x6c91b8`, stores the `Wow.ini` region at start-up (`dbc#wowini-values`). `0x6c9dd0` compares
+`edx` with 1 to 4 and tail-jumps to `0x6c9c60`, `0x6c9d50`, `0x6c9dc0` (a jump to `0x6c9d80`) and
+`0x6c9ce0`. `0x6c9d50` bounds the unit, then compares it with each word from `0x86ca30` while the offset
+is below 0x125c (`0x6c9d60`); the words ascend and are EUC-KR's rows 0xB0 to 0xC8, the Hangul set of KS X 1001.
+The tests run each function whole, the predicates over all 65,536 units.
