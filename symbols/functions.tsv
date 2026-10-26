@@ -11194,9 +11194,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f8420	19	InitQuotient4f8420		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4f8440	5	InitInfinity4f8450Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8450, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f8450	11	InitInfinity4f8450		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4f8460	34			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x4f8490	18			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
-0x4f84b0	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
+0x4f8460	34	RegisterBankSlotsWatcher		ui	orchestration	void __cdecl (void)	Watches byte 2 of the active player's PLAYER_BYTES_2, the bought bank bag slots, with 0x4f8490	verified	one	ui/bags#bank-slot-watcher	
+0x4f8490	18	OnBankSlotsChanged		ui	orchestration	uint32_t __fastcall (uint32_t offset, uint32_t length, uint32_t guidLow, uint32_t guidHigh, const void *old, void *argument)	Signals PLAYERBANKBAGSLOTS_CHANGED and returns 1	verified	one	ui/bags#bank-slot-watcher	
+0x4f84b0	30	UnregisterBankSlotsWatcher		ui	orchestration	void __cdecl (void)	Removes the active player's bank bag slot watcher 0x4f8490	verified	one	ui/bags#bank-slot-watcher	
 0x4f84d0	87	SetBankInteraction		ui	primitive		Opens the bank for a banker GUID and signals BANKFRAME_OPENED, or closes it for GUID 0 and signals BANKFRAME_CLOSED	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x4f8530	118	Script::BankButtonIDToInvSlotID	idb	ui	primitive	int __fastcall (lua_State *L)	Maps a bank button id to an inventory slot: id + 59 with a numeric second argument, else id + 39	verified	one	ui/bags#bank-button-ids	
 0x4f85b0	118	Script::GetNumBankSlots	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the bought bank bag slots and whether all are bought	verified	one	ui/inventoryverbs#the-bank	
