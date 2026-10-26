@@ -320,3 +320,24 @@ All four range tests (`0x4c7261` to `0x4c727c`) are signed because a miss is -1.
 `[[player+0xe68]+0x102c]` for the active player and 0 for any other (`0x4c72b2` to `0x4c72c7`) and compares it with
 `[item descriptor+0xc]` at `0x4c72cd`. The five callers are in the item watcher and refresh chains. An item found in
 slots 0 to 22 fires at `0x4c72d1` once, and falls out at the end without taking the ammo test.
+
+## An item's container update
+
+`0x4f9480(item)` raises `BAG_UPDATE` for the container an item sits in, when the item is a live
+object owned by the active player: through `0x4f9370` with `ITEM_FIELD_CONTAINED`, so 0 for an item
+directly in the player, the cache index 1 to 10 of a cached bag, and nothing for a bag outside the
+cache. An item that is not found or not the active player's raises nothing. The item code calls it
+when a record is applied, the stack count or the entry changes, a changed record arrives, and the
+enchantment visual refreshes.
+
+Addresses: `0x4f9480`, `0x4f949c`, `0x4f94a5`, `0x4f94a7`, `0x4f94b8`, `0x4f94bd`, `0x4f94c1`, `0x4f94cf`, `0x5d85e8`, `0x5d94ff`, `0x5d9685`, `0x5d96c9`, `0x5d9b1b`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4f949c` resolves the GUID with object mask 2 under `ContainerFrame.cpp`; `0x4f94a5 je` returns for
+none. `0x4f94a7` loads the item fields `+0x114`, field 6 `ITEM_FIELD_OWNER`, and `0x4f94b8` and
+`0x4f94bd` compare it with the active player's GUID; `0x4f94c1` pushes field 8 (`+8`, `+0xc`) and
+`0x4f94cf` calls `0x4f9370`, which first refreshes the action bar's usable state. It returns with
+`ret 8`. Its callers are `0x5d85e8`, `0x5d94ff`, `0x5d9685`, `0x5d96c9` and `0x5d9b1b`, in the item
+functions `0x5d8440`, `0x5d9400`, `0x5d95e0`, `0x5d96b0` and `0x5d9a90`.

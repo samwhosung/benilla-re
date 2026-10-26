@@ -83,13 +83,13 @@ non-header row's quest also requires, and returns their names joined by the list
 item remains, no player is present or the template is not cached. `AbandonQuest()` finds the non-header row whose id is the
 abandon id and sends its quest slot (`SendQuestLogRemoveQuest`), then clears the id; with no matching row it keeps the id.
 
-Addresses: `0x4dfbe0`, `0x4dfc8a`, `0x4dfcb1`, `0x4dfcb7`, `0x4dfd1c`, `0x4dfd38`, `0x4dfdb9`, `0x4dfde3`, `0x4dfe00`, `0x4df070`, `0x4df0ae`, `0x4df0ca`, `0x4df0cf`, `0x622130`, `0x5eaf40`, `0x4df150`
+Addresses: `0x4dfbe0`, `0x4dfc8a`, `0x4dfcb1`, `0x4dfcb7`, `0x4dfd1c`, `0x4dfd38`, `0x4dfdb9`, `0x4dfde3`, `0x4dfe00`, `0x4df070`, `0x4df079`, `0x4df098`, `0x4df0ae`, `0x4df0b6`, `0x4df0ca`, `0x4df0cf`, `0xbb7484`, `0x622130`, `0x5eaf40`, `0x4df150`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4dfc8a` counts the item with `CountInventoryItemsByEntry` and `0x4dfcb1` tests the record's `+0x194` against 4 and 5. `0x4dfcf0` to `0x4dfd67` walk every row, skipping the abandon quest itself (`0x4dfd1c`), and clear matching collected ids (`0x4dfd42`).
-`0x4dfdb9` pushes the separator between names and `0x4dfde3` joins `2n-1` strings. `0x4df0a7` tests the row's header word, `0x4df0ae` its id, `0x4df0ca` sends and `0x4df0cf` clears.
+`0x4dfdb9` pushes the separator between names and `0x4dfde3` joins `2n-1` strings. `0x4df0a7` tests the row's header word, `0x4df0ae` its id, `0x4df0ca` sends and `0x4df0cf` clears. `0x4df079` returns for a zero id and `0x4df098` without an active player, before the scan; the scan runs over all 40 rows (`cmp edx,0x28` at `0x4df0b6`), not the list's count.
 
 ## Headers and watches by row
 

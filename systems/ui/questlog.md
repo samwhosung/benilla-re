@@ -173,3 +173,24 @@ Test: none
 `0x4dedea` is the only append and `0x4dede5` is `cmp eax,5; jae`. The prune loop `0x4de7a7` to `0x4de80f` calls `0x4dee00`
 (a move down, a count decrement and a zeroed tail, `0x4dee38`, `0x4dee46`) and re-examines the shifted index. The
 rebuild ends by firing `QUEST_LOG_UPDATE` (`mov ecx,0x134`, `0x4de811`), whatever path reached the tail.
+
+## The quest marker
+
+A new selection points the minimap's quest marker at the quest. `0x4def70` asks the quest cache for
+the selected quest's record with the callback `0x4defe0`; with the record cached it sets static blip 0
+(`SetQuestBlip`) at the record's point, x `+0x90` and y `+0x94`, with rank `+0x98` and the title
+`+0x9c` as its name. On a miss nothing moves until the record arrives: the callback runs `0x4def70`
+again, which reads the selection as it is then, and for a refusal writes `Invalid quest log entry` on
+the console.
+
+Addresses: `0x4def70`, `0x4def89`, `0x4defb0`, `0x4defb7`, `0x4defd3`, `0x4defe0`, `0x4defe8`, `0x4deff1`, `0x4deffa`, `0x4def63`, `0x6dacb0`, `0x84b4d4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4def63` in `SelectQuestRow` tail-jumps to it after storing the selection, so a refused index moves
+nothing. `0x4def89` loads `0xbb7480`, and `0x4defb0` calls `0x562a40` with a zeroed owner, the
+callback, no data and dedupe 0; `0x4defb7 je` returns on null. `0x4defd3` calls `0x6dacb0` with `ecx`
+`+0x98`, `edx` the title's address and the two floats on the stack. The callback tests the status byte
+at `[ebp+0xc]` (`0x4defe8`), calls `ConsoleWrite` with the string and class 0 (`0x4deff1`) or
+`0x4def70` (`0x4deffa`), and returns with `ret 8`.

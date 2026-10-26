@@ -6,7 +6,7 @@ textures it loads. The blips, arrows and dots it draws are in `minimapblips`; th
 
 `CGMinimapFrame` (`MinimapFrame.cpp`, constructor `0x4edbc0`) is a frame with 10 methods of its own.
 
-Roots: `0x4ef2f0`
+Roots: `0x4ef2f0`, `0x4eb040`
 
 ## Zoom
 
@@ -269,3 +269,27 @@ Test: none
 
 The table is 10 pairs of a name and a function in the order above; `0x4ef2f0` calls `0x701d80` with
 0xa. `0x4ef320`, slot 2, looks in the `Minimap` hash and then calls `0x778590`.
+
+## The player arrow each frame
+
+`CGMinimapFrame`'s frame update (`0x4eb040`, slot 14) runs the base update, then two steps. When the
+player arrow child at `+0x338` holds a model that has loaded, `0x4ee100` places the arrow at half its
+own width and height: its position `+0x390` becomes `(w·0.5, h·0.5, 0)`, from the child's layout
+slots 7 (width) and 8 (height), each product rounded to a float. Then, when the camera's target GUID
+(`+0x88` of the active camera) names an object, `0x4eb8e0` takes that object's facing, slot 6, as a
+float: it stores it in the minimap's `+0x33c` (−10000.0 from the constructor) and in the arrow's
+facing `+0x39c`, unchanged. With no such object both keep their last value.
+
+Addresses: `0x4eb040`, `0x4eb04a`, `0x4eb057`, `0x4eb069`, `0x4eb074`, `0x4eb079`, `0x4eb09b`, `0x4eb0a8`, `0x4eb0b1`, `0x4eb8e0`, `0x4eb8e6`, `0x4eb8f8`, `0x4ee100`, `0x4ee118`, `0x4ee11b`, `0x4ee130`, `0x4ee133`, `0x4ee14e`, `0x4ee15a`, `0x4ee160`, `0x807ab8`, `0x4edbd4`, `0x76d080`, `0x76d0d0`
+Confidence: verified
+Proof: one
+Test: `ui::minimap_arrow_centre`, `ui::glue_4dc_4ee100_half_pair`
+
+`0x807ab8` is slot 14 of `CGMinimapFrame::vftable`, the slot `CSimpleFrame::OnFrameUpdate` fills in the
+base table; `0x4eb04a` calls that. `0x4eb057` and `0x4eb069` test the child and `CM2Model::IsLoaded` on
+its `+0x318`. `0x4ee118` and `0x4ee130` call slots 8 and 7 of the vtable at the child's `+0x24`, which for
+a Model frame are `0x76d0d0` and `0x76d080`; each `fmul` by 0.5 (`0x4ee11b`, `0x4ee133`) is stored with
+`fstp dword`, and `0x4ee14e` to `0x4ee160` write width, height and 0. `0x4eb079` takes `GetActiveCamera`,
+`0x4eb09b` resolves its `+0x88` with object mask 1, and `0x4eb0a8` calls slot 6, whose `st0` is stored as
+the argument. `0x4edbd4` stores the constructor's 0xc61c4000. `ui::minimap_arrow_centre` runs `0x4ee100`
+whole with the two slots stubbed; `ui::glue_4dc_4ee100_half_pair` runs the `fmul` bytes alone.

@@ -172,3 +172,49 @@ string (`0x5e728d`), with no queue on the path. `0x703f50` returns at `0x70404e`
 listener. The chat message handler sends the welcome line through `cmp [0x8435fc],ebx; je 0x49db9f`
 (`0x49db5c`, `0x49db62`) to the queue call `0x49cae0` (`0x49db8c`) while the latch is set. The latch is 1 in the
 file, set by `0x498a10` in the world teardown and cleared by `0x4989fd`.
+
+## Window resets at world entry
+
+Four of the cascade's calls reset a window's state without signalling a close. The trainer reset
+zeroes the trainer GUID, selection, total and greeting (`ui/trainer`). The merchant reset zeroes the
+vendor GUID, the row count and the 128 rows, registers the buy-back watch on the active player
+(`ui/merchant#the-buy-back-watch`) and rebuilds the buy-back list. The trade reset zeroes every trade
+table: the partner's seven slots and their records, the own offer's containers, GUIDs and bag
+slots, the partner GUID, both accept flags, both header caches and both money words, but not the
+done flag `0xb71748`. The pet reset calls `SetPetGuid(0, 0)` (`ui/petbar#pet-state`) and, when the
+player's charm GUID, else its summon GUID, is set, sends `CMSG_REQUEST_PET_INFO` (0x279) with an
+empty body.
+
+Addresses: `0x4909ab`, `0x4909b0`, `0x4909b5`, `0x4909c9`, `0x4d73e0`, `0x4fac50`, `0x4fac61`, `0x4fac7a`, `0x4fac8d`, `0x4fac93`, `0x4bf0e0`, `0x4bf20e`, `0x4bc6f0`, `0x4bc6fd`, `0x4bc718`, `0x4bc721`, `0x4bc72c`, `0x4bc736`, `0x4bc738`, `0x4bc75a`, `0x4bc765`, `0xb71748`
+Confidence: verified
+Proof: one
+Test: none
+
+The cascade calls them at `0x4909ab`, `0x4909b0`, `0x4909b5` and `0x4909c9`. `0x4fac61` to `0x4fac7a`
+zero `0xbddfa0`, `0xbddfa8` and 0x380 dwords from `0xbdd118`; `0x4fac8d` registers, `0x4fac93` tail-jumps
+to `0x4fafd0`. `0x4bf0e0` is ten `rep stos` and four `rep movs` zero-fills of the seven-entry tables
+from `0xb714b8` to `0xb71708`, then the stores to `0xb71728` to `0xb71744` and the byte `0xb71596`
+(`0x4bf20e`); no instruction in it names `0xb71748`. `0x4bc6fd` calls `0x4bc7e0` with `ecx` 0 and two
+zero stack words. `0x4bc718` resolves the active player (type mask 0x10); `0x4bc721` loads its unit
+fields, `0x4bc72c` takes `+8`, the summon, when the charm at `+0` is zero, and `0x4bc736 je` returns
+for a zero GUID. `0x4bc738` builds the 0x279 store and `0x4bc765` sends it.
+
+## Window closes when leaving
+
+Four of the 36 leave-world calls close a window by its own close routine, each signalling its close
+event when the window was open. The gossip leg sets the gossip target to zero (`GOSSIP_CLOSED`) and
+then resets the option and quest slots (`0x4e26a0`); the trainer leg is `0x4d7440` with a zero GUID
+(`TRAINER_CLOSED`); the merchant leg closes the vendor (`0x4fadf0`, `MERCHANT_CLOSED`) and removes
+the buy-back watch; the guild registrar leg is a jump to its close (`GUILD_REGISTRAR_CLOSED`).
+
+Addresses: `0x490ac1`, `0x490ad5`, `0x490ada`, `0x490b07`, `0x4e1f60`, `0x4e1f84`, `0x4e1f89`, `0x4d7400`, `0x4d7426`, `0x4facc0`, `0x4facdd`, `0x4f4fa0`, `0x4e1fa0`, `0x4e26a0`, `0x4d7440`, `0x4fadf0`, `0x4f5010`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x490a80` calls `0x4e1f60` at `0x490ac1`, `0x4d7400` at `0x490ad5`, `0x4facc0` at `0x490ada` and
+`0x4f4fa0` at `0x490b07`; each is its target's one caller. `0x4e1f84` and `0x4d7426` pass the address of
+a zeroed GUID in `ecx` (`edx` 0 for the trainer's type); `0x4e1f89` follows with `0x4e26a0`. `0x4facdd`
+calls `ClntObjMgrClearObjectMirrorHandler(4, 0x1038, player, 0x4faca0, 0)` after `0x4fadf0`, and
+`0x4f4fa0` is `jmp 0x4f5010`. The gossip close (`ui/taxiroute#new-flight-path`) and the vendor and
+registrar closes (`ui/merchantcursor#merchant-close`, `ui/petition#closing`) do nothing with no window.

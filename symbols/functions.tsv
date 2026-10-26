@@ -6944,7 +6944,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491a00	65	NotifyUnitNameUpdate		ui	orchestration		Marks the name of a GUID's unit dirty	inferred	none	objectlayer/playerfields#watchers-on-every-player	
 0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	ui/portraits#marking-and-draining	
 0x491a60	1145	CGGameUI::OnItemPush	idb	ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
-0x491ee0	103			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, 0x491a60; not read here	inferred	none		
+0x491ee0	103	OnItemPushRecordArrived		ui	orchestration	void __fastcall (uint32_t key, uint32_t unused, void *data, uint8_t found)	Replays a deferred item push with its saved arguments when the record arrives, then frees them	verified	one	ui/gameui#the-item-pushs-record-wait	
 0x491f50	187	QueryCorpse		ui	orchestration		Resets the corpse cache and asks the server for a ghost's corpse position	verified	one	ui/deathui#the-corpse-location	
 0x492010	124	CacheCorpseLocation		ui	orchestration	void __fastcall (uint32_t map, float *position, uint32_t extra)	Caches the corpse's map and position and sets the corpse blip on that map, else clears it	verified	one	ui/deathui#the-corpse-location	
 0x492090	49	GetCorpseMarker		ui	orchestration		Copies the corpse display map, its position and its map id to its three pointer arguments	verified	one	ui/gameui#interface-state-helpers	
@@ -7012,9 +7012,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494df0	22	ClearCursorIfSpell		ui	primitive	void __cdecl (void)	Drops the cursor when it holds a spell	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494e10	6	GetCursorSpell		ui	orchestration		Returns a ui global dword the unlearn compares with the spell	verified	one	objectlayer/playercombat#unlearning-a-spell	
 0x494e20	285	SetCursorPetAction		ui	primitive	void __thiscall (void *this)	Puts a pet action on the cursor with its icon as the picture	verified	one	ui/cursor#payload-pictures-by-kind	
-0x494f60	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
+0x494f60	22	ClearCursorPetAction		ui	unreached	void __cdecl (void)	Clears the cursor when it holds a pet action	verified	one	ui/cursor#unreached-cursor-drops	
 0x494f80	107	SetCursorMacro		ui	orchestration	void __fastcall (uint32_t macroId)	Puts a macro on the cursor with its icon path, returning for an id with no macro	verified	one	ui/cursor#payload-pictures-by-kind	
-0x494ff0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
+0x494ff0	22	ClearCursorMacro		ui	unreached	void __cdecl (void)	Clears the cursor when it holds a macro	verified	one	ui/cursor#unreached-cursor-drops	
 0x495010	190	SetCursorStablePet		ui	primitive	void __fastcall (int32_t stableIndex)	Puts a stabled pet on the cursor with its family icon	verified	one	ui/cursor#payload-pictures-by-kind	
 0x4950d0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
 0x4950f0	122	CGGameUI::SetCursorVirtualItem	idb	ui	orchestration	void __fastcall (uint32_t entry, uint32_t displayId, uint32_t index, uint32_t mode)	Puts a preview payload of kind 5, 7 or 9 on the cursor	verified	one	ui/cursor#item-and-preview-setters	
@@ -7027,7 +7027,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495460	297	UnlockAllItems		ui	primitive	void __cdecl (void)	Clears the lock of every item the player holds and signals ITEM_LOCK_CHANGED once	verified	one	ui/cursor#the-item-lock	
 0x495590	696	CGGameUI::Update		ui	primitive		Runs the interface frame update: zeroes the context count, signals memory events, reloads on request, polls play time	verified	one	ui/billing#the-play-time-poll	ui::billing_minutes_left, ui::billing_poll, ui::glue_geom_480_495590_tick_scale
 0x495850	72	SignalDeathState		ui	orchestration		Signals PLAYER_DEAD and clears the cursor at no health, else PLAYER_ALIVE	verified	one	ui/deathui#dead-and-alive	
-0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
+0x4958a0	61	RestorePlayerControlOnArrival		ui	orchestration	void __cdecl (void)	Sets the player-control flag to 1 without an event and makes the active player the active mover	verified	one	ui/gameui#control-back-on-arrival	
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
 0x495920	24	CancelCastAndClearCursor		ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
 0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Registers the eight game frame types, WorldFrame one-shot	verified	one	ui/framexml#frame-types	
@@ -7184,8 +7184,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49bef0	63	FindChannelById		ui	primitive		Returns the first slot with the ChatChannels id	verified	one	ui/chatchannels#finding-a-slot	
 0x49bf30	65	FindChannelByNumber		ui	primitive		Returns slot n when its number is n and its state is 0, else null	verified	one	ui/chatchannels#finding-a-slot	
 0x49bf80	1675	ChannelNotifyHandler	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the channel notify message: reads the notice and name, picks a token and chat type, and shows the line	verified	one	ui/chatchannels#the-channel-notify-message	
-0x49c690	332	ClientChannelListHandler	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the channel list message: builds the member list text and shows it as channel list lines	inferred	none	ui/chatchannels#channel-list-message	
-0x49c7e0	766			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 6 more; not read here	inferred	none		
+0x49c690	332	ClientChannelListHandler	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the channel list message: stores the flag byte, appends the members, prints once every name is known	verified	one	ui/chatchannels#channel-list-message	
+0x49c7e0	766	PrintChannelMemberList		ui	primitive	void __thiscall (ChatChannel *this)	Shows a channel's member list as CHANNEL_LIST lines once every name is cached, then frees it	verified	one	ui/chatchannels#printing-the-member-list	ui::channel_list_print
 0x49cae0	285	CGChat::QueueChatText	idb	ui	primitive		Queues a chat line with its fields for later display	verified	one	ui/chatevents#pending-lines	
 0x49cc00	182	QueuePendingTextEmote		ui	primitive	void __fastcall (uint64_t *performer, int32_t textId, const char *targetName, int32_t held, uint32_t emoteNum)	Appends a text emote waiting for its performer's name to the pending list	verified	one	ui/chatemote#the-pending-list	
 0x49ccc0	1029	ChatNameArrivedCallback		ui	primitive		Shows queued lines whose sender's name has arrived, re-queueing while the display latch is set	verified	one	ui/chatevents#pending-lines	
@@ -7197,18 +7197,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49dcc0	368	HandleZoneUnderAttackPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles zone under attack: shows the area's attack text on the zone's defence channels	verified	one	ui/chatserver#zone-under-attack	
 0x49de30	329	HandleDefenseMessagePacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the defence message: shows the packet's text on the zone's defence channels	verified	one	ui/chatserver#defence-message	
 0x49df80	226	HandleServerMessagePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the server message: formats a ServerMessages row with the string and shows it as a system line	verified	one	ui/chatserver#server-message	
-0x49e070	329	HandleRaidInstanceInfoPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs ChatFrame.cpp code that calls CDataStore::GetUInt32, FrameScript_GetText, 0x4a3370 and 4 more; not read here	inferred	none		
-0x49e1c0	667	HandleRaidInstanceMessagePacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
+0x49e070	329	HandleRaidInstanceInfoPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores the saved-instance list and signals UPDATE_INSTANCE_INFO, formatting an unused text per entry	verified	one	ui/instances#the-saved-instance-list	
+0x49e1c0	667	HandleRaidInstanceMessagePacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a raid lockout warning by type with the reset time in hours, minutes or days	verified	one	ui/instances#lockout-warnings	ui::instances_lockout_warning
 0x49e470	200	HandleInstanceResetPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Clears the last instance, then adds INSTANCE_RESET_SUCCESS with the map name as a system chat line	verified	one	ui/groupverbs#instances	
-0x49e540	297	HandleInstanceResetFailedPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
-0x49e670	74	HandleUpdateLastInstancePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs ChatFrame.cpp code that calls CDataStore::GetInt32, ClntObjMgrGetMapID, GetUnixTime and 1 more; not read here	inferred	none		
-0x49e6c0	32	HandleUpdateInstanceOwnershipPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x495d50; not read here	inferred	none		
+0x49e540	297	HandleInstanceResetFailedPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a reset refusal by reason, or an unwritten buffer for any other reason	verified	one	ui/instances#reset-refusals	
+0x49e670	74	HandleUpdateLastInstancePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Records the message's map as the instance left when the map has a record	verified	one	ui/instances#last-instance-and-ownership	
+0x49e6c0	32	HandleUpdateInstanceOwnershipPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores the server's instance ownership word	verified	one	ui/instances#last-instance-and-ownership	
 0x49e6e0	406	HandleExpectedSpamRecordsPacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcode 0x332: compiles the server's spam strings into the server list	verified	one	ui/chatfilter#the-servers-spam-list	
 0x49e880	25	ParseChannelKey		ui	orchestration		Returns the name of the joined slot a decimal argument names, or the argument when it parses to 0	verified	one	ui/channelverbs#leavechannelbyname	
-0x49e8a0	108			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a870; not read here	inferred	none		
-0x49e910	122			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49e8a0; not read here	inferred	none		
-0x49e990	59			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49e9d0	147	FormatSecondsDHMS		ui	primitive	void __fastcall (char *buffer, uint32_t size, int32_t seconds)	Formats a count of seconds as %dd %dh %dm %ds by truncating signed division	verified	one	collision/teleport#neighbouring-handlers	ui::format_duration_difftest
+0x49e8a0	108	ShowChannelModeBitChange		ui	orchestration	void __fastcall (const char *name, uint8_t oldFlags, uint64_t guid, uint8_t newFlags, const char *channel, uint8_t bit, const char *setText, const char *unsetText)	Shows the set or unset channel notice when a member flag bit is gained or lost	verified	one	ui/chatchannels#mode-change-lines	
+0x49e910	122	ShowChannelModeChange		ui	orchestration	void __fastcall (uint8_t oldFlags, uint8_t newFlags, uint64_t guid, const char *channel)	Shows the moderator and voice notices of a mode change when the member's name is cached	verified	one	ui/chatchannels#mode-change-lines	
+0x49e990	59	GetChatTypeColor		ui	primitive	void __fastcall (uint32_t *out, int32_t type)	Writes a chat type's registry colour as 0xffRRGGBB, or white for a type of 94 or more	verified	one	ui/chatcolors#a-chat-types-colour	ui::chat_type_colour
+0x49e9d0	147	FormatDurationDhms		ui	primitive	void __fastcall (char *buf, uint32_t size, int32_t seconds)	Formats seconds as days, hours, minutes and seconds, each division truncating	verified	one	ui/instances#duration-text	ui::instances_format_duration
 0x49ea70	17	SetGuildRecruitmentLatch		ui	orchestration		Stores the recruitment mode and runs the cascade when it is 1	verified	one	ui/channelverbs#guild-recruitment-mode	
 0x49ea90	217	RunGuildRecruitmentCascade		ui	primitive		Leaves or joins the capital guild recruitment channel by the player's guild and area, or arms the retry	verified	one	ui/channelverbs#guild-recruitment-cascade	
 0x49eb70	767	JoinChannel		ui	primitive		Composes the wire name, registers the window entry and slot, and sends the join	verified	one	ui/channelverbs#the-join-body	
@@ -7339,7 +7339,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a3150	60	Unlink4a3150		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x4a3190	231			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4a3280	226	GrowArrayBy4a3280		ui	primitive		Raises an array's capacity for count + add, rounding on request, and leaves the count	verified	one	ui/containers#arrays	
-0x4a3370	235			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x4a3370	235	ReserveRaidInstanceInfos		ui	primitive	void __thiscall (void *this, uint32_t extra, bool round)	Grows the saved-instance array's capacity for extra records, rounded by its granularity	verified	one	ui/instances#growing-the-saved-list	ui::instances_reserve_saved_list
 0x4a3460	255	ClearTable4a3460		ui	primitive		Unlinks every node of a table and, unless its argument is set, frees each	verified	one	ui/containers#hash-tables	
 0x4a3560	372	AddNode4a3560		ui	primitive		Adds a node for a hash to a table, growing the buckets after a long chain walk	verified	one	ui/containers#hash-table-nodes	
 0x4a36e0	136	ClearList4a36e0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
@@ -7437,8 +7437,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6460	36	OnExploredBitsChanged		ui	orchestration		Selects the map again with the current continent and its direct area or zone, and returns 1	verified	one	ui/worldmap#the-explored-bits-watcher	
 0x4a6490	30	ClearExploredWatcher		ui	orchestration		Removes the watcher on the explored bytes	verified	one	ui/worldmap#the-explored-bits-watcher	
 0x4a64b0	240	ShutdownWorldMap		ui	orchestration		Releases the continent records and the landmark, overlay and orphan lists and zeroes the map arrows	verified	one	ui/gameui#start-up-display-and-chat	
-0x4a65a0	60			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a65e0	106			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4a65a0	60	GetContinentName		ui	primitive	const char * __fastcall (uint32_t continent)	Returns the localized Map.dbc name of a continent record's map, or null	verified	one	ui/worldmap#the-getters	ui::worldmap_list_names
+0x4a65e0	106	GetContinentZoneName		ui	primitive	const char * __fastcall (uint32_t continent, uint32_t zone)	Returns the localized AreaTable name of a continent zone's area, or null	verified	one	ui/worldmap#the-getters	ui::worldmap_list_names
 0x4a6650	331	SelectCurrentZone		ui	orchestration		Selects the map, continent and zone of the active player, or an orphan map, or the world	verified	one	ui/worldmap#the-resolver	
 0x4a67a0	1360	SetMap		ui	orchestration		Stores the continent, zone and direct area, rebuilds the landmark and overlay lists, signals WORLD_MAP_UPDATE	verified	one	ui/worldmap#the-selection	ui::glue_4a6_4a67a0_near_zero_gate
 0x4a6cf0	94	GetSelectedAreaName		ui	primitive		Returns the name field of the selected WorldMapArea row, 0 for none	verified	one	ui/worldmap#the-getters	ui::worldmap_selected_area_name
@@ -7925,8 +7925,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b2bb0	152	CompareFormSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two form bar spells by their stance bar order word, -1 last, then by id	verified	one	ui/petbar#form-list	
 0x4b2c50	760			ui	primitive		Removes a spell from the spell book's display list; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
 0x4b2f50	32	ReplaceSpellInBook		ui	orchestration		Calls 0x4b2c50(old, 1) and then 0x4b25b0(new, 1, old)	verified	one	objectlayer/playercombat#spell-book-messages	
-0x4b2f70	22			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b2f90	50			ui	primitive		Runs SpellBookFrame.cpp code not read here	inferred	none		
+0x4b2f70	22	ClearPetBook		ui	orchestration	void __cdecl (void)	Zeroes the pet book's 1024 slots and its count	verified	one	ui/petbar#the-pet-spell-message	
+0x4b2f90	50	AddPetBookSpell		ui	primitive	void __fastcall (uint32_t spell)	Appends a spell to the pet book when its record exists without Attributes & 0x80	verified	one	ui/petbar#the-pet-spell-message	ui::pet_book_add_gate
 0x4b2fd0	100	SortSpellBook		ui	orchestration	void __fastcall (bool sortBook, bool sortPet)	Sorts the tab list and book, or the pet book, then signals SPELLS_CHANGED	verified	one	ui/spellbook#book-order	
 0x4b3040	121	CompareBookTabs		ui	primitive	int __cdecl (void **a, void **b)	Orders two tab nodes: General first, then by SkillLine name	verified	one	ui/spellbook#book-order	
 0x4b30c0	228	CompareBookSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two book spells by tab position, name, numeric rank and rank string	verified	one	ui/spellbook#book-order	ui::sortcmp_4b30c0
@@ -8338,7 +8338,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bc650	12	InitZero4bc630Register		ui	orchestration	void __cdecl (void)	Registers 0x4bc660 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4bc660	47	InitZero4bc630Exit		ui	primitive	void __cdecl (void)	Frees the PetAction block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4bc690	93	CGPetInfo::InitializeGame	idb	ui	orchestration		Zeroes the pet bar GUID and expiry and registers the handlers for opcodes 0x179, 0x17a, 0x2c6 and 0x2af	verified	one	ui/gameui#start-up-world-and-quests	
-0x4bc6f0	161			ui	primitive		Runs its object file code that calls 0x4bc7e0, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
+0x4bc6f0	161	ResetPetForWorld		ui	orchestration	void __cdecl (void)	Clears the pet GUID and asks for the pet bar when the player's charm or summon is set	verified	one	ui/worldenter#window-resets-at-world-entry	
 0x4bc7a0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4bc7b0	40	ClearPetHandlers		ui	orchestration		Clears the handlers for opcodes 0x179, 0x17a, 0x2c6 and 0x2af	verified	one	ui/gameui#start-up-world-and-quests	
 0x4bc7e0	321	SetPetGuid		ui	primitive	void __fastcall (uint32_t duration, uint64_t guid)	Stores the pet guid and expiry tick, signals UNIT_PET on a change, and always PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
@@ -8457,7 +8457,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bf0a0	19	InitQuotient4bf0a0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4bf0c0	5	InitInfinity4bf0d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bf0d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4bf0d0	11	InitInfinity4bf0d0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4bf0e0	309			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4bf0e0	309	ResetTradeTables		ui	orchestration	void __cdecl (void)	Zeroes the trade tables, partner, accept flags, header caches and money, not the done flag	verified	one	ui/worldenter#window-resets-at-world-entry	
 0x4bf220	5	LeaveWorldCancelTrade		ui	orchestration	void __cdecl ()	Jumps to the trade module's leave-world hook 0x5d4310	verified	one	ui/trade#starting-a-trade	
 0x4bf230	73	CGTradeInfo::PlayerAccept	idb	ui	orchestration	void __thiscall (CGTradeInfo *this)	Sets the player's accept flag, signals TRADE_ACCEPT_UPDATE on a change and sends accept or unaccept	verified	one	ui/trade#accept-flags	
 0x4bf280	40	CGTradeInfo::TargetAccept	idb	ui	orchestration	void __thiscall (CGTradeInfo *this)	Sets the partner's accept flag and signals TRADE_ACCEPT_UPDATE on a change	verified	one	ui/trade#accept-flags	
@@ -8476,7 +8476,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bfdf0	644	Script::ClickTradeButton	idb	ui	primitive	int __fastcall (lua_State *L)	Adds cursor money to the offer or puts the cursor item in a trade slot	verified	one	ui/tradelootverbs#clicking-a-trade-slot	
 0x4c0080	102	Script::ClickTargetTradeButton	idb	ui	primitive	int __fastcall (lua_State *L)	Clicks a slot of the target's trade window; slot 7 checks the enchant clash	verified	one	ui/popups#the-trade-enchant-clash	
 0x4c00f0	582	Script::GetTradeTargetItemInfo	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the partner's trade slot item: name, icon, count, quality, usable and enchant	verified	one	ui/tradelootverbs#describing-a-trade-slot	
-0x4c0340	24			ui	orchestration		Runs TradeFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
+0x4c0340	24	OnTradeItemRecord		ui	orchestration	void __fastcall (uint32_t key, uint32_t unused, void *data, uint8_t found)	Signals TRADE_UPDATE when a trade getter's item record arrives	verified	one	ui/trade#the-getters-record-callback	
 0x4c0360	238	Script::GetTradeTargetItemLink	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the partner's trade slot item link	verified	one	ui/tradelootverbs#trade-links-and-money	
 0x4c0450	508	Script::GetTradePlayerItemInfo	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the player's own trade slot item: name, icon, count, quality and enchant	verified	one	ui/tradelootverbs#describing-a-trade-slot	
 0x4c0650	129	Script::GetTradePlayerItemLink	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the player's own trade slot item link	verified	one	ui/tradelootverbs#trade-links-and-money	
@@ -9693,8 +9693,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d7310	47	InitZero4d72e0Exit		ui	primitive	void __cdecl (void)	Frees the TrainerSkillLineInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4d7340	1	InitTrainer		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-world-and-quests	
 0x4d7350	130	ShutdownTrainer		ui	orchestration		Frees the trainer service and group records and zeroes both counts	verified	one	ui/gameui#start-up-world-and-quests	
-0x4d73e0	28	ResetTrainer		ui	orchestration	void __cdecl ()	Zeroes the trainer GUID, selection and total length at world exit	verified	one	ui/trainer#trainer-state	
-0x4d7400	50			ui	orchestration		Runs its object file code that calls 0x4d7440; not read here	inferred	none		
+0x4d73e0	28	ResetTrainer		ui	orchestration	void __cdecl ()	Zeroes the trainer GUID, selection, total length and greeting at world entry	verified	one	ui/trainer#trainer-state	
+0x4d7400	50	CloseTrainerForWorld		ui	orchestration	void __cdecl (void)	Closes the trainer window with a zero GUID when leaving the world	verified	one	ui/worldenter#window-closes-when-leaving	
 0x4d7440	172	SetTrainer		ui	orchestration	void __fastcall (uint64_t *guid, uint32_t type)	Opens the trainer window for a GUID and type, or closes it for GUID 0 and signals TRAINER_CLOSED	verified	one	ui/trainer#trainer-state	
 0x4d74f0	36	SelectTrainerRecord		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of the record at an index as the selection, or clears it past the total length	verified	one	ui/trainer#selection	
 0x4d7520	54	FindSelectedTrainerRecord		ui	primitive	int32_t __cdecl ()	Returns the array position of the selected spell id, or -1	verified	one	ui/trainer#selection	
@@ -9714,7 +9714,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d8b50	66	GetTrainerServiceRank		ui	orchestration	char * __fastcall (uint32_t index)	Returns a row's spell rank text, empty for a header	verified	one	ui/trainer#names-and-ranks	
 0x4d8ba0	62	GetTrainerServiceStateName		ui	primitive	char * __fastcall (uint32_t index)	Returns available, unavailable, used or header for a row	verified	one	ui/trainer#service-records	
 0x4d8be0	66	GetTrainerGroupOfRow		ui	primitive		Returns the group ordinal of a trainer header row, or -1 for a service row or an index past the total	verified	one	ui/trainerverbs#filter-and-group-getters	
-0x4d8c30	88			ui	primitive		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
+0x4d8c30	88	IsTrainerHeaderCollapsed		ui	primitive	uint32_t __fastcall (uint32_t index)	Returns 1 for a header row whose group's expanded bit is clear, else 0	verified	one	ui/trainer#index-law	ui::trainer_header_collapsed
 0x4d8c90	21	SetTrainerStateFilter		ui	orchestration	void __fastcall (uint32_t mask)	Stores the state filter, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
 0x4d8cb0	21	SetTrainerSkillLineFilter		ui	orchestration	void __fastcall (uint32_t mask)	Stores the skill-line filter, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
 0x4d8cd0	21	SetTrainerExpandedMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the expanded mask, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
@@ -9965,11 +9965,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dee60	136	GetQuestHeaderOrdinal		ui	primitive		Returns a row's position in the header id array, or -1	verified	one	ui/questlog#visible-rows	
 0x4deef0	53	SetQuestClockOffset		ui	primitive		Stores the local minus server time as the clock offset, arms the hourly deadline and fires QUEST_LOG_UPDATE	verified	one	ui/questtimers#the-clock	
 0x4def30	58	SelectQuestRow		ui	primitive		Stores the quest id of a non-header row as the selection	verified	one	ui/questlog#the-selection	
-0x4def70	111			ui	orchestration		Runs its object file code that calls 0x562a40, 0x6dacb0; not read here	inferred	none		
-0x4defe0	35			ui	orchestration		Runs its object file code that calls ConsoleWrite, 0x4def70; not read here	inferred	none		
+0x4def70	111	PointQuestMarker		ui	orchestration	void __cdecl (void)	Sets the minimap quest marker at the selected quest's point, or waits for its record	verified	one	ui/questlog#the-quest-marker	
+0x4defe0	35	OnQuestMarkerRecord		ui	orchestration	void __fastcall (uint32_t key, uint32_t unused, void *data, uint8_t found)	Points the quest marker again when the record arrives, or logs an invalid entry	verified	one	ui/questlog#the-quest-marker	
 0x4df010	61	GetSelectedQuestRow		ui	primitive		Returns the index of the selected quest's row, or -1	verified	one	ui/questlog#the-selection	
 0x4df050	22	GetSelectedQuestSlot		ui	primitive		Returns the slot dword of the selected quest's row, or 0	verified	one	ui/questlogverbs#selected-quest-text	
-0x4df070	108			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x4df070	108	AbandonMarkedQuest		ui	orchestration	void __cdecl (void)	Sends the removal of the marked quest's row and clears the mark, keeping it when no row holds it	verified	one	ui/questlogverbs#abandoning-a-quest	
 0x4df0e0	29	CloseQuestIfCurrent		ui	orchestration		Calls a ui function when a quest id is the one the quest window holds	verified	one	objectlayer/quests#the-quest-log-watcher	
 0x4df100	75			ui	unreached		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x4df150	35	GetQuestIdOfRow		ui	primitive		Returns the quest id of an in-range row that is not a header, else 0	verified	one	ui/questlog#the-display-list	
@@ -10079,7 +10079,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1ef0	52	InitGossipHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x17d, 0x17e and 0x224	verified	one	ui/gameui#start-up-world-and-quests	
 0x4e1f30	30	ClearGossipHandlers		ui	orchestration		Clears the handlers for opcodes 0x17d, 0x17e and 0x224	verified	one	ui/gameui#start-up-world-and-quests	
 0x4e1f50	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e1f60	53			ui	orchestration		Runs its object file code that calls 0x4e1fa0, 0x4e26a0; not read here	inferred	none		
+0x4e1f60	53	CloseGossipForWorld		ui	orchestration	void __cdecl (void)	Closes the gossip window and resets its option and quest slots when leaving the world	verified	one	ui/worldenter#window-closes-when-leaving	
 0x4e1fa0	97	SetGossipTarget		ui	orchestration	void __thiscall (void *this)	Sets the gossip target and range, or clears it and signals GOSSIP_CLOSED for a zero GUID	verified	one	ui/taxiroute#new-flight-path	
 0x4e2010	697	PublishGossipGreeting		ui	primitive		Draws a greeting from the NPC text record by weight and gender column, fires GOSSIP_SHOW	verified	one	ui/gossip#the-greeting	ui::glue_4c0_4e2010_weighted_pick
 0x4e22d0	71	OnNpcTextArrived		ui	orchestration		Rebuilds the greeting when the NPC text arrives, or closes gossip when it failed	verified	one	ui/gossip#the-greeting	
@@ -10092,7 +10092,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e2600	156	SelectGossipActiveRow		ui	primitive		Sends the complete message for the n-th active gossip row	verified	one	ui/questpanel#gossip-rows	
 0x4e26a0	51	ResetGossipOptions		ui	primitive		Sets the index of all 16 gossip option slots to -1 and zeroes the 32 quest ids	verified	one	ui/gossip#the-gossip-message	
 0x4e26e0	274	HandleGossipMessagePacket	idb	ui	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles the gossip message: latches the target, reads options and quests, builds the greeting	verified	one	ui/gossip#the-gossip-message	
-0x4e2800	55	HandleGossipCompletePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs its object file code that calls 0x4e1fa0; not read here	inferred	none		
+0x4e2800	55	HandleGossipCompletePacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Closes the gossip window with a zero GUID and returns 1	verified	one	ui/gossip#gossip-complete	
 0x4e2840	123	HandleGossipPoiPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a point of interest and stores it in the second static blip	verified	one	ui/gossip#the-gossip-point-of-interest	
 0x4e28c0	16	Script::GetGossipText	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the gossip text	verified	one	ui/questpanel#gossip-rows	
 0x4e28d0	93	Script::GetGossipOptions	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes the text and type name of each gossip option in slot order	verified	one	ui/gossip#the-icon-names	
@@ -10438,7 +10438,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7c20	12	InitZero4e7c00Register		ui	orchestration	void __cdecl (void)	Registers 0x4e7c30 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4e7c30	63	InitZero4e7c00Exit		ui	primitive	void __cdecl (void)	Releases the storage behind what 0x4e7c00 set up, through SMemFree, at most once	verified	one	ui/initexits#exit-releases	
 0x4e7c70	494	CGPartyInfo::InitializeGame	idb	ui	primitive		Clears party and looking-for-group state, groups LfgDungeons ids by type and registers opcodes 0x1ff, 0x329, 0x2cb	verified	one	ui/lfg#the-type-lists	
-0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Runs PartyFrame.cpp code that calls CDataStore::GetInt32, FrameScript_GetText, SStrCopy and 2 more; not read here	inferred	none		
+0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows INSTANCE_SAVED, its debug wrapper, or an unwritten buffer, by flag	verified	one	ui/instances#the-save-notice	
 0x4e7f00	10			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e89c0; not read here	inferred	none		
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
@@ -10605,11 +10605,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ead90	113	MinimapTileOffsets		ui	primitive		Writes the difference of a value and a table's pair to a float, doubling it, for the minimap	verified	one	ui/minimap#two-small-helpers	ui::geo_4ead90, ui::geo_4eb910
 0x4eae10	229	DrawOutdoorTile		ui	primitive	void __thiscall (void *this, const uint32_t *colour, uint32_t arg3)	Draws one outdoor tile record through its texture and the circular mask	verified	one	minimap/draw#outdoor-tile-draw	
 0x4eaf00	319	MinimapClipBlipToTile		ui	primitive		Computes four edge values of a bounding box clamp from a base and a width	inferred	none	ui/minimap#two-small-helpers	ui::glue_4ea_4eaf00_bbox_edges
-0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
+0x4eb040	123	CGMinimapFrame::OnFrameUpdate		ui	orchestration	void __thiscall (CGMinimapFrame *this, float elapsed)	Runs the base update, places the loaded player arrow, and feeds it the camera target's facing	verified	one	ui/minimap#the-player-arrow-each-frame	
 0x4eb0c0	1983	CGMinimapFrame::OnMouseMove		ui	primitive		Finds the minimap icons, dots, arrows and party markers under the cursor and rebuilds the tooltip when they change	verified	one	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4eb0c0_range_and_light
 0x4eb880	46	CGMinimapFrame::OnLeave		ui	orchestration	void __thiscall (CGMinimapFrame *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	one	ui/mouse#enter-and-leave	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
-0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
+0x4eb8e0	34	CGMinimapFrame::SetPlayerFacing		ui	orchestration	void __thiscall (CGMinimapFrame *this, float facing)	Stores a facing in the minimap and in its player arrow's facing	verified	one	ui/minimap#the-player-arrow-each-frame	
 0x4eb910	639	MinimapBuildBlipQuad		ui	primitive		Builds the minimap quad from a four-float rectangle through 0x4ead90	inferred	none	ui/minimap#two-small-helpers	ui::geo_4eb910
 0x4ebb90	97	MinimapClipBlips		ui	orchestration		Calls the blip rectangle clip for 512 objects of 0xa4 bytes; the loop is read, the rest not	inferred	none	ui/minimap#blip-rectangle-clip	
 0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4ebc00_gradient
@@ -10635,7 +10635,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ee090	6	MinimapGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Minimap	verified	one	ui/widgettype#type-chains	
 0x4ee0a0	43	DeletingDestructor4ee0a0		ui	orchestration		Destroys the object through 0x4ee0d0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4ee0d0	36			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4ee100	104			ui	primitive		Runs its object file code not read here	inferred	none		ui::glue_4dc_4ee100_half_pair
+0x4ee100	104	CGMinimapFrame::PlacePlayerModel		ui	primitive	void __thiscall (CGMinimapFrame *this)	Sets the player arrow's position to half its width and height	verified	one	ui/minimap#the-player-arrow-each-frame	ui::glue_4dc_4ee100_half_pair, ui::minimap_arrow_centre
 0x4ee170	230	CGMinimapFrame::LoadArrowModel		ui	primitive		Sets a model of a file, the error cube when it fails to open, on the eight arrow children; 0 only when the create fails	verified	one	ui/minimap#arrow-model-loading	
 0x4ee260	77	CGMinimapFrame::LoadPlayerModel		ui	orchestration		Sets a model file on the player arrow child, answering 0 when the child holds no model after it	verified	one	ui/minimap#arrow-model-loading	
 0x4ee2b0	126	CGMinimapFrame::PostLoadXML		ui	orchestration		Reads the arrow and player model attributes with their defaults and loads both	verified	one	ui/minimap#arrow-model-loading	
@@ -10905,7 +10905,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f3e20	139			ui	primitive		Runs its object file code that calls 0x4f4e60; not read here	inferred	none		
 0x4f3eb0	55	FreeGlobalArray4f3eb0		ui	orchestration		Frees the block that a global points at, tagged PetitionSignerInfo, and zeroes the three dwords of its array header	verified	one	ui/containers#block-frees	
 0x4f3ef0	91	ResetPetitionSigners		ui	primitive	void __cdecl ()	Zeroes the signature count and the pending-name counter	verified	one	ui/petition#petition-state	
-0x4f3f50	8			ui	orchestration		Runs its object file code that calls 0x4f4320; not read here	inferred	none		
+0x4f3f50	8	PetitionSignerNameArrived		ui	orchestration	void __fastcall (uint32_t unused1, uint32_t unused2, void *data, uint8_t found)	Counts down a pending signer name whatever the answer	verified	one	ui/petition#petition-events	
 0x4f3f60	299	SetCurrentPetition		ui	primitive		Keeps a petition's id and GUID for the signature window, declining an earlier one	inferred	none	objectlayer/party#petitions	
 0x4f4090	19	PetitionRecordArrived		ui	orchestration	void __fastcall (uint32_t arg1, uint32_t unused, void *record, uint8_t ok)	Runs the record-arrival step when the petition record lands	verified	one	ui/petition#petition-events	
 0x4f40b0	271	StorePetitionSigners		ui	primitive		Stores a petition's signers and signals PETITION_SHOW	inferred	none	objectlayer/party#petitions	
@@ -10975,7 +10975,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f4f60	28	ClearPetitionModule		ui	orchestration	void __cdecl ()	Zeroes the stored first charter entry	verified	one	ui/petition#petition-state	
 0x4f4f80	5	InitInfinity4f4f90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f4f90, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f4f90	11	InitInfinity4f4f90		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4f4fa0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4f4fa0	5	CloseGuildRegistrarForWorld		ui	orchestration	void __cdecl (void)	Jumps to CloseGuildRegistrar, the leave-world leg	verified	one	ui/worldenter#window-closes-when-leaving	
 0x4f4fb0	94	OpenGuildRegistrar		ui	orchestration		Opens the guild registrar for a vendor and signals GUILD_REGISTRAR_SHOW	inferred	none	objectlayer/party#petitions	
 0x4f5010	48	CloseGuildRegistrar		ui	orchestration	void __cdecl ()	Clears the registrar target and GUID and signals GUILD_REGISTRAR_CLOSED, doing nothing with no GUID	verified	one	ui/petition#closing	
 0x4f5040	6	GetCharterCost		ui	orchestration	uint32_t __cdecl ()	Returns the cost of the first charter in the vendor list	verified	one	ui/petition#charter-shop	
@@ -11266,7 +11266,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f93d0	10	RaiseBagUpdateCooldown		ui	orchestration	void __cdecl ()	Signals BAG_UPDATE_COOLDOWN with no arguments	verified	one	ui/bags#backpack-and-keyring-events	
 0x4f93e0	47	GetContainerGuid		ui	primitive	uint64_t __fastcall (int32_t index)	Returns the cached GUID of bag index 0 to 9, 0 outside it or for bank bags with the bank closed	verified	one	ui/portraittextures#bag-portrait	
 0x4f9410	110	RaiseBagOpen		ui	primitive	void __stdcall (uint64_t container)	Raises BAG_OPEN with 0 for the player or each cache index 1 to 10 holding the container	verified	one	ui/bags#backpack-and-keyring-events	
-0x4f9480	90			ui	orchestration		Runs ContainerFrame.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, 0x4f9370; not read here	inferred	none		
+0x4f9480	90	RaiseItemBagUpdate		ui	orchestration	void __stdcall (uint64_t item)	Raises BAG_UPDATE for the container of an item the active player owns	verified	one	ui/bags#an-items-container-update	
 0x4f94e0	124	Script::ContainerIDToInventoryID	idb	ui	primitive	int __fastcall (lua_State *L)	Maps a container id to an inventory slot: id + 19 below 5, id + 59 from 5	verified	one	ui/bags#container-ids	
 0x4f9560	263	Script::GetContainerNumSlots	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the number of slots of a bag	verified	one	ui/inventoryverbs#bag-contents	
 0x4f9670	427	Script::GetContainerItemInfo	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon, count, lock, quality and readable flag of a bag item	verified	one	ui/inventoryverbs#bag-contents	
@@ -11331,9 +11331,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fac10	19	InitQuotient4fac10		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4fac30	5	InitInfinity4fac40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fac40, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4fac40	11	InitInfinity4fac40		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4fac50	72			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x4faca0	23			ui	orchestration		Runs its object file code that calls 0x4fafd0, FrameScript_SignalEvent; not read here	inferred	none		
-0x4facc0	35			ui	orchestration		Runs its object file code that calls 0x4fadf0, ClntObjMgrGetActivePlayer and 1 more; not read here	inferred	none		
+0x4fac50	72	ResetMerchantForWorld		ui	orchestration	void __cdecl (void)	Zeroes the vendor and its rows, watches the buy-back fields and rebuilds the buy-back list	verified	one	ui/worldenter#window-resets-at-world-entry	
+0x4faca0	23	OnBuybackFieldsChanged		ui	orchestration	uint32_t __fastcall (uint32_t offset, uint32_t unused, uint32_t length, uint64_t guid, void *previous)	Rebuilds the buy-back list and signals MERCHANT_UPDATE, returning 1	verified	one	ui/merchant#the-buy-back-watch	
+0x4facc0	35	CloseMerchantForWorld		ui	orchestration	void __cdecl (void)	Closes the vendor window and removes the buy-back watch when leaving the world	verified	one	ui/worldenter#window-closes-when-leaving	
 0x4facf0	174	OpenMerchantWindow		ui	primitive	void __fastcall (void *rows, uint32_t count, uint64_t vendorGuid)	Replaces the vendor's rows and GUID and signals MERCHANT_SHOW, leaving the cursor	verified	one	ui/merchantcursor#client-faults	
 0x4fada0	8			ui	orchestration		Runs its object file code that calls 0x4fb0f0; not read here	inferred	none		
 0x4fadb0	62	MerchantCanRepair		ui	primitive	uint32_t __cdecl (void)	Returns 1 when the open vendor's NPC flags have the repair bit	verified	one	ui/merchantcursor#the-repair-cursor	

@@ -280,3 +280,20 @@ Test: none
 which `0x515970` resolves and passes on untouched. The callers of `0x5d4310` (`0x11c`) are the script function,
 logout (`0x490be4`), the leave-world thunk (`0x4bf220`) and the close path (`0x4bf527`). `0x5d4230` and `0x5d42a0` are
 reached only through the accept flags.
+
+## The getters' record callback
+
+`GetTradeTargetItemInfo` and `GetTradePlayerItemInfo` ask the item cache for a slot's record with the
+callback `0x4c0340`, no data and dedupe 0, so every call that misses keeps one more callback. The
+callback signals `TRADE_UPDATE` (321), with no arguments, once per kept callback when the record
+arrives, and nothing for a refusal.
+
+Addresses: `0x4c0340`, `0x4c0343`, `0x4c0348`, `0x4c034f`, `0x4c00f0`, `0x4c017f`, `0x4c0450`, `0x4c0582`, `0x55ba30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4c017f` and `0x4c0582` push `0x4c0340` before `0x55ba30`, after `push 0; push 0` for the dedupe and
+the data; the first passes the partner GUID `0xb71728` as the owner. `0x4c0343` reads the status byte at
+`[ebp+0xc]`, `0x4c0348 je` skips a refusal, and `0x4c034f` calls `0x703e50` with 0x141; it returns with
+`ret 8`. Census: those two `push` operands are the only occurrences of the address.

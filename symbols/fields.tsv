@@ -120,6 +120,9 @@ CGItem_C	0x031c	1	uint8_t	m_cachedRecordByte	objectlayer	Holds the record byte a
 CGItem_C	0x0320	4	uint32_t	m_expiry	objectlayer	Holds the time the item expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
 CGItem_C	0x0324	28	uint32_t[7]	m_enchantExpiry	objectlayer	Holds the time each enchantment slot expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
 CGItem_C	0x0340	4	void *	m_groupSounds	objectlayer	Holds the ItemGroupSounds row of the display, set when the record arrives	verified	one	objectlayer/items#the-item-record
+CGMinimapFrame	0x0000	788	CSimpleFrame	m_frame	ui	Holds the frame part	verified	one	ui/minimap#the-player-arrow-each-frame
+CGMinimapFrame	0x0338	4	CSimpleModel *	m_playerArrow	ui	Points to the player arrow, the ninth engine child, a Model frame	verified	one	ui/minimap#the-player-arrow-each-frame
+CGMinimapFrame	0x033c	4	float	m_playerFacing	ui	Holds the facing last fed to the player arrow, -10000.0 from the constructor	verified	one	ui/minimap#the-player-arrow-each-frame
 CGObject_C	0x0000	4	void *	__vfptr	objectlayer	Holds the type's vtable, stored last by each constructor	verified	one	objectlayer/classes#constructors-and-final-vtables
 CGObject_C	0x0008	4	uint32_t *	m_fields	objectlayer	Holds the field array, written by 0x613980	verified	one	objectlayer/classes#field-storage
 CGObject_C	0x000c	4	uint32_t *	m_watchCopy	objectlayer	Holds the copy array of the watched fields, written by 0x613980	verified	one	objectlayer/classes#field-storage
@@ -704,7 +707,8 @@ CharacterSelectionDisplay	0x0114	4	void *	m_petModel	glue	Holds the pet's model,
 CharacterSelectionDisplay	0x0118	1	uint8_t	m_rebuildModel	glue	Holds 1 for a new or entered record; the select screen clears it when it builds the model	inferred	none	glue/flow#enter-world
 ChatChannel	0x0000	4	uint32_t	m_number	ui	Holds the slot's 1-based position, 0 while the slot is free	verified	one	ui/chatchannels#joined-channel-slots
 ChatChannel	0x0004	128	char[128]	m_name	ui	Holds the channel's name, the composed zone name for a zone channel	verified	one	ui/chatchannels#joined-channel-slots
-ChatChannel	0x0084	16	uint32_t[4]	m_members	ui	Holds the header of the channel's member list	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0084	12	uint32_t[3]	m_members	ui	Holds the member list: link offset and terminator link, the channel list message's members	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0090	1	uint8_t	m_listFlags	ui	Holds the flag byte of the last channel list message; with 0x02 a member without 0x04 prints #	verified	one	ui/chatchannels#channel-list-message
 ChatChannel	0x0094	4	uint32_t	m_channelId	ui	Holds the ChatChannels id, 0 for a custom channel	verified	one	ui/chatchannels#joined-channel-slots
 ChatChannel	0x0098	4	uint32_t	m_instance	ui	Holds the instance number from the join notice, not cleared when the slot is reused	verified	one	ui/chatchannels#joined-channel-slots
 ChatChannel	0x009c	4	uint32_t	m_state	ui	Holds 0 confirmed, 1 waiting, 2 renamed and waiting, 3 suspended	verified	one	ui/chatchannels#confirming-renaming-and-dropping
@@ -1200,6 +1204,9 @@ PATHINFO	0x0000	4	uint32_t	m_capacity	loadingscreen	Holds the capacity in entrie
 PATHINFO	0x0004	4	uint32_t	m_count	loadingscreen	Holds the number of legs	verified	one	loadingscreen/route#taxi-leg-table
 PATHINFO	0x0008	4	uint32_t *	m_data	loadingscreen	Holds the buffer of pair indices	verified	one	loadingscreen/route#taxi-leg-table
 PATHINFO	0x000c	4	uint32_t	m_granularity	loadingscreen	Holds the growth granularity, 0 until set	verified	one	loadingscreen/route#taxi-leg-table
+PENDINGUSERLIST	0x0000	8	uint32_t[2]	m_link	ui	Holds the list link, previous then next	verified	one	ui/chatchannels#channel-list-message
+PENDINGUSERLIST	0x0008	8	uint64_t	m_guid	ui	Holds the member's GUID, the name cache key	verified	one	ui/chatchannels#channel-list-message
+PENDINGUSERLIST	0x0010	1	uint8_t	m_flags	ui	Holds the member flags: 0x01 owner, 0x02 moderator, 0x04 voiced, which pick the prefix	verified	one	ui/chatchannels#printing-the-member-list
 PLAYERNAMEDESC	0x0000	4	void *	m_prevLink	playername	Holds the address of the previous link in the name list	verified	one	playername/plates#name-record-layout
 PLAYERNAMEDESC	0x0004	4	PLAYERNAMEDESC *	m_next	playername	Holds the next name record	verified	one	playername/plates#name-record-layout
 PLAYERNAMEDESC	0x0008	4	void *	m_text	playername	Holds the name text handle, 0 while none exists	verified	one	playername/plates#name-record-layout
@@ -1226,6 +1233,9 @@ RACECLASSINFO	0x000c	8	void *[2]	m_linkToFull	spell	Holds the link in the table'
 RACECLASSINFO	0x0014	1	uint8_t	m_key	spell	Holds an uninitialized stack byte the build copies; nothing reads it	verified	one	spell/tables#startup-build-of-the-indexes
 RACECLASSINFO	0x0018	4	void *	m_firstRow	spell	Holds the run's first SkillRaceClassInfo.dbc row	verified	one	spell/tables#startup-build-of-the-indexes
 RACECLASSINFO	0x001c	4	uint32_t	m_rowCount	spell	Holds the number of consecutive rows in the run	verified	one	spell/tables#startup-build-of-the-indexes
+RaidInstanceInfo	0x0000	4	int32_t	m_mapId	ui	Holds the Map.dbc id, read first	verified	one	ui/instances#the-saved-instance-list
+RaidInstanceInfo	0x0004	4	uint32_t	m_instanceId	ui	Holds the instance id, read third and pushed unsigned	verified	one	ui/instances#the-saved-instance-list
+RaidInstanceInfo	0x0008	4	int32_t	m_resetSeconds	ui	Holds the seconds to reset, read second and pushed signed	verified	one	ui/instances#the-saved-instance-list
 RealmCategory	0x0000	4	uint32_t	m_id	glue	Holds the category id, Cfg_Categories column 0, matched against a realm's category byte	verified	one	glue/realms#the-category-set
 RealmCategory	0x0004	4	void *	m_row	glue	Points to the category's Cfg_Categories record, the source of its localized name	verified	one	glue/realms#the-category-set
 RealmCategory	0x0008	4	uint32_t	m_realmsCapacity	glue	Holds the realm index array's capacity, a shared dword array's first field	inferred	none	glue/realms#the-category-set

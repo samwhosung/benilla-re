@@ -4,7 +4,7 @@ The colour each chat type is drawn in: the live registry that the chat frames re
 defaults, and the three Lua functions that change and query it. The defaults and the event each type
 fires are `tables/chat_types.tsv`; a window's own background colour is `chatwindows`.
 
-Roots: `0x4982c0`, `0x4a07f0`, `0x4a09e0`, `0x4a0a80`
+Roots: `0x4982c0`, `0x4a07f0`, `0x4a09e0`, `0x4a0a80`, `0x49e990`
 
 ## The colour registry
 
@@ -78,3 +78,20 @@ Test: none
 The loop is the start-up's (`0x64a5a0` with 0x40 and the bytes at `0x804750`), run from `0x4a09e3` to
 `0x4a0a1f`; the extras are recoloured from `0xb4e902` to `0xb4e904` in the loop `0x4a0a35` to
 `0x4a0a6f`. Because the live `CHANNEL` entry was just reset, the extras end at its default.
+
+## A chat type's colour
+
+`0x49e990(out, type)` writes the type's live colour to `out` as `0xffRRGGBB`, alpha 0xff and the
+three bytes of the registry entry in order. A type of 94 or more writes `0xffffffff`; the bound is
+signed, so a negative type reads outside the registry. The chat bubble takes its colour from it.
+
+Addresses: `0x49e990`, `0x49e995`, `0x49e997`, `0x49e99e`, `0x49e9a8`, `0x49e9c7`, `0xb4e518`, `0x608bad`
+Confidence: verified
+Proof: one
+Test: `ui::chat_type_colour`
+
+`cmp edx,0x5e; jl` at `0x49e995`; `0x49e997` stores −1. `0x49e99e imul edx,0x43` indexes the bytes at
+`0xb4e518` + 0x40, the colour after each entry's 64-byte name. `0x49e9a8 or
+ecx,0xffffff00` sets the alpha above red, and two `shl 8` and `or` add green and blue; `0x49e9c7`
+stores. `CGUnit_C::ShowChatBubble` calls it at `0x608bad`, its one caller. The test runs it whole for
+types −94 to 95 and 2^31 − 1, on a registry of distinct bytes.

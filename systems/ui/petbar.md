@@ -110,17 +110,17 @@ when its record exists without `Attributes & 0x80`, appended to the pet book. La
 cooldowns, each `u16 spell, u16 category, u32, u32`, the high bit of the last the enable flag, added to the pet
 cooldown bank. The tail sorts the pet book and sets the guid with `0x4bc7e0`.
 
-Addresses: `0x4bd990`, `0x4bd999`, `0x4bd9b1`, `0x4bd9bc`, `0x4bd9c8`, `0x4bd9d3`, `0x4bd9db`, `0x4bd9eb`, `0x4bd9f6`, `0x4bda07`, `0x4bda2c`, `0x4bda44`, `0x4bda58`, `0x4bda6c`, `0x4bda77`, `0x4bda82`, `0x4bda8d`, `0x4bdabf`, `0x4bdacf`, `0x4bdad4`, `0x4bdaf0`, `0x4b2f70`, `0x4b2f90`, `0x4b2fd0`, `0x6e2c60`, `0x4bc690`
+Addresses: `0x4bd990`, `0x4bd999`, `0x4bd9b1`, `0x4bd9bc`, `0x4bd9c8`, `0x4bd9d3`, `0x4bd9db`, `0x4bd9eb`, `0x4bd9f6`, `0x4bda07`, `0x4bda15`, `0x4bda2c`, `0x4bda3e`, `0x4bda44`, `0x4bda58`, `0x4bda6c`, `0x4bda77`, `0x4bda82`, `0x4bda8d`, `0x4bdabf`, `0x4bdacf`, `0x4bdad4`, `0x4bdaf0`, `0x4b2f70`, `0x4b2f90`, `0x4b2fad`, `0x4b2fd0`, `0x6e2c60`, `0x4bc690`, `0xb6f098`, `0xb71174`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::pet_book_add_gate`
 
 `0x4bc690` registers the handlers for opcodes 0x179, 0x17a, 0x2c6 and 0x2af and `0x4bc7b0` removes them.
 In `0x4bd990`: `0x4bd999 call 0x4bc980`, the 64-bit read at `0x4bd9b1`, the zero test `0x4bd9bc`, duration
 (`0x418fb0`), mode (`0x418eb0` then `0x4bc930`), ten slots through `0x4bc9a0` with send 0, count (`0x418cb0`),
 spells through `0x4bd150` and `0x4b2f90`, cooldown count, the two u16 reads (`0x418db0`) and two u32
 reads (`0x418e30`), `0x4bda97` splitting the high bit, `0x4bdabf` calling `0x6e2c60` with bank 1, and
-`0x4bdad4` the sort `0x4b2fd0(0, 1)`, then `0x4bdaf0 call 0x4bc7e0`.
+`0x4bdad4` the sort `0x4b2fd0(0, 1)`, then `0x4bdaf0 call 0x4bc7e0`. `0x4bda15` empties the book with `0x4b2f70` (1024 zeroed dwords at `0xb6f098`, count `0xb71174` zeroed) before the spells, and `0x4bda3e` passes the word's low 16 bits to `0x4b2f90(spell)`: it appends the id at the count and increments it when the id has a `Spell.dbc` record (`0xc0d788`, bound `0xc0d78c` signed) whose byte `+0x18` is not negative, the sign of `Attributes & 0x80` (`0x4b2fad js`). It bounds nothing; the u8 count keeps one message to 255 entries. `ui::pet_book_add_gate` runs `0x4b2f90` whole.
 
 ## Pet mode and feedback messages
 

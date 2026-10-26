@@ -8,7 +8,10 @@ arms but one end in the same two calls, `0x64a5a0` (copy the token) and `0x49a87
 line). The generator follows each arm's code up to the shared tail at 0x49c4df, collecting the
 data store reads (`GetGuid`, `GetInt32`, `GetCString`, `GetUInt8`), every token string
 pushed (joined by `|` where the arm picks one at run time) and the chat type the arm leaves in
-`edi`. An arm that pushes no token has none.
+`edi`. An arm that pushes no token has none. The one arm that ends elsewhere, notice 12, calls
+0x49e910, which passes each flag bit's set and unset tokens to 0x49e8a0; the generator follows
+that call and takes the tokens in argument order (set, then unset, per bit) and the chat type
+0x49e8a0 loads into `edx` for its 0x49a870 calls.
 """
 
 import sys
@@ -20,8 +23,35 @@ TAIL = 0x49C4DF
 END = 0x49C609          # the handler's last arm ends before the table
 READS = {0x4190B0: 'guid', 0x418E30: 'u32', 0x4191B0: 'cstring', 0x418CB0: 'u8',
          0x418EB0: 'u32'}
+MODE_CHANGE, MODE_BIT = 0x49E910, 0x49E8A0
 TYPES = {0x0A: 'SYSTEM', 0x0F: 'CHANNEL_JOIN', 0x10: 'CHANNEL_LEAVE', 0x12: 'CHANNEL_NOTICE',
          0x13: 'CHANNEL_NOTICE_USER'}
+
+
+def mode_change(img, dis):
+    """The tokens 0x49e910 passes per call to 0x49e8a0, in argument order, and the chat type
+    0x49e8a0 loads into edx before 0x49a870."""
+    tokens, pending, kind = [], [], None
+    k = dis.at[MODE_CHANGE]
+    while True:
+        a, _, mn, ops = dis.ins[k]
+        if mn == 'push' and ops.startswith('0x8'):
+            s = img.cstr(int(ops, 16), 40)
+            if s and s.isupper():
+                pending.append(s)
+        elif mn == 'call' and ops == '0x%x' % MODE_BIT:
+            tokens.extend(reversed(pending))
+            pending = []
+        elif mn == 'ret':
+            break
+        k += 1
+    k = dis.at[MODE_BIT]
+    while kind is None:
+        _, _, mn, ops = dis.ins[k]
+        if mn == 'mov' and ops.startswith('edx,0x'):
+            kind = int(ops[4:], 16)
+        k += 1
+    return tokens, kind
 
 
 def main():
@@ -56,6 +86,9 @@ def main():
                     t = int(ops, 16) if ops.startswith('0x') else None
                     if t in READS:
                         reads.append((a, READS[t]))
+                    if t == MODE_CHANGE:
+                        found, kind = mode_change(img, dis)
+                        tokens.update({MODE_CHANGE + i: tok for i, tok in enumerate(found)})
                     if t == 0x49A870:
                         break
                 elif mn == 'jmp' and ops.startswith('0x'):

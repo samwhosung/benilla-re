@@ -255,3 +255,21 @@ unit and `0x48d9db` requires a unit type. `0x48d9e4` tests the player type bit; 
 `0x48da1f` calls `CanCooperate`. `0x48da36` compares with the trade partner pair `0xb71728`: equal goes to
 `0x4bfc50` (`0x48da50`), a zero pair to `0x5d3fb0` with 1 and the GUID (`0x48da62`). `0x48da6c` and `0x48da79` compare with the
 pet GUID pair `0xb714a0`, `0x48da86` calls the feed routine and `0x48da96` clears.
+
+## Unreached cursor drops
+
+Two drops by kind have no caller: `0x494f60` clears the cursor with `ClearCursor(1, 1)` when it holds
+a pet action (kind 4), and `0x494ff0` the same when it holds a macro (kind 8). Each sits after its
+kind's setter; neither is part of the setter or of the grab.
+
+Addresses: `0x494f60`, `0x494f67`, `0x494f70`, `0x494ff0`, `0x494ff7`, `0x495000`, `0x494f3c`, `0x494fea`, `0x494e49`
+Confidence: verified
+Proof: one
+Test: none
+
+Each is `cmp dword [0xb4d900],kind; jne ret; mov edx,1; mov ecx,edx; jmp 0x495190`. The functions above
+end with `ret` at `0x494f3c` and `0x494fea`; after the first come its own jump table (0x494f40 to
+0x494f5b, read at `0x494e49`) and padding, after the second padding, so nothing falls into either.
+Census (`tools/callers.py`): no `call`, `jmp` or conditional jump in the listing targets either
+address, and neither occurs as a dword at any alignment in any section; the controls `0x494f80` (nine
+direct calls) and `0x49ccc0` (nine stored operands) are found by the same run.

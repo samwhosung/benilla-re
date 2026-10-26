@@ -144,3 +144,19 @@ with `jp` and sends a NaN out of range. The area is the leaf area at `0xb4e318`,
 `[rows + id*4]` with the name at `+0x2c + 4*locale`. The packet is `push 0x1b5`, `0x418190`, the two latch dwords by
 `0x418370`, `0x5ab630`; the binding pushes no Lua value, and no handler is registered for opcode 0x1b5. Two sibling
 latches serve the talent master (`0xc4d7a0`) and the pet untrainer (`0xc4d7b0`).
+
+## Gossip complete
+
+Opcode 0x17e, handled by `0x4e2800`, has no body: it sets the gossip target to zero, which closes the
+window and signals `GOSSIP_CLOSED` when one is open, and returns 1. It leaves the option and quest
+slots as they are; of the closes, only the leave-world leg resets them (`worldenter#window-closes-when-leaving`).
+
+Addresses: `0x4e2800`, `0x4e2824`, `0x4e1f03`, `0x4e1f08`, `0x4e1fa0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4e1f03` loads the handler and `0x4e1f08` the opcode for the registration. `0x4e2824` calls `0x4e1fa0`
+with the address of a zeroed GUID; nothing reads the message. `0x4e1fa0` returns for a GUID equal to the
+stored one, so a second close does nothing, and for a zero GUID ends the interaction, zeroes `0xbc3f58`
+and signals 0x12b.
