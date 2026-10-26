@@ -818,13 +818,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41318d	143	__Getdays	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x41321c	149	__Getmonths	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc and 1 more; not read here	inferred	none		
 0x4132b1	562	__Gettnames	idb	crt	unreached		Runs its object file code that calls _strlen, _malloc, _memcpy and 1 more; not read here	inferred	none		
-0x4134e3	27	_strftime		crt	boundary		Formats a broken-down time with a format string into a buffer	inferred	none	core/time#calendar-time	
-0x4134fe	250			crt	boundary		Runs its object file code that calls __lock, __expandtime, __unlock; not read here	inferred	none		
-0x4135f8	1007	__expandtime	idb	crt	boundary		Runs its object file code that calls __store_num, __store_winword, ___tzset and 1 more; not read here	inferred	none		
-0x4139e7	39	__store_str	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x413a0e	111	__store_num	idb	crt	boundary		Runs its object file code that calls __store_number; not read here	inferred	none		
-0x413a7d	73	__store_number	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x413ac6	719	__store_winword	idb	crt	boundary		Runs its object file code that calls __strcmpi, __expandtime; not read here	inferred	none		
+0x4134e3	27	_strftime		crt	orchestration	uint32_t __cdecl (char *out, uint32_t max, const char *format, const tm *fields)	Calls _Strftime with no time record	verified	one	crt/time#the-strftime-format-loop	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x4134fe	250	_Strftime		crt	primitive	uint32_t __cdecl (char *out, uint32_t max, const char *format, const tm *fields, const char **names)	Formats tm fields by a strftime format into max bytes; 0 when no room is left for the NUL	verified	one	crt/time#the-strftime-format-loop	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x4135f8	1007	__expandtime	idb	crt	primitive	void __cdecl (char spec, const tm *fields, char **out, uint32_t *left, const char **names)	Writes one strftime conversion of the fields; an unknown one writes nothing	verified	one	crt/time#name-and-pattern-conversions	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x4139e7	39	__store_str	idb	crt	primitive	void __cdecl (const char *s, char **out, uint32_t *left)	Copies a string's bytes while room is left	verified	one	crt/time#writing-numbers-and-strings	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x413a0e	111	__store_num	idb	crt	primitive	void __cdecl (int32_t n, uint32_t digits, char **out, uint32_t *left)	Writes a number's last digits zero-padded, or its own with __no_lead_zeros; too little room ends the output	verified	one	crt/time#writing-numbers-and-strings	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x413a7d	73	__store_number	idb	crt	primitive	void __cdecl (int32_t n, char **out, uint32_t *left)	Writes a number's digits low first and reverses them, swapping two bytes when none fit	verified	one	crt/time#writing-numbers-and-strings	crt::crt_strftime_difftest, crt::crt_strftime_patterns_difftest
+0x413ac6	719	__store_winword	idb	crt	primitive	void __cdecl (const char *pattern, const tm *fields, char **out, uint32_t *left, const char **names)	Writes fields by a Windows date or time picture: letter runs as conversions, quoted text as text	verified	one	crt/time#locale-date-patterns	crt::crt_strftime_patterns_difftest, crt::crt_strftime_difftest
 0x413d95	312	___getlocaleinfo	idb	crt	unreached		Runs its object file code that calls ___crtGetLocaleInfoA, _malloc, _strncpy and 3 more; not read here	inferred	none		
 0x413ecd	6			crt	unreached		Runs its object file code not read here	inferred	none		
 0x413ed3	453	___crtGetStringTypeW	idb	crt	boundary		Runs its object file code that calls __alloca_probe, _memset, 0x4100f0; not read here	inferred	none		
@@ -835,15 +835,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x414166	49	__i64toa	idb	crt	unreached		Runs its object file code that calls _x64toa@20; not read here	inferred	none		
 0x414197	134	_x64toa@20	idb	crt	unreached		Runs its object file code that calls __aullrem, __aulldiv; not read here	inferred	none		
 0x41421d	27	__ui64toa	idb	crt	unreached		Runs its object file code that calls _x64toa@20; not read here	inferred	none		
-0x414240	208	__strcmpi	idb	crt	boundary		Runs its object file code that calls __lock, 0x40f99a, __unlock; not read here	inferred	none		
+0x414240	208	__strcmpi	idb	crt	boundary	int32_t __cdecl (const char *a, const char *b)	Compares two strings without case, A to Z folded while the locale word 0x883b08 is 0	verified	one	crt/time#locale-date-patterns	crt::crt_strftime_patterns_difftest
 0x414310	257	__strnicmp	idb	crt	boundary		Compares up to n bytes of two strings without case; with no locale set it folds A to Z and orders the bytes unsigned	verified	one	net/friends#strings-without-case	net::friends_compare
 0x414411	139	_atol	idb	crt	primitive	int32_t __cdecl (const char *string)	Reads C-locale white space, one sign and decimal digits into a wrapping 32-bit value; 0 for no digit	verified	two	net/dial#integer-from-text	net::crt_atol
 0x41449c	11	_atoi	idb	crt	orchestration	int32_t __cdecl (const char *string)	Returns _atol of the string	verified	one	net/dial#integer-from-text	net::crt_atol
 0x4144a7	186	__atoi64	idb	crt	unreached		Runs its object file code that calls __isctype, __allmul; not read here	inferred	none		
-0x414561	46	___tzset	idb	crt	boundary		Runs its object file code that calls __lock, __tzset_lk, __unlock; not read here	inferred	none		
-0x41458f	22	__tzset	idb	crt	unreached		Runs its object file code that calls __lock, __tzset_lk, __unlock; not read here	inferred	none		
-0x4145a5	647	__tzset_lk	idb	crt	boundary		Runs its object file code that calls __lock, _getenv, __unlock and 7 more; not read here	inferred	none		
-0x41482c	33	__isindst	idb	crt	boundary		Runs its object file code that calls __lock, 0x41484d, __unlock; not read here	inferred	none		
+0x414561	46	___tzset	idb	crt	orchestration	void __cdecl (void)	Runs __tzset_lk under lock 0xb on the first call only, marked in 0x883c60	verified	one	crt/time#the-zone-read-once	
+0x41458f	22	__tzset	idb	crt	unreached	void __cdecl (void)	Runs __tzset_lk under lock 0xb; nothing calls it	verified	one	crt/time#the-zone-read-once	
+0x4145a5	647	__tzset_lk	idb	crt	host	void __cdecl (void)	Sets _timezone, _daylight, _dstbias and _tzname from TZ, else from GetTimeZoneInformation	verified	one	crt/time#the-zone-read-once	
+0x41482c	33	__isindst	idb	crt	orchestration	int32_t __cdecl (const tm *fields)	Answers 0x41484d's daylight test of a tm, called under lock 0xb	verified	one	crt/time#local-time	
 0x41484d	428			crt	boundary		Runs its object file code that calls _cvtdate; not read here	inferred	none		
 0x4149f9	320	_cvtdate	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x414b39	275	___crtGetLocaleInfoW	idb	crt	unreached		Runs its object file code that calls __alloca_probe; not read here	inferred	none		
@@ -31242,7 +31242,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73ef30	254			unassigned			Runs its object file code not read here	inferred	none		
 0x73f030	25			unassigned	unreached		Runs its object file code that calls _localtime, _asctime; not read here	inferred	none		
 0x73f049	220	_time	idb	crt	boundary		Runs its object file code that calls ___loctotime_t; not read here	inferred	none		
-0x73f125	352	_localtime	idb	crt	boundary		Runs its object file code that calls ___tzset, _gmtime, __isindst; not read here	inferred	none		
+0x73f125	352	_localtime	idb	crt	primitive	tm * __cdecl (const int32_t *t)	Breaks a time down in the zone, as gmtime of the time less _timezone; null for a negative time	verified	one	crt/time#local-time	crt::crt_localtime_difftest
 0x73f285	49	_fclose	idb	crt	host		Closes a C runtime file	inferred	none	collision/kinematics#teardown	
 0x73f2b6	76	__fclose_lk	idb	crt	boundary		Runs its object file code that calls __flush, __freebuf, __close and 1 more; not read here	inferred	none		
 0x73f302	49	__fsopen	idb	crt	boundary		Runs its object file code that calls __getstream, __openfile, __unlock_file; not read here	inferred	none		
@@ -31304,9 +31304,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x740272	699	__stat	idb	crt	boundary		Runs its object file code that calls __mbspbrk, __errno, ___doserrno and 8 more; not read here	inferred	none		
 0x74052d	112	_IsRootUNCName	idb	crt	boundary		Runs its object file code that calls _strlen; not read here	inferred	none		
 0x7405a0	20	__CIasin	idb	crt	boundary		Computes asin(st0)	inferred	none	collision/kinematics#spline-follower	
-0x74066b	14	_mktime	idb	crt	boundary		Runs its object file code that calls __make_time_t; not read here	inferred	none		
-0x740679	14			crt	unreached		Runs its object file code that calls __make_time_t; not read here	inferred	none		
-0x740687	484	__make_time_t	idb	crt	boundary		Runs its object file code that calls ___tzset, _localtime, _gmtime; not read here	inferred	none		
+0x74066b	14	_mktime	idb	crt	orchestration	int32_t __cdecl (tm *fields)	Calls __make_time_t with the local flag 1	verified	one	crt/time#fields-to-a-time	crt::crt_mktime_difftest
+0x740679	14			crt	unreached	int32_t __cdecl (tm *fields)	Calls __make_time_t with the local flag 0; nothing calls it	verified	one	crt/time#fields-to-a-time	
+0x740687	484	__make_time_t	idb	crt	primitive	int32_t __cdecl (tm *fields, int32_t local)	Builds a 32-bit time from fields of 1969 to 2039, -1 on overflow, the zone added through localtime	verified	one	crt/time#fields-to-a-time	crt::crt_mktime_difftest
 0x740870	31	__aullshr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x74088f	190	___wdtoxmode	idb	crt	boundary		Runs its object file code that calls _wcsrchr, __wcsicmp; not read here	inferred	none		
 0x74094d	704	__wstat	idb	crt	boundary		Runs its object file code that calls _wcspbrk, __errno, ___doserrno and 8 more; not read here	inferred	none		
@@ -31363,7 +31363,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74208c	1			crt	unreached		Runs its object file code not read here	inferred	none		
 0x742090	123	__setjmp3	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x74210b	207	_strcoll	idb	crt	boundary		Runs its object file code that calls __lock, __unlock, _strcmp and 2 more; not read here	inferred	none		
-0x7421da	266	_gmtime	idb	crt	boundary		Runs its object file code that calls __getptd, _malloc; not read here	inferred	none		
+0x7421da	266	_gmtime	idb	crt	primitive	tm * __cdecl (const int32_t *t)	Breaks a 32-bit time down in UTC into the thread's tm buffer; null for a negative time	verified	one	crt/time#breaking-a-time-down-in-utc	crt::crt_gmtime_difftest
 0x7422e4	47	_fflush	idb	crt	unreached		Runs its object file code that calls _flsall, __lock_file, __fflush_lk and 1 more; not read here	inferred	none		
 0x742313	46	__fflush_lk	idb	crt	boundary		Runs its object file code that calls __flush, __commit; not read here	inferred	none		
 0x742341	92	__flush	idb	crt	boundary		Runs its object file code that calls __write; not read here	inferred	none		
