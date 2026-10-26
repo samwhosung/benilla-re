@@ -5,8 +5,8 @@ mod common;
 
 use benilla_re_difftest::{Emu, RegisterX86};
 use benilla_re_net::{
-    compare_friends, compare_who, reverse_whois, strnicmp, DataStore, Fetch, FriendCall,
-    FriendList, FriendSlot, NameTable, WhoRecord, WhoisLine,
+    compare_friends, compare_ignores, compare_who, reverse_whois, strnicmp, DataStore, Fetch,
+    FriendCall, FriendList, FriendSlot, NameTable, WhoRecord, WhoisLine,
 };
 use common::{Lcg, Wow};
 
@@ -18,6 +18,7 @@ const GAME_ERROR: u64 = 0x496720;
 const DEC_FRIENDS: u64 = 0x5aeb70;
 const DEC_IGNORES: u64 = 0x5aeb90;
 const COMPARE_FRIENDS: u64 = 0x5ae870;
+const COMPARE_IGNORES: u64 = 0x5ae940;
 const COMPARE_WHO: u64 = 0x5ada00;
 const REVERSE_WHOIS: u64 = 0x5adde0;
 const CONSOLE_WRITE: u64 = 0x63cd00;
@@ -535,6 +536,87 @@ fn friends_compare() {
                 );
             }
         }
+    }
+}
+
+/// `CompareIgnoredByName` whole on pairs of guids: zero and non-zero in either half, and names the
+/// stubbed cache holds or misses, including names equal without case and names that differ in
+/// length and high bytes. The stub stands for `0x55f080`'s read with no callback: it returns the
+/// name of a guid whose bit 8 is set, from a table indexed by its low six bits, and null
+/// otherwise; the test checks that the comparator asks for both guids, in order, with a zeroed
+/// owner, no callback, no data and no flag, and asks nothing when either guid is zero.
+#[test]
+fn friends_compare_ignores() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let mut g = Lcg(0x1e40_0001);
+    let mut names: Vec<Vec<u8>> = Vec::new();
+    for k in 0..64 {
+        let n = if k % 4 == 3 {
+            names[k - 1].to_ascii_uppercase()
+        } else {
+            name(&mut g)
+        };
+        names.push(n);
+    }
+    let table = e.alloc(0x20 * 64);
+    for (k, n) in names.iter().enumerate() {
+        let mut z = n.clone();
+        z.push(0);
+        e.write(table + 0x20 * k as u64, &z);
+    }
+    let base = table as u32;
+    e.stub_fn(NAME_LOOKUP, 6, move |io| {
+        let lo = io.arg(0);
+        let owner = io.arg(2);
+        assert_eq!(io.reg(RegisterX86::ECX), 0x00c0_e228, "the name cache");
+        assert_eq!(io.read_u32(u64::from(owner)), 0, "a zeroed owner");
+        assert_eq!(io.read_u32(u64::from(owner) + 4), 0, "a zeroed owner");
+        if lo & 0x100 != 0 {
+            base + 0x20 * (lo & 0x3f)
+        } else {
+            0
+        }
+    });
+    e.stub(SERR_SET_LAST_ERROR, 0, 1);
+    let a = e.alloc(8);
+    let b = e.alloc(8);
+    let pick = |g: &mut Lcg| -> u64 {
+        let hi = u64::from(g.next()) << 32;
+        match g.next() >> 29 {
+            0 => 0,
+            1 => hi,
+            2 => hi | u64::from(g.next() & !0x100),
+            _ => hi | u64::from(g.next() | 0x100),
+        }
+    };
+    for case in 0..8000 {
+        let x = pick(&mut g);
+        let y = if g.next() >> 30 == 0 { x } else { pick(&mut g) };
+        e.write(a, &x.to_le_bytes());
+        e.write(b, &y.to_le_bytes());
+        e.clear_calls();
+        let got = e.call(COMPARE_IGNORES, 0, 0, &[a as u32, b as u32]) as i32;
+        let cached = |v: u64| (v & 0x100 != 0).then(|| &names[(v & 0x3f) as usize][..]);
+        let want = compare_ignores(x, y, cached(x), cached(y));
+        assert_eq!(got, want, "case {case} {x:#x} {y:#x}");
+        let lookups: Vec<[u32; 6]> = e
+            .calls()
+            .iter()
+            .filter(|c| c.addr == NAME_LOOKUP)
+            .map(|c| [c.args[0], c.args[1], 0, c.args[3], c.args[4], c.args[5]])
+            .collect();
+        let expect: Vec<[u32; 6]> = if x == 0 || y == 0 {
+            Vec::new()
+        } else {
+            [x, y]
+                .iter()
+                .map(|v| [*v as u32, (*v >> 32) as u32, 0, 0, 0, 0])
+                .collect()
+        };
+        assert_eq!(lookups, expect, "lookups {case} {x:#x} {y:#x}");
     }
 }
 

@@ -115,3 +115,14 @@ Proof: one
 Test: `net::friends_reverse_whois`
 
 The first read is `0x418eb0`; the tests are `cmp eax,-1` (`0x5addfe`) and `cmp eax,esi` against 0 (`0x5ade1f`). The account is `0x4191b0` with cap `0x40` and goes to `0x63cd50` (`Account: %s`); the count and index are two `0x418e30` reads; each name is `0x4191b0` with cap `0x30` to `0x63cd00` with the colour `(index != i ? 0 : -1) & 4` (`0x5adea5` to `0x5adead`). `0x5addf3`, `0x5ade74` and `0x5ade82` zero the dwords before their reads, and `0x4191b0` writes 0 at the buffer's start when its read ends past the store (`systems/net/messages.md`).
+
+## Whois
+
+The console command `whois`, registered in category 0 by `0x5adc50`, is `0x5adee0`: it sends `CMSG_WHOIS` (`0x64`) with the whole argument text as one C string, an empty one included, and returns 1. `SMSG_WHOIS` (`0x65`) is one C string, which `0x5adda0` reads into 256 bytes and writes to the console in colour class 0; a string cut short or filling the buffer before its NUL is written empty.
+
+Addresses: `0x5adee0`, `0x5adeea`, `0x5adf14`, `0x5adf1f`, `0x5adf48`, `0x5adda0`, `0x5addb8`, `0x5addc5`, `0x5adcfd`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5adcfd` calls `0x63f9e0` with the name `whois`, `edx` = `0x5adee0`, category `esi` = 0 and the help text. `0x5adee0` keeps its second register argument, the argument text, in `edi`, puts `0x64` (`0x5adeea`) and the text (`0x5adf14`, `0x418430`) into a stack data store, sends it (`0x5adf1f`, `0x5ab630`) and returns 1 (`0x5adf48`); it reads nothing else. `0x5adda0` calls `0x4191b0` with a 256-byte stack buffer and cap `0x100` (`0x5addb8`) and `0x63cb50` with `edx` = 0 (`0x5addc5`), and returns 1.

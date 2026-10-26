@@ -175,3 +175,14 @@ integer load of the elapsed dword, so a clock before the connect time reads as n
 seconds; with none elapsed a rate is `+∞`, or NaN with no bytes. The mean's loop wraps its index
 at 16 and stops there when the write index is 0 (`0x537fb5`), and its sum is a dword that
 wraps. `0x537d60` and `0x537e10` take the same lock (`0x537d70`, `0x537e3f`).
+
+## NetClient construction
+
+`NetClient::NetClient` (`0x537410`), which `RealmConnection`'s constructor `0x5b3a80` calls first, sets the abstract base vtable `0x8090b4`, builds the statistics lock at `+0x1ac0`, sets the `NetClient` vtable `0x809070` and zeroes the state `+0x70`, the event queue `+0x1a54`, the connection `+0x1a58`, the reference count `+0x1a5c`, the byte `+0x1a60`, the ping time `+0x1a64` and sequence `+0x1a68`, the byte counts `+0x1ab4` and `+0x1ab8`, the connect time `+0x1abc` and the object manager `+0x1ad8`. It then allocates a 12-byte `NETCLIENTNODE`, zeroes its two link words, links it at the tail of the list `0xc0d488` and stores the client at its `+8`. Only the ping writes the sequence after this (Ping sequence and statistics).
+
+Addresses: `0x537410`, `0x53741f`, `0x537425`, `0x537437`, `0x537452`, `0x53745e`, `0x537476`, `0x53747c`, `0x5374c4`, `0x5374de`, `0x5b3a80`, `0x8090b4`, `0x809070`, `0xc0d488`, `0x537590`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x53741f` stores `0x8090b4`, whose nine slots are the deleting destructor `0x537530`, four of `__purecall` (`0x40a2d7`) and the four empty returns from `0x5374f0`; `0x537425` calls `SCritSect::SCritSect` (`0x657990`), which passes `+0x1ac0` to `InitializeCriticalSection`, 24 bytes; `0x537437` stores `0x809070`. `0x537452` stores one byte at `+0x1a60`, and its readers at `0x538514`, `0x538574` and `0x5385ad` load one byte, as `0x538558` stores one. `0x53747c` is `SMemAlloc(12, ".?AUNETCLIENTNODE@@", -2, 8)`. `0x5374c4` to `0x5374d8` link the node before the list's head, whose two link words follow the link offset at `0xc0d488`, and `0x5374de` stores the client. `0x537590` finds the node by its `+8` and frees it. The list is made empty at start-up by `0x537330`. A scan of `call`, `jmp` and stored dwords finds `0x5b3a88` alone for `0x537410`, with the control `0x5ab630`. A scan of the listing for `+0x1a68]` finds two stores, `0x53745e` and the ping's `0x537e69`, beside the reads at `0x537d84`, `0x537e5c` and `0x537e87`.
