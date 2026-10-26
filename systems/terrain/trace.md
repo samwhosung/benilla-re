@@ -48,8 +48,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-With any of 0xf0000f (`0x69c0fe`) the scene's ray hits are enabled first (`0x7089b0`,
-`0x69c114`), and after the walk the segment, moved by the matrix `0xc7cd30`, is traced against the
+With any of 0xf0000f (`0x69c0fe`) `0x7089b0` stores 1 at the scene's `+0x12c` first (`0x69c114`), and after the walk the segment, moved by the matrix `0xc7cd30`, is traced against the
 queued models (`0x7089c0`, `0x69c2ca`) from a copy of `*t`. A result below `*t` (`test ah,5; jp`,
 a NaN or an equal one keeps `*t`) is stored, `*id` becomes 0xffff, and 1 is returned, the
 `object` and `instance` of an earlier map object hit kept. Otherwise it returns whether a map

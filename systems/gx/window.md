@@ -37,8 +37,8 @@ Proof: one
 Test: none
 
 `0x598770` splits at 0x14; up to it `0x598784` indexes the byte table `0x598b20` with `msg − 1`
-(15 entries: 0, 1, 7, 7, 2, 3, 4, 5, 7, 7, 7, 7, 7, 7, 6) into the five cases of `0x598b00`, and
-case 7 passes on. `WM_CREATE` (`0x598792`) calls `SetWindowLongA(hwnd, −21, [lParam])`. The size
+(15 entries: 0, 1, 7, 7, 2, 3, 4, 5, 7, 7, 7, 7, 7, 7, 6) into the eight cases of `0x598b00`, and
+case 7, `0x59899b`, passes on. `WM_CREATE` (`0x598792`) calls `SetWindowLongA(hwnd, −21, [lParam])`. The size
 words are `fild`ed into floats (`0x598832`, `0x598851`). `WM_ACTIVATE` needs the low word of
 `wParam` 0 and `0x592220`, the windowed byte `+0x20b`, clear (`0x5987f8`); `WM_DISPLAYCHANGE`
 the same byte clear (`0x5988dd`). `WM_SETCURSOR` with no device goes straight to
@@ -52,7 +52,7 @@ and `DefWindowProcA` at `0x5989c8`.
 On `WM_SIZING` both procedures adjust the drag rectangle `lParam` points to (the whole window, in
 screen coordinates) in place and return 1; one of zero width or height returns 0 unchanged. On
 `{top, left, bottom, right}`, with the ratio `r = [0xc0ef60]` (width over height of the format,
-0 unless it constrains the aspect, `device.md`) and the minimum 320 by 240 (`0xc0ef64`), the
+0 unless it constrains the aspect, `device.md`) and the minimum 320 by 240 (`0xc0ef64`, `0xc0ef68`), the
 dragged edge runs these steps in order; any other `wParam` changes nothing.
 
 | `wParam` | edge | steps |
@@ -66,7 +66,7 @@ dragged edge runs these steps in order; any other `wParam` changes nothing.
 | 7 | bottom left | min bottom, min left, fit left, fit bottom |
 | 8 | bottom right | min bottom, min right, fit bottom, fit right |
 
-Addresses: `0x58c6d0`, `0x5989d7`, `0x5989f3`, `0x5989fb`, `0x598a05`, `0x598a0e`, `0x598b30`, `0x598ad9`, `0x58c835`, `0x58c87a`, `0x58ca34`, `0x58c945`, `0x5910a0`, `0x5910ab`, `0x5910b5`, `0x5910c8`, `0x5910ce`, `0x5910e0`, `0x591120`, `0x591147`, `0x591160`, `0x5911a0`, `0x5911b4`, `0x5911b6`, `0x5911c0`, `0x5911d4`, `0x5911e0`, `0x591200`, `0xc0ef60`, `0xc0ef64`, `0x40a2b0`
+Addresses: `0x58c6d0`, `0x5989d7`, `0x5989f3`, `0x5989fb`, `0x598a05`, `0x598a0e`, `0x598b30`, `0x598ad9`, `0x58c835`, `0x58c87a`, `0x58ca34`, `0x58c945`, `0x5910a0`, `0x5910ab`, `0x5910b5`, `0x5910c8`, `0x5910ce`, `0x5910e0`, `0x591120`, `0x591147`, `0x591160`, `0x5911a0`, `0x5911b4`, `0x5911b6`, `0x5911c0`, `0x5911d4`, `0x5911e0`, `0x591200`, `0xc0ef60`, `0xc0ef64`, `0xc0ef68`, `0x40a2b0`
 Confidence: verified
 Proof: one
 Test: `gx::sizing_rect_helpers_difftest`, `gx::sizing_wm_sizing_difftest`

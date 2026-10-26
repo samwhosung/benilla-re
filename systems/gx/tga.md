@@ -38,19 +38,19 @@ the open flag `+0x110 & 2`, and every other output null; `0x44918a` is in the un
 
 `0x4493a0(record, pattern, fileFlag, levels)` reads lower mip levels from files: for level n from
 1 while the base image has smaller levels, it formats the pattern with n, stops when that file
-does not resolve or does not open, or when its size is not the expected one (the base's sides
+does not resolve, does not open or does not decode, or when its size is not the expected one (the base's sides
 halved for level 1, a side of 1 giving 0, and each later level halving the sides above 1), decodes it with flags 2, adds an opaque alpha when it
 has none, sets the top origin and copies its 32-bit pixels into chain level n. It returns 1 plus
 the number of files read; `0x4491f0` passes that count to `0x44aec0` as the first level it builds.
 
-Addresses: `0x4493a0`, `0x4493c0`, `0x4493c6`, `0x4493c8`, `0x449405`, `0x449418`, `0x449444`, `0x449457`, `0x449463`, `0x44946e`, `0x449486`, `0x449490`, `0x449498`, `0x4494a0`, `0x4494b6`, `0x4494f9`, `0x44952d`, `0x648a30`
+Addresses: `0x4493a0`, `0x4493c0`, `0x4493c6`, `0x4493c8`, `0x449405`, `0x449418`, `0x449444`, `0x449457`, `0x449463`, `0x44946e`, `0x449475`, `0x449486`, `0x449490`, `0x449498`, `0x4494a0`, `0x4494b6`, `0x4494f9`, `0x44952d`, `0x648a30`
 Confidence: verified
 Proof: one
 Test: `gx::tga_mip_copy_difftest`
 
 `ret 8`. `0x4493c0` counts the base's levels; one level returns 1 at once. `0x449405` is
 `SStrPrintf` into a 0x104-byte buffer and `0x449418` `SFileExistsEx` with the open flag. The size
-tests are `0x449457` and `0x449463`; `0x449486` calls `0x5a3fc0` when the nibble is 0 (`0x44947b`).
+tests are `0x449457` and `0x449463`, the decode test `0x449475`; `0x449486` calls `0x5a3fc0` when the nibble is 0 (`0x44947b`).
 `0x4494a0` takes the destination `levels[n]`; the copy is the same loop as `0x4491f0`'s, and the
 same depth fault applies; the test runs it, `0x4494b6` to `0x4494f6`. `0x4493c6` and `0x4493c8` halve the base's sides with `shr`; `0x4494f9` to `0x449515` halve each
 side above 1.

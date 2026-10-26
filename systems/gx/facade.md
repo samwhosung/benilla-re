@@ -78,7 +78,7 @@ reads the value with `SStrToInt` and compares at `0x6890ac`; `0x6890b9` and `0x6
 read sets it to 1 for each shader it reads (`0x595216`, `slots.md`, Shader files); an OpenGL
 program build clears it and sets it to whether the program compiled within the native limits
 (`0x59e544`, `0x59e6be`, `renderstate.md`). On Direct3D it is 1 once the file has a program for
-the device's level. Twenty call sites test it; the weather turns its shader leg off when either
+the device's level. Twenty-nine call sites test it; the weather turns its shader leg off when either
 of its two shaders reports 0 (`0x6747f5`, `0x674804`, `0x67480d`).
 
 Addresses: `0x58b360`, `0x58b362`, `0x58b367`, `0x595216`, `0x59e544`, `0x59e6be`, `0x6747f5`, `0x674804`, `0x67480d`
@@ -87,4 +87,4 @@ Proof: one
 Test: none
 
 `0x58b362` returns 0 for a null `ecx`, `0x58b367` loads `[ecx+0x2c]`. The census is every `call`
-to `0x58b360`: twenty, from `0x6747f5` to `0x6b6891`, and no `jmp` or stored address.
+to `0x58b360`: twenty-nine, from `0x6747f5` to `0x77062e`, and no `jmp` or stored address.

@@ -117,7 +117,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x531530	void *[9]	s_cases5313e0		ui	Holds the 9 case addresses of the switch in 0x5313e0	inferred	none	
 0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
 0x58ca34	void *[8]	s_glSizingCases		gx	Holds the eight sizing-edge case addresses of 0x58c6d0's WM_SIZING switch	verified	one	gx/window#window-sizing
-0x598b00	void *[5]	s_d3dWindowCases		gx	Holds the five case addresses of the message switch in 0x598750	verified	one	gx/window#direct3d-window-messages
+0x598b00	void *[8]	s_d3dWindowCases		gx	Holds the eight case addresses of the message switch in 0x598750	verified	one	gx/window#direct3d-window-messages
 0x598b20	uint8_t[15]	s_d3dWindowCaseIndex		gx	Maps messages 1 to 0xf to the cases of 0x598750's switch	verified	one	gx/window#direct3d-window-messages
 0x598b30	void *[8]	s_d3dSizingCases		gx	Holds the eight sizing-edge case addresses of 0x598750's WM_SIZING switch	verified	one	gx/window#window-sizing
 0x59a118	void *[5]	s_d3dReadbackFormatCases		gx	Holds the case addresses of the back buffer format switch in 0x599e90 for formats 0x15 to 0x19	verified	one	gx/capture#device-readback
