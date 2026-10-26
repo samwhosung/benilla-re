@@ -20,7 +20,7 @@ Roots: `0x6435a0`, `0x6436c0`, `0x6434d0`, `0x643820`, `0x643a70`, `0x643300`, `
 `0x643300` builds the clock: `+0x20` (minute offset), `+0x24` (day offset), `+0x28` (a count of minutes
 advanced), `+0x30` (the minute fraction) and `+0x34` (minutes still to skip) are 0; `+0x2c`, the scale
 in game minutes per real second, is `0x3c888889`, 1/60; `+0x38` is the tick `0x42c010()`; `+0x3c`, the
-phase base (the minute of day after the last step plus `+0x30`, stored by `0x643ad0`), is 0; the time at `+0` is −1 in every field (`0x642300`). A callback table with vtable
+phase base (the minute of day after the last step plus `+0x30`, stored by `0x643ad0`), is 0; the time at `+0` is −1 in six fields, 0 in the seventh (`0x642300`). A callback table with vtable
 `0x80e44c` starts at `+0x48` and `+0x6c` is −1. Static initializer `0x6c5bc0` jumps to the
 constructor with `ecx = 0xce8538`. The table's first vtable slot, `0x643bb0`, frees one entry: its callback
 records, then the entry through `0x643c30`.
@@ -193,6 +193,34 @@ year by 100 (`idiv`) and adds 100 to the remainder; `0x642372` calls `_mktime`. 
 by 0xc22e4507, adds the dividend, shifts right 16 and adds the sign bit: a signed division by
 86,400. In `0x642c80`, `0x642cd5` adds 2000; the weekday names are the seven string pointers from
 0x865864 (`0x642d64`); `0x642dc6` formats the minute with `%2.2i`.
+
+## Time record helpers
+
+A time record is seven dwords: minute, hour, weekday, day and month from 0, year from 2000, and a
+two-bit field. `0x642300` sets the first six to −1 and the seventh to 0. `0x6424c0` returns
+`hour·60 + minute`, 0 when either is negative. `0x6424e0(n)` sets the hour to `n / 60` and the minute
+to the signed remainder. `0x6423c0(days, keepTime)` leaves a record with a negative year, month or day
+unchanged. Otherwise it gives `mktime` the date at 0:00, or at its hour and minute with `keepTime`,
+adds `days · 86400` seconds, and 3600 more without `keepTime`, and writes back `localtime`'s year, month, day
+and weekday, and its hour and minute with `keepTime`. `0x642c10` packs a
+record through `WowTime::WowEncodeTime`.
+
+Addresses: `0x642300`, `0x642316`, `0x6424c0`, `0x6424c5`, `0x6424cb`, `0x6424cd`, `0x6424e0`, `0x6424ed`, `0x6423c0`, `0x6423cf`, `0x6423da`, `0x6423e5`, `0x6423f6`, `0x6423fb`, `0x642404`, `0x64240d`, `0x642426`, `0x64242e`, `0x642440`, `0x64244e`, `0x64245c`, `0x642465`, `0x642490`, `0x642c10`, `0x642ae0`
+Confidence: verified
+Proof: one
+Test: `gametime::minute_of_day_difftest`, `gametime::set_minute_of_day_difftest`, `gametime::add_days_difftest`
+
+`0x642302` is `or ecx,-1` and `0x642316` stores 0 at `+0x18`. `0x6424c5` and `0x6424cb` take `jl` to the
+zero return; `0x6424cd` is `imul eax,eax,0x3c`. `0x6424ed` is `idiv` by 60, quotient to `+4`, remainder to
+`+0`. In `0x6423c0` the tests are `0x6423cf`, `0x6423da` and `0x6423e5`; the `tm` is nine zeroed dwords
+(`0x6423f6`) with year + 100 (`0x6423fb`), day + 1 (`0x642404`) and daylight saving −1 (`0x64240d`).
+`0x642426` calls `_mktime`, `0x64242e` is `imul ecx,ecx,0x15180`, and `0x642440` adds 3600 when the byte
+argument is 0. `0x64244e` calls `0x642490`, which copies the 36 bytes of `localtime`, or zeroes them for a
+null result, so a time `localtime` refuses gives year −100, month 0, day −1 and weekday 0. `0x64245c`
+subtracts 100 and `0x642465` subtracts 1. Every caller passes `keepTime` 0. `0x642c10` pushes `+0x18` down
+to `+4` and passes `+0` in `edx`, its output pointer staying in `ecx`. The tests run `0x6424c0` and
+`0x6424e0` whole, and `0x6423c0` whole with `_mktime` and `_localtime` replaced by UTC versions, so they
+show the arithmetic around the calendar, not the host's zone.
 
 ## Time range test
 

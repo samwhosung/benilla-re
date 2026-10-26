@@ -23037,13 +23037,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6422d0	14			unassigned			Runs its object file code not read here	inferred	none		
 0x6422e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6422f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x642300	30			unassigned			Runs its object file code not read here	inferred	none		
+0x642300	30	WowTime::WowTime		unassigned	orchestration	WowTime * __thiscall (WowTime *this)	Sets a time record six fields to -1 and the seventh to 0 and returns it	verified	one	gametime/overview#time-record-helpers	
 0x642320	130	WowTime::GetDayNumber		unassigned		int32_t __thiscall (const WowTime *this)	Returns mktime of the date divided by 86,400, or 0 when its year, month or day is negative	verified	one	gametime/overview#day-number-and-time-text	
 0x6423b0	3			unassigned			Runs its object file code not read here	inferred	none		
-0x6423c0	198			unassigned			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
-0x642490	33			unassigned			Runs its object file code that calls _localtime; not read here	inferred	none		
-0x6424c0	22			unassigned			Runs its object file code not read here	inferred	none		
-0x6424e0	25			unassigned			Runs its object file code not read here	inferred	none		
+0x6423c0	198	WowTime::AddDays		unassigned	primitive	void __thiscall (WowTime *this, int32_t days, bool keepTime)	Moves a set date by a number of days through mktime and localtime, from local midnight plus an hour	verified	one	gametime/overview#time-record-helpers	gametime::add_days_difftest
+0x642490	33	CopyLocalTime		unassigned	orchestration	void __fastcall (const int32_t *seconds, void *out)	Copies the 36-byte localtime of a time into a buffer, or zeroes the buffer when localtime fails	verified	one	gametime/overview#time-record-helpers	
+0x6424c0	22	WowTime::GetMinuteOfDay		unassigned	primitive	int32_t __thiscall (const WowTime *this)	Returns hour times 60 plus minute, or 0 when either is negative	verified	one	gametime/overview#time-record-helpers	gametime::minute_of_day_difftest
+0x6424e0	25	WowTime::SetMinuteOfDay		unassigned	primitive	void __thiscall (WowTime *this, int32_t minutes)	Sets the hour and minute to a minute count divided by 60 and its signed remainder	verified	one	gametime/overview#time-record-helpers	gametime::set_minute_of_day_difftest
 0x642500	57			unassigned	unreached		Runs its object file code that calls 0x6424c0, 0x6423c0, 0x6424e0; not read here	inferred	none		
 0x642540	176			unassigned	unreached		Runs its object file code that calls 0x6423c0, 0x642500, 0x6424c0 and 1 more; not read here	inferred	none		
 0x6425f0	39	WowTime::CompareYear		unassigned	primitive	int32_t __thiscall (WowTime *this, const WowTime *other)	Returns 1, 0 or -1 as the year of a time is above, equal to or below another's	verified	one	gametime/overview#time-range-test	gametime::time_order_difftest
@@ -23061,7 +23061,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642ac0	21			unassigned	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
 0x642ae0	80	WowTime::WowEncodeTime	idb	unassigned	primitive	void __fastcall (uint32_t *out, int32_t minute, int32_t hour, int32_t weekday, int32_t day, int32_t month, int32_t year, int32_t extra)	Packs minute, hour, weekday, day, month, year and a two-bit field into a dword, each masked to its width	verified	one	gametime/overview#time-range-test	gametime::time_encode_difftest
 0x642b30	211	WowTime::WowDecodeTime2	idb	base	primitive	void __fastcall (uint32_t packed, int32_t *minute, int32_t *hour, int32_t *weekday, int32_t *day, int32_t *month, int32_t *year, int32_t *extra)	Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
-0x642c10	32			unassigned			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
+0x642c10	32	PackWowTime		unassigned	orchestration	void __fastcall (uint32_t *out, const WowTime *time)	Packs a time record into a dword through WowTime::WowEncodeTime	verified	one	gametime/overview#time-record-helpers	
 0x642c30	30	WowTime::WowDecodeTime	idb	base	orchestration	void __fastcall (uint32_t packed, WowTime *out)	Decodes a packed date into a seven-field record by calling 0x642b30	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
 0x642c50	38			unassigned	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
 0x642c80	397	WowTime::FormatTime		unassigned		char * __fastcall (const WowTime *time, char *buffer, uint32_t size)	Formats a time as month/day/year (weekday) hour:minute, or Not Set, into a buffer	verified	one	gametime/overview#day-number-and-time-text	

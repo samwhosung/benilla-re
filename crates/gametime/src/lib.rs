@@ -117,6 +117,50 @@ pub fn set_minute_of_day(t: &mut Time, minutes: i32) {
     t[0] = minutes % 60;
 }
 
+/// A C library `tm`: seconds, minutes, hours, day of the month, month, years since 1900, weekday,
+/// day of the year and the daylight-saving flag.
+pub type Tm = [i32; 9];
+
+/// `WowTime::AddDays` (`0x6423c0`), with the calendar the C library gives: `mktime` of a `tm`, and
+/// `localtime` of a time, `None` where the library returns null. A record with a negative year,
+/// month or day is left as it is. Otherwise the date goes to `mktime` at 0:00 (at the record's hour
+/// and minute with `keep_time`), `days · 86400` seconds are added, and 3600 more without
+/// `keep_time`; the year, month, day and weekday of `localtime` come back, and the hour and minute
+/// with `keep_time`. A refused time reads as a zeroed `tm` (`0x642490`).
+pub fn add_days(
+    t: &mut Time,
+    days: i32,
+    keep_time: bool,
+    mktime: &mut dyn FnMut(&Tm) -> i32,
+    localtime: &mut dyn FnMut(i32) -> Option<Tm>,
+) {
+    if t[5] < 0 || t[4] < 0 || t[3] < 0 {
+        return;
+    }
+    let mut tm: Tm = [0; 9];
+    tm[3] = t[3].wrapping_add(1);
+    tm[4] = t[4];
+    tm[5] = t[5].wrapping_add(100);
+    tm[8] = -1;
+    if keep_time {
+        tm[2] = t[1];
+        tm[1] = t[0];
+    }
+    let mut seconds = mktime(&tm).wrapping_add(days.wrapping_mul(86_400));
+    if !keep_time {
+        seconds = seconds.wrapping_add(3600);
+    }
+    let r = localtime(seconds).unwrap_or([0; 9]);
+    t[5] = r[5].wrapping_sub(100);
+    t[4] = r[4];
+    t[3] = r[3].wrapping_sub(1);
+    t[2] = r[6];
+    if keep_time {
+        t[1] = r[2];
+        t[0] = r[1];
+    }
+}
+
 /// The clock's fields the set and the sync read and write: its time, `+0x20` (minute offset),
 /// `+0x24` (day offset) and `+0x34` (minutes of frame time still to skip).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
