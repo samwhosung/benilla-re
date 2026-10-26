@@ -3593,7 +3593,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44ce00	190			unassigned			Runs its object file code not read here	inferred	none		
 0x44cec0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x44ced0	359			unassigned			Runs its object file code that calls 0x44e190, 0x44dfb0, 0x44dff0 and 1 more; not read here	inferred	none		
-0x44d040	632	TextBlockGenerateFont	idb	unassigned			Runs its object file code that calls SErrSetLastError, 0x41ae50, SStrPrintf and 10 more; not read here	inferred	none		
+0x44d040	632	TextBlockGenerateFont	idb	unassigned	primitive	void * __fastcall (const char *name, uint32_t flags, float size)	Returns a handle on the cached font of a name, flags and size over the screen scale, creating it; 0 on failure	verified	one	font/api#text-block-fonts	font::text_block_font_size_difftest, font::text_block_font_flags_difftest
 0x44d2c0	22			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x44d2e0	50			unassigned			Runs its object file code that calls SErrSetLastError, 0x5c1bf0; not read here	inferred	none		
 0x44d320	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -3607,10 +3607,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44d5c0	54			unassigned			Runs its object file code that calls GxuFontDestroyString, SMemFree; not read here	inferred	none		
 0x44d600	79			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ade0, 0x5c2770; not read here	inferred	none		
 0x44d650	20			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x44d670	221			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
+0x44d670	221	TextBlockGetTextExtent		unassigned	primitive	void __fastcall (void *block, const char *text, int32_t bytes, float size, float *width, float extra, float unused, uint32_t flags)	Measures a text width in screen units through GxuFontGetTextExtent, the lengths and flags converted	verified	one	font/api#text-block-measures	font::text_block_measure_flags_difftest
 0x44d750	263			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ade0, 0x41ae50 and 3 more; not read here	inferred	none		
 0x44d860	244			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
-0x44d960	233			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ae50, DivideByScreenScaleX and 1 more; not read here	inferred	none		
+0x44d960	233	TextBlockGetMaxCharsWithinHeight		unassigned	primitive	int __fastcall (void *block, const char *text, float size, float width, float height, void *arg6, float arg7, float arg8, uint32_t flags)	Counts the characters that fit a height through GxuFontGetMaxCharsWithinHeight, lengths and flags converted	verified	one	font/api#text-block-measures	font::text_block_measure_flags_difftest
 0x44da50	244			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
 0x44db50	231			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
 0x44dc40	19			unassigned			Runs its object file code that calls 0x5c27f0; not read here	inferred	none		
@@ -18362,7 +18362,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c1ef0	10	GxuFontBatchDraw		unassigned	orchestration	void __thiscall (void *this)	Draws a batch through 0x5c8b70	verified	one	font/api#batches	
 0x5c1f00	101	GxuFontBatchClear		unassigned	orchestration	int __thiscall (void *this)	Empties a batch	inferred	none	font/api#batches	
 0x5c1f70	213	GxuFontDestroyBatch		unassigned	orchestration	int __thiscall (void *this)	Returns a batch to the free list	inferred	none	font/api#batches	
-0x5c2050	32	GxuFontGetTextExtent		unassigned	orchestration	float __fastcall (void *arg1, const char *text, int bytes, float size, uint32_t flags, float extra, uint32_t arg7, uint32_t arg8)	Measures the width of a text through 0x5c6940	inferred	none	font/measure#text-extent	
+0x5c2050	32	GxuFontGetTextExtent		unassigned	orchestration	void __fastcall (void *font, const char *text, int32_t bytes, float size, float *width, float extra, float unused, uint32_t flags)	Stores the width of a text through 0x5c6940	inferred	none	font/measure#text-extent	
 0x5c2070	273	GxuFontGetTextBlockHeight		unassigned	primitive	float __fastcall (void *arg1, const char *text, float size, float width, void *state, uint32_t flags, uint32_t arg7)	Returns the height of a wrapped text	verified	one	font/measure#block-height-and-fit	font::font_textblock_height_difftest
 0x5c2190	42	GxuFontGetMaxCharsWithinWidth	idb	unassigned			Runs its object file code that calls InternalGetMaxCharsWithinWidth; not read here	inferred	none		
 0x5c21c0	339	GxuFontGetMaxCharsWithinHeight		unassigned	primitive	int __fastcall (void *arg1, const char *text, float size, float width, float height, float gap, int *broke, uint32_t flags, uint32_t arg9)	Counts the characters that fit a height	verified	one	font/measure#block-height-and-fit	font::font_height_fit_difftest
@@ -18456,7 +18456,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c6860	34	InitStringList		font	orchestration	void __cdecl (void)	Makes the global string list 0xc2b994 empty	verified	one	font/overview#static-objects	
 0x5c6890	12	RegisterDestroyStringList		font	orchestration	void __cdecl (void)	Registers 0x5c68a0 with _atexit	inferred	none	font/overview#static-objects	
 0x5c68a0	155	DestroyStringList		font	primitive	void __cdecl (void)	Unlinks the records of the global string list	inferred	none	font/overview#static-objects	
-0x5c6940	523	MeasureTextExtent		font	primitive	float __fastcall (void *arg1, const char *text, int bytes, float size, uint32_t flags, float extra, uint32_t arg7)	Returns the width of the widest line of a text	verified	one	font/measure#text-extent	font::text_extent_measure_difftest
+0x5c6940	523	MeasureTextExtent		font	primitive	void __fastcall (void *font, const char *text, int32_t bytes, float size, float *width, uint32_t flags, float extra)	Stores the width of the widest line of a text through a pointer	verified	one	font/measure#text-extent	font::text_extent_measure_difftest
 0x5c6b70	217	CGxFont::GetCharAdvance	idb	font	primitive	float __fastcall (CGxFont *arg1, uint32_t cur, const char *next, float size, uint32_t flags)	Returns a glyph's advance in pixels	verified	one	font/metrics#advance-of-a-glyph	font::char_advance_difftest
 0x5c6c50	725	InternalGetMaxCharsWithinWidth	idb	font	primitive	int __fastcall (void *arg1, const char *text, float size, float width, uint32_t flags, float extra, float *outWidth, int *outBytes, float *cumulative, uint32_t arg10, uint32_t arg11)	Counts the characters that fit one line of a width	verified	one	font/measure#fitting-characters-to-a-width	font::wrap_max_chars_difftest
 0x5c6f40	19			font	orchestration		Runs GxuFontUtil.cpp code that calls SMemAlloc; not read here	inferred	none		
