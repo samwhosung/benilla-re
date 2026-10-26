@@ -605,7 +605,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40abe2	84			crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
 0x40ac36	84	__mtinit	idb	crt	boundary		Runs its object file code that calls __mtinitlocks, 0x40d9b5, __initptd; not read here	inferred	none		
 0x40ac8a	30			crt	unreached		Runs its object file code that calls __mtdeletelocks; not read here	inferred	none		
-0x40aca8	19	__initptd	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x40aca8	19	__initptd	idb	crt	orchestration	void __cdecl (void *ptd)	Sets a new thread's rand seed at +0x14 to 1 and its exception action table at +0x50 to 0x82f2a0	verified	one	random#other-threads-rand	
 0x40acbb	103	__getptd	idb	crt	boundary		Returns the C runtime's per-thread data	inferred	none	random#the-c-runtime-rand	
 0x40ad22	160			unassigned	unreached		Runs its object file code that calls one function; not read here	inferred	none		
 0x40adc2	6	GetCurrentThreadId		unassigned	unreached		Jumps to GetCurrentThreadId, imported from KERNEL32.dll	inferred	none		
@@ -766,7 +766,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41071f	43	_strncnt	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x41074a	329	___crtGetStringTypeA	idb	crt	boundary		Runs its object file code that calls __alloca_probe, _memset; not read here	inferred	none		
 0x410893	8	__toupper	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x41089b	111	_toupper	idb	crt	boundary		Runs its object file code that calls __lock, 0x41090a, __unlock; not read here	inferred	none		
+0x41089b	111	_toupper	idb	crt	primitive	int32_t __cdecl (int32_t c)	Subtracts 0x20 from a to z while the locale word 0x883b08 is 0, every other value unchanged	verified	one	crt/ctype#upper-case	crt::crt_toupper_difftest
 0x41090a	204			crt	boundary		Runs its object file code that calls __isctype, ___crtLCMapStringA; not read here	inferred	none		
 0x4109d6	582	_setlocale	idb	crt	unreached		Runs its object file code that calls __lock, __setlocale_set_cat, _strpbrk and 9 more; not read here	inferred	none		
 0x410c1c	283	__setlocale_set_cat	idb	crt	unreached		Runs its object file code that calls __expandlocale, _strlen, _malloc and 3 more; not read here	inferred	none		
@@ -827,7 +827,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x413ac6	719	__store_winword	idb	crt	primitive	void __cdecl (const char *pattern, const tm *fields, char **out, uint32_t *left, const char **names)	Writes fields by a Windows date or time picture: letter runs as conversions, quoted text as text	verified	one	crt/time#locale-date-patterns	crt::crt_strftime_patterns_difftest, crt::crt_strftime_difftest
 0x413d95	312	___getlocaleinfo	idb	crt	unreached		Runs its object file code that calls ___crtGetLocaleInfoA, _malloc, _strncpy and 3 more; not read here	inferred	none		
 0x413ecd	6			crt	unreached		Runs its object file code not read here	inferred	none		
-0x413ed3	453	___crtGetStringTypeW	idb	crt	boundary		Runs its object file code that calls __alloca_probe, _memset, 0x4100f0; not read here	inferred	none		
+0x413ed3	453	___crtGetStringTypeW	idb	crt	host	int32_t __cdecl (uint32_t type, const wchar_t *src, int32_t count, uint16_t *out, int32_t code_page, int32_t lcid)	Answers characters' types by GetStringTypeW, or by GetStringTypeA on converted bytes without it	verified	one	crt/ctype#wide-character-types	
 0x414098	45	__itoa	idb	crt	unreached		Runs its object file code that calls _xtoa; not read here	inferred	none		
 0x4140c5	92	_xtoa	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x414121	42	__ltoa	idb	crt	unreached		Runs its object file code that calls _xtoa; not read here	inferred	none		
@@ -31264,7 +31264,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	
 0x73fb35	40			crt	boundary		Runs its object file code not read here	inferred	none		
 0x73fb5d	52	_sscanf	idb	crt	boundary		Runs its object file code that calls _strlen, __input; not read here	inferred	none		
-0x73fb91	46	_isalpha	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
+0x73fb91	46	_isalpha	idb	crt	primitive	int32_t __cdecl (int32_t c)	Tests a character's letter bits 0x103 in the table at _pctype, unchecked for negative values	verified	one	crt/ctype#character-classes	crt::crt_isalpha_difftest
 0x73fbbf	40	_isupper	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fbe7	40	_islower	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fc0f	40	_isdigit	idb	crt	boundary		Tests a character's digit bit in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	net/who#who-level-digits	

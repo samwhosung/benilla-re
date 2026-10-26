@@ -1357,6 +1357,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
 0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
+0x82f2a0	uint32_t[30]	_XcptActTab		crt	Holds ten rows of an exception code, a signal number and an action, each action 0 in the file	verified	one	random#other-threads-rand
 0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
 0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
@@ -2606,6 +2607,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x8838f4	uint8_t	s_sysMsgDisplayMade		unassigned	Holds 1 while the system message display layer exists	verified	one	sysmsg#display-layer
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
+0x883ba4	int32_t	s_stringTypeMode		crt	Holds which call ___crtGetStringTypeW makes: 0 undecided, 1 GetStringTypeW, 2 GetStringTypeA	verified	one	crt/ctype#wide-character-types
 0x883ba8	int32_t	tzapiused		crt	Holds 1 when __tzset_lk took the zone from GetTimeZoneInformation, which 0x41484d reads	verified	one	crt/time#the-systems-zone
 0x883bb0	uint8_t[172]	tzinfo		crt	Holds the TIME_ZONE_INFORMATION record __tzset_lk reads the zone into	verified	one	crt/time#the-systems-zone
 0x883c60	int32_t	first_time		crt	Holds 1 once ___tzset has run __tzset_lk; nothing else writes it	verified	one	crt/time#the-zone-read-once

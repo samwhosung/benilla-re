@@ -157,7 +157,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`mov [eax+0x14],1` (`0x40acb3`). `idiv 0x2710` (`0x5bcfd0`), `sub edi,0x63c0` (`0x5bcfda`) on a 16-bit port,
+`mov [eax+0x14],1` (`0x40acb3`); its other store, `0x40acac`, puts the exception action table `0x82f2a0` at `+0x50`. `idiv 0x2710` (`0x5bcfd0`), `sub edi,0x63c0` (`0x5bcfda`) on a 16-bit port,
 which wraps to 40000 + the remainder; `inc edi`, `cmp di,0xfde8`, `jb` (`0x5bd043` to `0x5bd049`) steps and ends
 at 65000. `MakeSocketPipe` is called from `WowConnectionNet::PlatformRun` (`0x5bcb18`); the network thread is
 `systems/net/dispatch.md#network-thread-handoff`'s.
