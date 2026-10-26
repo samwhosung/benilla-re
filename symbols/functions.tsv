@@ -14229,61 +14229,61 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x554a30	133			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x554ac0	56			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x554b00	16	ReadDword		dbc	orchestration	int __fastcall (void *file, uint32_t *out)	Reads four bytes from a file into a dword through SFile::Read	verified	one	dbc#the-loader	
-0x554b10	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554b20	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554b30	10			dbcache	orchestration		Runs its object file code that calls 0x554b40; not read here	inferred	none		
-0x554b40	29			dbcache	orchestration		Runs its object file code that calls 0x556060; not read here	inferred	none		
-0x554b60	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554b70	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554b80	10			dbcache	orchestration		Runs its object file code that calls 0x554b90; not read here	inferred	none		
-0x554b90	29			dbcache	orchestration		Runs its object file code that calls 0x557bd0; not read here	inferred	none		
-0x554bb0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554bc0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554bd0	10			dbcache	orchestration		Runs its object file code that calls 0x554be0; not read here	inferred	none		
-0x554be0	32			dbcache	orchestration		Runs its object file code that calls 0x5596c0; not read here	inferred	none		
-0x554c00	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554c10	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554c20	10			dbcache	orchestration		Runs its object file code that calls 0x554c30; not read here	inferred	none		
-0x554c30	29			dbcache	orchestration		Runs its object file code that calls 0x55b0a0; not read here	inferred	none		
-0x554c50	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554c60	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554c70	10			dbcache	orchestration		Runs its object file code that calls 0x554c80; not read here	inferred	none		
-0x554c80	32			dbcache	orchestration		Runs its object file code that calls 0x55cba0; not read here	inferred	none		
-0x554ca0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554cb0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554cc0	10			dbcache	orchestration		Runs its object file code that calls 0x554cd0; not read here	inferred	none		
-0x554cd0	29	InitNameCacheArguments		dbcache	orchestration	void __cdecl ()	Constructs the names cache with its tag, file name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved	
-0x554cf0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554d00	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554d10	10			dbcache	orchestration		Runs its object file code that calls 0x554d20; not read here	inferred	none		
-0x554d20	29			dbcache	orchestration		Runs its object file code that calls 0x560460; not read here	inferred	none		
-0x554d40	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554d50	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554d60	10			dbcache	orchestration		Runs its object file code that calls 0x554d70; not read here	inferred	none		
-0x554d70	29			dbcache	orchestration		Runs its object file code that calls 0x561fa0; not read here	inferred	none		
-0x554d90	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554da0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554db0	10			dbcache	orchestration		Runs its object file code that calls 0x554dc0; not read here	inferred	none		
-0x554dc0	29			dbcache	orchestration		Runs its object file code that calls 0x563d60; not read here	inferred	none		
-0x554de0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554df0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554e00	10			dbcache	orchestration		Runs its object file code that calls 0x554e10; not read here	inferred	none		
-0x554e10	29			dbcache	orchestration		Runs its object file code that calls 0x5658a0; not read here	inferred	none		
-0x554e30	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554e40	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554e50	10			dbcache	orchestration		Runs its object file code that calls 0x554e60; not read here	inferred	none		
-0x554e60	32			dbcache	orchestration		Runs its object file code that calls 0x567350; not read here	inferred	none		
-0x554e80	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554e90	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554ea0	10			dbcache	orchestration		Runs its object file code that calls 0x554eb0; not read here	inferred	none		
-0x554eb0	32			dbcache	orchestration		Runs its object file code that calls 0x568fb0; not read here	inferred	none		
-0x554ed0	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554ee0	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554ef0	10			dbcache	orchestration		Runs its object file code that calls 0x554f00; not read here	inferred	none		
-0x554f00	29			dbcache	orchestration		Runs its object file code that calls 0x56aaf0; not read here	inferred	none		
-0x554f20	12			dbcache	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x554f30	10			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x554f40	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
+0x554b10	5	InitDbCacheInfinityThunk		dbcache	orchestration	void __cdecl (void)	Jumps to 0x554b20, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b20	11	InitDbCacheInfinity		dbcache	orchestration	void __cdecl (void)	Copies +inf into the file's infinity global, which nothing reads	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b30	10	InitCreatureCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554b40 and then 0x554b60, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b40	29	InitCreatureCache		dbcache	orchestration	void __cdecl (void)	Constructs the creature cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b60	12	InitCreatureCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554b70 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b70	10	InitCreatureCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the creature cache's save 0x5566d0 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b80	10	InitGameObjectCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554b90 and then 0x554bb0, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554b90	29	InitGameObjectCache		dbcache	orchestration	void __cdecl (void)	Constructs the game object cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554bb0	12	InitGameObjectCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554bc0 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554bc0	10	InitGameObjectCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the game object cache's save 0x558180 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554bd0	10	InitItemNameCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554be0 and then 0x554c00, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554be0	32	InitItemNameCache		dbcache	orchestration	void __cdecl (void)	Constructs the item name cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c00	12	InitItemNameCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554c10 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c10	10	InitItemNameCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the item name cache's save 0x559c10 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c20	10	InitItemCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554c30 and then 0x554c50, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c30	29	InitItemCache		dbcache	orchestration	void __cdecl (void)	Constructs the item cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c50	12	InitItemCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554c60 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c60	10	InitItemCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the item cache's save 0x55b650 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c70	10	InitNpcCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554c80 and then 0x554ca0, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554c80	32	InitNpcCache		dbcache	orchestration	void __cdecl (void)	Constructs the NPC text cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554ca0	12	InitNpcCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554cb0 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554cb0	10	InitNpcCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the NPC text cache's save 0x55d120 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554cc0	10	InitNameCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554cd0 and then 0x554cf0, a static initializer	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554cd0	29	InitNameCache		dbcache	orchestration	void __cdecl (void)	Constructs the name cache with its tag, file name, opcode, owner flag and persist 0	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554cf0	12	InitNameCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554d00 with _atexit	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d00	10	InitNameCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the name cache's save 0x55ec70 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d10	10	InitGuildCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554d20 and then 0x554d40, a static initializer	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d20	29	InitGuildCache		dbcache	orchestration	void __cdecl (void)	Constructs the guild cache with its tag, file name, opcode, owner flag and persist 0	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d40	12	InitGuildCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554d50 with _atexit	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d50	10	InitGuildCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the guild cache's save 0x560a20 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554d60	10	InitQuestCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554d70 and then 0x554d90, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554d70	29	InitQuestCache		dbcache	orchestration	void __cdecl (void)	Constructs the quest cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554d90	12	InitQuestCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554da0 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554da0	10	InitQuestCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the quest cache's save 0x562630 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554db0	10	InitPageTextCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554dc0 and then 0x554de0, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554dc0	29	InitPageTextCache		dbcache	orchestration	void __cdecl (void)	Constructs the page text cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554de0	12	InitPageTextCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554df0 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554df0	10	InitPageTextCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the page text cache's save 0x564320 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554e00	10	InitPetNameCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554e10 and then 0x554e30, a static initializer	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e10	29	InitPetNameCache		dbcache	orchestration	void __cdecl (void)	Constructs the pet name cache with its tag, file name, opcode, owner flag and persist 0	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e30	12	InitPetNameCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554e40 with _atexit	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e40	10	InitPetNameCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the pet name cache's save 0x565e70 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e50	10	InitPetitionCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554e60 and then 0x554e80, a static initializer	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e60	32	InitPetitionCache		dbcache	orchestration	void __cdecl (void)	Constructs the petition cache with its tag, file name, opcode, owner flag and persist 0	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e80	12	InitPetitionCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554e90 with _atexit	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554e90	10	InitPetitionCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the petition cache's save 0x567980 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-unsaved-caches	
+0x554ea0	10	InitItemTextCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554eb0 and then 0x554ed0, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554eb0	32	InitItemTextCache		dbcache	orchestration	void __cdecl (void)	Constructs the item text cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554ed0	12	InitItemTextCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554ee0 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554ee0	10	InitItemTextCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the item text cache's save 0x569570 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554ef0	10	InitWowCacheThunk		dbcache	orchestration	void __cdecl (void)	Runs 0x554f00 and then 0x554f20, a static initializer	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554f00	29	InitWowCache		dbcache	orchestration	void __cdecl (void)	Constructs the wow cache with its tag, file name, opcode, owner flag and persist 1	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554f20	12	InitWowCacheAtExit		dbcache	orchestration	void __cdecl (void)	Registers the exit 0x554f30 with _atexit	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554f30	10	InitWowCacheExit		dbcache	orchestration	void __cdecl (void)	Jumps to the wow cache's save 0x56b040 with the store in ecx	verified	one	dbcache/clones#initializers-of-the-saved-caches	
+0x554f40	5	DBCacheLoadAllThunk		dbcache	orchestration	void __cdecl (void)	Jumps to 0x554f50, the load of every cache	verified	one	dbcache/clones#initializers-of-the-saved-caches	
 0x554f50	130	DBCacheLoadAll		dbcache	orchestration	void __cdecl ()	Calls the load function of each of the thirteen caches	verified	one	dbcache/overview#caches-that-are-not-saved	
 0x554fe0	1			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x554ff0	239	DBCache::RegisterHandlers	idb	dbcache	orchestration	void __cdecl ()	Registers the fourteen query response handlers with the message registrar	verified	one	dbcache/overview#handlers	
@@ -14355,7 +14355,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x556ff0	281	CreatureCacheRemove		dbcache	unreached		Removes a creature node by key; nothing references it	inferred	none	dbcache/overview#cache-objects-and-nodes	
 0x557110	228			dbcache	unreached		Runs its object file code that calls 0x556670, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x557200	163			dbcache	orchestration		Runs its object file code that calls 0x556df0, SMemFree; not read here	inferred	none		
-0x5572b0	1055	CreatureCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Creature cache from its file, or returns at once for a cache that is not saved	inferred	none		
+0x5572b0	1055	CreatureCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the creature cache from its file when it persists, keeping nothing on a header mismatch or short read	verified	one	dbcache/overview#loading-a-wdb-file	
 0x5576d0	625	CreatureCacheWriteFile		dbcache	unreached		Duplicates the Creature cache file writer; no branch or stored address reaches it	verified	one	dbcache/overview#the-wdb-file	
 0x557950	406			dbcache	unreached		Runs DBCache.cpp code that calls 0x556670, 0x557af0, 0x56c8f0 and 1 more; not read here	inferred	none		
 0x557af0	17			dbcache	orchestration		Runs DBCache.cpp code not read here	inferred	none		
@@ -14378,7 +14378,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x558780	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x558790	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x5587a0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x558160, 0x56d310, 0x556690 and 2 more; not read here	inferred	none		
-0x5588e0	471			dbcache	primitive		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x558160 and 5 more; not read here	inferred	none		
+0x5588e0	471	GameObjectCacheReceive		dbcache	orchestration	void __thiscall (void *this, CDataStore *stream, bool single)	Reads game object records from a response into the cache and runs their callbacks, status 0 for a refusal	verified	one	dbcache/clones#game-object-records-received	
 0x558ac0	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x558160; not read here	inferred	none		
 0x558bf0	236			dbcache	primitive		Runs DBCache.cpp code that calls 0x558160, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x558ce0	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
@@ -14534,10 +14534,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x562a40	534	QuestCacheGetRecord		dbcache	orchestration	void * __thiscall (void *this, uint32_t key, uint64_t *owner, void *callback, void *data, bool dedupe)	Returns a quest record by id, or keeps a callback and sends the cache query on a miss	verified	one	dbcache/overview#asking-for-a-record	
 0x562c60	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x562c70	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
-0x562c80	656			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, 0x56dc10, SStrCopy and 2 more; not read here	inferred	none		
+0x562c80	656	QuestCacheReceive		dbcache	orchestration	void __thiscall (void *this, QuestRecord *record, uint32_t key)	Stores a decoded quest record in the quest cache and runs its callbacks with status 1	verified	one	dbcache/clones#quest-records-stored-and-refused	
 0x562f10	92			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x562f70	471			dbcache	unreached		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x562610 and 5 more; not read here	inferred	none		
-0x563150	293			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610; not read here	inferred	none		
+0x563150	293	QuestCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint32_t key)	Runs a quest's callbacks with status 0, then unlinks and frees its node	verified	one	dbcache/clones#quest-records-stored-and-refused	
 0x563280	236			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x563370	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x563430	1061	QuestCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Quest cache from its file, or returns at once for a cache that is not saved	inferred	none		

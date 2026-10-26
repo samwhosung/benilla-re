@@ -672,6 +672,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090b4	void *[9]	s_connectionResponseBaseVftable		net	Holds the abstract base vtable NetClient sets first: a deleting destructor, four pure slots, four empty ones	verified	one	net/session#netclient-construction
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
+0x809128	const float	s_infinityDbCache		dbcache	Holds +inf, 0x7f800000, the literal the DBCache file copies at start-up	verified	one	dbcache/clones#initializers-of-the-saved-caches
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
 0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	one	dbcache/callbacks#item-node-allocation
 0x80917c	void *[4]	s_nameCacheVtable		dbcache	Holds the vtable of the names cache object; slot 0 frees a node	inferred	none	
@@ -3753,6 +3754,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e054	uint32_t[5]	s_areaPoiStore		dbc	Holds the AreaPOI.dbc store: records of 0x74 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-landmarks
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
+0xc0e07c	float	s_infinityDbCacheCopy		dbcache	Holds the DBCache file's copy of +inf, written at start-up and read by nothing	verified	one	dbcache/clones#initializers-of-the-saved-caches
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	one	dbc#localized-strings
 0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
