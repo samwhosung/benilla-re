@@ -30364,7 +30364,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7105c0	4	CM2Model::GetScene		models	orchestration		Returns an instance's scene	inferred	none		
 0x7105d0	36	CM2Model::GetPositionInScene		models	orchestration		Transforms an instance's world position by its scene's matrix	verified	one	models/lights#instance-lighting	
 0x710600	29	CM2Model::GetBaseTransform		models	orchestration		Copies an instance's base matrix	inferred	none		
-0x710620	43	CM2Model::SetBaseTransform		models	orchestration		Sets an instance's base matrix	inferred	none		
+0x710620	43	CM2Model::SetBaseTransform		models	orchestration	void __thiscall (CM2Model *this, const float *m)	Copies 16 words into an instance's base matrix	verified	one	models/model#instance-setters	
 0x710650	108	CM2Model::SetBaseTransformTRS		models	orchestration		Builds an instance's base matrix from a position, an angle about an axis, and a scale	inferred	none	models/model#base-transform	
 0x7106c0	951	CM2Model::SetBaseTransformConformed		models	primitive		Builds an instance's base matrix tilted toward a ground normal by its conform mode and animation	inferred	none	models/model#base-transform	models::billboard_tangent_frame_difftest, models::spline_complement_difftest, models::spline_param_fdiv_difftest, models::spline_param_fidiv_difftest
 0x710a80	247	M2ConformRows		models	primitive		Rebuilds a rotation's rows so its third row is a given normal, keeping the first row's heading	inferred	none	models/model#base-transform	models::m2_orthonormal_basis_difftest
@@ -30377,11 +30377,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x710c80	4	CM2Model::GetUserData		models	unreached		Returns an instance's user value; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710c90	13	CM2Model::SetUserData		models	orchestration		Stores an instance's user value	inferred	none		
 0x710ca0	7	CM2Model::GetAlpha		models	orchestration		Returns an instance's alpha	inferred	none		
-0x710cb0	16	CM2Model::SetAlpha		models	orchestration		Sets an instance's alpha	inferred	none		
+0x710cb0	16	CM2Model::SetAlpha		models	orchestration	void __thiscall (CM2Model *this, float alpha)	Stores an instance's alpha	verified	one	models/model#instance-setters	
 0x710cc0	36	CM2Model::GetDiffuseColor		models	unreached		Copies an instance's diffuse colour multiplier; nothing reaches it	verified	one	models/overview#unreached-code	
-0x710cf0	32	CM2Model::SetDiffuseColor		models	orchestration		Sets an instance's diffuse colour multiplier	inferred	none		
+0x710cf0	32	CM2Model::SetDiffuseColor		models	orchestration	void __thiscall (CM2Model *this, const float *rgb)	Copies three words into an instance's diffuse colour multiplier	verified	one	models/model#instance-setters	
 0x710d10	36	CM2Model::GetEmissiveColor		models	unreached		Copies an instance's emissive colour; nothing reaches it	verified	one	models/overview#unreached-code	
-0x710d40	32	CM2Model::SetEmissiveColor		models	orchestration		Sets an instance's emissive colour	inferred	none		
+0x710d40	32	CM2Model::SetEmissiveColor		models	orchestration	void __thiscall (CM2Model *this, const float *rgb)	Copies three words into an instance's emissive colour	verified	one	models/model#instance-setters	
 0x710d60	10	CM2Model::GetGlobalTime		models	unreached		Returns the scene time since an instance's global sequence anchor; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710d70	19	CM2Model::SetGlobalTime		models	unreached		Sets an instance's global sequence anchor so its global time reads a value; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710d90	7	CM2Model::GetZFill		models	unreached		Returns an instance's depth-fill eligibility; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -30401,12 +30401,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711880	215	CM2Model::FreeBatches		models	host		Frees an instance's own batch table, its index buffer and its shader ids	verified	one	models/model#own-batches	
 0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	verified	one	ui/modelanim#the-idle-sequence	
 0x7119a0	122	CM2Model::CountVariations		models	unreached		Counts the variations of an animation id's sequence chain; nothing reaches it	verified	one	models/overview#unreached-code	
-0x711a20	392	CM2Model::GetSequenceInfo		models	primitive		Fills a record with a resolved sequence's flags, length, speed, bounds and radius	inferred	none		models::attach_world_transform_difftest
+0x711a20	392	CM2Model::GetSequenceInfo		models	primitive	void __thiscall (CM2Model *this, uint32_t id, uint32_t variation, M2SequenceInfo *out)	Fills a record with a resolved sequence's flags, length, scaled speed, box, centre, radius, id and class	verified	one	models/model#sequence-info	models::attach_world_transform_difftest, models::sequence_info_difftest
 0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	verified	one	animation/hosts#doodad-model	
 0x711bd0	5	InitM2ModelInfinityThunk		models	orchestration		Jumps to 0x711be0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x711be0	11	InitM2ModelInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x711bf0	289	CM2Model::ResolveAnimationId		models	primitive		Maps an animation id to one the model has, following the fallback chain, with reverse and hold flags	verified	one	models/animation#animation-id-resolution	animation::m2_bone_classify_difftest
-0x711d20	68	CM2Model::HasKeyBone		models	orchestration		Returns whether an instance's model has a key bone id	inferred	none		
+0x711d20	68	CM2Model::HasKeyBone		models	orchestration	uint32_t __thiscall (CM2Model *this, uint32_t keyBone)	Returns 1 for −1 or a key bone id whose lookup entry is not 0xffff, else 0	verified	one	models/model#key-bones-and-cameras	
 0x711d70	92	CM2Model::GetKeyBonePivot		models	unreached		Copies a key bone's pivot; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711dd0	133	CM2Model::GetKeyBonePosition		models	unreached		Returns a key bone's pivot transformed by its bone and the scene; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711e60	91	CM2Model::GetKeyBoneMatrix		models	unreached		Copies a key bone's animated matrix; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -30444,11 +30444,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7133d0	34	CM2Model::GetLightCount		models	unreached		Returns the number of lights in an instance's model; nothing reaches it	verified	one	models/overview#unreached-code	
 0x713400	47	CM2Model::GetLightEnabled		models	unreached		Returns a model light's enabled flag; nothing reaches it	verified	one	models/overview#unreached-code	
 0x713430	127	CM2Model::SetLightEnabled		models	host		Sets a model light's enabled flag, or defers the call	verified	one	models/model#deferred-calls	
-0x7134b0	25	CM2Model::SetLightingCallback		models	orchestration		Stores an instance's lighting callback and its argument	inferred	none		
+0x7134b0	25	CM2Model::SetLightingCallback		models	orchestration	void __thiscall (CM2Model *this, void *callback, void *arg)	Stores an instance's lighting callback and its argument	verified	one	models/model#instance-setters	
 0x7134d0	34	CM2Model::GetCameraCount		models	orchestration		Returns the number of cameras in an instance's model	inferred	none		
 0x713500	59	CM2Model::HasCamera		models	unreached		Returns whether an instance's model has a camera id; nothing reaches it	verified	one	models/overview#unreached-code	
-0x713540	72	CM2Model::GetCameraById		models	orchestration		Returns the camera object of a model camera id	inferred	none		
-0x713590	47	CM2Model::GetCamera		models	orchestration		Returns the camera object of a model camera index	inferred	none		
+0x713540	72	CM2Model::GetCameraById		models	orchestration	CCamera * __thiscall (CM2Model *this, uint32_t id)	Returns the camera of the state a camera id's lookup entry names, with no bound	verified	one	models/model#key-bones-and-cameras	
+0x713590	47	CM2Model::GetCamera		models	orchestration	CCamera * __thiscall (CM2Model *this, uint32_t index)	Returns the camera of an instance's camera state by index, with no bound	verified	one	models/model#key-bones-and-cameras	
 0x7135c0	7	CM2Model::HasLiveParticles		models	orchestration		Returns an instance's live-particle flag +0x3d8, which CM2Model::Animate sets from its emitters	verified	one	objectlayer/effects#stopping-and-draining	
 0x7135d0	34	CM2Model::GetParticleEmitterCount		models	orchestration		Returns the number of particle emitters in an instance's model	inferred	none		
 0x713600	54	CM2Model::GetParticleEmitter		models	orchestration		Returns an instance's particle emitter by index	inferred	none		
@@ -30509,7 +30509,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71b290	79	M2RotationStateClear		models	orchestration		Zeroes a rotation track state and its blend copy with unit quaternions cleared	inferred	none		
 0x71b2e0	33	M2FloatTrackStateClear		models	orchestration		Zeroes a float track state and its blend copy	inferred	none		
 0x71b310	35	M2WordTrackStateClear		models	orchestration		Zeroes a 16-bit track state and its blend copy	inferred	none		
-0x71b340	33	M2ByteTrackStateClear		models	orchestration		Zeroes a byte track state and its blend copy	inferred	none		
+0x71b340	33	M2ByteTrackStateClear		models	orchestration	void * __thiscall (void *this)	Zeroes a byte track state's primary and blend slots and returns it	verified	one	models/model#byte-track-state-clear	
 0x71b370	295	M2LightStateConstruct		models	orchestration		Constructs a model light state: cleared tracks, an initialized light, enabled	verified	one	models/lights#model-light-tracks	
 0x71b4a0	97	M2LightInitialize		models	orchestration		Initializes a light: point type, zero colours and position, attenuation 0.7 and 0.03, unlinked	verified	one	models/lights#light-object	
 0x71b510	213	M2LightCopy		models	unreached		Copies a light's type, position, colours and attenuation, unlinked; nothing reaches it	verified	one	models/overview#unreached-code	

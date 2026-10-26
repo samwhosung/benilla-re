@@ -333,3 +333,88 @@ Test: none
 
 `0x713cb0` links through `+0x414`/`+0x418` into scene `+0x130` and stores `+0x410`, `+0x420`,
 `+0x41c`.
+
+## Instance setters
+
+`SetBaseTransform(m)` copies 16 words into the base matrix `+0xbc`, `SetAlpha(a)` stores `+0x180`,
+`SetDiffuseColor(c)` copies three words into `+0x184` and `SetEmissiveColor(c)` into `+0x190`, and
+`SetLightingCallback(fn, arg)` stores `+0x3bc` and `+0x3c0`. None waits for the shared model,
+defers, clamps or reaches a child: each moves words, so any float, a NaN included, lands as given.
+The animate pass reads the colours and the alpha (`animation#instance-colours`) and the lighting
+build calls the callback (`lights#instance-lighting`).
+
+Addresses: `0x710620`, `0x71062c`, `0x710cb0`, `0x710cf0`, `0x710d40`, `0x7134b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x710620` biases `ecx` by `+0xbc` minus the source (`0x71062c`) and runs eight passes of two dword
+moves, `ret 4`. `0x710cb6` is `mov [ecx+0x180],eax`, `ret 4`. `0x710cf8` and `0x710d48` add 0x184
+and 0x190 to `ecx` and copy three dwords, `ret 4`. `0x7134b9` and `0x7134bf` store the two
+arguments, `ret 8`.
+
+## Sequence info
+
+`GetSequenceInfo(id, variation, out)` waits for the shared model, resolves `id`
+(`animation#animation-id-resolution`) and fills a 0x3c-byte record, `+0x34` and `+0x38` first
+with the resolved id and its class. The id goes through the sequence lookup, and the index then
+moves `variation` times to its sequence's next variation `+0x40`, stopping at an index past the
+table. A sequence in the table gives `+0x0` its flags, `+0x4` its end minus its start, `+0x8` its
+speed `+0xc` times the length of the base matrix's first row, `+0xc` its six bound floats, `+0x24`
+the box centre and `+0x30` its radius. An index past the table, a lookup miss included, zeroes
+`+0x0` to `+0x33`. No bone, pose or scale but the base matrix enters.
+
+Addresses: `0x711a20`, `0x711a4c`, `0x711a5f`, `0x711a65`, `0x711a74`, `0x711a88`, `0x711a95`, `0x711ab6`, `0x711ae8`, `0x711af0`, `0x711af6`, `0x711b17`, `0x711b27`, `0x711b2f`, `0x711b58`, `0x710310`, `0x711bf0`
+Confidence: verified
+Proof: one
+Test: `models::sequence_info_difftest`, `models::attach_world_transform_difftest`
+
+`0x711a4c` calls `0x711bf0(&local, id)` and `0x711a5f` stores its two words zero-extended.
+`0x711a65` is `0x710310` with the low word and header `+0x24`. The chain loop compares the index
+with `[hdr+0x1c]` (`jae`), loads `word [seq+0x40]` and counts with `dec dword [ebp+0xc]; jne`
+(`0x711a88`), so the variation is an unsigned dword. `0x711a95 jae` takes the zero path at
+`0x711b58`. `0x711ab6` to `0x711ae8` load `+0xc4`, `+0xc0` and `+0xbc` and `fsqrt` the sum
+`(m1·m1 + m2·m2) + m0·m0` of matrix words 0 to 2 at 53 bits; `0x711af0 fmul [seq+0xc]` rounds once
+at the store. `0x711af6 rep movs` copies six dwords from `seq+0x24`. Each centre term is `fld max;
+fadd min; fstp`, passed to `0x4549a0` and halved by `0x5f8cf0` (`0x711b27`); `0x711b2f` loads
+`seq+0x3c`.
+
+`sequence_info_difftest` runs `0x711a20` whole, `0x711bf0` and `0x710310` included;
+`attach_world_transform_difftest` runs `0x711ab6`–`0x711b17`.
+
+## Key bones and cameras
+
+`HasKeyBone(id)` waits for the shared model and returns 1 for −1 and for an id whose key bone
+lookup entry is not 0xffff, else 0; an id past the lookup reads as 0xffff. `GetCameraById(id)`
+maps the id through the camera lookup and `GetCamera(index)` takes the index as given; both return
+the camera at `+0x80` of the instance's camera state `index`, 0x84 bytes each at `+0x3c4`. Neither
+bounds the index: an id the camera lookup lacks gives 0xffff, read 0xffff·0x84 bytes into the
+array. `HasCamera`, the camera lookup's presence test, has no caller.
+
+Addresses: `0x711d20`, `0x711d37`, `0x711d48`, `0x711d4d`, `0x713540`, `0x713566`, `0x713577`, `0x713590`, `0x7135ad`, `0x710310`, `0x713500`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x711d37 cmp ecx,-1; je` returns 1. `0x711d48` calls `0x710310` with header `+0x3c`, and `0x711d4d
+cmp ax,0xffff` picks 0. `0x713566` calls it with header `+0x12c`, zero-extends the word and
+`0x713577 imul ecx,ecx,0x84` indexes `[+0x3c4]` with the load at `+0x80`; `0x7135ad` multiplies the
+argument itself. `0x713540` has one call site, `0x52526a` with id 0; `0x713590` has four,
+`0x46c4cf`, `0x48ee82`, `0x50c7b7` and `0x76cef6`; `0x713500` has none (`overview#unreached-code`).
+
+## Byte track state clear
+
+`0x71b340(state)` clears a byte track's state, its primary slot (the key pair and fraction at
+`+0x0` to `+0x8`, the value byte `+0xc`) and its blend slot (`+0x10` to `+0x18`, the byte `+0x1c`),
+and returns the state (`animation/tracks#sampling-block`). The initializer runs it on every ribbon
+state at `+0xb0`, so its byte `+0xbc` starts at 0, and on every particle state at `+0x140`.
+
+Addresses: `0x71b340`, `0x71b34c`, `0x71b35e`, `0x70f401`, `0x70f8f1`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x71b340` copies `ecx` to `eax`, stores 0 at `+0x0`, `+0x4`, `+0x8`, the byte `+0xc` (`0x71b34c`),
+`+0x10`, `+0x14`, `+0x18` and the byte `+0x1c` (`0x71b35e`); the two `lea edx` before them are
+overwritten unused. `0x70f401` passes ribbon state `+0xb0` (0xd0 apart, after a count dword) and
+`0x70f8f1` particle state `+0x140` (0x16c apart).
