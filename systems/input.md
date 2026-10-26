@@ -56,9 +56,9 @@ start. `0x5142a0` is called from `WowClientInit` (`0x402b6a`).
 The binding table `0x8500b8` pairs each command's name with its handler. `TurnOrActionStart`
 (`0x514120`) arms click mode 2 and presses command bit `0x1`; `CameraOrSelectOrMoveStart`
 (`0x514190`) arms click mode 1 and presses bit `0x2`. Each does both only when `0x494a50(0)`, a
-check not read here, returns nonzero. Arming (`0x514810`) stores the mode only when no
-primary command, `0x1` or `0x2`, is held, and for a nonzero mode picks the world object under
-the cursor with `0x481f00`. `0x515090` sends a press to `0x514840` and a release to `0x514b70`. The 26 names are Lua functions: `0x514340` registers each pair of the table and `0x514370` removes them, from the game UI's own registration and removal (`0x490250`, `0x490ce0`).
+check not read here, returns nonzero. Arming (`0x514810`) stores a nonzero mode only when no
+primary command, `0x1` or `0x2`, is held, and then picks the world object under the cursor with
+`0x481f00`; mode 0 is always stored. `0x515090` sends a press to `0x514840` and a release to `0x514b70`. The 26 names are Lua functions: `0x514340` registers each pair of the table and `0x514370` removes them, from the game UI's own registration and removal (`0x490250`, `0x490ce0`).
 
 Addresses: `0x8500b8`, `0x514120`, `0x514190`, `0x494a50`, `0x514810`, `0x515090`, `0x481f00`, `0x514340`, `0x514357`, `0x514370`, `0x49029c`, `0x490d30`
 Confidence: verified

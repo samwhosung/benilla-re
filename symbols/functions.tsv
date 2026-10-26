@@ -12447,7 +12447,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x514620	8			input	primitive		Runs InputControl.cpp code not read here	inferred	none		
 0x514630	8	CInputControl::ClearAutoRunLatch		input	primitive		Clears command bit 0x1000 and the start latch 0x10000	verified	one	input#what-clears-autorun	
 0x514640	458	CInputControl::Tick		input	orchestration		Applies the command bits to the driven unit: moves, turns, pitches and stops, honouring root and stun	verified	one	input#the-tick	
-0x514810	38	CInputControl::ArmClick		input	orchestration	void __thiscall (CInputControl *this, uint32_t mode)	Stores the click mode unless a primary is held, and for a nonzero mode picks the object under the cursor	verified	one	input#mouse-commands	
+0x514810	38	CInputControl::ArmClick		input	orchestration	void __thiscall (CInputControl *this, uint32_t mode)	Stores a click mode, a nonzero one only while no primary is held, and picks the object under the cursor for it	verified	one	input#mouse-commands	
 0x514840	660	CInputControl::PressCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t time)	Presses command bits; on the first primary, latches the time and zeroes the travel sums	verified	one	input#click-versus-drag	
 0x514ae0	85	CInputControl::IsDragRelease		input	primitive	uint32_t __thiscall (CInputControl *this, uint32_t release_time)	Returns 1 when a release is a drag: held 800 ms or more, or 200 ms or more with 8.0 of travel	verified	two	input#click-versus-drag	
 0x514b40	44	CInputControl::IsDragging		input	orchestration	uint32_t __thiscall (CInputControl *this)	Returns 1 when 0x514ae0 says drag at the current clock and the motion stamp is recent	verified	one	input#click-versus-drag	
