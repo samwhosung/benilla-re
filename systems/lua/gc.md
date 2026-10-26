@@ -1,7 +1,7 @@
 # lua: marking
 
 The marking half of the collector, `lgc.c` of the upstream source, which the client keeps as Lua
-5.0 has it. `mark` (`0x6f73e0`) marks from the roots, propagates through a gray list, clears the
+5.0 has it but for the context word a nil it writes takes. `mark` (`0x6f73e0`) marks from the roots, propagates through a gray list, clears the
 weak tables, separates the userdata to finalize, marks them and propagates again, and clears the
 weak tables a second time. Its state is a `GCState` on the stack: the gray list at `+0`, the tables
 with weak keys at `+4`, weak values at `+8`, both at `+0xc`, and the global state at `+0x10`. An

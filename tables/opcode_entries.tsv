@@ -42,7 +42,7 @@ opcode	name	role	site	function	entries	basis
 0x05c	CMSG_QUEST_QUERY	send	0x562b78	0x562a40	net/server#cache-query-opcodes|ui/questlog#the-rebuild	opcode
 0x05d	SMSG_QUEST_QUERY_RESPONSE	handler	0x555084	0x555300	dbcache/overview#handlers|ui/questlog#when-the-templates-arrive|ui/questrewardspell#quest-log-reward-spell	opcode
 0x05e	CMSG_GAMEOBJECT_QUERY	send	0x558698	0x558560	net/server#cache-query-opcodes	opcode
-0x05f	SMSG_GAMEOBJECT_QUERY_RESPONSE	handler	0x55500d	0x555100	dbcache/overview#handlers	opcode
+0x05f	SMSG_GAMEOBJECT_QUERY_RESPONSE	handler	0x55500d	0x555100	dbcache/clones#game-object-records-received|dbcache/overview#handlers	opcode
 0x060	CMSG_CREATURE_QUERY	send	0x556bd2	0x556aa0	net/server#cache-query-opcodes	opcode
 0x061	SMSG_CREATURE_QUERY_RESPONSE	handler	0x554ffc	0x5550e0	dbcache/overview#handlers	opcode
 0x062	CMSG_WHO	send	0x5af168	0x5aebb0	net/who#who-query-packet	opcode

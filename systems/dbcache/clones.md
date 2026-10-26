@@ -3,8 +3,9 @@
 The code each of the thirteen caches has a copy of: the static initializers that build the cache
 objects and register their savers, and the response code of the game object and quest caches. The
 cache objects, the files and the shared shapes are in `dbcache/overview`. The initializer run is the
-slots `0x829e8c` to `0x829ec0` of the C runtime's table: DBCache.cpp's +∞ copy, then one thunk per
-cache, in the order of the tables below.
+slots `0x829e8c` to `0x829ec0` of the C runtime's table, run in address order: DBCache.cpp's +∞ copy,
+then one thunk per cache: creature, game object, item name, item, NPC text, name, guild, quest, page
+text, pet name, petition, item text and wow cache.
 
 Roots: `0x554b10`, `0x554b30`, `0x554b80`, `0x554bd0`, `0x554c20`, `0x554c70`, `0x554cc0`, `0x554d10`, `0x554d60`, `0x554db0`, `0x554e00`, `0x554e50`, `0x554ea0`, `0x554ef0`, `0x554f40`, `0x5588e0`, `0x562c80`, `0x563150`
 
@@ -65,19 +66,21 @@ at `0x5557c0` and the petition clear at `0x55580c` after testing their `+0x39` b
 
 ## Game object records received
 
-`0x5588e0(store, single)` is the game object cache's `Receive`. Single 0 reads a count byte; a count of 0
-returns. Each record opens with its key, and a key with its top bit set refuses the key without the bit. A refusal for a key with a node sets the dispatching byte `+0xa9`, unlinks the node,
-runs its callbacks with status 0, clears the byte and frees the node through vtable slot 0; one without
-a node does nothing. An accepted key finds or makes the node, decodes the record into `node + 0x18`, sets
-the valid byte `+0x98` and the key copy `+0x94`, and runs the callbacks with status 1 and frees them,
-the dispatching byte set meanwhile.
+`0x5588e0(msg, single)` is the game object cache's `Receive`. Its one caller, the handler for opcode
+0x5f, passes single 1: the response is one record and no count byte. The record opens with its key; a
+top bit set refuses the key without it. A refusal for a key with a node sets the dispatching byte
+`+0xa9`, unlinks the node, runs its callbacks with status 0, clears the byte and frees the node
+through vtable slot 0; without a node it does nothing. An accepted key finds or makes the node,
+decodes the record into `node + 0x18`, sets the valid byte `+0x98` and the key copy `+0x94`, and runs
+the callbacks with status 1, dispatching byte set, and frees them.
 
-Addresses: `0x5588e0`, `0x5588ee`, `0x558907`, `0x558925`, `0x558985`, `0x55898d`, `0x5589a4`, `0x5589d8`, `0x558a02`, `0x558a16`, `0x558a26`, `0x558a2b`, `0x558a69`, `0x558a97`, `0x558aa5`, `0x555d60`, `0x56d310`
+Addresses: `0x5588e0`, `0x555100`, `0x555106`, `0x55510e`, `0x5588ee`, `0x558907`, `0x558925`, `0x558985`, `0x55898d`, `0x5589a4`, `0x5589d8`, `0x558a02`, `0x558a16`, `0x558a26`, `0x558a2b`, `0x558a69`, `0x558a97`, `0x558aa5`, `0x555d60`, `0x56d310`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5588ee` takes single to a count of 1; `0x558907 jbe` returns on a zero count; `0x558aa5 dec; jne` loops.
+`0x555106` pushes 1 and `0x55510e` calls with the cache `0xc0e318`. `0x5588ee` takes single to a count of 1, where
+0 would read a count byte and `0x558907 jbe` return on 0; `0x558aa5 dec; jne` loops.
 `0x558925 jns` keeps a clear top bit; else `and ebx,0x7fffffff` and a refusal flag. The chain walk is
 `0x558934` to `0x55897e`. The refusal leg (`0x558985`, `0x55898d` for no node) unlinks the hash and list
 links with `0x555d60` when `[node+8]` is set (`0x5589a4`), calls `[cb+8]` with `push 0` (`0x5589d8`) and

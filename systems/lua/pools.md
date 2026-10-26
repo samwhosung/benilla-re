@@ -40,9 +40,9 @@ stubbed Storm calls, through 60,000 allocations, frees and reallocations, locati
 
 ## The threshold a collection leaves
 
-The client replaces 5.0's threshold of twice the block count with `0x6fae00(L)`, which `checkSizes`
-jumps to at the end of a collection. The headroom is the threshold `[G+0x24]` less the block count
-`[G+0x28]`, in 32 bits, lowered to the free bytes of each pool: its block size times its chunks'
+The client replaces 5.0's threshold of twice the bytes in use with `0x6fae00(L)`, which `checkSizes`
+jumps to at the end of a collection. The headroom is the threshold `[G+0x24]` less the bytes in use
+`[G+0x28]` (`luaM_irealloc`'s running sum of size changes), in 32 bits, lowered to the free bytes of each pool: its block size times its chunks'
 free counts summed, compared unsigned. The new threshold is the count plus the larger of the
 headroom and a quarter of the count, `count >> 2`. A pool with no chunk has no free bytes, so until
 every pool has a chunk the threshold is the count and a quarter.

@@ -2732,7 +2732,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4359f0	17			unassigned	unreached		Runs its object file code that calls 0x435980; not read here	inferred	none		
 0x435a10	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x435a20	42			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x435a50	81			unassigned			Runs its object file code that calls 0x65b250, __alloca_probe, SUniConvertUTF8to16; not read here	inferred	none		
+0x435a50	81	SetWindowTextUtf8		unassigned	host	void __fastcall (void *window, const char *text)	Sets a window's caption from UTF-8 through SetWindowTextW, in a buffer sized by 0x65b250	verified	one	storm/unicode#counting-utf-16-units	
 0x435ab0	99			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x435b20	122			unassigned	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
 0x435ba0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -23840,7 +23840,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65a0c0	217	SLogCreate	idb	storm	orchestration	bool __stdcall (const char *name, uint32_t flags, uint32_t *log)	Makes a log record for a path and flags, opening the file at once only with flag 1	verified	one	storm/log#opening-a-log-file	
 0x65a1a0	18	UnlockLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
 0x65a1c0	152	CreateLogFile		storm	host	bool __fastcall (const char *path, void **handle, uint32_t flags)	Opens a log's file for writing, appended to with flag 4 and emptied without; -1 and 0 for no path or a failure	verified	one	storm/log#opening-a-log-file	
-0x65a260	153	CreatePathFolders		storm	boundary		Makes each folder of a path with CreateDirectoryA	inferred	none	storm/log#opening-a-log-file	
+0x65a260	153	CreatePathFolders		storm	host	void __fastcall (const char *path)	Makes each folder of a path with CreateDirectoryA, its last name cut and / read as \	verified	one	storm/log#opening-a-log-file	
 0x65a300	109			storm	boundary		Runs its object file code that calls SStrLen, SStrChr; not read here	inferred	none		
 0x65a370	58			storm	boundary		Runs its object file code that calls SStr::sub_64A450, 0x65a300; not read here	inferred	none		
 0x65a3b0	34			storm	boundary		Runs its object file code that calls SStrChr2; not read here	inferred	none		
@@ -24209,15 +24209,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x667a80	19			storm	boundary		Runs its object file code not read here	inferred	none		
 0x667aa0	294			storm	boundary		Runs its object file code that calls _fclose; not read here	inferred	none		
 0x667bd0	63	OpenZipFile		storm	orchestration	bool __thiscall (void *this, const char *name)	Opens a zip's file with fopen in binary mode and keeps its name, up to 0x100 bytes, at +0xc	verified	one	storm/files#zip-archive-listing	
-0x667c10	388	FindZipEndRecord		storm	boundary		Finds the zip end record PK 5 6 within the last 0x10016 bytes of a zip's file	inferred	none	storm/files#zip-archive-listing	
-0x667da0	82			storm	boundary		Runs its object file code that calls _fseek, 0x667e20; not read here	inferred	none		
+0x667c10	388	FindZipEndRecord		storm	host	bool __thiscall (void *this, void *record)	Finds the first PK 5 6 in the last 0x10016 bytes of a zip's file and reads the 22-byte end record	verified	one	storm/files#zip-archive-listing	
+0x667da0	82	ReadZipDirectory		storm	host	bool __thiscall (void *this, void *record)	Seeks to a zip's central directory and reads each record the end record counts	verified	one	storm/files#zip-archive-listing	
 0x667e00	22	SlashesToBackslashes		storm	orchestration	void __fastcall (char *text)	Replaces each / of a string with \ in place	verified	one	storm/files#zip-archive-listing	
-0x667e20	1114	ReadZipDirectoryEntry		storm	boundary		Reads one central directory entry of a zip into a new entry of the zip entry table	inferred	none	storm/files#zip-archive-listing	
+0x667e20	1114	ReadZipDirectoryEntry		storm	host	bool __thiscall (void *this)	Reads a zip's next central record, checks its local header, and adds it to the zip entry table	verified	one	storm/files#zip-archive-listing	
 0x668280	26			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x6682a0	120			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668320	29			storm	boundary		Runs SZip.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x668340	19			storm	boundary		Runs SZip.cpp code that calls SMemFree; not read here	inferred	none		
-0x668360	212	OpenZipArchive		storm	orchestration	void * __fastcall (const char *name)	Opens a zip file and reads its central directory into the zip entry table; 0 on failure	inferred	none	storm/files#zip-archive-listing	
+0x668360	212	OpenZipArchive		storm	host	void * __fastcall (const char *name)	Opens a zip file and reads its central directory into the zip entry table; 0 on failure	verified	one	storm/files#zip-archive-listing	
 0x668440	30			storm	boundary		Runs SZip.cpp code that calls 0x667aa0, SMemFree; not read here	inferred	none		
 0x668460	7			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668470	157			storm	boundary		Runs SZip.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		

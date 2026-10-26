@@ -2,8 +2,8 @@
 
 Storm's conversion of the client's UTF-8 text to the UTF-16 the wide Windows calls take, and the
 count that sizes a buffer for it. File, folder and registry names go through the conversion, as do
-the name validator and the error box; the count serves the error box and the guild rank name
-checks. Neither validates: a lead byte's entry in the table `0x80e780` says how many bytes follow
+the name validator, the error box and the window caption; the count serves the error box, the
+caption and the guild rank name checks. Neither validates: a lead byte's entry in the table `0x80e780` says how many bytes follow
 (0 for `0x00` to `0xbf`, then 1 to 5 from `0xc0`, `0xe0`, `0xf0`, `0xf8` and `0xfc`), and those
 bytes are folded in whatever they hold.
 
@@ -44,7 +44,7 @@ form included, which the conversion stores as two units; for valid UTF-8 the cou
 plus one. `read` takes the bytes
 consumed, the NUL's included, and 0 for a null or empty source.
 
-Addresses: `0x65b250`, `0x65b258`, `0x65b263`, `0x65b28c`, `0x65b299`, `0x65b2a2`, `0x65b2b0`, `0x65b2da`, `0x65b2e1`, `0x65b2e9`, `0x65b2f0`, `0x65b2fb`, `0x65b303`, `0x65b308`, `0x65b318`, `0x65b326`, `0x435f1a`, `0x435f40`, `0x4d2127`, `0x4d212c`
+Addresses: `0x65b250`, `0x65b258`, `0x65b263`, `0x65b28c`, `0x65b299`, `0x65b2a2`, `0x65b2b0`, `0x65b2da`, `0x65b2e1`, `0x65b2e9`, `0x65b2f0`, `0x65b2fb`, `0x65b303`, `0x65b308`, `0x65b318`, `0x65b326`, `0x435f1a`, `0x435f40`, `0x435a50`, `0x435a64`, `0x435a87`, `0x435a91`, `0x63cb3b`, `0x63a04e`, `0x8824ec`, `0x4d2127`, `0x4d212c`
 Confidence: verified
 Proof: one
 Test: `storm::utf8_to_utf16_len_whole`
@@ -53,5 +53,7 @@ The chain at `0x65b2a9` to `0x65b2d9`, entered through `0x65b334` (`0x65b2a2`), 
 (`0x65b2b0`), where the conversion uses `movzx`. `0x65b2e1` counts 1 up to 0xffff (`0x65b2e9`, ending on 0), `0x65b2f0`
 1 above 0x10ffff and `0x65b2fb` 2 between. The error box `0x435f00` sizes a stack buffer with the count (`0x435f1a`) and
 converts into that many units (`0x435f40`): a text with a character above U+FFFF fills it with no NUL, and the
-conversion's 1 is not tested. `GuildControlSaveRank` takes the count less one (`0x4d212c`) and refuses a name outside 1
+conversion's 1 is not tested. `0x435a50(window, text)`, which `ConsoleSetCaption` jumps to (`0x63cb3b`) and the
+restart calls (`0x63a04e`), does the same (`0x435a64` to `0x435a87`) and hands the buffer to `SetWindowTextW`
+(`[0x8824ec]`), so such a caption reads past it. `GuildControlSaveRank` takes the count less one (`0x4d212c`) and refuses a name outside 1
 to 16. The test runs the function whole on the conversion's corpus, bounded and unbounded.

@@ -2526,6 +2526,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882094	char[13]	s_textExpat1955		unassigned	Holds the string "expat_1.95.5"	inferred	none	
 0x8824a0	void *	s_getStringTypeW		crt	Holds GetStringTypeW, bound from kernel32.dll by its first call (0x4156bd); 0x413ed3 calls it	verified	one	net/who#who-filter-decoding
 0x8824c0	void *	s_wideCharToMultiByte		crt	Holds WideCharToMultiByte, bound from kernel32.dll by its first call (0x4155bb)	verified	one	storm/files#opening-a-loose-file
+0x8824ec	void *	s_setWindowTextW		crt	Holds SetWindowTextW, bound from user32.dll by its first call (0x748942)	verified	one	storm/unicode#counting-utf-16-units
 0x8824fc	uint32_t *	s_startupStringsRecords		dbc	Points at the Startup_Strings records, 0x2c bytes each	verified	one	dbc#startup-strings
 0x882500	uint32_t	s_startupStringsCount		dbc	Holds the Startup_Strings record count	verified	one	dbc#startup-strings
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
