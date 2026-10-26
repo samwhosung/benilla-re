@@ -366,3 +366,52 @@ Test: none
 `0x7ae010` allocates 0x40 bytes and fills the noise table on creation. `0x7ae780`, called by the
 copy constructor `0x7b14a0`, clones through slot 4 of the prototype and appends the clone. The
 releases call `0x7ba810` for legacy emitters and `0x7b5e50` for the others.
+
+## Emitter model loads
+
+The model's initializer gives an emitter its record's models. A record naming a model (`+0x1c`)
+calls `SetModel(scene, path)`: for a scene and a non-empty path it stores the scene at `+0x94`,
+creates the instance at `+0x90` and, once one exists, sets `+0x28`, which turns the emitter to
+model particles (`Model particles`). A record naming a child model (`+0x24`) calls
+`LoadChildModel`, which creates that instance at `+0x98` and makes `OnChildModelLoaded` its loaded
+callback. Once loaded, the callback appends the first `min(count, 4)` of the child model's
+emitters to the four child slots at `+0x80` and enables each. A spline record passes its points to
+the curve at `+0x2a8`.
+
+Addresses: `0x7b1c80`, `0x7b1c8b`, `0x7b1c9c`, `0x7b1cb1`, `0x7b5da0`, `0x7b5daf`, `0x7b5dc2`, `0x7b5dd0`, `0x7b5dee`, `0x7b5e13`, `0x7b5e1e`, `0x7b5e29`, `0x7b5d80`, `0x7b9a80`, `0x71002e`, `0x710045`, `0x71005d`, `0x710075`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x71004a` to `0x71006c` test each path and its first byte. `0x7b1c8b`, `0x7b1c92` and `0x7b1c97`
+return for a null scene, a null path or an empty one; `0x7b1ca2` calls `0x707350(path, 0)`. `0x7b5daf` makes the same call and passes the result to `0x7105a0` untested,
+so a failed creation stores through a null instance. `0x7b5dd0` is `__fastcall(model, emitter)`,
+as `0x710560` calls it; `0x7b5dee cmp eax,4; jae` caps the count, `0x7b5e13` takes each emitter
+with `0x713600`, `0x7b5d80` stores it at `+0x80 + 4·[+0x7c]` and increments `+0x7c` with no bound
+of its own, and `0x7b5e29` calls `0x7b4ba0(1, 1)`. `0x7b5e1e` is `0x7b5d80`'s one call site.
+`0x71002e` gates the spline call on record type 3; `0x710045` pushes `+0x1d4` (the count) and
+`+0x1d8` (the points), and `0x7b9a80` calls `0x453360(points, count)` on `ecx + 0x2a8`, the Bezier
+curve (`spline#control-point-storage`).
+
+## Frame change
+
+`TransformParticles(m)` moves an emitter's particles into another frame: each live particle's
+position `+0x0` goes through `m` (`0x7bcc60`) and its velocity `+0x10` through the 3×3 alone, then
+each child takes the same call. The particles are the 0x20-byte ones at `+0x3c`, or the 0x40-byte
+model particles at `+0x4c` when `+0x28` is set. Nothing else changes: not a model particle's
+orientation `+0x20`, nor the emitter's last position `+0x248`, velocity `+0x258` or matrix. The
+velocity is `((m0·vx + m4·vy) + m8·vz, (m9·vz + m1·vx) + m5·vy, (m10·vz + m6·vy) + m2·vx)` at 53
+bits, each component rounded once from the old velocity.
+
+Addresses: `0x7b5e60`, `0x7b5e8c`, `0x7b5eab`, `0x7b5eb0`, `0x7b5efc`, `0x7b5f0c`, `0x7b5f27`, `0x7b5f36`, `0x7187f0`
+Confidence: verified
+Proof: one
+Test: `models::transform_particles_difftest`, `models::orient_velocity_difftest`
+
+`0x7b5e8c` tests `+0x28` and takes `shl 5` from `+0x3c` or `shl 6` from `+0x4c`, for each of the
+`[+0x64]` indices at `[+0x5c]`; `0x7b5eab` calls `0x7bcc60` on the particle. The rows are
+`fld`/`fmul`/`faddp` chains in the order above, stored after the last load (`0x7b5efc` to
+`0x7b5f0c`). `0x7b5f27` walks the inline slots from `+0x80` for `[+0x7c]` children, recursing at
+`0x7b5f36`; the other caller is `0x7187f0` (`model#reference-frame`).
+`transform_particles_difftest` runs `0x7b5e60` whole, with children of both particle sizes;
+`orient_velocity_difftest` runs `0x7b5eb0`–`0x7b5f0f`.

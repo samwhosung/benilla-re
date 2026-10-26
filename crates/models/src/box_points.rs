@@ -1,4 +1,4 @@
-//! `BoxContainsTriangle` (`0x6b8b70`).
+//! `TriangleOutsideBoxPlane` (`0x6b8b70`).
 
 /// `0x6b8b70` (ecx = the box, minimum then maximum; edx, then the stack, the three points; `ret 8`):
 /// true when the three points lie outside one side of the box. Per axis it ANDs the sign bits of

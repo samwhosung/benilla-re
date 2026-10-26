@@ -270,3 +270,52 @@ pub fn shadow_transform_normal(basis: [Axis3; 3], n: [f32; 3], v0: [f32; 3]) -> 
         w: (-dot) as f32,
     }
 }
+
+/// One `M2LookupIndex` (`0x710310`): entry `id` of a 16-bit table, or 0xffff at or past its end
+/// (an unsigned compare).
+fn lookup_index(table: &[u16], id: u32) -> u16 {
+    table.get(id as usize).copied().unwrap_or(0xffff)
+}
+
+/// `CM2Model::GetSequenceInfo` (`0x711a20`, `systems/models/model.md#sequence-info`) after its
+/// `ResolveAnimationId` call: `resolved` is that call's dword (the id in the low word, its class
+/// in the high word), `variation` the second argument, `lookup` the header's sequence lookup,
+/// `sequences` the 0x44-byte records as 17 words each, and `row0` the base matrix's words `+0xbc`,
+/// `+0xc0`, `+0xc4`. Returns the record's 15 words.
+pub fn sequence_info(
+    resolved: u32,
+    variation: u32,
+    lookup: &[u16],
+    sequences: &[[u32; 17]],
+    row0: [f32; 3],
+) -> [u32; 15] {
+    let mut out = [0u32; 15];
+    out[13] = resolved & 0xffff;
+    out[14] = resolved >> 16;
+    let mut index = lookup_index(lookup, resolved & 0xffff);
+    // The variation chain (`0x711a74` to `0x711a8b`), stopping early at an index past the table.
+    let mut left = variation;
+    while left != 0 {
+        let Some(seq) = sequences.get(usize::from(index)) else {
+            break;
+        };
+        index = (seq[16] & 0xffff) as u16;
+        left -= 1;
+    }
+    let Some(seq) = sequences.get(usize::from(index)) else {
+        return out; // `0x711b58`: everything but the id and class is zero.
+    };
+    let f = |w: u32| f32::from_bits(w);
+    out[0] = seq[4];
+    out[1] = seq[2].wrapping_sub(seq[1]);
+    let [m0, m1, m2] = row0.map(f64::from);
+    let len = ((m1 * m1 + m2 * m2) + m0 * m0).sqrt();
+    out[2] = ((len * f64::from(f(seq[3]))) as f32).to_bits();
+    out[3..9].copy_from_slice(&seq[9..15]);
+    for k in 0..3 {
+        let sum = (f64::from(f(seq[12 + k])) + f64::from(f(seq[9 + k]))) as f32;
+        out[9 + k] = ((f64::from(sum) * 0.5) as f32).to_bits();
+    }
+    out[12] = seq[15];
+    out
+}

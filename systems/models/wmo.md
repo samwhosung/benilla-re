@@ -353,3 +353,43 @@ and so the first parameter of the packer; `0x6c4c6f push 1` is the creator's for
 the stage flags (`0x58ade0`), compute `(~flags >> 3)` into bits 3 and 4 and write them back with
 `0x58ad30`; the materials' words are `[esi]`. The reference alpha comes only from the blend state
 (`terrain/groupdraw#interior-batch-states`).
+
+## BSP tree setup
+
+A group whose flags have 1 reads `MOBN` and `MOBR` among its optional chunks and points its tree
+at group `+0x44` at them: `0x692f20(nodes, nodeCount, refs, refCount, bounds)` stores the
+nodes at tree `+0x0` and `+0x4`, the face references at `+0x8`, the two counts at `+0xc` and
+`+0x10` and 0 at `+0x48`, and copies the group's bounding box to `+0x4c`. The node count is the
+`MOBN` size over 16, the reference count the `MOBR` size over 2.
+
+Addresses: `0x692f20`, `0x692f3c`, `0x692f51`, `0x6c4579`, `0x6c459e`, `0x6c45a4`, `0x6c45ad`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c4579` tests flag bit 0. The caller pushes group `+0x14`, `size >> 1` (`0x6c459e`), the
+`MOBR` data, `size >> 4` (`0x6c45a4`) and the `MOBN` data, with `ecx` at group `+0x44`.
+`0x692f20` stores the first argument at `+0x4` and `+0x0`, `0x692f3c` stores 0 at `+0x48`, and
+`0x692f51 rep movs` copies six dwords to `+0x4c`; `ret 0x14`.
+
+## Group liquid draw type
+
+`0x6ba970` gives the type a group's liquid draws as (`terrain/groupdraw#group-liquid`): the low
+nibble of the first tile byte whose nibble is not 0xf among the first `x tiles` bytes of the `MLIQ`
+tile flags, else 0xf. Only the grid's first row of tiles is scanned, so a group whose first row is
+all holes takes type 0xf, whose frame the draw requests before bounding it, a client fault
+(`terrain/groupdraw#group-liquid`); the header's liquid word `+0x38` is not read.
+The parse stores `MLIQ`'s vertex and tile counts at `+0xf8` to `+0x104`, the corner at `+0x108`,
+the material at `+0x114`, the vertices at `+0x118` and the tile flags at `+0x11c`.
+
+Addresses: `0x6ba970`, `0x6ba971`, `0x6ba981`, `0x6ba993`, `0x6c460d`, `0x6c461c`, `0x6c4631`, `0x6c464d`, `0x6c466f`, `0x6c4686`, `0x6c468f`, `0x6b62ef`
+Confidence: verified
+Proof: one
+Test: `models::first_liquid_tile_type_difftest`
+
+`0x6c460d` tests flag 0x1000. `0x6c461c` to `0x6c463a` store the data's dwords `+0x0` to `+0xc`
+(x and y vertices, x and y tiles), `0x6c464d` the corner `+0x10`, `0x6c466f` the word `+0x1c`;
+`0x6c4686` stores `data + 0x1e` and `0x6c468f` that plus `8·xverts·yverts`. `0x6ba971` loads
+`+0x100`, the x tile count; `0x6ba981 jle` returns 0xf for 0 or below; `0x6ba993` is `and al,0xf;
+cmp al,0xf; jne` over `[+0x11c]`. The one caller is `0x6b62ef`, and `0x6b62e0` loads no `+0x38`.
+`first_liquid_tile_type_difftest` runs `0x6ba970` whole.

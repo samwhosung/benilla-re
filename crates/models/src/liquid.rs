@@ -1,7 +1,7 @@
 //! A group's liquid grid (`systems/models/wmo.md#queries`): the height query
 //! `CMapObjGroup::LiquidHeight` (`0x6b9f10`), and the arithmetic of the vertex fill `CMapObjGroup::BuildLiquidVertices` (`0x6ba9b0`), the ray test
 //! `CMapObjGroup::RayHitLiquid` (`0x6baa70`) and the collectors
-//! `CMapObjGroup::CollectLiquidSegment` (`0x6bb170`) and `CMapObjGroup::CollectLiquidVolume`
+//! `CMapObjGroup::CollectBoxLiquid` (`0x6bb170`) and `CMapObjGroup::CollectLiquidVolume`
 //! (`0x6bb6b0`).
 //!
 //! The grid is anchored at the group's `+0x108`, `+0x10c`; its vertices are 4.1666665 apart and a

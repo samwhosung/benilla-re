@@ -1,7 +1,7 @@
 //! A group's liquid grid: `CMapObjGroup::LiquidHeight` (`0x6b9f10`) and
 //! `CMapObjGroup::LiquidTileFlags` (`0x6b9e50`) run whole, `InitMapObjGroupInvTileSize`
 //! (`0x6bcf90`) whole, and the arithmetic of `CMapObjGroup::BuildLiquidVertices` (`0x6ba9b0`),
-//! `CMapObjGroup::RayHitLiquid` (`0x6baa70`), `CMapObjGroup::CollectLiquidSegment` (`0x6bb170`)
+//! `CMapObjGroup::RayHitLiquid` (`0x6baa70`), `CMapObjGroup::CollectBoxLiquid` (`0x6bb170`)
 //! and `CMapObjGroup::CollectLiquidVolume` (`0x6bb6b0`) as slices. A stretch run in an island is
 //! the exe's own bytes, checked, copied between a load and a store.
 //!

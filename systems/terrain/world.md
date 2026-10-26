@@ -339,3 +339,60 @@ Test: none
 `0x672b3a` compares `0xc5a470` with 2 (`jb`, so 2 passes). `0x672b7d` subtracts 20.0
 (`0x804478`) from the position's z to make the segment end; `0x672c09` calls the trace thunk
 `0x672190` with mask 0x100111; `0x672c24` to `0x672c2d` store (end z − start z) × t + start z.
+
+## World console commands
+
+Five toggles flip one world flag each and print the new state through `ConsoleWrite` in class 0:
+a set bit is cleared with `<name> disabled.`, a clear one set with `<name> enabled.` (no period for
+particulates). `showSimpleDoodads` does so to the word `0xc7b2c4`, storing 0 or 1. `waterMaxLOD`,
+`waterWaves`, `waterSpecular` and `waterRipples` read a `%d` into their words, which keep their
+value when no number parses; `waterMaxLOD` is then held to 0 to 4, signed. Each handler returns 1.
+The ripple emitter reads `waterRipples`, and only its handler the simple doodad word. The water
+words follow the 9-entry frame name table `0x86a000`: the frame loader's `0x68ab44` reads them as
+the name formats of liquid types 12 to 15.
+
+| handler | command | word | name |
+|---|---|---|---|
+| `0x673050` | `showDetailDoodads` | flag 0x100000 | Detail doodads |
+| `0x673250` | `showCull` | flag 0x20 | Terrain culling |
+| `0x673770` | `waterParticulates` | flag 0x2000000 | Particulates |
+| `0x673a30` | `showShadow` | flag 0x40 | Terrain shadow |
+| `0x673a70` | `showLowDetail` | flag 0x4000000 | Terrain low detail |
+| `0x673ac0` | `showSimpleDoodads` | `0xc7b2c4`, 0 at start-up | Simple doodads |
+| `0x6736c0` | `waterMaxLOD` | `0x86a030`, 4 | none |
+| `0x673710` | `waterWaves` | `0x86a034`, 2 | none |
+| `0x673730` | `waterSpecular` | `0x86a038`, 1 | none |
+| `0x673750` | `waterRipples` | `0x86a03c`, 1 | none |
+
+Addresses: `0x673050`, `0x673250`, `0x673770`, `0x673a30`, `0x673a70`, `0x673ac0`, `0x6736c0`, `0x6736d8`, `0x6736ed`, `0x673710`, `0x673730`, `0x673750`, `0xc7b2a4`, `0xc7b2c4`, `0x86a030`, `0x86a034`, `0x86a038`, `0x86a03c`, `0x66f714`, `0x68bda3`, `0x68ab44`, `0x86a000`, `0x63cb50`, `0x73fb5d`
+Confidence: verified
+Proof: one
+Test: `terrain::world_console_toggles_difftest`, `terrain::water_max_lod_difftest`
+
+Each toggle tests its bit, loads the line into `ecx` with `edx` 0, calls `0x63cb50`, then `and` or
+`or` on `0xc7b2a4`. The water handlers push the word, `%d` (`0x835154`) and the arguments to
+`0x73fb5d`; `0x6736d8 cmp eax,4; jle` and `0x6736ed test eax,eax; jge` bound `waterMaxLOD`. The
+start values are the words' file bytes; `0x66f714` stores 0 in `0xc7b2c4`. A census of the five
+words' addresses as dwords anywhere in the image (control `0x7102e8`) finds only their handlers,
+`0x66f714` and, for `0x86a03c`, `0x68bda3`, the ripple emitter; the indexed load `0x68ab44 mov
+eax,[ebx*4+0x86a000]` reaches the water words from entry 12 on. The tests run each
+handler whole, with `0x63cb50` and `0x73fb5d` replaced.
+
+## Smoothed frame rate
+
+`GetSmoothedFrameRate()` sums the 30 frame times of the ring `0xc631c8`, starting at the write
+index `0xc7b488` and wrapping, from 0.0 at 53 bits, and multiplies by 1/30 (`0x3d088889`). A mean
+below 0.001 returns 1000.0; any other, a NaN included, returns `1 / mean` unrounded on the stack.
+`GetFramerate` passes it to Lua as a double. The ring holds `0xc62510`, the frame seconds, written
+by `0x672700` one slot a frame (`World frame`).
+
+Addresses: `0x6724c0`, `0x6724d0`, `0x6724e2`, `0x6724f3`, `0x6724fe`, `0xc631c8`, `0xc7b488`, `0x807334`, `0x8022cc`, `0x672700`, `0x4893e3`
+Confidence: verified
+Proof: one
+Test: `terrain::smoothed_frame_rate_difftest`
+
+`0x6724d0 fadd [eax*4+0xc631c8]` runs 30 times with the index reset to 0 at 30. `0x6724e2 fmul
+0x807334`, then `fcom 0.001; test ah,5; jp` (`0x6724f3`): a less compare falls through to `fld
+1000.0` (`0x8022cc`), an equal, greater or unordered one jumps to `0x6724fe fdivr 1.0`. `0x4893e3`
+is the one caller, which stores the result with `fstp qword` for `lua_pushnumber`.
+`smoothed_frame_rate_difftest` runs `0x6724c0` whole.

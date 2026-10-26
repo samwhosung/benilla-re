@@ -349,6 +349,9 @@ CM2Model	0x01d4	4	uint32_t	m_attachIndex	models	Holds the attachment index in th
 CM2Model	0x01dc	4	CM2Model *	m_firstChild	models	Holds the first attached instance	verified	one	models/model#instance-object
 CM2Model	0x01e4	4	CM2Model *	m_nextSibling	models	Holds the next instance attached to the same parent	verified	one	models/model#instance-object
 CM2Model	0x03b8	4	M2Lighting *	m_lighting	models	Holds the lighting record the instance draws with	verified	one	models/model#instance-object
+CM2Model	0x03bc	4	void *	m_lightingCallback	models	Holds the callback that adds to the instance lighting record	verified	one	models/model#instance-setters
+CM2Model	0x03c0	4	void *	m_lightingArg	models	Holds the lighting callback argument	verified	one	models/model#instance-setters
+CM2Model	0x03c4	4	void *	m_cameraStates	models	Holds the camera states, 0x84 bytes each with the camera at +0x80	verified	one	models/model#key-bones-and-cameras
 CM2Shared	0x0000	4	uint32_t	m_refCount	models	Holds the shared model's reference count	verified	one	models/shared#shared-model-object
 CM2Shared	0x0004	4	M2Cache *	m_cache	models	Holds the cache the shared model belongs to	verified	one	models/shared#shared-model-object
 CM2Shared	0x0008	4	uint32_t	m_flags	models	Holds flag 1 when loaded and flag 2 when the load's open flag allows loose files	verified	one	models/shared#shared-model-object
@@ -382,6 +385,13 @@ CMapObjGroup	0x0030	4	uint32_t	m_portalRefCount	models	Holds the number of porta
 CMapObjGroup	0x0034	4	uint8_t[4]	m_fogs	models	Holds the fog indices	verified	one	models/wmo#group-header
 CMapObjGroup	0x0038	4	uint32_t	m_liquid	models	Holds the liquid word of the header	verified	one	models/wmo#group-header
 CMapObjGroup	0x003c	6	uint16_t[3]	m_batchCounts	models	Holds the three batch counts	verified	one	models/wmo#group-header
+CMapObjGroup	0x0044	4	void *	m_bspNodes	models	Holds the MOBN nodes, the BSP tree start	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0048	4	void *	m_bspNodesCopy	models	Holds the MOBN nodes again	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x004c	4	uint16_t *	m_bspFaceRefs	models	Holds the MOBR face references	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0050	4	uint32_t	m_bspNodeCount	models	Holds the MOBN size over 16	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0054	4	uint32_t	m_bspFaceRefCount	models	Holds the MOBR size over 2	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x008c	4	uint32_t	m_bspZero	models	Holds 0 from the BSP setup	verified	one	models/wmo#bsp-tree-setup
+CMapObjGroup	0x0090	24	float[6]	m_bspBounds	models	Holds the BSP's box, a copy of the group's bounding box	verified	one	models/wmo#bsp-tree-setup
 CMapObjGroup	0x00bc	1	uint8_t	m_vertexFadeDone	models	Holds whether the portal vertex fade has run	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x00c0	4	char *	m_name	models	Holds the group name	verified	one	models/wmo#group-header
 CMapObjGroup	0x00c4	4	uint16_t *	m_faces	models	Holds the MOPY face records	verified	one	models/wmo#portal-vertex-fade
@@ -389,6 +399,14 @@ CMapObjGroup	0x00c8	4	uint16_t *	m_indices	models	Holds the MOVI indices	verifie
 CMapObjGroup	0x00d0	4	float *	m_vertices	models	Holds the MOVT vertices	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x00dc	4	void *	m_batches	models	Holds the MOBA batches, 24 bytes each	verified	one	models/wmo#group-header
 CMapObjGroup	0x00f4	4	uint32_t *	m_colors	models	Holds the MOCV vertex colours	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00f8	4	uint32_t	m_liquidXVerts	models	Holds the MLIQ x vertex count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x00fc	4	uint32_t	m_liquidYVerts	models	Holds the MLIQ y vertex count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0100	4	uint32_t	m_liquidXTiles	models	Holds the MLIQ x tile count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0104	4	uint32_t	m_liquidYTiles	models	Holds the MLIQ y tile count	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0108	12	float[3]	m_liquidCorner	models	Holds the MLIQ corner	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0114	2	uint16_t	m_liquidMaterial	models	Holds the MLIQ material	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x0118	4	void *	m_liquidVertices	models	Holds the MLIQ vertices, 8 bytes each	verified	one	models/wmo#group-liquid-draw-type
+CMapObjGroup	0x011c	4	uint8_t *	m_liquidTiles	models	Holds the MLIQ tile flag bytes	verified	one	models/wmo#group-liquid-draw-type
 CMapObjGroup	0x0124	4	uint32_t	m_faceCount	models	Holds the number of faces	verified	one	models/wmo#portal-vertex-fade
 CMapObjGroup	0x013c	4	uint32_t	m_batchCount	models	Holds the number of batches	verified	one	models/wmo#group-header
 CMapObjGroup	0x014c	4	uint32_t	m_groupId	models	Holds the group id of the header	verified	one	models/wmo#group-header
@@ -487,12 +505,18 @@ CParticle2	0x0010	12	float[3]	m_velocity	models	Holds the velocity	verified	one	
 CParticle2	0x001c	4	float	m_age	models	Holds the age in seconds	verified	one	models/particles#particle-life
 CParticleEmitter2	0x000c	4	uint32_t	m_columnShift	models	Holds log2 of the texture grid columns	verified	one	models/particles#head-quads
 CParticleEmitter2	0x0010	8	float[2]	m_cellSize	models	Holds the cell width and height in texture space	verified	one	models/particles#head-quads
+CParticleEmitter2	0x0028	4	uint32_t	m_hasModel	models	Holds 1 once the emitter has a particle model, which makes its particles model particles	verified	one	models/particles#emitter-model-loads
 CParticleEmitter2	0x002c	8	NTempest::CRndSeed	m_random	models	Holds the random state spawns draw from	verified	one	models/emission#speed-and-birth
+CParticleEmitter2	0x003c	4	CParticle2 *	m_particles	models	Holds the 0x20-byte particles of an emitter without a model	verified	one	models/particles#frame-change
+CParticleEmitter2	0x004c	4	void *	m_modelParticles	models	Holds the 0x40-byte model particles	verified	one	models/particles#frame-change
 CParticleEmitter2	0x005c	4	uint32_t *	m_live	models	Holds the live particle indices	verified	one	models/particles#particle-life
 CParticleEmitter2	0x0064	4	uint32_t	m_liveCount	models	Holds the number of live particles	verified	one	models/particles#particle-life
 CParticleEmitter2	0x0070	4	uint32_t *	m_free	models	Holds the free particle indices	verified	one	models/particles#particle-life
 CParticleEmitter2	0x007c	4	uint32_t	m_childCount	models	Holds the number of child emitters	verified	one	models/particles#child-emitters
-CParticleEmitter2	0x0080	4	CParticleEmitter2 **	m_children	models	Holds the child emitters each particle carries	verified	one	models/particles#child-emitters
+CParticleEmitter2	0x0080	16	CParticleEmitter2 *[4]	m_children	models	Holds the four child emitter slots each particle carries	verified	one	models/particles#emitter-model-loads
+CParticleEmitter2	0x0090	4	CM2Model *	m_model	models	Holds the model each particle draws	verified	one	models/particles#emitter-model-loads
+CParticleEmitter2	0x0094	4	M2Scene *	m_modelScene	models	Holds the scene the particle model was made in	verified	one	models/particles#emitter-model-loads
+CParticleEmitter2	0x0098	4	CM2Model *	m_childModel	models	Holds the model whose emitters become the children	verified	one	models/particles#emitter-model-loads
 CParticleEmitter2	0x009c	4	uint32_t	m_vertsPerParticle	models	Holds 4 per head or tail, the vertices one particle writes	verified	one	models/particles#draw-order-and-batches
 CParticleEmitter2	0x00a0	4	uint32_t	m_indicesPerParticle	models	Holds 6 per head or tail, the indices one particle takes	verified	one	models/particles#draw-order-and-batches
 CParticleEmitter2	0x00ac	4	float	m_lifespan	models	Holds the particle lifespan in seconds	verified	one	models/particles#particle-life
@@ -544,6 +568,8 @@ CRibbonEmitter	0x0014	4	uint32_t	m_head	models	Holds the head slot, the uncommit
 CRibbonEmitter	0x0018	4	uint32_t	m_tail	models	Holds the oldest live slot	verified	one	models/ribbons#ribbon-ring
 CRibbonEmitter	0x001c	4	float	m_carry	models	Holds the fraction of an edge carried to the next update	verified	one	models/ribbons#ribbon-update
 CRibbonEmitter	0x0020	12	float[3]	m_lastPosition	models	Holds the last node position	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x003c	4	uint32_t	m_vertexCount	models	Holds the number of ring vertices, two per slot	verified	one	models/ribbons#ribbon-frame-change
+CRibbonEmitter	0x0040	4	void *	m_vertices	models	Holds the ring vertices, 20 bytes each with the position first	verified	one	models/ribbons#ribbon-frame-change
 CRibbonEmitter	0x0058	4	float	m_inverseLifespan	models	Holds 1 over the lifespan	verified	one	models/ribbons#ribbon-ring
 CRibbonEmitter	0x005c	8	float[2]	m_cellSize	models	Holds the cell width in u and height in v	verified	one	models/ribbons#ribbon-texture-cells
 CRibbonEmitter	0x006c	16	float[4]	m_cell	models	Holds the cell v0, u0, v1 and u1	verified	one	models/ribbons#ribbon-texture-cells
@@ -1051,6 +1077,7 @@ M2Scene	0x00dc	64	float[16]	m_sceneMatrix	models	Holds the matrix the scene deri
 M2Scene	0x0124	8	void *[2]	m_groundCallback	models	Holds the ground height callback and its argument	verified	one	models/emission#spawn-space
 M2Scene	0x014c	7200	uint32_t[1800]	m_shaderIdMemo	models	Holds the remapped vertex shader ids, -1 when not computed	verified	one	models/scene#scene-object
 M2Sequence	0x0004	8	uint32_t[2]	m_range	models	Holds the start and end in milliseconds	verified	one	models/records#sequence-record
+M2Sequence	0x000c	4	float	m_moveSpeed	models	Holds the speed the sequence moves its model at	verified	one	models/model#sequence-info
 M2Sequence	0x0010	4	uint32_t	m_flags	models	Holds the flags, 1 playing once	verified	one	models/records#sequence-record
 M2Sequence	0x0014	4	uint32_t	m_probability	models	Holds the probability among the variations	verified	one	models/records#sequence-record
 M2Sequence	0x0018	8	uint32_t[2]	m_repeats	models	Holds the minimum and maximum repeats	verified	one	models/records#sequence-record
@@ -1058,6 +1085,14 @@ M2Sequence	0x0020	4	uint32_t	m_blendTime	models	Holds the blend time in millisec
 M2Sequence	0x0024	24	float[6]	m_bounds	models	Holds the bounding box	verified	one	models/records#sequence-record
 M2Sequence	0x003c	4	float	m_radius	models	Holds the bounding radius	verified	one	models/records#sequence-record
 M2Sequence	0x0040	2	uint16_t	m_nextVariation	models	Holds the next variation	verified	one	models/records#sequence-record
+M2SequenceInfo	0x0000	4	uint32_t	m_flags	models	Holds the sequence's flags	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0004	4	uint32_t	m_length	models	Holds the sequence's end minus its start	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0008	4	float	m_moveSpeed	models	Holds the sequence's speed times the length of the base matrix's first row	verified	one	models/model#sequence-info
+M2SequenceInfo	0x000c	24	float[6]	m_bounds	models	Holds the sequence's box, minimum then maximum	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0024	12	float[3]	m_center	models	Holds the box centre	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0030	4	float	m_radius	models	Holds the sequence's bounding radius	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0034	4	uint32_t	m_animationId	models	Holds the resolved animation id	verified	one	models/model#sequence-info
+M2SequenceInfo	0x0038	4	uint32_t	m_class	models	Holds the resolved dword's high word: the class, 0 to 3, from a walk, or a playable entry's high word	verified	one	models/model#sequence-info
 M2Submesh	0x0000	4	uint32_t	m_id	models	Holds the id SetGeosetRange compares	verified	one	models/records#submesh-record
 M2Submesh	0x0004	4	uint16_t[2]	m_vertices	models	Holds the first vertex and the vertex count	verified	one	models/records#submesh-record
 M2Submesh	0x0008	4	uint16_t[2]	m_indices	models	Holds the first index and the index count	verified	one	models/records#submesh-record

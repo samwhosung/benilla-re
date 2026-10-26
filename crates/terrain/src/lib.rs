@@ -56,6 +56,7 @@ pub mod texture;
 pub mod waterfx;
 pub mod wdlgeom;
 pub mod wmovis;
+pub mod worldconsole;
 pub mod worldcoord;
 pub mod worldquery;
 mod x87;

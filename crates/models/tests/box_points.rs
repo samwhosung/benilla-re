@@ -1,4 +1,4 @@
-//! `BoxContainsTriangle` (`0x6b8b70`) run whole: points inside, outside one side, mixed, and random
+//! `TriangleOutsideBoxPlane` (`0x6b8b70`) run whole: points inside, outside one side, mixed, and random
 //! boxes and points, some of them any bits.
 
 use benilla_re_difftest::{Emu, Wow};

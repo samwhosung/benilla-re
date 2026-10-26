@@ -163,3 +163,30 @@ stride 0. Flags bits 0 to 4 go to states 0xe, 0xf, 0x10, 0x12 and 0x14, the blen
 7, and texture `+0x114[i]` to stage 0.
 
 Of `0x7b80c0`, `render_world_translate_difftest` runs `0x7b815d`–`0x7b8180`.
+
+## Ribbon frame change
+
+`TransformVertices(m)` moves a ribbon into another frame: its last and current node positions
+`+0x20` and `+0x14c` and every vertex of its ring go through `m` (`0x7bcc60`), and the last and
+current up and forward axes `+0x7c`, `+0x88`, `+0x94` and `+0xa0` through its 3×3. The ring is the
+`+0x3c` vertices at `+0x40`, 20 bytes each with the position first, dead slots included. The edge
+ends `+0xc4` and the tangents `+0xac` are not moved. Component `R` of an axis `a` is the sum of
+`a_C·m[4C + R]` over `C` at 53 bits, rounded once, in this order of `C`:
+
+| axis | x | y | z |
+|---|---|---|---|
+| `+0x94` | y, z, x | z, y, x | z, x, y |
+| `+0x7c` | z, y, x | z, y, x | x, z, y |
+| `+0xa0` | y, z, x | z, y, x | x, z, y |
+| `+0x88` | x, z, y | x, z, y | z, y, x |
+
+Addresses: `0x7b7bc0`, `0x7b7bd5`, `0x7b7bda`, `0x7b7c5a`, `0x7b7cd8`, `0x7b7cdd`, `0x7b7d5f`, `0x7b7dcb`, `0x7b7df3`, `0x7187f0`
+Confidence: verified
+Proof: one
+Test: `models::ribbonbasis_difftest`
+
+`0x7b7bd5` and `0x7b7cd8` call `0x7bcc60` on `+0x20` and `+0x14c`. The axes are turned in the order
+`+0x94` (`0x7b7bda`), `+0x7c` (`0x7b7c5a`), `+0xa0` (`0x7b7cdd`) and `+0x88` (`0x7b7d5f`), each
+stored after its three components are read. `0x7b7dcb` compares the count `+0x3c` and the loop at
+`0x7b7df3` steps `[+0x40]` by 0x14. The one caller is `0x7187f0` (`model#reference-frame`).
+`ribbonbasis_difftest` runs `0x7b7bc0` whole.

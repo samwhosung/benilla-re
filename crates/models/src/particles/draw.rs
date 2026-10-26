@@ -151,3 +151,20 @@ pub fn tile_grid_recip(cols: u32, rows: u32) -> (f32, f32) {
         (one / f64::from(cols)) as f32,
     )
 }
+
+/// `CParticleEmitter2::TransformParticles` (`0x7b5e60`, `systems/models/particles.md#frame-change`)
+/// for one emitter: each live particle's position goes through `0x7bcc60` and its velocity
+/// through [`orient_velocity`]. `pool` is the particle array as floats, 8 a particle (`+0x3c`) or
+/// 16 for an emitter with a model (`+0x4c`); `live` the indices at `+0x5c`. The children at `+0x80`
+/// take the same call.
+pub fn transform_particles(m: &[f32; 16], live: &[u32], model: bool, pool: &mut [f32]) {
+    let stride = if model { 16 } else { 8 };
+    for &i in live {
+        let b = i as usize * stride;
+        let p =
+            benilla_re_cmath::transform::transform_point(&[pool[b], pool[b + 1], pool[b + 2]], m);
+        let v = orient_velocity(m, [pool[b + 4], pool[b + 5], pool[b + 6]]);
+        pool[b..b + 3].copy_from_slice(&p);
+        pool[b + 4..b + 7].copy_from_slice(&v);
+    }
+}

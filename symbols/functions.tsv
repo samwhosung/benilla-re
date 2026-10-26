@@ -24607,7 +24607,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6723f0	121	FindNearestLiquid		terrain	orchestration	void __fastcall (const float *point, float *out, float radius, uint32_t arg4)	Fills an array with the nearest liquid per type around a point, by map object groups then terrain areas	verified	one	terrain/world#nearest-liquid	
 0x672470	17	GetCameraLiquid		terrain	orchestration	uint32_t __thiscall (void *this)	Writes the camera liquid state to its argument when non-null and returns it	verified	one	terrain/world#entity-queries	
 0x672490	40	AddSplashThunk		terrain	orchestration	void __fastcall (void *a, void *b, uint32_t c, uint32_t d, uint32_t e, uint32_t f, uint32_t g, uint32_t h, uint32_t i)	Forwards a splash to 0x68bda0	inferred	none		
-0x6724c0	69	GetSmoothedFrameRate		terrain	primitive	float __cdecl (void)	Returns the frame rate over the last 30 frame times, 1000 when their mean is below 0.001	inferred	none		
+0x6724c0	69	GetSmoothedFrameRate		terrain	primitive	float __cdecl (void)	Returns 1 over the mean of the 30 ring frame times, or 1000 when the mean is below 0.001	verified	one	terrain/world#smoothed-frame-rate	terrain::smoothed_frame_rate_difftest
 0x672510	6	GetCameraValue		terrain	unreached	float __cdecl (void)	Returns the dword 0xc7cfdc	inferred	none	terrain/overview#unreached-functions	
 0x672520	6	GetVisibleChunkCount		terrain	unreached	uint32_t __cdecl (void)	Returns the visible chunk count 0xc7b6f8	inferred	none	terrain/overview#unreached-functions	
 0x672530	6	GetSceneCounter		terrain	unreached	uint32_t __cdecl (void)	Returns the dword 0xc7b600	inferred	none	terrain/overview#unreached-functions	
@@ -24636,14 +24636,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x672d80	97	ScaleMatrix3		terrain	primitive	void __fastcall (float *m, uint32_t arg2, float s)	Multiplies the nine floats of a 3x3 matrix by a scalar	inferred	none		terrain::mat3_scale_world_difftest, models::partfinalize_normalize_basis9_difftest
 0x672df0	242	CWorld::FadeOutModel		terrain	orchestration	void __thiscall (CWorld *this, uint32_t arg2)	Schedules a ready model to fade out, or releases it when not ready or the value is below 0.01	verified	one	terrain/world#model-fade-out	
 0x672ef0	344	CWorld::UpdateFadingModels		terrain	primitive	void __cdecl (void)	Sets each fading model's alpha by (3 - 2t)t² of its age and releases it when done	verified	one	terrain/world#model-fade-out	terrain::doodad_despawn_fade_difftest
-0x673050	66	ConsoleToggleDetailDoodads		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag bit 20, detail doodads, and prints the new state	inferred	none		
+0x673050	66	ConsoleToggleDetailDoodads		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag bit 20, detail doodads, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x6730a0	66	ConsoleToggleBspRender		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80000, BSP render	inferred	none	terrain/overview#unreached-functions	
 0x6730f0	57	ConsoleToggleTerrain		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x2, terrain	inferred	none	terrain/overview#unreached-functions	
 0x673130	57	ConsoleToggleTerrainDoodads		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1, terrain doodads	inferred	none	terrain/overview#unreached-functions	
 0x673170	66	ConsoleToggleDoodadBoxes		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 22, doodad box visuals	inferred	none	terrain/overview#unreached-functions	
 0x6731c0	63	ConsoleToggleDoodadCollision		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80, doodad collision visuals	inferred	none	terrain/overview#unreached-functions	
 0x673200	73	ConsoleSetMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads maxLOD: 2 or 3 stored, 0 and 1 give 2, others 3	verified	one	terrain/lod#chunk-levels	
-0x673250	57	ConsoleToggleCulling		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x20, terrain culling, and prints the new state	inferred	none		
+0x673250	57	ConsoleToggleCulling		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x20, terrain culling, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x673290	197	ConsoleSetShadowColor		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Packs four floats from 0 to 1 into the shadow colour, the first in the top byte	verified	one	terrain/world#world-initialization	terrain::color_scale255_difftest
 0x673360	64	ConsoleToggleMapObjLighting		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x200, map object lighting	inferred	none	terrain/overview#unreached-functions	
 0x6733a0	64	ConsoleToggleMapObjTextures		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x800, map object textures	inferred	none	terrain/overview#unreached-functions	
@@ -24657,11 +24657,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6735b0	57	ConsoleSetWeather3		terrain	unreached	uint32_t __fastcall (uint32_t unused, const char *args)	Reads a value and passes it to the weather as setting 3	inferred	none	terrain/overview#unreached-functions	
 0x6735f0	124	ConsoleShowWeather		terrain	unreached	uint32_t __cdecl (void)	Prints the weather state	inferred	none	terrain/overview#unreached-functions	
 0x673670	66	ConsoleToggleWater		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000000, water	inferred	none	terrain/overview#unreached-functions	
-0x6736c0	65	ConsoleSetWaterMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterMaxLOD into 0x86a030, 4 or 0	inferred	none		
-0x673710	25	ConsoleSetWaterWaves		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterWaves into 0x86a034	inferred	none		
-0x673730	25	ConsoleSetWaterSpecular		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterSpecular into 0x86a038	inferred	none		
-0x673750	25	ConsoleSetWaterRipples		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterRipples into 0x86a03c	inferred	none		
-0x673770	66	ConsoleToggleParticulates		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x2000000, liquid particulates, and prints the new state	inferred	none		
+0x6736c0	65	ConsoleSetWaterMaxLod		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterMaxLOD into 0x86a030 and holds it to 0 to 4	verified	one	terrain/world#world-console-commands	terrain::water_max_lod_difftest
+0x673710	25	ConsoleSetWaterWaves		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterWaves into 0x86a034 with no bound	verified	one	terrain/world#world-console-commands	
+0x673730	25	ConsoleSetWaterSpecular		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterSpecular into 0x86a038 with no bound	verified	one	terrain/world#world-console-commands	
+0x673750	25	ConsoleSetWaterRipples		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads waterRipples into 0x86a03c with no bound	verified	one	terrain/world#world-console-commands	
+0x673770	66	ConsoleToggleParticulates		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x2000000, liquid particulates, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x6737c0	33	ConsoleFlushTextures		terrain	unreached	uint32_t __cdecl (void)	Calls two device texture functions	inferred	none	terrain/overview#unreached-functions	
 0x6737f0	45	SetWorldFlagsA		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
 0x673820	45	SetWorldFlagsB		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
@@ -24670,9 +24670,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x673960	58	ConsoleToggleDetailTest		terrain	unreached	uint32_t __cdecl (void)	Toggles the detail doodad debug test 0xc63194	inferred	none	terrain/overview#unreached-functions	
 0x6739a0	67	ConsoleSetAlphaRef		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Reads an alpha reference from 0 to 255	verified	one	terrain/world#detail-doodad-and-alpha-settings	
 0x6739f0	60	ConsoleToggleGroupRender		terrain	unreached	uint32_t __cdecl (void)	Toggles rendering of only the current map object group	inferred	none	terrain/overview#unreached-functions	
-0x673a30	57	ConsoleToggleShadow		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x40, terrain shadow, and prints the new state	inferred	none		
-0x673a70	66	ConsoleToggleLowDetail		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x4000000, terrain low detail, and prints the new state	inferred	none		
-0x673ac0	58	ConsoleToggleSimpleDoodads		terrain	orchestration	uint32_t __fastcall (const char *name, const char *args)	Toggles the simple doodad flag 0xc7b2c4 and prints the new state	inferred	none		
+0x673a30	57	ConsoleToggleShadow		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x40, terrain shadow, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
+0x673a70	66	ConsoleToggleLowDetail		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles world flag 0x4000000, terrain low detail, and prints the new state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
+0x673ac0	58	ConsoleToggleSimpleDoodads		terrain	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles the simple doodad word 0xc7b2c4 between 0 and 1, which nothing else reads, and prints the state	verified	one	terrain/world#world-console-commands	terrain::world_console_toggles_difftest
 0x673b00	230	ConsoleDumpTextureStats		terrain	unreached	uint32_t __fastcall (uint32_t unused, uint32_t arg2)	Writes the terrain texture memory statistics to a log file	inferred	none	terrain/overview#unreached-functions	
 0x673bf0	142	ConsoleOpenWorldLog		terrain	unreached	uint32_t __fastcall (uint32_t unused, uint32_t arg2)	Opens a world log file	inferred	none	terrain/overview#unreached-functions	
 0x673c80	274	PushOwnerId		terrain	host	void __thiscall (void *this, const uint64_t *id)	Appends an 8-byte id to a growable array	inferred	none		
@@ -25699,7 +25699,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x692dd0	5	AaBspFreeThunk		models	orchestration		Jumps to the BSP tree free	inferred	none		
 0x692de0	16	AaBspDestruct		models	orchestration		Frees a BSP tree and zeroes its record	inferred	none		
 0x692df0	295	AaBspBuild		models	unreached		Builds a BSP tree over a mesh's faces in scratch pools; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x692f20	57	AaBspSetMesh		models	orchestration		Points a BSP tree at a group's vertices, faces and node arrays	inferred	none		
+0x692f20	57	AaBspSetNodes		models	orchestration	void __thiscall (void *this, void *nodes, uint32_t nodeCount, uint16_t *refs, uint32_t refCount, const float *bounds)	Points a group's BSP at its MOBN nodes and MOBR face references and copies the group's box	verified	one	models/wmo#bsp-tree-setup	
 0x692f60	86	AaBspQuerySegment		models	unreached		Collects the faces a segment's BSP walk visits; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x692fc0	86	AaBspQueryBox		models	unreached		Collects the faces of the BSP leaves a box touches; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x693020	19	AaBspSetCounts		models	unreached		Stores two counts in a BSP tree record; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -27398,12 +27398,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b8810	98	CMapObjGroup::CMapObjGroup		models	orchestration		Zeroes a group record, its BSP and liquid block and its lists	inferred	none		
 0x6b8880	86	CMapObjGroup::~CMapObjGroup		models	primitive		Frees a group's arrays and returns its list nodes to the free list	inferred	none		
 0x6b88e0	654	CMapObjGroup::IntersectLeaf		models	primitive		Intersects a segment with the welded faces of a BSP leaf	inferred	none	models/wmo#bsp-segment-descent	models::aabsp_segment_clip_difftest, models::wmobsp_leaf_tscale_difftest
-0x6b8b70	131	BoxContainsTriangle		models	primitive		Returns whether three points share an outside side of a box	inferred	none		models::aabb_points3_separated_difftest
+0x6b8b70	131	TriangleOutsideBoxPlane		models	primitive	uint8_t __fastcall (const float *box, const float *p0, const float *p1, const float *p2)	Returns 1 when all three points lie beyond one face of a box, by the sign bits of the differences	verified	one	models/collisionquery#box-descent-and-face-test	models::aabb_points3_separated_difftest
 0x6b8c00	72	TriangleBehindPlanes		models	primitive		Returns whether a triangle lies behind three planes	inferred	none		
 0x6b8c50	5	CMapObjGroup::ReturnFalse		models	orchestration		Returns 0, popping two arguments	inferred	none		
 0x6b8c60	485	CMapObjGroup::CollectLeafBox		models	primitive		Collects a BSP leaf's welded faces that touch a box	inferred	none		models::aabsp_box_query_difftest
 0x6b8e50	866	CMapObjGroup::CommitFacets		models	primitive		Writes a leaf's collected faces into the global facet tables	inferred	none		
-0x6b91c0	238	CMapObjGroup::CollectSegment		models	primitive		Collects the facets a segment crosses through a group's BSP	inferred	none		
+0x6b91c0	238	CMapObjGroup::CollectBoxFacets		models	primitive	uint8_t __thiscall (CMapObjGroup *this, void *list, const float *box, void *arg, uint32_t classWord, uint32_t mask)	Gathers a group's faces in a box through its BSP, then its liquid tiles, and clears the visited bits	verified	one	models/collisionquery#group-box-gather	
 0x6b92b0	384	CMapObjGroup::IntersectSegment		models	primitive		Intersects a segment with a group's BSP and liquid	inferred	none	models/wmo#queries	models::bspdispatch_normalize_difftest
 0x6b9430	252	CMapObjGroup::CollectVolume		models	primitive		Collects a group's facets and liquid in a convex volume	inferred	none		
 0x6b9530	172	CMapObjGroup::BoxAnyHit		models	primitive		Returns whether a box touches a face of a group's BSP that the mask lets through	verified	one	terrain/lightattach#containment-queries	
@@ -27428,14 +27428,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ba740	40	ListTail		models	orchestration		Returns the last node of a list	inferred	none		
 0x6ba770	420	VertexBufferBlockFill		models	primitive		Locks a block and copies interleaved vertex data into it	inferred	none	models/wmo#vertex-buffer-pools	
 0x6ba920	71	VertexBufferBlockBindIndices		models	host		Binds the index buffer of a vertex buffer block	inferred	none		
-0x6ba970	62	FirstNonEmptyLiquidLayer		models	primitive		Returns the first liquid layer that has data	inferred	none		
+0x6ba970	62	CMapObjGroup::FirstLiquidTileType		models	primitive	uint32_t __thiscall (CMapObjGroup *this)	Returns the first non-hole tile nibble of a group's first MLIQ tile row, else 0xf	verified	one	models/wmo#group-liquid-draw-type	models::first_liquid_tile_type_difftest
 0x6ba9b0	177	CMapObjGroup::BuildLiquidVertices		models	primitive		Fills a group's liquid vertex lattice from its grid	inferred	none		models::mliq_vertex_advance_x_difftest, models::mliq_vertex_advance_y_difftest
 0x6baa70	1699	CMapObjGroup::RayHitLiquid		models	primitive		Intersects a ray with a group's liquid surface	inferred	none		models::mliq_hit_scale_difftest, models::mliq_ray_grid_scale_difftest, models::mliq_ray_grid_sub_difftest, models::mliq_ray_normalize_difftest, models::mliq_straddle_difftest
 0x6bb120	5	InitMapObjGroupTwoPiThunk		models	orchestration		Jumps to 0x6bb130; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bb130	15	InitMapObjGroupTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x6bb140	5	InitMapObjGroupInvTwoPiThunk		models	orchestration		Jumps to 0x6bb150; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bb150	19	InitMapObjGroupInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
-0x6bb170	1333	CMapObjGroup::CollectLiquidSegment		models	primitive		Collects the liquid tiles a segment crosses in a group	inferred	none		models::mliq_seg_scale_difftest, models::mliq_seg_translate_difftest, models::mliq_seg_tri_bound_difftest
+0x6bb170	1333	CMapObjGroup::CollectBoxLiquid		models	primitive		Collects a group's liquid tiles under a box	inferred	none		models::mliq_seg_scale_difftest, models::mliq_seg_translate_difftest, models::mliq_seg_tri_bound_difftest
 0x6bb6b0	1533	CMapObjGroup::CollectLiquidVolume		models	primitive		Collects the liquid triangles of a group inside a convex volume	inferred	none		models::mliq_scale_difftest, models::mliq_translate_difftest
 0x6bbcb0	96	CMapObjGroup::QueryLiquidSegment		models	primitive		Runs a liquid segment query on a group	inferred	none		
 0x6bbd10	96	CMapObjGroup::QueryLiquidVolume		models	unreached		Runs a liquid volume query on a group; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -27456,7 +27456,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bc700	210	AaBspIntersectLeaf		models	primitive		Intersects a segment with a BSP leaf's faces, keeping the closest hit	inferred	none	models/wmo#bsp-segment-descent	models::aabsp_leaf_tscale_difftest, models::aabsp_segment_clip_difftest
 0x6bc7e0	433	AaBspCollectBoxNode		models	primitive		Descends a group's BSP with a box, collecting the faces inside	inferred	none		
 0x6bc9a0	164	AaBspCollectLeafBox		models	primitive		Collects a BSP leaf's faces not behind a box's planes	inferred	none		
-0x6bca50	164	AaBspQueryLeafBox		models	primitive		Collects a BSP leaf's faces whose points a box contains	inferred	none		models::aabsp_box_query_difftest
+0x6bca50	164	AaBspQueryLeafBox		models	primitive	void __thiscall (void *this, uint16_t face)	Marks a face visited and keeps it unless the mask rejects it or its points all lie beyond one box face	verified	one	models/collisionquery#group-box-gather	models::aabsp_query_leaf_box_difftest
 0x6bcb00	5	InitMapObjGroupTenSquaredThunk		models	orchestration		Jumps to 0x6bcb10; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bcb10	19	InitMapObjGroupTenSquared		models	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	models/overview#shared-header-constants	
 0x6bcb30	5	InitMapObjGroupTileUnitInvSquaredThunk		models	orchestration		Jumps to 0x6bcb40; a static initializer	verified	one	models/overview#shared-header-constants	
@@ -30364,7 +30364,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7105c0	4	CM2Model::GetScene		models	orchestration		Returns an instance's scene	inferred	none		
 0x7105d0	36	CM2Model::GetPositionInScene		models	orchestration		Transforms an instance's world position by its scene's matrix	verified	one	models/lights#instance-lighting	
 0x710600	29	CM2Model::GetBaseTransform		models	orchestration		Copies an instance's base matrix	inferred	none		
-0x710620	43	CM2Model::SetBaseTransform		models	orchestration		Sets an instance's base matrix	inferred	none		
+0x710620	43	CM2Model::SetBaseTransform		models	orchestration	void __thiscall (CM2Model *this, const float *m)	Copies 16 words into an instance's base matrix	verified	one	models/model#instance-setters	
 0x710650	108	CM2Model::SetBaseTransformTRS		models	orchestration		Builds an instance's base matrix from a position, an angle about an axis, and a scale	inferred	none	models/model#base-transform	
 0x7106c0	951	CM2Model::SetBaseTransformConformed		models	primitive		Builds an instance's base matrix tilted toward a ground normal by its conform mode and animation	inferred	none	models/model#base-transform	models::billboard_tangent_frame_difftest, models::spline_complement_difftest, models::spline_param_fdiv_difftest, models::spline_param_fidiv_difftest
 0x710a80	247	M2ConformRows		models	primitive		Rebuilds a rotation's rows so its third row is a given normal, keeping the first row's heading	inferred	none	models/model#base-transform	models::m2_orthonormal_basis_difftest
@@ -30377,11 +30377,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x710c80	4	CM2Model::GetUserData		models	unreached		Returns an instance's user value; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710c90	13	CM2Model::SetUserData		models	orchestration		Stores an instance's user value	inferred	none		
 0x710ca0	7	CM2Model::GetAlpha		models	orchestration		Returns an instance's alpha	inferred	none		
-0x710cb0	16	CM2Model::SetAlpha		models	orchestration		Sets an instance's alpha	inferred	none		
+0x710cb0	16	CM2Model::SetAlpha		models	orchestration	void __thiscall (CM2Model *this, float alpha)	Stores an instance's alpha	verified	one	models/model#instance-setters	
 0x710cc0	36	CM2Model::GetDiffuseColor		models	unreached		Copies an instance's diffuse colour multiplier; nothing reaches it	verified	one	models/overview#unreached-code	
-0x710cf0	32	CM2Model::SetDiffuseColor		models	orchestration		Sets an instance's diffuse colour multiplier	inferred	none		
+0x710cf0	32	CM2Model::SetDiffuseColor		models	orchestration	void __thiscall (CM2Model *this, const float *rgb)	Copies three words into an instance's diffuse colour multiplier	verified	one	models/model#instance-setters	
 0x710d10	36	CM2Model::GetEmissiveColor		models	unreached		Copies an instance's emissive colour; nothing reaches it	verified	one	models/overview#unreached-code	
-0x710d40	32	CM2Model::SetEmissiveColor		models	orchestration		Sets an instance's emissive colour	inferred	none		
+0x710d40	32	CM2Model::SetEmissiveColor		models	orchestration	void __thiscall (CM2Model *this, const float *rgb)	Copies three words into an instance's emissive colour	verified	one	models/model#instance-setters	
 0x710d60	10	CM2Model::GetGlobalTime		models	unreached		Returns the scene time since an instance's global sequence anchor; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710d70	19	CM2Model::SetGlobalTime		models	unreached		Sets an instance's global sequence anchor so its global time reads a value; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710d90	7	CM2Model::GetZFill		models	unreached		Returns an instance's depth-fill eligibility; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -30401,12 +30401,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711880	215	CM2Model::FreeBatches		models	host		Frees an instance's own batch table, its index buffer and its shader ids	verified	one	models/model#own-batches	
 0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	verified	one	ui/modelanim#the-idle-sequence	
 0x7119a0	122	CM2Model::CountVariations		models	unreached		Counts the variations of an animation id's sequence chain; nothing reaches it	verified	one	models/overview#unreached-code	
-0x711a20	392	CM2Model::GetSequenceInfo		models	primitive		Fills a record with a resolved sequence's flags, length, speed, bounds and radius	inferred	none		models::attach_world_transform_difftest
+0x711a20	392	CM2Model::GetSequenceInfo		models	primitive	void __thiscall (CM2Model *this, uint32_t id, uint32_t variation, M2SequenceInfo *out)	Fills a record with a resolved sequence's flags, length, scaled speed, box, centre, radius, id and class	verified	one	models/model#sequence-info	models::attach_world_transform_difftest, models::sequence_info_difftest
 0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	verified	one	animation/hosts#doodad-model	
 0x711bd0	5	InitM2ModelInfinityThunk		models	orchestration		Jumps to 0x711be0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x711be0	11	InitM2ModelInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x711bf0	289	CM2Model::ResolveAnimationId		models	primitive		Maps an animation id to one the model has, following the fallback chain, with reverse and hold flags	verified	one	models/animation#animation-id-resolution	animation::m2_bone_classify_difftest
-0x711d20	68	CM2Model::HasKeyBone		models	orchestration		Returns whether an instance's model has a key bone id	inferred	none		
+0x711d20	68	CM2Model::HasKeyBone		models	orchestration	uint32_t __thiscall (CM2Model *this, uint32_t keyBone)	Returns 1 for −1 or a key bone id whose lookup entry is not 0xffff, else 0	verified	one	models/model#key-bones-and-cameras	
 0x711d70	92	CM2Model::GetKeyBonePivot		models	unreached		Copies a key bone's pivot; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711dd0	133	CM2Model::GetKeyBonePosition		models	unreached		Returns a key bone's pivot transformed by its bone and the scene; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711e60	91	CM2Model::GetKeyBoneMatrix		models	unreached		Copies a key bone's animated matrix; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -30444,11 +30444,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7133d0	34	CM2Model::GetLightCount		models	unreached		Returns the number of lights in an instance's model; nothing reaches it	verified	one	models/overview#unreached-code	
 0x713400	47	CM2Model::GetLightEnabled		models	unreached		Returns a model light's enabled flag; nothing reaches it	verified	one	models/overview#unreached-code	
 0x713430	127	CM2Model::SetLightEnabled		models	host		Sets a model light's enabled flag, or defers the call	verified	one	models/model#deferred-calls	
-0x7134b0	25	CM2Model::SetLightingCallback		models	orchestration		Stores an instance's lighting callback and its argument	inferred	none		
+0x7134b0	25	CM2Model::SetLightingCallback		models	orchestration	void __thiscall (CM2Model *this, void *callback, void *arg)	Stores an instance's lighting callback and its argument	verified	one	models/model#instance-setters	
 0x7134d0	34	CM2Model::GetCameraCount		models	orchestration		Returns the number of cameras in an instance's model	inferred	none		
 0x713500	59	CM2Model::HasCamera		models	unreached		Returns whether an instance's model has a camera id; nothing reaches it	verified	one	models/overview#unreached-code	
-0x713540	72	CM2Model::GetCameraById		models	orchestration		Returns the camera object of a model camera id	inferred	none		
-0x713590	47	CM2Model::GetCamera		models	orchestration		Returns the camera object of a model camera index	inferred	none		
+0x713540	72	CM2Model::GetCameraById		models	orchestration	CCamera * __thiscall (CM2Model *this, uint32_t id)	Returns the camera of the state a camera id's lookup entry names, with no bound	verified	one	models/model#key-bones-and-cameras	
+0x713590	47	CM2Model::GetCamera		models	orchestration	CCamera * __thiscall (CM2Model *this, uint32_t index)	Returns the camera of an instance's camera state by index, with no bound	verified	one	models/model#key-bones-and-cameras	
 0x7135c0	7	CM2Model::HasLiveParticles		models	orchestration		Returns an instance's live-particle flag +0x3d8, which CM2Model::Animate sets from its emitters	verified	one	objectlayer/effects#stopping-and-draining	
 0x7135d0	34	CM2Model::GetParticleEmitterCount		models	orchestration		Returns the number of particle emitters in an instance's model	inferred	none		
 0x713600	54	CM2Model::GetParticleEmitter		models	orchestration		Returns an instance's particle emitter by index	inferred	none		
@@ -30509,7 +30509,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71b290	79	M2RotationStateClear		models	orchestration		Zeroes a rotation track state and its blend copy with unit quaternions cleared	inferred	none		
 0x71b2e0	33	M2FloatTrackStateClear		models	orchestration		Zeroes a float track state and its blend copy	inferred	none		
 0x71b310	35	M2WordTrackStateClear		models	orchestration		Zeroes a 16-bit track state and its blend copy	inferred	none		
-0x71b340	33	M2ByteTrackStateClear		models	orchestration		Zeroes a byte track state and its blend copy	inferred	none		
+0x71b340	33	M2ByteTrackStateClear		models	orchestration	void * __thiscall (void *this)	Zeroes a byte track state's primary and blend slots and returns it	verified	one	models/model#byte-track-state-clear	
 0x71b370	295	M2LightStateConstruct		models	orchestration		Constructs a model light state: cleared tracks, an initialized light, enabled	verified	one	models/lights#model-light-tracks	
 0x71b4a0	97	M2LightInitialize		models	orchestration		Initializes a light: point type, zero colours and position, attenuation 0.7 and 0.03, unlinked	verified	one	models/lights#light-object	
 0x71b510	213	M2LightCopy		models	unreached		Copies a light's type, position, colours and attenuation, unlinked; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -35392,7 +35392,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b14a0	1757	CParticleEmitter2::CopyConstruct		models	primitive		Constructs a particle emitter as a copy of a prototype, sharing its model and registering it	inferred	none	models/particles#registries	
 0x7b1b80	229	CParticleEmitter2::~CParticleEmitter2		models	host		Releases a particle emitter's model, textures, children and particle arrays	inferred	none		
 0x7b1c70	1	CParticleEmitter2::NoOp		models	orchestration		Returns; called by the emitter destructor	inferred	none		
-0x7b1c80	61	CParticleEmitter2::SetModel		models	orchestration		Loads the model a particle emitter emits as particles	inferred	none		
+0x7b1c80	61	CParticleEmitter2::SetModel		models	orchestration	void __thiscall (CParticleEmitter2 *this, M2Scene *scene, const char *path)	Creates the model an emitter emits as particles and switches it to model particles	verified	one	models/particles#emitter-model-loads	
 0x7b1cc0	270	CParticleEmitter2::RollSpeed		models	primitive	float __thiscall (CParticleEmitter2 *this)	Returns the emission speed times one plus a signed uniform times the speed variation	verified	one	models/emission#speed-and-birth	models::burst_velocity_difftest, models::emit_shape_plane_difftest, models::emit_shape_sphere_difftest, models::emit_shape_spline_difftest, models::emitter_speed_difftest, models::emitter_speed_states_difftest
 0x7b1dd0	138	CParticleEmitter2::Preallocate		models	primitive		Reserves particle storage for the emitter's rate and lifespan, with 15 percent slack	inferred	none	models/particles#emitter-classes	models::prealloc_sizing_difftest
 0x7b1e60	153	CParticleEmitter2::ShrinkStorage		models	primitive		Picks the smaller capacity for an emitter's particle and index arrays	inferred	none		
@@ -35417,7 +35417,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b44e0	1	ParticleRenderStateNoOpA		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b44f0	1	ParticleRenderStateNoOpB		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b4500	1	ParticleRenderStateNoOpC		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
-0x7b4510	801	CParticleEmitter2::DrawModelParticle		models	primitive		Places, tints and fades the model of one model particle	inferred	none		models::alpha_distance_scale_difftest, models::color_byte_to_f32_difftest, models::flag200_scale_difftest, models::lod_index_scale_difftest, models::quat_billboard_matrix_difftest
+0x7b4510	801	CParticleEmitter2::DrawModelParticle		models	primitive	uint32_t __thiscall (CParticleEmitter2 *this, void *particle, const float *frame)	Places, tints and shows one model particle's instance, or hides it under the twinkle	verified	one	models/modelparticles#model-particle-placement	models::alpha_distance_scale_difftest, models::color_byte_to_f32_difftest, models::flag200_scale_difftest, models::lod_index_scale_difftest, models::quat_billboard_matrix_difftest
 0x7b4840	760	CParticleEmitter2::DrawModelParticles		models	primitive		Places every model particle's model, in depth order when the emitter sorts	inferred	none	models/particles#update	models::depth_dot_drawall_difftest
 0x7b4b40	77	CParticleEmitter2::RenderTree		models	orchestration		Renders an emitter and its child emitters	inferred	none	models/render#ribbon-particle-and-custom-draws	
 0x7b4b90	3	CParticleEmitter2::VirtualNoOp		models	orchestration		Returns, popping one argument; a vtable slot of every particle emitter	verified	one	models/particles#emitter-classes	
@@ -35461,12 +35461,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b5d00	32	CParticleEmitter2::SetSorted		models	primitive		Copies bit 0 of its argument into flag 0x10, the depth-ordered draw	verified	one	models/emission#record-flags	
 0x7b5d20	13	CParticleEmitter2::GetFlag10		models	unreached		Returns bit 4 of an emitter's flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b5d30	76	CParticleEmitter2::SetFollowMapping		models	primitive		Stores the slope and intercept of the line through two speed and factor points	verified	one	models/emission#record-to-emitter	models::remap_fit_difftest, models::remap_gate_difftest
-0x7b5d80	26	CParticleEmitter2::AddChild		models	orchestration		Appends a child emitter to an emitter	inferred	none		
-0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration		Loads the model whose emitters become an emitter's children	inferred	none	models/particles#child-emitters	
-0x7b5dd0	106	CParticleEmitter2::OnChildModelLoaded		models	orchestration		Adopts a loaded child model's particle emitters as an emitter's children	inferred	none		
+0x7b5d80	26	CParticleEmitter2::AddChild		models	orchestration	void __thiscall (CParticleEmitter2 *this, CParticleEmitter2 *child)	Appends a child emitter to an emitter's inline slots, with no bound	verified	one	models/particles#emitter-model-loads	
+0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration	void __thiscall (CParticleEmitter2 *this, M2Scene *scene, const char *path)	Creates an emitter's child model and installs the callback that adopts its emitters	verified	one	models/particles#emitter-model-loads	
+0x7b5dd0	106	CParticleEmitter2::OnChildModelLoaded		models	orchestration	void __fastcall (CM2Model *model, CParticleEmitter2 *emitter)	Appends and enables up to four of a loaded model's emitters as an emitter's children	verified	one	models/particles#emitter-model-loads	
 0x7b5e40	6	EmitterAddRef		models	orchestration		Increments an emitter's reference count	inferred	none		
 0x7b5e50	13	EmitterRelease		models	orchestration		Decrements an emitter's reference count and destroys it through its vtable at zero	inferred	none	models/particles#registries	
-0x7b5e60	245	CParticleEmitter2::TransformParticles		models	primitive		Transforms the live particles of an emitter and its children by a matrix	inferred	none		models::orient_velocity_difftest
+0x7b5e60	245	CParticleEmitter2::TransformParticles		models	primitive	void __thiscall (CParticleEmitter2 *this, const float *m)	Moves the live particles' positions and velocities of an emitter and its children through a matrix	verified	one	models/particles#frame-change	models::orient_velocity_difftest, models::transform_particles_difftest
 0x7b5f60	59	CParticleEmitter2::HasLiveParticles		models	orchestration		Returns whether an emitter or one of its children holds a live particle	verified	one	objectlayer/effects#stopping-and-draining	
 0x7b5fa0	53	CParticleEmitter2::CountModelParticles		models	orchestration		Counts the live model particles of an emitter and its children	inferred	none		
 0x7b5fe0	98	CParticleEmitter2::GetParticleModel		models	orchestration		Returns the model of a model particle by index across an emitter and its children	inferred	none		
@@ -35507,7 +35507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b7b90	16	CRibbonEmitter::SetAbove		models	orchestration		Sets a ribbon's height above its node at +0x15c	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7ba0	16	CRibbonEmitter::SetBelow		models	orchestration		Sets a ribbon's height below its node at +0x160	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7bb0	16	CRibbonEmitter::SetGravity		models	orchestration		Sets a ribbon's gravity at +0x164	inferred	none		
-0x7b7bc0	594	CRibbonEmitter::TransformVertices		models	primitive		Transforms a ribbon's vertices by a matrix	inferred	none		models::ribbonbasis_difftest
+0x7b7bc0	594	CRibbonEmitter::TransformVertices		models	primitive	void __thiscall (CRibbonEmitter *this, const float *m)	Moves a ribbon's node positions, axes and ring vertices through a matrix	verified	one	models/ribbons#ribbon-frame-change	models::ribbonbasis_difftest
 0x7b7e20	49	CRibbonEmitter::UpdateIfStarted		models	unreached		Updates a ribbon once its first frame has been placed; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b7e60	593	CRibbonEmitter::Update		models	primitive	void __thiscall (CRibbonEmitter *this, float dt, uint32_t noEmit)	Ages out old edges, emits new ones along the node curve, writes the head edge and ages every edge	verified	one	models/ribbons#ribbon-update	models::dt_clamp_difftest, models::emit_frac_advance_difftest, models::emit_interp_head_difftest, models::emit_segment_offset_difftest, models::emit_t_recip_difftest, models::expire_sum_difftest, models::ribbonage_expire_sum_difftest, models::ribbonage_gravity_emit_difftest, models::ribbonage_interp_factor_difftest, models::ribbonage_next_counter_difftest, models::ribbonage_phase_frac_difftest, models::ribbonage_recip_floorarg_difftest, models::ribbonage_segment_iter_difftest, models::segment_point_write_difftest
 0x7b80c0	536	CRibbonEmitter::Render		models	primitive		Draws the live edges as one indexed strip per material, with the frame offset and one colour	verified	one	models/ribbons#ribbon-draw	models::render_world_translate_difftest
@@ -35574,7 +35574,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b9a40	16	SplineEmitterSetSpread		models	orchestration		Stores a spline emitter's spread angle about the tangent	inferred	none		
 0x7b9a50	16	SplineEmitterSetOffset		models	orchestration		Stores a spline emitter's offset along the spawn direction	verified	one	models/particles#emitter-classes	
 0x7b9a60	31	SplineEmitterSetRate		models	primitive		Stores the base rate and the rate times the end parameter	verified	one	models/emission#spline-spawn	models::spline_set_scale_difftest
-0x7b9a80	26	SplineEmitterSetPath		models	orchestration		Sets the points of a spline emitter's spline	inferred	none		
+0x7b9a80	26	SplineEmitterSetPath		models	orchestration	void __thiscall (SplineParticleEmitter *this, const float *points, uint32_t count)	Sets the points of a spline emitter's Bezier curve	verified	one	models/particles#emitter-model-loads	
 0x7b9aa0	5	InitEmitterShapesTwoPiThunk		models	orchestration		Jumps to 0x7b9ab0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9ab0	15	InitEmitterShapesTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x7b9ac0	5	InitEmitterShapesInvTwoPiThunk		models	orchestration		Jumps to 0x7b9ad0; a static initializer	verified	one	models/overview#shared-header-constants	
