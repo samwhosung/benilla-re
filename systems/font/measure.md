@@ -24,8 +24,8 @@ and `0x5c7470`.
 
 ## Text extent
 
-`0x5c6940(text, bytes, size, flags, extra)` returns the width of the widest line of the first `bytes`
-bytes of a text, as a fraction of the screen width (in pixels when flag `0x80` is set).
+`0x5c6940(text, bytes, size, &width, flags, extra)` stores in `width` the width of the widest line of the
+first `bytes` bytes of a text, as a fraction of the screen width (in pixels when flag `0x80` is set).
 
 Addresses: `0x5c6940`, `0x5c2050`, `0x5c6a1a`, `0x5c6a3b`, `0x5c6a40`, `0x5c6a8c`, `0x5c6a95`, `0x5c6aa0`, `0x5c6ac5`, `0x5c6ace`, `0x5c6fa0`, `0x5c2540`
 Confidence: verified

@@ -18,13 +18,13 @@ A formatted default is text built by `SStrPrintf` just before the `Register` cal
 | `gxMultisample` | `0x63a950` | `%d` of the `multisample` column of the matched hardware row |
 | `gxFixLag` | `0x63a9c1` | `%d` of the `fix-lag` column of the matched hardware row |
 
-Addresses: `0x402c7b`, `0x402c5b`, `0x42cd60`, `0x82e994`, `0x884cb4`, `0x4571ca`, `0x457520`, `0x835e10`, `0x835e0c`, `0x48fd60`, `0x48fda4`, `0x48fd21`, `0x48fd65`, `0x80450c`, `0x804510`, `0x835160`, `0x6c5ae1`, `0x6c5aa6`, `0x835154`, `0x86c3f8`, `0x63a950`, `0x63a9c1`, `0x63a910`, `0x63a97b`
+Addresses: `0x402c7b`, `0x402c5b`, `0x42cd60`, `0x82e994`, `0x884cb4`, `0x4571ca`, `0x457520`, `0x835e10`, `0x835e0c`, `0x48fd60`, `0x48fda4`, `0x48fd21`, `0x48fd65`, `0x80450c`, `0x804510`, `0x835160`, `0x6c5ae1`, `0x6c5aa6`, `0x835154`, `0x86c3f8`, `0x6c5aa0`, `0x63a950`, `0x63a9c1`, `0x63a910`, `0x63a97b`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x402c5b` formats `0x82e994` (`%1.1f`) with the value of `0x42cd60`, which is the stored host speed (`0x884cb4`) times 0.1 (`core/input`). `0x457520` returns the pointer to `50` (`0x835e10`) when `0x639a00` returns a set flag and the copy of the detection record has 1 at `+0x18`, the processor class, and `100` (`0x835e0c`) otherwise. `ConsoleDeviceInitialize` sets the flag byte before the sound CVars register, so the class alone decides.
-`0x48fd21` pushes 10.0 and `0x48fd65` pushes 41.0 as doubles for `%f` (`0x835160`); both register with callback `0x490720` in category 5. `0x6c5aa6` loads the locale index and indexes the dwords at `0x86c3f8`: 2 for every locale except index 1 (`koKR`), which holds 1; `0x835154` is `%d`. `0x63a910` and `0x63a97b` read `+0x54` and `+0x50` of the matched row.
+`0x48fd21` pushes 10.0 and `0x48fd65` pushes 41.0 as doubles for `%f` (`0x835160`); both register with callback `0x490720` in category 5. `0x6c5aa6` loads the locale index and indexes the dwords at `0x86c3f8`: 2 for every locale except index 1 (`koKR`), which holds 1; `0x835154` is `%d`. `ViolenceLevelsInitialize` (`0x6c5aa0`) formats it into 12 bytes and registers `violenceLevel` with callback `0x6c5af0`, category 5, flags 0. `0x63a910` and `0x63a97b` read `+0x54` and `+0x50` of the matched row.
 
 ## Locale defaults
 

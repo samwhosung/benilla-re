@@ -6,7 +6,9 @@ edition.workspace = true
 license.workspace = true
 publish = false
 
+[dependencies]
+# `SStrToInt`, which the Wow.ini integer read falls back to.
+benilla-re-storm.workspace = true
+
 [dev-dependencies]
 benilla-re-difftest.workspace = true
-# The fixture tests read the install's tables through the client's archive mount.
-benilla-re-storm.workspace = true

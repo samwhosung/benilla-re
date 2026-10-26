@@ -166,6 +166,31 @@ Test: none
 property and 0, then call `0x52adb0` with the quality, as in `ui/auctionlists#item-links-and-time-left`. The tooltip
 side of a loot slot is `ui/tooltipenchant`.
 
+## Coin row text
+
+`GetLootRowName` (`0x4c2550`) names the coin row while the money is above 0. `SplitCopper` splits it into
+gold, silver and copper, and each part above 0, gold first, becomes `%d %s%s` of its count, the global
+text of its key (`GOLD`, `SILVER` or `COPPER`, from `0x6c6230`) cut to 31 bytes, and `\n` after gold
+and silver, nothing after copper. The first part is formatted into the output and each later one
+appended with `SStrPack`, both bounded by the caller's size. `SplitCopper(n)` divides by 10000, then
+by 100, each time the remainder at least the divisor, else that part is 0; copper is what is left.
+`0x6c6230(i)` returns the key `COPPER`, `SILVER` or `GOLD` for 0, 1 or 2, else `ERROR_CAPS`.
+
+Addresses: `0x4c2550`, `0x4c2589`, `0x4c2596`, `0x4c25a5`, `0x4c25b3`, `0x4c25cb`, `0x4c25d2`, `0x4c25f6`, `0x4c2620`, `0x4c2631`, `0x6c6260`, `0x6c627b`, `0x6c6282`, `0x6c6296`, `0x6c6220`, `0x6c6230`, `0x6c63a0`, `0xce86c4`
+Confidence: verified
+Proof: one
+Test: `ui::loot_coin_split_difftest`
+
+`0x4c2589` returns the empty output for negative money. `0x4c2596` calls `SplitCopper` into three
+dwords, copper first; the loop `0x4c25a5` walks them from gold and skips a 0. `0x4c25b3` takes the key,
+`FrameScript_GetText` its text, and `0x4c25cb` copies it into 32 bytes. `0x4c25d2` picks `\n`, and the
+index test `jg` gives copper the empty string. The first part goes through `SStrPrintf`
+(`0x4c25f6`), later ones through a 64-byte `SStrPrintf` (`0x4c2620`) and `SStrPack` (`0x4c2631`).
+`SplitCopper` takes the divisor from `CurrencyMultiplier` (`0x6c6220`, the table `0xce86c4`, which
+`LootInitialize` fills with 1, 100 and 10000 at start-up), compares signed (`0x6c627b`), divides with
+`idiv` (`0x6c6282`), keeps the remainder in `edx`, and stores it as copper (`0x6c6296`). The test runs
+`LootInitialize`, `SplitCopper` and `0x6c6230` whole.
+
 ## The row widget
 
 `LootButton` is a frame type that `CreateFrame` and the XML loader can build (`0x495a30` is its factory, registered at

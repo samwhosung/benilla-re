@@ -69,6 +69,26 @@ target `0x5408d0` to `0x554740`; the last pair is `0x5408b7`, `0x5408bc`. Census
 target of exactly one `e8` or `e9` (the 144 from inside `0x53f8b0`, `0x53f8b0` from `0x53f4f0`), and none occurs as a
 dword in the image. The one caller of `0x641260` is `0x63a26b`.
 
+## Damage class check
+
+`0x53f510` builds a pointer array over the `Resistances` rows, in record order, once the tables are loaded. A table of other
+than 7 rows prints `Warning: The Resistances table has the wrong number of entries`, and at most 7 rows
+are taken. The array at `0xc0d530` is sized to that count and holds a pointer to each row in record
+order, and `0x855808` takes the position of the last row whose `Flags` (`+0x4`) has bit 0; with none it
+stays −1.
+
+Addresses: `0x53f510`, `0x53f51b`, `0x53f52c`, `0x53f537`, `0x53f552`, `0x53f56c`, `0x53f598`, `0x53f59e`, `0x53f5a9`, `0x53f4f5`, `0xc0d530`, `0x855808`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x53f51b` stores −1 in `0x855808` first. The count is compared with 7, `0x53f52c` calls `ConsolePrintf`
+with the warning, and `0x53f537` caps the count at 7. The array is `{capacity, count, base}`: for 0 rows
+`0x53f552` frees it and zeroes the three words, otherwise `0x53f56c` reallocates it to the count, which
+is stored at `+4`. The loop steps the row by 0x30 bytes; `0x53f598` tests `[row+4]` bit 0 and `0x53f59e`
+stores the index, so a later flagged row replaces an earlier one; `0x53f5a9` stores the row pointer. The
+one caller is `ClientDBInitialize` (`0x53f4f5`).
+
 ## Record files
 
 Each table's record type has an object file of ten functions, in this order: a file-name getter (`mov eax,<string>; ret`),
@@ -122,6 +142,62 @@ reads `+0x10` as the divisor of the object's radius (`0x5d53cf`), the record com
 `+0x0c` to `+0x30` (`0x60f01d` for the last), `+0x34` (`0x60ee3d`) and `+0x38` (`0x60ee2e`), and passes the record to `0x60d7c0` (`0x60f358`), which takes `+0x3c` on; it never reads `+0x04`.
 The missile launcher `0x60a3d0` reads the visual's `+0x1c` (`0x60a409`), `+0x24` (`0x60a523`) and `+0x28` (`0x60a510`) and not `+0x20`, which the merge `0x60d450` only copies (`0x60d518` to `0x60d522`).
 The absences are of the readers named: callees past them were not read. Column meanings are in `systems/spell/shakes.md` and `systems/objectlayer/auras.md`.
+
+## Reading Wow.ini
+
+Start-up loads `Wow.ini` into a profile (`0x4442c0`, `0x444460`), read to its first NUL by lines.
+`//` opens a comment. `[name]` makes `name` the section, ignoring what follows `]`; with no `]`
+the section stays. Any other line is a key, ending at the first `=` after its first character, then
+the value, nothing trimmed. A line with no `=`, or before any section, adds nothing. Names compare
+ignoring case. Each line appends its value's pieces to its key: a `,` ends a piece, so `a,,b` gives an
+empty middle one; a piece opening with `"` runs to the next `"`, a `,` right after it skipped, and any
+other text there starts the next piece. An empty value appends nothing.
+
+Addresses: `0x4442c0`, `0x444460`, `0x444480`, `0x444507`, `0x44451f`, `0x444540`, `0x4445f0`, `0x44463c`, `0x444661`, `0x444671`, `0x44469b`, `0x4446c8`, `0x4446e5`, `0x444710`, `0x44471e`, `0x444732`, `0x444750`, `0x444769`, `0x44476d`, `0x444779`, `0x444790`, `0x4448d9`, `0x44488e`, `0x444e10`, `0x402496`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x444460` refuses a null name (error 0x57) and jumps to `0x444480`, which copies the name into 260
+bytes, cuts trailing `__ismbcspace` characters with no lower bound (spaces alone walk below the buffer),
+loads the file with `SFile::LoadByName` (`0x444507`), parses it (`0x44451f`) and frees the buffer, or
+returns 0. `0x444540` walks its NUL-terminated copy (`0x4446c8`) through six states: line start
+(`0x4445f0`: CR or LF stays, `//` by a two-byte `SStrCmp`, `[`, else a key), comment and after `]`
+(`0x444661`), section (`0x44463c`: a line end restores the last closed section, `]` closes it), key
+(`0x444671`: a line end drops it, `=` ends it) and value (`0x44469b`: a line end hands it to
+`0x444710`). A state takes effect from the next character, so a key's first character is never its `=`.
+`0x4446e5` hands over a value open at the end. `0x444710` returns for a null section (`0x44471e`) or an
+empty value (`0x444732`), else calls `0x444790(section, key, piece, 0, 1)` per piece (`0x444779`); a `,`
+ends a piece (`0x444750`, `0x44476d`), and after a closing quote the next starts at once (`0x444769`).
+The 0 skips the clearing at `0x4448d9`. `0x444790` finds a section by `SStrHashHT` and `0x444e10`, a key
+by `SStrCmpI` (`0x44488e`), creating either.
+
+## Wow.ini values
+
+`0x4452c0(section, key, index)` returns the key's value at `index`, or null when the section, the key
+or the index is missing; `0x4452f0` finds the key. `0x4455d0` empties its buffer, then copies the value
+with `SStrCopy` to the buffer's size and returns 1, or returns 0 with no value. `0x445410` stores 0,
+then the value as an integer and returns 1: a value opening with `'` packs the up to four characters
+that follow, up to a `'` or the end, unsigned and first character highest; any other is `SStrToInt`.
+Start-up reads value 0 of `Region` in `[WoW Config]` into `0x882730`, which keeps 0 without the file
+or the key, and `0x6c91a0` copies it to `0x86c9e0`, the name charsets' region.
+
+Addresses: `0x4452c0`, `0x4452d6`, `0x4452f0`, `0x4452f8`, `0x445356`, `0x4453cb`, `0x445410`, `0x44542c`, `0x445470`, `0x445480`, `0x445497`, `0x44549c`, `0x4455d0`, `0x4455ec`, `0x445612`, `0x4024a4`, `0x4024bd`, `0x40256a`, `0x445900`, `0x882730`, `0x402b79`, `0x6c91a0`, `0x6c91b8`, `0x86c9e0`
+Confidence: verified
+Proof: one
+Test: `dbc::wow_ini_value_int_difftest`
+
+`0x4452c0` compares the index with the count `+0x1c` of the key (`jae` at `0x4452d6`) and reads the
+array `+0x20`. `0x4452f0` returns 0 for an empty table (mask −1, `0x4452f8`) and compares the section
+and key names at `0x445356` and `0x4453cb`, each after a pointer-equality test. `0x445410` and
+`0x4455d0` raise error 0x57 for a null section, key or output; their stores before the lookup are
+`0x44542c` and `0x4455ec`, and `0x445612` is the copy. `0x445470` runs `shl eax,8; or eax,edx` with
+`movzx` over at most four bytes (`0x445480` to `0x445497`), else calls `SStrToInt` (`0x44549c`).
+`0x4024a4` skips every read when the load fails; `0x4024bd` passes `WoW Config`, `Region`, `0x882730`
+and index 0; `0x40256a` deletes the profile through `0x445900`, slot 0 of its vtable with 1. Census of
+the instructions that name `0x882730`: the push at `0x4024ac` and the reads at `0x402b79` and
+`0x46a510` (control: the same scan finds the one store to `0xc0e080`, `0x402562`); its file bytes
+are 0. `0x402b79` passes it in `ecx` to `0x6c91a0`, which stores it at `0x6c91b8`.
 
 ## Localized strings
 

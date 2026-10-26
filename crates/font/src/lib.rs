@@ -20,5 +20,6 @@ pub mod metric;
 pub mod raster;
 pub mod screen_pixel;
 pub mod setup;
+pub mod text_block;
 
 pub use benilla_re_cmath::x87::ftol;

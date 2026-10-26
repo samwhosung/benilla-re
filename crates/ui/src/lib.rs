@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 pub mod anchors;
+pub mod auction_deposit;
 pub mod auto_loot;
 pub mod billing;
 pub mod camera_arm_view;
@@ -52,6 +53,7 @@ pub mod layout_scale;
 pub mod list_lookups;
 pub mod list_sort;
 pub mod list_sort_cmp;
+pub mod loot_coin;
 pub mod minimap_arrow;
 pub mod minimap_blips;
 pub mod minimap_frame;

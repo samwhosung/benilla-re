@@ -58,6 +58,68 @@ too (`or eax,1`, `0x5c1b9a`), and `0x5ca1d0(name, flags, size)` runs. It copies 
 (`0x5d0060(name, 0xc2b9a8)`) and, when it loads, calls the metrics `0x5ca030`. On failure `0x5c1bb2`
 destroys and frees the font and `*font` is 0.
 
+## Text block fonts
+
+`TextBlockGenerateFont(name, flags, size)` (`0x44d040`) returns a font handle, or 0 with error 0x57 for
+a null or empty name. It divides the size by `s_screenScaleY` and makes the float 1.0 when it is 1.0 or
+more, or NaN. Fonts are cached by the key `%s-%d-%f` of the name, the flags as passed and that size,
+compared exactly although the hash folds case. A new key creates the font with `GxuFontCreateFont`,
+flag bit 0 giving 1, bit 1 giving 2 and bit 2 giving 8, and on failure frees its entry and returns 0.
+The factory refuses a size of 1 or more or of 0 or less, so a quotient outside (0, 1), the clamped
+1.0 included, fails the load.
+
+Addresses: `0x44d040`, `0x44d059`, `0x44d073`, `0x44d078`, `0x44d07b`, `0x44d088`, `0x44d0ab`, `0x44d0c8`, `0x44d110`, `0x44d13c`, `0x44d1f2`, `0x44d1fa`, `0x44d216`, `0x44d224`, `0x44d298`, `0x44d2ab`, `0x41ae50`, `0x41af10`, `0x5c1ae0`, `0x5c1af3`, `0x5c1b03`
+Confidence: verified
+Proof: one
+Test: `font::text_block_font_size_difftest`, `font::text_block_font_flags_difftest`
+
+`0x44d059` tests the first byte. `0x44d073` calls `DivideByScreenScaleY`, `0x44d078` stores the quotient
+with `fst dword`, and `0x44d07b` compares the unrounded quotient with 1.0 (`test ah,5; jnp`), so only a
+quotient below 1.0 keeps its stored float; `0x44d088` stores 1.0. `0x44d0ab` formats the key into 0x114
+bytes. The lookup hashes it with `SStrHashHT` (`0x44d0c8`) and compares with `SStrCmp` (`0x44d110`); a
+hit returns `CreateHandle(entry, "HTEXTFONT")` (`0x44d13c`). A miss inserts an entry, keeps a copy of the
+key (`SStrDupA`, `0x44d1f2`), maps the flags (`0x44d1fa` to `0x44d216`) and calls `GxuFontCreateFont`
+with `entry + 0x20` (`0x44d224`), whose size tests are `0x5c1af3` and `0x5c1b03`. A zero return unlinks
+the entry and deletes it through its vtable (`0x44d298`); a success returns a handle (`0x44d2ab`). The
+tests run `0x44d06f` to `0x44d08f` and `0x44d1fa` to `0x44d219` as slices.
+
+## Text block measures
+
+`0x44d670(block, text, bytes, size, &width, extra, unused, flags)` and `0x44d960(block, text, …, flags)`
+call the font's measures in screen units with the block's font (`+0x20`): each vertical length is
+divided by `s_screenScaleY`, each horizontal one by `s_screenScaleX`, and the flags are mapped as below.
+A null block or text, a block without a font, or for `0x44d670` a null `width`, raises error 0x57.
+`0x44d670` zeroes `width` first and multiplies the width `GxuFontGetTextExtent` stores there by
+`s_screenScaleX`; `0x44d960` returns the count `GxuFontGetMaxCharsWithinHeight` returns.
+
+| flag | font flag |
+|---|---|
+| `0x0040` | `0x002` |
+| `0x0100` | `0x001` |
+| `0x0200` | `0x004` |
+| `0x0400` | `0x008` |
+| `0x0800` | `0x010` |
+| `0x1000` | `0x040` |
+| `0x2000` | `0x100` |
+| `0x4000` | `0x200` |
+| `0x8000` | `0x400` |
+| `0x0080` | `0x800` |
+
+Addresses: `0x44d670`, `0x44d689`, `0x44d6a4`, `0x44d6fc`, `0x44d733`, `0x44d741`, `0x44d960`, `0x44d996`, `0x44d9ee`, `0x44da3e`, `0x5c2050`, `0x5c6940`, `0x5c6b22`, `0x5c6b41`, `0x5c21c0`, `0x41ae40`, `0x41ae50`, `0x41ad80`
+Confidence: verified
+Proof: one
+Test: `font::text_block_measure_flags_difftest`
+
+`0x44d6a4` to `0x44d6fc` and `0x44d996` to `0x44d9ee` make the same ten tests (`test ch` and `test cl`,
+`jns` for the two sign bits). `0x44d670` stores 0 through its fifth argument (`0x44d689`), divides the
+seventh and sixth by `DivideByScreenScaleX` and the fourth by `DivideByScreenScaleY`, calls `0x5c2050`
+(`0x44d733`), then `ScaleScreenDelta(width, null, *width, 0)` (`0x44d741`). `0x5c2050` passes the bytes,
+the size, the width pointer, the flags and `extra` to `0x5c6940`, which stores the width through the
+pointer (`0x5c6b22`, `0x5c6b41`) and leaves the x87 stack empty; `unused` is never read. `0x44d960`
+divides its third, fifth and eighth arguments by `DivideByScreenScaleY` and its fourth and seventh by
+`DivideByScreenScaleX`, passes the sixth unchanged, and calls `0x5c21c0` (`0x44da3e`). The test runs the
+two flag maps as slices.
+
 ## Destroying a font
 
 `0x5c1c00(&font)` destroys the font that a pointer names and clears the pointer. `0x5ca760`

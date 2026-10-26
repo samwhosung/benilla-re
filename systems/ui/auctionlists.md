@@ -257,12 +257,12 @@ consignment column of the row is never read.
 Addresses: `0x4ce170`, `0x4ce1c0`, `0x4ce29c`, `0x4ce292`, `0x4ce295`, `0x4ce29f`, `0x644bc0`, `0x644bd0`, `0x644be9`, `0x644bf9`, `0x80e4b0`, `0xc0dff0`, `0x4ce2f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::auction_deposit_difftest`
 
 `0x4ce181` indexes the house id (`0xb72600`) in the `AuctionHouse.dbc` store (`0xc0dff0`) and
 `0x4ce18e` pushes `fild [row+8]`. `0x644bc0(rate, price * count, runTime)` accepts only the three durations (`0x80e4b0`),
 computes `rate * price * count` in 32 bits, divides by 100 (`0x51eb851f`, `shr 5`) and runTime by 120 (`0x88888889`,
-`shr 6`), multiplies in the x87 and truncates with `__ftol`. A rate of 5, price 9, count 1 and 1440 gives 0.
+`shr 6`), multiplies in the x87 and truncates with `__ftol`. A rate of 5, price 9, count 1 and 1440 gives 0. The test runs it whole.
 
 ## Sell slot
 

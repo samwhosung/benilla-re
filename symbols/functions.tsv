@@ -3319,13 +3319,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4441d0	194			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4442a0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4442b0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x4442c0	214			unassigned			Runs Profile.cpp code that calls SMemAlloc, 0x446ad0, 0x446950 and 1 more; not read here	inferred	none		
+0x4442c0	214	ProfileCreate		unassigned	orchestration	void * __cdecl (void)	Allocates and constructs an empty profile of sections, keys and values, or returns null	verified	one	dbc#reading-wowini	
 0x4443a0	181			unassigned			Runs its object file code that calls 0x446300, 0x445910, SMemFree and 5 more; not read here	inferred	none		
-0x444460	19			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x444480	183			unassigned			Runs its object file code that calls SStrCopy, SStrLen, __ismbcspace and 3 more; not read here	inferred	none		
-0x444540	440			unassigned			Runs its object file code that calls 0x444010, SStrChr, SStrCmp and 1 more; not read here	inferred	none		
-0x444710	125			unassigned			Runs its object file code that calls 0x444790; not read here	inferred	none		
-0x444790	479			unassigned			Runs its object file code that calls SStrHashHT, 0x444e10, 0x446950 and 10 more; not read here	inferred	none		
+0x444460	19	ProfileLoad		unassigned	orchestration	int __fastcall (void *profile, const char *name)	Loads a profile file by name through 0x444480; error 0x57 and 0 for a null name	verified	one	dbc#reading-wowini	
+0x444480	183	ProfileReadFile		unassigned	orchestration	int __fastcall (void *profile, const char *name)	Loads a named file with trailing spaces cut from the name and parses it; 0 when it does not load	verified	one	dbc#reading-wowini	
+0x444540	440	ProfileParseText		unassigned	orchestration	int __fastcall (void *profile, const char *text, uint32_t size)	Parses a copy of an INI text into sections, keys and values, line by line, and returns 1	verified	one	dbc#reading-wowini	
+0x444710	125	ProfileAddValueList		unassigned	orchestration	void __fastcall (void *profile, const char *section, const char *key, char *value)	Splits a value at commas, a quoted part whole, and appends each part to the key	verified	one	dbc#reading-wowini	
+0x444790	479	ProfileAddValue		unassigned	orchestration	void __fastcall (void *profile, const char *section, const char *key, const char *value, int clear, uint32_t arg6)	Appends a value to a key, creating the section and the key, after clearing the key when asked	verified	one	dbc#reading-wowini	
 0x444970	19			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x444990	146			unassigned	unreached		Runs its object file code that calls 0x446a20, 0x444a80, 0x444a30 and 1 more; not read here	inferred	none		
 0x444a30	80			unassigned	unreached		Runs its object file code that calls _fopen, 0x73f574, _fclose; not read here	inferred	none		
@@ -3335,7 +3335,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x444d40	16			unassigned	unreached		Runs its object file code that calls 0x444540; not read here	inferred	none		
 0x444d50	67			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x444790; not read here	inferred	none		
 0x444da0	109			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
-0x444e10	43			unassigned			Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x444e10	43	ProfileNameEquals		unassigned	orchestration	int __fastcall (const char **name, uint32_t unused, const char *other)	Returns 1 when a held name is the same pointer as a name or equal to it ignoring case	verified	one	dbc#reading-wowini	
 0x444e40	113			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
 0x444ec0	114			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrPrintf, 0x444790; not read here	inferred	none		
 0x444f40	98			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x761320, 0x444790; not read here	inferred	none		
@@ -3347,14 +3347,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4451b0	98			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x761320, 0x444790; not read here	inferred	none		
 0x445220	57			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x444790; not read here	inferred	none		
 0x445260	94			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrCmpI; not read here	inferred	none		
-0x4452c0	40			unassigned			Runs its object file code that calls 0x4452f0; not read here	inferred	none		
-0x4452f0	276			unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x445410	82			unassigned			Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x445470; not read here	inferred	none		
-0x445470	51			unassigned			Runs its object file code that calls 0x64ac60; not read here	inferred	none		
+0x4452c0	40	ProfileGetValue		unassigned	orchestration	const char * __fastcall (void *profile, const char *section, const char *key, uint32_t index)	Returns the value of a key at an index, or null for a missing section, key or index	verified	one	dbc#wowini-values	
+0x4452f0	276	ProfileFindKey		unassigned	orchestration	void * __fastcall (void *profile, const char *section, const char *key)	Finds a key of a section by hash and names compared ignoring case, or returns null	verified	one	dbc#wowini-values	
+0x445410	82	ProfileGetInt		unassigned	orchestration	int __fastcall (void *profile, const char *section, const char *key, int32_t *out, uint32_t index)	Stores 0, then a value read as an integer, and returns whether the value exists; error 0x57 for null input	verified	one	dbc#wowini-values	
+0x445470	51	ProfileParseInt		unassigned	primitive	int32_t __fastcall (const char *value)	Packs up to four quoted characters first byte highest, or reads a decimal through SStrToInt	verified	one	dbc#wowini-values	dbc::wow_ini_value_int_difftest
 0x4454b0	91			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x64acd0; not read here	inferred	none		
 0x445510	81			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrToFloat; not read here	inferred	none		
 0x445570	89			unassigned	unreached		Runs its object file code that calls 0x4452c0, SErrSetLastError, 0x7614b0; not read here	inferred	none		
-0x4455d0	81			unassigned			Runs its object file code that calls 0x4452c0, SErrSetLastError, SStrCopy; not read here	inferred	none		
+0x4455d0	81	ProfileGetString		unassigned	orchestration	int __fastcall (void *profile, const char *section, const char *key, char *out, uint32_t size, uint32_t index)	Empties a buffer, then copies a value into it and returns whether the value exists; error 0x57 for null input	verified	one	dbc#wowini-values	
 0x445630	43			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x4452c0; not read here	inferred	none		
 0x445660	37			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x445690; not read here	inferred	none		
 0x445690	29			unassigned	unreached		Runs its object file code that calls 0x4452f0; not read here	inferred	none		
@@ -3362,7 +3362,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x445730	223			unassigned	unreached		Runs its object file code that calls SStrHashHT, SStrCmpI, 0x446950 and 1 more; not read here	inferred	none		
 0x445810	68			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x445860	158			unassigned	unreached		Runs its object file code that calls SErrSetLastError, SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x445900	11			unassigned			Runs its object file code not read here	inferred	none		
+0x445900	11	ProfileDelete		unassigned	orchestration	void __thiscall (void *this)	Deletes a non-null profile through its vtable slot 0 with 1	verified	one	dbc#wowini-values	
 0x445910	60			unassigned			Runs its object file code not read here	inferred	none		
 0x445950	98			unassigned			Runs its object file code that calls 0x445fc0, 0x446270, 0x446780 and 3 more; not read here	inferred	none		
 0x4459c0	65			unassigned			Runs its object file code that calls SMemFree, 0x446540; not read here	inferred	none		
@@ -3593,7 +3593,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44ce00	190			unassigned			Runs its object file code not read here	inferred	none		
 0x44cec0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x44ced0	359			unassigned			Runs its object file code that calls 0x44e190, 0x44dfb0, 0x44dff0 and 1 more; not read here	inferred	none		
-0x44d040	632	TextBlockGenerateFont	idb	unassigned			Runs its object file code that calls SErrSetLastError, 0x41ae50, SStrPrintf and 10 more; not read here	inferred	none		
+0x44d040	632	TextBlockGenerateFont	idb	unassigned	primitive	void * __fastcall (const char *name, uint32_t flags, float size)	Returns a handle on the cached font of a name, flags and size over the screen scale, creating it; 0 on failure	verified	one	font/api#text-block-fonts	font::text_block_font_size_difftest, font::text_block_font_flags_difftest
 0x44d2c0	22			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x44d2e0	50			unassigned			Runs its object file code that calls SErrSetLastError, 0x5c1bf0; not read here	inferred	none		
 0x44d320	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -3607,10 +3607,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44d5c0	54			unassigned			Runs its object file code that calls GxuFontDestroyString, SMemFree; not read here	inferred	none		
 0x44d600	79			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ade0, 0x5c2770; not read here	inferred	none		
 0x44d650	20			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x44d670	221			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
+0x44d670	221	TextBlockGetTextExtent		unassigned	primitive	void __fastcall (void *block, const char *text, int32_t bytes, float size, float *width, float extra, float unused, uint32_t flags)	Measures a text width in screen units through GxuFontGetTextExtent, the lengths and flags converted	verified	one	font/api#text-block-measures	font::text_block_measure_flags_difftest
 0x44d750	263			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ade0, 0x41ae50 and 3 more; not read here	inferred	none		
 0x44d860	244			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
-0x44d960	233			unassigned			Runs its object file code that calls SErrSetLastError, 0x41ae50, DivideByScreenScaleX and 1 more; not read here	inferred	none		
+0x44d960	233	TextBlockGetMaxCharsWithinHeight		unassigned	primitive	int __fastcall (void *block, const char *text, float size, float width, float height, void *arg6, float arg7, float gap, uint32_t flags)	Counts the characters that fit a height through GxuFontGetMaxCharsWithinHeight, lengths and flags converted	verified	one	font/api#text-block-measures	font::text_block_measure_flags_difftest
 0x44da50	244			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
 0x44db50	231			unassigned			Runs its object file code that calls SErrSetLastError, DivideByScreenScaleX, 0x41ae50 and 2 more; not read here	inferred	none		
 0x44dc40	19			unassigned			Runs its object file code that calls 0x5c27f0; not read here	inferred	none		
@@ -14067,7 +14067,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x53f4c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x53f4d0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x53f4f0	32	ClientDBInitialize	idb	unassigned	orchestration		Loads every table, then runs four fix-ups and jumps to the light table conversion	verified	one	lighting/tables#light-positions-at-load	
-0x53f510	167	CheckDamageClassConsistency	idb	unassigned			Runs its object file code that calls ConsolePrintf, 0x554980, 0x5549a0; not read here	inferred	none		
+0x53f510	167	CheckDamageClassConsistency	idb	unassigned	orchestration	void __cdecl (void)	Points an array at up to 7 Resistances rows in record order, keeps the last with Flags bit 0, warns on a count but 7	verified	one	dbc#damage-class-check	
 0x53f5c0	126	InitTerrainSoundTypeIDs	idb	unassigned			Runs its object file code that calls FreeUint32Array, ReallocUint32Array; not read here	inferred	none		
 0x53f640	277	InitWeaponSubclasses	idb	unassigned			Runs its object file code that calls 0x554ac0, LocateWeaponSubclass, 0x554a30; not read here	inferred	none		
 0x53f760	72	LocateWeaponSubclass	idb	unassigned			Runs its object file code not read here	inferred	none		
@@ -18362,10 +18362,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c1ef0	10	GxuFontBatchDraw		unassigned	orchestration	void __thiscall (void *this)	Draws a batch through 0x5c8b70	verified	one	font/api#batches	
 0x5c1f00	101	GxuFontBatchClear		unassigned	orchestration	int __thiscall (void *this)	Empties a batch	inferred	none	font/api#batches	
 0x5c1f70	213	GxuFontDestroyBatch		unassigned	orchestration	int __thiscall (void *this)	Returns a batch to the free list	inferred	none	font/api#batches	
-0x5c2050	32	GxuFontGetTextExtent		unassigned	orchestration	float __fastcall (void *arg1, const char *text, int bytes, float size, uint32_t flags, float extra, uint32_t arg7, uint32_t arg8)	Measures the width of a text through 0x5c6940	inferred	none	font/measure#text-extent	
+0x5c2050	32	GxuFontGetTextExtent		unassigned	orchestration	void __fastcall (void *font, const char *text, int32_t bytes, float size, float *width, float extra, float unused, uint32_t flags)	Stores the width of a text through 0x5c6940	inferred	none	font/measure#text-extent	
 0x5c2070	273	GxuFontGetTextBlockHeight		unassigned	primitive	float __fastcall (void *arg1, const char *text, float size, float width, void *state, uint32_t flags, uint32_t arg7)	Returns the height of a wrapped text	verified	one	font/measure#block-height-and-fit	font::font_textblock_height_difftest
 0x5c2190	42	GxuFontGetMaxCharsWithinWidth	idb	unassigned			Runs its object file code that calls InternalGetMaxCharsWithinWidth; not read here	inferred	none		
-0x5c21c0	339	GxuFontGetMaxCharsWithinHeight		unassigned	primitive	int __fastcall (void *arg1, const char *text, float size, float width, float height, float gap, int *broke, uint32_t flags, uint32_t arg9)	Counts the characters that fit a height	verified	one	font/measure#block-height-and-fit	font::font_height_fit_difftest
+0x5c21c0	339	GxuFontGetMaxCharsWithinHeight		unassigned	primitive	int __fastcall (void *arg1, const char *text, float size, float width, float height, void *arg6, float arg7, float gap, uint32_t flags)	Counts the characters that fit a height	verified	one	font/measure#block-height-and-fit	font::font_height_fit_difftest
 0x5c2320	259	GxuFontGetCharsFittingWidth		unassigned	primitive	int __fastcall (void *arg1, const char *text, float size, float width, int count, float *out, uint32_t flags, uint32_t arg8, uint32_t arg9)	Counts the characters from the end that fit a width	verified	one	font/measure#fitting-characters-to-a-width	font::font_width_fit_difftest
 0x5c2430	263	GxuFontEnumerateLines		unassigned	primitive	int __fastcall (void *font, const char *text, uint32_t length, float size, float width, uint32_t *offsets, uint32_t count, uint32_t arg8, uint32_t arg9, uint32_t flags)	Writes the byte offset each line starts at, up to a count, and returns the number of lines	verified	one	font/markup#line-starts	font::line_break_enumerate_difftest
 0x5c2540	67	GxuFontGetOneToOneHeight	idb	unassigned	primitive	float __thiscall (void *this)	Returns the font pixel size over the viewport height	verified	one	font/metrics#screen-and-pixel-units	font::one_to_one_height_difftest
@@ -18456,7 +18456,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c6860	34	InitStringList		font	orchestration	void __cdecl (void)	Makes the global string list 0xc2b994 empty	verified	one	font/overview#static-objects	
 0x5c6890	12	RegisterDestroyStringList		font	orchestration	void __cdecl (void)	Registers 0x5c68a0 with _atexit	inferred	none	font/overview#static-objects	
 0x5c68a0	155	DestroyStringList		font	primitive	void __cdecl (void)	Unlinks the records of the global string list	inferred	none	font/overview#static-objects	
-0x5c6940	523	MeasureTextExtent		font	primitive	float __fastcall (void *arg1, const char *text, int bytes, float size, uint32_t flags, float extra, uint32_t arg7)	Returns the width of the widest line of a text	verified	one	font/measure#text-extent	font::text_extent_measure_difftest
+0x5c6940	523	MeasureTextExtent		font	primitive	void __fastcall (void *font, const char *text, int32_t bytes, float size, float *width, uint32_t flags, float extra)	Stores the width of the widest line of a text through a pointer	verified	one	font/measure#text-extent	font::text_extent_measure_difftest
 0x5c6b70	217	CGxFont::GetCharAdvance	idb	font	primitive	float __fastcall (CGxFont *arg1, uint32_t cur, const char *next, float size, uint32_t flags)	Returns a glyph's advance in pixels	verified	one	font/metrics#advance-of-a-glyph	font::char_advance_difftest
 0x5c6c50	725	InternalGetMaxCharsWithinWidth	idb	font	primitive	int __fastcall (void *arg1, const char *text, float size, float width, uint32_t flags, float extra, float *outWidth, int *outBytes, float *cumulative, uint32_t arg10, uint32_t arg11)	Counts the characters that fit one line of a width	verified	one	font/measure#fitting-characters-to-a-width	font::wrap_max_chars_difftest
 0x5c6f40	19			font	orchestration		Runs GxuFontUtil.cpp code that calls SMemAlloc; not read here	inferred	none		
@@ -22886,8 +22886,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6409f0	12	CommandListReset		console	orchestration	void __thiscall (void *this)	Points a list terminator at itself	verified	one	console/commands#growth-twins	
 0x640a00	316	CommandBucketsResize		console	primitive	void __thiscall (void *this, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	console/commands#growth-twins	
 0x640b40	264	CommandBucketsRealloc		console	primitive	void __thiscall (void *this, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	console/commands#growth-twins	
-0x640c50	5			unassigned			Runs its object file code not read here	inferred	none		
-0x640c60	11			unassigned			Runs its object file code not read here	inferred	none		
+0x640c50	5	InitInfinity640c60Thunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x640c60, a static initializer	verified	one	console/overview#object-files	
+0x640c60	11	InitInfinity640c60		unassigned	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	console/overview#object-files	
 0x640c70	5			unassigned			Runs its object file code not read here	inferred	none		
 0x640c80	15			unassigned			Runs its object file code not read here	inferred	none		
 0x640c90	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -23037,13 +23037,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6422d0	14			unassigned			Runs its object file code not read here	inferred	none		
 0x6422e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6422f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x642300	30			unassigned			Runs its object file code not read here	inferred	none		
+0x642300	30	WowTime::WowTime		unassigned	orchestration	WowTime * __thiscall (WowTime *this)	Sets a time record six fields to -1 and the seventh to 0 and returns it	verified	one	gametime/overview#time-record-helpers	
 0x642320	130	WowTime::GetDayNumber		unassigned		int32_t __thiscall (const WowTime *this)	Returns mktime of the date divided by 86,400, or 0 when its year, month or day is negative	verified	one	gametime/overview#day-number-and-time-text	
 0x6423b0	3			unassigned			Runs its object file code not read here	inferred	none		
-0x6423c0	198			unassigned			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
-0x642490	33			unassigned			Runs its object file code that calls _localtime; not read here	inferred	none		
-0x6424c0	22			unassigned			Runs its object file code not read here	inferred	none		
-0x6424e0	25			unassigned			Runs its object file code not read here	inferred	none		
+0x6423c0	198	WowTime::AddDays		unassigned	primitive	void __thiscall (WowTime *this, int32_t days, bool keepTime)	Moves a set date by a number of days through mktime and localtime, from local midnight plus an hour without keepTime	verified	one	gametime/overview#time-record-helpers	gametime::add_days_difftest
+0x642490	33	CopyLocalTime		unassigned	orchestration	void __fastcall (const int32_t *seconds, void *out)	Copies the 36-byte localtime of a time into a buffer, or zeroes the buffer when localtime fails	verified	one	gametime/overview#time-record-helpers	
+0x6424c0	22	WowTime::GetMinuteOfDay		unassigned	primitive	int32_t __thiscall (const WowTime *this)	Returns hour times 60 plus minute, or 0 when either is negative	verified	one	gametime/overview#time-record-helpers	gametime::minute_of_day_difftest
+0x6424e0	25	WowTime::SetMinuteOfDay		unassigned	primitive	void __thiscall (WowTime *this, int32_t minutes)	Sets the hour and minute to a minute count divided by 60 and its signed remainder	verified	one	gametime/overview#time-record-helpers	gametime::set_minute_of_day_difftest
 0x642500	57			unassigned	unreached		Runs its object file code that calls 0x6424c0, 0x6423c0, 0x6424e0; not read here	inferred	none		
 0x642540	176			unassigned	unreached		Runs its object file code that calls 0x6423c0, 0x642500, 0x6424c0 and 1 more; not read here	inferred	none		
 0x6425f0	39	WowTime::CompareYear		unassigned	primitive	int32_t __thiscall (WowTime *this, const WowTime *other)	Returns 1, 0 or -1 as the year of a time is above, equal to or below another's	verified	one	gametime/overview#time-range-test	gametime::time_order_difftest
@@ -23061,7 +23061,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642ac0	21			unassigned	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
 0x642ae0	80	WowTime::WowEncodeTime	idb	unassigned	primitive	void __fastcall (uint32_t *out, int32_t minute, int32_t hour, int32_t weekday, int32_t day, int32_t month, int32_t year, int32_t extra)	Packs minute, hour, weekday, day, month, year and a two-bit field into a dword, each masked to its width	verified	one	gametime/overview#time-range-test	gametime::time_encode_difftest
 0x642b30	211	WowTime::WowDecodeTime2	idb	base	primitive	void __fastcall (uint32_t packed, int32_t *minute, int32_t *hour, int32_t *weekday, int32_t *day, int32_t *month, int32_t *year, int32_t *extra)	Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
-0x642c10	32			unassigned			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
+0x642c10	32	PackWowTime		unassigned	orchestration	void __fastcall (uint32_t *out, const WowTime *time)	Packs a time record into a dword through WowTime::WowEncodeTime	verified	one	gametime/overview#time-record-helpers	
 0x642c30	30	WowTime::WowDecodeTime	idb	base	orchestration	void __fastcall (uint32_t packed, WowTime *out)	Decodes a packed date into a seven-field record by calling 0x642b30	verified	two	gametime/messages#packed-date-fields	gametime::gametime_642c30_decode_time
 0x642c50	38			unassigned	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
 0x642c80	397	WowTime::FormatTime		unassigned		char * __fastcall (const WowTime *time, char *buffer, uint32_t size)	Formats a time as month/day/year (weekday) hour:minute, or Not Set, into a buffer	verified	one	gametime/overview#day-number-and-time-text	
@@ -23189,7 +23189,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x644b70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x644b90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x644ba0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x644bc0	102			unassigned			Runs its object file code that calls __ftol; not read here	inferred	none		
+0x644bc0	102	ComputeAuctionDeposit		unassigned	primitive	uint32_t __fastcall (uint32_t rate, uint32_t value, uint32_t minutes)	Returns rate times value in 32 bits over 100, times minutes over 120, for 120, 480 or 1440 minutes, else 0	verified	one	ui/auctionlists#deposit	ui::auction_deposit_difftest
 0x644c30	5			unassigned			Runs its object file code not read here	inferred	none		
 0x644c40	11			unassigned			Runs its object file code not read here	inferred	none		
 0x644c50	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -28180,7 +28180,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5a60	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a90	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned			Runs its object file code that calls SStrPrintf, CVar::Register; not read here	inferred	none		
+0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned	orchestration	void __cdecl (void)	Registers violenceLevel with the locale table entry as its default and OnViolenceLevelChanged as callback	verified	one	cvar/defaults#formatted-defaults	
 0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel value clamped to the locale maximum and sets the blood-spurt name substitution	verified	one	gx/textures#texture-basename-substitution	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b60	10			unassigned			Runs its object file code that calls 0x6c5b70; not read here	inferred	none		
@@ -28201,12 +28201,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c6120	114	ReceiveNewGameTime	idb	unassigned	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Sets the clock to the packet's packed date with force and runs the time-changed bridge, or logs a malformed packet	verified	two	gametime/messages#game-time-set	gametime::gametime_6c6120_game_time_set
 0x6c61a0	60	ClearGameTimeHandlers		unassigned	orchestration	void __cdecl (void)	Clears the five game-time opcode handlers, then jumps to 0x6433f0 on the clock	verified	one	gametime/messages#server-messages	
 0x6c61e0	56	SetTimeChangedCallback		unassigned	unreached	void __fastcall (uint32_t add, void *callback)	Stores a callback in the first empty time-changed slot, or clears the slot that holds it	inferred	none	gametime/overview#unreached-functions	
-0x6c6220	8	CurrencyMultiplier	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6260	59	SplitCopper		unassigned	primitive		Splits an amount into copper, silver and gold: divides by 10000, 100 and 1, each step on the last remainder	inferred	none	objectlayer/quests#quest-completion	
+0x6c6220	8	CurrencyMultiplier	idb	unassigned	orchestration	uint32_t __fastcall (uint32_t index)	Returns the copper value of currency unit 0, 1 or 2 from the table LootInitialize fills	verified	one	ui/loot#coin-row-text	
+0x6c6230	35	GetCurrencyKey		unassigned	primitive	const char * __fastcall (uint32_t index)	Returns the global string key COPPER, SILVER or GOLD for 0, 1 or 2, else ERROR_CAPS	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
+0x6c6260	59	SplitCopper		unassigned	primitive	void __fastcall (int32_t copper, int32_t *parts)	Splits an amount into copper, silver and gold, dividing the remainder by 10000 and 100 when it reaches them	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
 0x6c62a0	34			unassigned	unreached		Runs its object file code that calls CurrencyMultiplier; not read here	inferred	none		
 0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
-0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x6c63a0	41	LootInitialize	idb	unassigned	primitive	void __cdecl (void)	Fills the currency multipliers with 1, 100 and 10000 and sets their ready flag	verified	one	ui/loot#coin-row-text	ui::loot_coin_split_difftest
 0x6c63d0	8	LootDestroy	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c63e0	5	InitPlayerNameInfinityThunk		playername	orchestration		Jumps to 0x6c63f0; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
 0x6c63f0	11	InitPlayerNameInfinity		playername	orchestration	void __cdecl (void)	Copies +inf into 0xce8700	verified	one	playername/overview#infinity-copies-and-pools	
@@ -28336,11 +28336,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9150	18			unassigned			Runs its object file code not read here	inferred	none		
 0x6c9170	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6c9180	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6c91a0	929	BuildWordFilterLists		unassigned		void __cdecl (void)	Compiles the NamesProfanity, ChatProfanity, NamesReserved and SpamMessages rows into the filter lists	verified	one	ui/chatfilter#the-word-lists	
+0x6c91a0	929	BuildWordFilterLists		unassigned		void __fastcall (int32_t region)	Compiles the NamesProfanity, ChatProfanity, NamesReserved and SpamMessages rows into the filter lists	verified	one	ui/chatfilter#the-word-lists	
 0x6c9550	128			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6c95d0	240			unassigned	unreached		Runs its object file code that calls 0x6c96c0, SUniConvertUTF8to16, 0x6c9e00 and 2 more; not read here	inferred	none		
 0x6c96c0	939	ValidateNameText		unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	
-0x6c9a70	100			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9a70	100	GetNameCharsets		unassigned	primitive	void __fastcall (int32_t locale, uint32_t *primary, uint32_t *secondary)	Writes the primary and secondary name charsets of the region, or of the locale for a region outside 1 to 5	verified	one	glue/enterworld#name-charsets	glue::name_charset_pair_difftest
 0x6c9ae0	80	ValidateCharacterName		unassigned			Validates a character name with no extra characters and all word lists on; code 2 when over 12, 8 or 6 units	verified	one	glue/enterworld#character-name-check	
 0x6c9b30	63	ValidateCharacterNameTwoCaps		unassigned	unreached		Validates a character name with no extra characters and all word lists on; code 2 when over 12 or 8 units	verified	one	glue/enterworld#character-name-check	
 0x6c9b70	61	ValidateGuildName		unassigned	orchestration	uint32_t __fastcall (int32_t locale, const char *name)	Validates a guild name: a space is the extra character, both profanity lists are on, code 2 over 24 units	verified	one	ui/petition#guild-name-check	
@@ -28348,14 +28348,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9c10	24			unassigned	unreached		Runs its object file code that calls 0x6c9bb0; not read here	inferred	none		
 0x6c9c30	21	IsAsciiDigit		unassigned			Returns whether a 16-bit code is an ASCII digit	verified	one	ui/chatlanguage#splitting-a-line-into-words	
 0x6c9c50	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9c60	79	IsLatin1Letter		unassigned			Returns whether a 16-bit code is A to Z, a to z or a Latin-1 letter	verified	one	ui/chatlanguage#splitting-a-line-into-words	
+0x6c9c60	79	IsLatin1Letter		unassigned	primitive		Returns whether a 16-bit code is A to Z, a to z or a Latin-1 letter	verified	one	ui/chatlanguage#splitting-a-line-into-words	glue::name_charset_units_difftest
 0x6c9cb0	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9ce0	33			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9ce0	33	IsAsciiLetter		unassigned	primitive	int __fastcall (uint16_t unit)	Returns whether a unit is A to Z or a to z	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
 0x6c9d10	51			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9d50	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9d80	51			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9dc0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9dd0	43			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9d50	41	IsHangulNameSyllable		unassigned	primitive	bool __fastcall (uint16_t unit)	Returns whether a unit is one of the 2,350 Hangul syllables of the table at 0x86ca30	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9d80	51	IsCjkIdeograph		unassigned	primitive	int __fastcall (uint16_t unit)	Returns whether a unit is a CJK ideograph: U+4E00 to U+9FFF, U+3400 to U+4DFF or U+F900 to U+FAFF	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9dc0	5	IsCjkNameUnit		unassigned	orchestration	int __fastcall (uint16_t unit)	Jumps to IsCjkIdeograph, name charset 3	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
+0x6c9dd0	43	IsInNameCharset		unassigned	primitive	bool __fastcall (uint16_t unit, uint32_t set)	Returns whether a UTF-16 unit is in name charset 1 to 4; any other set takes none	verified	one	glue/enterworld#name-charsets	glue::name_charset_units_difftest
 0x6c9e00	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c9e20	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c9e40	56			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -37307,9 +37307,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7e6640	19	InitSkyDrawTenSquared5		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
 0x7e6660	5	InitSkyDrawHalfTenthThunk		lighting	orchestration		Jumps to 0x7e6670; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x7e6670	19	InitSkyDrawHalfTenth		lighting	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
-0x7e6690	21			unassigned			Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
+0x7e6690	21	CreateXmlParser		unassigned	boundary	void * __cdecl (const char *encoding)	Creates an expat parser without namespace processing through 0x7e66d0	verified	one	ui/framexml#xml-trees	
 0x7e66b0	29			unassigned	unreached		Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
-0x7e66d0	415			unassigned			Runs its object file code that calls _malloc, 0x7ed470, 0x7e6870 and 5 more; not read here	inferred	none		
+0x7e66d0	415	CreateXmlParserWithSeparator		unassigned	boundary	void * __cdecl (const char *encoding, const void *memsuite, const char *separator)	Creates an expat parser; a null separator leaves namespace processing off	verified	one	ui/framexml#xml-trees	
 0x7e6870	381			unassigned			Runs its object file code that calls 0x7f9370, 0x7ed5b0, 0x7f8870; not read here	inferred	none		
 0x7e69f0	188			unassigned	unreached		Runs its object file code that calls 0x7e6ab0, 0x7ed490, 0x7e6870 and 1 more; not read here	inferred	none		
 0x7e6ab0	45			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -37733,7 +37733,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fda90	6	_FSOUND_Stream_Open@16	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fda96	6	_FSOUND_Stream_Close@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fda9c	6	_FSOUND_Stream_Stop@4	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x7fdaa2	6	_FSOUND_Stream_GetTime@4	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x7fdaa2	6	_FSOUND_Stream_GetTime@4	idb	unassigned	host	int32_t __stdcall (void *stream)	Jumps through the import slot of fmod.dll FSOUND_Stream_GetTime	verified	one	ui/movieframe#clock-and-frame-choice	
 0x7fdaa8	6	_FSOUND_3D_SetRolloffFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fdaae	6	_FSOUND_3D_SetDopplerFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x7fdab4	6	_FSOUND_3D_SetDistanceFactor@4	idb	unassigned			Runs its object file code not read here	inferred	none		
