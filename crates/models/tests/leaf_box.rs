@@ -1,5 +1,5 @@
 //! `AaBspQueryLeafBox` (`0x6bca50`, `systems/models/collisionquery.md#group-box-gather`) run whole,
-//! `BoxContainsTriangle` (`0x6b8b70`) included, over runs of faces on one context: the face flag
+//! `TriangleOutsideBoxPlane` (`0x6b8b70`) included, over runs of faces on one context: the face flag
 //! bytes, the visited and kept stacks and their counts, and the status word are compared after
 //! every call.
 

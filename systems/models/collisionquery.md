@@ -129,13 +129,12 @@ none on this path, and `0x7c2e90` has none.
 ## Group box gather
 
 `0x6b91c0(list, box, arg, class, mask)` gathers a group's faces in a box. It builds a leaf context
-(a status word, the faces `+0xc4`, the vertices `+0xd0`, the indices `+0xc8`, the box and `mask |
-0x80`), descends the tree at `+0x44` within its box `+0x90`, commits the kept faces with
-`list` and `arg`, adds the liquid tiles for a class with any of 0xf0000, then pops every visited
-face, clearing its bit 0x80, and returns whether the batch count `0xc5a474` moved. The leaf
-`0x6bca50(face)` skips a face whose flag byte shares a bit with the mask; unless the visited stack
-is full, it pushes the face, sets its bit 0x80 and keeps it unless `0x6b8b70` separates its
-triangle from the box.
+with the reject mask `mask | 0x80`, descends the tree at `+0x44` within its box `+0x90`, commits
+the kept faces with `list` and `arg`, adds the liquid tiles for a class with any of 0xf0000, pops
+every visited face, clearing its bit 0x80, and returns whether the batch count `0xc5a474` moved.
+The leaf `0x6bca50(face)` skips a face whose flag byte shares a bit with the mask; else, unless the
+visited stack is full, it pushes the face, sets its bit 0x80 and keeps it unless all three points
+lie beyond one box face (`0x6b8b70`): a triangle whose bounds overlap the box is kept.
 
 Addresses: `0x6b91c0`, `0x6b91f7`, `0x6b9208`, `0x6b9224`, `0x6b923b`, `0x6b9253`, `0x6b9269`, `0x6b9272`, `0x6bca50`, `0x6bca63`, `0x6bca72`, `0x6bca80`, `0x6bca88`, `0x6bca9a`, `0x6bcad1`, `0x6bcae1`, `0xc5a474`
 Confidence: verified

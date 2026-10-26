@@ -377,7 +377,8 @@ Test: none
 `0x6ba970` gives the type a group's liquid draws as (`terrain/groupdraw#group-liquid`): the low
 nibble of the first tile byte whose nibble is not 0xf among the first `x tiles` bytes of the `MLIQ`
 tile flags, else 0xf. Only the grid's first row of tiles is scanned, so a group whose first row is
-all holes draws nothing whatever its other rows hold; the header's liquid word `+0x38` is not read.
+all holes takes type 0xf, whose frame the draw requests before bounding it, a client fault
+(`terrain/groupdraw#group-liquid`); the header's liquid word `+0x38` is not read.
 The parse stores `MLIQ`'s vertex and tile counts at `+0xf8` to `+0x104`, the corner at `+0x108`,
 the material at `+0x114`, the vertices at `+0x118` and the tile flags at `+0x11c`.
 

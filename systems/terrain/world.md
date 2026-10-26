@@ -342,14 +342,14 @@ Test: none
 
 ## World console commands
 
-Five toggles flip one world flag each and print the new state through `ConsoleWrite` in class 0: a
-set bit is cleared with the line `<name> disabled.`, a clear one set with `<name> enabled.`, the
-particulates lines without the period.
-`showSimpleDoodads` does the same to the word `0xc7b2c4`, storing 0 or 1. `waterMaxLOD`,
+Five toggles flip one world flag each and print the new state through `ConsoleWrite` in class 0:
+a set bit is cleared with `<name> disabled.`, a clear one set with `<name> enabled.` (no period for
+particulates). `showSimpleDoodads` does so to the word `0xc7b2c4`, storing 0 or 1. `waterMaxLOD`,
 `waterWaves`, `waterSpecular` and `waterRipples` read a `%d` into their words, which keep their
 value when no number parses; `waterMaxLOD` is then held to 0 to 4, signed. Each handler returns 1.
-Only `waterRipples` is read elsewhere: nothing but its own handler reads `waterMaxLOD`,
-`waterWaves`, `waterSpecular` or the simple doodad word, so those four change nothing.
+The ripple emitter reads `waterRipples`, and only its handler the simple doodad word. The water
+words follow the 9-entry frame name table `0x86a000`: the frame loader's `0x68ab44` reads them as
+the name formats of liquid types 12 to 15.
 
 | handler | command | word | name |
 |---|---|---|---|
@@ -364,7 +364,7 @@ Only `waterRipples` is read elsewhere: nothing but its own handler reads `waterM
 | `0x673730` | `waterSpecular` | `0x86a038`, 1 | none |
 | `0x673750` | `waterRipples` | `0x86a03c`, 1 | none |
 
-Addresses: `0x673050`, `0x673250`, `0x673770`, `0x673a30`, `0x673a70`, `0x673ac0`, `0x6736c0`, `0x6736d8`, `0x6736ed`, `0x673710`, `0x673730`, `0x673750`, `0xc7b2a4`, `0xc7b2c4`, `0x86a030`, `0x86a034`, `0x86a038`, `0x86a03c`, `0x66f714`, `0x68bda3`, `0x63cb50`, `0x73fb5d`
+Addresses: `0x673050`, `0x673250`, `0x673770`, `0x673a30`, `0x673a70`, `0x673ac0`, `0x6736c0`, `0x6736d8`, `0x6736ed`, `0x673710`, `0x673730`, `0x673750`, `0xc7b2a4`, `0xc7b2c4`, `0x86a030`, `0x86a034`, `0x86a038`, `0x86a03c`, `0x66f714`, `0x68bda3`, `0x68ab44`, `0x86a000`, `0x63cb50`, `0x73fb5d`
 Confidence: verified
 Proof: one
 Test: `terrain::world_console_toggles_difftest`, `terrain::water_max_lod_difftest`
@@ -372,9 +372,10 @@ Test: `terrain::world_console_toggles_difftest`, `terrain::water_max_lod_difftes
 Each toggle tests its bit, loads the line into `ecx` with `edx` 0, calls `0x63cb50`, then `and` or
 `or` on `0xc7b2a4`. The water handlers push the word, `%d` (`0x835154`) and the arguments to
 `0x73fb5d`; `0x6736d8 cmp eax,4; jle` and `0x6736ed test eax,eax; jge` bound `waterMaxLOD`. The
-start values are the words' file bytes; `0x66f714` stores 0 in `0xc7b2c4`. A census of the four
-unread words' addresses as dwords anywhere in the image (control `0x7102e8`) finds only their
-handlers and `0x66f714`; `0x86a03c` also has `0x68bda3`, the ripple emitter. The tests run each
+start values are the words' file bytes; `0x66f714` stores 0 in `0xc7b2c4`. A census of the five
+words' addresses as dwords anywhere in the image (control `0x7102e8`) finds only their handlers,
+`0x66f714` and, for `0x86a03c`, `0x68bda3`, the ripple emitter; the indexed load `0x68ab44 mov
+eax,[ebx*4+0x86a000]` reaches the water words from entry 12 on. The tests run each
 handler whole, with `0x63cb50` and `0x73fb5d` replaced.
 
 ## Smoothed frame rate

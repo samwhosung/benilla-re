@@ -256,7 +256,7 @@ pub struct LeafBoxQuery<'a> {
 /// `AaBspQueryLeafBox` (`0x6bca50`, `systems/models/collisionquery.md#group-box-gather`) for one
 /// face: a face whose flag byte shares a bit with the mask is skipped; a full visited stack sets
 /// status bit 1 and stops; else the face is pushed, its flag gets bit 0x80, and it is kept unless
-/// `BoxContainsTriangle` finds its triangle outside one side of the box.
+/// `TriangleOutsideBoxPlane` finds its triangle outside one side of the box.
 pub fn aabsp_query_leaf_box(q: &mut LeafBoxQuery, face: u16) {
     let f = usize::from(face);
     if q.faces[2 * f] & q.mask != 0 {

@@ -152,7 +152,11 @@ Test: none
 `0x6b62e0` clears culling, sets the interior fog when the group fog flag is set, takes the frame texture
 of the liquid type (`0x68aac0`) as stage 0 (nothing is drawn without one), and dispatches on the byte
 table at `0x6b6408` (types 0 to 8: 0, 2, 1, 1, 0, 2, 1, 1, 0) through the three arms at `0x6b639f`
-(water), `0x6b6387` (magma) and `0x6b63ed` (none); types above 8 draw nothing. The water arm sets
+(water), `0x6b6387` (magma) and `0x6b63ed` (none); types above 8 draw nothing, but `0x6b6352` asks
+`0x68aac0` for the frame before `0x6b6374 cmp esi,8; ja` bounds the type. For type 0xf that reads
+entry 15 of the period `0x8102b8`, the loaded bytes `0xc89da4` and the frames `0xc811c0`, past
+their entries, and while its slot is empty passes entry 15 of the name table `0x86a000`, the word
+`waterRipples` (1 by default), to `SStrPrintf` as the format: a client fault. The water arm sets
 state 0x1f to 3, blend 2 and depth write off (`0x6b639f` to `0x6b63bf`).
 
 ## Group liquid mesh

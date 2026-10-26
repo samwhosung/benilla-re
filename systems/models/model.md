@@ -356,13 +356,13 @@ arguments, `ret 8`.
 ## Sequence info
 
 `GetSequenceInfo(id, variation, out)` waits for the shared model, resolves `id`
-(`animation#animation-id-resolution`) and fills a 0x3c-byte record, `+0x34` and `+0x38` first
-with the resolved id and its class. The id goes through the sequence lookup, and the index then
+(`animation#animation-id-resolution`) and fills a 0x3c-byte record: `+0x34` and `+0x38` get the
+resolved dword's low and high words. The id goes through the sequence lookup, and the index then
 moves `variation` times to its sequence's next variation `+0x40`, stopping at an index past the
 table. A sequence in the table gives `+0x0` its flags, `+0x4` its end minus its start, `+0x8` its
 speed `+0xc` times the length of the base matrix's first row, `+0xc` its six bound floats, `+0x24`
 the box centre and `+0x30` its radius. An index past the table, a lookup miss included, zeroes
-`+0x0` to `+0x33`. No bone, pose or scale but the base matrix enters.
+`+0x0` to `+0x33`. No bone or pose enters.
 
 Addresses: `0x711a20`, `0x711a4c`, `0x711a5f`, `0x711a65`, `0x711a74`, `0x711a88`, `0x711a95`, `0x711ab6`, `0x711ae8`, `0x711af0`, `0x711af6`, `0x711b17`, `0x711b27`, `0x711b2f`, `0x711b58`, `0x710310`, `0x711bf0`
 Confidence: verified
@@ -415,6 +415,6 @@ Proof: one
 Test: none
 
 `0x71b340` copies `ecx` to `eax`, stores 0 at `+0x0`, `+0x4`, `+0x8`, the byte `+0xc` (`0x71b34c`),
-`+0x10`, `+0x14`, `+0x18` and the byte `+0x1c` (`0x71b35e`); the two `lea edx` before them are
-overwritten unused. `0x70f401` passes ribbon state `+0xb0` (0xd0 apart, after a count dword) and
+`+0x10`, `+0x14`, `+0x18` and the byte `+0x1c` through `0x71b352 lea edx,[eax+0x1c]` (`0x71b35e`);
+the `lea edx,[eax+0xc]` before it is overwritten unused. `0x70f401` passes ribbon state `+0xb0` (0xd0 apart, after a count dword) and
 `0x70f8f1` particle state `+0x140` (0x16c apart).

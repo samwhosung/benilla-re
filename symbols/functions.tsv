@@ -27398,7 +27398,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b8810	98	CMapObjGroup::CMapObjGroup		models	orchestration		Zeroes a group record, its BSP and liquid block and its lists	inferred	none		
 0x6b8880	86	CMapObjGroup::~CMapObjGroup		models	primitive		Frees a group's arrays and returns its list nodes to the free list	inferred	none		
 0x6b88e0	654	CMapObjGroup::IntersectLeaf		models	primitive		Intersects a segment with the welded faces of a BSP leaf	inferred	none	models/wmo#bsp-segment-descent	models::aabsp_segment_clip_difftest, models::wmobsp_leaf_tscale_difftest
-0x6b8b70	131	BoxContainsTriangle		models	primitive		Returns whether three points share an outside side of a box	inferred	none		models::aabb_points3_separated_difftest
+0x6b8b70	131	TriangleOutsideBoxPlane		models	primitive	uint8_t __fastcall (const float *box, const float *p0, const float *p1, const float *p2)	Returns 1 when all three points lie beyond one face of a box, by the sign bits of the differences	verified	one	models/collisionquery#box-descent-and-face-test	models::aabb_points3_separated_difftest
 0x6b8c00	72	TriangleBehindPlanes		models	primitive		Returns whether a triangle lies behind three planes	inferred	none		
 0x6b8c50	5	CMapObjGroup::ReturnFalse		models	orchestration		Returns 0, popping two arguments	inferred	none		
 0x6b8c60	485	CMapObjGroup::CollectLeafBox		models	primitive		Collects a BSP leaf's welded faces that touch a box	inferred	none		models::aabsp_box_query_difftest
@@ -27435,7 +27435,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bb130	15	InitMapObjGroupTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x6bb140	5	InitMapObjGroupInvTwoPiThunk		models	orchestration		Jumps to 0x6bb150; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bb150	19	InitMapObjGroupInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
-0x6bb170	1333	CMapObjGroup::CollectLiquidSegment		models	primitive		Collects the liquid tiles a segment crosses in a group	inferred	none		models::mliq_seg_scale_difftest, models::mliq_seg_translate_difftest, models::mliq_seg_tri_bound_difftest
+0x6bb170	1333	CMapObjGroup::CollectBoxLiquid		models	primitive		Collects a group's liquid tiles under a box	inferred	none		models::mliq_seg_scale_difftest, models::mliq_seg_translate_difftest, models::mliq_seg_tri_bound_difftest
 0x6bb6b0	1533	CMapObjGroup::CollectLiquidVolume		models	primitive		Collects the liquid triangles of a group inside a convex volume	inferred	none		models::mliq_scale_difftest, models::mliq_translate_difftest
 0x6bbcb0	96	CMapObjGroup::QueryLiquidSegment		models	primitive		Runs a liquid segment query on a group	inferred	none		
 0x6bbd10	96	CMapObjGroup::QueryLiquidVolume		models	unreached		Runs a liquid volume query on a group; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -27456,7 +27456,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bc700	210	AaBspIntersectLeaf		models	primitive		Intersects a segment with a BSP leaf's faces, keeping the closest hit	inferred	none	models/wmo#bsp-segment-descent	models::aabsp_leaf_tscale_difftest, models::aabsp_segment_clip_difftest
 0x6bc7e0	433	AaBspCollectBoxNode		models	primitive		Descends a group's BSP with a box, collecting the faces inside	inferred	none		
 0x6bc9a0	164	AaBspCollectLeafBox		models	primitive		Collects a BSP leaf's faces not behind a box's planes	inferred	none		
-0x6bca50	164	AaBspQueryLeafBox		models	primitive	void __thiscall (void *this, uint16_t face)	Marks a face visited and keeps it when the mask passes it and its triangle meets the query box	verified	one	models/collisionquery#group-box-gather	models::aabsp_query_leaf_box_difftest
+0x6bca50	164	AaBspQueryLeafBox		models	primitive	void __thiscall (void *this, uint16_t face)	Marks a face visited and keeps it unless the mask rejects it or its points all lie beyond one box face	verified	one	models/collisionquery#group-box-gather	models::aabsp_query_leaf_box_difftest
 0x6bcb00	5	InitMapObjGroupTenSquaredThunk		models	orchestration		Jumps to 0x6bcb10; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6bcb10	19	InitMapObjGroupTenSquared		models	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	models/overview#shared-header-constants	
 0x6bcb30	5	InitMapObjGroupTileUnitInvSquaredThunk		models	orchestration		Jumps to 0x6bcb40; a static initializer	verified	one	models/overview#shared-header-constants	
