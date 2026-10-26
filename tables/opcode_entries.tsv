@@ -350,7 +350,7 @@ opcode	name	role	site	function	entries	basis
 0x17b	CMSG_GOSSIP_HELLO	send	0x5df518	0x5df4d0	objectlayer/interaction#talking-to-an-npc|ui/questshare#accepting-and-declining	opcode
 0x17c	CMSG_GOSSIP_SELECT_OPTION	send	0x4e23ef	0x4e2320	ui/gossip#selecting-an-option	opcode
 0x17d	SMSG_GOSSIP_MESSAGE	handler	0x4e1efc	0x4e26e0	ui/gossip#the-gossip-message	opcode
-0x17e	SMSG_GOSSIP_COMPLETE	handler	0x4e1f0d	0x4e2800		unread
+0x17e	SMSG_GOSSIP_COMPLETE	handler	0x4e1f0d	0x4e2800	ui/gossip#gossip-complete	opcode
 0x17f	CMSG_NPC_TEXT_QUERY	send	0x55d668	0x55d530	net/server#cache-query-opcodes|ui/gossip#the-greeting	opcode
 0x180	SMSG_NPC_TEXT_UPDATE	handler	0x555051	0x555180	dbcache/overview#handlers	opcode
 0x182	CMSG_QUESTGIVER_STATUS_QUERY	send	0x5eaff8	0x5eafb0	objectlayer/quests#quest-giver-status-refresh|objectlayer/quests#quest-messages-sent	opcode
@@ -581,7 +581,7 @@ opcode	name	role	site	function	entries	basis
 0x276	MSG_QUEST_PUSH_RESULT	send	0x5dbf95	0x5dbd50	objectlayer/quests#details-request-and-reward|ui/questshare#what-the-client-answers-itself	opcode
 0x277	SMSG_PLAY_MUSIC	handler	0x48f4df	0x48f690	sound/music#server-music|ui/gameui#game-start-up	opcode
 0x278	SMSG_PLAY_OBJECT_SOUND	handler	0x48f4ff	0x48f690	sound/objects#server-object-sounds|ui/gameui#game-start-up	opcode
-0x279	CMSG_REQUEST_PET_INFO	send	0x4bc765	0x4bc6f0		unread
+0x279	CMSG_REQUEST_PET_INFO	send	0x4bc765	0x4bc6f0	ui/worldenter#window-resets-at-world-entry	opcode
 0x27a	CMSG_FAR_SIGHT	send	0x5ee3e8	0x5ee290	objectlayer/interaction#far-sight	opcode
 0x27a	CMSG_FAR_SIGHT	send	0x5ee50f	0x5ee290	objectlayer/interaction#far-sight	opcode
 0x27b	SMSG_SPELLDISPELLOG	handler	0x5e37bf	0x5e8b60	objectlayer/playercombat#spell-combat-log-messages	opcode

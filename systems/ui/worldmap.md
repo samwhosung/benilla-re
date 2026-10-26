@@ -50,12 +50,12 @@ The orphan row id is taken from the same id index every reader uses, so it passe
 Addresses: `0x4a7e30`, `0x4a7e3a`, `0x4a7e48`, `0x4a7e69`, `0x4a6cf0`, `0x4a6d50`, `0x4a7ed0`, `0x4a7f00`, `0x4a7ce0`, `0x4a65a0`, `0x4a7d10`, `0x4a7d57`, `0x4a7d5a`, `0x4a65e0`, `0x4a7db0`, `0x4a7def`, `0x4a7e0f`
 Confidence: verified
 Proof: one
-Test: `ui::worldmap_selected_area_name`, `ui::worldmap_getmapinfo_pot_round`, `ui::glue_4a6_4a6d50_aspect_ftol`
+Test: `ui::worldmap_selected_area_name`, `ui::worldmap_getmapinfo_pot_round`, `ui::glue_4a6_4a6d50_aspect_ftol`, `ui::worldmap_list_names`
 
 `0x4a6cf0` returns the name of the selected row (field 3 of `WorldMapArea`), from the direct area word when the continent is below 0. `0x4a6d50` returns the texture height as `ftol(H * 1002.0 / W)` of the matching `WorldMapContinent` row's tile counts, or the rectangle ratio when a zone is selected, and 0 when no row matches or W or H is 0.
 The round-up keeps the high part of the height and rounds its low byte to a power of two. `GetCurrentMapAreaID` does not exist in this build.
 
-`ui::worldmap_selected_area_name` runs `0x4a6cf0` whole, and `ui::worldmap_getmapinfo_pot_round` runs `0x4a7e69` to `0x4a7e9a` of `0x4a7e30`, the round-up.
+`ui::worldmap_selected_area_name` runs `0x4a6cf0` whole, and `ui::worldmap_getmapinfo_pot_round` runs `0x4a7e69` to `0x4a7e9a` of `0x4a7e30`, the round-up. The list names come from two lookups that return null for an index at or past the count, an id out of range, or no record: `0x4a65a0(continent)` returns the `Map.dbc` localized name (`+0x10` plus 4 × the locale) of the continent record's map id (`+0`), and `0x4a65e0(continent, zone)` the `AreaTable` localized name (`+0x2c` plus 4 × the locale) of the area (`+8`) of the zone's `WorldMapArea` row, the zone bounded by the record's count `+0xc`. `lua_pushstring` pushes nil for null. `ui::worldmap_list_names` runs both whole.
 
 ## Hover and click
 

@@ -1724,6 +1724,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84ada4	int32_t	s_taxiLineSlot		ui	Holds the slot whose route lines were built last, -1 after a failed build	verified	one	ui/taxiroute#route-lines
 0x84ada8	void *[28]	s_taxiFunctionTable		ui	Holds the 14 name and function pairs of the taxi Lua functions	verified	one	ui/taxi#taxi-lua-functions
 0x84b0f0	void *[68]	s_questLogFunctions		ui	Holds the 34 name and function pairs of the quest log Lua functions, GetNumQuestLogEntries to GetQuestIndexForWatch	verified	one	ui/scriptapi#function-tables
+0x84b4d4	const char[24]	s_textInvalidQuestLogEntry		ui	Holds the string "Invalid quest log entry"	verified	one	ui/questlog#the-quest-marker
 0x84b4ec	char[34]	s_textMissingHeaderQuestDesigners		ui	Holds the string "Missing header! (quest designers)"	inferred	none	
 0x84b564	char[36]	s_textUsageIsUnitOnQuestIndexUnit		ui	Holds the string "Usage: IsUnitOnQuest(index, "unit")"	inferred	none	
 0x84b5dc	char[25]	s_textFACTIONSTANDINGLABELD		unassigned	Holds the string "FACTION_STANDING_LABEL%d"	inferred	none	
@@ -3274,7 +3275,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbb7478	uint32_t	s_questLogRowCount		ui	Holds the number of rows in the quest log list, headers included	verified	one	ui/questlog#the-display-list
 0xbb747c	uint32_t	s_questHeaderCount		ui	Holds the number of header ids in the list	verified	one	ui/questlog#the-display-list
 0xbb7480	uint32_t	s_selectedQuestId		ui	Holds the id of the quest selected in the quest log	verified	one	ui/questlog#the-selection
-0xbb7484	uint32_t			ui	Holds a dword that Script::SetAbandonQuest, Script::GetAbandonQuestName read and write; not read here	inferred	none	ui/questlogverbs#selected-quest-text
+0xbb7484	uint32_t	s_abandonQuestId		ui	Holds the quest id marked for abandoning, which AbandonQuest clears when a row holds it	verified	one	ui/questlogverbs#abandoning-a-quest
 0xbb7488	uint32_t	s_questWatchCount		ui	Holds the number of watched quests	verified	one	ui/questlog#quest-watches
 0xbb748c	uint32_t	s_questHeaderExpanded		ui	Holds a bit per header, set while the header is expanded	verified	one	ui/questlog#the-collapse-state
 0xbb7490	uint32_t	s_questVisibleRows		ui	Holds the number of rows shown, the row count minus quests under collapsed headers	verified	one	ui/questlog#visible-rows

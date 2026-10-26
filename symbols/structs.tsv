@@ -10,6 +10,7 @@ CGCharacterModelBase		1016	0x8084f8	ui	Holds a character pane: a CSimpleModel, t
 CGContainer_C		2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/classes#class-sizes-and-pools
 CGGameObject_C		784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/classes#class-sizes-and-pools
 CGItem_C		1172	0x80ada8	objectlayer	Holds an item: the object, its field pointers, watcher lists, flags, cached record bytes and expiries	verified	one	objectlayer/classes#class-sizes-and-pools
+CGMinimapFrame		836	0x807a80	ui	Holds the Minimap frame: a CSimpleFrame with its engine children and the fed facing	verified	one	ui/minimap#the-player-arrow-each-frame
 CGObject_C		308	0x803640	objectlayer	Holds an object the server described: its storage, pool handle, type, GUID key, hold count and flags	verified	one	objectlayer/classes#class-sizes-and-pools
 CGPlayer_C		11340	0x80af78	objectlayer	Holds a player other than the active one, whose heap block is 26648 bytes; the unit plus the player section	verified	one	objectlayer/classes#class-sizes-and-pools
 CGTooltip		1120	0x808f60	ui	Holds a GameTooltip: the frame, its owner and anchor, its lines and the fields a rebuild needs	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild

@@ -20,7 +20,7 @@ The window keeps its state in a few cells.
 | `0xb73a18` | the visible count, what `GetNumTrainerServices` returns |
 | `0xb73a1c`, `0xb73a20`, `0xb73a24` | the state filter, the skill-line filter and the expanded mask |
 
-Addresses: `0x4d7440`, `0x4d73e0`, `0x4d7400`, `0x4d74e9`, `0x4d7463`, `0x4d7486`, `0x4d8d50`, `0x4d8cf0`, `0xb73a00`, `0xb73a08`, `0xb73a0c`, `0xb737b0`, `0xb73a10`, `0xb739c0`, `0xb73a14`, `0xb73a18`, `0xb73a1c`, `0xb73a20`, `0xb73a24`
+Addresses: `0x4d7440`, `0x4d73e0`, `0x4d7400`, `0x4d7426`, `0x4909ab`, `0x490ad5`, `0xb737b8`, `0x4d74e9`, `0x4d7463`, `0x4d7486`, `0x4d8d50`, `0x4d8cf0`, `0xb73a00`, `0xb73a08`, `0xb73a0c`, `0xb737b0`, `0xb73a10`, `0xb739c0`, `0xb73a14`, `0xb73a18`, `0xb73a1c`, `0xb73a20`, `0xb73a24`
 Confidence: verified
 Proof: one
 Test: none
@@ -33,7 +33,10 @@ the own GUID sets no interaction target (`0x4d74c3`). The close signals before i
 (`0x4d7468`, then `0x4931c0` at `0x4d7474`); when the NPC is still the interaction target that call runs the
 dispatcher `0x493310`, which zeroes the target and re-enters the close with a zero GUID (`0x493434` to `0x49343f`) while the trainer GUID `0xb73a00` is still stored, so a script close
 signals `TRAINER_CLOSED` twice. `0x4d73e0` is the
-world-exit reset of the GUID, selection and total.
+world-entry reset (`EnterWorldUI`, `0x4909ab`): it zeroes the GUID, the selection, the total and the
+greeting byte `0xb737b8`, and signals nothing. `0x4d7400`, the leave-world leg (`0x490ad5`), is
+`0x4d7440` with a zero GUID and type, so leaving the world with the window open signals
+`TRAINER_CLOSED`.
 
 ## Service records
 
@@ -127,15 +130,21 @@ other getters (`GetTrainerServiceIcon`, `...Cost`, `...LevelReq`, `...SkillReq`,
 or 0 past it. `BuyTrainerService(index)` sends the purchase of one row (opcode 0x1b2: the trainer GUID and the row's spell id) when the
 row exists and its state is 0; any other state is refused silently. An index of 0 or less buys every visible row.
 
-Addresses: `0x4d89b0`, `0x4d8dc0`, `0x4d8aa0`, `0x4d8b50`, `0x4d8ba0`, `0x4d8c30`, `0x4d8be0`, `0x4d8d90`, `0x4d8d96`, `0x4da210`, `0x4da23f`, `0x4da245`, `0x4da247`, `0x4da252`, `0x4d89d0`, `0x4d89e5`, `0x4d8a70`
+Addresses: `0x4d89b0`, `0x4d8dc0`, `0x4d8aa0`, `0x4d8b50`, `0x4d8ba0`, `0x4d8c30`, `0x4d8c45`, `0x4d8c65`, `0x4d8c81`, `0x4d8e34`, `0x4d8be0`, `0x4d8d90`, `0x4d8d96`, `0x4da210`, `0x4da23f`, `0x4da245`, `0x4da247`, `0x4da252`, `0x4d89d0`, `0x4d89e5`, `0x4d8a70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::trainer_header_collapsed`
 
 The compare is unsigned, so 0 and negative indices behave as past the end. Only `GetNumTrainerServices` and the buy-all
 loop read the visible count (`0x4d8d96`, `0x4d8a70`). `GetTrainerServiceInfo` always returns four values: the siblings
 share the gate, a null string pushes nil, and the fourth gives 1.0 past the end. Buying branches on a signed test
 (`0x4da245 jns`); the single-row path `0x4d89d0` refuses a record whose state byte is not 0 (`0x4d89e5`) and never reads the visible flag.
+The fourth value comes from `0x4d8c30(index)`: for an index below the total whose record's first
+dword is negative, a header, it finds the group whose key equals the record's `+4` and returns 1 when
+that group's bit in the expanded mask `0xb73a24` is clear (`neg; sbb; inc` at `0x4d8c81`), 0 when it is
+set; any other index or a header with no group returns 0. The bit is `1 << i` with the count masked to
+five bits, so group 32 reads group 0's bit. `0x4d8e34` pushes nil for 1 and 1.0 for 0. `ui::trainer_header_collapsed`
+runs `0x4d8c30` whole.
 
 ## Names and ranks
 

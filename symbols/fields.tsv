@@ -120,6 +120,9 @@ CGItem_C	0x031c	1	uint8_t	m_cachedRecordByte	objectlayer	Holds the record byte a
 CGItem_C	0x0320	4	uint32_t	m_expiry	objectlayer	Holds the time the item expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
 CGItem_C	0x0324	28	uint32_t[7]	m_enchantExpiry	objectlayer	Holds the time each enchantment slot expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
 CGItem_C	0x0340	4	void *	m_groupSounds	objectlayer	Holds the ItemGroupSounds row of the display, set when the record arrives	verified	one	objectlayer/items#the-item-record
+CGMinimapFrame	0x0000	788	CSimpleFrame	m_frame	ui	Holds the frame part	verified	one	ui/minimap#the-player-arrow-each-frame
+CGMinimapFrame	0x0338	4	CSimpleModel *	m_playerArrow	ui	Points to the player arrow, the ninth engine child, a Model frame	verified	one	ui/minimap#the-player-arrow-each-frame
+CGMinimapFrame	0x033c	4	float	m_playerFacing	ui	Holds the facing last fed to the player arrow, -10000.0 from the constructor	verified	one	ui/minimap#the-player-arrow-each-frame
 CGObject_C	0x0000	4	void *	__vfptr	objectlayer	Holds the type's vtable, stored last by each constructor	verified	one	objectlayer/classes#constructors-and-final-vtables
 CGObject_C	0x0008	4	uint32_t *	m_fields	objectlayer	Holds the field array, written by 0x613980	verified	one	objectlayer/classes#field-storage
 CGObject_C	0x000c	4	uint32_t *	m_watchCopy	objectlayer	Holds the copy array of the watched fields, written by 0x613980	verified	one	objectlayer/classes#field-storage

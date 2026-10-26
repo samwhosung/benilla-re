@@ -210,3 +210,21 @@ The arm in `0x4c7300` is `0x4c7714 call 0x523d10; cmp eax,0x11`, `0x4c7722 call 
 `0x4c7a62`, `0x4f9c7b` to `0x4f9d11` and `0x4fa1da` to `0x4fa27a`. The error row 0x25 has voice id 0x28 (`0x4851c7`) and the
 speech runs through `0x458250` (`ui/auctionmessages#message-routes`). `ClearCursor` is at `0x4c79a9` and `0x4fa198`; no arm
 writes the base cursor mode.
+
+## The buy-back watch
+
+The world entry registers `0x4faca0` as a field watcher on the active player's 0x60 bytes from
+descriptor byte `0x1038`, the 12 buy-back prices and the 12 timestamps, and leaving the world removes
+it. On any change in that range it rebuilds the buy-back list and signals `MERCHANT_UPDATE` (317) with
+no arguments, whether a vendor is open or not, and returns 1.
+
+Addresses: `0x4faca0`, `0x4faca5`, `0x4facaa`, `0x4facaf`, `0x4fac50`, `0x4fac55`, `0x4fac83`, `0x4fac8d`, `0x4facc0`, `0x4facc7`, `0x4facdd`, `0x467e70`, `0x467fb0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4fac50` pushes kind 0, argument 0, the callback (`0x4fac55`), the length 0x60, the player's GUID,
+`edx` 0x1038 (`0x4fac83`) and section 4 before `ClntObjMgrSetObjectMirrorHandler` (`0x4fac8d`).
+`0x4faca0` calls `0x4fafd0`, signals 0x13d (`0x4facaa`) and returns 1 with `ret 0x10` (`0x4facaf`).
+`0x4facc0` removes it with the same section, offset, GUID, callback and argument (`0x4facdd`). Those two
+`push 0x4faca0` operands are the only occurrences of the address (`tools/callers.py`).

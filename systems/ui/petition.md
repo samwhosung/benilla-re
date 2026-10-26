@@ -121,12 +121,12 @@ nothing of its own. The target clear (`0x4f5024`, `0x4931c0`) runs the dispatche
 again while the GUID is still set (the zeroing is `0x4f502b`), so `GUILD_REGISTRAR_CLOSED` fires twice when the NPC is
 still the interaction target.
 
-Addresses: `0x4f43c0`, `0x4f3f60`, `0x4f3fb5`, `0x4f3ff3`, `0x4f4016`, `0x4f402c`, `0x4f4078`, `0x4f5220`, `0x4f5010`, `0x4f5024`, `0x4f503a`, `0x4931c0`, `0x493310`
+Addresses: `0x4f43c0`, `0x4f3f60`, `0x4f3fb5`, `0x4f3ff3`, `0x4f4016`, `0x4f402c`, `0x4f4078`, `0x4f5220`, `0x4f5010`, `0x4f5024`, `0x4f503a`, `0x4931c0`, `0x493310`, `0x4f4fa0`
 Confidence: verified
 Proof: one
 Test: none
 
-The decline is `Put32(0x1c2)` at `0x4f3fb5` and the send at `0x4f3ff3`. `0x4f5010` tail-jumps to the signaller with 0x17b. The
+The decline is `Put32(0x1c2)` at `0x4f3fb5` and the send at `0x4f3ff3`. `0x4f5010` tail-jumps to the signaller with 0x17b. Leaving the world closes the registrar through `0x4f4fa0`, a `jmp 0x4f5010` (`worldenter#window-closes-when-leaving`). The
 close path `0x4931c0` builds no packet; it hands a matching GUID to the interaction-clear dispatcher `0x493310`, which
 zeroes the target and calls the close of the first window holding that GUID: an else-if chain (trade, `0xbc3fa0`,
 gossip, and on to the stable `0xb71b48`) that jumps to `0x493513` after the first match.
@@ -159,12 +159,12 @@ is appended with nothing pending, when the last pending name resolves with the r
 arrives with nothing pending. `PETITION_CLOSED`
 (391) is signalled when a petition is replaced or closed.
 
-Addresses: `0x4f5003`, `0x4f503a`, `0x4f402c`, `0x4f41b4`, `0x4f430c`, `0x4f433f`, `0x4f43ad`, `0x4f419b`, `0x4f4090`, `0x4f4320`, `0x4f4350`, `0x703e50`
+Addresses: `0x4f5003`, `0x4f503a`, `0x4f402c`, `0x4f41b4`, `0x4f430c`, `0x4f433f`, `0x4f43ad`, `0x4f419b`, `0x4f4090`, `0x4f4320`, `0x4f4350`, `0x703e50`, `0x4f3f50`, `0x4f3f1d`, `0x4f4167`, `0x4f42c8`
 Confidence: verified
 Proof: one
 Test: none
 
 The deferral is `0x4f419b` to `0x4f41ad`: the event needs `[0xbdce24] == 0` and `[0xbdce28] != 0`. The callback `0x4f4090` runs
 `0x4f4350`, which fetches the record of the open petition id from the cache; `0x4f4320` decrements the pending counter and
-signals only on the step to zero (`0x4f432f jne`), so the event comes once however many names were outstanding. Other signal sites are
+signals only on the step to zero (`0x4f432f jne`), so the event comes once however many names were outstanding. Each signer's name lookup keeps the callback `0x4f3f50` (`0x4f4167`, `0x4f42c8`; `0x4f3f1d` passes it to the cancel), which calls `0x4f4320` whatever the status and returns with `ret 8`, so a refused name counts down as an answered one does. Other signal sites are
 `objectlayer/party#petitions` (`0x5ef037`, `0x5ef16b`, `0x5ef29c`).

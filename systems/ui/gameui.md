@@ -161,3 +161,42 @@ Proof: one
 Test: none
 
 `0x4920d0` is called by `CGCorpse_C::OnCreate`, `Deactivate` and `Reactivate`; `0x492090` by `ProjectCorpsePosition`. `0x4946d0` reads the GUID at +8, the values at +0x10, +0x14 and +0x18 and the kind at +0xa4, which indexes the name table at 0x83de28. `0x496510` frees the answers with the line numbers of `GameUI.cpp` and is called at start-up, shutdown and by `SendSurvey`.
+
+## The item push's record wait
+
+`CGGameUI::OnItemPush` (`0x491a60`) first asks the item cache for the item's record without a
+callback. On a miss it copies its two register arguments and eight of its nine stack arguments, all but
+the item id, into a 0x28-byte block, asks again with the callback `0x491ee0` and that block, and returns having shown
+nothing. Every push that misses keeps its own callback. The callback, run with the answer, calls
+`OnItemPush` again with the saved arguments and the item id the cache passes, then frees the block;
+for a refusal it only frees the block, so that push never shows.
+
+Addresses: `0x491a60`, `0x491a9c`, `0x491aa5`, `0x491ab4`, `0x491af6`, `0x491b05`, `0x491ee0`, `0x491ee8`, `0x491efb`, `0x491f2e`, `0x491f3d`, `0x55ba30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x491a9c` calls `0x55ba30` with the item id from the third stack argument, a zeroed owner and no
+callback; `0x491aa5 jne` continues on a record. `0x491ab4` allocates the block, which holds stack
+arguments 1 and 2, `ecx`, `edx`, then arguments 6, 7, 8, 4, 5 and 9. `0x491b05` asks with the owner
+`&arg1`, the callback, the block and dedupe 0, and returns with `ret 0x24`. The callback takes the key
+in `ecx` and the status byte at `[ebp+0xc]`: `0x491ee8 jne` takes a set status to the replay, whose
+pushes put each dword back in its place with the key as argument 3 (`0x491f2e`), then `0x491f3d` frees;
+a clear one frees at `0x491efb` when the block is not null.
+
+## Control back on arrival
+
+`0x4958a0` sets the player-control flag `0xb4b3e4` to 1 without signalling and makes the active
+player the active mover again (`SetActiveMover`). Its one caller is the active player's arrival,
+after the unit's own control is restored.
+
+Addresses: `0x4958a0`, `0x4958b9`, `0x4958c3`, `0x4958d1`, `0x5deb5b`, `0x5deb49`, `0x5deb56`, `0x5deb60`, `0xb4b3e4`, `0x6006e0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4958b9` is `mov dword [0xb4b3e4],1`, one of the two direct stores of 1 beside `SetPlayerControl`
+(`spell/checks#lost-control-exemption`); unlike `0x4958e0` it fires neither control event. `0x4958c3`
+reads the active player's GUID into a local and `0x4958d1` passes its address in `ecx`. `0x5deb5b`
+in `CGPlayer_C::OnActiveArrival` calls it, only when the manager's `+0xc8` is 0 (`0x5deb49`), between
+`CGUnit_C::SetClientControl(1)` (`0x5deb56`) and `EnterWorldUI` (`0x5deb60`).
