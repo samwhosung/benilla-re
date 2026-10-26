@@ -236,14 +236,66 @@ set by notices 3 (YOU_LEFT only), 4, 5, 19, 26 and 27 and consumed after the eve
 
 ## Channel list message
 
-Opcode 0x9b, handled by `0x49c690`, builds the member list of a channel as a comma-separated string and
-hands it to the chat line function twice, with chat type 0x11 (`CHANNEL_LIST`), once per part of the
-list, with the stored channel name as the channel and every other argument 0.
+Opcode 0x9b, handled by `0x49c690`: the channel name (at most 128 bytes), a flag byte and an i32
+count of members, each a GUID and a flag byte. An unknown channel skips the rest. The flag byte goes
+to the slot's `+0x90`; each member becomes a 0x18-byte node appended to the slot's member list at
+`+0x84`, its name asked of the name cache with the callback `0x49ccc0`. When every name is cached, or
+the count is 0 or less, the list prints at once (`0x49c7e0`); otherwise the callback prints it when a
+name arrives. Nodes of an earlier message whose names never came stay and print with the new ones.
 
-Addresses: `0x49c690`, `0x49c9dc`, `0x49ca7b`, `0x49a870`, `0x498604`, `0x49862a`
-Confidence: inferred
-Proof: none
+Addresses: `0x49c690`, `0x49c6ad`, `0x49c6c3`, `0x49c6d9`, `0x49c6ed`, `0x49c6fb`, `0x49c710`, `0x49c75d`, `0x49c77b`, `0x49c787`, `0x49c7a2`, `0x49c7ab`, `0x49c7c5`, `0x49c7c9`, `0x498604`, `0x49862a`
+Confidence: verified
+Proof: one
 Test: none
 
-The two calls to `0x49a870` are `0x49c9dc` and `0x49ca7b`, each with `edx = 0x11`. The member list
-format and the split between the calls are not read here.
+`0x49c6c3` takes a missing slot to `mov [store+0x14],[store+0x10]`. `0x49c6d9` reads the byte into
+`slot+0x90`, `0x49c6ed` the count, and `0x49c6fb jle` skips the loop for a count of 0 or less. Each node
+is `SMemAlloc(0x18)` under the tag `.?AUPENDINGUSERLIST@@` (`0x49c710`), linked before the list's
+terminator at `+0x88` (`0x49c75d` to `0x49c775`), with the GUID read into `+8` and the byte into `+0x10`.
+`0x49c7a2` asks for the name with the node's GUID as the owner; a null answer counts one pending
+(`0x49c7ab`), and `0x49c7c5 jne` skips the print while any is.
+
+## Printing the member list
+
+`0x49c7e0(slot)` prints nothing while a member's name is not cached. Else it builds lines of
+entries, each separator, prefix and name cut at 50 characters. The separator is `, ` on a line that is
+not empty. The prefix is `*` for member flag 0x01, else `@` for 0x02, else `#` when the channel byte
+has 0x02 and the member lacks 0x04. The name is the record's, then `-` and the string at `+0x30`
+without spaces and tabs, when that is not empty. An entry that brings the line to 256 bytes or more
+shows the line first and opens the next, its `, ` dropped. Lines are type 0x11, `CHANNEL_LIST`, on
+the slot's name; then every node is freed.
+
+Addresses: `0x49c7e0`, `0x49c81d`, `0x49c842`, `0x49c849`, `0x49c8b2`, `0x49c8bf`, `0x49c8cb`, `0x49c8d2`, `0x49c8e0`, `0x49c8e5`, `0x49c8f6`, `0x49c900`, `0x49c938`, `0x49c962`, `0x49c98f`, `0x49c9b0`, `0x49c9dc`, `0x49c9e1`, `0x49c9f9`, `0x49ca10`, `0x49ca3f`, `0x49ca5e`, `0x49ca7b`, `0x49ca94`, `0x49cace`, `0x49d09a`, `0x8362d8`, `0x84480c`, `0x833180`, `0x844814`, `0x844810`, `0x844808`
+Confidence: verified
+Proof: one
+Test: `ui::channel_list_print`
+
+The first walk (`0x49c81d` to `0x49c85a`) returns at `0x49c849` on a null record. `0x49c8b2` loads the
+member byte; `0x49c8bf`, `0x49c8cb` and `0x49c8e0` pick the prefixes `0x833180`, `0x844814` and
+`0x844810`. `0x49c8e5` tests the line's first byte for the separator `0x84480c`. `0x49c900` tests
+`+0x30`; `0x49c938` appends `0x844808` and the loop to `0x49c962` drops 0x20 and 0x09. `0x49c98f` is
+`SStrPrintf(entry, 0x33, "%s%s%s", …)`; `0x49c9b0` compares the two lengths' sum with 0x100. The flush
+shows the line (`0x49c9dc`), clears it, and when the entry starts with `,` (`0x49c9e1`) moves it two
+bytes left (`0x49c9f9`). `0x49ca5e` shows a last line when the line count is not 0; `0x49ca94` to
+`0x49cace` unlink and free. The callback `0x49ccc0` calls it for every joined slot whose list is not
+empty (`0x49d09a`). The test runs it whole on 600 lists of up to 59 members, with the name cache, `SStrPrintf`, `0x49a870` and `SMemFree` stubbed.
+
+## Mode change lines
+
+Notice 12 of the notify message, a GUID, the old flags and the new flags, goes to `0x49e910`. When
+the member's name is cached it shows up to two `CHANNEL_NOTICE_USER` lines (type 0x13), the text a
+token, the sender the name and the channel the notice's channel: for bit 0x02, `SET_MODERATOR` when
+it is gained and `UNSET_MODERATOR` when it is lost; then for bit 0x04, `SET_VOICE` and
+`UNSET_VOICE`. A name not cached shows nothing: the callback it registers holds no line.
+
+Addresses: `0x49e910`, `0x49e91a`, `0x49e934`, `0x49e93d`, `0x49e95c`, `0x49e97e`, `0x49e8a0`, `0x49e8a8`, `0x49e8b0`, `0x49e8b4`, `0x49e8d3`, `0x49e8df`, `0x49e8e3`, `0x49e902`, `0x49c283`, `0x8449d8`, `0x8449e8`, `0x8449c0`, `0x8449cc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x49c283` passes the old byte in `cl`, the new in `dl`, then the GUID and the channel. `0x49e934` asks
+the name cache with `0x49ccc0` and no data; `0x49e93d` returns on null. `0x49e95c` and `0x49e97e` call
+`0x49e8a0(name, old; guid, new, channel, bit, set, unset)` with bit 2 and then 4. There `0x49e8a8`
+masks the old byte; `0x49e8b0` and `0x49e8b4` take the gain (old clear, new set) to `0x49e8d3` with the
+set token, and `0x49e8df` and `0x49e8e3` the loss to `0x49e902` with the unset token, each with type
+0x13 and the name as the first stack argument.

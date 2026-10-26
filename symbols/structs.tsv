@@ -101,6 +101,7 @@ OrientedBox		60		cmath	Holds an oriented box: centre, half-extents and three uni
 OsTcp		1580		os	Holds the OsTcp object: the network thread's events, the resolve request count, lock, id counter and list	verified	one	net/dial#resolver-hand-off
 OsThreadRecord		6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
 PATHINFO		16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
+PENDINGUSERLIST		24		ui	Holds one member of a channel list message waiting to print: link, GUID and member flags	verified	one	ui/chatchannels#channel-list-message
 PLAYERNAMEDESC		56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
 PROFICIENCYSPELL		28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
 PendingSpellCast		256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields

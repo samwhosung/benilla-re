@@ -1348,6 +1348,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832f60	char[14]	s_textScreenshotStamp		unassigned	Holds the time format "%m%d%y_%H%M%S"	verified	one	gx/capture#screenshot-file
 0x832f70	uint32_t	s_idleSleepEnabled		os	Holds 1, the word that lets the pump sleep while the window is inactive	verified	one	core/input#message-filter-and-idle-sleep
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
+0x833180	const char[2]	s_textStar		ui	Holds the string "*"	verified	one	ui/chatchannels#printing-the-member-list
 0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
 0x833190	char *[22]	s_reservedFileNames		unassigned	Holds the 22 reserved device names nul, con, prn, aux, com1 on that file name validation rejects	verified	one	core/time#file-name-helpers
@@ -1618,6 +1619,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x844608	char[21]	s_textSSSSSSDDSD		ui	Holds the string "%s%s%s%s%s%s%d%d%s%d"	verified	one	ui/chatevents#the-ten-event-arguments
 0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
+0x844810	const char[2]	s_textHash		ui	Holds the string "#"	verified	one	ui/chatchannels#printing-the-member-list
+0x844814	const char[2]	s_textAt		ui	Holds the string "@"	verified	one	ui/chatchannels#printing-the-member-list
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
 0x844870	const char[23]	s_textRaidInstanceInfoFmt		ui	Holds the string "RAID_INSTANCE_INFO_FMT"	verified	one	ui/instances#the-saved-instance-list
 0x844888	const char[22]	s_textRaidInstanceWelcome		ui	Holds the string "RAID_INSTANCE_WELCOME"	verified	one	ui/instances#lockout-warnings
@@ -1627,6 +1630,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x844910	const char[22]	s_textInstanceResetFailed		ui	Holds the string "INSTANCE_RESET_FAILED"	verified	one	ui/instances#reset-refusals
 0x844928	const char[30]	s_textInstanceResetFailedOffline		ui	Holds the string "INSTANCE_RESET_FAILED_OFFLINE"	verified	one	ui/instances#reset-refusals
 0x844948	const char[29]	s_textInstanceResetFailedZoning		ui	Holds the string "INSTANCE_RESET_FAILED_ZONING"	verified	one	ui/instances#reset-refusals
+0x8449c0	const char[10]	s_textSetVoice		ui	Holds the string "SET_VOICE"	verified	one	ui/chatchannels#mode-change-lines
+0x8449cc	const char[12]	s_textUnsetVoice		ui	Holds the string "UNSET_VOICE"	verified	one	ui/chatchannels#mode-change-lines
+0x8449d8	const char[14]	s_textSetModerator		ui	Holds the string "SET_MODERATOR"	verified	one	ui/chatchannels#mode-change-lines
+0x8449e8	const char[16]	s_textUnsetModerator		ui	Holds the string "UNSET_MODERATOR"	verified	one	ui/chatchannels#mode-change-lines
 0x8449f8	const char[16]	s_formatDurationDhms		ui	Holds the string "%dd %dh %dm %ds"	verified	one	ui/instances#duration-text
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
 0x844d28	char[41]	s_textUsageChangeChatColor		ui	Holds the string "Usage(ChangeChatColor(chatType, r, g, b)", the usage error of ChangeChatColor	verified	one	ui/chatcolors#changechatcolor
