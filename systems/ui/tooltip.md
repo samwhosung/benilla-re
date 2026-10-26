@@ -142,8 +142,10 @@ twins compare the count `+4` with the limit; a difference calls `0x536c80` (`0x5
 or its copy `0x4368c0` (`0x5299ea`) with the limit and stores it as the count (`0x529982`). The
 branches for a limit of 0 free the array instead and run only when the limit wraps past 0xffffffff.
 `0x529a01`, `0x529a14` and `0x529a26` store the left string, the right string and 0 at index
-limit − 1 of the data `+0x32c`, `+0x338` and `+0x344`. The test runs `0x529940` whole with the two
-resizers stubbed to store the capacity.
+limit − 1 of the data `+0x32c`, `+0x338` and `+0x344`. The test runs `0x529940` with the two
+resizers stubbed to store the capacity; it does not run the limit-0 branches `0x52996a` to
+`0x52997a`, `0x5299a1` to `0x5299b0` and `0x5299d7` to `0x5299e7`, whose stores then write below
+freed data.
 
 ## Item object link
 

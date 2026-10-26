@@ -92,19 +92,20 @@ negates both (`0x78bcc2`, `0x78bcd1`) and anchors point 4 to the wheel's point 4
 `0x78b850(texture)` installs the wheel thumb `+0x31c` the way `0x78ba90` installs the value thumb:
 the same texture does nothing; otherwise the old one is deleted, a new one is moved into the colour
 select on layer 3 (`OVERLAY`), shown, with its anchors cleared, and the thumb is stored and placed
-again, a null one included. `SetColorWheelThumbTexture` passes a texture object or nil, and the
-`ColorWheelThumbTexture` element its texture. `0x78b7b0(path)` loads a path into the wheel thumb, or
-builds one and installs it when the file loads, deleting it and answering 0 when not. `0x78b530`, slot 11 of the vtable `0x81d108`,
-clears each of the four texture fields that holds the region being removed, then removes it.
+again, a null one included; `SetColorWheelThumbTexture` passes an object or nil. `0x78b7b0(path)`
+loads a path into the wheel thumb, answering 1 even when the file fails, or builds one and installs
+it when the file loads, deleting it and answering 0 when not. `0x78b530`, slot 11 of `0x81d108`,
+clears each of the four texture fields that holds the removed region, then removes it.
 
-Addresses: `0x78b850`, `0x78b862`, `0x78b86c`, `0x78b879`, `0x78b881`, `0x78b888`, `0x78b88e`, `0x78b7b0`, `0x78b7be`, `0x78b7d5`, `0x78b7f1`, `0x78b802`, `0x78b81d`, `0x78b824`, `0x78b829`, `0x78b841`, `0x78b530`, `0x78b543`, `0x78b551`, `0x78b55f`, `0x78b56e`, `0x78b575`, `0x78e2e2`, `0x78e308`, `0x78e322`, `0x78b46e`, `0x81d108`, `0x78bc20`, `0x77fd10`, `0x767ed0`, `0x770200`, `0x76fc40`
+Addresses: `0x78b850`, `0x78b862`, `0x78b86c`, `0x78b879`, `0x78b881`, `0x78b888`, `0x78b88e`, `0x78b7b0`, `0x78b7be`, `0x78b7c0`, `0x78b7d5`, `0x78b7dc`, `0x78b7f1`, `0x78b802`, `0x78b81d`, `0x78b824`, `0x78b829`, `0x78b841`, `0x78b530`, `0x78b543`, `0x78b551`, `0x78b55f`, `0x78b56e`, `0x78b575`, `0x78e2e2`, `0x78e308`, `0x78e322`, `0x78b46e`, `0x81d108`, `0x78bc20`, `0x77fd10`, `0x767ed0`, `0x770200`, `0x76fc40`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x78b862` returns for the same texture and `0x78b86c` calls slot 0 of the old one with 1. A
 non-null texture gets `0x77fd10(select, 3, 1)` (`0x78b879`) and `0x767ed0` (`0x78b881`); `0x78b888`
-stores it and `0x78b88e` calls `0x78bc20`. `0x78b7be` tests the thumb and `0x78b7d5` loads into it;
+stores it and `0x78b88e` calls `0x78bc20`. `0x78b7be` tests the thumb and `0x78b7d5` loads into it, `0x78b7dc` returning the 1 that `0x78b7c0`
+put in `ebx`;
 otherwise `0x78b7f1` takes a block from the texture pool, `0x78b802` builds it with layer 2 and
 shown, `0x78b81d` loads, and `0x78b824` sends a load to `0x78b829` and a failure to the deleting
 destructor (`0x78b841`). `0x78b530` compares the region with `+0x318`, `+0x31c`, `+0x320` and

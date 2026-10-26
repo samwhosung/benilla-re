@@ -79,7 +79,7 @@ cleared, and the thumb is stored and flag 1 of `+0x314`, place the thumb, is set
 1 even when the file fails, or builds one and installs it on layer 3 when the file loads, deleting it
 and answering 0 when not. `0x789790`, slot 11 of `0x81cf60`, forgets a removed thumb.
 
-Addresses: `0x789860`, `0x789870`, `0x78987c`, `0x78988b`, `0x789893`, `0x7898a1`, `0x7898a7`, `0x7897c0`, `0x7897ce`, `0x7897e5`, `0x789801`, `0x789812`, `0x78982d`, `0x789834`, `0x78983b`, `0x789853`, `0x789790`, `0x789796`, `0x78979e`, `0x7897a9`, `0x790434`, `0x79045a`, `0x790476`, `0x78959b`, `0x7895f6`, `0x789564`, `0x81cf60`, `0x77fd10`, `0x767ed0`, `0x770200`, `0x76fc40`
+Addresses: `0x789860`, `0x789870`, `0x78987c`, `0x78988b`, `0x789893`, `0x7898a1`, `0x7898a7`, `0x7897c0`, `0x7897ce`, `0x7897e5`, `0x789801`, `0x789812`, `0x78982d`, `0x789834`, `0x78983b`, `0x789853`, `0x789790`, `0x789796`, `0x78979e`, `0x7897a9`, `0x790434`, `0x79045a`, `0x790476`, `0x7895a2`, `0x7895a9`, `0x7895bc`, `0x7895f6`, `0x789564`, `0x81cf60`, `0x77fd10`, `0x767ed0`, `0x770200`, `0x76fc40`
 Confidence: verified
 Proof: one
 Test: `ui::slider_install_thumb_difftest`
@@ -92,7 +92,8 @@ texture gets `0x77fd10(slider, layer, 1)` (`0x78988b`) and `0x767ed0` on its lay
 `0x78983b`, the install with 3, and a failure to the deleting destructor (`0x789853`). `0x789796`
 compares the region with the thumb and `0x78979e` stores 0 before `CSimpleFrame::RemoveRegion`
 (`0x7897a9`). The Lua callers are `0x790434` (an object), `0x79045a` (a string) and `0x790476`
-(nil); `0x7895f6` is the XML one, with the layer `0x78959b` reads from the slider's node, and `0x789564` the
+(nil); `0x7895f6` is the XML one, with the layer that `0x7895a2` defaults to 3 and
+`0x7895a9` and `0x7895bc` read from the slider's `drawLayer`, and `0x789564` the
 destructor's. The test runs `0x789860` whole with
 the parent and anchor calls and the old thumb's destructor stubbed.
 
