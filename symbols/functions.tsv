@@ -14922,7 +14922,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575380	6	CharHairGeosetsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharHairGeosets table file	inferred	none		
 0x575390	3	CharHairGeosetsRecConstruct		dbc	orchestration	CharHairGeosetsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x5753a0	1	CharHairGeosetsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x5753b0	228	CharHairGeosetsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharHairGeosetsRec column by column from the file and rebases its string offsets	inferred	none		
+0x5753b0	228	CharHairGeosetsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the six dwords of one CharHairGeosetsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::char_hair_geosets_read_difftest
 0x5754a0	5	InitDbcTwoPiC0E428Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x5754b0	15	InitDbcTwoPiC0E428		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x5754c0	5	InitDbcInvTwoPiC0E424Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -14932,7 +14932,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575510	6	CharSectionsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharSections table file	inferred	none		
 0x575520	3	CharSectionsRecConstruct		dbc	orchestration	CharSectionsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x575530	1	CharSectionsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x575540	419	CharSectionsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharSectionsRec column by column from the file and rebases its string offsets	inferred	none		
+0x575540	419	CharSectionsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharSectionsRec and rebases its three texture names once every read succeeds	verified	one	dbc#six-readers-column-by-column	dbc::char_sections_read_difftest
 0x5756f0	5	InitDbcTwoPiC0E434Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x575700	15	InitDbcTwoPiC0E434		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x575710	5	InitDbcInvTwoPiC0E430Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -14962,7 +14962,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575a50	6	CharacterFacialHairStylesGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the CharacterFacialHairStyles table file	inferred	none		
 0x575a60	3	CharacterFacialHairStylesRecConstruct		dbc	orchestration	CharacterFacialHairStylesRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x575a70	1	CharacterFacialHairStylesRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x575a80	261	CharacterFacialHairStylesRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one CharacterFacialHairStylesRec column by column from the file and rebases its string offsets	inferred	none		
+0x575a80	261	CharacterFacialHairStylesRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the nine dwords of one CharacterFacialHairStylesRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::character_facial_hair_styles_read_difftest
 0x575b90	5	InitDbcTwoPiC0E458Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x575ba0	15	InitDbcTwoPiC0E458		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x575bb0	5	InitDbcInvTwoPiC0E454Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -15942,7 +15942,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x583720	6	SpellGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the Spell table file	inferred	none		
 0x583730	3	SpellRecConstruct		dbc	orchestration	SpellRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x583740	1	SpellRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x583750	5353	SpellRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one SpellRec column by column from the file and rebases its string offsets	inferred	none		
+0x583750	5353	SpellRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one SpellRec in 118 reads and rebases its 32 string offsets once every read succeeds	verified	one	dbc#six-readers-column-by-column	dbc::spell_read_difftest
 0x584c40	5	InitDbcTwoPiC0E8F0Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x584c50	15	InitDbcTwoPiC0E8F0		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x584c60	5	InitDbcInvTwoPiC0E8ECThunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -16152,7 +16152,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x587420	6	WeaponImpactSoundsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the WeaponImpactSounds table file	inferred	none		
 0x587430	3	WeaponImpactSoundsRecConstruct		dbc	orchestration	WeaponImpactSoundsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x587440	1	WeaponImpactSoundsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x587450	195	WeaponImpactSoundsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one WeaponImpactSoundsRec column by column from the file and rebases its string offsets	inferred	none		
+0x587450	195	WeaponImpactSoundsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the 23 dwords of one WeaponImpactSoundsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::weapon_impact_sounds_read_difftest
 0x587520	5	InitDbcTwoPiC0E9ECThunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x587530	15	InitDbcTwoPiC0E9EC		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x587540	5	InitDbcInvTwoPiC0E9E8Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
@@ -16270,7 +16270,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589000	6	LightParamsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the LightParams table file	inferred	none		
 0x589010	3	LightParamsRecConstruct		dbc	orchestration	LightParamsRec * __thiscall (void *this)	Returns the record it is called on and does nothing else	inferred	none		
 0x589020	1	LightParamsRecDestruct		dbc	orchestration	void __thiscall (void *this)	Returns at once; the record has no destructor work	inferred	none		
-0x589030	327	ReadLightParamsRecord		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads one LightParamsRec column by column from the file and rebases its string offsets	inferred	none		
+0x589030	327	LightParamsRecRead		dbc	primitive	bool __thiscall (void *this, void *file, const char *stringBase)	Reads the nine dwords of one LightParamsRec, false when any read fails	verified	one	dbc#six-readers-column-by-column	dbc::light_params_read_difftest
 0x589180	5	InitDbcTwoPiC0EB30Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the record file	inferred	none		
 0x589190	15	InitDbcTwoPiC0EB30		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x5891a0	5	InitDbcInvTwoPiC0EB2CThunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
