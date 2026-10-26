@@ -158,12 +158,12 @@ Both bindings test `lua_isnumber` (`0x6f34d0`) first and convert with `lua_tonum
 
 `GetNumIgnores` (`0x5ad400`) returns the count `0x5ae550` gives, 0 without a list. `GetIgnoreName(index)` (`0x5ad460`) reads the guid `0x5ae570` returns for `__ftol(index) − 1`: the guid at `+0x650 + 8·i` for `i` of at most 25, else 0. `i` = 25 reads `+0x718`, the pending count, and `+0x71c`, which the constructor does not write. A zero guid, or one whose name the cache does not hold, returns the global string `UNKNOWN`; else the cached name. `SetSelectedIgnore(index)` (`0x5ad520`) calls `0x5ae5f0` with `index − 1`, and `GetSelectedIgnore` (`0x5ad570`) returns `0x5ae630` plus 1. `AddIgnore`, `DelIgnore` and `AddOrDelIgnore` (`0x5ad5f0`, `0x5ad640`, `0x5ad5a0`) take a string and call `0x5af300`, `0x5af400` and `0x5af1a0`, or do nothing without a list.
 
-Addresses: `0x5ad400`, `0x5ad411`, `0x5ad460`, `0x5ad4bb`, `0x5ad4c4`, `0x5ad4e5`, `0x5ad4ee`, `0x5ad4fd`, `0x5ae570`, `0x5ae576`, `0x5ad520`, `0x5ad570`, `0x5ad5a0`, `0x5ad5ca`, `0x5ad5f0`, `0x5ad61a`, `0x5ad640`, `0x5ad66a`, `0x5aca10`, `0x55f080`, `0x703bf0`, `0x838044`
+Addresses: `0x5ad400`, `0x5ad411`, `0x5ad460`, `0x5ad4bb`, `0x5ad4c4`, `0x5ad4e5`, `0x5ad4ee`, `0x5ad4fd`, `0x5ae570`, `0x5ae576`, `0x5ad520`, `0x5ae5f9`, `0x5ad570`, `0x5ad5a0`, `0x5ad5ca`, `0x5ad5f0`, `0x5ad61a`, `0x5ad640`, `0x5ad66a`, `0x5aca10`, `0x55f080`, `0x703bf0`, `0x838044`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5ad411` tests `0xc28168`; `GetIgnoreName`, `SetSelectedIgnore` and `GetSelectedIgnore` load it with no test. `0x5ae576` is `cmp edx,0x19; jbe`. `0x5ad4c4` skips the lookup for a zero guid; `0x5ad4e5` calls `0x55f080` on the name cache `0xc0e228` with a zeroed owner and no callback, which returns null on a miss and sends nothing (`dbcache/overview`, Asking for a record). `0x5ad4ee` takes `UNKNOWN` (`0x838044`) through `0x703bf0`, and `0x5ad4fd` pushes the record's string. `0x5aca10` writes `+0x718` and `+0x720` but not `+0x71c`. The name bindings test `lua_isstring` and raise their usage error otherwise; `0x5ad5ca`, `0x5ad61a` and `0x5ad66a` test the list.
+`0x5ad411` tests `0xc28168`; `GetIgnoreName`, `SetSelectedIgnore` and `GetSelectedIgnore` load it with no test. `SetSelectedIgnore(26)` passes 25, which `0x5ae5f9` (`jbe` after `cmp eax,0x19`) accepts, so it selects the eight bytes at `+0x718` and `+0x71c`. `0x5ae576` is `cmp edx,0x19; jbe`. `0x5ad4c4` skips the lookup for a zero guid; `0x5ad4e5` calls `0x55f080` on the name cache `0xc0e228` with a zeroed owner and no callback, which returns null on a miss and sends nothing (`dbcache/overview`, Asking for a record). `0x5ad4ee` takes `UNKNOWN` (`0x838044`) through `0x703bf0`, and `0x5ad4fd` pushes the record's string. `0x5aca10` writes `+0x718` and `+0x720` but not `+0x71c`. The name bindings test `lua_isstring` and raise their usage error otherwise; `0x5ad5ca`, `0x5ad61a` and `0x5ad66a` test the list.
 
 ## Ignore requests
 

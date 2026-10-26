@@ -241,15 +241,15 @@ the pitch band (`0x5107b1`, `0x5107cb`) and `0x510850` the yaw band; `0x510750` 
 
 `0x511010(camera)` holds the pivot bias: it answers 1 when the Track bit (bit 8 of the mode word `+0x90`) is set and either
 `cameraSmoothTrackingStyle` is 0 or the auto-move mode `0xc4d888` is 0 (keep facing the target,
-`objectlayer/unitmovement#auto-move-modes`), else 0. `0x5107f0` asks it once the bias is at least 0.001 in size and answers
+`objectlayer/unitmovement#auto-move-modes`), else 0. `0x5107f0` asks it once the bias is at least 0.001 in size, or NaN, and answers
 that nothing needs clearing when it answers 1.
 
-Addresses: `0x511010`, `0x511016`, `0x51101e`, `0x511028`, `0x51102a`, `0x51102f`, `0x511035`, `0x51080e`, `0x510815`, `0x60f8f0`, `0xbe10c4`, `0xc4d888`
+Addresses: `0x511010`, `0x511016`, `0x51101e`, `0x511028`, `0x51102a`, `0x51102f`, `0x511035`, `0x5107fb`, `0x510806`, `0x51080e`, `0x510815`, `0x60f8f0`, `0xbe10c4`, `0xc4d888`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x511016` is `test ah,1` on `[ecx+0x90]` and returns 0 when clear. `0x51101e` loads the CVar `0xbe10c4` and `0x511028`
 tests its integer value `+0x28`; 0 returns 1 (`0x511035`). Otherwise `0x51102a` calls `0x60f8f0`, `mov eax,[0xc4d888]`, and
-`0x51102f` turns it into 1 for 0 and 0 for any other value (`neg; sbb; inc`). `0x51080e` is its one call, in `0x5107f0`,
+`0x51102f` turns it into 1 for 0 and 0 for any other value (`neg; sbb; inc`). `0x5107fb` compares `|bias|` with 0.001 and `test ah,5; jp` at `0x510806` reaches the call for C0 and C2 both clear or both set, so an unordered NaN calls it too. `0x51080e` is its one call, in `0x5107f0`,
 and `0x510815` returns 0 on a nonzero answer.
