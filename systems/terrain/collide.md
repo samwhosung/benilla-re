@@ -54,6 +54,57 @@ mask, and the result is the AND of the chunks'.
 `terrain::aabb_query_negates_difftest` runs `0x6aa930` to `0x6aa967`;
 `terrain::aabb_query_cell_indices_difftest` runs `0x6aa9b4` to `0x6aaa14`.
 
+## Map object gather
+
+`0x6aaab0(box, list, mask, flags)` gathers the facets of the map objects and their groups in a
+box, 1, or 0 when one there is not ready. Each instance of the map object list whose box `+0x44`
+overlaps the box, but one with bit 0 of byte `+0xd` or no map object `+0x118`, needs its map
+object loaded (`+0x1d4`) and a def group, or the gather fails. The box, moved about its centre
+into the instance's space, is tested against the map object (`0x6a4670`): a pass gathers its
+group facets under 0xf0, ORing `s_batchOverflow` into `*flags`, its liquid under 0xf0000.
+Each overlapping def group must be loaded and its doodads (0xf0000f) ready (Doodad gather leg),
+then its game objects under 0xf00000.
+
+Addresses: `0x6aaab0`, `0x6aaae6`, `0x6aaaf0`, `0x6aab1f`, `0x6aab2b`, `0x6aab3c`, `0x6aab61`, `0x6aab6b`, `0x6aab87`, `0x6aab9a`, `0x6aabaa`, `0x6aabb8`, `0x6aabdb`, `0x6aac06`, `0x6aac28`, `0x6aac34`, `0x6aac4e`, `0x6aac5c`, `0x6aac6c`, `0x6aac8a`, `0x6aaca3`, `0x6aacb5`, `0x6aacba`, `0x6aaccd`, `0x6aad0c`, `0x6aad1b`, `0x6aad2b`, `0x6aad37`, `0x6aad4c`, `0x6aad58`, `0x6aad6d`, `0x6aad89`, `0x6aada7`, `0x6aadb2`, `0x6acb40`, `0x699330`, `0x6a42b0`, `0x6a4670`, `0x6a3b10`, `0x6a3c20`, `0x671cc0`, `0x6abc40`, `0x6abe60`, `0x6dc3f0`, `0xca7d9c`, `0xc63258`, `0xc5a474`, `0xc7b378`, `0xc63190`
+Confidence: verified
+Proof: one
+Test: `terrain::collectinbox_negate_difftest`
+
+`ret 8`. The centre is `(min + max) · 0.5` (`0x6aaae6`, `0x6aaaf0`); the box less the centre is
+kept (`0x6aab1f` to `0x6aab37`). Per instance, `0x6acb40` (every component of its min at most the
+box's max) and `0x699330` (its max at least the box's min) are the overlap, a NaN failing it. The
+failures are `0x6aabaa` and `0x6aabb8` to `0x6aabc8`, jumping to `0x6aada7`. The centre moves by
+`+0xd4` (`0x6aabdb`); `0x6aac06` builds the 3×3 of that matrix's upper rows and `0x6aac28` passes
+it and the centred box to `0x6dc3f0`, the centre added back after (`0x6aac34`). `0x6aac6c` zeroes
+`s_batchOverflow`, `0xc5a474`, `0xc7b378`, `0xc63190` and one more batch global before
+`0x6a3b10`, and `0x6aaca3` emits through `0x671cc0` with `+0x158`, `+0x15c`. Groups are tested by
+`+0x44` and `+0x50` (`0x6aad0c`, `0x6aad1b`), then `0x6a42b0(group index +0x7c)`, which is the
+group's parsed byte `+0x164`, 0 for an unloaded map object (`0x6aad2b`). The group walk runs
+whether or not `0x6a4670` passed. `terrain::collectinbox_negate_difftest` runs `0x6aaaf5` to
+`0x6aab1c`.
+
+## Doodad gather leg
+
+`0x6abc40(doodads, box, list, mask)` returns 1 at once without any of 0xf0000f in the mask, else
+walks a doodad def list and returns 0 at the first def it would take that is not loaded. A def is
+passed over when its flag word `+0xc` has bit 0x100, its stamp `+0x8c` is the query id or it has
+no model `+0x88`; it is taken by the mask under 0xf00000 when it has a game object's owner
+pair `+0x180`, `+0x184`, else under 0xf. A taken def needs bit 0x80 (loaded); its box `+0x14c`
+overlapping the query box adds its facets (`0x6abd90`); either way it is stamped. It returns 1 at
+the list's end.
+
+Addresses: `0x6abc40`, `0x6abc4c`, `0x6abc60`, `0x6abc89`, `0x6abc90`, `0x6abc9f`, `0x6abcb1`, `0x6abcc5`, `0x6abcc7`, `0x6abccf`, `0x6abcda`, `0x6abcee`, `0x6abcf6`, `0x6abd1d`, `0x6abd46`, `0x6abd54`, `0x6abd70`, `0x6abd7b`, `0x6abd90`, `0xc89f20`, `0x6aad4c`, `0x6ab4a1`
+Confidence: verified
+Proof: one
+Test: none
+
+`ret 8`; the list in `ecx` holds its link offset at `+0` and its head at `+8`, each node's def at
+`+4`. `0x6abc90 test ah,1` is bit 0x100; `0x6abcc5` the owner pair's `or`. `0x6abcda` is `test al,al;
+jns` to `0x6abd70`, `xor eax,eax`. The box test copies the def's box `+0x14c` to the stack (`0x6abcee`) and
+compares each min with the box's max (`test ah,0x41; jp`) and each max with its min (`test ah,1;
+jne`), a NaN failing it. `0x6abd54` stores `s_mapQueryId`. The callers are the map object gather
+(`0x6aad4c`, a group's `+0xa8`) and the chunk gather (`0x6ab4a1`).
+
 ## Chunk facets
 
 `0x6aadc0` gathers a chunk's facets: four triangles per cell of the rectangle clamped to the

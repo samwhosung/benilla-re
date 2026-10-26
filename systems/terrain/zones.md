@@ -10,7 +10,30 @@ name for the locale at `+0x2c + 4 × locale`. A WMOAreaTable row holds the id, W
 group id at `+0x0` to `+0xc`, the same five sound fields at `+0x10` to `+0x20`, the flags at `+0x24`,
 the AreaTable id at `+0x28` and the name at `+0x2c + 4 × locale`.
 
-Roots: `0x67e510`, `0x67e9c0`, `0x6703a0`, `0x6704e0`, `0x6704f0`, `0x6705a0`
+Roots: `0x67e510`, `0x67e9c0`, `0x67e460`, `0x6703a0`, `0x6704e0`, `0x6704f0`, `0x6705a0`
+
+## Area name format
+
+`0x67e460(area, out, size, withParent)` writes an area's name for the locale into `out`, at most
+`size` bytes with the terminator. With `withParent` set and a parent row, the text is `name,
+parent`, formatted `%s, %s`; otherwise it is the name alone. It returns 1, or 0 with nothing
+written for a null `out` or a `size` of 0, and 0 with `out` emptied for an id below 0, above
+the highest id or without a row. A parent of 0, out of range or without a row gives the name
+alone.
+
+Addresses: `0x67e460`, `0x67e468`, `0x67e473`, `0x67e47b`, `0x67e47e`, `0x67e488`, `0x67e495`, `0x67e49c`, `0x67e4a3`, `0x67e4ae`, `0x67e4b8`, `0x67e4c9`, `0x67e4ea`, `0xc0e048`, `0xc0e04c`, `0xc0e080`, `0x868610`, `0x64a7f0`, `0x64a5a0`, `0x403f1f`, `0x52a97f`
+Confidence: verified
+Proof: one
+Test: none
+
+`ret 8`: the id in `ecx`, `out` in `edx`. `0x67e468` and `0x67e473` return before the store of 0
+at `0x67e47b`; `0x67e47e` (`jl`) and `0x67e488` (`jg` against `0xc0e04c`) bound the id, and
+`0x67e495` tests the row from `0xc0e048`. The parent `+0x8` is tested for 0, sign and the highest
+id (`0x67e4a3` to `0x67e4a9`) and its row at `0x67e4ae`. The names are `[row + 0x2c + 4 ·
+[0xc0e080]]` (`0x67e4b8`); `0x67e4c9` is `SStrPrintf(out, size, "%s, %s", name, parent)` with the
+format at `0x868610`, and `0x67e4ea` is `SStrCopy(out, name, size)`. The callers are the error
+log's zone line, `0x403f1f`, with the player's area id, 0x104 bytes and the parent, and the unit
+tooltip's group record line, `0x52a97f`, with the record's area word, 0x400 bytes and no parent.
 
 ## Area update
 

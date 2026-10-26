@@ -2172,6 +2172,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x868604	int32_t	s_zoneNameIdA		terrain	Holds a zone name id, −1 when none	inferred	none	
 0x868608	int32_t	s_zoneNameIdB		terrain	Holds a zone name id, −1 when none	inferred	none	
 0x86860c	int32_t	s_zoneNameIdC		terrain	Holds a zone name id, −1 when none	inferred	none	
+0x868610	char[7]	s_areaWithParentFormat		terrain	Holds the format "%s, %s" of an area name followed by its parent's	verified	one	terrain/zones#area-name-format
 0x86861c	float	s_horizonHalf		terrain	Holds 0.5, taken off a horizon column before rounding	verified	one	terrain/cull#horizon-buffer
 0x868620	float	s_smallCullValue		cvar	Holds the SmallCull value the option stores; nothing reads it	verified	one	cvar/options#float-range-settings
 0x868624	float	s_distCullValue		cvar	Holds the DistCull value the option stores; nothing reads it	verified	one	cvar/options#float-range-settings
@@ -2210,6 +2211,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86b560	uint32_t[8]	s_chunkLevelIndexLists		terrain	Holds the four levels' index lists the mesh tables read: a count word and a pointer	verified	one	terrain/lod#level-meshes
 0x86b580	uint32_t[4]	s_quadrantCornerVertex		terrain	Holds the chunk vertex 0, 8, 136 or 144 that files the chunk in a depth band by the camera quadrant	verified	one	terrain/cull#chunk-points
 0x86b590	uint16_t[2]	s_shadowTexel		terrain	Holds the shadow texels 0x0000 for a clear bit and 0xffff for a set one	verified	one	terrain/chunk#shadow-maps
+0x86b5d4	char[20]	s_detailDoodadFolder		terrain	Holds the folder World\NoDXT\Detail\ the detail doodad model paths are appended to	verified	one	terrain/detail#detail-doodad-model-load
 0x86b608	char[58]	s_detailDoodadSourcePath		terrain	Holds the source path ending in DetailDoodad.cpp that the file passes to the allocator	verified	one	terrain/overview#object-files
 0x86b6b8	uint32_t	s_portalDepthCapDefault		terrain	Holds 10, the portal recursion cap a static initializer copies	inferred	none	
 0x86b6c0	float	s_halfHeight		terrain	Holds 0.5, taken off a cell coordinate before rounding	verified	one	terrain/queries#surface-height
@@ -4241,6 +4243,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7cb50	uint32_t[3]	s_occluderChunks		terrain	Holds the frame's occluder candidate chunks	verified	one	terrain/cull#chunk-visibility
 0xc7cb5c	float[6]	s_frustumBox		terrain	Holds the min then max corner of the box around the frame's eight frustum corners	verified	one	terrain/cull#frame-frustum-box
 0xc7cb7c	uint8_t	s_portalWindows		terrain	Begins the scene's portal window records	inferred	none	
+0xc7cd30	NTempest::C44Matrix	s_doodadTraceMatrix		terrain	Holds the matrix a segment moves by before the doodad trace: identity at start-up, then copied by 0x671b30	verified	one	terrain/trace#map-object-trace
 0xc7cd80	uint32_t[2]	s_claimedGroupList		terrain	Holds the capacity and the count of the pointer array the camera down-ray appends the claimed model and group to	inferred	none	
 0xc7cd88	uint32_t	s_cameraGroupSet		terrain	Holds the group set the camera stands in	inferred	none	
 0xc7cf20	float[3]	s_cameraPosition		terrain	Holds the camera position the terrain, liquid, group and doodad passes subtract	verified	one	terrain/cull#camera-origin
@@ -4415,6 +4418,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcac860	float[290]	s_chunkTexCoords		terrain	Holds each chunk vertex's texture coordinate scaled to [0, 8]	verified	one	terrain/lod#chunk-mesh-tables
 0xcaf160	uint16_t	s_chunkIndexScratch		terrain	Begins the scratch index list the chunk index builder fills	inferred	none	
 0xcaf79c	void *	s_detailRamp		terrain	Holds the detail doodad fade ramp texture	verified	one	terrain/detail#detail-doodad-draw
+0xcafffc	void **	s_detailDoodadModels		terrain	Holds the detail model records indexed by GroundEffectDoodad id, which 0x6b1a90 fills	verified	one	terrain/detail#detail-doodad-model-load
 0xcb0034	uint32_t	s_detailDoodadRebuild		terrain	Holds 1 when the detail doodad buffers must be rebuilt	verified	one	terrain/detail#detail-doodad-tables
 0xcb004c	uint32_t	s_portalDepthCap		terrain	Holds the portal recursion cap	inferred	none	
 0xcb005c	uint8_t[57344]	s_portalStates		terrain	Holds the 2048 portal states of 0x1c bytes: flags, screen rectangle and the two pass numbers	verified	one	terrain/portals#portal-walk
