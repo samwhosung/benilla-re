@@ -1226,6 +1226,9 @@ RACECLASSINFO	0x000c	8	void *[2]	m_linkToFull	spell	Holds the link in the table'
 RACECLASSINFO	0x0014	1	uint8_t	m_key	spell	Holds an uninitialized stack byte the build copies; nothing reads it	verified	one	spell/tables#startup-build-of-the-indexes
 RACECLASSINFO	0x0018	4	void *	m_firstRow	spell	Holds the run's first SkillRaceClassInfo.dbc row	verified	one	spell/tables#startup-build-of-the-indexes
 RACECLASSINFO	0x001c	4	uint32_t	m_rowCount	spell	Holds the number of consecutive rows in the run	verified	one	spell/tables#startup-build-of-the-indexes
+RaidInstanceInfo	0x0000	4	int32_t	m_mapId	ui	Holds the Map.dbc id, read first	verified	one	ui/instances#the-saved-instance-list
+RaidInstanceInfo	0x0004	4	uint32_t	m_instanceId	ui	Holds the instance id, read third and pushed unsigned	verified	one	ui/instances#the-saved-instance-list
+RaidInstanceInfo	0x0008	4	int32_t	m_resetSeconds	ui	Holds the seconds to reset, read second and pushed signed	verified	one	ui/instances#the-saved-instance-list
 RealmCategory	0x0000	4	uint32_t	m_id	glue	Holds the category id, Cfg_Categories column 0, matched against a realm's category byte	verified	one	glue/realms#the-category-set
 RealmCategory	0x0004	4	void *	m_row	glue	Points to the category's Cfg_Categories record, the source of its localized name	verified	one	glue/realms#the-category-set
 RealmCategory	0x0008	4	uint32_t	m_realmsCapacity	glue	Holds the realm index array's capacity, a shared dword array's first field	inferred	none	glue/realms#the-category-set

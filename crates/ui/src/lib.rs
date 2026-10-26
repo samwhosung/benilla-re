@@ -44,6 +44,7 @@ pub mod gossip_pick;
 pub mod heading;
 pub mod hit_test;
 pub mod hyperlink;
+pub mod instances;
 pub mod input_motion;
 pub mod inventory_verbs;
 pub mod layout_scale;

@@ -1619,7 +1619,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
-0x8449f8	char[16]	s_formatSecondsDHMS		ui	Holds the format %dd %dh %dm %ds that FormatSecondsDHMS prints	verified	one	collision/teleport#neighbouring-handlers
+0x844870	const char[23]	s_textRaidInstanceInfoFmt		ui	Holds the string "RAID_INSTANCE_INFO_FMT"	verified	one	ui/instances#the-saved-instance-list
+0x844888	const char[22]	s_textRaidInstanceWelcome		ui	Holds the string "RAID_INSTANCE_WELCOME"	verified	one	ui/instances#lockout-warnings
+0x8448a0	const char[31]	s_textRaidInstanceWarningMinSoon		ui	Holds the string "RAID_INSTANCE_WARNING_MIN_SOON"	verified	one	ui/instances#lockout-warnings
+0x8448c0	const char[26]	s_textRaidInstanceWarningMin		ui	Holds the string "RAID_INSTANCE_WARNING_MIN"	verified	one	ui/instances#lockout-warnings
+0x8448dc	const char[28]	s_textRaidInstanceWarningHours		ui	Holds the string "RAID_INSTANCE_WARNING_HOURS"	verified	one	ui/instances#lockout-warnings
+0x844910	const char[22]	s_textInstanceResetFailed		ui	Holds the string "INSTANCE_RESET_FAILED"	verified	one	ui/instances#reset-refusals
+0x844928	const char[30]	s_textInstanceResetFailedOffline		ui	Holds the string "INSTANCE_RESET_FAILED_OFFLINE"	verified	one	ui/instances#reset-refusals
+0x844948	const char[29]	s_textInstanceResetFailedZoning		ui	Holds the string "INSTANCE_RESET_FAILED_ZONING"	verified	one	ui/instances#reset-refusals
+0x8449f8	const char[16]	s_formatDurationDhms		ui	Holds the string "%dd %dh %dm %ds"	verified	one	ui/instances#duration-text
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
 0x844d28	char[41]	s_textUsageChangeChatColor		ui	Holds the string "Usage(ChangeChatColor(chatType, r, g, b)", the usage error of ChangeChatColor	verified	one	ui/chatcolors#changechatcolor
 0x84506c	int32_t	s_mapContinent		unassigned	Holds the selected continent index, -1 for the world view, -2 for a direct area	verified	one	ui/worldmap#the-selection
@@ -1731,6 +1739,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84c154	char *[6]	s_lfgTypeNames		ui	Holds the LFG type names None, Dungeon, Raid, Quest, Zone and Battleground	verified	one	ui/lfg#reading-the-lists
 0x84c170	void *[32]	s_partyFunctions		ui	Holds the 16 name and function pairs of the party Lua functions, GetNumPartyMembers to GetLFGTypeEntries	verified	one	ui/scriptapi#function-tables
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
+0x84c388	const char[15]	s_textInstanceSaved		ui	Holds the string "INSTANCE_SAVED"	verified	one	ui/instances#the-save-notice
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
 0x84c51c	uint16_t[4]	s_outdoorStripIndices		ui	Holds the strip index order 0, 1, 2, 3 of the outdoor tile draw	verified	one	minimap/draw#outdoor-tile-draw
 0x84c524	uint16_t[4]	s_tileStripIndices		ui	Holds the strip index order 0, 1, 3, 2 of the interior tile draw	verified	one	minimap/draw#interior-tile-quad
@@ -2948,7 +2957,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4fdd4	uint32_t	s_deferredJoinCapacity		ui	Holds the capacity of the list of channel names the settings header asked to join	verified	one	ui/chatwindows#settings-file-lines
 0xb4fdd8	uint32_t	s_deferredJoinCount		ui	Holds the count of channel names in the deferred-join list	verified	one	ui/chatwindows#settings-file-lines
 0xb4fddc	char **	s_deferredJoins		ui	Points at the deferred-join list of channel name strings	verified	one	ui/chatwindows#settings-file-lines
-0xb4fdf4	void *	s_savedInstances		ui	Points to the saved instance entries: map id, reset value and extent, 12 bytes each	verified	one	ui/groupverbs#instances
+0xb4fdec	uint32_t	s_savedInstanceCapacity		ui	Holds the capacity of the saved-instance array in records	verified	one	ui/instances#the-saved-instance-list
+0xb4fdf0	uint32_t	s_savedInstanceArrayCount		ui	Holds the saved-instance array's count, raised to a larger message count and never lowered	verified	one	ui/instances#the-saved-instance-list
+0xb4fdf4	RaidInstanceInfo *	s_savedInstances		ui	Points to the saved-instance records: map id, instance id and seconds to reset	verified	one	ui/instances#the-saved-instance-list
+0xb4fdf8	uint32_t	s_savedInstanceGranularity		ui	Holds the saved-instance array's growth granularity, 0 until a need of 21 sets 21	verified	one	ui/instances#growing-the-saved-list
 0xb4fe00	uint32_t	s_joinedChannelCount		ui	Holds the number of joined-channel slots, each 0xa0 bytes	verified	one	ui/chatchannels#joined-channel-slots
 0xb4fe04	ChatChannel *	s_joinedChannels		ui	Points at the array of joined-channel slots	verified	one	ui/chatchannels#joined-channel-slots
 0xb4fe0c	uint32_t[3]	s_pendingTextEmotes		ui	Holds the list of text emotes waiting for a performer name	verified	one	ui/chatemote#the-pending-list

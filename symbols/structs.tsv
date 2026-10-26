@@ -107,6 +107,7 @@ PendingSpellCast		256		spell	Holds the pending cast request: source, caster and 
 PlaneParticleEmitter		672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
 PlayerPendingItemExpiration		24		objectlayer	Holds an enchantment time waiting for its item: list link, item GUID, slot and time	verified	one	objectlayer/inventory#item-timers
 RACECLASSINFO		32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
+RaidInstanceInfo		12		ui	Holds one saved instance of the raid info message: map id, instance id and seconds to reset	verified	one	ui/instances#the-saved-instance-list
 RealmCategory		28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
 RealmInfo		308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
 ResolveRequest		52		os	Holds a host resolve request: link, host text, id, thread, callback, done flag and address list	verified	one	net/dial#resolver-hand-off
