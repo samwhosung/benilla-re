@@ -30610,16 +30610,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71faa0	19	InitM2UtilHalfTenth		models	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	models/overview#object-files	
 0x71fac0	176			unassigned	unreached		Runs its object file code that calls _sprintf, _strncpy; not read here	inferred	none		
 0x71fb70	34			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x71fba0	109			unassigned			Runs its object file code that calls 0x720250, 0x71fc10, 0x71fe10; not read here	inferred	none		
+0x71fba0	109	RegexCompile		unassigned	orchestration	int32_t __fastcall (void *preg, const char *pattern, int32_t cflags)	Compiles a pattern as UTF-8 without a check, caseless for flag 1 and multi-line for flag 2	verified	one	ui/chatfilter#regular-expression-options	
 0x71fc10	87			unassigned			Runs its object file code not read here	inferred	none		
-0x71fc70	347			unassigned			Runs its object file code that calls _malloc, 0x724350 and 1 more; not read here	inferred	none		
+0x71fc70	347	RegexSearch		unassigned	orchestration	int32_t __fastcall (void *preg, const char *string, uint32_t nmatch, void *pmatch, int32_t eflags)	Runs a compiled pattern over a whole string without a UTF-8 check and fills up to nmatch offset pairs	verified	one	ui/chatfilter#regular-expression-options	
 0x71fe00	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x71fe10	130			unassigned			Runs its object file code that calls 0x71fea0; not read here	inferred	none		
 0x71fea0	279			unassigned			Runs its object file code that calls 0x71ffc0; not read here	inferred	none		
 0x71ffc0	55			unassigned			Runs its object file code not read here	inferred	none		
 0x720000	443			unassigned			Runs its object file code that calls 0x71fea0; not read here	inferred	none		
 0x7201f0	63			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x720250	4222			unassigned			Runs its object file code that calls 0x724230, 0x721710, 0x721460 and 7 more; not read here	inferred	none		
+0x720250	4222	PcreCompile		unassigned	primitive	void * __fastcall (const char *pattern, int32_t options, const char **error, int32_t *errorOffset, const uint8_t *tables)	Compiles a regular expression, the default tables for null ones	verified	one	ui/chatfilter#regular-expression-options	
 0x721420	64			unassigned			Runs its object file code not read here	inferred	none		
 0x721460	574			unassigned			Runs its object file code not read here	inferred	none		
 0x721710	142			unassigned			Runs its object file code not read here	inferred	none		
@@ -30641,8 +30641,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x724080	168			unassigned			Runs its object file code that calls 0x723ce0, 0x724080; not read here	inferred	none		
 0x724130	176			unassigned			Runs its object file code that calls 0x723ce0, 0x724130; not read here	inferred	none		
 0x724230	260			unassigned			Runs its object file code not read here	inferred	none		
-0x724350	1568			unassigned			Runs its object file code that calls 0x71fea0, 0x724230, 0x724970; not read here	inferred	none		
-0x724970	14113			unassigned			Runs its object file code that calls 0x4100f0, 0x724970, 0x728290 and 1 more; not read here	inferred	none		
+0x724350	1568	PcreExec		unassigned	primitive	int32_t __fastcall (const void *code, const void *extra, const char *subject, int32_t length, int32_t startOffset, int32_t options, int32_t *ovector, int32_t ovecSize)	Matches a compiled pattern against a subject with the extra block's, the pattern's or the default tables	verified	one	ui/chatfilter#the-matchers-character-tables	
+0x724970	14113	PcreMatch		unassigned	primitive	int32_t __fastcall (const uint8_t *eptr, const uint8_t *ecode, int32_t offsetTop, void *md, uint32_t ims, void *eptrb, int32_t flags)	Matches compiled pattern code at a subject position, taking characters of 0x100 up as neither word nor space	verified	one	ui/chatfilter#the-matchers-character-tables	
 0x728290	123			unassigned			Runs its object file code not read here	inferred	none		
 0x728310	390			unassigned			Runs its object file code not read here	inferred	none		
 0x7284a0	5	InitMinigameInfinityThunk		minigame	orchestration	void __cdecl ()	Jumps to the +inf initializer of Minigame_C.cpp	verified	one	minigame#constants-nothing-reads	

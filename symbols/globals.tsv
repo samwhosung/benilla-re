@@ -2388,7 +2388,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8730ac	const char[26]	s_pathModel2VertexProgram		models	Holds the path of the model vertex program file shaders\vertex\Model2.bls	verified	one	models/cache#feature-request
 0x873184	uint32_t[6]	s_m2KindPriority		models	Holds the transparent sort priority of each element kind	verified	one	models/scene#batch-grouping
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
-0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x873b40	uint8_t[256]	s_pcreDefaultTables		unassigned	Holds PCRE's default tables: lower case here, then case flip, class bits and character types	verified	one	ui/chatfilter#the-matchers-character-tables
+0x873c40	uint8_t[256]	s_pcreFlipCase		unassigned	Holds PCRE's case-flip table, which swaps only A to Z and a to z	verified	one	ui/chatfilter#the-matchers-character-tables
+0x873e80	uint8_t[256]	s_pcreCharTypes		unassigned	Holds PCRE's character types: bit 0x10 word and 0x01 space, Latin-1 letters among the words	verified	one	ui/chatfilter#the-matchers-character-tables
 0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
 0x87405c	int32_t	s_lcdScreen		ui	Holds the screen the keyboard LCD shows, -1 before the first change	verified	one	ui/lcd#changing-screen
 0x874060	int32_t	s_lcdPreviousScreen		ui	Holds the screen shown before the current one, -1 at first	verified	one	ui/lcd#changing-screen
