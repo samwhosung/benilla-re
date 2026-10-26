@@ -193,6 +193,7 @@ CGTooltip	0x03a4	4	uint32_t	m_equippedHeader	ui	Holds the equipped header argume
 CGTooltip	0x03a8	8	uint32_t[2]	m_setOwnerGuid	ui	Holds the GUID of the unit whose gear counts for an item set, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x03b0	4	int32_t	m_pendingItems	ui	Holds the number of item cache answers a spell tooltip waits for	verified	one	ui/tooltipspell#rebuilding-after-a-cache-answers
 CGTooltip	0x03b4	4	uint32_t	m_fading	ui	Holds 1 while the tooltip fades out	verified	one	ui/tooltip#fading-out
+CGTooltip	0x03bc	4	float	m_padding	ui	Holds the extra plate width SetPadding stores, 0 from the constructor	verified	one	ui/tooltipcontent#padding
 CGTooltip	0x03c4	4	float	m_offsetX	ui	Holds the owner offset in x	verified	one	ui/tooltip#anchoring-again
 CGTooltip	0x03c8	4	float	m_offsetY	ui	Holds the owner offset in y	verified	one	ui/tooltip#anchoring-again
 CGTooltip	0x03d0	28	uint32_t[7]	m_enchantIds	ui	Holds the seven enchantment ids an item without an object shows	verified	one	ui/tooltipenchant#enchantment-ids

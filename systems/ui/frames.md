@@ -71,6 +71,26 @@ over it, and appends the rest with `SStrPack` (`0x76c629`); with no prefix it co
 `0x701cb8`). `0x76c760` reads the global, checks the value's type is 5 (a table), reads element 0 as
 light userdata and calls slot 0x10 with the id.
 
+## A texture's name from XML
+
+`0x76fdf0(texture, node, status)` reads the node's `name` attribute and, when it is present and not
+empty, names the texture with `SetName`; it reads nothing else and ignores `status`. The XML texture
+builder runs it on each `Texture` element before the texture's load. `CreateTexture(name, layer,
+template)` sets the Lua name first and then, with a template found, runs it on the template's node,
+so a template node with a `name` gives the texture that name in place of the one passed, expanded
+against the texture's parent (`Names and lookup by name`).
+
+Addresses: `0x76fdf0`, `0x76fdfe`, `0x76fe07`, `0x76fe0f`, `0x6f2751`, `0x773ba1`, `0x773bd5`, `0x76c650`, `0x6f2cf0`, `0x838090`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x76fdfe` calls `GetXMLAttribute(node, "name")` (the string at `0x838090`); `0x76fe07` tests the
+first byte and `0x76fe0f` calls `0x76c650` with the texture in `ecx`; `ret 8` drops the two
+arguments. `0x6f2751` passes the element and the status after the texture's constructor.
+`0x773a20` calls `0x76c650` with the Lua name (`0x773ba1`) and then, when `FindXMLTemplate` answered a
+node in `ebx`, `0x76fdf0` with it (`0x773bd5`) before the layout load and `AnchorToParent`.
+
 ## Frame fields
 
 A frame keeps, after the `CScriptRegion` fields `+0x98` (name) and `+0x9c` (parent): the top
@@ -209,6 +229,30 @@ Test: none
 `0x76a0d0` (slot 0xc of `0x81c498`) asks `0x702590` first, which compares with `OnEvent` and
 returns `this + 0xc`, then compares with each name in turn and returns `this + 0x118` to `this +
 0x190` in steps of 8.
+
+## The OnSizeChanged script
+
+When a frame's resolved rectangle changes size, its `OnSizeChanged` script runs with `arg1` the new
+width and `arg2` the new height: `right − left` and `top − bottom` of the layout rectangle, each
+rounded to a float, in layout units, with no division by the frame's scale. A change of less than
+2^−22 in both runs nothing. The slot `+0x120` is the second of the sixteen; without a handler nothing
+runs. An edit box lays its label out after the script, and a scroll frame then marks its scroll
+range for an update.
+
+Addresses: `0x76b580`, `0x76b5eb`, `0x76b606`, `0x76b623`, `0x76b631`, `0x76b63b`, `0x76b63e`, `0x8029d4`, `0x76b660`, `0x76b663`, `0x76b671`, `0x76b679`, `0x76b680`, `0x76b68a`, `0x81c4e0`, `0x7026f0`, `0x77a8d0`, `0x7871f0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x76b580`, called on the layout part, compares the width and height changes between the old
+rectangle and the new one at `+0x40` with 2^−22 at `0x8029d4` (`0x76b5eb`, `0x76b606`). When either is
+not below it, it stores the height `[+0x48] − [+0x40]` at `[esp+4]` (`0x76b631`) and the width
+`[+0x4c] − [+0x44]` at `[esp]` (`0x76b63b`), each as a float, and calls slot 0x48 of the frame
+(`0x76b63e`), `0x76b660` in `CSimpleFrame::vftable` (`0x81c4e0`). `0x76b663` loads the slot
+and `0x76b671` returns when it is 0. `0x76b679` and `0x76b680` widen the two floats to doubles,
+height above width, and `0x76b68a` calls `0x7026f0(frame, slot, "%f%f", width, height)`; the format
+is the string `%f%f`. `0x77a8d0` and `0x7871f0` call `0x76b660` and then lay out the label or store 1 at
+`+0x314`.
 
 ## Loading from XML
 

@@ -159,6 +159,24 @@ byte `+0xb` (`0x786376`).
 
 Bit-exact coverage: `ui::luabind_792_color_quantize` covers 4 ranges from `0x79579f` to `0x795808` of `0x795590`.
 
+## The current scroll
+
+`GetCurrentScroll()` answers how many lines the frame is scrolled up from the newest:
+`(position − scroll + count) mod count`, the write position `+0x344`, the scroll position `+0x348`
+and the line count `+0x33c` as signed integers and the remainder of a signed division, so it takes
+the dividend's sign. It answers 0 with no lines or with the write position −1. The method pushes the
+result as a number.
+
+Addresses: `0x788ac0`, `0x788ac9`, `0x788ad4`, `0x788ad6`, `0x788adc`, `0x788adf`, `0x788ae2`, `0x7936f3`, `0x7936fb`
+Confidence: verified
+Proof: one
+Test: `ui::smf_current_scroll_difftest`
+
+`0x788ac9` returns 0 for a zero count and `0x788ad4` for a position of −1. `0x788ad6` subtracts the
+scroll position, `0x788adc` adds the count, and `cdq; idiv` (`0x788adf`) leaves the remainder in
+`edx`, which `0x788ae2` returns. `GetCurrentScroll` (`0x793650`) calls it at `0x7936f3` and pushes it
+through `fild dword` (`0x7936fb`). The test runs `0x788ac0` whole.
+
 ## Lua methods
 
 `ScrollingMessageFrame` has 40 methods at `0x87b5c0`, registered by `0x794190`; `MessageFrame`

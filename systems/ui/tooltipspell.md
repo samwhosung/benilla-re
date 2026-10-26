@@ -205,3 +205,26 @@ Test: none
 tests are at `0x52ebf4`, `0x52ec1c` and `0x52ec27`; the instant arm at `0x52ec4b` needs the power type 0 and a
 cost above 0. The recast cell is built the same way from `[ebp-0x38]` (`0x52eca0`) and is empty for 0 or less
 (`0x52ed11`). The line is added by `0x530270` with white on both sides (`0x52ed35`).
+
+## A macro action's tooltip
+
+`SetAction(slot)` on a slot whose action word has 4 in its top four bits passes the word with bit 30
+cleared, the macro id, to `0x52b040`, and answers nil. `0x52b040` clears the tooltip and looks the
+macro up by id: with none it hides the tooltip; otherwise it adds one line, the macro's name in white
+with no wrap, and shows the tooltip through its show slot, which shows it only when it has an owner.
+The macro's text, its icon and any spell it casts are not shown.
+
+Addresses: `0x5322a0`, `0x5323ad`, `0x532611`, `0x53269f`, `0x5326b1`, `0x5326b9`, `0x5326be`, `0x52b040`, `0x52b046`, `0x52b04e`, `0x52b057`, `0x52b061`, `0x52b077`, `0x52b08a`, `0x4f0f40`, `0x530a60`, `0x530a80`, `0xc0cf60`
+Confidence: verified
+Proof: one
+Test: none
+
+`SetAction` clears the tooltip first (`0x5323ad`); a word with a nonzero top nibble other than 8
+reaches `0x532695`, which keeps 0x40000000 alone (`0x53269f` to `0x5326ab`) and masks with 0xbfffffff
+(`0x5326b1`) before `0x5326b9`; every other nibble, and the macro leg's return, push nil
+(`0x5326be` to `0x532404`). `0x52b040` calls `0x530050` (`0x52b046`) and `0x4f0f40` (`0x52b04e`). A
+null answer stores 0 at `+0xd0` and calls slot 0x84 (`0x52b061`), `0x530a60`. A macro gives
+`0x5303b0(name, 0xc0cf60, 0)` with the name at `+0x24` of the record (`0x52b077`), then 1 at `+0xd0`
+and slot 0x88 (`0x52b08a`), `0x530a80`, which shows the frame with an owner and a line and hides it
+otherwise. `0x52b040` has one caller, `0x5326b9`.
+

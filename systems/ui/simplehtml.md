@@ -32,6 +32,53 @@ with `0x6f2a30` (`0x78a422`); a failure jumps to the fallback (`0x78a42c`). It c
 loop (`0x78a4bf`). A zero byte (`0x78a4fc`) calls `0x78adb0(text, 0, 1)` (`0x78a501`, `0x78a508`);
 `0x78a50d` sets `+0x370`. `0x796a90` passes `lua_tostring` of argument 2.
 
+## Freeing the blocks
+
+`0x78a580` empties the frame: it deletes each content node's region, the text block's font string
+or the image's texture, unlinks and frees the node, zeroes the last block `+0x348` and the offset
+`+0x34c`, and releases every live link button to the free list, which hides it. `SetText` runs it
+first and the destructor after deleting the four element fonts, so the next layout starts at the top.
+
+Addresses: `0x78a580`, `0x78a59f`, `0x78a5aa`, `0x78a5bf`, `0x78a5ce`, `0x78a5d9`, `0x78a5df`, `0x78a5e5`, `0x78a64d`, `0x78a40c`, `0x789fe7`, `0x7a3920`
+Confidence: verified
+Proof: one
+Test: none
+
+The loop walks the list from `+0x344` until a tagged link: `0x78a59f` loads the region `[node+0xc]`
+and `0x78a5aa` calls its slot 0 with 1 when it is not null, `0x78a5bf` unlinks the node through
+`0x78b140` and `0x78a5ce` frees it, tagged `CONTENTNODE`. `0x78a5d9` and `0x78a5df` store 0. The
+second loop (`0x78a5e5`) takes the first node of the live button list `+0x368`, whose link offset is
+`+0x364`, unlinks it and passes the button to `0x7a3920` (`0x78a64d`) until the list is empty.
+
+## Rebuilding the link buttons
+
+The frame's update rebuilds its hyperlink buttons when `+0x370` is set and then clears it, whether or
+not the rebuild ran. `SetText` sets it; so does a change of the frame's width or height by 10⁻⁵ or
+more, and a push from an element font whose changed bits include the font or the spacing group
+(0x11). A rebuild does nothing while the frame's rectangle is not valid, so that request is lost.
+Otherwise it releases every live button and, for each text block whose text contains `|H`, asks the
+block's string for its hyperlink spans and configures one button from the pool per span over that
+font string. A colour, justify or shadow change, and a move, rebuild nothing.
+
+Addresses: `0x78a2f0`, `0x78a2fa`, `0x78a2ff`, `0x78a30b`, `0x78a310`, `0x81d030`, `0x78a320`, `0x78a32b`, `0x78a340`, `0x78a34b`, `0x78a35c`, `0x78a367`, `0x78a369`, `0x81d000`, `0x80c5c8`, `0x78a380`, `0x78a383`, `0x78a389`, `0x81cffc`, `0x789e81`, `0x77e530`, `0x78a50d`, `0x78af70`, `0x78af7b`, `0x78afdf`, `0x78b011`, `0x78b02d`, `0x78b037`, `0x78b052`, `0x78b0c6`, `0x78af62`, `0x7a3880`, `0x7a3350`, `0x5c27e0`, `0x44d360`
+Confidence: verified
+Proof: one
+Test: `ui::glue_788_78a320_rect_changed`
+
+`0x78a2f0`, slot 14 of `0x81d030`, runs `0x76b2c0` (`0x78a2fa`), tests `+0x370`
+(`0x78a2ff`), calls `0x78af70` (`0x78a30b`) and stores 0 (`0x78a310`). `0x78a320` is slot 0 of the
+layout vtable `0x81d000`: after `0x76b580` (`0x78a32b`) it compares the width and then the height
+change between the old rectangle and `+0x40` with 1e-5 at `0x80c5c8` (`0x78a340`, `0x78a35c`); `jp`
+and `jnp` (`0x78a34b`, `0x78a367`) send a change not below it, or a NaN, to `0x78a369`, which stores 1
+at layout `+0x34c`, frame `+0x370`. The object at `+0x338` has the one-slot vtable `0x81cffc`, and the
+constructor stores it as each element font's observer `+0x7c` (`0x789e81`); `0x77e530` calls its
+`0x78a380(font, changed)`, which tests `changed & 0x11` (`0x78a383`) and stores 1 at `+0x38`
+(`0x78a389`). `0x78af7b` tests the rectangle-valid bit of `+0x60`. `0x78afdf` releases each live
+button through `0x7a3920`. `0x78b011` takes nodes of kind 1, which `0x78af62` stores for a block
+text containing `|H` (2 is an image); `0x78b02d` and `0x78b037` read the string's span count and
+array, and per span `0x78b052` acquires a button and `0x78b0c6` configures it. The test covers
+`0x78a330` to `0x78a348` and `0x78a34d` to `0x78a364`.
+
 ## Elements
 
 Inside `BODY`, `H1`, `H2`, `H3` and `P` make a text block, `BR` a block holding one newline, and

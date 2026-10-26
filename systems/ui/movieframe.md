@@ -94,6 +94,25 @@ Test: none
 
 `0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; only the first two end the start on a zero answer; the results of the audio start and the subtitle load are dropped and `0x78cebd` returns 1. `0x78ce81` sets the playing flag, `0x78ce8b` calls `0x442a00(1)`, `0x78ce99` sets the clear colour `0xff000000` through `0x58a920`, and `0x78cea3`, `0x78cead` and `0x78ceb7` call the clear `0x58a970(3)`, the present `0x58a960(3)` and the clear again. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
 
+## Destroying a movie frame
+
+The destructor body `0x78c280` stores the frame's two vtables back and stops the movie as `StopMovie`
+does, so a frame destroyed while playing runs its `OnMovieFinished` first. Then it releases the three
+script slots, `OnMovieFinished` `+0x320`, `OnMovieShowSubtitle` `+0x328` and `OnMovieHideSubtitle`
+`+0x330`, frees a caption array left at `+0x3d4` and runs the frame destructor. A frame that is not
+playing runs no script.
+
+Addresses: `0x78c280`, `0x78c283`, `0x78c289`, `0x78c290`, `0x78c29e`, `0x78c2ac`, `0x78c2ba`, `0x78c2c7`, `0x78c2d3`, `0x78c2db`, `0x78c236`, `0x78ced0`, `0x78cedb`, `0x78cf1e`, `0x702670`, `0x7693b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78c283` and `0x78c289` store 0x81d440 and 0x81d410 and `0x78c290` calls `0x78ced0`, which returns
+at once without the playing flag `+0x314` (`0x78cedb`) and otherwise ends with the handler call
+`0x78cf1e`. `0x78c29e`, `0x78c2ac` and `0x78c2ba` call `0x702670` on the three slots; `0x78c2c7`
+tests `+0x3d4` and `0x78c2d3` frees it, tagged `MOVIECAPTION`; `0x78c2db` tail-jumps to
+`0x7693b0`. Its one caller is the deleting destructor (`0x78c236`).
+
 ## Drawing
 
 The frame adds a draw callback to its layer 2 batch (`0x78d650` registers `0x78d680` for layer 2, `ui/draworder#what-a-batch-drains`). When it runs for a playing movie it advances the clock with `0x78cf30` and, when a frame is ready, draws the tile textures with `0x78d1a0`:

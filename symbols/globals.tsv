@@ -1239,6 +1239,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81ce18	void *[39]	CSimpleMessageScrollFrame::vftable		ui	Holds the virtual function slots of CSimpleMessageScrollFrame, which its constructor stores	verified	one	ui/messagemembers#scroll-frame-teardown
 0x81cec4	void *[11]	s_messageLineLayoutVtable		ui	Holds the layout vtable of a message frame's line object, which shares the font string's size slots	verified	one	ui/regions#the-layout-vtable
 0x81cf60	void *[36]	CSimpleSlider::vftable		ui	Holds the 36 virtual function slots of CSimpleSlider, which its constructor stores	inferred	none	
+0x81cffc	void *[1]	s_simpleHtmlFontObserverVtable		ui	Holds the one slot of a SimpleHTML's element font observer at +0x338, 0x78a380	verified	one	ui/simplehtml#rebuilding-the-link-buttons
+0x81d000	void *[11]	s_simpleHtmlLayoutVtable		ui	Holds the vtable of a CSimpleHTML's layout part, its rectangle callback 0x78a320 in slot 0	verified	one	ui/simplehtml#rebuilding-the-link-buttons
 0x81d030	void *[39]	CSimpleHTML::vftable		ui	Holds the 39 virtual function slots of CSimpleHTML, which its constructor stores	inferred	none	
 0x81d0d0	const float	s_colorWheelPi		ui	Holds pi, which the colour wheel adds to the arc tangent of a pick offset	verified	one	ui/colorselect#dragging
 0x81d108	void *[36]	CSimpleColorSelect::vftable		ui	Holds the 36 virtual function slots of CSimpleColorSelect, which its constructor stores	inferred	none	
@@ -3420,6 +3422,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbddfa0	uint64_t	s_merchantGuid		ui	Holds the GUID of the open vendor, 0 when none is open	verified	one	ui/merchant#repair-capability
 0xbddfa8	uint32_t	s_merchantItemCount		ui	Holds the number of rows of the open vendor	verified	one	ui/merchantcursor#grabbing-a-merchant-row
 0xbddfac	uint32_t	s_buybackCount		ui	Holds the number of items the vendor will buy back	verified	one	ui/merchantcursor#merchant-sell-cursors
+0xbddfb0	uint32_t	s_merchantPendingRecords		ui	Counts the vendor row record answers the window waits for, 0 at each open	verified	one	ui/merchant#vendor-row-records-and-stock
 0xbddfb8	uint32_t[4]	s_tradeSkillRowArray		ui	Holds the growable array of recipe row pointers: capacity, count, data, chunk	verified	one	tradeskill/recipes#list-state
 0xbddfd8	float	s_tradeSkillInfinity		ui	Holds +infinity copied by the first static initializer of the file; nothing reads it	verified	one	tradeskill/overview#static-objects
 0xbddff8	uint32_t[4]	s_tradeSkillHeaderArray		ui	Holds the growable array of item-type header pointers: capacity, count, data, chunk	verified	one	tradeskill/recipes#list-state
@@ -3550,6 +3553,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe17b8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe1b48	uint32_t	s_stockInterfaceNumber		ui	Holds the interface number of the stock FrameXML.toc, which nothing reads	verified	one	ui/addonfiles#stock-interface-number
 0xbe1b64	uint32_t[3]	s_addOnList		ui	Holds the add-on list: its link offset, its sentinel link and its head	verified	one	ui/addons#finding-add-ons
+0xbe1b7c	void *	s_addOnBuckets		ui	Holds the bucket array of the add-on record hash, 12 bytes a bucket, keyed by folder name	verified	one	ui/addoninfo#finding-a-record-by-name
+0xbe1b84	uint32_t	s_addOnBucketMask		ui	Holds the add-on hash's bucket mask; -1 while it has no buckets	verified	one	ui/addoninfo#finding-a-record-by-name
 0xbe1b90	uint32_t	s_numAddOnNames		ui	Counts the names in the sorted add-on array	verified	one	ui/addons#the-order-lua-sees
 0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	one	ui/addons#the-order-lua-sees
 0xbe1bd0	uint32_t			ui	Holds a dword that LoadCharacterAddOnState reads and writes; not read here	inferred	none	

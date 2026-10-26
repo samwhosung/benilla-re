@@ -87,6 +87,31 @@ negates both (`0x78bcc2`, `0x78bcd1`) and anchors point 4 to the wheel's point 4
 
 `ui::geo_78bc20` runs `0x78bc20` whole, with the width getter replaced by an island and `0x767c70` stubbed to log the offset.
 
+## The wheel thumb texture
+
+`0x78b850(texture)` installs the wheel thumb `+0x31c` the way `0x78ba90` installs the value thumb:
+the same texture does nothing; otherwise the old one is deleted, a new one is moved into the colour
+select on layer 3 (`OVERLAY`), shown, with its anchors cleared, and the thumb is stored and placed
+again, a null one included. `SetColorWheelThumbTexture` passes a texture object or nil, and the
+`ColorWheelThumbTexture` element its texture. `0x78b7b0(path)` loads a path into the wheel thumb, or
+builds one and installs it when the file loads, deleting it and answering 0 when not. `0x78b530`, slot 11 of the vtable `0x81d108`,
+clears each of the four texture fields that holds the region being removed, then removes it.
+
+Addresses: `0x78b850`, `0x78b862`, `0x78b86c`, `0x78b879`, `0x78b881`, `0x78b888`, `0x78b88e`, `0x78b7b0`, `0x78b7be`, `0x78b7d5`, `0x78b7f1`, `0x78b802`, `0x78b81d`, `0x78b824`, `0x78b829`, `0x78b841`, `0x78b530`, `0x78b543`, `0x78b551`, `0x78b55f`, `0x78b56e`, `0x78b575`, `0x78e2e2`, `0x78e308`, `0x78e322`, `0x78b46e`, `0x81d108`, `0x78bc20`, `0x77fd10`, `0x767ed0`, `0x770200`, `0x76fc40`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78b862` returns for the same texture and `0x78b86c` calls slot 0 of the old one with 1. A
+non-null texture gets `0x77fd10(select, 3, 1)` (`0x78b879`) and `0x767ed0` (`0x78b881`); `0x78b888`
+stores it and `0x78b88e` calls `0x78bc20`. `0x78b7be` tests the thumb and `0x78b7d5` loads into it;
+otherwise `0x78b7f1` takes a block from the texture pool, `0x78b802` builds it with layer 2 and
+shown, `0x78b81d` loads, and `0x78b824` sends a load to `0x78b829` and a failure to the deleting
+destructor (`0x78b841`). `0x78b530` compares the region with `+0x318`, `+0x31c`, `+0x320` and
+`+0x324` in turn, storing 0 at each match (`0x78b543` to `0x78b56e`), and ends in
+`CSimpleFrame::RemoveRegion` (`0x78b575`). The Lua callers are `0x78e2e2` (an object), `0x78e308` (a
+string) and `0x78e322` (nil); the XML one is `0x78b46e`.
+
 ## The value strip texture
 
 `ColorValueTexture` gets an 8 by 8 texture whose every texel is the colour at full value `+0x334`,
