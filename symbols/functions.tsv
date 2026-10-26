@@ -35031,8 +35031,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6930	37	Sound::SetNearCutoff		sound	primitive		Sets or clears the flag that a sound is inside 0.9 of its cutoff	verified	one	sound/engine#flags-of-a-sound	
 0x7a6960	9	Sound::IsNearCutoff		sound	primitive		Returns the flag that a sound is inside 0.9 of its cutoff	verified	one	sound/engine#flags-of-a-sound	
 0x7a6970	41	TSLink_Sound::NextLink	idb	sound	primitive		Returns the link after a sound list link	verified	one	sound/engine#the-sound-object	
-0x7a69a0	376			unassigned			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
-0x7a6b20	313	fnInternetCallback	idb	unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x7a69a0	376	URLDownloadReadThread		unassigned	host	uint32_t __stdcall (void *context)	Reads a download's status and, for 2xx, its body into the callback, then closes the connection	verified	one	glue/manager#the-downloads-replies	
+0x7a6b20	313	fnInternetCallback	idb	unassigned	host	void __stdcall (void *internet, void *context, uint32_t status, void *info, uint32_t infoLength)	Tracks a download's WinINet status: handles, completions, the worker start and the final callback	verified	one	glue/manager#the-downloads-replies	
 0x7a6cc0	505	StartUrlDownload		os	host	bool __fastcall (const char *url, void *callback, void *param, int32_t timeoutMs)	Sends an asynchronous WinINet GET of a URL with a callback and timeouts; returns 1 once the send is accepted	verified	one	glue/manager#the-url-download	
 0x7a6ec0	5			client			Runs its object file code not read here	inferred	none		
 0x7a6ed0	11			client			Runs its object file code not read here	inferred	none		

@@ -120,6 +120,35 @@ and 0x84000200 (`0x7a6e34`) into `+8`, waiting on `+0x10` the same way, and `Htt
 (`0x7a6e7e`) passes no headers or body; success or error 997 (`0x7a6e93`) return 1. Every failure
 reaches `SMemFree` (`0x7a6e9e`). What `0x7a6b20` and `0x7a69a0` do with the replies is not read here.
 
+## The download's replies
+
+The status callback `0x7a6b20` keeps each handle WinINet creates and signals its event, and on
+the first completion of the send keeps its error and starts the worker thread `0x7a69a0`. The
+worker reads the status. From 200 to 299 each read of up to 0x4000 bytes goes to
+`callback(param, data, size, 0, 0)`, the last one empty; else the result is 3 for 404 and 1
+otherwise, and 2 when the send timed out. The worker then closes the connection, and its
+closing status removes the status callback, signals two events, frees the context and calls
+`callback(param, 0, 0, 1, result)`. Nothing closes the session or the four events. The request
+flags set neither TLS nor a stop on redirects.
+
+Addresses: `0x7a6b20`, `0x7a6b67`, `0x7a6b6e`, `0x7a6b86`, `0x7a6bab`, `0x7a6bc7`, `0x7a6be3`, `0x7a6c00`, `0x7a6c3a`, `0x7a6c4b`, `0x7a69a0`, `0x7a69ec`, `0x7a6a0e`, `0x7a6a21`, `0x7a6a56`, `0x7a6a5d`, `0x7a6a74`, `0x7a6aaf`, `0x7a6ac2`, `0x7a6ad3`, `0x7a6aec`, `0x7a6b07`, `0x7a6e34`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7a6b67` switches on the status through the byte table after it: 60 stores the connection or
+request handle and sets its event (`0x7a6b6e`), 41 sets the response event `+0x18` and, for 0
+bytes, the done byte `+0x20` (`0x7a6bc7`), 51 sets the done byte, and 100 on the first completion
+(`0x7a6b86`) stores the error at `+0x28` and calls `CreateThread` with `0x7a69a0` (`0x7a6bab`),
+later ones setting the read event `+0x14`.
+`0x7a69ec` asks `HttpQueryInfoA` for the status as a number; `0x7a6a0e` to `0x7a6a21` keep 200
+up to 299. `0x7a6a56` sets the 0x4000-byte buffer of `InternetReadFileExA` (`0x7a6a5d`), a pending
+read waits on `+0x14` (`0x7a6a74`), and `0x7a6aaf` calls the callback with the size. `0x7a6ad3`
+gives 3 for 0x194 and `0x7a6aec` 2 for the error 12002. `0x7a6ac2` and `0x7a6b07`, the only
+`InternetCloseHandle` calls, close the connection `+4`; status 70 for it (`0x7a6be3`) clears the
+callback (`0x7a6c00`), frees the context (`0x7a6c3a`) and makes the final call (`0x7a6c4b`).
+`0x7a6e34`'s 0x84000200 lacks 0x800000 and 0x200000.
+
 ## Glue build
 
 `0x46a7b0(reset)` zeroes the manager's state `0xb41da0` and the cells `0xb41d98`, `0xb41d9c`,
