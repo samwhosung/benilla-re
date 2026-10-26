@@ -1152,6 +1152,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
+0x811d34	const uint32_t[6]	s_luaPoolBlockSizes		lua	Holds the six Lua pool block sizes: 16, 32, 64, 96, 128 and 256	verified	one	lua/pools#allocating-from-the-pools
 0x811d4c	uint8_t[28]	priority		lua	Holds the left and right priority of each of the 14 binary operators of the parser	verified	one	lua/compiler#expressions
 0x811d68	char *[31]	token2string		lua	Holds the text of each token from 257, the reserved words to <eof>	verified	one	lua/compiler#lexer-errors-and-limits
 0x811de4	uint8_t[35]	luaP_opmodes		lua	Holds the mode byte of each of the 35 opcodes: format, operand kinds, sets A and test	verified	one	lua/codegen#jump-lists

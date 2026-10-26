@@ -29810,18 +29810,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f72f0	65	sweepstrings		lua	boundary		Sweeps every bucket of the string table and lowers the string count	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f7340	41	luaC_collectgarbage	idb	lua	primitive		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
 0x6f7370	107	checkSizes		lua	boundary		Halves the string table and the work buffer when they are mostly unused	verified	one	lua/runtime#sweeping-and-finalizers	
-0x6f73e0	143			lua	boundary		Runs its object file code that calls 0x6f7ab0, 0x6f7510, 0x6f7a20 and 3 more; not read here	inferred	none		
+0x6f73e0	143	mark		lua	orchestration	void __fastcall (lua_State *L)	Marks what the roots reach, clears weak tables, separates and marks the userdata to finalize	verified	one	lua/gc#clearing-weak-keys	
 0x6f7470	38			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
 0x6f74a0	81			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f7510	97			lua	boundary		Runs its object file code that calls 0x6f7590, 0x6f77b0, 0x6f7860 and 1 more; not read here	inferred	none		
-0x6f7590	375			lua	boundary		Runs its object file code that calls 0x6f74a0, luaT_gettm, _strchr; not read here	inferred	none		
+0x6f7590	375	traversetable		lua	primitive	void __fastcall (void *st, void *h)	Marks a table's metatable, its weak mode and the keys and values its mode leaves strong	verified	one	lua/gc#traversing-a-table	lua::traversetable_whole
 0x6f7710	157			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
 0x6f77b0	173			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
-0x6f7860	153			lua	boundary		Runs its object file code that calls 0x6f74a0, 0x6f7900; not read here	inferred	none		
-0x6f7900	103			lua	boundary		Runs its object file code that calls 0x6f5ef0; not read here	inferred	none		
-0x6f7970	84			lua	boundary		Runs its object file code that calls 0x6f79f0, 0x6f79d0; not read here	inferred	none		
-0x6f79d0	27			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f79f0	37			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f7860	153	traversestack		lua	orchestration	void __fastcall (void *st, lua_State *L1)	Marks a thread's globals and stack, clears the slots up to the highest call top and shrinks its vectors	verified	one	lua/gc#traversing-a-thread	
+0x6f7900	103	checkstacksizes		lua	primitive	void __fastcall (lua_State *L, void *max)	Halves a thread's call records or stack when under a quarter is in use and they are above 16 and 90	verified	one	lua/gc#traversing-a-thread	lua::checkstacksizes_whole
+0x6f7970	84	cleartablekeys		lua	primitive	void __fastcall (void *list)	Removes the nodes whose keys are unmarked from each table of a weak-keyed list	verified	one	lua/gc#clearing-weak-keys	lua::cleartablekeys_whole
+0x6f79d0	27	removekey		lua	orchestration	void __fastcall (void *n)	Makes a node's value nil with the current context word and a collectable key's tag -1	verified	one	lua/gc#clearing-weak-keys	lua::cleartablekeys_whole
+0x6f79f0	37	valismarked		lua	primitive	int __fastcall (void *o)	Marks a string value, then answers 1 for a value below tag 4 or a marked object	verified	one	lua/gc#clearing-weak-keys	lua::valismarked_whole
 0x6f7a20	131			lua	boundary		Runs its object file code that calls 0x6f79f0, 0x6f79d0; not read here	inferred	none		
 0x6f7ab0	101			lua	boundary		Runs its object file code that calls 0x6f74a0, 0x6f7860; not read here	inferred	none		
 0x6f7b20	31	luaC_link		lua	boundary		Puts a new object on the main list with its type tag and a clear mark	verified	one	lua/runtime#sweeping-and-finalizers	
@@ -29883,14 +29883,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fadd0	5			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fade0	11			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fadf0	1			lua	unreached		Runs its object file code not read here	inferred	none		
-0x6fae00	139			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fae90	842	luaM_reallocPool	idb	lua	boundary		Runs lmemPool.cpp code that calls SMemReAlloc, SMemAlloc, 0x6fb1e0 and 2 more; not read here	inferred	none		
-0x6fb1e0	13			lua	boundary		Runs lmemPool.cpp code not read here	inferred	none		
-0x6fb1f0	256			lua	boundary		Runs lmemPool.cpp code that calls 0x6fb440, 0x6fb3b0, SMemAlloc; not read here	inferred	none		
-0x6fb2f0	93			lua	boundary		Runs lmemPool.cpp code that calls 0x6fb350, SMemFree; not read here	inferred	none		
-0x6fb350	90			lua	boundary		Runs lmemPool.cpp code that calls SMemFree; not read here	inferred	none		
-0x6fb3b0	133			lua	boundary		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6fb440	56			lua	boundary		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6fae00	139	SetGcThreshold		lua	primitive	void __fastcall (lua_State *L)	Sets the next threshold to the count plus the larger of a quarter of it and the headroom, capped by pool space	verified	one	lua/pools#the-threshold-a-collection-leaves	lua::next_threshold_whole
+0x6fae90	842	luaM_reallocPool	idb	lua	primitive	void * __fastcall (lua_State *L, void *block, uint32_t size)	Allocates, moves or frees a block in six fixed-size pools up to 256 bytes, else in Storm's heap	verified	one	lua/pools#allocating-from-the-pools	lua::realloc_pool_whole
+0x6fb1e0	13	PoolChunkArrayInit		lua	orchestration	void * __thiscall (void *this)	Zeroes a pool's chunk array header and returns it	verified	one	lua/pools#allocating-from-the-pools	lua::realloc_pool_whole
+0x6fb1f0	256	PoolAllocBlock		lua	primitive	void * __thiscall (void *this)	Pops the first free block of a pool's chunks, cutting a new 0x20000-byte chunk when none is free	verified	one	lua/pools#allocating-from-the-pools	lua::realloc_pool_whole
+0x6fb2f0	93	FreeBlockPools		lua	host	void __fastcall (lua_State *L)	Frees every pool's chunks, chunk records, arrays and the pool array, and clears it in the global state	verified	one	lua/pools#closing-the-pools	
+0x6fb350	90	PoolFreeChunks		lua	host	void __thiscall (void *this)	Frees a pool's chunks from the last, each one's memory and record, then its chunk array	verified	one	lua/pools#closing-the-pools	
+0x6fb3b0	133	PoolResizeChunkArray		lua	host	void __thiscall (void *this, uint32_t count)	Reallocates a pool's chunk array to a count, allocating and copying when the reallocation fails	verified	one	lua/pools#allocating-from-the-pools	lua::realloc_pool_whole
+0x6fb440	56	PoolChunkArrayFree		lua	host	void * __thiscall (void *this, uint32_t flags)	Frees a pool's chunk array data, and the pool too with flag bit 0	verified	one	lua/pools#allocating-from-the-pools	
 0x6fb480	58	luaZ_fill		lua	boundary		Calls the reader for the next block of a stream and returns its first byte, or -1 at the end	verified	one	lua/runtime#input-streams	
 0x6fb4c0	42	luaZ_lookahead		lua	boundary		Returns the next byte of a stream without consuming it, or -1 at the end	verified	one	lua/runtime#input-streams	
 0x6fb4f0	35	luaZ_init		lua	boundary		Sets up a stream with a reader, its data and a name	verified	one	lua/runtime#input-streams	
