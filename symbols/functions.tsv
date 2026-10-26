@@ -36703,9 +36703,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cccf0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7ccd00	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7ccd10	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7ccd30	124			unassigned			Runs its object file code that calls 0x587060, _bsearch, 0x587070; not read here	inferred	none		
-0x7ccdb0	33			unassigned			Runs its object file code not read here	inferred	none		
-0x7ccde0	104			unassigned			Runs its object file code that calls 0x587060, _bsearch, 0x587070; not read here	inferred	none		
+0x7ccd30	124	FindWMOAreaName		unassigned	orchestration	const char * __fastcall (int32_t wmoId, int32_t nameSet, int32_t groupId)	Returns the locale name of the WMOAreaTable row of an exact key, or the empty string	verified	one	terrain/zones#wmoareatable-lookups	
+0x7ccdb0	33	CompareWMOAreaKeys		unassigned	primitive	int32_t __cdecl (const void *a, const void *b)	Compares two WMOAreaTable rows by WMO id, name set and group id, each by its wrapping difference	verified	one	terrain/zones#wmoareatable-lookups	terrain::wmo_area_compare_difftest
+0x7ccde0	104	FindWMOAreaRow		unassigned	orchestration	bool __fastcall (int32_t wmoId, int32_t nameSet, int32_t groupId, void **row)	Finds the WMOAreaTable row of an exact key by binary search and stores it or null	verified	one	terrain/zones#wmoareatable-lookups	
 0x7cce50	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cce60	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7cce80	5			unassigned			Runs its object file code not read here	inferred	none		
