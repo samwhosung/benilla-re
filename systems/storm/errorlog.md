@@ -89,7 +89,7 @@ lock, collects the file and line recorded for this thread, formats the message i
 with `_vsnprintf`, hands the code, file, message and line to `0x64d100`, which reports the error as
 `error <code & 0xffff>`, 134 for the first, and then calls `StormExitProcess(1)`: the process ends.
 The recorded file and line are null and 0, since only the unreached setter `0x64e5c0` writes them.
-A base archive that does not open reaches it from `MountArchives` (`storm/mount`).
+A base archive that does not open reaches it from `MountArchives` (`storm/mount`), and so does any archive that fails with error 0x26, 0x8510006c or 0x85100083, through `0x64cf80`.
 
 Addresses: `0x64d0e0`, `0x64cf80`, `0x64cfa0`, `0x64cfba`, `0x64cfc0`, `0x64cffe`, `0x64d003`, `0x64d008`, `0x64d020`, `0x64d070`, `0x64d080`, `0x64d0a3`, `0x64d0c4`, `0x64d2ca`, `0x64cc80`, `0x64e5c0`, `0x4038c1`, `0x4038ef`
 Confidence: verified
