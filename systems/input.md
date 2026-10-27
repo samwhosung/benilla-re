@@ -155,6 +155,20 @@ Test: none
 The two predicates are independent: a root leaves turning, a stun removes it. The tick has 13 callers: the setter tail, the stun edge below, `0x514490` (a release of everything) and ten in the unit and player code. The call at `0x5146d6` is reached only when the unit may not translate and is not allowed to turn: a dead unit, or a stunned one.
 The autorun clear at `0x514748` is on the may-not-translate leg only.
 
+## Tick on a mover switch
+
+When the new active mover exists, `SetActiveMover` (`0x6006e0`) ends by running the tick for it:
+`0x514640(time, 1)` on the control `0x5143e0` returns, so `apply` is 1.
+
+Addresses: `0x6006e0`, `0x600846`, `0x60084d`, `0x5143e0`, `0x514640`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x600843` and `0x600845` push 1 and the time stored at `0x600712`, `0x600846` calls `0x5143e0`,
+which is `mov eax,[0xbe1148]; ret` and reads no argument, so both pushes stay for `0x60084d`, the
+call of `0x514640` on that result; it returns with `ret 0x8` (`0x514782`).
+
 ## May it move, may it turn
 
 `0x5144e0(unit)` is the precondition of both: the unit exists, `UNIT_FIELD_HEALTH` is above 0 (signed), its movement object's auxiliary record (`+0xa4`) is absent or has bit 0x4 at `+0x18`, it is not in a current animation whose `AnimationData` word (column 3) has bit 0x80 (the knockdown lockout, `0x60f5b0`), and it is not the active player with far sight engaged (`+0x1c70` bit 0).

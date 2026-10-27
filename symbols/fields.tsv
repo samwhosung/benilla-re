@@ -1187,7 +1187,7 @@ ObjectManager	0x0028	40	uint8_t[40]	m_releasedObjects	objectlayer	Holds the GUID
 ObjectManager	0x0050	84	uint32_t[21]	m_reuseLists	objectlayer	Holds seven 12-byte reuse lists of released objects, one per type 1 to 7	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00a4	12	uint32_t[3]	m_objects	objectlayer	Holds the list of every live object, link offset 0x38	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00b0	12	uint32_t[3]	m_reactivated	objectlayer	Holds the list of objects reactivated during the current update packet	verified	one	objectlayer/manager#manager-block
-ObjectManager	0x00c0	8	uint64_t	m_activePlayerGuid	objectlayer	Holds the active player's GUID, written by 0x4660a0 for a new object with create flag 1	verified	one	objectlayer/update#create-block
+ObjectManager	0x00c0	8	uint64_t	m_activePlayerGuid	objectlayer	Holds the active player's GUID, written by 0x4660a0 for a new object with create flag 1	verified	two	objectlayer/update#create-block
 ObjectManager	0x00cc	4	uint32_t	m_mapId	objectlayer	Holds the map id, written by 0x4685a0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d0	4	ClientConnection *	m_client	objectlayer	Holds the client connection the update handlers are registered on, written by 0x4685b0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d4	4	MovementGlobals *	m_movementGlobals	objectlayer	Holds the movement manager, written by 0x468600	verified	one	objectlayer/manager#accessors-and-enumeration

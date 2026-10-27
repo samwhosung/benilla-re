@@ -19,9 +19,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x42e084	uint8_t[19]	s_frameDoubleClickIndex		core	Holds the case index of 0x42e000 for hit tests 2 to 20	verified	one	core/input#window-frame
 0x42e170	void *[6]	s_frameReleaseCases		core	Holds the case addresses of the frame release 0x42e0a0	verified	one	core/input#window-frame
 0x42e188	uint8_t[19]	s_frameReleaseIndex		core	Holds the case index of 0x42e0a0 for hit tests 2 to 20	verified	one	core/input#window-frame
-0x4647c8	void *[9]	s_cases464700		objectlayer	Holds the 9 case addresses of the switch in 0x464700	inferred	none	objectlayer/manager#trace-lines
+0x4647c8	void *[9]	s_cases464700		objectlayer	Holds the 9 case addresses of the switch in 0x464700	verified	two	objectlayer/manager#trace-lines
+0x4647ec	uint8_t[129]	s_index464700		objectlayer	Maps the type mask minus 1 to the cases of the switch in 0x464700	verified	two	objectlayer/manager#trace-lines
+0x464b98	void *[9]	s_cases464ad0		objectlayer	Holds the 9 case addresses of the switch in 0x464ad0	verified	two	objectlayer/manager#trace-lines
+0x464bbc	uint8_t[129]	s_index464ad0		objectlayer	Maps the type mask minus 1 to the cases of the switch in 0x464ad0	verified	two	objectlayer/manager#trace-lines
 0x464e98	void *[7]	s_watcherFreeJumpTable		objectlayer	Holds the cases of 0x464c40 for type ids 1 to 7, each walking its sections' watcher lists	verified	one	objectlayer/manager#releasing-an-object
-0x465314	void *[6]	s_updateNotifyJumpTable		objectlayer	Holds the notify pass's six cases for block types 0 to 5	verified	one	objectlayer/update#block-types
+0x465314	void *[6]	s_updateNotifyJumpTable		objectlayer	Holds the notify pass's six cases for block types 0 to 5	verified	two	objectlayer/update#block-types
 0x4656b4	void *[8]	s_sectionOffsetJumpTable		objectlayer	Holds the cases of 0x465690, one per section, returning each section's byte offset	verified	one	objectlayer/fields#field-counts-and-sections
 0x465748	void *[6]	s_nextSectionJumpTable		objectlayer	Holds the cases of 0x4656e0 that give the section after a section for each class chain	verified	one	objectlayer/fields#field-counts-and-sections
 0x465760	uint8_t[127]	s_nextSectionIndexTable		objectlayer	Maps a type mask minus 3 to its case in 0x465748	verified	one	objectlayer/fields#field-counts-and-sections
@@ -29,11 +32,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x465b08	void *[9]	s_fieldCountJumpTable		objectlayer	Holds the field count cases of 0x465a80 for the eight types and the default	verified	one	objectlayer/update#values-block
 0x465b2c	uint8_t[129]	s_fieldCountIndexTable		objectlayer	Maps a type mask minus 1 to its case in 0x465b08	verified	one	objectlayer/update#values-block
 0x465e78	void *[8]	s_createHookJumpTable		objectlayer	Holds the create notify's cases for type ids 0 to 7, each calling the type's create hook	verified	one	objectlayer/update#notify-pass
-0x466084	void *[6]	s_createPassJumpTable		objectlayer	Holds the create pass's six cases for block types 0 to 5	verified	one	objectlayer/update#block-types
+0x466084	void *[6]	s_createPassJumpTable		objectlayer	Holds the create pass's six cases for block types 0 to 5	verified	two	objectlayer/update#block-types
 0x46767c	uint8_t[129]	s_destroyIndexTable		objectlayer	Maps a type mask minus 1 to the destroy handler's case: the eight masks to the destructor call	verified	one	objectlayer/update#destroy-object
 0x467ac8	void *[3]	s_cases467800		ui	Holds the two destructor arms and the skip arm of the manager's destruction 0x467800	verified	one	ui/worldenter#a-world-transfer
 0x467ad4	uint8_t[129]	s_destroyTypeMap		ui	Maps an object type value to the destructor arm or the skip arm of the manager's destruction	verified	one	ui/worldenter#a-world-transfer
-0x468224	void *[7]	s_cases4680c0		objectlayer	Holds the 7 case addresses of the switch in 0x4680c0	inferred	none	objectlayer/manager#watcher-copy-offsets
+0x468224	void *[7]	s_cases4680c0		objectlayer	Holds the 7 case addresses of the switch in 0x4680c0	verified	two	objectlayer/manager#watcher-copy-offsets
 0x46aaac	void *[4]	s_glueSignatureJumpTable		glue	Holds the four case addresses of the glue build's switch on the signature check's answer	verified	one	glue/manager#signature-and-digest-check
 0x46b7a8	void *[12]	s_statusDialogClickCases		glue	Holds the case addresses of the status-dialog click 0x46b720 for screen states 0 to 11	verified	one	glue/flow#screen-states
 0x46c2ac	void *[5]	s_logonStateCases		glue	Holds the case addresses of the per-frame update's logon arm for logon states 5 to 9	verified	one	glue/flow#logon-arm
@@ -184,7 +187,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5ebc64	void *[11]	s_switch5ebc64		objectlayer	Holds the 11 case addresses of the switch in 0x5eb900	verified	one	objectlayer/overview#switch-tables
 0x5f3b40	void *[4]	s_switch5f3b40		objectlayer	Holds the 4 case addresses of the switch in 0x5f3930	verified	one	objectlayer/overview#switch-tables
 0x5f41e4	void *[12]	s_switch5f41e4		objectlayer	Holds the 12 case addresses of the switch in 0x5f4120	verified	one	objectlayer/overview#switch-tables
-0x5f4a04	uint8_t[165]	s_transportAnimDoneCases		objectlayer	Holds the case of each animation 0 to 0xa4 for the transport entity's done callback 0x5f49b0	verified	one	objectlayer/transports#map-objects
+0x5f4a04	uint8_t[165]	s_transportAnimDoneCases		objectlayer	Holds the case of each animation 0 to 0xa4 for the transport entity's done callback 0x5f49b0	verified	two	objectlayer/transports#map-objects
 0x5f76cc	void *[31]	s_switch5f76cc		objectlayer	Holds the 31 case addresses of the switch in 0x5f6f30	verified	one	objectlayer/overview#switch-tables
 0x5fc3c8	void *[2]	s_twoHandedCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fc390	verified	one	objectlayer/unitanim#animation-sets
 0x5fc3d0	uint8_t[20]	s_twoHandedIndex		objectlayer	Maps weapon subclasses 1 to 20 to the cases of 0x5fc390's switch	verified	one	objectlayer/unitanim#animation-sets
@@ -218,8 +221,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x6012fc	void *[12]	s_ownSpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for the active mover, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60132c	void *[12]	s_relaySpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for other units, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x601408	void *[6]	s_splineSpeedOpcodeCases		objectlayer	Holds the 6 case addresses of the switch in 0x601360, opcodes 0x2fe to 0x303	verified	one	objectlayer/unitmovement#movement-message-handlers
-0x601510	void *[13]	s_splineToggleCases		objectlayer	Holds the 13 case addresses of the switch in 0x601420	verified	one	objectlayer/unitmovement#spline-toggles
-0x601544	uint8_t[23]	s_splineToggleIndex		objectlayer	Maps opcodes 0x304 to 0x31a to the cases of 0x601420's switch	verified	one	objectlayer/unitmovement#spline-toggles
+0x601510	void *[13]	s_splineToggleCases		objectlayer	Holds the 13 case addresses of the switch in 0x601420	verified	two	objectlayer/unitmovement#spline-toggles
+0x601544	uint8_t[23]	s_splineToggleIndex		objectlayer	Maps opcodes 0x304 to 0x31a to the cases of 0x601420's switch	verified	two	objectlayer/unitmovement#spline-toggles
 0x601844	void *[26]	s_relayedMoveCases		objectlayer	Holds the 26 case addresses of the switch in 0x601580	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x6018ac	uint8_t[61]	s_relayedMoveIndex		objectlayer	Maps opcodes 0xb5 to 0xf1 to the cases of 0x601580's switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x602114	void *[4]	s_switch602114		objectlayer	Holds the 4 case addresses of the switch in 0x6018f0	verified	one	objectlayer/overview#switch-tables
@@ -232,8 +235,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x60d62c	uint8_t[53]	s_spellCastAnimTestIndex		objectlayer	Maps animations 2 to 54 to the cases of 0x60d600's switch	verified	one	objectlayer/units#unreached-unit-code
 0x60dbfc	void *[9]	s_kitCharProcJumpTable		objectlayer	Holds the 9 case addresses of the switch in 0x60d7c0	verified	one	objectlayer/overview#indexed-switch-tables
 0x60dc20	uint8_t[16]	s_kitCharProcIndexTable		objectlayer	Maps kit procedure kinds 0 to 15 to the cases of 0x60d7c0's switch	verified	one	spell/visuals#chain-effect-creation
-0x60e3fc	void *[3]	s_localMoveCases		objectlayer	Holds the 3 case addresses of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
-0x60e408	uint8_t[45]	s_localMoveIndex		objectlayer	Maps opcodes 0xb7 to 0xe3 to the cases of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60e3fc	void *[3]	s_localMoveCases		objectlayer	Holds the 3 case addresses of 0x60e0a0's first switch	verified	two	objectlayer/unitmovement#movement-message-handlers
+0x60e408	uint8_t[45]	s_localMoveIndex		objectlayer	Maps opcodes 0xb7 to 0xe3 to the cases of 0x60e0a0's first switch	verified	two	objectlayer/unitmovement#movement-message-handlers
 0x60e438	void *[4]	s_localMoveSendCases		objectlayer	Holds the 4 case addresses of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60e448	uint8_t[53]	s_localMoveSendIndex		objectlayer	Maps opcodes 0xb7 to 0xeb to the cases of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60e520	void *[5]	s_moveOpcodeAnimCases		objectlayer	Holds the 5 case addresses of the switch in 0x60e480	verified	one	objectlayer/unitanim#reactions-and-move-animations
@@ -1356,7 +1359,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f1a4	char[47]	s_pathLoadingScreen		loadingscreen	Holds the source path of LoadingScreen.cpp	verified	one	loadingscreen/overview#object-file
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
-0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
+0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	two	objectlayer/manager#table-slots-and-sizing
 0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
 0x82f2a0	uint32_t[30]	_XcptActTab		crt	Holds ten rows of an exception code, a signal number and an action, each action 0 in the file	verified	one	random#other-threads-rand
 0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
@@ -1471,10 +1474,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8364e0	int32_t	s_waterSoundsOff		sound	Holds the water sounds' off state, above 0 while ambience is off, -1 after teardown	verified	one	sound/ambience#water-sound-switches
 0x836708	char *[8]	s_objectPoolNames		objectlayer	Holds the class name of each type's object pool	verified	one	objectlayer/classes#class-sizes-and-pools
 0x836728	uint32_t[8]	s_objectPoolBlockCounts		objectlayer	Holds each type's object pool block count	verified	one	objectlayer/classes#class-sizes-and-pools
-0x8367b8	char[19]	s_textRememberingCorpse		objectlayer	Holds the string "Remembering corpse" that TraceRememberObject prints	verified	one	objectlayer/manager#trace-lines
-0x836854	char[19]	s_textRememberingObject		objectlayer	Holds the string "Remembering object" that TraceRememberObject prints	verified	one	objectlayer/manager#trace-lines
-0x836868	char[18]	s_textForgettingCorpse		objectlayer	Holds the string "Forgetting corpse" that TraceForgetObject prints	verified	one	objectlayer/manager#trace-lines
-0x8368fc	char[18]	s_textForgettingObject		objectlayer	Holds the string "Forgetting object" that TraceForgetObject prints	verified	one	objectlayer/manager#trace-lines
+0x8367b8	char[19]	s_textRememberingCorpse		objectlayer	Holds the string "Remembering corpse" that TraceRememberObject passes to 0x44cb20	verified	two	objectlayer/manager#trace-lines
+0x836854	char[19]	s_textRememberingObject		objectlayer	Holds the string "Remembering object" that TraceRememberObject passes to 0x44cb20	verified	two	objectlayer/manager#trace-lines
+0x836868	char[18]	s_textForgettingCorpse		objectlayer	Holds the string "Forgetting corpse" that TraceForgetObject passes to 0x44cb20	verified	two	objectlayer/manager#trace-lines
+0x8368fc	char[18]	s_textForgettingObject		objectlayer	Holds the string "Forgetting object" that TraceForgetObject passes to 0x44cb20	verified	two	objectlayer/manager#trace-lines
 0x836b24	int32_t	s_logonResult		glue	Holds the last reported logon result, default -1; written by 0x46afb0 and 0x46b0f0	verified	one	glue/flow#logon-state-dialogs
 0x836b28	int32_t	s_logonState		glue	Holds the last reported logon state, default -1; written by 0x46afb0, 0x46b0f0 and the PIN arm of 0x46b930	verified	one	glue/flow#logon-state-dialogs
 0x836b2c	int32_t	s_shownLogonResult		glue	Holds the logon result the dialog last showed, default -1; written by 0x46afb0 and 0x46b140	verified	one	glue/flow#logon-state-dialogs
@@ -2805,7 +2808,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb2306c	void *	s_mapWaterSoundsCVar		sound	Holds the MapWaterSounds CVar	verified	one	sound/ambience#water-sounds
 0xb230b8	uint32_t			unassigned	Holds data whose address InitializeWaterAmbiences, ClearAllSounds take; not read here	inferred	none	
 0xb2326c	uint32_t	s_waterSubmergeState		sound	Holds bit 0x2 while submerged and bit 0x1 for the restart without fade on surfacing	verified	one	sound/ambience#water-sound-placement
-0xb232a4	uint32_t[4]	s_objectHeaps		objectalloc	Holds the array of object heaps: its capacity, count, data and growth step	verified	one	objectlayer/manager#object-heap-teardown
+0xb232a4	uint32_t[4]	s_objectHeaps		objectalloc	Holds the array of object heaps: its capacity, count, data and growth step	verified	two	objectlayer/manager#object-heap-teardown
 0xb232e8	void *[7]	s_objectPools		objectlayer	Holds the object pools of types 1 to 7, created at start-up	verified	one	objectlayer/classes#class-sizes-and-pools
 0xb23310	uint32_t[30768]	s_fieldWatcherLists		objectlayer	Holds 10,256 field watcher list heads of 12 bytes, one per type section and field index	verified	one	objectlayer/initializers#object-tables
 0xb41414	void *	s_objectManager		objectlayer	Holds the client object manager; its +0xd4 holds the movement manager	inferred	none	collision/mover#movement-manager
@@ -3661,11 +3664,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d618	uint32_t[5]	s_unitBloodStore		dbc	Holds the UnitBlood table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d62c	uint32_t[5]	s_unitBloodLevelsStore		dbc	Holds the UnitBloodLevels table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d640	uint32_t[5]	s_uISoundLookupsStore		dbc	Holds the UISoundLookups table store: records, count, id map, largest id, loaded flag	inferred	none	
-0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
+0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	two	objectlayer/transports#the-transports-path
 0xc0d668	uint32_t[5]	s_terrainTypeSoundsStore		dbc	Holds the TerrainTypeSounds table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d67c	uint32_t[5]	s_terrainTypeStore		terrain	Holds the TerrainType.dbc store: rows, count, the table by id at +0x8 and the id bound at +0xc	verified	one	terrain/footprints#footprint-spawn
 0xc0d690	uint32_t[5]	s_taxiPathStore		dbc	Holds the TaxiPath table store: records, count, id map, largest id, loaded flag	inferred	none	
-0xc0d6a4	uint32_t[5]	s_taxiPathNodeStore		dbc	Holds the TaxiPathNode.dbc store: records and count	verified	one	objectlayer/transports#the-ship-path
+0xc0d6a4	uint32_t[5]	s_taxiPathNodeStore		dbc	Holds the TaxiPathNode.dbc store: records and count	verified	two	objectlayer/transports#the-ship-path
 0xc0d6b8	uint32_t[5]	s_taxiNodesStore		dbc	Holds the TaxiNodes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#taxis
 0xc0d6d4	uint32_t	s_talentTabIdMap		dbc	Holds the TalentTab.dbc rows by id	verified	one	ui/tooltipspell#the-talent-lines
 0xc0d6d8	uint32_t	s_talentTabMaxId		dbc	Holds the highest TalentTab.dbc id	verified	one	ui/tooltipspell#the-talent-lines
@@ -4043,7 +4046,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d8a0	uint32_t	s_spellDamageColor		objectlayer	Holds 0xffffde00 from 0x5fa0b0, the gold of spell damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0xc4d8a4	uint32_t[8]	s_reactionColors		objectlayer	Holds the selection colours by reaction 0 to 7 that 0x605960 builds: red, red, orange, yellow, then green	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
-0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	one	objectlayer/unitmovement#local-movement-commands
+0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	two	objectlayer/unitmovement#local-movement-commands
 0xc4d8c8	uint32_t	s_targetFlashColor		objectlayer	Holds the attacked target's selection colour, red from 0x5fa3f0 with a green byte 0x607ed0 sweeps	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d8cc	uint32_t	s_petMeleeDamageColor		objectlayer	Holds 0xffff8400 from 0x5fa0f0, the orange of a pet's melee damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0xc4d8e4	void *[6]	s_environmentalDamageKits		objectlayer	Holds the visual kit of each EnvironmentalDamage type 0 to 5, filled by 0x6033c0 and played by 0x624f30	verified	one	objectlayer/units#start-up-and-shutdown
@@ -4085,7 +4088,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4da78	uint64_t	s_pendingLootGuid		objectlayer	Holds the corpse an arrived mode 6 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da80	uint32_t	s_deadUnitColor		objectlayer	Holds 0xff7f7f7f from 0x5fa160, the grey 0x605960 gives a dead unit that no player controls	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4da84	float[3]	s_autoMoveLastPosition		objectlayer	Holds the position of the unit at the last frame, which the auto move stop test measures distance from	inferred	none	objectlayer/unitmovement#arrival-height-and-stalls
-0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
+0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	two	objectlayer/unitmovement#the-active-mover
 0xc4daa0	uint32_t	s_targetFlashTime		objectlayer	Holds the time 0x607ed0 last turned the target flash's sweep	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4daa4	uint32_t	s_targetFlashRising		objectlayer	Holds the sweep direction 0x607ed0 flips every 500 ms; nonzero sweeps the green byte up	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4dac4	uint32_t	s_selectionTexture		objectlayer	Holds the handle of Textures\UnitSelectTexture.blp, the selection circle's disc	verified	one	objectlayer/objectbase#selection-circle-textures

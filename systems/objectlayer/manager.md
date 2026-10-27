@@ -206,38 +206,45 @@ round; the second round starts at `0x467954`. `0x467a30` takes each node of the 
 `0x4643b0` links a new object into the live table under its GUID. The first insert makes the
 table: mask 3 and four buckets, each a list linked through offset `0x1c`. The bucket is `lo &
 mask`. A credit at `+0x10` falls by 3 per insert, to 0; each node in the chosen chain adds 1, and
-a total over 13 rehashes to `2·mask + 2` buckets and starts again. The table stops growing at
-mask `0x1fff`. The object goes onto its bucket and the iteration list (`+0x4` of the table), and
-`+0x18`, `+0x30` and `+0x34` take the GUID.
+a total over 13 rehashes to `2·mask + 2` buckets and restarts the credit from 0. At mask `0x1fff`
+the table stops growing and the credit is left alone. The object goes onto the end of its bucket
+and of the iteration list (`+0x4` of the table), and `+0x18`, `+0x30` and `+0x34` take the GUID.
 
-Addresses: `0x4643b0`, `0x4643ed`, `0x4643fa`, `0x46440e`, `0x46442c`, `0x464437`, `0x46447c`, `0x46448b`, `0x46449c`, `0x4644b9`, `0x4644c8`, `0x4699f0`, `0x468f10`, `0x469810`, `0x468940`
+Addresses: `0x4643b0`, `0x4643ed`, `0x4643fa`, `0x46440e`, `0x46442c`, `0x46443b`, `0x464443`, `0x464475`, `0x46447b`, `0x464495`, `0x46449c`, `0x4644be`, `0x4644ce`, `0x4699f0`, `0x468f10`, `0x469810`, `0x468940`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4643ed` stores 3 in the mask; `0x4643fa` sizes the bucket array (`0x4699f0`, mask + 1);
-`0x46440e` makes each bucket list (`0x468f10` with offset `0x1c`). `0x46442c` ends growth at
-`0x1fff`. `0x464437` subtracts 3 from `+0x10` (to 0 below 4). The chain walk `0x46447c` counts
-nodes (`inc`, `cmp 0xd`); `0x46449c` rehashes with `0x469810` and the doubled size. `0x4644b9` and
-`0x4644c8` link with `0x468940`. The constructor `0x6139a0` calls it.
+`0x46440e` makes each bucket list (`0x468f10` with offset `0x1c`). `0x46442c` jumps past the credit
+code at `0x1fff`. `0x46443b` subtracts 3 from `+0x10`; at 3 or less `0x464443` stores 0. The
+chain walk counts nodes (`cmp 0xd` at `0x464475`, `ja` at `0x46447b`); `0x464495` doubles the
+size, `0x46449c` zeroes the credit and `0x469810` rehashes. `0x4644be` and `0x4644ce` link with
+`0x468940` (placement 2, no neighbour: before the list's end link, so at the tail). The
+constructor `0x6139a0` calls it.
 
 ## Trace lines
 
-`0x464700` and `0x464ad0` write a status line naming the object's type: `Remembering object`,
-`item`, `container`, `unit`, `player`, `game object`, `dynamic object` or `corpse` when an object is
-created or reactivated (`0x464700`), and `Forgetting …` before one is released (`0x464ad0`). The
-line goes through `ValidateStatusLevel` with level 0x20; a GUID that is not live, or a type outside
-1 to 7, writes nothing.
+`0x464700` and `0x464ad0` pass a text naming the object's type to `ValidateStatusLevel`, which
+writes nothing. The text is `Remembering …` from `0x464700`, which runs when a lookup has
+reactivated a released object, and `Forgetting …` from `0x464ad0`, before an object is released.
+The type mask picks it: 1, 3, 7, 9, 0x19, 0x21, 0x41 and 0x81 give `object`, `item`, `container`,
+`unit`, `player`, `game object`, `dynamic object` and `corpse`; any other mask, or a GUID that is
+not live, passes nothing. The level is 0.
 
-Addresses: `0x464700`, `0x464ad0`, `0x464519`, `0x464966`, `0x44cb20`
+Addresses: `0x464700`, `0x464ad0`, `0x46471b`, `0x464519`, `0x464966`, `0x44cb20`, `0x4647c8`, `0x4647ec`, `0x464b98`, `0x464bbc`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-Both look the GUID up with `0x464870` and index a jump table by the object's type id minus 1
-(`0x464700`: the table at 0x4647c8). The strings are `Remembering …` from 0x8367b8 to 0x836854 and
-`Forgetting …` from 0x836868 to 0x8368fc. `0x464519` is the call in the find-or-create function
-(`0x4644f0`) and `0x464966` the call in the release (`0x464920`).
+Both look the GUID up with `0x464870`, load the type mask `[[object+8]+8]` (`0x46471b`), and after
+`dec eax; cmp eax,0x80; ja` index a byte table of 0x81 entries (`0x4647ec`; `0x464bbc` for
+`0x464ad0`) into a jump table of 9 cases (`0x4647c8`; `0x464b98`). Case 8 is the return. Each case
+is `mov ecx,text; xor edx,edx; push 0x20; call 0x44cb20`: `edx` is the level, 0, and the 0x20 is
+an unused stack argument. `0x44cb20` returns 1 for a non-null text and a level below 4, and
+otherwise sets error 0x57; it prints nothing. The `Remembering …` texts run from 0x8367b8 to
+0x836854 and `Forgetting …` from 0x836868 to 0x8368fc. The only call of `0x464700` is `0x464519`
+in `0x4644f0`, after the lookup's slot 2; the only call of `0x464ad0` is `0x464966`, in `0x464920`.
 
 ## Watcher copy offsets
 
@@ -249,7 +256,7 @@ parent (the unit's or the object's, the item's for a container), and returns tha
 
 Addresses: `0x4680c0`, `0x4680ea`, `0x468114`, `0x46813e`, `0x468168`, `0x468192`, `0x4681bc`, `0x4681e6`, `0x468200`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The jump table at 0x468224 sends the types 1 to 7 to the blocks of the item (`0x468158`), container
@@ -260,18 +267,24 @@ The jump table at 0x468224 sends the types 1 to 7 to the blocks of the item (`0x
 ## The object list
 
 An object an enumeration should not see is taken off the object list, and put back when it may be
-seen. `0x468270(guid)` unlinks the live object with that GUID from the list at `+0xa4` if it is
-on it; `0x4682f0(guid)` links it at the list's head if it is not on it. Items and game objects
-call the first at construction and reactivation, and a game object calls the second when its
-record arrives.
+seen. `0x468270(guid)` unlinks the live object with that GUID from the list at `+0xa4` when it is
+on it; `0x4682f0(guid)` appends it at the list's tail when it is not on it. The item and game
+object constructors and the game object's reactivation call the first. A game object's `OnCreate`
+calls the second, when it has a model.
 
-Addresses: `0x468270`, `0x4682f0`, `0x5d8267`, `0x5f703e`, `0x5f7ec3`, `0x5f7d00`, `0x464890`
+Addresses: `0x468270`, `0x4682f0`, `0x468299`, `0x4682a8`, `0x46831f`, `0x46835d`, `0x46836b`, `0x468380`, `0x5d8267`, `0x5f703e`, `0x5f7ec3`, `0x5f7d00`, `0x5f7c40`, `0x5f7ce2`, `0x5f7cf4`, `0x465e1f`, `0x464890`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-Both find the object with `0x464890` and test its link at the list offset `[+0xa4]`: `0x468270` acts when
-the link's next is set, `0x4682f0` when it is clear.
+Both find the object with `0x464890` and test its link at the list offset `[+0xa4]`: `0x468270`
+acts when the link's next and previous words are both set (`0x468299`, `0x4682a8`), `0x4682f0` when
+the next is clear (`0x46831f`). `0x4682f0` appends: the new link's previous is the list's last link
+`[+0xa8]` and its next that link's next; the last link's next and `[+0xa8]` then name the new link
+(`0x46835d` to `0x46836b`). `0x468380` starts at `[+0xac]`, the head. The only call of `0x4682f0`
+is `0x5f7d00`, in `0x5f7c40`, which the create notify calls (`0x465e1f`) and which reaches it only
+when `+0xdc` or `+0xd8` holds a model (`0x5f7ce2` to `0x5f7cf4`). The callers of `0x468270` are
+`0x5d8267` (item), `0x5f703e` (game object) and `0x5f7ec3` (game object slot 2).
 
 ## List code
 
@@ -280,38 +293,60 @@ tables. A list is a link offset, a first link and an end link marked by bit 0.
 
 Addresses: `0x468640`, `0x468680`, `0x468b20`, `0x468b90`, `0x468b60`, `0x468bd0`, `0x468940`, `0x468a00`, `0x468a30`, `0x468e90`, `0x468ee0`, `0x468f10`, `0x468f80`, `0x469070`, `0x4694b0`, `0x468ec0`, `0x4688b0`, `0x467430`, `0x464ec0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x468640`, `0x468680`, `0x468b20` and `0x468b90` are one body, as are `0x468b60` and `0x468bd0`: the
-first unlinks a node (the neighbours are joined through the bit-0 end marks) and the second returns
-the address a link names, negative offsets resolving through the list's offset. `0x468a00`
+`0x468640`, `0x468680`, `0x468b20` and `0x468b90` are one body, as are `0x468b60` and `0x468bd0`:
+the first unlinks a node (the neighbours are joined through the bit-0 end marks) and the second
+returns the address a link names, negative offsets resolving through the list's offset. `0x468a00`
 (offset `0x38`), `0x468a30` (`0x40`), `0x468e90` (−0x22222223), `0x468ee0` (0) make an empty list;
-`0x468f10` empties one and sets its offset, `0x468f80` and `0x4688b0` empty one, and `0x469070` and
-`0x4694b0` make a bare node. `0x468ec0` returns a node's link address, and `0x468940` unlinks a
-node and links it again by a placement argument. `0x467430` and `0x464ec0` are destructors that
-unlink and free.
+`0x468f10` sets a list's offset and empties it first when the offset changes, `0x468f80` and
+`0x4688b0` empty one, and `0x469070` and `0x4694b0` make a bare node. `0x468ec0` returns a node's
+link address, and `0x468940` unlinks a node and links it again by a placement argument. `0x467430`
+and `0x464ec0` are destructors that unlink and free.
+
+## Table slots and sizing
+
+The table's vtable `0x803600` has four slots. `0x4686c0` destroys an object node: its slot 0 with
+0, then its block freed. `0x4686f0` allocates a node of 0x110 bytes plus an extra count, builds
+the base object and links it at the head. `0x468a60` is the table's deleting destructor and
+frees the table on bit 0 of its argument. `0x4687f0` clears the table: the mask becomes −1, the
+buckets are freed and the vtable stays. `0x469d60(n)` returns the largest power of two
+not above n, at least 1, and 0x15 for n of 0x15 or more; `0x469da0(n, g)` rounds n up to a
+multiple of g. `0x47fea0(count)` stores the count and resizes the buffer.
+`0x468c00` reads three floats from a packet.
+
+Addresses: `0x803600`, `0x4686c0`, `0x4686f0`, `0x468a60`, `0x4687f0`, `0x468c00`, `0x469d60`, `0x469da0`, `0x47fea0`, `0x82f25c`
+Confidence: verified
+Proof: two
+Test: none
+
+`0x4686cd` calls the node's slot 0 with 0 pushed, and `0x4686d9` frees with the `CGObject_C` tag.
+`0x46870e` allocates zero-filled, `0x468739` to `0x46875c` build six empty lists from `+0x48`
+through `0x469070`, `0x46878a` stores the object vtable and `0x4687bc` to `0x4687d7` link the node
+at the head. `0x468a6b` stores the table vtable; `0x468afe` tests bit 0 before the free. `0x468857`
+stores −1 in the mask, `0x468898` frees the bucket array. `0x469d66` compares n with `0x15`: below
+it `0x469d6b` to `0x469d79` clear low bits until one is left and `0x469d80` makes 0 into 1; from
+`0x469d89` it stores `0x15` at `+0xc` and returns it. `0x469dae` divides and `0x469db4` adds the
+shortfall. `0x47fea0` stores the count at `0x47feae`, and unless the buffer is null and the count 0
+reallocates to count · 4 bytes with the tag `0x82f25c`. `0x468c00` calls `0x419130` three times.
 
 ## Table and array code
 
-A hash table is a vtable `0x803600`, a list, a bucket array and a mask, −1 until used. The code
-inserts, rehashes and frees its buckets, and grows the arrays behind them.
+The rest of the table code. A hash table is a vtable `0x803600`, a list, a bucket array and a
+mask, −1 until used (`Table slots and sizing`). The code inserts, rehashes and frees its buckets,
+and grows the arrays behind them.
 
-Addresses: `0x468d30`, `0x469810`, `0x4699f0`, `0x469080`, `0x469290`, `0x468c30`, `0x468fe0`, `0x4691e0`, `0x469c20`, `0x469dc0`, `0x469d60`, `0x469da0`, `0x4686c0`, `0x4686f0`, `0x468a60`, `0x4687f0`, `0x468c00`, `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0`, `0x469b30`, `0x47fea0`, `0x47fd40`, `0x803600`
+Addresses: `0x468d30`, `0x469810`, `0x4699f0`, `0x469080`, `0x469290`, `0x468c30`, `0x468fe0`, `0x4691e0`, `0x469c20`, `0x469dc0`, `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0`, `0x469b30`, `0x47fd40`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x468d30` inserts into a table as `0x4643b0` does. `0x469810`, `0x4699f0`, `0x469080`, `0x469290`,
-`0x468c30`, `0x468fe0` and `0x4691e0` rehash, size, empty and free the bucket array; `0x469c20`
-and `0x469dc0` grow arrays with `SMemReAlloc`, and `0x469d60` and `0x469da0` round a size to a
-power of two (at most 0x15) and up to a multiple. `0x4686c0`, `0x4686f0`, `0x468a60` and
-`0x4687f0` are slots 0 to 3 of the table vtable: a deleting destructor, a `CGObject_C` factory
-that builds the six watcher lists, and two destructors of the table. `0x468c00` reads three
-floats from a packet, and `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0` and `0x469b30` zero, set
-up or free small members. `0x47fea0(count)` stores the count at `this` and resizes the buffer at
-`this+8` to four bytes per element with `SMemReAlloc` (allocation tag 0x82f25c) when a buffer exists or the
-count is not 0; `0x47fd40` and the `ui` code at `0x4a96b0` call it.
+`0x468d30` inserts into a table as `0x4643b0` does. `0x469810`, `0x4699f0`, `0x469080`,
+`0x469290`, `0x468c30`, `0x468fe0` and `0x4691e0` rehash, size, empty and free the bucket array;
+`0x469c20` and `0x469dc0` grow arrays with `SMemReAlloc`. `0x468fd0`, `0x469b70`, `0x469c10`,
+`0x469bc0` and `0x469b30` zero, set up or free small members. `0x47fd40` and the `ui` code at
+`0x4a96b0` call `0x47fea0`.
 
 ## Object heap teardown
 
@@ -322,7 +357,7 @@ every line it formats goes to the empty print `0x4420b0`, so nothing is shown.
 
 Addresses: `0x463bb0`, `0x463bb1`, `0x463bd8`, `0x463bff`, `0x463c04`, `0x463c30`, `0x463c56`, `0x463c75`, `0x463ce1`, `0x463d00`, `0x463d25`, `0x463d47`, `0x403688`, `0xb232a4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `ClientContextStop` calls `0x463bb0` at `0x403688`, and `0x463bb1` calls `0x463c30`. `0x463bd8` runs

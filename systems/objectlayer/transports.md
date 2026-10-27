@@ -19,14 +19,14 @@ A type 14 handler holds a world entity at `+0x10`. Its record arrival and reacti
 it: `CWorld::CreateMapEntity` with the model path of the `GameObjectDisplayInfo` row of
 `GAMEOBJECT_DISPLAYID`, the object's position and facing, and its GUID for types 11 and 15, 0
 for others. Without the row it prints `NOOBJECTFILENAME|%d|%d|Game` with the display and entry
-ids and passes no path. Deactivation and the destructor destroy the entity. The entity's done
+ids and passes no path; a display id of 0 passes no path and prints nothing (`0x5f8099`). Deactivation and the destructor destroy the entity. The entity's done
 callback chains the transports' animations: accelerating (0xa2) plays cruising (0xa3),
 decelerating (0xa4) plays standing (0); after standing or cruising nothing plays, and any other
 animation replays itself.
 
-Addresses: `0x5f4860`, `0x5f4970`, `0x5f8030`, `0x5f8090`, `0x5f4950`, `0x5f4910`, `0x5f48d0`, `0x5f48c0`, `0x5f4900`, `0x5f4930`, `0x5f4940`, `0x5f4890`, `0x5f48a0`, `0x5f48b0`, `0x5f49b0`
+Addresses: `0x5f4860`, `0x5f4970`, `0x5f8030`, `0x5f8090`, `0x5f8099`, `0x5f4950`, `0x5f4910`, `0x5f48d0`, `0x5f48c0`, `0x5f4900`, `0x5f4930`, `0x5f4940`, `0x5f4890`, `0x5f48a0`, `0x5f48b0`, `0x5f49b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5f4970` tests `[fields+0x3c]` (`GAMEOBJECT_TYPE_ID`) against 0xb and 0xf; `0x5f8030` pushes
@@ -61,17 +61,28 @@ an entity, frees each leg's stops and spline and the legs, and unlinks the passe
 | `+0x30`, `+0x34`, `+0x38` | start, travel time and end, ms |
 | `+0x40`, `+0x44` | the stop count and the stops, 12 bytes: time, distance, wait |
 
-Addresses: `0x5f4ab0`, `0x5f4b40`, `0x5f4b70`, `0x5f4b80`, `0x5f4b90`, `0x5f4bc0`, `0x5f9380`, `0x5f93a0`, `0x5f9ad0`, `0x5f9c10`, `0x5f9d10`, `0x5f94d0`, `0x80b798`
+Addresses: `0x5f4ab0`, `0x5f4b40`, `0x5f4b70`, `0x5f4b80`, `0x5f4b90`, `0x5f4bc0`, `0x5f9380`, `0x5f93a0`, `0x5f9ad0`, `0x5f9c10`, `0x5f94d0`, `0x80b798`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5f4ab0` runs `0x5f4860`, sets `+0x14` to 8 and the list head, −1 at `+0x24` and `+0x54`, and
 copies `[fields+0x24]` to `+0x44` and `[fields+0x30]` to `+0x50`. `0x5f93a0` resizes the legs,
 storing the spline vtable at `leg+4` and mode 1 at `leg+0x2c`. `0x5f4bc0` frees through
 `0x5f9380(leg+0x3c)` and `0x469b30(leg+4)`, then the legs with the `ShipPath<…>::Leg` tag. `0x5f9ad0`
-reallocates the legs, copying each leg's spline arrays (`0x5f9c10`) and stops (`0x5f9d10`);
-`0x5f94d0` zeros a leg's four dwords.
+reallocates the legs, copying each leg's spline arrays (`0x5f9c10`); `0x5f94d0` zeros a leg's four
+dwords.
+
+## Copying a leg's stops
+
+When the legs are reallocated, `0x5f9ad0` copies each leg's stops through `0x5f9d10`.
+
+Addresses: `0x5f9ad0`, `0x5f9d10`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5f9ad0` calls `0x5f9d10` for each leg beside the spline copy `0x5f9c10`.
 
 ## Passengers
 
@@ -85,28 +96,27 @@ list and the entity is destroyed. A point is inside (slot 21) when there is no e
 
 Addresses: `0x5f5500`, `0x5f4fb0`, `0x5f55c0`, `0x5f6490`, `0x5f5dd0`, `0x5f6540`, `0x7c6500`, `0x511da0`, `0x617ac0`, `0x617b00`, `0x617100`, `0x630920`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5f5500` unlinks `[mover+8]`, links it before the head `+0x18` and calls `0x7c6500` when
-`IsEntityReady` fails. `0x5f4fb0` compares `[camera+0x88]` with `[mover+0x30]` before
+`IsEntityReady` fails. `0x5f4fb0` compares `[camera+0x88]` with the GUID `[mover+0x30]` points to before
 `SetCameraTransport(0, 0)`, compares the unit's GUID with `0xc4da98` to pick `0x617ac0(now)` or
 `0x617b00`, then calls `0x617100(0, 0)`. `0x5f5dd0` is the same body, `0x5f6490` the same
 boarding with `0x614eb0`.
 
 ## The ship path
 
-Its record's arrival creates the entity, reads `accelRate`, `moveSpeed` and `taxiPathID`. The
-nodes, none dropped, are the run of `TaxiPathNode` rows from the first with that path to the first
+The nodes, none dropped, are the run of `TaxiPathNode` rows from the first with that path to the first
 of another. A leg starts at the first node, at a map change and after a node with flag 0x1,
 which so ends its leg. A node with flag 0x2, not a leg's first, is a stop of its delay × 1000
 ms. Legs are timed, then laid end to end: a leg's start is the total so far, its stops' times gain
 it, and the total gains its travel and the last leg's stop waits (Path faults), ending as the
 period. The object joins the transport list and ticks.
 
-Addresses: `0x5f4cc0`, `0x5f4f80`, `0x5f90e0`, `0x5f94f0`, `0x5f9530`, `0x5f9570`, `0x5f95d0`, `0x5f9610`, `0x5f99e0`, `0x6308b0`, `0x5f4e47`, `0x5f4e66`, `0x5f4e8c`
+Addresses: `0x5f4cc0`, `0x5f90e0`, `0x5f94f0`, `0x5f9530`, `0x5f9570`, `0x5f95d0`, `0x5f9610`, `0x5f99e0`, `0x6308b0`, `0x5f4e47`, `0x5f4e66`, `0x5f4e8c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::ship_path_build_difftest`
 
 The columns are `0x621b00` ids 0x2b, 0x24 and 0x23, the first two made floats through `fild` of a
@@ -115,9 +125,21 @@ zero-extended qword. The rows of `0xc0d6a4` are 0x24 bytes: path `+4`, map `+0xc
 needs a non-zero point count for a stop, and `0x5f4e47` multiplies the delay by 0x3e8 with a 32-bit `imul`.
 `0x5f4e66` appends every node's position, the stop's included; `0x5f90e0` fetches the next row by
 index, null past the store's count, and `0x5f4e8c` ends the run at another path. The node and stop
-arrays live on the stack, 0x3000 and 0x2000 bytes, 1024 entries each. Slot 27 (`0x5f4f80`)
-recreates the entity, clears `+0x5c`, sets `+0x54` to −1, rejoins the transport list (`0x5f4f97`)
-and ticks. The test runs `0x5f4cc0` whole on generated rows.
+arrays live on the stack, 0x3000 and 0x2000 bytes, 1024 entries each. The test runs `0x5f4cc0`
+whole on generated rows.
+
+## Record arrival and reactivation
+
+A ship's record arrival creates the entity and reads `accelRate`, `moveSpeed` and `taxiPathID`.
+Slot 27 (`0x5f4f80`) recreates the entity, clears `+0x5c`, sets `+0x54` to −1, rejoins the transport
+list (`0x5f4f97`) and ticks.
+
+Addresses: `0x5f4cc0`, `0x5f4f80`, `0x5f4f97`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5f4cc0` is the record handler and `0x5f4f80` the reactivation handler of the moving transport.
 
 ## Leg curve
 
@@ -128,14 +150,13 @@ segments. A segment's length is 20 chords stored as a float, the leg's the float
 sum. A stop at node `k` lies at the 53-bit sum of the first `k − 1` lengths. A distance places the
 ship at the arc-length parameter distance / length.
 
-Addresses: `0x5f93a0`, `0x5f9439`, `0x5f9440`, `0x5f9142`, `0x453360`, `0x454770`, `0x4532e0`, `0x4543e0`, `0x453760`, `0x4543d0`, `0x453920`, `0x453300`, `0x5f91af`, `0x454580`, `0x7ffd84`
+Addresses: `0x5f93a0`, `0x5f9439`, `0x5f9440`, `0x454770`, `0x4532e0`, `0x4543e0`, `0x453760`, `0x4543d0`, `0x453920`, `0x453300`, `0x5f91af`, `0x454580`, `0x7ffd84`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::ship_path_build_difftest`, `objectlayer::ship_path_tick_difftest`
 
 `0x5f9439` stores the Catmull-Rom vtable `0x7ffd84` at leg `+4` and `0x5f9440` mode 1 at `+0x2c`,
-the curve's `+0x28`. `0x5f9142` calls `SetSplinePath` (`0x453360`) with the leg's point count and
-array, and slot 7 (`0x454770`) stores the points unchanged. `0x4532e0` then rebuilds the lengths
+the curve's `+0x28`. Slot 7 (`0x454770`) stores the points unchanged. `0x4532e0` rebuilds the lengths
 (slot 1, `0x4543e0`, each `0x453760` stored by `fstp`) and the total (slot 0, `0x4543d0`, which sums
 through `0x453920`; stored at `+4`), for more than 3 points only. `0x5f91af` calls `0x453300(k)`
 for a stop at node `k`. The tick's frame is slot 6, `0x454580`, which finds the segment by arc
@@ -144,9 +165,7 @@ length (`spline#frames`, `spline#arc-length-and-parameter`). The tests run `0x5f
 
 ## Path faults
 
-The path build has four faults. The install's `TaxiPathNode.dbc` (patch.MPQ, 288 paths) reaches
-none: every leg has at least four nodes, no leg ends on a stop, and its eight two-leg paths have
-equal waits in both legs (60 and 60 seconds, or none).
+The path build has four faults.
 
 | fault | effect |
 |---|---|
@@ -157,7 +176,7 @@ equal waits in both legs (60 and 60 seconds, or none).
 
 Addresses: `0x5f4e32`, `0x5f4eeb`, `0x5f4f01`, `0x5f4f10`, `0x5f916e`, `0x5f91a1`, `0x5f519e`, `0x5f9530`, `0x5f9610`, `0x4532e3`, `0x5f9427`, `0x45478a`, `0x4547d1`, `0x4547f3`, `0x5f9ad0`, `0x5f9c10`, `0x5f9ca1`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The stop array is emptied only when a new leg starts (`0x5f4e32`), and the post-loop sum at
@@ -173,6 +192,19 @@ with accelerates 1 and decelerates 0. The appends `0x5f9530` and `0x5f9610` chec
 (`0x45478a`, `0x4547f3`) and its capacity rounding wraps to 0 (`0x4547d1` to `0x4547e2`);
 `0x5f9c10`, copying for `0x5f9ad0`, allocates 4 × count mod 2^32 bytes and copies count floats
 (`0x5f9ca1` to `0x5f9cf2`).
+
+## The install's paths
+
+The install's `TaxiPathNode.dbc` (patch.MPQ, 288 paths) reaches none of the four faults of `Path
+faults`: every leg has at least four nodes, no leg ends on a stop, and its eight two-leg paths have
+equal waits in both legs (60 and 60 seconds, or none).
+
+Addresses: `0x5f4cc0`
+Confidence: verified
+Proof: one
+Test: none
+
+The census reads the install's table, not the exe.
 
 ## Leg timing
 
@@ -193,16 +225,29 @@ the whole leg and wait 0.
 
 Addresses: `0x5f9120`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::leg_time_difftest`, `objectlayer::leg_time_special_values_difftest`, `objectlayer::ship_path_build_difftest`
 
-`0x5f9120(points, stops, leg)` calls `SetSplinePath`, sizes the stops to s + 1 for s stops and zeros `+0x34`.
+`0x5f9120(points, stops, leg)` sizes the stops to s + 1 for s stops.
 Stop i's distance is 0x453300(spline, node), a cumulative length; seg is it less the last. A stop
 at the leg's last node ends the loop (`0x5f91a1`). `0x5f91db` picks the first span's form,
 `0x5f9205` the middle form; the end runs from `0x5f92b8` with seg = length − last. `fst` at
 `0x5f91d8` and `0x5f92f0` stores float(da) and keeps the 53-bit da on the stack, which the compares
 at `0x5f91dd`, `0x5f9205` (against seg·0.5) and `0x5f92f3` read; the formulas load the stored
 float. Branches test `ah & 5` and `jp`, so a NaN takes the square root. The x87 runs at 53 bits. Slices: leg_time_difftest, leg_time_special_values_difftest `0x5f91af`-`0x5f924f` `0x5f92b8`-`0x5f9335`; ship_path_build_difftest runs it whole.
+
+## Leg set-up calls
+
+`0x5f9120` calls `SetSplinePath` (`0x453360`) with the leg's point count and array, which stores
+the points through slot 7 and rebuilds the lengths (`0x4532e0`), and zeros `+0x34`.
+
+Addresses: `0x5f9120`, `0x5f9142`, `0x453360`, `0x5f9179`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5f9136` to `0x5f9142` pass the count and the array to `0x453360`; `0x5f9179` stores a zero
+register at `+0x34`.
 
 ## Speed curve
 
@@ -220,7 +265,7 @@ ta = v / a; r = min(T, ta), and min(T·0.5, ta) for both; d = t − (T − r).
 
 Addresses: `0x5f8dc0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::transport_speed_easing_difftest`, `objectlayer::transport_speed_easing_special_values_difftest`, `objectlayer::ship_path_tick_difftest`
 
 v is `[ecx+0x18]`, a `[ecx+0x20]`. Both ends store ta and T − r as floats (`0x5f8ddf`, `0x5f8dff`);
@@ -235,13 +280,14 @@ the object is constructed: the create block's u32 of update flag 0x02 less the c
 packet arrived. The tick's t is that u32 advanced by the client's milliseconds since, modulo the
 period.
 
-Addresses: `0x5f6f30`, `0x5f706e`, `0x5f7077`, `0x5f707d`, `0x5f7080`, `0x5f50cd`, `0x5f6292`
+Addresses: `0x5f6f30`, `0x5f7043`, `0x5f706e`, `0x5f7077`, `0x5f707d`, `0x5f7080`, `0x5f50cd`, `0x5f6292`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-The constructor `0x5f6f30` tests 0x2 in the descriptor byte `+0xd8` (`0x5f706e`); when it is set it
-stores the descriptor dword `+0xf0` less its time argument at `+0x278` (`0x5f7080`). Inside the
+The constructor `0x5f6f30` tests 0x2 in the byte `+0xd8` of the create block, its second argument
+(`0x5f7043`, `0x5f706e`); when it is set it stores the block's dword `+0xf0` less its time argument
+at `+0x278` (`0x5f7080`). Inside the
 game object code the offset is read twice, by the moving-transport tick (`0x5f50cd`) and by the
 type 11 evaluator (`0x5f6292`); the constructor clears the fields around it and leaves `+0x278` as
 it was. The dword is the create block's last u32 (`objectlayer/update#create-block`), and the time is the one the
@@ -260,7 +306,7 @@ the position, facing and entity move, and a changed animation plays once the ent
 
 Addresses: `0x5f50a0`, `0x5f8cb0`, `0x5f8d60`, `0x453480`, `0x468580`, `0x6709a0`, `0x670950`, `0x670a30`, `0x6709f0`, `0x801360`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::diff_normalize_vec2`, `objectlayer::g3_transport_ms_scale`, `objectlayer::g3_transport_leg_fraction`, `objectlayer::g3_transport_heading`, `objectlayer::g3_transport_heading_angle`, `objectlayer::ship_path_tick_difftest`
 
 `0x5f50e1` divides unsigned. A span's T is stop j's time less the span start and t the elapsed
@@ -282,11 +328,11 @@ and unloads the map around the camera's unit.
 
 Addresses: `0x5f8da0`, `0x7bdc40`, `0x7bdd60`, `0x7c6510`, `0x613ef0`, `0x718910`, `0x66fc70`, `0x66fc80`, `0x615020`, `0x407e80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::world_model_scale_difftest`
 
 The frame starts at identity; `RotateMatrix` takes the axis (0, 0, 1). The passengers are walked through `0x5f8da0`, a link getter. The unit is
-`ClntObjMgrObjectPtr([mover+0x30], 8)`; `0x613ef0(unit, 0)` runs before `SetTransportFrame` on
+`ClntObjMgrObjectPtr(g, 8)`, g the GUID `[mover+0x30]` points to; `0x613ef0(unit, 0)` runs before `SetTransportFrame` on
 `+0xdc`, else `+0xd8`. The first tick is `+0x54` = −1 on entry. The loading sequence is
 0x443620(0x407f70, 0), `SetLoadProgressCallback(0x407fa0, 0)`, 0x407de0 with the entry and the
 old leg, `UnloadAreas` at the camera unit's slot 5 position, `0x615020`, `EndLoadingScreen`, then
@@ -301,15 +347,17 @@ The offset at a time t = (now + `+0x278`) mod the last row's time lies between t
 before t and the next row B: f = (t − A) / (B − A), p = A·(1 − f) + B·f, turned by the object's
 rotation quaternion. A's animation plays when it changes.
 
-Addresses: `0x5f5ab0`, `0x5f5ec0`, `0x5f6260`, `0x5f6280`, `0x5f8d20`, `0x5f5c80`, `0x5f5cb0`, `0x5f5d70`, `0x5f5da0`, `0x5f9110`, `0x80ba58`, `0xc0d654`
+Addresses: `0x5f5ab0`, `0x5f5ec0`, `0x5f6260`, `0x5f6280`, `0x5f62a4`, `0x5f50d5`, `0x5f8d20`, `0x5f5c80`, `0x5f5cb0`, `0x5f5d70`, `0x5f5da0`, `0x5f9110`, `0x80ba58`, `0xc0d654`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::gameobject_path_eval_difftest`, `objectlayer::gameobject_path_eval_large_times_difftest`
 
 The constructor makes the passenger list through `0x5f9110`. Rows are 0x1c bytes: entry `+4`, time `+8`, position `+0xc`, animation `+0x18`. `0x5f5ec0` stops
 at the first entry above the object's: the store is taken as sorted. With no row the constructor
-leaves `+0x20` and `+0x24` unset, and the tick reads through them. `0x5f62bc`–`0x5f62e7` advance
-A with no bound: a t below the first row's time matches no pair and never ends. f is a `fidiv`
+leaves `+0x20` and `+0x24` unset, and the tick reads through them. `0x5f62a4` divides by the
+last row's time with no guard, so 0 faults, where type 15 substitutes 1 (`0x5f50d5`).
+`0x5f62bc`–`0x5f62e7` advance A with no bound: with ascending row times, a t below the first row's
+time matches no pair and never ends. f is a `fidiv`
 of the zero-extended difference by the signed span, stored as a float. With x2 = 2x and the
 products stored as floats, M = [1 − (yy + zz), xy + wz, xz − wy; xy − wz, 1 − (xx + zz), yz + wx;
 xz + wy, yz − wx, 1 − (xx + yy)], and out_j = (M[2][j]·pz + M[1][j]·py) + M[0][j]·px. px rounds
@@ -327,11 +375,12 @@ move.
 
 Addresses: `0x5f5f10`, `0x5f5c10`, `0x5f5c40`, `0x6343b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::diff_scale_vec3`, `objectlayer::g3_move_pos_add`, `objectlayer::g3_move_delta_sub`, `objectlayer::g3_move_dist2_gate`, `objectlayer::g3_move_normalize`, `objectlayer::g3_move_leg_speed`
 
-The squared length is (dy² + dz²) + dx², stored as a float and compared by magnitude at
-`0x5f5fb3`. The distance is float(sqrt) and the heading each delta times 1/distance, stored.
-`0x5f61ba` divides the distance by float(elapsed)·0.001 at 53 bits. The frame is L of the base and
+The squared length is (dy² + dz²) + dx²; `fst` stores a float copy (`0x5f5fae`) and the compare
+by magnitude at `0x5f5fb3` reads the unrounded sum. The distance is float(sqrt) and the heading each delta times 1/distance, stored.
+`0x5f61ba` divides the distance by elapsed·0.001f at 53 bits, the elapsed `fild` of a
+zero-extended qword (`0x5f61ac`) times the float `[0x801360]`. The frame is L of the base and
 the object slot 6 facing; its translation row takes the new position after the sweeps. Slot 17
 (`0x5f5c10`) returns the base. Slices: g3_move_pos_add `0x5f5f47`-`0x5f5f69`; g3_move_delta_sub `0x5f5f6e`-`0x5f5f93`; g3_move_dist2_gate `0x5f5f98`-`0x5f5fbb`; g3_move_normalize `0x5f60f2`-`0x5f612d`; g3_move_leg_speed `0x5f61ac`-`0x5f61c0`.
