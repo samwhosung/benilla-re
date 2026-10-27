@@ -154,10 +154,11 @@ answers null for entry 0 as well as a miss. The icon is `0xb71840` built from th
 ## Item link and name
 
 `GetLootSlotLink(slot)` pushes the link of the row, `|Hitem:<entry>:0:<random property>:<link number>|h[<name>]|h` with the
-quality colour and `|r`, and pushes nothing on a miss or an uncached item. The enchantment id is always 0. The name
+quality colour and `|r`, and pushes one nil on a miss or an uncached item: the worker `0x4c2670` returns null (`0x4c272e`), `0x4c2d77` passes it to
+`0x6f3890`, which pushes nil for null, and `0x4c2d7c` returns 1. The enchantment id is always 0. The name
 uses the same suffix join as the row text. The link number is the value of wire entry +0x0c.
 
-Addresses: `0x4c2d20`, `0x4c2670`, `0x4c26ca`, `0x4c26fc`, `0x4c2717`, `0x52adb0`, `0x5d8b00`
+Addresses: `0x4c2d20`, `0x4c2d77`, `0x4c2d7c`, `0x4c2670`, `0x4c26ca`, `0x4c26fc`, `0x4c2717`, `0x4c272e`, `0x52adb0`, `0x5d8b00`, `0x6f3890`
 Confidence: verified
 Proof: one
 Test: none
