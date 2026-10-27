@@ -1360,6 +1360,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
 0x82f2a0	uint32_t[30]	_XcptActTab		crt	Holds ten rows of an exception code, a signal number and an action, each action 0 in the file	verified	one	random#other-threads-rand
 0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
+0x82f4d0	double	s_mathInfinity		crt	Holds +inf, the value the math routines return for an overflow or an infinite answer	verified	one	crt/math#non-finite-powers
+0x82f4d8	double	s_mathIndefinite		crt	Holds the indefinite, 0xfff8000000000000, the answer of a math domain error	verified	one	crt/math#splitting-a-double
+0x82f4f0	double	s_mathNegativeZero		crt	Holds -0.0, the answer of pow for a negative odd power of -inf	verified	one	crt/math#non-finite-powers
 0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
 0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
@@ -1367,6 +1370,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
 0x831928	int32_t[6]	_DoubleFormat		crt	Holds the double's format for __ld12cvt: exponents 1024 and -1023, 53 bits, widths 11 and 64, bias 1023	verified	two	crt/strtod#rounding-to-a-format
 0x831940	int32_t[6]	_FloatFormat		crt	Holds the float's format for __ld12cvt: exponents 128 and -127, 24 bits, widths 8 and 32, bias 127	verified	two	crt/strtod#rounding-to-a-format
+0x831ac8	int32_t	s_mathErrnoOnly		crt	Holds 0x2694, which nothing writes; nonzero makes the math error exits set errno and skip _matherr	verified	one	crt/math#math-error-flags
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
 0x832398	const char **	__lc_time_curr		crt	Points to the current time record, the C locale's 0x8323a0; only ___init_time writes it	verified	one	crt/time#the-strftime-format-loop
 0x8323a0	const char *[43]	__lc_time_c		crt	Holds the C locale's day and month names, AM, PM and the date and time patterns strftime reads	verified	one	crt/time#the-strftime-format-loop
@@ -2415,8 +2419,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x874458	char[13]	s_textMinutesAbbr		ui	Holds the global string key "MINUTES_ABBR"	verified	one	ui/lcd#battlefield-status
 0x874468	char[13]	s_textSecondsAbbr		ui	Holds the global string key "SECONDS_ABBR"	verified	one	ui/lcd#battlefield-status
 0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
+0x875ea0	uint8_t[80]	s_fmodRecord		crt	Holds the fmod record: its name, function code 0x16 at +0xe and the 16 handler addresses at +0x10	verified	one	crt/math#remainder-dispatch
 0x8761c0	const char *	s_nullString		crt	Points to the text (null) at 0x871708, which __output writes for a null %s; nothing writes it	verified	one	crt/printf#characters-strings-and-counts
 0x8761c4	const uint16_t *	s_wideNullString		crt	Points to the UTF-16 text (null) at 0x81623c, which __output writes for a null wide string	verified	one	crt/printf#characters-strings-and-counts
+0x8761d0	uint8_t[10]	s_x87Indefinite		crt	Holds the indefinite as an 80-bit real, which the dispatcher loads for a domain error	verified	one	crt/math#remainder-dispatch
+0x8761ec	uint8_t[16]	s_fxamClasses		crt	Maps the fxam condition bits to the operand classes 0, 4, 8 and 12: normal, zero, NaN, infinity	verified	one	crt/math#remainder-dispatch
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
@@ -2610,6 +2617,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e14	uint32_t	s_tipBatch		loadingscreen	Holds the tip string batch handle	verified	one	loadingscreen/screen#tip-text
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x8838f4	uint8_t	s_sysMsgDisplayMade		unassigned	Holds 1 while the system message display layer exists	verified	one	sysmsg#display-layer
+0x883918	int32_t	s_mathExitDisabled		crt	Holds 0, zero-filled; its one writer 0x409a61 is unreached, so the intrinsic exit reports every error	verified	one	crt/math#math-error-flags
+0x88391c	int32_t	s_fdivErratum		crt	Holds the processor's FDIV erratum answer 0x409a1b stores, 1 only on a flawed Pentium	verified	one	crt/math#math-error-flags
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883ba4	int32_t	s_stringTypeMode		crt	Holds which call ___crtGetStringTypeW makes: 0 undecided, 1 GetStringTypeW, 2 GetStringTypeA	verified	one	crt/ctype#wide-character-types
 0x883ba8	int32_t	tzapiused		crt	Holds 1 when __tzset_lk took the zone from GetTimeZoneInformation, which 0x41484d reads	verified	one	crt/time#the-systems-zone
