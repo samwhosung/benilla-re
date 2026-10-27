@@ -176,7 +176,7 @@ bits 0 to 2 or 3 to 5 of the justify word: a name of the other axis clears the a
 word with the justify group set is not stored; otherwise it is, the group marked set and changed
 (0x202). Either way the font stops following its parent's justify and pushes its changes. Any other
 argument raises the usage error. `GetJustifyH()` and `GetJustifyV()` answer the first set of
-`LEFT`, `CENTER`, `RIGHT` or `TOP`, `MIDDLE`, `BOTTOM`, else `UNKNOWN`. `GetFontObject()`, on those five
+`LEFT`, `CENTER`, `RIGHT` or `TOP`, `MIDDLE`, `BOTTOM`, else `UNKNOWN`. `GetFontObject()`, on the five types other than `FontString`
 and under Button's three font object getters, answers the followed `Font` or nil.
 
 Addresses: `0x79fc20`, `0x79fc34`, `0x79fc4e`, `0x79fc57`, `0x79fc66`, `0x79fc6d`, `0x79fc72`, `0x79fc75`, `0x79fc7c`, `0x79fc84`, `0x79fc97`, `0x79fce0`, `0x79fd21`, `0x79fd57`, `0x79fcb0`, `0x79fcb3`, `0x79fcb9`, `0x79fd70`, `0x79fd76`, `0x79fd79`, `0x79f090`, `0x79f094`, `0x79f0a6`, `0x79f0b7`, `0x79f0c9`, `0x780562`, `0x7806e2`, `0x780862`, `0x6f1990`, `0x6f1a00`, `0x87c77c`, `0x87c7a0`

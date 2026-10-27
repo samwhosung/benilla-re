@@ -110,7 +110,7 @@ the two (of two NaNs the larger significand), with `errno` 33. When either is an
 | \|x\| < 1, zero | +0 | +inf | |
 | \|x\| = 1 | indefinite, 1 | indefinite, 1 | |
 | +inf | | | +inf for y > 0, 1 for 0, +0 for y < 0 |
-| −inf | | | by the whole-number kind of y: odd gives −inf and −0, else +inf and +0; y = 0 gives 1 |
+| −inf | | | y > 0: −inf if y is odd, else +inf; y < 0: −0 if odd, else +0; y = 0: 1 |
 
 Addresses: `0x73f940`, `0x73f950`, `0x744c8c`, `0x744cdc`, `0x744d33`, `0x744d49`, `0x744db0`, `0x744dbc`, `0x7458d2`, `0x40a1e6`, `0x82f4d0`, `0x82f4d8`, `0x82f4f0`
 Confidence: verified

@@ -1938,7 +1938,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8537fc	char[11]	s_textInterface		ui	Holds the string "Interface:"	inferred	none	
 0x853838	char[6]	s_textTitle		ui	Holds the string "Title"	inferred	none	
 0x853840	char[27]	s_addOnTocFormat		ui	Holds the format of an add-on's toc path	verified	one	ui/addons#finding-add-ons
-0x853878	char[26]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	one	ui/addons#reading-the-url-file
+0x853878	char[27]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	one	ui/addons#reading-the-url-file
 0x853928	char[4]	s_addOnsTxtSeparators		ui	Holds CR, LF and the quote, the separators of AddOns.txt	verified	one	ui/addons#enable-state
 0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	one	ui/addons#enable-state
 0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	one	ui/addons#enable-state
@@ -2424,8 +2424,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8761c4	const uint16_t *	s_wideNullString		crt	Points to the UTF-16 text (null) at 0x81623c, which __output writes for a null wide string	verified	one	crt/printf#characters-strings-and-counts
 0x8761d0	uint8_t[10]	s_x87Indefinite		crt	Holds the indefinite as an 80-bit real, which the dispatcher loads for a domain error	verified	one	crt/math#remainder-dispatch
 0x8761ec	uint8_t[16]	s_fxamClasses		crt	Maps the fxam condition bits to the operand classes 0, 4, 8 and 12: normal, zero, NaN, infinity	verified	one	crt/math#remainder-dispatch
-0x8763c0	char[5]	s_scanSpaceSet		crt	Holds the scanset text of %s, space and 9 to 13 then a bracket, which scanf complements	verified	one	crt/scanf#character-sets
-0x8763c8	char[1]	s_scanEmptySet		crt	Holds the empty scanset of %c, a bracket alone, which scanf complements	verified	one	crt/scanf#character-sets
+0x8763c0	char[6]	s_scanSpaceSet		crt	Holds the scanset text of %s, space and 9 to 13 then a bracket, which scanf complements	verified	one	crt/scanf#character-sets
+0x8763c8	char[2]	s_scanEmptySet		crt	Holds the empty scanset of %c, a bracket alone, which scanf complements	verified	one	crt/scanf#character-sets
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
@@ -3916,6 +3916,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a3bc	uint32_t	s_latencyMax		net	Holds the greatest simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
 0xc2a3c4	uint32_t	s_initUnitCount		net	Counts the object files whose static initializers ran the shared unit count	inferred	none	net/layout#shared-helpers
 0xc2a428	uint8_t[64]	s_randomPool		net	Holds the SHA-1 random pool SRP6 draws from, seeded at startup with the client clock	verified	one	net/login#random-pool
+0xc2a66c	uint8_t[56]	s_lightTable		unassigned	Holds the light table object: a vtable pointer at +0 and, at +0x30, the head of its node list	inferred	none	core/close#light-list-teardown
 0xc2a738	uint8_t[640]	s_fpsDigitsA		font	Holds the first set of frame-rate digit quads	verified	one	font/overview#static-objects
 0xc2a9b8	float[30]	s_frameTimes		font	Holds the last 30 frame times in seconds	verified	one	font/api#frame-rate-bar
 0xc2aa38	uint8_t[640]	s_fpsDigitsB		font	Holds the second set of frame-rate digit quads	verified	one	font/overview#static-objects

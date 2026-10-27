@@ -18266,7 +18266,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bf240	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf250	159			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x5bf2f0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x5bf300	224	DestroyGxuLightLists		unassigned	orchestration	void __cdecl (void)	Empties the light table and frees the nodes of the three light lists with their allocation tags	verified	one	core/close#light-list-teardown	
+0x5bf300	224	DestroyGxuLightLists		unassigned	orchestration	void __cdecl (void)	Calls 0x5c08b0 on 0xc2a66c with 0, then frees the nodes of the three light lists with their allocation tags	verified	one	core/close#light-list-teardown	
 0x5bf3e0	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf3f0	227			unassigned	unreached		Runs its object file code that calls SMemAlloc, DeviceLightInitialize, 0x5c03d0 and 2 more; not read here	inferred	none		
 0x5bf4e0	338			unassigned	unreached		Runs its object file code that calls 0x5c07a0, 0x5c0b30, 0x5bfdb0 and 1 more; not read here	inferred	none		
@@ -31395,7 +31395,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7436c0	62	__cintrindisp2	idb	crt	orchestration		Saves the control word, classes two x87 operands through 0x743997 and runs the exit 0x74378a on its answer	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x7436fe	61	__cintrindisp1	idb	crt	unreached		Runs its object file code that calls __trandisp1 and 1 more; not read here	inferred	none		
 0x74373b	72	__ctrandisp2	idb	crt	unreached		Runs its object file code that calls __fload, __trandisp2, ctranexit; not read here	inferred	none		
-0x743783	312	ctranexit	idb	crt	boundary		Clears bit 0 of the exit flags and runs the exit at 0x74378a, which reports an error type or restores the control word	inferred	none	crt/math#math-error-flags	
+0x743783	312	ctranexit	idb	crt	boundary		Has an unreached start; the inner entry 0x74378a is live and passes an error type to __87except or restores the cw	inferred	none	crt/math#math-error-flags	
 0x7438bb	51	__ctrandisp1	idb	crt	unreached		Runs its object file code that calls __fload, __trandisp1, ctranexit; not read here	inferred	none		
 0x7438ee	60	__fload	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x743930	103	__trandisp1	idb	crt	unreached		Runs its object file code not read here	inferred	none		

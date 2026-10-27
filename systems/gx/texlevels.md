@@ -27,4 +27,4 @@ a mode of 0 or 1, and bit 6 when the mode is neither (`0x5a08a8`); `0x5a08cb` ta
 and `0x5a08f0` is the `shr`/`inc` loop. `0x5a0902` and `0x5a0903` hold the skip count to the count
 less 1, unsigned. `0x5a0930` calls it (`0x5a0951`) and passes `end - first` as the level count of
 `CreateTexture` (`0x5a09c7`), adding the auto-generate usage 0x400 for bit 6 (`0x5a0996`);
-`0x5a0a80` calls it at `0x5a0aed` and locks level `n - first` for each `n` from `first` to `end`.
+`0x5a0a80` calls it at `0x5a0aed` and locks level `n - first` for each `n` from `first` to `end - 1` (`0x5a0af8`, `0x5a0d55`).

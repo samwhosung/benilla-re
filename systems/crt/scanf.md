@@ -37,7 +37,7 @@ to undo the step. `__whiteout` is `inc [esi]` and `0x74587d` in a loop on `_issp
 
 `__input` keeps `n`, the conversions stored, `matched`, a byte counting those that matched even when
 suppressed or `%n`, and `charcount`, the bytes read. A space in the format (9 to 13 or 0x20) reads
-one byte, pushes back the first that is not a space and skips the format's next spaces; a byte other
+while the byte is a space, pushes back the first that is not and skips the format's next spaces; a byte other
 than `%` must equal the next input byte, else it is pushed back and the scan ends; `%` starts a
 conversion. The scan ends at the format's end, and when the last byte read was EOF unless `%n`
 follows. It answers `n`, or −1 when that byte was EOF with `n` and `matched` 0. A format ending in
@@ -53,17 +53,18 @@ Test: `crt::crt_sscanf_fixed_difftest`, `crt::crt_sscanf_random_difftest`
 `%` (0x25); `0x745793` reads and compares, `0x745802` pushes back on a mismatch. `0x7457d5` is
 `cmp [ebp-0x14],-1`; with EOF it needs `%` at `0x7457db` and `n` at `0x7457e3` to go on.
 `0x745827` ends at `0x74583e` unless EOF; `0x74582d` returns `n`, or −1 when `[ebp-0x15]`, which
-`0x745788` raises per conversion, is 0. `[ebp-0x14]` is written only by a read, so a format of no
-bytes (`0x744e40`) and a `%n` first leave it as the stack had it; a format ending in a space
+`0x745788` raises per conversion, is 0. `[ebp-0x14]` is written only after a read (`0x745008`, `0x745566` via
+`0x745361`, `0x7455cc`, `0x745705`), so a format of no bytes (`0x744e40`) and a `%n` first leave it
+as the stack had it; a format ending in a space
 reads one more byte (`0x745793`) and a mismatch pushes it back.
 
 ## Conversion flags
 
-After `%`, bytes up to the type are flags. Digits build the width, a 0 among them marking it set:
-`%0d` fails. `*` suppresses the store. The size byte starts at 1: `l` and `L` add 1 and `h` takes 1,
+After `%`, bytes up to the type are flags. Any digit sets the width (`0x744f1b`), and a width set to 0 fails:
+`%0d`. `*` suppresses the store. The size byte starts at 1: `l` and `L` add 1 and `h` takes 1,
 so `hh` makes it −1. `l` and `w` ask for wide output, `h` narrow. `I64` selects 64 bits; `F` and `N` are skipped; any other byte is the type. The type ORed with 0x20 picks the
-conversion: `D` acts as `d`, and `[` and `{` both open a set. `%c`, `%s` and `%[`
-read their first byte at once, `%n` none, the rest skip spaces first. A conversion not suppressed takes the next argument pointer.
+conversion: `D` acts as `d`, and `[` and `{` both open a set. `%c` and `%[`
+read their first byte at once, `%n` none, the rest, `%s` included, skip spaces first. A conversion not suppressed takes the next argument pointer.
 
 Addresses: `0x744eba`, `0x744ee8`, `0x744f2a`, `0x744f4a`, `0x744f99`, `0x744fb8`, `0x744fd2`, `0x74500b`, `0x7452ac`, `0x7457f7`
 Confidence: verified
@@ -81,9 +82,9 @@ argument (`0x7452c5`) and the `matched` count.
 ## Integer conversions
 
 `d`, `i`, `u`, `o`, `x`, `X` and `p` read an optional sign and then digits, in 32 bits that wrap, or
-64 with `I64`. `d`, `u` and `i` take decimal digits, `o` the digits below 8, `x` and `p` hex digits.
+64 with `I64`. `d`, `u` and `i` take decimal digits, `o` the digits below 8, `x` hex digits; `p` hex and 32 bits, but with `I64` decimal and 64.
 `i` and `x` also read `0x` or `0X` after the sign; `i` followed by a 0 then not an `x` reads octal.
-`p` has no prefix and stores 32 bits. The sign takes one of the width, a `0` and `x` prefix none.
+The sign takes one of the width, a `0` and `x` prefix none.
 A `-` negates in the width of the store. With no digit the conversion fails. The store is eight
 bytes for `I64`, else four unless the size byte is 0, then two.
 
@@ -99,13 +100,13 @@ the prefix: `x` or `X` sets the type to `x` (`0x74534d`), another byte sets the 
 (`0x745342`) and for `x` pushes the byte back (`0x74535a`) and takes `0` again, for `i` makes the
 type `o`. The 32-bit loop shifts by 4 (`0x7456fa`), 3 (`0x7456c4`) or multiplies by 10
 (`0x7456c9`), and adds `ch − 0x30` (`0x74570f`), `__hextodec` (`0x745846`) having turned a letter
-into its value plus 0x30. The 64-bit loop uses `__allshl` and `__allmul` (`0x7455b8`, `0x745619`).
+into its value plus 0x30. The 64-bit loop (`0x74557d`) tests only `x` for hex, so `%I64p` reads decimal digits; it uses `__allshl` and `__allmul` (`0x7455b8`, `0x745619`).
 `0x7456c2` stops `o` at 8.
 
 ## Float conversions
 
-`e`, `f` and `g` copy the text into a stack buffer and store it through `_fassign`. The width is
-clamped to 349 if unset or larger. The sign takes one of the width and is stored for `-` only.
+`e`, `f` and `g` copy the text into a stack buffer and store it through `_fassign`. The sign takes one of the width
+first and is stored for `-` only; then the width is clamped to 349 if unset or larger.
 Digits, a `.` and digits follow, each byte taking one of the width; only after a digit may an `e` or
 `E` follow, stored as `e`, then a sign, stored for `-`, then digits. The `e` and the sign are
 consumed whether or not a digit follows; only the byte after them is pushed back. A scan with no

@@ -90,6 +90,8 @@ const FORMATS: &[&str] = &[
     "%lld",
     "%I64d",
     "%I64x",
+    "%I64p",
+    "%I64X",
     "%I64o",
     "%I64i",
     "%I64u",
