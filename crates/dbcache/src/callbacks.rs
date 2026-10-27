@@ -39,16 +39,16 @@ impl Image {
 }
 
 /// An empty list at `list`, as the node constructor `0x55b250` leaves it: link offset 0 at `+0`,
-/// the terminator at `+4` pointing back at itself and forward at itself tagged with bit 0
-/// (`0x55b2aa` to `0x55b2bb`).
+/// the head at `+4` pointing at the terminator itself and the tail at `+8` holding it tagged
+/// with bit 0 (`0x55b2aa` to `0x55b2bb`).
 pub fn init_list(img: &mut Image, list: u32) {
     img.set(list, 0);
     img.set(list + 4, list + 4);
     img.set(list + 8, (list + 4) | 1);
 }
 
-/// The link of the node at `link` that follows it: the node `next` names, or the terminator when
-/// `next` is tagged (`0x56d0fb` to `0x56d107`, `0x56d15a` to `0x56d167`). Offset 0.
+/// The link that a previous-member dword `next` (`[link + 4]`) names: the member itself, or the
+/// terminator when it is tagged (`0x56d0fb` to `0x56d107`, `0x56d15a` to `0x56d167`). Offset 0.
 fn next_link(next: u32) -> u32 {
     if next & 1 != 0 || next == 0 {
         next & !1
@@ -58,14 +58,14 @@ fn next_link(next: u32) -> u32 {
 }
 
 /// `0x56d0e0(node, mode, reference)` on the list at `list`, whole. It unlinks `node` if it is
-/// linked, then links it directly after `reference` (mode 1) or directly before it (any other
-/// mode, 2 in the exe). A `reference` of 0 stands for the terminator, so mode 1 makes the node
-/// the head and mode 2 the tail. `node` must not be 0 and a `reference` must be linked in the
-/// list.
+/// linked, then links it directly before `reference` in head-to-tail order (mode 1) or directly
+/// after it (any other mode, 2 in the exe). A `reference` of 0 stands for the terminator, so
+/// mode 1 makes the node the tail and mode 2 the head. `node` must not be 0 and a `reference`
+/// must be linked in the list.
 pub fn link(img: &mut Image, list: u32, node: u32, mode: u32, reference: u32) {
     let l = node;
-    // Unlink: the next link's previous becomes this link's previous, and the previous link's
-    // next becomes this link's next (`0x56d0f2` to `0x56d120`).
+    // Unlink: the previous member's next becomes this link's next, and the next link's
+    // previous becomes this link's previous (`0x56d0f2` to `0x56d120`).
     let prev = img.get(l);
     if prev != 0 {
         let next = img.get(l + 4);
@@ -76,14 +76,14 @@ pub fn link(img: &mut Image, list: u32, node: u32, mode: u32, reference: u32) {
     }
     let r = if reference != 0 { reference } else { list + 4 };
     if mode == 1 {
-        // After `r` (`0x56d14d` to `0x56d188`).
+        // Directly before `r` (`0x56d14d` to `0x56d188`).
         img.set(l, r);
         let after = img.get(r + 4);
         img.set(l + 4, after);
         img.set(next_link(after), l);
         img.set(r + 4, node);
     } else {
-        // Before `r` (`0x56d137` to `0x56d14a`).
+        // Directly after `r` (`0x56d137` to `0x56d14a`).
         let before = img.get(r);
         img.set(l, before);
         let before_next = img.get(before + 4);
@@ -93,9 +93,9 @@ pub fn link(img: &mut Image, list: u32, node: u32, mode: u32, reference: u32) {
     }
 }
 
-/// The nodes of the list at `list` from the head along the next links, as the response walk
+/// The nodes of the list at `list` from the tail along the previous links, as the response walk
 /// reads them (`0x55bf12` to `0x55bf3e`): `[list + 8]`, then `[node + 4]`, until a tagged or
-/// zero next.
+/// zero dword.
 pub fn nodes(img: &Image, list: u32) -> Vec<u32> {
     let mut out = Vec::new();
     let mut at = img.get(list + 8);
