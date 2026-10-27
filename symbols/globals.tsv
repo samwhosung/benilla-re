@@ -373,7 +373,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7a3140	uint8_t[9]	s_pointYCaseIndex		ui	Holds the case of each anchor point for the y getter: 0, 0, 0, 1, 1, 1, 2, 2, 2	verified	two	ui/anchors#relative-point-coordinates
 0x7a3850	void *[6]	s_cases7a37e0		ui	Holds the six button name arms of the hyperlink click firer 0x7a37e0	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
 0x7a3868	uint8_t[16]	s_caseIndexes7a37e0		ui	Maps a button mask to a button name arm, 5 for none	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
-0x7c229c	void *[4]	s_circleBoxModeCases		cmath	Holds the four mode case addresses of the circle against a box test 0x7c2040	verified	one	cmath/geometry#circle-and-point-against-a-box
+0x7c229c	void *[4]	s_circleBoxModeCases		cmath	Holds the four mode case addresses of the circle against a box test 0x7c2040	verified	two	cmath/geometry#circle-and-point-against-a-box
 0x7c5468	void *[5]	s_displacementCases		collision	Holds the five case labels of the displacement dispatcher 0x7c5360	verified	one	collision/kinematics#displacement-dispatcher
 0x7c547c	uint8_t[15]	s_displacementCaseIndex		collision	Holds the case index for modes 1 to 15 of the displacement dispatcher	verified	one	collision/kinematics#displacement-dispatcher
 0x7ff310	const void *			unassigned	Holds a function address that OsGetTickCount, OsGetCachedUnixTime, DestroyTimeManager read; not read here	inferred	none	
@@ -482,11 +482,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
 0x803090	double	s_twoPiFloatAsDouble		unassigned	Holds the float 2 pi widened to a double, the modulus of the angle wrap	verified	one	fastmath#angle-wrap
-0x803098	const float	s_scalarInfinitySource		cmath	Holds +inf, the value the scalar file's +inf initializer copies	verified	one	cmath/scalars#header-initializers
-0x80309c	const float	s_scalarPi		cmath	Holds the float pi, which the scalar file's 2 pi initializer doubles	verified	one	cmath/scalars#header-initializers
+0x803098	const float	s_scalarInfinitySource		cmath	Holds +inf, the value the scalar file's +inf initializer copies	verified	two	cmath/scalars#header-initializers
+0x80309c	const float	s_scalarPi		cmath	Holds the float pi, which the scalar file's 2 pi initializer doubles	verified	two	cmath/scalars#header-initializers
 0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
-0x8030a8	const double	s_piDouble		cmath	Holds pi as a double, the factor of the double sine cardinal	verified	one	cmath/scalars#shaping-functions
-0x8030b0	const float	s_piFloat		cmath	Holds pi as a float, the factor of the float sine cardinal	verified	one	cmath/scalars#shaping-functions
+0x8030a8	const double	s_piDouble		cmath	Holds pi as a double, the factor of the double sine cardinal	verified	two	cmath/scalars#shaping-functions
+0x8030b0	const float	s_piFloat		cmath	Holds pi as a float, the factor of the float sine cardinal	verified	two	cmath/scalars#shaping-functions
 0x8030bc	const float	s_sndIfInfinitySource		sound	Holds +inf, the value the interface file's infinity initializer copies	verified	one	sound/overview#shared-header-constants
 0x803140	const float	s_footstepNearRadius		sound	Holds 20.0, the footstep radius	verified	one	sound/objects#footstep-sounds
 0x803144	const float	s_footstepFarRadius		sound	Holds 50.0, the far footstep radius	verified	one	sound/objects#footstep-sounds
@@ -1284,8 +1284,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d8b4	void *[11]	s_sphereEmitterVftable		models	Holds the sphere emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d8e0	void *[11]	s_splineEmitterVftable		models	Holds the spline emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d90c	void *[9]	s_bezierCurveVtable		spline	Holds the Bezier curve vtable: its length, point, tangent, frame and control point routines	verified	one	spline#curve-objects
-0x81d994	const uint32_t[3]	s_nextAxis		cmath	Holds 1, 2, 0, the next axis of each axis for the matrix to quaternion conversion	verified	one	cmath/quaternions#matrix-to-quaternion
-0x81d9a0	const float	s_quaternionEpsilon		cmath	Holds 2^-21, the sine bound under which the quaternion functions copy	verified	one	cmath/quaternions#exponential-and-logarithm
+0x81d994	const uint32_t[3]	s_nextAxis		cmath	Holds 1, 2, 0, the next axis of each axis for the matrix to quaternion conversion	verified	two	cmath/quaternions#matrix-to-quaternion
+0x81d9a0	const float	s_quaternionEpsilon		cmath	Holds 2^-21, the sine bound under which the quaternion functions copy	verified	two	cmath/quaternions#exponential-and-logarithm
 0x81d9bc	const float	s_rayTriangleNegEpsilon		cmath	Holds -1e-6, the lower determinant bound of the ray triangle test	verified	one	models/scene#ray-triangle-test
 0x81da58	float	s_gravity		collision	Holds g, 19.291105 (0x419a542f) yards per second squared, down-positive	verified	one	collision/falling#arc-fields-and-constants
 0x81da5c	float	s_negInvGravity		collision	Holds -1/g, -0.051837362 (0xbd54536a)	verified	one	collision/falling#arc-fields-and-constants
@@ -1889,7 +1889,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84ffb0	char[9]	s_textNearclip		unassigned	Holds the string "nearclip"	inferred	none	
 0x84ffec	char[12]	s_textCameraPitch		uicamera	Holds the string "cameraPitch", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
 0x84fff8	char[15]	s_textCameraDistance		uicamera	Holds the string "cameraDistance", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
-0x85005c	char[22]	s_typeTagCFacet		unassigned	Holds the RTTI name of NTempest::CFacet, the allocation tag of facet arrays	verified	one	cmath/types#type-names
+0x85005c	char[22]	s_typeTagCFacet		unassigned	Holds the RTTI name of NTempest::CFacet, the allocation tag of facet arrays	verified	two	cmath/types#type-names
 0x8500a0	char[15]	s_textCameraViewS		unassigned	Holds the format "Camera view %s" that SetView prints with the view name	inferred	none	uicamera/driver#setting-a-view
 0x8500b4	uint32_t	s_joystickHandle		input	Holds the open joystick input control, -1 while none is open	verified	one	input#joystick-setting
 0x8500b8	void *[52]	s_bindingCommands		input	Pairs the 26 movement and mouse binding commands' names with their handlers	verified	one	input#mouse-commands
@@ -2020,7 +2020,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85a860	char[65]	s_pathCGxDeviceD3d		gx	Holds the source path of CGxDeviceD3d.cpp	verified	one	gx/overview#object-files
 0x85a9ec	char[29]	s_wglGetPixelFormatAttribivArb		gx	Holds the name "wglGetPixelFormatAttribivARB" looked up with wglGetProcAddress	verified	one	gx/device#opengl-window-and-pixel-formats
 0x85aaf8	char[71]	s_pathCGxDeviceOpenGl		gx	Holds the source path of CGxDeviceOpenGl.cpp	verified	one	gx/overview#object-files
-0x85ab48	char[24]	s_typeTagC2Vector		unassigned	Holds the RTTI name of NTempest::C2Vector, the allocation tag of two-float arrays	verified	one	cmath/types#type-names
+0x85ab48	char[24]	s_typeTagC2Vector		unassigned	Holds the RTTI name of NTempest::C2Vector, the allocation tag of two-float arrays	verified	two	cmath/types#type-names
 0x85acf0	uint32_t[6]	s_primitiveCountDivisor		gx	Holds the divisor of the primitive count of each topology: 1, 2, 1, 3, 1, 1	verified	one	gx/draw#draw-call
 0x85ad08	uint32_t[6]	s_primitiveCountSubtrahend		gx	Holds the amount subtracted from the primitive count of each topology: 0, 0, 1, 0, 2, 2	verified	one	gx/draw#draw-call
 0x85ad20	uint32_t[11]	s_alphaRefByBlendMode		gx	Holds the default alpha reference of each blend mode 0 to 10: 0, 224, then 1 for modes 2 to 6, then 0	verified	one	gx/renderstate#cache-dirty-list-and-stack
@@ -2097,7 +2097,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8607e4	uint32_t[13]	s_gameObjectStateAnims		objectlayer	Holds the animation of each family A state: 0x91, 0x93, 0x94, 0x95, 0x92, 0x96 to 0x9d	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860818	char *[13]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 12: Closed to Despawn for states 0 to 8, null for 9 to 12	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860850	char[4]	s_textOm3		unassigned	Holds the string "om3"	inferred	none	
-0x860944	char[23]	s_typeTagC4Plane		unassigned	Holds the RTTI name of NTempest::C4Plane, the tag the transport handler frees its plane array with	verified	one	cmath/types#type-names
+0x860944	char[23]	s_typeTagC4Plane		unassigned	Holds the RTTI name of NTempest::C4Plane, the tag the transport handler frees its plane array with	verified	two	cmath/types#type-names
 0x8609a4	char[30]	s_formatCursorUnableFile		objectlayer	Holds the format Interface\Cursor\Unable%s.blp of the cursor file of an unusable game object	verified	one	objectlayer/gameobjects#cursor
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
@@ -2722,9 +2722,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05e98	float	s_fastmathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#static-initializers
 0xb05e9c	float	s_fastmathInvTwoPi		fastmath	Holds 1/(2π), set at startup; nothing reads it	verified	one	fastmath#static-initializers
 0xb05ea0	float	s_fastmathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/(2π) initializer	verified	one	fastmath#static-initializers
-0xb05ea4	float	s_scalarInfinity		cmath	Holds +inf, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
-0xb05ea8	float	s_scalarInvTwoPi		cmath	Holds 1/2 pi, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
-0xb05eac	float	s_scalarTwoPi		cmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	cmath/scalars#header-initializers
+0xb05ea4	float	s_scalarInfinity		cmath	Holds +inf, set at startup; nothing reads it	verified	two	cmath/scalars#header-initializers
+0xb05ea8	float	s_scalarInvTwoPi		cmath	Holds 1/2 pi, set at startup; nothing reads it	verified	two	cmath/scalars#header-initializers
+0xb05eac	float	s_scalarTwoPi		cmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	two	cmath/scalars#header-initializers
 0xb05ebc	uint32_t[4]	s_emoteSoundPointers		sound	Holds the emote sound pointer array: capacity, count, buffer and granularity	verified	one	sound/interface#emote-sounds
 0xb05ee0	float	s_sndIfInfinity		sound	Holds +inf, the interface file's infinity	verified	one	sound/overview#shared-header-constants
 0xb05ee4	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
@@ -4873,41 +4873,41 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table
 0xcf5b68	float[16]	s_particleViewMatrix		models	Holds the matrix an emitter's draw takes particle positions into view space with	verified	one	models/particles#particle-view-space
-0xcf5c04	float	s_geometryFile1Infinity		cmath	Holds +infinity from start-up, stored by 0x7bc0a0	verified	one	cmath/geometry#static-constants
-0xcf5c08	float	s_geometryFile1InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bdf30	verified	one	cmath/geometry#static-constants
-0xcf5c0c	float	s_geometryFile1TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bdf10	verified	one	cmath/geometry#static-constants
-0xcf5c10	float	s_geometryFile2Infinity		cmath	Holds +infinity from start-up, stored by 0x7be0d0	verified	one	cmath/geometry#static-constants
-0xcf5c14	float	s_geometryFile2InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf660	verified	one	cmath/geometry#static-constants
-0xcf5c18	float	s_geometryFile2TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf640	verified	one	cmath/geometry#static-constants
-0xcf5c1c	float	s_geometryFile3Infinity		cmath	Holds +infinity from start-up, stored by 0x7bf6f0	verified	one	cmath/geometry#static-constants
-0xcf5c20	float	s_geometryFile3InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf790	verified	one	cmath/geometry#static-constants
-0xcf5c24	float	s_geometryFile3TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf770	verified	one	cmath/geometry#static-constants
-0xcf5c28	float	s_geometryFile4Infinity		cmath	Holds +infinity from start-up, stored by 0x7bf850	verified	one	cmath/geometry#static-constants
-0xcf5c2c	float	s_geometryFile4InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf9b0	verified	one	cmath/geometry#static-constants
-0xcf5c30	float	s_geometryFile4TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf990	verified	one	cmath/geometry#static-constants
-0xcf5c34	float	s_geometryFile5Infinity		cmath	Holds +infinity from start-up, stored by 0x7bfa40	verified	one	cmath/geometry#static-constants
-0xcf5c38	float	s_geometryFile5InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bfa80	verified	one	cmath/geometry#static-constants
-0xcf5c3c	float	s_geometryFile5TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bfa60	verified	one	cmath/geometry#static-constants
-0xcf5c40	float	s_geometryFile6Infinity		cmath	Holds +infinity from start-up, stored by 0x7bfb30	verified	one	cmath/geometry#static-constants
-0xcf5c44	float	s_geometryFile6InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c00d0	verified	one	cmath/geometry#static-constants
-0xcf5c48	float	s_geometryFile6TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c00b0	verified	one	cmath/geometry#static-constants
-0xcf5c4c	float	s_geometryFile7Infinity		cmath	Holds +infinity from start-up, stored by 0x7c0180	verified	one	cmath/geometry#static-constants
-0xcf5c50	float	s_geometryFile7InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1300	verified	one	cmath/geometry#static-constants
-0xcf5c54	float	s_geometryFile7TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c12e0	verified	one	cmath/geometry#static-constants
-0xcf5c58	float	s_geometryFile8Infinity		cmath	Holds +infinity from start-up, stored by 0x7c13b0	verified	one	cmath/geometry#static-constants
-0xcf5c5c	float	s_geometryFile8InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1430	verified	one	cmath/geometry#static-constants
-0xcf5c60	float	s_geometryFile8TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c1410	verified	one	cmath/geometry#static-constants
-0xcf5c64	float	s_geometryFile9Infinity		cmath	Holds +infinity from start-up, stored by 0x7c1580	verified	one	cmath/geometry#static-constants
-0xcf5c68	float	s_geometryFile9InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1880	verified	one	cmath/geometry#static-constants
-0xcf5c6c	float	s_geometryFile9TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c1860	verified	one	cmath/geometry#static-constants
-0xcf5c70	float	s_geometryFile10Infinity		cmath	Holds +infinity from start-up, stored by 0x7c18b0	verified	one	cmath/geometry#static-constants
-0xcf5c74	float	s_geometryFile10InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c42d0	verified	one	cmath/geometry#static-constants
-0xcf5c78	float	s_geometryFile10TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c42b0	verified	one	cmath/geometry#static-constants
-0xcf5c7c	uint32_t[6]	s_polygonAxisPairs		cmath	Holds the two kept axes of each dropped axis for the polygon test, set by 0x7c18d0	verified	one	cmath/geometry#point-in-polygon
-0xcf5c94	float	s_geometryFile11Infinity		cmath	Holds +infinity from start-up, stored by 0x7c4350	verified	one	cmath/geometry#static-constants
-0xcf5c98	float	s_geometryFile11InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c4390	verified	one	cmath/geometry#static-constants
-0xcf5c9c	float	s_geometryFile11TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c4370	verified	one	cmath/geometry#static-constants
-0xcf5ca0	float	s_geometryFile12Infinity		cmath	Holds +infinity from start-up, stored by 0x7c43c0	verified	one	cmath/geometry#static-constants
+0xcf5c04	float	s_geometryFile1Infinity		cmath	Holds +infinity from start-up, stored by 0x7bc0a0	verified	two	cmath/geometry#static-constants
+0xcf5c08	float	s_geometryFile1InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bdf30	verified	two	cmath/geometry#static-constants
+0xcf5c0c	float	s_geometryFile1TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bdf10	verified	two	cmath/geometry#static-constants
+0xcf5c10	float	s_geometryFile2Infinity		cmath	Holds +infinity from start-up, stored by 0x7be0d0	verified	two	cmath/geometry#static-constants
+0xcf5c14	float	s_geometryFile2InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf660	verified	two	cmath/geometry#static-constants
+0xcf5c18	float	s_geometryFile2TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf640	verified	two	cmath/geometry#static-constants
+0xcf5c1c	float	s_geometryFile3Infinity		cmath	Holds +infinity from start-up, stored by 0x7bf6f0	verified	two	cmath/geometry#static-constants
+0xcf5c20	float	s_geometryFile3InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf790	verified	two	cmath/geometry#static-constants
+0xcf5c24	float	s_geometryFile3TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf770	verified	two	cmath/geometry#static-constants
+0xcf5c28	float	s_geometryFile4Infinity		cmath	Holds +infinity from start-up, stored by 0x7bf850	verified	two	cmath/geometry#static-constants
+0xcf5c2c	float	s_geometryFile4InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bf9b0	verified	two	cmath/geometry#static-constants
+0xcf5c30	float	s_geometryFile4TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bf990	verified	two	cmath/geometry#static-constants
+0xcf5c34	float	s_geometryFile5Infinity		cmath	Holds +infinity from start-up, stored by 0x7bfa40	verified	two	cmath/geometry#static-constants
+0xcf5c38	float	s_geometryFile5InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7bfa80	verified	two	cmath/geometry#static-constants
+0xcf5c3c	float	s_geometryFile5TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7bfa60	verified	two	cmath/geometry#static-constants
+0xcf5c40	float	s_geometryFile6Infinity		cmath	Holds +infinity from start-up, stored by 0x7bfb30	verified	two	cmath/geometry#static-constants
+0xcf5c44	float	s_geometryFile6InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c00d0	verified	two	cmath/geometry#static-constants
+0xcf5c48	float	s_geometryFile6TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c00b0	verified	two	cmath/geometry#static-constants
+0xcf5c4c	float	s_geometryFile7Infinity		cmath	Holds +infinity from start-up, stored by 0x7c0180	verified	two	cmath/geometry#static-constants
+0xcf5c50	float	s_geometryFile7InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1300	verified	two	cmath/geometry#static-constants
+0xcf5c54	float	s_geometryFile7TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c12e0	verified	two	cmath/geometry#static-constants
+0xcf5c58	float	s_geometryFile8Infinity		cmath	Holds +infinity from start-up, stored by 0x7c13b0	verified	two	cmath/geometry#static-constants
+0xcf5c5c	float	s_geometryFile8InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1430	verified	two	cmath/geometry#static-constants
+0xcf5c60	float	s_geometryFile8TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c1410	verified	two	cmath/geometry#static-constants
+0xcf5c64	float	s_geometryFile9Infinity		cmath	Holds +infinity from start-up, stored by 0x7c1580	verified	two	cmath/geometry#static-constants
+0xcf5c68	float	s_geometryFile9InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c1880	verified	two	cmath/geometry#static-constants
+0xcf5c6c	float	s_geometryFile9TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c1860	verified	two	cmath/geometry#static-constants
+0xcf5c70	float	s_geometryFile10Infinity		cmath	Holds +infinity from start-up, stored by 0x7c18b0	verified	two	cmath/geometry#static-constants
+0xcf5c74	float	s_geometryFile10InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c42d0	verified	two	cmath/geometry#static-constants
+0xcf5c78	float	s_geometryFile10TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c42b0	verified	two	cmath/geometry#static-constants
+0xcf5c7c	uint32_t[6]	s_polygonAxisPairs		cmath	Holds the two kept axes of each dropped axis for the polygon test, set by 0x7c18d0	verified	two	cmath/geometry#point-in-polygon
+0xcf5c94	float	s_geometryFile11Infinity		cmath	Holds +infinity from start-up, stored by 0x7c4350	verified	two	cmath/geometry#static-constants
+0xcf5c98	float	s_geometryFile11InvTwoPi		cmath	Holds 1/2π, 0.15915494, from start-up, stored by 0x7c4390	verified	two	cmath/geometry#static-constants
+0xcf5c9c	float	s_geometryFile11TwoPi		cmath	Holds 2π, 6.2831855, from start-up, stored by 0x7c4370	verified	two	cmath/geometry#static-constants
+0xcf5ca0	float	s_geometryFile12Infinity		cmath	Holds +infinity from start-up, stored by 0x7c43c0	verified	two	cmath/geometry#static-constants
 0xcf5ca4	float	s_geometryInvTwoPi		unassigned	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#object-files
 0xcf5ca8	float	s_geometryTwoPi		unassigned	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#object-files
 0xcf5cc0	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers

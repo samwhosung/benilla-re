@@ -23,7 +23,7 @@ community database's `0x4a2c10`, which stores one dword. The other types are not
 
 Addresses: `0x85ab48`, `0x82f230`, `0x860944`, `0x85005c`, `0x84f09c`, `0x453519`, `0x690933`, `0x690986`, `0x674388`, `0x67436d`, `0x5f5cd5`, `0x77f6f0`, `0x4a2c10`, `0x4a2c2d`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x453519` reallocates the spline's control points with the size `12n` and the tag `0x82f230`.
@@ -50,7 +50,7 @@ Test: none
 
 `0x6dc2c0` and `0x7c3d20` read `+0` and `+4` of each of their four points and write two floats. `0x7bf680` and `0x7bf700`
 return 0, 1 or 2 for the components at `+0`, `+4` and `+8`. `0x7c1450` steps through its points by 12. `0x7bcb4c` multiplies
-the float at `+0xc` of the vector by the row at `+0x30` of the matrix. The wowdev wiki documents `C4Vector` as the floats
+the float at `+0xc` of the vector by `+0x3c` (m15) of the matrix, the first product of the fourth output. The wowdev wiki documents `C4Vector` as the floats
 x, y, z, w; the name is from a later build.
 
 ## Matrices
@@ -63,7 +63,7 @@ at `+0x24`. `Matrix2x2` is four floats, row by row; its one builder `0x7c42f0` w
 
 Addresses: `0x7bca80`, `0x7bca9e`, `0x7bc6a0`, `0x7bdfc0`, `0x7bb0e0`, `0x7bae60`, `0x7bcae0`, `0x674c50`, `0x674f45`, `0x674f54`, `0x7c42f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7bca80` adds `[m+0x38]` to the z output (`0x7bca9e`) after the three products of column 2, and `[m+0x30]` and
@@ -84,7 +84,7 @@ forms `x = (m21 − m12)·k`, the formula for a matrix acting on column vectors;
 
 Addresses: `0x7c0120`, `0x7c0129`, `0x7c0158`, `0x7c0162`, `0x7c0190`, `0x7c01bf`, `0x7c01d0`, `0x7c1340`, `0x7c135e`, `0x7c03b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 In the trace leg of `0x7c0190` the scalar `0.5·√(t + 1)` is stored at `+0xc` (`0x7c01bf`) and `(m21 − m12)·k` at
@@ -103,7 +103,7 @@ and `+0x28`.
 
 Addresses: `0x7c1450`, `0x7c1560`, `0x6992c0`, `0x7c1920`, `0x7c1af0`, `0x7c1af9`, `0x7c2040`, `0x7c22b0`, `0x7c22f1`, `0x7bf860`, `0x7bf870`, `0x7bf888`, `0x7bf89e`, `0x7bf96d`, `0x7c2740`, `0x7c2786`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c1450` folds the points into two local triples, the second through the maximum `0x6992c0`, and copies the
@@ -122,7 +122,7 @@ routines take a record of the ray's layout, an origin then a direction.
 
 Addresses: `0x7c22b0`, `0x7c22c6`, `0x7c29f0`, `0x7c46d0`, `0x7c46f2`, `0x7c4630`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c22b0` multiplies the plane normal by `+0xc` of the ray (`0x7c22c6`), and `0x7c29f0` takes `+0xc` as the
@@ -140,7 +140,7 @@ extents the routines read. No public names for them are known, so their names ar
 
 Addresses: `0x7c32f0`, `0x7c3390`, `0x7c33ca`, `0x7c33ff`, `0x7c3780`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c3390` dots the direction with `+0x10` to `+0x18` (from `0x7c33ca`) and squares `+0x20` (`0x7c33ff`); it and
@@ -154,7 +154,7 @@ The meanings are in `cmath/solids#ray-and-cone` and `cmath/solids#box-against-bo
 
 Addresses: `0x7bbec0`, `0x7bbec8`, `0x7bbee3`, `0x7bbf19`, `0x7bbf20`, `0x78ed10`, `0x78edeb`, `0x78ee08`, `0x78ee25`, `0x7bbc80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7bbec0` stores 0xff at `+3` (`0x7bbec8`) and channels 0, 1 and 2 of the float colour at `+2`, `+1` and `+0`

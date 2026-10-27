@@ -19,7 +19,7 @@ outputs are optional.
 
 Addresses: `0x7c1920`, `0x7c196a`, `0x7c198b`, `0x7c19b5`, `0x7c19e6`, `0x7c1a00`, `0x7c1a22`, `0x7c1a4b`, `0x7c1a64`, `0x7c1a9b`, `0x7c1aaa`, `0x7c1abd`, `0x7ffd74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c196a fcomp [min]; test ah,5; jp` leaves an origin at or above the minimum, and below it the axis gets class 1 and
@@ -37,7 +37,7 @@ distance from the centre to the box's slab (0 inside it) is at most the squared 
 
 Addresses: `0x6dc7a0`, `0x6dc7c2`, `0x6dc7d3`, `0x6dc7f3`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6dc7c2 fcomp [min]; test ah,5; jp` takes the below-minimum leg (`c − min`), `0x6dc7d3 fcomp [max]; test ah,0x41; jne` skips a centre
@@ -52,7 +52,7 @@ and forms `n·v + d` for both as floats. It returns 0 when their sign bits diffe
 
 Addresses: `0x6dc810`, `0x6dc83c`, `0x6dc86a`, `0x6dc8a9`, `0x6dc8b6`, `0x6dc8d7`, `0x8101b8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6dc83c fcomp 0.0; test ah,1` splits the normal's sign; `0x6dc8a9 xor ecx,edx; test ecx,ecx; js` is the sign-bit test, and
@@ -68,7 +68,7 @@ with `|det| < 0.001` (a float at `0x801360`) as the miss test, and it writes the
 
 Addresses: `0x6dc2c0`, `0x6dc2f7`, `0x6dc302`, `0x6dc310`, `0x6dc353`, `0x6dc39e`, `0x7c3d20`, `0x7c3d57`, `0x7c3d5b`, `0x7c3dba`, `0x7c3dd4`, `0x801360`, `0x7ffd74`, `0x7ff9d8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The determinant at `0x6dc2f7` is `(a.y − b.y)·c.x + (c.y − d.y)·b.x + (b.y − a.y)·d.x + (d.y − c.y)·a.x`, and `0x6dc302 jp` is
@@ -85,7 +85,7 @@ the closest point is inside when `S,T≥0` and `S+T≤det`, at `s=S/det` and `t=
 
 Addresses: `0x6dc900`, `0x6dc906`, `0x6dc93d`, `0x6dc95e`, `0x6dc9d2`, `0x6dc9fb`, `0x6dca09`, `0x6dcb0d`, `0x6dcd73`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `r` is stored at `0x6dc906` to `0x6dc922` as `edx − ecx`, `a` and `c` at `[ebp-8]` and `[ebp-4]` (`0x6dc93d`, `0x6dc95e`), `b` at
@@ -101,7 +101,7 @@ Within `S+T≤det`, `S<0` with `T≥0` minimises on the edge `s=0`, and `S≥0` 
 
 Addresses: `0x6dc900`, `0x6dca14`, `0x6dca1d`, `0x6dca2a`, `0x6dca77`, `0x6dcac5`, `0x6dcae8`, `0x6dcaac`, `0x6dcbe3`, `0x6dccc9`, `0x8030a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6dca14 test ah,5; jp 0x6dcac5` separates `S≥0`. Then `0x6dcac5` tests `T` (`0x6dcb0d` is the interior) and `0x6dca1d` tests it for `S<0`;
@@ -115,7 +115,7 @@ it when `c+e` exceeds `b+d`, and `T<0` when `a+d` exceeds `b+e`, with `t=(a+d−
 
 Addresses: `0x6dc900`, `0x6dcb59`, `0x6dcb62`, `0x6dcb7d`, `0x6dcb96`, `0x6dcbb3`, `0x6dcbfc`, `0x6dcc10`, `0x6dcc26`, `0x6dcc3f`, `0x6dcc57`, `0x6dcc99`, `0x6dcce2`, `0x6dccfb`, `0x6dcd0d`, `0x6dcd24`, `0x6dcd3b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6dcb59 test ah,5; jp 0x6dcbfc` separates `S≥0` on the far side. `S<0` (`0x6dcb64`) forms `b+d` and `c+e` and `0x6dcb73 fcom; jne 0x6dcbb3` sends
@@ -134,7 +134,7 @@ No epsilon is added to any `R`.
 
 Addresses: `0x7c3780`, `0x7c37a8`, `0x7c3807`, `0x7c3820`, `0x7c3894`, `0x7c3904`, `0x7c39c9`, `0x7c39f7`, `0x7c3a08`, `0x7c3bc1`, `0x7c3bef`, `0x7c3c00`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Three loops of three iterations (`0x7c37a8`, `0x7c3820`, `0x7c3894`) store each `R` entry and its absolute value, signed in
@@ -151,7 +151,7 @@ overlap and a NaN does not separate. A separation returns 0 at once; passing all
 
 Addresses: `0x7c3390`, `0x7c3444`, `0x7c3455`, `0x7c3477`, `0x7c3496`, `0x7c34ac`, `0x7c34e8`, `0x7c3505`, `0x7c3526`, `0x7c35b5`, `0x7c365d`, `0x7c3673`, `0x7c36e6`, `0x7c36f8`, `0x7c3737`, `0x7c3751`, `0x5f8cf0`, `0x621160`, `0x80e2e4`, `0x7ffa24`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `|A| < 1e-6` (`0x80e2e4`) takes the linear leg, otherwise `disc = B² − A·Cc` below 0 returns 0, 0 takes the single root and above 0 the two roots. The two-root leg
@@ -169,7 +169,7 @@ behind the apex inside the mirror cone passes.
 
 Addresses: `0x7c32f0`, `0x7c3304`, `0x7c3317`, `0x7c3339`, `0x7c3343`, `0x7c3350`, `0x7c3353`, `0x7c3363`, `0x7c336d`, `0x7c337d`, `0x7ffd74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c3317 fstp [ebp-4]` stores `p`. `0x7c3339 fcompp` compares `k²·|d|²` with `p²` and `0x7c3343 test ah,0x41; jp` clears the flag when `k²·|d|²`

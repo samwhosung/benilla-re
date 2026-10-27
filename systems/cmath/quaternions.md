@@ -19,7 +19,7 @@ diagonal entry, the later index winning only when strictly greater, `j = next[i]
 
 Addresses: `0x7c0120`, `0x7c0190`, `0x7c019d`, `0x7c01a2`, `0x7c01ad`, `0x7c01b5`, `0x7c01f0`, `0x7c0210`, `0x7c021f`, `0x7c0226`, `0x7c024d`, `0x7c0253`, `0x7ffa24`, `0x7ffd74`, `0x7ff9d8`, `0x81d994`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::matrix_quat_difftest`
 
 `0x7c0197` to `0x7c019f` form the trace as `(m[4] + m[0]) + m[8]`; `0x7c01a2 fcom 0.0; test ah,0x41; jne
@@ -41,7 +41,7 @@ and the identity `(0, 0, 0, 1)` when that sum is below 2⁻²². `0x7c1340(out)`
 
 Addresses: `0x7c02c0`, `0x7c02cc`, `0x7c02e7`, `0x7c02f3`, `0x7c0320`, `0x7c0348`, `0x7c0353`, `0x7c0358`, `0x741820`, `0x7c038d`, `0x7c03b0`, `0x7c03e3`, `0x7c03f1`, `0x7c0434`, `0x7c1340`, `0x8029d4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c02cc fmul 0.5` and `0x7c02db fstp` round the half angle. `fsincos` leaves the cosine on top: it goes to
@@ -61,7 +61,7 @@ rounded for x and y.
 
 Addresses: `0x7c0450`, `0x7c048e`, `0x7c0499`, `0x7c04a1`, `0x7c04a7`, `0x7c04ac`, `0x7c04af`, `0x7c04b2`, `0x7c04f0`, `0x7c04fc`, `0x7c0504`, `0x7c0507`, `0x7c050c`, `0x7c0513`, `0x7c0526`, `0x7c0528`, `0x81d9a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c048e fsincos` stores the cosine at `[ebp-8]` and the sine at `[ebp-4]`; `0x7c0499 fabs; fcomp
@@ -81,14 +81,14 @@ sign is −1 and `d` is negated. `s = √|1 − d²|`. When `s` is below 2⁻²�
 
 Addresses: `0x7c0570`, `0x7c0576`, `0x7c0597`, `0x7c059f`, `0x7c05aa`, `0x7c05ac`, `0x7c05b5`, `0x7c05bf`, `0x7c05c1`, `0x7c05c8`, `0x7c05d3`, `0x7c05fe`, `0x7c0606`, `0x7c060f`, `0x7c0614`, `0x7c0620`, `0x7c066f`, `0x5c6540`, `0x81d9a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c059f fcom 0.0; test ah,5; jp 0x7c05b5` keeps the sign for a dot of 0 or more and NaN, else `0x7c05ac`
 stores −1.0 and `0x7c05b3 fchs` negates. `0x7c05c8 fcomp 2⁻²¹; test ah,5; jp 0x7c05f6` continues for `s` at the
 bound or above, and the copy leg `0x7c05d5` stores the four dwords of `a`. The weights multiply the
 components of `a` and `b` into locals and the four-float builder `0x5c6540`; the sums are stored as
-floats one at a time. The function is not called.
+floats one at a time. Its three call sites, `0x7c128b`, `0x7c129b` and `0x7c12b6`, are all in `0x7c1270` (`cmath/quaternions#squad`), which nothing references, so the function is unreached.
 
 ## Squad
 
