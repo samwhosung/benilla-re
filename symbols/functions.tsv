@@ -12710,7 +12710,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51d410	71	ReadAddOnKey		ui	orchestration		Reads an add-on's .pub file into its record	verified	one	ui/addons#secure-add-ons	
 0x51d460	95			ui	orchestration		Runs AddOns.cpp code that calls SFile::Load, 0x648700; not read here	inferred	none		
 0x51d4c0	61	ReadAddOnURL		ui	orchestration		Reads an add-on's .url file into its record	verified	one	ui/addons#secure-add-ons	
-0x51d500	123			ui	primitive		Runs AddOns.cpp code that calls SFile::Load, SStrChr2, SStrDupA and 2 more; not read here	inferred	none		
+0x51d500	123	ReadAddOnURLText		ui	primitive	void __fastcall (const char *path, char **url)	Loads a .url file and stores a copy of the text after its first = with trailing CR, LF and spaces cut	verified	one	ui/addons#reading-the-url-file	ui::addon_url_parse_difftest
 0x51d580	558	SetAddOnMetadata		ui	primitive		Stores a metadata line by name, keeping a locale-suffixed name only for the client locale	verified	one	ui/addons#add-on-metadata	
 0x51d7b0	24	RegisterFolderAddOn		ui	primitive		Registers a folder not beginning with . and returns 0	verified	one	ui/addons#finding-add-ons	
 0x51d7d0	6	GetInterfaceVersion		ui	orchestration	int __cdecl (void)	Returns 11200, the interface version add-ons are checked against	verified	one	ui/addons#whether-an-add-on-may-load	
@@ -34782,7 +34782,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79fb40	157	FontMethods::SetSpacing		ui	primitive		Stores the line spacing converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
 0x79fbe0	58	FontMethods::GetSpacing		ui	primitive		Returns the line spacing converted from layout units to Lua units	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x79fc20	136	FontMethods::SetJustifyH		ui	primitive	int __fastcall (const char *name, CSimpleFont *font, lua_State *L)	Merges a justify name's horizontal bits into a font block, stops following its parent's justify and pushes	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_set_h_difftest
-0x79fcb0	33			ui	primitive		Runs its object file code that calls 0x6f1a00, lua_pushstring; not read here	inferred	none		
+0x79fcb0	33	FontMethods::GetJustifyH		ui	primitive	int __fastcall (const char *unused, CSimpleFont *font, lua_State *L)	Pushes the name of the first horizontal justify bit of a font's block, else UNKNOWN	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_get_h_difftest
 0x79fce0	136	FontMethods::SetJustifyV		ui	primitive	int __fastcall (const char *name, CSimpleFont *font, lua_State *L)	Merges a justify name's vertical bits into a font block, stops following its parent's justify and pushes	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_set_v_difftest
 0x79fd70	33	FontMethods::GetJustifyV		ui	primitive	int __fastcall (const char *unused, CSimpleFont *font, lua_State *L)	Pushes the name of the first vertical justify bit of a font's block, else UNKNOWN	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_get_v_difftest
 0x79fda0	182	FontInstance::GetObjectType	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Font method GetObjectType, its pair in the table 0x87c7c8	verified	one	ui/fontstring#lua-methods	

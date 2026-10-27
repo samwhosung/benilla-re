@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 pub mod addon_lookup;
+pub mod addon_url;
 pub mod anchors;
 pub mod auction_deposit;
 pub mod auto_loot;

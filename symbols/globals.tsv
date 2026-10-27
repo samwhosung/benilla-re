@@ -1933,6 +1933,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8537fc	char[11]	s_textInterface		ui	Holds the string "Interface:"	inferred	none	
 0x853838	char[6]	s_textTitle		ui	Holds the string "Title"	inferred	none	
 0x853840	char[27]	s_addOnTocFormat		ui	Holds the format of an add-on's toc path	verified	one	ui/addons#finding-add-ons
+0x853878	char[26]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	one	ui/addons#reading-the-url-file
 0x853928	char[4]	s_addOnsTxtSeparators		ui	Holds CR, LF and the quote, the separators of AddOns.txt	verified	one	ui/addons#enable-state
 0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	one	ui/addons#enable-state
 0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	one	ui/addons#enable-state

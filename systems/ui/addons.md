@@ -151,6 +151,27 @@ calls `0x42a460(path, 0x40000000, 0, 2, 0x80)`, which checks the path, the acces
 `0x51de88` writes its length through `0x42a5d0`, a `WriteFile` wrapper that raises 0x57 for a null
 buffer or count pointer (`0x42a601`), and `0x51de8f` closes with `0x42a4d0`, `CloseHandle`.
 
+## Reading the URL file
+
+`0x51d500(path, &url)` (`ecx` the path, `edx` the out slot) loads the file `Interface\AddOns\<name>\<name>.url`
+that `0x51d4c0` names, with one extra zero byte, and stores a copy of the text after its first `=`
+without the trailing CR, LF and space bytes. The file is read as a C string, so a NUL ends it. A file
+that does not load, or has no `=` before its first NUL, leaves the slot unwritten. A `=` as the last
+byte gives an empty string. The file is freed and the return value goes unread.
+
+Addresses: `0x51d500`, `0x51d516`, `0x51d524`, `0x51d53a`, `0x51d549`, `0x51d552`, `0x51d554`, `0x51d55e`, `0x51d571`, `0x51d4c0`, `0x51d4f3`, `0x648620`, `0x64a3f0`, `0x64a620`, `0x64a6f0`, `0x648700`
+Confidence: verified
+Proof: one
+Test: `ui::addon_url_parse_difftest`
+
+`0x51d516` calls `SFile::Load(0, path, &buffer, 0, 1, 1, 0)`; the extra byte is zeroed
+(`0x6486bf`). `0x51d524` calls `SStrChr2(buffer, '=')`; a null answer jumps to the free
+(`0x51d52b`). `0x51d53a` is `SStrDupA(p + 1, "AddOns.cpp", 0x107)` and stores the copy through
+`edx` (`0x51d540`); `0x51d549` takes the last byte, and the loop `0x51d552` to `0x51d56b` zeroes
+each of 0x0d, 0x0a and 0x20 and steps back while the pointer has not passed the start. `0x51d4c0`
+formats the path `Interface\AddOns\%s\%s.url` (`0x853878`) with the add-on's name twice and calls it
+(`0x51d4f3`) with the record's `+0x30`; `0x51d3f4` ignores what comes back.
+
 ## The auth packet's add-on block
 
 With any add-on registered, the auth packet gets a u32, the size of the block before compression,
