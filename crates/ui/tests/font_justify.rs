@@ -1,5 +1,5 @@
-//! The shared font methods `SetJustifyH` (`0x79fc20`), `SetJustifyV` (`0x79fce0`) and
-//! `GetJustifyV` (`0x79fd70`) against the exe, each run whole
+//! The shared font methods `SetJustifyH` (`0x79fc20`), `SetJustifyV` (`0x79fce0`),
+//! `GetJustifyH` (`0x79fcb0`) and `GetJustifyV` (`0x79fd70`) against the exe, each run whole
 //! (`systems/ui/fontmethods.md#justify-and-the-followed-font`). `ParseJustify` (`0x6f1990`) and
 //! `GetJustifyName` (`0x6f1a00`) run from the image with `SStrCmpI`. The Lua calls are stubbed:
 //! `lua_isstring` (`0x6f3510`) and `lua_tostring` (`0x6f3690`) answer the test's argument 2,
@@ -15,6 +15,7 @@ use std::rc::Rc;
 
 const SET_H: u64 = 0x79fc20;
 const SET_V: u64 = 0x79fce0;
+const GET_H: u64 = 0x79fcb0;
 const GET_V: u64 = 0x79fd70;
 const LUA_ISSTRING: u64 = 0x6f3510;
 const LUA_TOSTRING: u64 = 0x6f3690;
@@ -228,6 +229,29 @@ fn font_justify_get_v_difftest() {
         r.log.borrow_mut().clear();
         let ret = r.e.call(GET_V, 0, r.font as u32, &[L]);
         let want = justify_name(word & V_MASK).as_bytes().to_vec();
+        assert_eq!(ret, 1, "{word:#x}: values");
+        assert_eq!(
+            r.log.borrow().as_slice(),
+            &[Ev::PushString(want)],
+            "{word:#x}: name"
+        );
+    }
+}
+
+#[test]
+fn font_justify_get_h_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = rig(&wow);
+    let mut seed = 0x77_u32;
+    let mut words: Vec<u32> = (0..0x80).collect();
+    words.extend((0..64).map(|_| lcg(&mut seed)));
+    for word in words {
+        r.e.write_u32(r.font + 0x54, word);
+        r.log.borrow_mut().clear();
+        let ret = r.e.call(GET_H, 0, r.font as u32, &[L]);
+        let want = justify_name(word & H_MASK).as_bytes().to_vec();
         assert_eq!(ret, 1, "{word:#x}: values");
         assert_eq!(
             r.log.borrow().as_slice(),

@@ -11,6 +11,7 @@
 
 pub mod device;
 pub mod lightning;
+pub mod texlevels;
 pub mod texmode;
 pub mod textures;
 pub mod window;

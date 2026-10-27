@@ -87,11 +87,11 @@ copies `nFileSizeLow`, and `0x42adba`, `0x42add2` and `0x42addd` test 0x10, 0x1 
 `speech2.MPQ` opens next, if present, at the next priority. Then each patch that opened gets a child record for
 the prefix `speech2` when a real `speech2.MPQ` exists. Then the ten base archives, `model`, `texture`, `terrain`,
 `wmo`, `sound`, `misc`, `interface`, `fonts`, `speech`, `dbc` (`.MPQ`), at the fixed priorities `0x3f` down to `0x36`
-whether or not each opens. A base or speech2 name is tried under `Data\` and then `..\Data\`; a missing base archive
-logs `Failed to open archive %s: %s`, a missing speech2 or patch nothing. A base or speech2 archive that is present but fails its
-header or table checks is a fatal error; a patch that does is skipped.
+whether or not each opens. A base or speech2 name is tried under `Data\` and then `..\Data\`. A base archive that does not open, missing or
+bad, ends the client with `Failed to open archive %s: %s` (`storm/errorlog#fatal-error-display`); a missing speech2 is
+skipped, a bad one is fatal; a patch that fails is skipped without a word.
 
-Addresses: `0x403740`, `0x403b00`, `0x4022d0`, `0x402320`, `0x648e80`, `0x655a40`, `0x82e12c`
+Addresses: `0x403740`, `0x403b00`, `0x4022d0`, `0x402320`, `0x648e80`, `0x655a40`, `0x82e12c`, `0x4038c1`, `0x4038ef`, `0x40381b`
 Confidence: verified
 Proof: one
 Test: none

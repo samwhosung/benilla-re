@@ -103,7 +103,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403740	613	MountArchives		client			Mounts the patch, speech and base MPQ archives in priority order	verified	one	storm/mount#patch-archives	
 0x4039b0	290			client			Runs Client.cpp code that calls SStrPrintf, SMemReAlloc, SMemAlloc and 2 more; not read here	inferred	none		
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, logging a missing one and failing fatally on a bad one	verified	one	storm/mount#base-and-speech-archives	
+0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, returning 0 if missing and ending the client on a bad one	verified	one	storm/mount#base-and-speech-archives	
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
 0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	two	core/close#tail	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
@@ -658,22 +658,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40c407	9			crt	unreached		Runs its object file code that calls __getptd; not read here	inferred	none		
 0x40c410	9	___pxcptinfoptrs	idb	crt	unreached		Runs its object file code that calls __getptd; not read here	inferred	none		
 0x40c419	486	_ldexp	idb	crt	boundary		Runs its object file code that calls __ctrlfp, __sptype, __handle_qnan2 and 4 more; not read here	inferred	none		
-0x40c5ff	41	__set_exp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x40c5ff	41	__set_exp	idb	crt	primitive	double __cdecl (double x, int32_t e)	Writes the biased exponent e + 0x3fe over a double's exponent field and returns it in st0	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
 0x40c628	20			crt	unreached		Runs its object file code not read here	inferred	none		
 0x40c63c	44			crt	unreached		Runs its object file code that calls __set_exp; not read here	inferred	none		
 0x40c668	36	__set_bexp	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x40c68c	90	__sptype	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40c6e6	193	__decomp	idb	crt	boundary		Runs its object file code that calls __set_exp; not read here	inferred	none		
-0x40c7a7	84	__handle_qnan1	idb	crt	boundary		Runs its object file code that calls __umatherr, __errno, __ctrlfp; not read here	inferred	none		
+0x40c68c	90	__sptype	idb	crt	primitive	int32_t __cdecl (double x)	Classes a double: 1 for +inf, 2 for -inf, 3 for a NaN with its quiet bit, 4 for another NaN, else 0	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
+0x40c6e6	193	__decomp	idb	crt	primitive	double __cdecl (double x, int32_t *e)	Splits a finite double into a mantissa in [0.5, 1) with its sign and an exponent stored through e; a zero gives +0 and 0	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
+0x40c7a7	84	__handle_qnan1	idb	crt	boundary	double __cdecl (uint32_t op, double x, uint32_t cw)	Sets errno to 33, restores the control word and returns its NaN argument while the flag 0x831ac8 is nonzero	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
 0x40c7fb	96	__handle_qnan2	idb	crt	boundary		Runs its object file code that calls __umatherr, __errno, __ctrlfp; not read here	inferred	none		
-0x40c85b	152	__except1	idb	crt	boundary		Runs its object file code that calls __handle_exc, __raise_exc, __errcode and 3 more; not read here	inferred	none		
+0x40c85b	152	__except1	idb	crt	boundary	double __cdecl (uint32_t flags, uint32_t op, double arg, double result, uint32_t cw)	Reports a masked exception: marks the status, sets errno from the flags, restores the control word, returns result	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
 0x40c8f3	165	__except2	idb	crt	boundary		Runs its object file code that calls __handle_exc, __raise_exc, __errcode and 3 more; not read here	inferred	none		
 0x40c998	691	__raise_exc	idb	crt	boundary		Runs its object file code that calls __statfp, __clrfp; not read here	inferred	none		
-0x40cc4b	535	__handle_exc	idb	crt	boundary		Runs its object file code that calls __set_statfp, __decomp; not read here	inferred	none		
+0x40cc4b	535	__handle_exc	idb	crt	boundary		Marks each exception flag whose mask bit is set in the control word, adjusts the result and returns 1 when none is left	inferred	none	crt/math#math-error-flags	
 0x40ce62	136	__umatherr	idb	crt	boundary		Runs its object file code that calls __get_fname, __ctrlfp, 0x4104f8 and 1 more; not read here	inferred	none		
-0x40ceea	40	__set_errno	idb	crt	boundary		Runs its object file code that calls __errno; not read here	inferred	none		
+0x40ceea	40	__set_errno	idb	crt	boundary	void __cdecl (int32_t type)	Stores 33 in errno for error type 1 and 34 for types 2 and 3	verified	one	crt/math#math-error-flags	crt::crt_frexp_difftest
 0x40cf12	37	__get_fname	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x40cf37	45	__errcode	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x40cf37	45	__errcode	idb	crt	primitive	int32_t __cdecl (uint32_t flags)	Maps exception flags to an error type: 0x20 gives 5, 8 gives 1, 4 gives 2, 1 gives 3, else (flags and 2) times 2	verified	one	crt/math#math-error-flags	crt::crt_frexp_difftest
 0x40cf64	14	__statfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40cf72	15	__clrfp	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40cf81	35	__ctrlfp	idb	crt	boundary	int32_t __cdecl (uint32_t newWord, uint32_t mask)	Sets the x87 control word to (old & ~mask) | (new & mask) and returns the old word	verified	one	ui/billing#the-minutes-reading	
@@ -12710,7 +12710,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51d410	71	ReadAddOnKey		ui	orchestration		Reads an add-on's .pub file into its record	verified	one	ui/addons#secure-add-ons	
 0x51d460	95			ui	orchestration		Runs AddOns.cpp code that calls SFile::Load, 0x648700; not read here	inferred	none		
 0x51d4c0	61	ReadAddOnURL		ui	orchestration		Reads an add-on's .url file into its record	verified	one	ui/addons#secure-add-ons	
-0x51d500	123			ui	primitive		Runs AddOns.cpp code that calls SFile::Load, SStrChr2, SStrDupA and 2 more; not read here	inferred	none		
+0x51d500	123	ReadAddOnURLText		ui	primitive	void __fastcall (const char *path, char **url)	Loads a .url file and stores a copy of the text after its first = with trailing CR, LF and spaces cut	verified	one	ui/addons#reading-the-url-file	ui::addon_url_parse_difftest
 0x51d580	558	SetAddOnMetadata		ui	primitive		Stores a metadata line by name, keeping a locale-suffixed name only for the client locale	verified	one	ui/addons#add-on-metadata	
 0x51d7b0	24	RegisterFolderAddOn		ui	primitive		Registers a folder not beginning with . and returns 0	verified	one	ui/addons#finding-add-ons	
 0x51d7d0	6	GetInterfaceVersion		ui	orchestration	int __cdecl (void)	Returns 11200, the interface version add-ons are checked against	verified	one	ui/addons#whether-an-add-on-may-load	
@@ -17070,7 +17070,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a07e0	40	CGxDeviceD3d::CreateTexture2D		gx	orchestration	uint32_t __thiscall (CGxDeviceD3d *this, uint32_t width, uint32_t height, uint32_t format, uint32_t flags, void *owner, void *callback, CGxTexture **out)	Forwards its seven arguments to the base two-dimensional texture creation	verified	one	gx/slots#buffer-and-texture-slots	
 0x5a0810	52	CGxDeviceD3d::CreateTexture		gx	orchestration	uint32_t __thiscall (CGxDeviceD3d *this, uint32_t arg2, uint32_t arg3, uint32_t arg4, uint32_t arg5, uint32_t arg6, uint32_t arg7, uint32_t arg8, uint32_t arg9, uint32_t arg10, void *outHandle)	Forwards its ten arguments to the base texture record creation	verified	one	gx/textures#device-texture-record	
 0x5a0850	44	CGxDeviceD3d::DestroyTexture		gx	host	void __thiscall (CGxDeviceD3d *this, CGxTexture *texture)	Releases a texture's Direct3D texture, then the record	verified	one	gx/slots#buffer-and-texture-slots	
-0x5a0880	173			gx	primitive		Runs its object file code not read here	inferred	none		
+0x5a0880	173	CGxDeviceD3d::GetTextureLevels		gx	primitive	void __thiscall (CGxDeviceD3d *this, void *texture, uint32_t *width, uint32_t *height, uint32_t *first, uint32_t *end)	Sets the first level, the end level and the top level size of a texture from its flags and the device's skip count	verified	one	gx/texlevels#direct3d-level-range	gx::d3d_texture_levels_difftest
 0x5a0930	321			gx	primitive		Runs its object file code that calls 0x5a0880, 0x590630; not read here	inferred	none		
 0x5a0a80	734	CGxDeviceD3d::UploadTexture		gx	host	uint32_t __thiscall (CGxDeviceD3d *this, void *texture)	Locks each level of a Direct3D texture, copies the owner's rows in and unlocks it, from the first kept level down	verified	one	gx/textures#device-texture-upload	
 0x5a0d60	1			gx	orchestration		Runs its object file code not read here	inferred	none		
@@ -18266,7 +18266,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bf240	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf250	159			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x5bf2f0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x5bf300	224			unassigned			Runs its object file code that calls 0x5c08b0, 0x5bfd20, 0x5bf0a0 and 5 more; not read here	inferred	none		
+0x5bf300	224	DestroyGxuLightLists		unassigned	orchestration	void __cdecl (void)	Calls 0x5c08b0 on 0xc2a66c with 0, then frees the nodes of the three light lists with their allocation tags	verified	one	core/close#light-list-teardown	
 0x5bf3e0	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf3f0	227			unassigned	unreached		Runs its object file code that calls SMemAlloc, DeviceLightInitialize, 0x5c03d0 and 2 more; not read here	inferred	none		
 0x5bf4e0	338			unassigned	unreached		Runs its object file code that calls 0x5c07a0, 0x5c0b30, 0x5bfdb0 and 1 more; not read here	inferred	none		
@@ -23488,12 +23488,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64cea0	181			storm	boundary		Runs its object file code that calls 0x64ea40, SMemFree; not read here	inferred	none		
 0x64cf60	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64cf70	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64cf80	20	SErrDisplayAppFatal2	idb	storm	boundary		Runs its object file code that calls 0x64cfa0; not read here	inferred	none		
-0x64cfa0	118			storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070, 0x64d080 and 1 more; not read here	inferred	none		
-0x64d020	69			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64d070	8			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64d080	81			storm	boundary		Runs its object file code that calls __vsnprintf, 0x64d100; not read here	inferred	none		
-0x64d0e0	22	SErrDisplayAppFatal	idb	storm	boundary		Runs its object file code that calls 0x64cfa0; not read here	inferred	none		
+0x64cf80	20	SErrDisplayAppFatal2	idb	storm	orchestration	void __cdecl (uint32_t code, const char *format, ...)	Passes its code, format and variadic arguments to 0x64cfa0, which reports a fatal error and ends the process	verified	one	storm/errorlog#fatal-error-display	
+0x64cfa0	118	SErrDisplayAppFatalV		storm	orchestration	void __fastcall (uint32_t code, const char *format, va_list args)	Takes the error lock, formats and reports a fatal error through 0x64d080 and ends the process with exit code 1	verified	one	storm/errorlog#fatal-error-display	
+0x64d020	69	StormEnterSection		storm	host	void __fastcall (void *section)	Initialises Storm's two critical sections on the first call and enters the one in ecx	verified	one	storm/errorlog#fatal-error-display	
+0x64d070	8	StormLeaveSection		storm	host	void __fastcall (void *section)	Leaves the critical section in ecx	verified	one	storm/errorlog#fatal-error-display	
+0x64d080	81	SErrFormatAndDisplay		storm	orchestration	void __fastcall (uint32_t code, const char *file, uint32_t line, const char *format, va_list args, uint32_t arg5, uint32_t arg6)	Formats a message into 2048 bytes with _vsnprintf and passes it with the code, file and line to 0x64d100	verified	one	storm/errorlog#fatal-error-display	
+0x64d0e0	22	SErrDisplayAppFatal	idb	storm	orchestration	void __cdecl (const char *format, ...)	Passes the code 0x85100086 with its format and variadic arguments to 0x64cfa0, which ends the process	verified	one	storm/errorlog#fatal-error-display	
 0x64d100	1777			storm	boundary		Runs its object file code that calls SStrCopy, SStr::sub_64A450, 0x64de30 and 20 more; not read here	inferred	none		
 0x64d810	46			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64d870	175			storm	boundary		Runs its object file code that calls SStrLen, _strpbrk, SStrCopy and 1 more; not read here	inferred	none		
@@ -31259,17 +31259,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f87b	78	_shortsort	idb	crt	primitive	void __cdecl (char *lo, char *hi, uint32_t width, int (*compare)(const void *, const void *))	Sorts a range of at most 8 elements by moving the first maximum to the end until the range is empty	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
 0x73f8c9	44	_swap	idb	crt	boundary	void __cdecl (char *a, char *b, uint32_t width)	Exchanges two blocks of width bytes, doing nothing for the same address or a width of 0	verified	one	ui/auctionlists#the-qsort-short-sort	ui::crt_qsort_difftest
 0x73f900	10	_fmod	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x73f90a	10	__CIfmod	idb	crt	boundary		Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
-0x73f914	30			crt	boundary		Runs its object file code that calls 0x74450c; not read here	inferred	none		
-0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	
+0x73f90a	10	__CIfmod	idb	crt	orchestration		Loads the fmod record 0x875ea0 and jumps to the two-operand intrinsic dispatcher, dividend in st1, divisor in st0	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
+0x73f914	30			crt	primitive		Repeats fprem on st0 by st1 until C2 clears, or calls the software remainder 0x74450c when 0x88391c is 1	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
+0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	crt::crt_pow_nonfinite_difftest
 0x73fb35	40			crt	boundary		Runs its object file code not read here	inferred	none		
-0x73fb5d	52	_sscanf	idb	crt	boundary		Runs its object file code that calls _strlen, __input; not read here	inferred	none		
+0x73fb5d	52	_sscanf	idb	crt	orchestration	int32_t __cdecl (const char *string, const char *format, ...)	Runs __input over a string stream and returns the stored conversions, or -1 for EOF before a match	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73fb91	46	_isalpha	idb	crt	primitive	int32_t __cdecl (int32_t c)	Tests a character's letter bits 0x103 in the table at _pctype, unchecked for negative values	verified	one	crt/ctype#character-classes	crt::crt_isalpha_difftest
 0x73fbbf	40	_isupper	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fbe7	40	_islower	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fc0f	40	_isdigit	idb	crt	boundary		Tests a character's digit bit in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	net/who#who-level-digits	
 0x73fc37	45	_isxdigit	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x73fc64	40	_isspace	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
+0x73fc64	40	_isspace	idb	crt	boundary	int32_t __cdecl (int32_t c)	Tests a character's space bit 8 in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73fc8c	40	_ispunct	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fcb4	46	_isalnum	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fce2	46	_isprint	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
@@ -31281,7 +31281,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fdb8	61	___iscsym	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	ui::billing_minutes_left
 0x73fec4	82	_sprintf	idb	crt	primitive	int __cdecl (char *buffer, const char *format, ...)	Formats into a buffer with no bound through __output, ends it with a NUL and returns the count	verified	one	crt/printf#the-string-front-ends	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest
-0x73ff20	31	__allshl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x73ff20	31	__allshl	idb	crt	primitive		Shifts the 64-bit value in edx:eax left by cl, giving 0 from 64	verified	one	crt/scanf#integer-conversions	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73ff3f	207	floor		crt	boundary		Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x74000e	21	_isleadbyte	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x740023	17	_iswalpha	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
@@ -31349,7 +31349,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741a4c	182			crt	boundary		Runs its object file code that calls __getptd; not read here	inferred	none		
 0x741b77	123			crt	boundary		Runs its object file code that calls 0x747445; not read here	inferred	none		
 0x741bf2	41	_ungetc	idb	crt	unreached		Runs its object file code that calls __lock_file, 0x741c1b, __unlock_file; not read here	inferred	none		
-0x741c1b	110			crt	boundary		Runs its object file code that calls __getbuf; not read here	inferred	none		
+0x741c1b	110	_ungetc_lk		crt	primitive	int32_t __cdecl (int32_t c, void *stream)	Pushes a byte back and returns it, or EOF; a string stream takes it only if the byte before the pointer equals it	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x741c89	168			crt	boundary		Runs its object file code that calls 0x40d9b5, __amsg_exit; not read here	inferred	none		
 0x741d31	20			crt	boundary		Runs its object file code that calls 0x74239d; not read here	inferred	none		
 0x741d45	47	__lock_file	idb	crt	boundary		Runs its object file code that calls __lock; not read here	inferred	none		
@@ -31392,22 +31392,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7433af	280	__flsbuf	idb	crt	boundary		Runs its object file code that calls __isatty, __getbuf, __write and 1 more; not read here	inferred	none		
 0x7434c7	101	__write	idb	crt	boundary		Runs its object file code that calls __lock_fhandle, __write_lk, __unlock_fhandle and 2 more; not read here	inferred	none		
 0x74352c	395	__write_lk	idb	crt	boundary		Runs its object file code that calls __lseek_lk, __errno, ___doserrno and 1 more; not read here	inferred	none		
-0x7436c0	62	__cintrindisp2	idb	crt	boundary		Dispatches a two-operand x87 math intrinsic	inferred	none	collision/kinematics#facing-and-pitch-integration	
+0x7436c0	62	__cintrindisp2	idb	crt	orchestration		Saves the control word, classes two x87 operands through 0x743997 and runs the exit 0x74378a on its answer	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x7436fe	61	__cintrindisp1	idb	crt	unreached		Runs its object file code that calls __trandisp1 and 1 more; not read here	inferred	none		
 0x74373b	72	__ctrandisp2	idb	crt	unreached		Runs its object file code that calls __fload, __trandisp2, ctranexit; not read here	inferred	none		
-0x743783	312	ctranexit	idb	crt	unreached		Runs its object file code that calls __87except; not read here	inferred	none		
+0x743783	312	ctranexit	idb	crt	boundary		Has an unreached start; the inner entry 0x74378a is live and passes an error type to __87except or restores the cw	inferred	none	crt/math#math-error-flags	
 0x7438bb	51	__ctrandisp1	idb	crt	unreached		Runs its object file code that calls __fload, __trandisp1, ctranexit; not read here	inferred	none		
 0x7438ee	60	__fload	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x743930	103	__trandisp1	idb	crt	unreached		Runs its object file code not read here	inferred	none		
-0x743997	140	__trandisp2	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x743997	140	__trandisp2	idb	crt	primitive		Classes two x87 operands with fxam as normal, zero, NaN or infinity and jumps through the record's table	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x743a23	10			crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
 0x743a2d	7			crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
-0x743a34	7			crt	boundary		Runs its object file code not read here	inferred	none		
+0x743a34	7			crt	primitive		Pops both operands and leaves +0	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x743a3b	7			crt	unreached		Runs its object file code not read here	inferred	none		
 0x743a42	43			crt	boundary		Runs its object file code not read here	inferred	none		
-0x743a6d	42			crt	boundary		Runs its object file code not read here	inferred	none		
-0x743a97	63			crt	boundary		Runs its object file code not read here	inferred	none		
-0x743ad6	29			crt	boundary		Runs its object file code not read here	inferred	none		
+0x743a6d	42			crt	primitive		Adds the operands for a NaN: error type 7 for a quiet NaN, 1 for a signalling one; 0x743a6f takes st0 as the NaN	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
+0x743a97	63			crt	primitive		Adds two NaN operands: error type 7 when both are quiet, else 1	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
+0x743ad6	29			crt	primitive		Pops both operands, leaves the indefinite and sets error type 1	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x743af3	7			crt	boundary		Runs its object file code not read here	inferred	none		
 0x743b00	279			crt	boundary		Runs its object file code not read here	inferred	none		
 0x743c17	1183			crt	unreached		Runs its object file code that calls 0x743b00; not read here	inferred	none		
@@ -31450,21 +31450,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x744b00	21	__twoToTOS	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x744b15	23	__load_CW	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x744b2c	25	__convertTOStoQNaN	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x744b45	67	__fload_withFB	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x744b45	67	__fload_withFB	idb	crt	primitive		Loads the double at edx onto the x87 stack, an infinity or NaN built by hand as an extended real	verified	one	crt/math#non-finite-powers	crt::crt_pow_nonfinite_difftest
 0x744b88	22	__checkTOS_withFB	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x744bab	42			crt	boundary		Runs its object file code that calls __startOneArgErrorHandling; not read here	inferred	none		
 0x744be9	163	__check_range_exit	idb	crt	boundary		Runs its object file code that calls __startOneArgErrorHandling and 1 more; not read here	inferred	none		
-0x744c8c	304	__powhlp	idb	crt	boundary		Runs its object file code that calls __d_inttype; not read here	inferred	none		
-0x744dbc	101	__d_inttype	idb	crt	boundary		Runs its object file code that calls __fpclass, __frnd; not read here	inferred	none		
-0x744e21	2597	__input	idb	crt	boundary		Runs its object file code that calls __isctype, __whiteout, __un_inc and 7 more; not read here	inferred	none		
-0x745846	55	__hextodec	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x74587d	26			crt	boundary		Runs its object file code that calls __filbuf; not read here	inferred	none		
-0x745897	23	__un_inc	idb	crt	boundary		Runs its object file code that calls 0x741c1b; not read here	inferred	none		
-0x7458ae	36	__whiteout	idb	crt	boundary		Runs its object file code that calls 0x74587d, _isspace; not read here	inferred	none		
+0x744c8c	304	__powhlp	idb	crt	primitive	int32_t __cdecl (double x, double y, double *out)	Stores pow for an infinite x or y and returns 1 for a domain error	verified	one	crt/math#non-finite-powers	crt::crt_pow_nonfinite_difftest
+0x744dbc	101	__d_inttype	idb	crt	primitive	int32_t __cdecl (double y)	Returns 0 for a subnormal or a value that is not whole, 1 for an odd whole value, else 2	verified	one	crt/math#non-finite-powers	crt::crt_pow_nonfinite_difftest
+0x744e21	2597	__input	idb	crt	primitive	int32_t __cdecl (void *stream, const uint8_t *format, void *args)	Walks a scanf format over a stream, stores each conversion through the argument list and returns their count or -1	verified	one	crt/scanf#the-format-walk	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x745846	55	__hextodec	idb	crt	primitive	int32_t __cdecl (int32_t c)	Returns a digit as it is and a letter as its value plus 0x30	verified	one	crt/scanf#integer-conversions	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x74587d	26	_inc		crt	primitive	int32_t __cdecl (void *stream)	Takes the next byte of a stream as an unsigned value, or the answer of __filbuf when its count runs out	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x745897	23	__un_inc	idb	crt	boundary	void __cdecl (int32_t c, void *stream)	Pushes a byte back into a stream through _ungetc_lk, and does nothing for EOF	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x7458ae	36	__whiteout	idb	crt	primitive	int32_t __cdecl (int32_t *count, void *stream)	Reads bytes, counting each, until one is not a space and returns it	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x7458d2	18	__frnd	idb	crt	boundary	double __cdecl (double x)	Rounds a double to an integral value in the current rounding mode and returns it in st0	verified	one	ui/billing#the-minutes-reading	
 0x7458e4	82	_iswctype	idb	crt	boundary		Tests a 16-bit unit's type bits: 0 for 0xffff, the C table below 0x100, else GetStringTypeW's CT_CTYPE1	verified	one	net/who#who-filter-decoding	
 0x745936	16			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
-0x745946	220	__filbuf	idb	crt	boundary		Runs its object file code that calls __getbuf, __read; not read here	inferred	none		
+0x745946	220	__filbuf	idb	crt	boundary		Answers EOF at once for a string stream, else refills a stream's buffer from its file	inferred	none	crt/scanf#the-string-stream	
 0x745a22	405	__mbsicmp	idb	crt	boundary		Runs its object file code that calls __strcmpi, __lock, ___crtLCMapStringA and 1 more; not read here	inferred	none		
 0x745bb7	114	__mbsrchr	idb	crt	boundary		Runs its object file code that calls strrchr, __lock, __unlock; not read here	inferred	none		
 0x745c29	67	__getdrive	idb	crt	boundary		Runs its object file code that calls _toupper; not read here	inferred	none		
@@ -31525,7 +31525,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7479bd	41	__isatty	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7479e6	89	_wctomb	idb	crt	boundary		Runs its object file code that calls __lock, __wctomb_lk, __unlock; not read here	inferred	none		
 0x747a3f	105	__wctomb_lk	idb	crt	boundary		Runs its object file code that calls __errno; not read here	inferred	none		
-0x747aa8	208	__87except	idb	crt	boundary		Runs its object file code that calls __handle_exc, __raise_exc, __ctrlfp and 2 more; not read here	inferred	none		
+0x747aa8	208	__87except	idb	crt	boundary		Applies a math error type: marks a masked invalid operation, sets errno from the type and restores the control word	inferred	none	crt/math#math-error-flags	
 0x747b78	93	_mbtowc	idb	crt	boundary		Runs its object file code that calls __lock, __mbtowc_lk, __unlock; not read here	inferred	none		
 0x747bd5	201	__mbtowc_lk	idb	crt	boundary		Runs its object file code that calls __errno; not read here	inferred	none		
 0x747c9e	39	__wgetcwd	idb	crt	boundary		Runs its object file code that calls __lock, __wgetdcwd_lk, __unlock; not read here	inferred	none		
@@ -34782,7 +34782,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79fb40	157	FontMethods::SetSpacing		ui	primitive		Stores the line spacing converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
 0x79fbe0	58	FontMethods::GetSpacing		ui	primitive		Returns the line spacing converted from layout units to Lua units	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x79fc20	136	FontMethods::SetJustifyH		ui	primitive	int __fastcall (const char *name, CSimpleFont *font, lua_State *L)	Merges a justify name's horizontal bits into a font block, stops following its parent's justify and pushes	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_set_h_difftest
-0x79fcb0	33			ui	primitive		Runs its object file code that calls 0x6f1a00, lua_pushstring; not read here	inferred	none		
+0x79fcb0	33	FontMethods::GetJustifyH		ui	primitive	int __fastcall (const char *unused, CSimpleFont *font, lua_State *L)	Pushes the name of the first horizontal justify bit of a font's block, else UNKNOWN	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_get_h_difftest
 0x79fce0	136	FontMethods::SetJustifyV		ui	primitive	int __fastcall (const char *name, CSimpleFont *font, lua_State *L)	Merges a justify name's vertical bits into a font block, stops following its parent's justify and pushes	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_set_v_difftest
 0x79fd70	33	FontMethods::GetJustifyV		ui	primitive	int __fastcall (const char *unused, CSimpleFont *font, lua_State *L)	Pushes the name of the first vertical justify bit of a font's block, else UNKNOWN	verified	one	ui/fontmethods#justify-and-the-followed-font	ui::font_justify_get_v_difftest
 0x79fda0	182	FontInstance::GetObjectType	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Font method GetObjectType, its pair in the table 0x87c7c8	verified	one	ui/fontstring#lua-methods	
@@ -37713,7 +37713,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fd810	23	luaopen_string		lua	orchestration		Opens the string library of 12 functions	verified	one	ui/luastate#what-a-new-state-holds	
 0x7fd830	31	__EH_prolog	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd84f	140	_bsearch	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x7fd8db	176	_frexp	idb	crt	boundary		Runs its object file code that calls __ctrlfp, __sptype, __handle_qnan1 and 2 more; not read here	inferred	none		
+0x7fd8db	176	_frexp	idb	crt	primitive	double __cdecl (double x, int32_t *e)	Splits a double into a mantissa in [0.5, 1) and a power of two stored through e; an infinity gives the indefinite and -1	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest
 0x7fd990	165	_memchr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fda36	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7fda3c	6			unassigned	unreached		Runs its object file code not read here	inferred	none		

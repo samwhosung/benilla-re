@@ -1342,6 +1342,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e99c	char[18]	s_checkAddonVersionName		client	Holds checkAddonVersion, the CVar that refuses out-of-date add-ons	verified	one	ui/addons#whether-an-add-on-may-load
 0x82e9d8	char[14]	s_textMovieSubtitle		client	Holds the string "movieSubtitle"	inferred	none	
 0x82ecc8	char[6]	s_argDelimiters		unassigned	Holds the tokenizer delimiters tab, CR, LF, quote and space, with no comma	verified	one	console/commands#world-port-command
+0x82ed90	char[30]	s_failedToOpenArchive		client	Holds "Failed to open archive %s: %s", the fatal message for a base archive that does not open	verified	one	storm/errorlog#fatal-error-display
 0x82edbc	char[12]	s_textPatchMPQ		client	Holds a string of 11 characters	inferred	none	
 0x82edfc	uint16_t			unassigned	Holds a word that RunPrepatchList, CVarLoadFile, TopLevelExceptionFilter read; not read here	inferred	none	
 0x82ee00	char[2]			unassigned	Holds the string " "	inferred	none	
@@ -1359,6 +1360,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f274	void *	s_fpInit		crt	Points to __fpmath (0x409a11), which __cinit calls before the initializer tables; nothing writes it	verified	one	crt/printf#the-conversion-slots
 0x82f2a0	uint32_t[30]	_XcptActTab		crt	Holds ten rows of an exception code, a signal number and an action, each action 0 in the file	verified	one	random#other-threads-rand
 0x82f3f8	void *[6]	s_floatConversions		crt	Holds _cfltcvt and its helpers, which 0x409a29 stores over the file values, all _fptrap	verified	one	crt/printf#the-conversion-slots
+0x82f4d0	double	s_mathInfinity		crt	Holds +inf, the value the math routines return for an overflow or an infinite answer	verified	one	crt/math#non-finite-powers
+0x82f4d8	double	s_mathIndefinite		crt	Holds the indefinite, 0xfff8000000000000, the answer of a math domain error	verified	one	crt/math#splitting-a-double
+0x82f4f0	double	s_mathNegativeZero		crt	Holds -0.0, the answer of pow for a negative odd power of -inf	verified	one	crt/math#non-finite-powers
 0x831710	int32_t	__mb_cur_max		crt	Holds the most bytes a multibyte character takes, 1 in the C locale; only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
 0x831714	char	__decimal_point		crt	Holds the decimal point, '.'; only the LC_NUMERIC initializer writes it	verified	one	net/who#who-level-digits
 0x83171c	const uint16_t *	_pctype		crt	Points to the character type table's entry for 0 (0x831726); only the LC_CTYPE initializer writes it	verified	one	net/who#who-level-digits
@@ -1366,6 +1370,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x831724	uint16_t[257]	_ctype		crt	Holds the C locale's character type bits for EOF and the bytes 0 to 0xff, none for 0x80 to 0xff	verified	one	net/who#who-filter-decoding
 0x831928	int32_t[6]	_DoubleFormat		crt	Holds the double's format for __ld12cvt: exponents 1024 and -1023, 53 bits, widths 11 and 64, bias 1023	verified	two	crt/strtod#rounding-to-a-format
 0x831940	int32_t[6]	_FloatFormat		crt	Holds the float's format for __ld12cvt: exponents 128 and -127, 24 bits, widths 8 and 32, bias 127	verified	two	crt/strtod#rounding-to-a-format
+0x831ac8	int32_t	s_mathErrnoOnly		crt	Holds 0x2694, which nothing writes; nonzero makes the math error exits set errno and skip _matherr	verified	one	crt/math#math-error-flags
 0x831bd8	void *[18]	__lc_category		crt	Holds each locale category's name, locale and initializer; read only by _setlocale, which nothing calls, and 0x410c1c	verified	one	net/who#who-filter-decoding
 0x832398	const char **	__lc_time_curr		crt	Points to the current time record, the C locale's 0x8323a0; only ___init_time writes it	verified	one	crt/time#the-strftime-format-loop
 0x8323a0	const char *[43]	__lc_time_c		crt	Holds the C locale's day and month names, AM, PM and the date and time patterns strftime reads	verified	one	crt/time#the-strftime-format-loop
@@ -1933,6 +1938,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8537fc	char[11]	s_textInterface		ui	Holds the string "Interface:"	inferred	none	
 0x853838	char[6]	s_textTitle		ui	Holds the string "Title"	inferred	none	
 0x853840	char[27]	s_addOnTocFormat		ui	Holds the format of an add-on's toc path	verified	one	ui/addons#finding-add-ons
+0x853878	char[27]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	one	ui/addons#reading-the-url-file
 0x853928	char[4]	s_addOnsTxtSeparators		ui	Holds CR, LF and the quote, the separators of AddOns.txt	verified	one	ui/addons#enable-state
 0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	one	ui/addons#enable-state
 0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	one	ui/addons#enable-state
@@ -2071,7 +2077,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
 0x85f398	const char[3]	s_textRb		storm	Holds "rb", the mode the loose and zip opens pass fopen	verified	one	storm/files#opening-a-loose-file
-0x85f3f0	void *	s_networkShutdownFunction		unassigned	Holds the network library's shutdown function, 0x5bf300 in the image, which the stop handler calls	verified	one	core/close#stop-handler-order
+0x85f3ec	void *	s_lightInitFunction		unassigned	Holds the light table's start function, a bare return in the image, which WowClientInit calls	verified	one	core/close#light-list-teardown
+0x85f3f0	void *	s_lightShutdownFunction		unassigned	Holds the light lists' teardown function, 0x5bf300 in the image, which the stop handler calls	verified	one	core/close#light-list-teardown
 0x85f4d8	const uint32_t[21]	s_stripTable		font	Holds seven triples of mask, replacement character and prefix flag per token class	verified	one	font/markup#stripping
 0x85f534	const char[20]	s_batchTag		font	Holds the allocation tag of a batch	verified	one	font/api#batches
 0x85f554	const char[14]	s_fontTag		font	Holds the allocation tag of a font	verified	one	font/api#creating-a-font
@@ -2176,6 +2183,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x865b40	uint32_t	s_extraOpenFlags		storm	Holds the flags every resolve adds; 1 in the file, 0 once start-up calls 0x648be0(0)	verified	two	storm/mount#loose-files
 0x865b44	uint8_t	s_keepLooseFlags		storm	Holds a byte that start-up clears so the open calls drop the loose-file flag bits	verified	two	storm/mount#loose-files
 0x865bf0	const uint16_t[3]	s_wtextRb		storm	Holds L"rb", the mode the loose open passes _wfopen	verified	one	storm/files#opening-a-loose-file
+0x865cf0	int32_t	s_errorLockUsers		storm	Holds -1 until the first error lock call; InterlockedIncrement counts the calls and the first initialises the sections	verified	one	storm/errorlog#fatal-error-display
 0x866520	uint16_t	s_lookupLocale		storm	Holds the locale a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866522	uint8_t	s_lookupPlatform		storm	Holds the platform a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866834	char[14]	s_textBlockTable		storm	Holds the string (block table), whose type 3 hash decrypts the block table	verified	one	storm/format#hash-and-block-tables
@@ -2411,8 +2419,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x874458	char[13]	s_textMinutesAbbr		ui	Holds the global string key "MINUTES_ABBR"	verified	one	ui/lcd#battlefield-status
 0x874468	char[13]	s_textSecondsAbbr		ui	Holds the global string key "SECONDS_ABBR"	verified	one	ui/lcd#battlefield-status
 0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
+0x875ea0	uint8_t[80]	s_fmodRecord		crt	Holds the fmod record: its name, function code 0x16 at +0xe and the 16 handler addresses at +0x10	verified	one	crt/math#remainder-dispatch
 0x8761c0	const char *	s_nullString		crt	Points to the text (null) at 0x871708, which __output writes for a null %s; nothing writes it	verified	one	crt/printf#characters-strings-and-counts
 0x8761c4	const uint16_t *	s_wideNullString		crt	Points to the UTF-16 text (null) at 0x81623c, which __output writes for a null wide string	verified	one	crt/printf#characters-strings-and-counts
+0x8761d0	uint8_t[10]	s_x87Indefinite		crt	Holds the indefinite as an 80-bit real, which the dispatcher loads for a domain error	verified	one	crt/math#remainder-dispatch
+0x8761ec	uint8_t[16]	s_fxamClasses		crt	Maps the fxam condition bits to the operand classes 0, 4, 8 and 12: normal, zero, NaN, infinity	verified	one	crt/math#remainder-dispatch
+0x8763c0	char[6]	s_scanSpaceSet		crt	Holds the scanset text of %s, space and 9 to 13 then a bracket, which scanf complements	verified	one	crt/scanf#character-sets
+0x8763c8	char[2]	s_scanEmptySet		crt	Holds the empty scanset of %c, a bracket alone, which scanf complements	verified	one	crt/scanf#character-sets
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
@@ -2606,6 +2619,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e14	uint32_t	s_tipBatch		loadingscreen	Holds the tip string batch handle	verified	one	loadingscreen/screen#tip-text
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x8838f4	uint8_t	s_sysMsgDisplayMade		unassigned	Holds 1 while the system message display layer exists	verified	one	sysmsg#display-layer
+0x883918	int32_t	s_mathExitDisabled		crt	Holds 0, zero-filled; its one writer 0x409a61 is unreached, so the intrinsic exit reports every error	verified	one	crt/math#math-error-flags
+0x88391c	int32_t	s_fdivErratum		crt	Holds the processor's FDIV erratum answer 0x409a1b stores, 1 only on a flawed Pentium	verified	one	crt/math#math-error-flags
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883ba4	int32_t	s_stringTypeMode		crt	Holds which call ___crtGetStringTypeW makes: 0 undecided, 1 GetStringTypeW, 2 GetStringTypeA	verified	one	crt/ctype#wide-character-types
 0x883ba8	int32_t	tzapiused		crt	Holds 1 when __tzset_lk took the zone from GetTimeZoneInformation, which 0x41484d reads	verified	one	crt/time#the-systems-zone
@@ -3901,6 +3916,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a3bc	uint32_t	s_latencyMax		net	Holds the greatest simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
 0xc2a3c4	uint32_t	s_initUnitCount		net	Counts the object files whose static initializers ran the shared unit count	inferred	none	net/layout#shared-helpers
 0xc2a428	uint8_t[64]	s_randomPool		net	Holds the SHA-1 random pool SRP6 draws from, seeded at startup with the client clock	verified	one	net/login#random-pool
+0xc2a66c	uint8_t[56]	s_lightTable		unassigned	Holds the light table object: a vtable pointer at +0 and, at +0x30, the head of its node list	inferred	none	core/close#light-list-teardown
 0xc2a738	uint8_t[640]	s_fpsDigitsA		font	Holds the first set of frame-rate digit quads	verified	one	font/overview#static-objects
 0xc2a9b8	float[30]	s_frameTimes		font	Holds the last 30 frame times in seconds	verified	one	font/api#frame-rate-bar
 0xc2aa38	uint8_t[640]	s_fpsDigitsB		font	Holds the second set of frame-rate digit quads	verified	one	font/overview#static-objects
