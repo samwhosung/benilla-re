@@ -325,7 +325,7 @@ pub fn check_interact_in_range(q: [f32; 3], p: [f32; 3], threshold: f32) -> bool
     script_distance_sq(q, p) < f64::from(threshold)
 }
 
-/// The table at `0xb4e3cc`, built at the first call (`0x48ba30`) from the cells `0xb4d918`,
+/// The table at `0xb4e3cc`, built at the first call (`0x48ba32`) from the cells `0xb4d918`,
 /// `0xb4e29c`, `0xb4e258` and `0xb4e2a0`: the squares of 10, 11.1111, 10 and 30. The index is
 /// `distIndex - 1`.
 pub const INTERACT_TABLE: [f32; 4] = [100.0, 123.45678, 100.0, 900.0];

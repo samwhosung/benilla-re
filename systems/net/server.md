@@ -28,14 +28,14 @@ The three puts are byte-identical bodies. `0x5379a0` tests connection state 6 an
 
 ## Send site rows
 
-`tables/opcode_sends.tsv` has one row per place a send call follows an opcode write. Most write the opcode as an immediate. Others take it from a register (`via-register`), from a caller's argument (`through-<function>`, for the movement and channel senders), from the cache object (`cache-object`), or by hand (`hand-resolved`); a row with opcode `?` is one of three: the `wowcache` lookup `0x56b5fa`, whose cache object holds opcode 0, and the two writes in `0x619b50` (`0x619bb9`, `0x619c05`), whose opcode is not a constant and which no live code reaches. The scan follows the listing, not the branches, so a send reached from several writes lists each opcode.
+`tables/opcode_sends.tsv` has one row per place a send call follows an opcode write. Most write the opcode as an immediate. Others take it from a register (`via-register`), from a caller's argument (`through-<function>`, for the movement and channel senders), from the cache object (`cache-object`), or by hand (`hand-resolved`); a row with opcode `?` is one of four: the `wowcache` lookup `0x56b5fa`, whose cache object holds opcode 0; the two calls of `0x60e0a0` in `0x619b50` (`0x619bb9`, `0x619c05`), whose opcode is an argument and which no live code reaches; and the call of `0x600a30` at `0x61a9e6`, whose opcode `0x61a820` chooses from state. The scan follows the listing, not the branches, so a send reached from several writes lists each opcode.
 
-Addresses: `0x5ab630`, `0x5379a0`, `0x728640`, `0x600a30`, `0x600a10`, `0x60e0a0`, `0x4a00f0`, `0x4a04b0`, `0x5ab000`
+Addresses: `0x5ab630`, `0x5379a0`, `0x728640`, `0x600a30`, `0x600a10`, `0x60e0a0`, `0x4a00f0`, `0x4a04b0`, `0x5ab000`, `0x56b5fa`, `0x619bb9`, `0x619c05`, `0x61a9e6`
 Confidence: verified
 Proof: one
 Test: none
 
-The control is the cast request `0x6e54f0`, which `spell/cast#cast-request-packets` reads to the bytes: the scan gives 0xab, 0x12e and 0x1f0 for it. `0x728640` is the minigame's wrapper around `0x5ab630`, so its caller `0x728650` is the site. The movement opcodes pass through `0x60e0a0`, `0x617fe0`, `0x600a10` and `0x600a30`, which take the opcode as an argument; `0x61a820` chooses its opcode from state, and its row is `?`.
+The control is the cast request `0x6e54f0`, which `spell/cast#cast-request-packets` reads to the bytes: the scan gives 0xab, 0x12e and 0x1f0 for it. `0x728640` is the minigame's wrapper around `0x5ab630`, so its caller `0x728650` is the site. The movement opcodes pass through `0x60e0a0`, `0x617fe0`, `0x600a10` and `0x600a30`, which take the opcode as an argument.
 
 ## Formats vmangos reads
 
@@ -92,7 +92,7 @@ The comparison is by index and name against the two tables; `chat_types.tsv` row
 
 ## Mail sends
 
-`SendMail(target, subject, body)` sends opcode 0x238 and checks, in order, a pending or in-flight send, the mailbox, a non-empty target and subject, a selected stationery, and the attachment and money.
+`SendMail(target, subject, body)` sends opcode 0x238 and checks, in order, a pending request, the mailbox, a send still awaiting its result, a non-empty target and subject, a selected stationery, and the attachment and money.
 
 | check | value | entry |
 |---|---|---|
@@ -102,7 +102,7 @@ The comparison is by index and name against the two tables; `chat_types.tsv` row
 | postage shown | the money being sent, plus 30 copper, plus the stationery's price when the player does not carry it, plus the package's cost | `ui/mailsend#postage-and-the-attachments-details` |
 | body | GUID, target, subject, body, stationery u32, package u32, item GUID, money u32, COD u32, zero u64, zero u8 | `ui/mailsend#sending` |
 
-Addresses: `0x4ae800`, `0x4ae8dd`, `0x4ae99e`, `0x4ae756`, `0x4ae730`, `0x4aea6c`
+Addresses: `0x4ae800`, `0x4ae839`, `0x4ae852`, `0x4ae85e`, `0x4ae8dd`, `0x4ae99e`, `0x4ae756`, `0x4ae730`, `0x4aea6c`
 Confidence: verified
 Proof: one
 Test: none
@@ -117,12 +117,12 @@ The trade senders put the opcode and a small body, send through `0x5ab630`, and 
 |---|---|---|
 | `CMSG_INITIATE_TRADE` 0x116 | u64 GUID | none; no range test |
 | `CMSG_BEGIN_TRADE` 0x117, `CMSG_BUSY_TRADE` 0x118, `CMSG_IGNORE_TRADE` 0x119, `CMSG_UNACCEPT_TRADE` 0x11b, `CMSG_CANCEL_TRADE` 0x11c | none | none |
-| `CMSG_ACCEPT_TRADE` 0x11a | u32 from `0xc4be78`+4, set to 1 when the window opens | none |
+| `CMSG_ACCEPT_TRADE` 0x11a | u32 from `0xc4be78`+4: 1 when the window opens, then the value of each extended status with side byte 1 | none |
 | `CMSG_SET_TRADE_ITEM` 0x11d | u8 trade slot, u8 container index, u8 slot | an active player and the item |
 | `CMSG_CLEAR_TRADE_ITEM` 0x11e | u8 trade slot | none |
 | `CMSG_SET_TRADE_GOLD` 0x11f | u32 copper | add and set: coinage at least the new total |
 
-Addresses: `0x5d3fb0`, `0x5d4230`, `0x5d4380`, `0x5d4480`, `0x5d4500`, `0x5d4570`, `0x5d4680`, `0x5d45f0`
+Addresses: `0x5d3fb0`, `0x5d4230`, `0x5d4380`, `0x5d4480`, `0x5d4500`, `0x5d4570`, `0x5d4680`, `0x5d45f0`, `0x5d4990`, `0x5d49ca`
 Confidence: verified
 Proof: one
 Test: none
@@ -172,7 +172,7 @@ Twelve caches ask the server for a record the first time a key is wanted. The qu
 
 Addresses: `0x554b40`, `0x554cd0`, `0x556ba5`, `0x55866b`, `0x55a0e5`, `0x55bb3b`, `0x55d63b`, `0x55f1c5`, `0x560f3b`, `0x562b4b`, `0x56483b`, `0x566345`, `0x567e6b`, `0x569a8b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each lookup puts its opcode from `[cache+0x30]`; the caller passes the store in `ecx` (the first caller of each lookup gives the store above), and the constructor call, six pushes then `mov ecx,<store>`, pushes the opcode fourth (`0x554b46` for creatures, `0x554cd6` for names). The first writes after the vtable store are the puts listed. `net/dispatch` and `dbcache/overview#asking-for-a-record` describe the lookup. A thirteenth cache, `wowcache.wdb` at `0xc0e084`, has opcode 0 and its lookup `0x56b430` is not read here.
@@ -204,31 +204,32 @@ The cast attempt `0x6e4b60` refuses in this order before anything is sent; a ref
 
 Addresses: `0x6e4b60`, `0x6e4bac`, `0x6e4bc1`, `0x6e4c49`, `0x6e4d43`, `0x494a50`, `0x6e1a00`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The table is `spell/cast#cast-attempt-refusals`. The reason bytes are the failure ids of Cast failure reasons below.
 
 ## Cast gates
 
-After the early refusals the attempt checks, in this order, and the first failure is the only one reported.
+After the early refusals the attempt checks, in this order, and the first failure is the only one reported; the attack pick reports nothing.
 
 | check | refused when | reason |
 |---|---|---|
-| in flight | a spell is in flight and the new one lacks `Attributes & 0x404` | 0x61 |
+| in flight | a spell is in flight and the in-flight spell's record lacks `Attributes & 0x404` | 0x61, naming the new spell |
 | reagents, totems | `0x6e4000` fails | by the check |
 | equipped item | `0x6e40e0` fails | by the check |
 | ranged | `Attributes & 2` and no ranged weapon | 0x18 |
 | combo points | `AttributesEx & 0x500000`, no combo points | 0x46 or 0x12 |
+| attack pick | `0x6e5200(record)` holds, `0x60ecb0` does not and `0x612df0` fails | none |
 | range | `0x6e4440` fails | 0x59 or 0x76 |
 | validator | `0x6094f0` fails | one of its rungs |
 
-Addresses: `0x6e4d62`, `0x6e4dbe`, `0x6e4e50`, `0x6e4e85`, `0x6e4f26`, `0x6e4f3b`, `0x6094f0`, `0x609549`, `0x609616`
+Addresses: `0x6e4d62`, `0x6e4d97`, `0x6e4da0`, `0x6e4dbe`, `0x6e4e50`, `0x6e4e85`, `0x6e4edf`, `0x6e4eeb`, `0x6e4efb`, `0x6e4f26`, `0x6e4f3b`, `0x6094f0`, `0x609549`, `0x609616`
 Confidence: verified
 Proof: one
 Test: none
 
-The table is `spell/cast#cast-attempt-gates`. The validator's rungs run in the order `spell/castgates#rung-order` gives: item cooldown 0x28, spell cooldown 0x3c, power 0x4d, summons and pets, control, stance, mount, stand, daytime, water, moving 0x2e, form, stealth, aura state, reputation 0x8f, place and taming. All of this runs before the request is sent.
+The table is `spell/cast#cast-attempt-gates`. The validator's rungs run in the order `spell/castgates#rung-order` gives: item cooldown 0x28, spell cooldown 0x3c, power 0x4d, summons and pets, control, stance, mount, stand, daytime, water, moving 0x2e, form, stealth, aura state, reputation 0x8f, place and taming. All of this runs before the request is sent. `0x6e4d97` calls `0x6e3d30`, which holds while `0xceca88` is non-zero; `0x6e4da0` loads that in-flight spell's record and `0x6e4dbe` tests its attributes, while the report at `0x6e4dd2` names the new spell.
 
 ## Cast failure reasons
 
@@ -269,10 +270,10 @@ The client's own range tests, and the vmangos constants they meet.
 | NPC click | walks up when farther than 5.5555553 yards | `INTERACTION_DISTANCE 5.0` plus both bounding radii (`ObjectDefines.h:24`, `Player.cpp:2556`, `Object.h:595`) |
 | inspect | squared distance at most 10² | `INSPECT_DISTANCE 10.0` (`ObjectDefines.h:26`, `MiscHandler.cpp:951`) |
 | `CheckInteractDistance` 1 to 4 | 10, 11.111111 (`0x4131c71c`, 100/9), 10, 30 | `TRADE_DISTANCE 11.11`, slightly below the client's value (`ObjectDefines.h:27`), trade checks center to center (`TradeHandler.cpp:272`) |
-| spirit healer | chosen within 20, kept to 22.000001 | not read |
+| spirit healer | chosen within 20, kept to 22.0 | not read |
 | corpse | within 40 | not read |
 
-Addresses: `0x5f0130`, `0xc4c28c`, `0x4944a0`, `0xb4d918`, `0x48ba00`, `0x48ba30`, `0x4924c0`, `0x4923b0`, `0x492130`
+Addresses: `0x5f0130`, `0xc4c28c`, `0x4944a0`, `0xb4d918`, `0x48ba00`, `0x48ba32`, `0x4924c0`, `0x4923b0`, `0x492406`, `0x492411`, `0x49241e`, `0x492469`, `0x492130`
 Confidence: verified
 Proof: one
 Test: `objectlayer::p3_in_range_gate_5f0130`, `ui::dist2_4944a0`, `ui::check_interact_dist2`
