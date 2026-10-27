@@ -22,7 +22,7 @@ The manager's constructor calls it once, right after storing that connection.
 
 Addresses: `0x465140`, `0x464ff0`, `0x465120`, `0x465125`, `0x4685b0`, `0x537a60`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x465140` loads `[0xb41414]+0xd0` into `ecx` three times and calls `0x537a60` with pushes 0,
@@ -39,16 +39,16 @@ out-of-range block and end with the read position put back. The third pass rerea
 from block 0 and notifies. Then every object a pass reactivated is taken off the manager's list
 at `+0xb0` and gets its vtable slot 3 (`+0x0c`). The handler returns 1.
 
-Addresses: `0x4651a0`, `0x418eb0`, `0x418cb0`, `0x4651b2`, `0x4651c1`, `0x4651dc`, `0x4651e1`, `0x4651e9`, `0x4651f7`, `0x46520e`, `0x465222`, `0x46522d`, `0x465290`, `0x4652ff`, `0x466010`, `0x465ec0`
+Addresses: `0x4651a0`, `0x418eb0`, `0x418cb0`, `0x4651b2`, `0x4651c1`, `0x4651dc`, `0x4651e1`, `0x4651e9`, `0x4651f7`, `0x46520e`, `0x465222`, `0x46522a`, `0x465231`, `0x465290`, `0x4652ff`, `0x466010`, `0x465ec0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::update_handler_dispatch`
 
 `0x4651b2` reads the count (`0x418eb0`), `0x4651c1` the flag into `ebx` (`0x418cb0`); the cursor `+0x14` is saved in
 `[ebp-0x8]`. `0x4651e1` compares the next byte with 4: equal calls `0x465ec0` and sets `edi` to 1;
 otherwise `0x4651f7` rewinds. With `ebx` nonzero, `0x46520e` calls `0x466010(time, count, edi,
-store, 1)` and the cursor is restored; `0x465222` calls it with 0. `0x46522d` rewinds to
-`[ebp-0x8]` and the loop reads each type. `0x465ec0` returns 0 (`0x465fbd`), so its result,
+store, 1)` and the cursor is restored; `0x465222` calls it with 0. `0x46522a` loads `[ebp-0x8]` and
+`0x465231` stores it at `+0x14`, rewinding; the loop then reads each type. `0x465ec0` returns 0 (`0x465fbd`), so its result,
 subtracted from `ebx`, changes nothing. `0x465290` to `0x4652ff` unlink each node of the list at
 `+0xb0` and `call [eax+0xc]`.
 
@@ -67,7 +67,7 @@ consumes nothing more in either, so the next byte is read as the next block's ty
 
 Addresses: `0x466010`, `0x466084`, `0x465314`, `0x46524d`, `0x466044`, `0x465fd0`, `0x465ea0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::update_handler_dispatch`
 
 The notify table `0x465314` holds `0x46526f`, `0x465266`, `0x465254`, `0x465254`, `0x46527e`,
@@ -86,14 +86,14 @@ pass handles those GUIDs before anything else in the packet, and the second pass
 A packet whose header flag is 0 runs only the second pass, so its blocks for such GUIDs are
 skipped by every pass.
 
-Addresses: `0x4660d8`, `0x4660e6`, `0x4660f1`, `0x466105`, `0x467188`, `0x4671b5`, `0x467290`, `0x4672bf`
+Addresses: `0x4660d8`, `0x4660e6`, `0x4660f1`, `0x466105`, `0x46610b`, `0x467188`, `0x4671b5`, `0x467290`, `0x4672bf`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::update_out_of_range`, `objectlayer::update_near_objects`, `objectlayer::update_values_block`
 
 `0x4660d8` takes the GUID's high dword, `and eax,0xf0000000`, and compares it with `0x60000000`
 (`0x4660e6`) and `0x80000000` (`0x4660f1`); a match gives 1. `0x466105` XORs it with the pass flag
-and skips on a difference (`0x466109` calls `0x466af0`). `0x467188`/`0x4671b5` repeat the test
+and skips on a difference (`0x46610b` calls `0x466af0`). `0x467188`/`0x4671b5` repeat the test
 for values and `0x467290`/`0x4672bf` for near objects. The movement handler `0x467050` does not
 test the GUID: in the flagged pass it skips every movement block (`Movement blocks`).
 
@@ -118,11 +118,11 @@ not settled here.
 An out-of-range block is a u32 count and that many packed GUIDs. Handled as the first block, it
 releases each listed object (`manager`) in two rounds: every GUID whose top four bits are not 6
 or 8, in list order and except the active player, then the others, without that exception. The read position ends after the list.
-In any other position the notify pass skips the list and nothing is released.
+In any other position the notify pass skips the list and nothing is released, and the create passes read no body for the block (`Block types`).
 
 Addresses: `0x465ec0`, `0x465ee1`, `0x465f04`, `0x465f10`, `0x465f39`, `0x465f4f`, `0x465f69`, `0x465fa6`, `0x465fb3`, `0x464920`, `0x465fd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::update_out_of_range`
 
 `0x465ee1` reads the count. Each GUID (`0x465f04`, `0x642ed0`) whose high dword passes the
@@ -141,16 +141,16 @@ flagged fields, then a values block. The flags, in read order:
 | flag | read |
 |---|---|
 | 0x20 | the movement block (`movement`) |
-| 0x40, without 0x20 | position: four floats, x, y, z, facing |
+| 0x40, without 0x20 | four floats |
 | 0x08 | a u32 |
 | 0x10 | a u32 |
 | 0x04 | a packed GUID |
 | 0x02 | a u32 |
 | 0x01 | nothing; marks the receiver's own player, for a new object only |
 
-Addresses: `0x4660a0`, `0x4660c8`, `0x4660d3`, `0x466185`, `0x46618d`, `0x4661a0`, `0x4661dc`, `0x4661f6`, `0x46620e`, `0x466226`, `0x466237`, `0x46623b`, `0x466245`, `0x466254`, `0x466af0`
+Addresses: `0x4660a0`, `0x4660c8`, `0x4660d3`, `0x466185`, `0x46618d`, `0x4661a0`, `0x4661dc`, `0x4661f6`, `0x46620e`, `0x466226`, `0x466237`, `0x46623b`, `0x466245`, `0x466254`, `0x466350`, `0x466a20`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4660c8` reads the GUID, `0x4660d3` the type byte, `0x466185` the flags. `test al,0x20` at
@@ -159,30 +159,45 @@ read by `0x418eb0` at `0x4661e8` and `0x466202`, the packed GUID by `0x642ed0`, 
 `0x418fb0` at `0x466232`. Flag 1 stores the block's GUID at the manager's `+0xc0`/`+0xc4`
 (`0x466245`, `0x466254`), which `0x468550` returns, only on the path for a GUID the lookup did
 not find (`0x46623b`, ahead of `0x466e00`); `0x466350`, the update of a known object, reads the
-flag and stores nothing. The same order and gates are read by the skip `0x466af0`, by `0x466350`
-and by the notify pass's `0x465c50`. All of it lands in one structure at `[ebp-0x118]`,
-the movement block from `+0x00`, the flags at `+0xd8`, the u32s at `+0xdc` and `+0xe0`, the GUID
-at `+0xe8` and the last u32 at `+0xf0`, which the constructor and the create hooks receive.
+flag and stores nothing; its flag tests run in the same order. All of it lands in one structure
+at `[ebp-0x118]`, the movement block from `+0x00`, the four floats from `+0x24`, the flags at
+`+0xd8`, the u32s at `+0xdc` and `+0xe0`, the GUID at `+0xe8` and the last u32 at `+0xf0`, which
+`0x466a20` receives.
+
+## Create block readers
+
+The skip `0x466af0` and the notify pass's `0x465c50` read a create block's flags in the same
+order and under the same gates as `0x4660a0`, and the four floats of flag 0x40 are x, y, z and the
+facing. `0x465c50` fills a structure of the same layout.
+
+Addresses: `0x466af0`, `0x465c50`, `0x4660a0`, `0x419130`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x466af0` tests `0x20` (`0x47ede0`, a skip), else `0x40` (four `0x419130` reads), then `0x08`,
+`0x10`, `0x04` and `0x02`, and ends in the values skip `0x465bb0`. `0x465c50` repeats the same
+tests (`0x465ccd` to `0x465d72`), reading into a structure at `[ebp-0x110]`.
 
 ## Creating an object
 
 The create pass looks the GUID up, reactivating it when it was released (`manager`). An existing
 object is updated by `0x466350`: a unit applies the block's movement through `0x5ff070`, with
 whether it is the active player; any other type reads and drops the movement fields. Its values
-are then written with every unset field cleared to 0. A new object is allocated for its type,
-its field array zeroed, its type id and mask stored, its values written, and its class
-constructor run with the time and the movement block; it then joins the manager's object list.
+are then written (`Writing the values`). A new object is allocated for its type, its field array
+zeroed, its type id and mask stored, its values written, and its class constructor run with the
+time and the movement block; it then joins the manager's object list.
 
 Addresses: `0x4660a0`, `0x46612d`, `0x46613c`, `0x46614c`, `0x466350`, `0x46638c`, `0x466498`, `0x466582`, `0x466265`, `0x466279`, `0x46628e`, `0x466320`, `0x46629f`, `0x4662c7`, `0x466e00`, `0x466c70`, `0x613880`, `0x466a20`, `0x466bc0`, `0x44cb20`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::zero_descriptor_block_difftest`
 
 `0x46612d` calls `0x464530`; found, `0x46613c` calls `0x466350` and, when the lookup reactivated
 it, slot 2 (`0x46614c`). `0x46638c` tests bit 3 of the type mask (a unit); `0x466498` passes the
-parsed block and the active-player compare. `0x466582` calls `0x466590` with flags 0 and 1, the
-second clearing unset fields. A new object: `0x466265` calls `0x466e00(type, guid)`, `0x466279`
-`0x466c70`, `0x46628e` `0x466320`, which calls `0x613880` and `0x466590` with flags 1 and 0.
+parsed block and the active-player compare. `0x466582` calls `0x466590` with flags 0 and 1. A new
+object: `0x466265` calls `0x466e00(type, guid)`, `0x466279` `0x466c70`, `0x46628e` `0x466320`,
+which calls `0x613880` and `0x466590` with flags 1 and 0.
 `0x46629f` calls `0x466a20(time, object, block)`. `0x4662c7` links the object into the list at
 the manager's `+0xa4`; `0x466bc0` then passes the type's `Creating …` text to `0x44cb20`, which
 returns 1 for a text and a level below 4 and has no other effect.

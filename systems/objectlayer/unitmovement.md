@@ -27,7 +27,7 @@ which returns 1.
 
 Addresses: `0x6033c0`, `0x603bb0`, `0x603ae0`, `0x603c10`, `0x603c80`, `0x603f90`, `0x603b40`, `0x603f00`, `0x601560`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6033c0` pairs each `mov ecx,opcode` with `mov edx,handler` before `0x5ab650`. The relayed set is
@@ -44,20 +44,23 @@ value − 0xb5) into `0x601844` (26), and `0x602780` through `0x602a50` (36, val
 ## Compressed moves
 
 `0x603ce0` handles 0x2fb: a u32 inflated size, then a zlib stream. It reserves the size, rounded
-up to 4, on the stack, inflates into it with the size as the output limit, and then dispatches
-each `u8 length` and `length` bytes as one message through `0x537aa0`. Nothing bounds the size:
-one above the free stack faults in `0x40a280`, and 0xfffffffd to 0xffffffff round to 0, so the
-inflate writes past a zero-byte buffer.
+up to 4, on the stack, inflates into it with the unrounded size as the output limit, and then
+dispatches each `u8 length` and `length` bytes as one message through `0x537aa0`, until the cursor
+equals the inflated size. No test bounds the size between its read and the reserve: one above the
+free stack faults in `0x40a280`, and the top three sizes, 0xfffffffd to 0xffffffff, round to a
+0-byte reserve while the output limit stays the size.
 
-Addresses: `0x603ce0`, `0x603cf7`, `0x603d00`, `0x603d33`, `0x603d67`, `0x603da6`
+Addresses: `0x603ce0`, `0x603cf2`, `0x603cf7`, `0x603d00`, `0x603d33`, `0x603d67`, `0x603da6`, `0x603dc9`, `0x419ae0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x603cf7` loads the size, `add eax,3; and eax,-4`, and `0x603d00` calls `0x40a280` with it; the
-limit `[ebp-8]` keeps the unrounded size and `0x603d33` passes it to `0x660740`. The loop reads the
-length with `0x418cb0` (`0x603d67`), wraps the bytes in a second store and calls
-`0x537aa0` on `0x5ab490()` (`0x603da6`) until the cursor reaches the inflated length.
+`0x603cf2` loads the size, `add eax,3; and eax,-4` (`0x603cf7`), and `0x603d00` calls `0x40a280`
+with it. The limit `[ebp-8]` keeps the unrounded size and
+`0x603d33` passes it to `0x660740`. The loop reads the length with `0x418cb0` (`0x603d67`), wraps
+the bytes in a second store and calls `0x537aa0` on `0x5ab490()` (`0x603da6`); it repeats until the
+cursor `[ebp-0x10]` equals the size `[ebp-0x14]` (`0x603dc9`). A frame that passes the end moves
+the cursor to size + 1 (`0x419ae0`), which that test never meets.
 
 ## Spline toggles
 
@@ -76,7 +79,7 @@ length with `0x418cb0` (`0x603d67`), wraps the bytes in a second store and calls
 
 Addresses: `0x601420`, `0x601510`, `0x601544`, `0x6014ec`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The bound is `lea eax,[edi-0x304]; cmp eax,0x16`. The byte table holds 0 to 10 for 0x304 to
@@ -122,7 +125,7 @@ movement status; without the manager's `+0xc8` it queues a teleport, else it ans
 
 Addresses: `0x602a80`, `0x602aa0`, `0x602ac0`, `0x602ae0`, `0x602b00`, `0x602b20`, `0x602b60`, `0x602b80`, `0x602bc0`, `0x602be0`, `0x602c00`, `0x602c20`, `0x602e30`, `0x602e60`, `0x602ef0`, `0x602f10`, `0x602f90`, `0x602760`, `0x602670`, `0x6026f0`, `0x602fb0`, `0x602c60`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each wrapper is `add ecx,0x9a8` and a jump-free call: move start `0x617520`, strafe `0x6178e0`,
@@ -142,7 +145,7 @@ they are sent. The stops, turns, facing and acknowledgement messages are sent as
 
 Addresses: `0x60e0a0`, `0x60e0bb`, `0x60e0c1`, `0x60e0cd`, `0x60e0d4`, `0x60e0da`, `0x60e139`, `0x60e13d`, `0x60e14b`, `0x60e15d`, `0x60e16d`, `0x60e1b3`, `0x60e1b8`, `0x60e3fc`, `0x60e408`, `0x60be30`, `0x5ed430`, `0x60d040`, `0x614150`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x60e0a0(opcode)` indexes the opcodes 0xb7 to 0xe3 through the byte table `0x60e408` into the three
@@ -164,7 +167,7 @@ and sends 0x171 with no body. A facing change wakes a sleeping unit (stand state
 
 Addresses: `0x60dc60`, `0x60dc90`, `0x60dcb0`, `0x60dce0`, `0x60dd00`, `0x60dd80`, `0x60dda0`, `0x60ddd0`, `0x60de00`, `0x60de30`, `0x60de70`, `0x60dea0`, `0x60e060`, `0x60e080`, `0x60e990`, `0x60e860`, `0x60e880`, `0x60e8a0`, `0x60e8f0`, `0x60e920`, `0x60e940`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x60e990(stops, keepsLoot)`: with `stops`, an auto-move in progress (`0x6103a0`) and bit 0 of
@@ -182,16 +185,16 @@ mover, with bit 0 of `0xc4da48` set around the call; `0x60e860`, `0x60e880`, `0x
 
 `0x600860` writes a movement message: the opcode, the GUID for relayed opcodes, a u32 for those
 that carry one, the status, and a float for nine opcodes. Falling (0x2000) sets bit 0x80 of the
-unit's state word `+0xc58`. `0x600a10` sends with the mover's step time.
+unit's state word `+0xc58`.
 
-Addresses: `0x600860`, `0x6009b0`, `0x600a10`
+Addresses: `0x600860`, `0x6009b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The GUID test is `0x7ccc10(op)` and the u32 test `0x7ccb90(op)`; the status goes through the
 mover's init and write calls. `0x6009b0` returns 1 for 0xe3, 0xe5, 0xe7, 0xf6, 0x2cf, 0x2d0,
-0x2db, 0x2dd and 0x2df. `0x600a10(op)` calls `0x600a30(op, step, 0, 0)`.
+0x2db, 0x2dd and 0x2df.
 
 ## Who may send a report
 
@@ -201,7 +204,7 @@ mover's init and write calls. `0x6009b0` returns 1 for 0xe3, 0xe5, 0xe7, 0xf6, 0
 
 Addresses: `0x600860`, `0x600880`, `0x600882`, `0x600963`, `0x600969`, `0x600971`, `0x600973`, `0x60097b`, `0x600984`, `0x600989`, `0x600994`, `0x60099a`, `0x6009a0`, `0x6008af`, `0x7ccc10`, `0x7cccb0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x600882 je 0x600963` takes the no-GUID path. `0x600969` loads the spline object `+0xa4` of the
@@ -215,16 +218,16 @@ match builds the message (`0x6008af`).
 The active mover is the GUID at `0xc4da98`. `0x6006e0(guid)` switches it: the old mover's
 auto-move stops, bit 31 of its flags clears and, with no running spline, its queue resets; the
 active player's old mover sends 0x2d1. The new GUID is stored and, when nonzero, sent with 0x26a;
-the new mover resets and the input refreshes. `0x6006b0` stops the auto-move and clears it.
+the new mover resets. `0x6006b0` stops the auto-move and clears it.
 
 Addresses: `0x6006e0`, `0x6006b0`, `0x600753`, `0x600783`, `0x6007ae`, `0x5fa5f0`, `0x5fa600`, `0x603ea0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x600753` clears bit 31 of `[+0x9e8]`; `0x619d50(0)` resets the old mover when `+0xa4` is empty
 or has bit 4 of `+0x18`. `0x600783` pushes 0x2d1 for `0x600a10`; `0x6007ae` 0x26a with the GUID.
-The new mover gets `0x619d50(1)` and `0x514640(now,1)`. Client control is bit 0x400 of `+0xc58`:
+The new mover gets `0x619d50(1)`. Client control is bit 0x400 of `+0xc58`:
 `0x5fa5f0` reads it, `0x5fa600` sets it and re-picks the camera's mover, and `0x603ea0` (0x159)
 reads a packed GUID and a byte and calls `0x5fa600(byte != 0)`.
 
@@ -239,7 +242,7 @@ or `PLAYER_CONTROL_LOST`.
 
 Addresses: `0x5fa600`, `0x5fa621`, `0x5fa62a`, `0x5fa631`, `0x5fa636`, `0x5fa63c`, `0x5fa64c`, `0x5fa662`, `0x5fa678`, `0x5fa68b`, `0x5fa696`, `0x5fa69d`, `0x5fa6b1`, `0x4958e0`, `0xb4b3e4`, `0x603ea0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The bit is stored at `0x5fa636`, before `0x5fa662` reads it back through `IsClientControlled`, so with
@@ -252,21 +255,34 @@ the action buttons test the flag; `0x603ea0` feeds `0x5fa600`.
 
 ## Facing
 
-A unit keeps two facings: the body's at `+0xc94` and the display's at `+0xc98`. The active mover's
+A unit keeps a display facing at `+0xc98` and a second facing at `+0xc94`. The active mover's
 display follows the mover; another unit's turns toward its move direction or, idle, toward its
 target, averaging four samples at `+0xc9c`. `0x6084f0` wraps an angle into −π to π.
 
-Addresses: `0x600cd0`, `0x600cb0`, `0x601020`, `0x601050`, `0x607eb0`, `0x6084f0`, `0x60a110`, `0x608560`
+Addresses: `0x600cd0`, `0x601020`, `0x601050`, `0x6084f0`, `0x60a110`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `objectlayer::wrap_angle_difftest`, `objectlayer::angle_wrap_pi_difftest`, `objectlayer::swing_transform_args_difftest`, `objectlayer::u4_facing_delta_difftest`, `objectlayer::u4_facing_dead_band_difftest`, `objectlayer::u4_facing_wrap_pi_delta_difftest`, `objectlayer::u4_facing_box_apply_difftest`
 
 `0x600cd0` sets bits 0x1 and 0x2 of `+0xd58` for key and mouse turning on the active mover.
-`0x600cb0` and `0x607eb0` convert `+0xc98` and `+0xc94` to world facings through the transport.
 `0x601020` resets `+0xc98` from the mover's facing and zeroes `+0xc9c` to `+0xca8`; `0x601050`
-adds a transport's turn to both facings, wrapping each once into 0 to 2π. `0x6084f0` uses
-`fmod` past ±π. `0x608560` (slot 15) places a swimming unit's model with the pitched transform
-`0x60a110`: scale `[+0x94]·[+0x90]` times the mount's `+0x9c` or the unit's `+0x98`. Slices: u4_facing_delta_difftest `0x600ea5`-`0x600eb3`; u4_facing_dead_band_difftest `0x600ea5`-`0x600ec0`; u4_facing_wrap_pi_delta_difftest `0x600eda`-`0x600f0e`; u4_facing_box_apply_difftest `0x600f7b`-`0x601013`.
+wraps each of `+0xc98` and `+0xc94` once into 0 to 2π. `0x6084f0` uses `fmod` past ±π. `0x60a110`
+scales a swimming unit's model by `[+0x94]·[+0x90]` times the mount's `+0x9c` or the unit's
+`+0x98`. Slices: u4_facing_delta_difftest `0x600ea5`-`0x600eb3`; u4_facing_dead_band_difftest `0x600ea5`-`0x600ec0`; u4_facing_wrap_pi_delta_difftest `0x600eda`-`0x600f0e`; u4_facing_box_apply_difftest `0x600f7b`-`0x601013`.
+
+## Body facing
+
+The facing at `+0xc94` is the body's. `0x600cb0` and `0x607eb0` convert the display and body
+facings to world facings through the transport, `0x601050` adds a transport's turn to both, and
+`0x608560` (slot 15) places a swimming unit's model with the pitched transform `0x60a110`.
+
+Addresses: `0x600cb0`, `0x607eb0`, `0x601050`, `0x608560`, `0x60a110`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x600cb0` and `0x607eb0` pass `+0xc98` and `+0xc94` to `0x7c4ae0` on the mover; `0x601050`
+adds its argument to each.
 
 ## The display facing goal
 
@@ -309,13 +325,14 @@ mode has a 12-byte row of `0x860a58`: enabled, a maximum squared distance, and t
 | 7 | walk to a game object | 6400 | `0xc4d998`² |
 | 9 | walk into spell range | 6400 | range · 0.9, squared |
 
-Addresses: `0x860a58`, `0x60e590`, `0x611240`, `0x6113d8`, `0x611310`, `0x61132c`, `0x6111ab`, `0x6110a0`, `0x6103a0`, `0x611590`, `0x60f9fc`, `0xc4d888`, `0xc4d9c0`, `0xc4d910`
+Addresses: `0x860a58`, `0x860a84`, `0x60e590`, `0x60e5a0`, `0x611240`, `0x6113d8`, `0x611310`, `0x61132c`, `0x6111ab`, `0x6110a0`, `0x6103a0`, `0x611590`, `0x60f9fc`, `0xc4d888`, `0xc4d9c0`, `0xc4d910`
 Confidence: verified
 Proof: one
 Test: `objectlayer::move_cast_radius_difftest`, `objectlayer::cast_goal_reach_difftest`, `objectlayer::u5_in_range_dist2_difftest`, `objectlayer::u5_in_range_gates_difftest`
 
-`0x60e590` writes rows 3 to 10 at start-up: 900 at `0x860a80`, 6400 at rows 5, 6, 7, 9 and 10,
-the `+8` byte 1 and `+9` set only on row 8; row 3's enabled byte is the file's. `0x611240(mode,
+`0x60e590` writes rows 3 to 10 at start-up: 900 at `0x860a80`, 6400 at rows 5, 6, 7, 9 and 10, the
+`+8` byte 1 on rows 4 to 10 and 0 on row 3 (`0x860a84`, `0x60e5a0`), and `+9` set only on row 8; row
+3's enabled byte is the file's. `0x611240(mode,
 guid)` takes row `+0` and `+9` and switches modes 3 to 10 through `0x6113d8`: 3 `0xc4d9c4`
 (3², `0x60e6e0`), 4 `0xc4d9b0` (0.5²), 5 `0xc4d958` (2.7777777²), 6 and 10 the combat reaches
 (field 130) plus 4/3, at least 5, mode 10 less 4/3, 7 `0xc4d998` squared, 9 `0x6e3480`'s range
@@ -339,8 +356,9 @@ Proof: one
 Test: `objectlayer::interact_arrival_scale_difftest`, `objectlayer::move_cast_radius_difftest`, `objectlayer::cast_reach_floor_difftest`, `objectlayer::cast_in_range_difftest`, `objectlayer::cast_plane_z_difftest`, `objectlayer::cast_aim_normalize_difftest`, `objectlayer::cast_aim_key_difftest`, `objectlayer::cast_aim_endpoint_difftest`
 
 `0x60fed0` maps modes 0, 1, 5 to "any unit", 3 to follow, 6 and 9 to "a corpse or a dead unit",
-the rest to refusal, through `0x610094` and `0x610084`. Follow needs a cooperative player and a
-live, unstunned, unchannelled follower: messages 0x7e, 0x191, 0x134, else 0x128. `0x60fb60` signals
+the rest to refusal, through `0x610094` and `0x610084`. Follow runs four tests in
+order: the target is a player that `0x606ba0` passes, else message 0x128; the follower's health
+is above 0, else 0x7e; it is not stunned, else 0x191; it has no channel, else 0x134. `0x60fb60` signals
 event 0x170 for mode 3, turns through `0x60e8f0` and stops through `0x60e7f0`, `0x60e920`,
 `0x60e880`. `0x60fc50` clears the precast bit 0x400 of `+0xd58`, ends the ranged pose when the ranged weapon
 is out, releases the spell effect and stops an auto-move whose mode is in `0x860adc`. The walks
@@ -375,24 +393,27 @@ facing with a transport. Slices: move_dist_squares_difftest `0x610f7a`-`0x610fb6
 ## Arrival, height and stalls
 
 Speed widens the arrival: a mover faster than 7 yards a second arrives that much farther out.
-Near the target the height stops counting unless the mover swims. A frame that brings the mover
-no closer, a target behind a drunk mover, a stall while walking forward, or a target straight
-above or below ends the walk. A walk along a heading (mode 8) first pitches a swimmer level, steep or straight.
+Near the target the height stops counting unless the mover swims, and modes 5 and 10 cap that
+window at its unscaled base. A frame that brings the mover no closer, a target behind a drunk
+mover, a stall while walking forward (modes 4 to 10, not follow), or a target straight above or
+below ends the walk. A walk along a heading (mode 8) first pitches a swimmer level, steep or
+straight, by strict thresholds.
 
-Addresses: `0x6106b0`, `0x6107e5`, `0x6108e6`, `0x610a7b`, `0x610aaa`, `0x610c63`, `0x610d32`, `0x610e40`, `0x610100`
+Addresses: `0x6106b0`, `0x6107e5`, `0x6108e6`, `0x610a7b`, `0x610aaa`, `0x610ae8`, `0x610b01`, `0x610c63`, `0x610d32`, `0x610e40`, `0x610ff1`, `0x611007`, `0x610100`, `0x6101bb`, `0x6101f5`
 Confidence: verified
 Proof: one
 Test: `objectlayer::b2_speed_from_timer_difftest`
 
-`0x610e40` ignores height within 0.5 yard (0x80c4c8), or the stop distance in mode 10, times
-max(speed/7, 1) (0x80c4d0); `0x610aaa` scales the stop distance the same way, capped in modes 5
-and 10. `0x6107e5` stops when the distance to the target is not below the distance from the last
-frame's position (0xc4da84) while bit 1 of `0xc4da48`, set once the turn is done (`0x6108e6`),
-holds, outside modes 3 and 5. With a drunkenness argument above 0 and bit 1, `0x610a7b` stops when
-the target lies 160° to 220° off the facing (0x80c604, 0x80c600), and mode 3 drops bit 1 when a
-random fraction times it tops 0.07 (0x80c608). Mode 3 starts walking only beyond
-4.5·max(speed/7, 1) yards (3, 0x80c4c0, times 1.5). `0x610c63` stops a
-forward walk that moved less than 1/360 yard (0x80c4dc, through `0x610d50`) in modes with flag
-byte +8. `0x610d32` stops when the direction's height part tops cos 1° (0xc4d9d0, from 0x80c5f8).
-`0x610100` pitches a swimmer to ±π/2 when the height part of the heading is at least 0.86602
-(0x80c4d4), to its `asin` from 0.17364 (0x80c4d8), else to 0. Slices: b2_speed_from_timer_difftest `0x610aa2`-`0x610aee`.
+`0x610e40` ignores height within 0.5 yard (0x80c4c8), or in mode 10 the stop distance `0xc4d910`,
+times max(speed/7, 1) (0x80c4d0), and `0x610ff1` to `0x611007` cap it at that base. `0x610aaa` does
+the same to the stop distance (`0x610b01`). `0x6107e5` stops when the distance to the target is not
+below the distance from the last frame's position (0xc4da84) while bit 1 of `0xc4da48`, set once the
+turn is done (`0x6108e6`), holds, outside modes 3 and 5. With a drunkenness argument above 0 and bit
+1, `0x610a7b` stops when the target lies 160° to 220° off the facing (0x80c604, 0x80c600), and mode
+3 drops bit 1 when a random fraction times it tops 0.07 (0x80c608). Mode 3 starts walking only
+beyond 4.5·max(speed/7, 1) yards (3·1.5, 0x80c4c0). `0x610c63` stops a forward walk that moved less
+than 1/360 yard (0x80c4dc, through `0x610d50`) in modes with flag byte +8. `0x610d32` stops when the
+direction's height part tops cos 1° (0xc4d9d0, 0x80c5f8). `0x610100` pitches a swimmer to ±π/2 when
+the magnitude of the heading's height part is above 0.86602 (0x80c4d4, `0x6101bb`), to its `asin`
+when above 0.17364 (0x80c4d8, `0x6101f5`), else to 0; a threshold value or a NaN takes the lower
+form. Slices: b2_speed_from_timer_difftest `0x610aa2`-`0x610aee`.

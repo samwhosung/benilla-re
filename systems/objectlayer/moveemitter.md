@@ -49,6 +49,23 @@ send at `0x60e235` when 0.1 is not above the difference (`0x60e208`). Otherwise 
 swimming (0x200000, `0x60e20a`) skips the send; a swimmer repeats the test for the pitch `+0x20`
 against `+0xc74` (`0x60e217` to `0x60e22f`). `0x600a5d` stores before the call to `0x600860`.
 
+## Sending with the step time
+
+`0x600a10(op)` pushes 0, 0 and the opcode, calls `0x619d40`, which takes no arguments and returns
+the mover's step time, and calls `0x600a30(step, op, 0, 0)` with it. `0x600a30` passes the step
+and the opcode to `0x600860` as its time and opcode, and sends the message when that returns
+nonzero.
+
+Addresses: `0x600a10`, `0x600a1e`, `0x600a26`, `0x600a30`, `0x600a8e`, `0x600aca`, `0x619d40`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x600a1e` calls `0x619d40`, which is `call 0x630a40; mov eax,[eax+0x12c]; ret` (`0x619d4b`), so
+the three pushes stay for `0x600a30`, with `eax` pushed on top (`0x600a23`). `0x600a30` pushes
+`[ebp+8]` and `[ebp+0xc]` as the first two arguments of `0x600860` (`0x600a7e` to `0x600a8e`) and
+calls `0x5ab630` on a nonzero result (`0x600aca`).
+
 ## Emitter tail
 
 After the send, every call reaches `0x60e300`, which acts only for the active mover (the unit's
