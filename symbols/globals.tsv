@@ -2424,6 +2424,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8761c4	const uint16_t *	s_wideNullString		crt	Points to the UTF-16 text (null) at 0x81623c, which __output writes for a null wide string	verified	one	crt/printf#characters-strings-and-counts
 0x8761d0	uint8_t[10]	s_x87Indefinite		crt	Holds the indefinite as an 80-bit real, which the dispatcher loads for a domain error	verified	one	crt/math#remainder-dispatch
 0x8761ec	uint8_t[16]	s_fxamClasses		crt	Maps the fxam condition bits to the operand classes 0, 4, 8 and 12: normal, zero, NaN, infinity	verified	one	crt/math#remainder-dispatch
+0x8763c0	char[5]	s_scanSpaceSet		crt	Holds the scanset text of %s, space and 9 to 13 then a bracket, which scanf complements	verified	one	crt/scanf#character-sets
+0x8763c8	char[1]	s_scanEmptySet		crt	Holds the empty scanset of %c, a bracket alone, which scanf complements	verified	one	crt/scanf#character-sets
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math

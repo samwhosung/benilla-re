@@ -31263,13 +31263,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f914	30			crt	primitive		Repeats fprem on st0 by st1 until C2 clears, or calls the software remainder 0x74450c when 0x88391c is 1	verified	one	crt/math#remainder-dispatch	crt::crt_fmod_difftest
 0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	crt::crt_pow_nonfinite_difftest
 0x73fb35	40			crt	boundary		Runs its object file code not read here	inferred	none		
-0x73fb5d	52	_sscanf	idb	crt	boundary		Runs its object file code that calls _strlen, __input; not read here	inferred	none		
+0x73fb5d	52	_sscanf	idb	crt	orchestration	int32_t __cdecl (const char *string, const char *format, ...)	Runs __input over a string stream and returns the stored conversions, or -1 for EOF before a match	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73fb91	46	_isalpha	idb	crt	primitive	int32_t __cdecl (int32_t c)	Tests a character's letter bits 0x103 in the table at _pctype, unchecked for negative values	verified	one	crt/ctype#character-classes	crt::crt_isalpha_difftest
 0x73fbbf	40	_isupper	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fbe7	40	_islower	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fc0f	40	_isdigit	idb	crt	boundary		Tests a character's digit bit in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	net/who#who-level-digits	
 0x73fc37	45	_isxdigit	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x73fc64	40	_isspace	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
+0x73fc64	40	_isspace	idb	crt	boundary	int32_t __cdecl (int32_t c)	Tests a character's space bit 8 in the table at _pctype, unchecked for negative values, while __mb_cur_max is 1	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73fc8c	40	_ispunct	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fcb4	46	_isalnum	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fce2	46	_isprint	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
@@ -31281,7 +31281,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73fdb8	61	___iscsym	idb	crt	unreached		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x73fdf5	207	ceil		crt	boundary	double __cdecl (double x)	Returns the smallest integer not less than a finite double, rounding under the control word 0x1b3f	verified	one	ui/billing#the-minutes-reading	ui::billing_minutes_left
 0x73fec4	82	_sprintf	idb	crt	primitive	int __cdecl (char *buffer, const char *format, ...)	Formats into a buffer with no bound through __output, ends it with a NUL and returns the count	verified	one	crt/printf#the-string-front-ends	crt::crt_sprintf_states_difftest, crt::crt_sprintf_difftest, crt::crt_sprintf_float_difftest
-0x73ff20	31	__allshl	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x73ff20	31	__allshl	idb	crt	primitive		Shifts the 64-bit value in edx:eax left by cl, giving 0 from 64	verified	one	crt/scanf#integer-conversions	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x73ff3f	207	floor		crt	boundary		Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x74000e	21	_isleadbyte	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x740023	17	_iswalpha	idb	crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
@@ -31349,7 +31349,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741a4c	182			crt	boundary		Runs its object file code that calls __getptd; not read here	inferred	none		
 0x741b77	123			crt	boundary		Runs its object file code that calls 0x747445; not read here	inferred	none		
 0x741bf2	41	_ungetc	idb	crt	unreached		Runs its object file code that calls __lock_file, 0x741c1b, __unlock_file; not read here	inferred	none		
-0x741c1b	110			crt	boundary		Runs its object file code that calls __getbuf; not read here	inferred	none		
+0x741c1b	110	_ungetc_lk		crt	primitive	int32_t __cdecl (int32_t c, void *stream)	Pushes a byte back and returns it, or EOF; a string stream takes it only if the byte before the pointer equals it	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x741c89	168			crt	boundary		Runs its object file code that calls 0x40d9b5, __amsg_exit; not read here	inferred	none		
 0x741d31	20			crt	boundary		Runs its object file code that calls 0x74239d; not read here	inferred	none		
 0x741d45	47	__lock_file	idb	crt	boundary		Runs its object file code that calls __lock; not read here	inferred	none		
@@ -31456,15 +31456,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x744be9	163	__check_range_exit	idb	crt	boundary		Runs its object file code that calls __startOneArgErrorHandling and 1 more; not read here	inferred	none		
 0x744c8c	304	__powhlp	idb	crt	primitive	int32_t __cdecl (double x, double y, double *out)	Stores pow for an infinite x or y and returns 1 for a domain error	verified	one	crt/math#non-finite-powers	crt::crt_pow_nonfinite_difftest
 0x744dbc	101	__d_inttype	idb	crt	primitive	int32_t __cdecl (double y)	Returns 0 for a subnormal or a value that is not whole, 1 for an odd whole value, else 2	verified	one	crt/math#non-finite-powers	crt::crt_pow_nonfinite_difftest
-0x744e21	2597	__input	idb	crt	boundary		Runs its object file code that calls __isctype, __whiteout, __un_inc and 7 more; not read here	inferred	none		
-0x745846	55	__hextodec	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
-0x74587d	26			crt	boundary		Runs its object file code that calls __filbuf; not read here	inferred	none		
-0x745897	23	__un_inc	idb	crt	boundary		Runs its object file code that calls 0x741c1b; not read here	inferred	none		
-0x7458ae	36	__whiteout	idb	crt	boundary		Runs its object file code that calls 0x74587d, _isspace; not read here	inferred	none		
+0x744e21	2597	__input	idb	crt	primitive	int32_t __cdecl (void *stream, const uint8_t *format, void *args)	Walks a scanf format over a stream, stores each conversion through the argument list and returns their count or -1	verified	one	crt/scanf#the-format-walk	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x745846	55	__hextodec	idb	crt	primitive	int32_t __cdecl (int32_t c)	Returns a digit as it is and a letter as its value plus 0x30	verified	one	crt/scanf#integer-conversions	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x74587d	26	_inc		crt	primitive	int32_t __cdecl (void *stream)	Takes the next byte of a stream as an unsigned value, or the answer of __filbuf when its count runs out	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x745897	23	__un_inc	idb	crt	boundary	void __cdecl (int32_t c, void *stream)	Pushes a byte back into a stream through _ungetc_lk, and does nothing for EOF	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
+0x7458ae	36	__whiteout	idb	crt	primitive	int32_t __cdecl (int32_t *count, void *stream)	Reads bytes, counting each, until one is not a space and returns it	verified	one	crt/scanf#the-string-stream	crt::crt_sscanf_fixed_difftest, crt::crt_sscanf_random_difftest
 0x7458d2	18	__frnd	idb	crt	boundary	double __cdecl (double x)	Rounds a double to an integral value in the current rounding mode and returns it in st0	verified	one	ui/billing#the-minutes-reading	
 0x7458e4	82	_iswctype	idb	crt	boundary		Tests a 16-bit unit's type bits: 0 for 0xffff, the C table below 0x100, else GetStringTypeW's CT_CTYPE1	verified	one	net/who#who-filter-decoding	
 0x745936	16			crt	unreached		Runs its object file code that calls _iswctype; not read here	inferred	none		
-0x745946	220	__filbuf	idb	crt	boundary		Runs its object file code that calls __getbuf, __read; not read here	inferred	none		
+0x745946	220	__filbuf	idb	crt	boundary		Answers EOF at once for a string stream, else refills a stream's buffer from its file	inferred	none	crt/scanf#the-string-stream	
 0x745a22	405	__mbsicmp	idb	crt	boundary		Runs its object file code that calls __strcmpi, __lock, ___crtLCMapStringA and 1 more; not read here	inferred	none		
 0x745bb7	114	__mbsrchr	idb	crt	boundary		Runs its object file code that calls strrchr, __lock, __unlock; not read here	inferred	none		
 0x745c29	67	__getdrive	idb	crt	boundary		Runs its object file code that calls _toupper; not read here	inferred	none		
