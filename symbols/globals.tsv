@@ -337,10 +337,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x6f1bc0	uint8_t[74]	s_caseIndexes6f1b30		ui	Holds the 74 case indexes of the switch in 0x6f1b30	inferred	none	
 0x6f1ce8	void *[8]	s_cases6f1c10		ui	Holds the 8 case addresses of the switch in 0x6f1c10	inferred	none	
 0x6f1d08	uint8_t[74]	s_caseIndexes6f1c10		ui	Holds the 74 case indexes of the switch in 0x6f1c10	inferred	none	
-0x6f9870	const uint32_t[35]	s_luaOpcodeHandlers		lua	Holds the 35 opcode handler addresses luaV_execute dispatches through	verified	one	ui/luastate#lua-50-behaviour-kept
+0x6f9870	const uint32_t[35]	s_luaOpcodeHandlers		lua	Holds the 35 opcode handler addresses luaV_execute dispatches through	verified	two	ui/luastate#lua-50-behaviour-kept
 0x703078	void *[9]	s_cases702f40		ui	Holds the 9 case addresses of the switch in 0x702f40	inferred	none	ui/luabase#type-and-tostring
-0x7039c4	const uint32_t[2]	s_debugstackNameCases		ui	Holds debugstack's two description arms, by name and by kind	verified	one	ui/luastate#debugstacks-lines
-0x7039cc	const uint8_t[8]	s_debugstackNameKinds		ui	Maps the first letter of a name kind, f to m, to the two arms of 0x7039c4	verified	one	ui/luastate#debugstacks-lines
+0x7039c4	const uint32_t[2]	s_debugstackNameCases		ui	Holds debugstack's two description arms, by name and by kind	verified	two	ui/luastate#debugstacks-lines
+0x7039cc	const uint8_t[8]	s_debugstackNameKinds		ui	Maps the first letter of a name kind, f to m, to the two arms of 0x7039c4	verified	two	ui/luastate#debugstacks-lines
 0x704a40	const uint32_t[7]	s_serializeTypeCases		ui	Holds the serializer case addresses for the Lua types nil to function	verified	one	ui/savedvariables#the-saved-variables-format
 0x704a5c	const uint32_t[4]	s_serializeEscapeCases		ui	Holds the string escape case addresses: NUL, LF, quote or backslash, and plain	verified	one	ui/savedvariables#the-saved-variables-format
 0x704a6c	const uint8_t[93]	s_serializeEscapeKinds		ui	Maps the bytes 0 to 92 to the escape cases of 0x704a5c	verified	one	ui/savedvariables#the-saved-variables-format
@@ -455,7 +455,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x802800	float[16]	s_noiseGradients		random	Holds -1 + 2k/15 for k = 0 to 15, the gradient components of the noise	inferred	none	random#unreached-functions
 0x802940	double	s_two		terrain	Holds 2.0, whose root scales the guard planes	verified	one	terrain/portals#portal-polygon-clip
 0x80295c	const float	s_twoPiConst		unassigned	Holds 2π as a float	verified	one	lighting/daynight#recompute
-0x802970	const double	s_zeroDouble		unassigned	Holds 0.0	verified	one	ui/luastate#reading-numeric-arguments
+0x802970	const double	s_zeroDouble		unassigned	Holds 0.0	verified	two	ui/luastate#reading-numeric-arguments
 0x802978	float	s_oneEighth		terrain	Holds 0.125	verified	one	terrain/lod#chunk-mesh-tables
 0x80297c	const float	s_three		ui	Holds 3.0, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
 0x802990	float	s_six		terrain	Holds 6.0	verified	one	terrain/waterfx#ripple-emission
@@ -1153,13 +1153,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
+0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	two	ui/luabase#type-and-tostring
 0x811d34	const uint32_t[6]	s_luaPoolBlockSizes		lua	Holds the six Lua pool block sizes: 16, 32, 64, 96, 128 and 256	verified	one	lua/pools#allocating-from-the-pools
 0x811d4c	uint8_t[28]	priority		lua	Holds the left and right priority of each of the 14 binary operators of the parser	verified	one	lua/compiler#expressions
 0x811d68	char *[31]	token2string		lua	Holds the text of each token from 257, the reserved words to <eof>	verified	one	lua/compiler#lexer-errors-and-limits
 0x811de4	uint8_t[35]	luaP_opmodes		lua	Holds the mode byte of each of the 35 opcodes: format, operand kinds, sets A and test	verified	one	lua/codegen#jump-lists
 0x811e08	int32_t[6]	ops		lua	Holds the comparison opcode of each operator from ~= to >= for the code generator	verified	one	lua/codegen#conditions-and-operators
-0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	one	ui/luastate#the-library-scripts-see
+0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	two	ui/luastate#the-library-scripts-see
 0x811f4c	void *[5]	s_scriptObjectVtable		ui	Holds the script object vtable the constructor 0x701ae0 stores	verified	two	ui/script#the-script-object
 0x811f8c	uint32_t[7]	s_m2StageCombineByBlend		models	Holds the texture stage combine value of each blend mode	verified	one	models/render#texture-stages
 0x811fa8	uint32_t[7]	s_m2LitByBlend		models	Holds whether each blend mode is lit	verified	one	models/render#lighting-and-fog
@@ -1304,12 +1304,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81e9b4	uint32_t[15]	s_ftSmoothRendererClass		unassigned	Holds the smooth renderer class, the anti-aliased outline renderer	verified	one	font/freetype#rendering
 0x81eb70	uint32_t[30]	s_trueTypeEncodings		unassigned	Holds the TrueType encoding table: platform, encoding or -1 for any, and tag, ten rows	verified	one	font/freetype#charmap-selection
 0x81ecec	uint32_t[15]	s_ftRaster1RendererClass		unassigned	Holds the raster1 renderer class, the 1-bit outline renderer	verified	one	font/freetype#rendering
-0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
+0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	two	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
 0x822d28	double	s_degreesPerRadian		lua	Holds 180 over pi, the factor math.deg multiplies by	verified	one	lua/libs#more-math-functions
 0x822d30	double	s_radiansPerDegree		lua	Holds pi over 180, the factor math.rad multiplies by	verified	one	lua/libs#more-math-functions
-0x822d40	luaL_reg[9]	tab_funcs		lua	Pairs the table library names concat to remove with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
-0x822d88	luaL_reg[13]	strlib		lua	Pairs the string library names len to gsub with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
+0x822d40	luaL_reg[9]	tab_funcs		lua	Pairs the table library names concat to remove with their functions, ending in a null pair	verified	two	ui/luastate#the-library-scripts-see
+0x822d88	luaL_reg[13]	strlib		lua	Pairs the string library names len to gsub with their functions, ending in a null pair	verified	two	ui/luastate#the-library-scripts-see
 0x827000	void (*[7180])(void)	__xc_a		crt	Lists the C++ static initializers __cinit runs in ascending order, up to __xc_z	verified	one	random#static-initializers
 0x82e124	char *[2]	s_archiveRoots		storm	Holds the two search roots of archives: Data\ and ..\Data\	verified	one	storm/mount#base-and-speech-archives
 0x82e12c	uint32_t			client	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1382,6 +1382,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8327d8	char *[2]	_tzname		crt	Points to the standard and daylight zone names, PST and PDT in the file, which __tzset_lk fills	verified	one	crt/time#the-zone-read-once
 0x832800	int32_t[13]	_lpdays		crt	Holds the days before each month less one in a leap year, from -1 to 365; nothing writes it	verified	one	crt/time#breaking-a-time-down-in-utc
 0x832834	int32_t[13]	_days		crt	Holds the days before each month less one in another year, from -1 to 364; nothing writes it	verified	one	crt/time#breaking-a-time-down-in-utc
+0x832998	char[9]	s_textLoadfile		unassigned	Holds loadfile, a command-line switch name	verified	one	ui/luastate#the-library-scripts-see
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	two	screencoord#screen-scale-state
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	two	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	two	screencoord#screen-scale-state
@@ -1394,7 +1395,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	two	core/events#timers
 0x832f60	char[14]	s_textScreenshotStamp		unassigned	Holds the time format "%m%d%y_%H%M%S"	verified	one	gx/capture#screenshot-file
 0x832f70	uint32_t	s_idleSleepEnabled		os	Holds 1, the word that lets the pump sleep while the window is inactive	verified	one	core/input#message-filter-and-idle-sleep
-0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
+0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	two	ui/luastate#the-c-function-contract
 0x833180	const char[2]	s_textStar		ui	Holds the string "*"	verified	one	ui/chatchannels#printing-the-member-list
 0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
@@ -1589,17 +1590,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x83dc30	char[52]	s_textSpellShadowUnacceptable		unassigned	Holds the unacceptable ground reticle texture path, Interface\SpellShadow\Spell-Shadow-Unacceptable.blp	verified	one	ui/groundreticle#the-decal-passes
 0x83dc64	char[50]	s_textSpellShadowAcceptable		unassigned	Holds the acceptable ground reticle texture path, Interface\SpellShadow\Spell-Shadow-Acceptable.blp	verified	one	ui/groundreticle#the-decal-passes
 0x83ddb0	const char *[29]	s_invTypeKeys		ui	Holds the global string key of each inventory type, empty for type 0	verified	one	ui/tooltipitemhead#the-slot-and-type-line
-0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
+0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	two	ui/luastate#the-context-word
 0x83de28	const char *[9]	s_victimStateActions		ui	Holds the UNIT_COMBAT action words of victim states 0 to 8, MISS to DEFLECT	verified	one	objectlayer/playercombat#the-unit-combat-event
 0x83de4c	uint32_t			ui	Holds a dword that CGGameUI::InitializeGame, CGGameUI::ShutdownGame read; not read here	inferred	none	cvar/registry#flags-and-categories
 0x83de58	uint32_t			ui	Holds a dword that Script::IsInInstance reads; not read here	inferred	none	
-0x83de68	uint32_t[432]	s_gameScriptFunctions		ui	Holds the 216 pairs of a name and a C function the game registers as globals	verified	one	ui/luastate#the-c-function-contract
+0x83de68	uint32_t[432]	s_gameScriptFunctions		ui	Holds the 216 pairs of a name and a C function the game registers as globals	verified	two	ui/luastate#the-c-function-contract
 0x83f2d0	char[10]	s_textRealmName		unassigned	Holds the string "realmName"	inferred	none	
 0x840404	char[21]	s_textIgPlayerInviteAccept		unassigned	Holds the string "igPlayerInviteAccept"	inferred	none	
 0x84133c	char[20]	s_textERRPASSIVEABILITY		ui	Holds the string "ERR_PASSIVE_ABILITY"	inferred	none	
 0x842180	char[14]	s_textERRBANKFULL		ui	Holds the string "ERR_BANK_FULL"	inferred	none	
 0x8421a8	char[35]	s_registerForSaveUsage		ui	Holds the usage message of RegisterForSave	verified	one	ui/savedvariables#saved-variables-written
-0x8421cc	char[56]	s_registerForSaveBlizzardOnly		ui	Holds the message RegisterForSave raises for a nonzero context word	verified	one	ui/luastate#the-context-word
+0x8421cc	char[56]	s_registerForSaveBlizzardOnly		ui	Holds the message RegisterForSave raises for a nonzero context word	verified	two	ui/luastate#the-context-word
 0x8422e8	char[40]	s_textUsageRegisterCVarCvarDefault		ui	Holds the string "Usage: RegisterCVar("cvar" [, default])"	inferred	none	
 0x842310	char[30]	s_textCouldnTFindCVarNamedS		ui	Holds the string "Couldn't find CVar named '%s'"	inferred	none	
 0x84235c	char[46]	s_textUsageSetCVarCvarValueScriptCvar		ui	Holds the string "Usage: SetCVar("cvar", value [, "scriptCvar")"	inferred	none	
@@ -1916,6 +1917,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x853244	char[21]	s_textScreenshotSucceeded		unassigned	Holds the event name "SCREENSHOT_SUCCEEDED"	verified	one	gx/capture#completion-events
 0x85365c	const char *[8]	s_addOnReasonNames		ui	Points to the add-on reason names LOADABLE to INTERFACE_VERSION	verified	one	ui/addons#whether-an-add-on-may-load
 0x85367c	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/addons#the-in-game-add-on-functions
+0x853690	char[18]	s_textInterfaceVersion		ui	Holds the string INTERFACE_VERSION	verified	two	ui/luastate#the-library-scripts-see
 0x853724	char[18]	s_addOnsPrefix		ui	Holds Interface\AddOns\	verified	one	ui/addons#finding-add-ons
 0x853738	char[5]	s_tocExtension		ui	Holds .toc	verified	one	ui/addons#finding-add-ons
 0x853740	char[8]	s_textSecure		ui	Holds the string "Secure:"	inferred	none	
@@ -2062,6 +2064,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85c9d0	const char[48]	s_blpSourcePath		image	Holds the source path of blp.cpp	verified	one	image/overview#initializers-and-statics
 0x85cae8	char *[83]	s_errorCodeTokens	idb	net	Holds the 83 status code names, RESPONSE_SUCCESS to CHAR_NAME_SUCCESS, the localization keys	verified	one	net/session#session-status
 0x85cc34	uint32_t			net	Holds a dword that IsAllowedLaunchUrl reads; not read here	inferred	none	
+0x85d2bc	char[22]	s_textAuthVersionMismatch		unassigned	Holds AUTH_VERSION_MISMATCH	verified	two	ui/luastate#the-library-scripts-see
+0x85d3e8	char[26]	s_textResponseVersionMismatch		unassigned	Holds RESPONSE_VERSION_MISMATCH	verified	two	ui/luastate#the-library-scripts-see
 0x85d5b0	char[5]	s_textI		net	Holds the string "(%i)"	inferred	none	
 0x85d684	char[24]	s_textLastRealmConnectedTo		net	Holds the string "Last realm connected to"	inferred	none	
 0x85d6bc	char[8]	s_textHttp		net	Holds the string "http://"	inferred	none	
@@ -2151,7 +2155,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x864644	char[3]	s_text16		unassigned	Holds the string "16"	inferred	none	
 0x8648c8	char[55]	s_pathConsoleClient		console	Holds the source path of ConsoleClient.cpp	verified	one	console/overview#object-files
 0x864908	char[18]	s_tagConsoleLine		console	Holds the allocation tag of a console line, the type name CONSOLELINE	verified	one	console/screen#line-records
-0x864a48	char[7]	s_globalNameKind		unassigned	Holds global	verified	one	ui/luastate#function-names-from-globals
+0x864a48	char[7]	s_globalNameKind		unassigned	Holds global	verified	two	ui/luastate#function-names-from-globals
 0x864e40	char[9]	s_textGxFixLag		console	Holds the string "gxFixLag"	inferred	none	
 0x864eb8	char[9]	s_textGxCursor		console	Holds the string "gxCursor"	inferred	none	
 0x864edc	char[11]	s_textGxMaximize		console	Holds the string "gxMaximize"	inferred	none	
@@ -2350,45 +2354,45 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x871404	char[7]	s_textBOTTOM		ui	Holds the string "BOTTOM"	inferred	none	
 0x87145c	char[3]	s_textOn		ui	Holds the string "on"	inferred	none	
 0x871460	char[4]	s_textOff		ui	Holds the string "off"	inferred	none	
-0x871624	char[9]	s_textNoValue		ui	Holds the string "no value", the type name of an absent index	verified	one	ui/luabase#type-and-tostring
+0x871624	char[9]	s_textNoValue		ui	Holds the string "no value", the type name of an absent index	verified	two	ui/luabase#type-and-tostring
 0x8716e0	char[4]	s_textSAt8716e0		unassigned	Holds the string "@%s"	inferred	none	
 0x871708	char[7]	s_nullText		unassigned	Holds the text (null), which __output and Lua's pushstr write for a null string	verified	one	crt/printf#characters-strings-and-counts
 0x871896	char[12]	s_textASrcLgcC		unassigned	Holds the string "a\src\lgc.c"	inferred	none	
-0x871938	char[7]	s_stringLibraryName		unassigned	Holds string	verified	one	ui/luastate#the-library-scripts-see
+0x871938	char[7]	s_stringLibraryName		unassigned	Holds string	verified	two	ui/luastate#the-library-scripts-see
 0x871960	char[6]	s_text14g		unassigned	Holds the string "%.14g"	inferred	none	
-0x8719b0	char[5]	s_nextName		unassigned	Holds next	verified	one	ui/luastate#lua-50-behaviour-kept
+0x8719b0	char[5]	s_nextName		unassigned	Holds next	verified	two	ui/luastate#lua-50-behaviour-kept
 0x871c10	char[25]	s_textAttemptToSASValue		lua	Holds the string "attempt to %s a %s value"	inferred	none	
 0x871c2c	char[35]	s_textAttemptToSSSASValue		lua	Holds the string "attempt to %s %s `%s' (a %s value)"	inferred	none	
 0x87217c	char[20]	s_textSDSNearS		lua	Holds the string "%s:%d: %s near `%s'"	verified	one	lua/compiler#lexer-errors-and-limits
 0x8722c8	int32_t	s_errorHandlerRef		ui	Holds the registry reference of the script error handler	verified	two	ui/script#running-a-handler
-0x8722cc	int32_t	s_userErrorHandlerRef		ui	Holds the registry reference of the function seterrorhandler set, -1 for none	verified	one	ui/luastate#error-handlers
+0x8722cc	int32_t	s_userErrorHandlerRef		ui	Holds the registry reference of the function seterrorhandler set, -1 for none	verified	two	ui/luastate#error-handlers
 0x8722d0	uint32_t	s_openTableMark		ui	Holds 1, the light userdata the serializer marks open tables with	verified	one	ui/luastate#what-a-new-state-holds
 0x8722d4	int32_t	s_openTableMarkRef		ui	Holds the registry reference of the serializer's open-table mark	verified	one	ui/luastate#what-a-new-state-holds
-0x8722d8	const char *	s_compatChunk		ui	Points to the text of compat.lua, run into each new state	verified	one	ui/luastate#what-a-new-state-holds
+0x8722d8	const char *	s_compatChunk		ui	Points to the text of compat.lua, run into each new state	verified	two	ui/luastate#what-a-new-state-holds
 0x8722dc	char[8]	s_argName		ui	Holds arg and the digits of the argument global being set	verified	two	ui/script#running-a-handler
 0x8722e8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0x8728a4	char[7]	s_ipairsName		ui	Holds the string "ipairs"	verified	one	ui/luabase#iteration
+0x8728a4	char[7]	s_ipairsName		ui	Holds the string "ipairs"	verified	two	ui/luabase#iteration
 0x872990	char[30]	s_eventObjectTag		ui	Holds the allocation tag of the event array, the type name of FrameScript_EventObject	verified	two	ui/script#the-event-table
 0x8729b0	char[60]	s_frameScriptPath		ui	Holds the source path of FrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x8729ec	char[19]	s_frameScriptMetaName		ui	Holds __framescript_meta, the global holding the object metatable	verified	two	ui/script#the-script-object
 0x872a08	char[24]	s_listenerNodeTag		ui	Holds the allocation tag of a listener node, the type name of EVENTLISTENERNODE	verified	two	ui/script#registering-for-an-event
 0x872a28	char[6]	s_handlerNameFormat		ui	Holds %s:%s, the format of a compiled handler's name	verified	two	ui/script#compiling-a-script-element
-0x872a30	char[32]	s_textUsageSeterrorhandlerErrfunc		ui	Holds the string "Usage: seterrorhandler(errfunc)"	verified	one	ui/luastate#error-handlers
-0x872a50	char[12]	s_textMetatableKey		ui	Holds the string "__metatable"	verified	one	ui/luabase#metatables
-0x872a5c	char[36]	s_textCannotChangeProtectedMetatable		ui	Holds the string "cannot change a protected metatable"	verified	one	ui/luabase#metatables
-0x872a80	char[22]	s_textNilOrTableExpected		ui	Holds the string "nil or table expected"	verified	one	ui/luabase#metatables
-0x872acc	char[2]	s_getinfoOptionF		ui	Holds the string "f", the getinfo option for the running function	verified	one	ui/luabase#function-environments
-0x872afc	char[7]	s_fenvKey		ui	Holds the string "__fenv", the key of a protected environment	verified	one	ui/luabase#function-environments
-0x872bb8	char[11]	s_textTostringKey		ui	Holds the string "__tostring"	verified	one	ui/luabase#type-and-tostring
-0x872bc4	char[24]	s_textTableTooBigToUnpack		ui	Holds the string "table too big to unpack"	verified	one	ui/luabase#iteration
+0x872a30	char[32]	s_textUsageSeterrorhandlerErrfunc		ui	Holds the string "Usage: seterrorhandler(errfunc)"	verified	two	ui/luastate#error-handlers
+0x872a50	char[12]	s_textMetatableKey		ui	Holds the string "__metatable"	verified	two	ui/luabase#metatables
+0x872a5c	char[36]	s_textCannotChangeProtectedMetatable		ui	Holds the string "cannot change a protected metatable"	verified	two	ui/luabase#metatables
+0x872a80	char[22]	s_textNilOrTableExpected		ui	Holds the string "nil or table expected"	verified	two	ui/luabase#metatables
+0x872acc	char[2]	s_getinfoOptionF		ui	Holds the string "f", the getinfo option for the running function	verified	two	ui/luabase#function-environments
+0x872afc	char[7]	s_fenvKey		ui	Holds the string "__fenv", the key of a protected environment	verified	two	ui/luabase#function-environments
+0x872bb8	char[11]	s_textTostringKey		ui	Holds the string "__tostring"	verified	two	ui/luabase#type-and-tostring
+0x872bc4	char[24]	s_textTableTooBigToUnpack		ui	Holds the string "table too big to unpack"	verified	two	ui/luabase#iteration
 0x872bdc	char[18]	s_textAssertionFailed		ui	Holds the string "assertion failed!"	inferred	none	
-0x872c44	char[3]	s_dateTableFormat		ui	Holds the string "*t", the date format that answers a table	verified	one	ui/luabase#date
+0x872c44	char[3]	s_dateTableFormat		ui	Holds the string "*t", the date format that answers a table	verified	two	ui/luabase#date
 0x872c6c	char[3]			ui	Holds a string of 2 characters	inferred	none	ui/luastate#debugstacks-lines
-0x872c70	char[21]	s_textInFunctionSD		ui	Holds the string " in function <%s:%d>"	verified	one	ui/luastate#debugstacks-lines
-0x872c88	char[15]	s_textInMainChunk		ui	Holds the string " in main chunk"	verified	one	ui/luastate#debugstacks-lines
-0x872c98	char[18]	s_textInFunctionS		ui	Holds the string " in function `%s'"	verified	one	ui/luastate#debugstacks-lines
-0x872cb4	char[5]	s_debugstackElision		ui	Holds ... and a newline, the line debugstack writes for elided levels	verified	one	ui/luastate#debugstacks-lines
-0x872cbc	char[11]	s_compatChunkName		ui	Holds compat.lua	verified	one	ui/luastate#what-a-new-state-holds
+0x872c70	char[21]	s_textInFunctionSD		ui	Holds the string " in function <%s:%d>"	verified	two	ui/luastate#debugstacks-lines
+0x872c88	char[15]	s_textInMainChunk		ui	Holds the string " in main chunk"	verified	two	ui/luastate#debugstacks-lines
+0x872c98	char[18]	s_textInFunctionS		ui	Holds the string " in function `%s'"	verified	two	ui/luastate#debugstacks-lines
+0x872cb4	char[5]	s_debugstackElision		ui	Holds ... and a newline, the line debugstack writes for elided levels	verified	two	ui/luastate#debugstacks-lines
+0x872cbc	char[11]	s_compatChunkName		ui	Holds compat.lua	verified	two	ui/luastate#what-a-new-state-holds
 0x872cc8	char[8]	s_getTextName		ui	Holds GetText	verified	one	ui/chatserver#the-text-lookup
 0x872cd0	char[15]	s_getPluralIndexName		ui	Holds GetPluralIndex	verified	two	ui/script#text-counts-and-running-code
 0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	one	ui/savedvariables#the-saved-variables-format
@@ -2438,6 +2442,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87859c	const char[10]	s_tagMinResize		ui	Holds the XML element name minResize of a frame's minimum size	verified	one	ui/resizebounds#the-xml-element
 0x8785a8	const char[13]	s_tagResizeBounds		ui	Holds the XML element name ResizeBounds of a frame's resize bounds	verified	one	ui/resizebounds#the-xml-element
 0x8785b8	char[55]	s_simpleFramePath		ui	Holds the source path of CSimpleFrame.cpp	verified	one	ui/README#frame-core-object-files
+0x87860c	char[15]	s_textEnableKeyboard		ui	Holds enableKeyboard, the frame attribute that enables keys and characters	verified	two	ui/mouse#switching-input-kinds
+0x87861c	char[12]	s_textEnableMouse		ui	Holds enableMouse, the frame attribute that enables the mouse	verified	two	ui/mouse#switching-input-kinds
 0x8786a8	char[33]	s_inheritedNodeNotFound		ui	Holds the message for an inherits name that finds no template	verified	two	ui/framexml#templates
 0x8786cc	char[11]	s_textFontString		ui	Holds the string "FontString"	inferred	none	
 0x878778	char[36]	s_unknownScriptElement		ui	Holds the message for a Scripts child naming no handler	verified	two	ui/framexml#script-elements
@@ -2453,6 +2459,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x878d70	char[56]	s_pathCSimpleRenderCpp		ui	Holds the source path of CSimpleRender.cpp, passed to the allocator as the file	verified	one	ui/fonttext#creating-and-freeing-a-string
 0x878e7c	char[28]	s_typeCSimpleBatchedTexture		ui	Holds the RTTI name of the batched quad record, passed to the allocator as its tag	verified	two	ui/draworder#batch-construction
 0x878ec0	uint32_t[136]	s_frameMethods		ui	Holds the 68 pairs of a name and a function of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
+0x879164	char[17]	s_textEnableMouseWheel		ui	Holds EnableMouseWheel, a frame method name	verified	one	ui/mouse#switching-input-kinds
 0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x879544	char[54]	s_textSCreateTextureCouldnTFindInheritedNodeS		ui	Holds the string "%s:CreateTexture(): Couldn't find inherited node "%s""	inferred	none	
 0x87957c	char[57]	s_textSCreateFontStringCouldnTFindInheritedNodeS		ui	Holds the string "%s:CreateFontString(): Couldn't find inherited node "%s""	inferred	none	
@@ -2487,7 +2494,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87a5f8	char[30]	s_typeCSimpleMessageFrameLine		ui	Holds the RTTI name of a message frame line, an allocation tag	verified	one	ui/messagemembers#message-frame-teardown
 0x87a618	char[11]	s_textInsertMode		ui	Holds the string "insertMode"	inferred	none	
 0x87a64c	char[60]	s_pathCSimpleMessageFrameH		ui	Holds the source path of CSimpleMessageFrame.h, passed to the allocator as the file	verified	one	ui/messagemembers#making-a-line
-0x87a6c0	char[12]	s_scrollChildElement		ui	Holds ScrollChild, the XML element name	verified	one	ui/xmltypes#scroll-child
+0x87a6c0	char[12]	s_scrollChildElement		ui	Holds ScrollChild, the XML element name	verified	two	ui/xmltypes#scroll-child
 0x87a7d0	char[43]	s_typeMessageScrollDisplayNode		ui	Holds the RTTI name of a scroll frame display node, an allocation tag	verified	one	ui/messagemembers#scroll-frame-teardown
 0x87a838	char[11]	s_textHSHSH		ui	Holds the string "|H%s|h%s|h"	verified	one	ui/simplehtml#elements
 0x87a88c	char[18]	s_textFontStringHeader3		ui	Holds the string "FontStringHeader3"	inferred	none	
@@ -2515,6 +2522,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87bb40	char[39]	s_textUsageSSetHyperlinkFormatFormat		ui	Holds the string "Usage: %s:SetHyperlinkFormat("format")"	inferred	none	
 0x87bb68	uint32_t[96]	s_editBoxMethods		ui	Holds the 48 pairs of a name and a function of the EditBox methods	verified	one	ui/editbox#lua-methods
 0x87bce8	char[19]	s_textGetAltArrowKeyMode		unassigned	Holds the string "GetAltArrowKeyMode"	inferred	none	
+0x87bf30	char[29]	s_textUsageSetMaxLetters		ui	Holds Usage: %s:SetMaxLetters(max)	verified	two	ui/luastate#reading-numeric-arguments
 0x87bf74	uint32_t[12]	s_checkButtonMethods		ui	Holds the 6 pairs of a name and a function of the CheckButton methods	verified	one	ui/button#lua-methods
 0x87c0a0	char[68]	s_textSSetDisabledCheckedTextureWrongObjectType		ui	Holds the string "%s:SetDisabledCheckedTexture(): Wrong object type, expected texture"	inferred	none	
 0x87c0e8	char[64]	s_textSSetDisabledCheckedTextureCouldnTFindThis		ui	Holds the string "%s:SetDisabledCheckedTexture(): Couldn't find 'this' in texture"	inferred	none	
@@ -2657,8 +2665,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884048	uint64_t	s_cachedUnixTime		core	Holds the GetTickCount and time(NULL) pair 0x429580 caches	verified	one	core/time#calendar-time
 0x884058	uint64_t	s_lastCpuTicksPerSecond		core	Holds the counter rate the calibration copied from 0x8332c0 last	verified	one	core/time#processor-frequency
 0x884060	uint64_t	s_maxCpuTicksPerSecond		core	Holds the largest counter rate the calibration has stored	verified	one	core/time#processor-frequency
-0x884800	uint32_t	s_textSectionStart		os	Holds the start address of the exe .text section, 0 until 0x42a380 runs	verified	one	ui/luastate#the-c-function-contract
-0x884c00	uint32_t	s_textSectionEnd		os	Holds the end address of the exe .text section, 0 until 0x42a380 runs	verified	one	ui/luastate#the-c-function-contract
+0x884800	uint32_t	s_textSectionStart		os	Holds the start address of the exe .text section, 0 until 0x42a380 runs	verified	two	ui/luastate#the-c-function-contract
+0x884c00	uint32_t	s_textSectionEnd		os	Holds the end address of the exe .text section, 0 until 0x42a380 runs	verified	two	ui/luastate#the-c-function-contract
 0x884c08	uint32_t	s_idleSleepTime		os	Holds 0, the milliseconds the inactive pump sleeps	verified	one	core/input#message-filter-and-idle-sleep
 0x884c70	uint64_t	s_cpuMaxHz		core	Holds the processor's maximum frequency in hertz from CallNtPowerInformation	verified	one	core/time#processor-frequency
 0x884c78	void *	s_timeManager		core	Holds the time manager while it lives	verified	one	core/time#time-manager-lifetime
@@ -3031,7 +3039,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e3cc	float[4]	s_interactRangesSquared		ui	Holds the squared ranges of CheckInteractDistance indices 1 to 4, copied at the first call	verified	one	ui/distancegates#thresholds
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
-0xb4e3e4	uint32_t	s_forbiddenSignalGuard		ui	Holds 1 while 0x494a50 signals a forbidden action	verified	one	ui/luastate#the-context-word
+0xb4e3e4	uint32_t	s_forbiddenSignalGuard		ui	Holds 1 while 0x494a50 signals a forbidden action	verified	two	ui/luastate#the-context-word
 0xb4e3f8	uint32_t[60]	s_chatHistoryTimes		ui	Holds the time each history slot was written	verified	one	ui/chatevents#the-history-ring
 0xb4e4f0	void *	s_cityAreaRow		ui	Points at the one AreaTable row whose flags include 0x200, which names a capital's channels	verified	one	ui/chatchannels#composing-a-channel-name
 0xb4e500	uint32_t	s_extraChatColorCount		ui	Holds the number of extra channel colour entries	verified	one	ui/chatcolors#the-colour-registry
@@ -4729,14 +4737,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceea38	uint32_t	s_tocProgressContext		ui	Holds the context word LoadTocFile passes the progress callback in ecx	verified	one	ui/framexml#running-a-toc
 0xceea3c	uint32_t	s_tocLinesTotal		ui	Holds the total of toc lines for the progress callback	verified	two	ui/framexml#running-a-toc
 0xceea60	char[64]	s_fontFlagsText		ui	Holds the flags text FormatFontFlags builds and returns, emptied and rewritten by each call	verified	one	ui/fontmethods#font-flags-text
-0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	one	ui/luastate#the-context-word
-0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	one	ui/luastate#the-context-word
+0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	two	ui/luastate#the-context-word
+0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	two	ui/luastate#the-context-word
 0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	one	ui/savedvariables#the-saved-variables-format
 0xceef60	uint32_t	s_eventCapacity		ui	Holds the capacity of the event record array	verified	two	ui/script#the-event-table
 0xceef64	uint32_t	s_eventCount		ui	Holds the number of event records	verified	two	ui/script#the-event-table
 0xceef68	void *	s_eventRecords		ui	Points to the event records, 0x10 bytes each: name and listener list	verified	two	ui/script#the-event-table
 0xceef6c	uint32_t	s_lastTypeId		ui	Holds the last script type id handed out	verified	two	ui/frames#the-region-type-id
-0xceef74	void *	s_luaState		ui	Points to the Lua state of the interface, 0 while closed	verified	one	ui/luastate#opening-and-replacing-the-state
+0xceef74	void *	s_luaState		ui	Points to the Lua state of the interface, 0 while closed	verified	two	ui/luastate#opening-and-replacing-the-state
 0xceefb0	M2Cache	s_m2Cache		models	Holds the model cache	verified	one	models/cache#cache-object
 0xceffec	float	s_m2LightGridScale		models	Holds the scale from world units to a scene light grid cell	verified	one	models/lights#scene-light-grid
 0xcefff8	uint32_t[251]	s_m2GroupBuckets		models	Holds the buckets of the batch grouping hash, -1 when empty	verified	one	models/scene#batch-grouping

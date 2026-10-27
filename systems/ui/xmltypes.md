@@ -30,7 +30,7 @@ first (`frames`, `Script slots by name`) and then compares its own names, ignori
 
 Addresses: `0x778733`, `0x785033`, `0x779b28`, `0x76c98f`, `0x786a99`, `0x789e44`, `0x787742`, `0x78945a`, `0x782db0`, `0x78b2a2`, `0x78c14e`, `0x7856ca`, `0x7692e5`, `0x76a0d0`, `0x787d9b`, `0x7786a0`, `0x785010`, `0x7799b0`, `0x76c8e0`, `0x786a40`, `0x789dd0`, `0x787670`, `0x789400`, `0x782d80`, `0x78b220`, `0x78c0d0`, `0x785640`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each constructor stores its type's vtable: `0x778733` (Button), `0x785033` (CheckButton),
@@ -50,7 +50,7 @@ unchanged. Each then reads its own children and attributes, by name and ignoring
 
 Addresses: `0x778739`, `0x785039`, `0x779b2e`, `0x7856d0`, `0x76c995`, `0x786a9f`, `0x787748`, `0x789460`, `0x789e4a`, `0x782db6`, `0x78b2a8`, `0x78c154`, `0x7692eb`, `0x7788d6`, `0x78517f`, `0x769820`, `0x76985c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each constructor stores the layout part's vtable right after the main one (`0x778739` to
@@ -78,7 +78,7 @@ with the template (`0x76985c`).
 
 Addresses: `0x7788c0`, `0x785170`, `0x779fb0`, `0x785910`, `0x787b20`, `0x78a130`, `0x76cac0`, `0x786bc0`, `0x789580`, `0x782ef0`, `0x78b3f0`, `0x6f2cf0`, `0x6f2c50`, `0x64a4c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each name is the string a loader passes to `0x6f2cf0` (attributes), `0x6f2c50` (a named child) or
@@ -94,20 +94,21 @@ label keeps what a template or the constructor gave it. Otherwise the value name
 when that global is missing, is neither a string nor a number, or is empty, the value itself is
 used, so
 `text="Continue"` with no such global shows `Continue`. The keyboard display's `LCDText` loader
-reads `text` the same way into a stack buffer of 1,028 bytes with no bound, and stores `""` for an
+reads `text` the same way into a stack buffer of 1,024 bytes with no bound, and stores `""` for an
 absent attribute.
 
-Addresses: `0x778c07`, `0x778c15`, `0x778c23`, `0x778c31`, `0x771006`, `0x771016`, `0x771024`, `0x771032`, `0x729220`, `0x7292a6`, `0x7292c9`, `0x7292d6`, `0x7292ea`, `0x729319`, `0x703bf0`, `0x704350`, `0x8621e4`
+Addresses: `0x778c07`, `0x778c15`, `0x778c23`, `0x778c31`, `0x771006`, `0x771016`, `0x771024`, `0x771032`, `0x729220`, `0x729223`, `0x729283`, `0x7292a6`, `0x7292c9`, `0x7292d6`, `0x7292ea`, `0x729319`, `0x703bf0`, `0x704350`, `0x8621e4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x778c15` and `0x771016` skip on a null or empty value. `0x703bf0` with a count of −1 and no
 gender reads the global through `0x704350`, answering `""` when it is not a string or number;
 `0x778c31` and `0x771032` replace an empty answer with the value (`mov eax,esi`). `0x7292d6` copies
 the answer into `[ebp-0x424]` with the limit 0x7fffffff, `0x7292ea` copies the value instead when
-it is empty, and `0x729319` copies `""` for an absent one; the frame is 0x424 bytes and locals sit
-at `[ebp-0x20]` and above.
+it is empty, and `0x729319` copies `""` for an absent one; the frame is 0x424 bytes (`0x729223`), so
+the buffer, `[ebp-0x424]` up to `[ebp-0x24]`, holds 0x400 bytes, and the locals start at `[ebp-0x24]`,
+where `0x729283` stores the id `0x64ac60` returns.
 
 ## EditBox flags
 
@@ -117,7 +118,7 @@ attribute changes nothing; a present one sets or clears its bit by whether it re
 
 Addresses: `0x7799b0`, `0x779a29`, `0x779a2e`, `0x77a0a5`, `0x77a0b3`, `0x77a0bc`, `0x77a0c5`, `0x77a470`, `0x6f1b30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x779a2e` stores 1 at `+0x318`. For `autoFocus` (`0x77a0a5`) a null or empty value jumps past the
@@ -131,13 +132,13 @@ both `minValue` and `maxValue` are present does it set the range, then `valueSte
 `defaultValue` when present; `orientation` is read either way. `StatusBar` sets its range and then
 `defaultValue` under the same condition.
 
-Addresses: `0x789580`, `0x7895a2`, `0x78960c`, `0x789632`, `0x789656`, `0x78967c`, `0x7896a2`, `0x7896ae`, `0x782ef0`, `0x782fb7`, `0x782fd5`, `0x782ff9`, `0x783021`
+Addresses: `0x789580`, `0x7895a2`, `0x78960c`, `0x789632`, `0x789656`, `0x78967c`, `0x7896a2`, `0x7896a7`, `0x7896ae`, `0x782ef0`, `0x782fb7`, `0x782fd5`, `0x782ff9`, `0x783021`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7895a2` stages 3 before `drawLayer` is read. A null or empty `minValue` (`0x78960c`) or
-`maxValue` (`0x789632`) jumps to `orientation` (`0x7896ae`); else `0x789656` calls `0x7898f0` with
+`maxValue` (`0x789632`) jumps to `orientation` (`0x7896a7`, the push before the read at `0x7896ae`); else `0x789656` calls `0x7898f0` with
 both, `0x78967c` `0x789a60` with the step and `0x7896a2` `0x789930` with the default. `0x782fb7` and
 `0x782fd5` gate `0x783270` (`0x782ff9`) and the default's slot 0x90 (`0x783021`) the same way.
 
@@ -149,7 +150,7 @@ the parent argument and makes it the scroll child. An empty `ScrollChild` report
 
 Addresses: `0x786bc0`, `0x786bdc`, `0x786be5`, `0x786bf4`, `0x786c00`, `0x786c28`, `0x87a6c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x786bdc` finds `ScrollChild` (`0x87a6c0`); `0x786be5` reads its first child; `0x786bf4` calls
@@ -167,7 +168,7 @@ fonts, then the same font items from `font` to `Shadow`.
 
 Addresses: `0x76fe20`, `0x76fe2e`, `0x76fe66`, `0x770179`, `0x770f40`, `0x770f4e`, `0x771410`, `0x783c30`, `0x783c3e`, `0x783d38`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_geom_783c30_fontheight_spacing`, `ui::glue_unit_convert_1024`
 
 The names are the strings `0x76fe20`, `0x770f40` and `0x783c30` pass to `0x6f2cf0`, `0x6f2c50` and

@@ -31,7 +31,7 @@ and a chain function. A `Texture` or `FontString` also answers `Region`, every f
 
 Addresses: `0x76c480`, `0x76c460`, `0x77e520`, `0x77e500`, `0x773480`, `0x773430`, `0x7735d0`, `0x773580`, `0x484800`, `0x4847b0`, `0x778810`, `0x7787b0`, `0x785100`, `0x785090`, `0x495b60`, `0x495af0`, `0x779db0`, `0x779d50`, `0x782e80`, `0x782e20`, `0x7857f0`, `0x785790`, `0x786b40`, `0x786ae0`, `0x7879a0`, `0x787940`, `0x789510`, `0x7894b0`, `0x789f60`, `0x789f00`, `0x78b360`, `0x78b300`, `0x78c220`, `0x78c1c0`, `0x529440`, `0x5293e0`, `0x4ee090`, `0x4ee030`, `0x470030`, `0x46ffd0`, `0x505830`, `0x5057c0`, `0x5042d0`, `0x504240`, `0x502880`, `0x5027f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 A scan of `.text` for `mov eax,[g]; ret` where `g` holds a pointer to a short string finds exactly
@@ -50,7 +50,7 @@ raise first.
 
 Addresses: `0x7a11d0`, `0x7a1290`, `0x7a11f7`, `0x7a121c`, `0x7a1254`, `0x7a126f`, `0x7a1278`, `0x7a1315`, `0x7a1323`, `0x7a133f`, `0x7a135c`, `0x7a1364`, `0x7a136d`, `0x7a1382`, `0x64a4c0`, `0x414310`, `0x414333`, `0x6f3810`, `0x6f37f0`, `0x6f3510`, `0x6f3690`, `0x79fda0`, `0x79fe60`, `0x7a1100`, `0x7a2ea0`, `0x7a2e70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The self checks (`0x7a11f7` to `0x7a1254`): the argument must be a table, `lua_rawgeti(1, 0)` must give
@@ -71,7 +71,7 @@ name or an alias an addon assigned. A name that does not resolve raises for `Set
 
 Addresses: `0x76c760`, `0x76c777`, `0x76c77e`, `0x76c78d`, `0x76c7a9`, `0x76c7cf`, `0x6f3a40`, `0x6f3b00`, `0x6f7cf0`, `0x76c700`, `0x76c71c`, `0x76c744`, `0x76c5b0`, `0x76c6e0`, `0x6ee3e8`, `0x6ee280`, `0x7a1637`, `0x7910a4`, `0x790fa0`, `0x48d7bf`, `0x767964`, `0x767800`, `0x767949`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76c760(name, id)` pushes the name and calls `lua_gettable` (`0x6f3a40`, which goes through
@@ -96,7 +96,7 @@ argument and reads a number as a name.
 
 Addresses: `0x7a2540`, `0x7a25d2`, `0x7a25eb`, `0x7a262f`, `0x7a264a`, `0x7a2654`, `0x7a26a8`, `0x7a26b3`, `0x7a26c9`, `0x7a26de`, `0x7a2710`, `0x7a271d`, `0x7a2764`, `0x7a27b2`, `0x7a2810`, `0x7a28ff`, `0x7a2940`, `0x7a29d9`, `0x7a29ea`, `0x7a2a04`, `0x7a2a61`, `0x7a2aa8`, `0x7a2af6`, `0x7a2b5b`, `0x768010`, `0x767c70`, `0x767db0`, `0x6f1840`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7a2540` raises `Usage` through `0x7a290d` unless argument 2 is a string or number
@@ -112,19 +112,24 @@ candidate) and `Unknown region point`; each raises. `0x7a28ff` calls `0x767c70(â
 
 Naming a widget stores a copy of the expanded name and publishes the widget's table as a global
 when that global is nil, so a name already taken stays with its owner and the later widget is
-unreachable by name. Destroying the widget sets the global to nil whoever holds it. Fonts are also
-kept in a hash table by name; no other class is.
+unreachable by name. Destroying the widget does not clear its global: the destroy paths count the
+table's holders down, which at zero empties its element 0, and leave the global holding that dead table. Only a font rename clears a
+global, the old name's. Fonts are also kept in a hash table by name; no other class is.
 
-Addresses: `0x76c650`, `0x76c662`, `0x76c67d`, `0x76c691`, `0x76c6a4`, `0x76c6b8`, `0x701bd0`, `0x701c5b`, `0x701c62`, `0x701c6c`, `0x701c88`, `0x701cb8`, `0x701cd0`, `0x783870`, `0x783886`, `0x783901`, `0x783c6c`, `0x784150`
+Addresses: `0x76c650`, `0x76c662`, `0x76c67d`, `0x76c691`, `0x76c6a4`, `0x76c6b8`, `0x701bd0`, `0x701c5b`, `0x701c62`, `0x701c6c`, `0x701c88`, `0x701cb8`, `0x701cd0`, `0x701ce5`, `0x701cf8`, `0x701d16`, `0x701d32`, `0x701d41`, `0x7693b0`, `0x7693e7`, `0x76c560`, `0x76c567`, `0x76fd40`, `0x76fd5f`, `0x770e50`, `0x770ea2`, `0x46ff70`, `0x783870`, `0x783886`, `0x783901`, `0x783c6c`, `0x784150`, `0x78415e`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76c650` ignores a null or empty name (assert 0x57, `0x76c6c5`), frees the old copy, expands
 `$parent` (`0x76c691`), stores `SStrDupA` (`0x76c6a4`) and calls `0x701bd0` (`0x76c6b8`). `0x701bd0` probes the global
 with `lua_gettable` (`0x701c62`) and sets it with `lua_settable` (`0x701cb8`) only when its type is
-nil (`0x701c6c`); `false` blocks it as well. `0x701cd0` clears the global without checking its value. `[widget+0x98]` is touched by the
-constructor, the destructor and these only. `0x783870(name, create)` finds or creates a font in a hash
-table of its own, keyed by `SStrHashHT` and compared by `SStrCmpI`, and `0x784150` names the font, clearing
-the old global and publishing the new. Of the string-hash calls in the frame files, three are in the
+nil (`0x701c6c`); `false` blocks it as well. `0x701cd0(name)` counts one holder down (`0x701ce5`); at zero it sets element 0 to nil
+(`0x701cf8` to `0x701d16`) and frees the reference (`0x701d32`). It clears the global `name`, unchecked, only for a nonnull
+name (`0x701d41`). Of its five callers (no `jmp`, no stored address) four push 0: the destructors of the frame `0x7693b0`
+(`0x7693e7`), the region `0x76c560` (`0x76c567`) and the font string `0x770e50` (`0x770ea2`), and `0x76fd40` (`0x76fd5f`);
+the font rename `0x784150` (`0x78415e`) passes the old name. `[widget+0x98]` is written by the constructor and `0x76c650`
+and freed by the destructor; the name getter `0x46ff70`, slot 1 of 33 vtables, returns it. `0x783870(name, create)` finds or
+creates a font in a hash table of its own, keyed by `SStrHashHT` and compared by `SStrCmpI`, and `0x784150` names the font,
+clearing the old global and publishing the new. Of the string-hash calls in the frame files, three are in the
 font table (`0x783886`, `0x783901`, `0x783c6c`).

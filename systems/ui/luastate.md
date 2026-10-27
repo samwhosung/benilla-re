@@ -24,7 +24,7 @@ character screen runs on a state opened twice in a row.
 
 Addresses: `0x7039e0`, `0x7039ed`, `0x703b80`, `0x703b8e`, `0x703ba0`, `0x703bab`, `0x402aee`, `0x403701`, `0x48fe97`, `0x491231`, `0x46a87b`, `0x6f6d20`, `0x6f6f80`, `0xceef74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7039e0` calls `0x6f6d20` and stores the result at `0x7039ed`. `0x703b80` tests `0xceef74`,
@@ -48,7 +48,7 @@ and the chunk `compat.lua`, run from the text `0x8722d8` points at, which sets t
 
 Addresses: `0x7039e0`, `0x7039f2`, `0x703a2f`, `0x703a61`, `0x703a8c`, `0x703aa6`, `0x703ab0`, `0x703ae7`, `0x703af5`, `0x703b26`, `0x6f4400`, `0x6f4dc0`, `0x7fd810`, `0x7fbcd0`, `0x7fb470`, `0x7fadc0`, `0x704cd0`, `0x8722c8`, `0x8722cc`, `0x8722d0`, `0x8722d4`, `0x8722d8`, `0x811e28`, `0x8729ec`, `0x872cbc`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7039f2` calls `0x6f4400` with 0x100. `0x6f3920` pushes `0x7020b0` as a C closure (`0x703a2f`),
@@ -68,7 +68,7 @@ collection by setting the threshold to 0, and clears it unless `keep` is nonzero
 
 Addresses: `0x703bc0`, `0x6f43c0`, `0x6f43d0`, `0x6f4400`, `0x6f6c40`, `0x6f6c76`, `0x6f7340`, `0x6f7343`, `0x490946`, `0x4955d5`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f6c76` stores 1 (`edx`) at `+0x60`. `0x6f7340` loads `+0x60` (`0x6f7343`) and returns on 0;
@@ -91,17 +91,20 @@ or `coroutine` table. `debugload`, `debuginfo`, `debugprint`, `debugdump`, `debu
 globals' metatable applies. `math` adds `pi` and sets the global `__pow`; `bit` holds `bnot`,
 `band`, `bor`, `bxor`, `lshift`, `rshift`, `arshift` and `mod`.
 
-Addresses: `0x811e28`, `0x822d88`, `0x822d40`, `0x822c60`, `0x822c18`, `0x702770`, `0x7027b0`, `0x7027e0`, `0x7027f0`, `0x702800`, `0x702810`, `0x702820`, `0x702830`, `0x7fb470`, `0x7fb492`, `0x7fb4c4`
+Addresses: `0x811e28`, `0x822d88`, `0x822d40`, `0x822c60`, `0x822c18`, `0x702770`, `0x7027b0`, `0x7027e0`, `0x7027f0`, `0x702800`, `0x702810`, `0x702820`, `0x702830`, `0x7fb470`, `0x7fb492`, `0x7fb4c4`, `0x853690`, `0x853699`, `0x85d2bc`, `0x85d2c0`, `0x85d3e8`, `0x85d3f0`, `0x832998`, `0x8010c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The four `luaL_reg` tables hold 12 string functions (`len` to `gsub`, `gfind` among them), 8 table
 functions (`concat` to `remove`, `setn` among them), 24 math functions (`abs` to `randomseed`) and
 the 8 bit functions, each ending in a null pair. The six stubs are `xor eax,eax; ret`. The census
 of the names: no `_G`, `dofile`, `loadlib`, `require` or `newproxy` string exists in the image;
-the one `print` is a character class name and the one `_VERSION` is inside `INTERFACE_VERSION`;
-the control finds `string` (`0x871938`) and `gcinfo`. `0x7fb492` pushes π (0x400921fb54442d18)
+the one `print` is a character class name; no NUL-bounded `_VERSION` exists, and the image holds
+three byte runs of it, inside `INTERFACE_VERSION` (`0x853690`, at `0x853699`), `AUTH_VERSION_MISMATCH`
+(`0x85d2bc`, at `0x85d2c0`) and `RESPONSE_VERSION_MISMATCH` (`0x85d3e8`, at `0x85d3f0`); the one `loadfile` string (`0x832998`) is a
+command-line switch name, held in the table at `0x8010c0`; the control finds `string` (`0x871938`)
+and `gcinfo`. `0x7fb492` pushes π (0x400921fb54442d18)
 under `pi`; `0x7fb4c4` pushes `pow` under `__pow` into the globals.
 
 ## Error handlers
@@ -115,7 +118,7 @@ one is set.
 
 Addresses: `0x703b40`, `0x702900`, `0x702950`, `0x8722cc`, `0x872a30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x703b40` tests `[0x8722cc]` against −1, pushes the registry value, moves it under the message
@@ -135,7 +138,7 @@ the chunk `s` when `name` is absent and answers nil and the message on failure.
 
 Addresses: `0x6f5690`, `0x6f5699`, `0x6f56af`, `0x6f4320`, `0x6f6a00`, `0x6f6a15`, `0x6f6a80`, `0x6f6a98`, `0x6fec00`, `0x6fc9b0`, `0x6ff580`, `0x6ff5cd`, `0x703280`, `0x704b0c`, `0x704c87`, `0x7032b0`, `0x6f57d0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f5699` is `cmp eax,3; jb`, then three byte compares, then `add edx,3; sub eax,3` (`0x6f56af`)
@@ -157,7 +160,7 @@ tables and full userdata have metatables: a string has none, so `s:upper()` is a
 
 Addresses: `0x6f8720`, `0x6f87c6`, `0x6f94a2`, `0x6f94f5`, `0x6f94ff`, `0x6f9870`, `0x6fa760`, `0x6fa2a0`, `0x6f7bd0`, `0x8719b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaV_execute` (`0x6f8720`) dispatches 35 opcodes through `0x6f9870` (`0x6f87c6`); entry 30 is
@@ -175,15 +178,15 @@ first string key whose value is the function, answers that key with the kind `gl
 `debugstack`, error messages and the saved variables writer name a function by a global that holds
 it, the last such key in the hash part.
 
-Addresses: `0x6fbd70`, `0x6fbdf8`, `0x6fbe11`, `0x6fbe22`, `0x6fbe2b`, `0x6fbf90`, `0x6fbfc6`, `0x6fbfcf`, `0x6fbfd8`, `0x864a48`
+Addresses: `0x6fbd70`, `0x6fbdf8`, `0x6fbe11`, `0x6fbe16`, `0x6fbe22`, `0x6fbe2b`, `0x6fbf90`, `0x6fbfc6`, `0x6fbfcf`, `0x6fbfd8`, `0x864a48`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 In `auxgetinfo`'s (`0x6fbd70`) `n` case (`0x6fbdf8`) a null answer from `getfuncname` (`0x6fc460`)
-leads to `travglobals` (`0x6fbf90`, call at `0x6fbe11`), which walks `1 << [t+7]` nodes of `[L+0x48]`
-downward (`0x6fbfc6`), compares each value with `luaO_rawequalObj` (`0x6fbfcf`) and requires a
-string key (`0x6fbfd8`). A hit stores `global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores
+leads to the fallback that starts at `0x6fbe11` and calls `travglobals` (`0x6fbf90`) at `0x6fbe16`.
+`travglobals` walks `1 << [t+7]` nodes of `[L+0x48]` downward (`0x6fbfc6`), compares each value
+with `luaO_rawequalObj` (`0x6fbfcf`) and requires a string key (`0x6fbfd8`). A hit stores `global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores
 `""` (`0x6fbe2b`).
 
 ## math.ceil
@@ -195,7 +198,7 @@ with `lua_pushnumber` and returns one result.
 
 Addresses: `0x7faf70`, `0x822c60`, `0x6f4c80`, `0x6f4c91`, `0x6f4ca7`, `0x6f4cb6`, `0x73fdf5`, `0x6f3810`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The pair at offset 0x40 of `mathlib` holds `ceil` and `0x7faf70`. `0x7faf70` calls `0x6f4c80`
@@ -217,7 +220,7 @@ protected call.
 
 Addresses: `0x704120`, `0x704160`, `0x490250`, `0x490276`, `0x83de68`, `0x6f6050`, `0x6f61a1`, `0x6f61a8`, `0x6f5de8`, `0x6f601b`, `0x42a320`, `0x42a380`, `0x884800`, `0x884c00`, `0x833124`, `0x6f4940`, `0x6f496f`, `0x6f4440`, `0x6fc780`, `0x6fc85c`, `0x6f5d80`, `0x6f3409`, `0x46d70d`, `0x46d726`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x704120` pushes `lua_pushcclosure(fn, 0)` and the name and sets them into `-10001`; `0x704160`
@@ -237,13 +240,13 @@ compare its answer with 0. `0x46d70d` tests argument 1 after `lua_isstring` fail
 an absent argument included, it answers 0.0 and never raises. `lua_isnumber` accepts exactly what
 converts; `lua_isstring` accepts numbers and strings. Integers come from `__ftol`, truncating
 toward zero. What a function does with a missing number is its own: some raise (`SetAlpha`), some
-use a default (a colour's alpha of 1), some convert anyway (`SetMaxLetters` stores 0), and some
-return having done nothing (`SetScrollFromBottom`). An argument count is checked by few functions,
-and exactly (`SetMaxLetters` wants two values, `self` included).
+use a default (a colour's alpha of 1), and some return having done nothing (`SetScrollFromBottom`).
+An argument count is checked by few functions, and exactly: `SetMaxLetters` raises unless it has two
+values (`self` included) and stores 0 only when the second is not a number.
 
-Addresses: `0x6f3410`, `0x6f3400`, `0x6f34d0`, `0x6f3510`, `0x6f3620`, `0x6f3649`, `0x6f7c20`, `0x6f7c32`, `0x6f3070`, `0x40a2b0`, `0x802970`, `0x774e90`, `0x774f1c`, `0x774f8f`, `0x799110`, `0x79919c`, `0x7991e8`, `0x793070`, `0x793078`
+Addresses: `0x6f3410`, `0x6f3400`, `0x6f34d0`, `0x6f3510`, `0x6f3620`, `0x6f3649`, `0x6f7c20`, `0x6f7c32`, `0x6f3070`, `0x40a2b0`, `0x802970`, `0x774e90`, `0x774f1c`, `0x774f8f`, `0x799110`, `0x79919c`, `0x7991bb`, `0x7991d4`, `0x7991e8`, `0x7991ed`, `0x7991f2`, `0x87bf30`, `0x793070`, `0x793078`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f3410` answers null for a positive index at or past the top. `0x6f3620` loads `0.0`
@@ -251,7 +254,9 @@ Test: none
 and 4 (`0x6f7c32`). `0x6f34d0` mirrors those tests; `0x6f3510` compares `lua_type` with 4 and 3.
 `0x40a2b0` sets rounding to chop around `fistp`. `Frame:SetAlpha` gates argument 2 with
 `0x6f34d0` (`0x774f1c`) and raises at `0x774f8f`. `SetMaxLetters` compares `lua_gettop` with 2
-(`0x79919c`), raises otherwise, and stores `__ftol(lua_tonumber(2))` (`0x7991e8`).
+(`0x79919c`, `je 0x7991e1`) and, for any other count, raises `Usage: %s:SetMaxLetters(max)`
+(`0x87bf30`, at `0x7991bb` or `0x7991d4`); with two values it stores `__ftol(lua_tonumber(2))`
+(`0x7991e8`, `0x7991ed`) at `+0x340` (`0x7991f2`), which is 0 for a non-number.
 `SetScrollFromBottom` tests argument 2 first (`0x793078`) and returns 0 on failure.
 
 ## Stack room and run errors
@@ -264,9 +269,9 @@ to `0x6fc8a0` and calls `luaG_errormsg`, which throws. When bit 0 of the current
 clear, `0x6fc8a0` pushes `%s:%d: %s` of the text `0x6f5c40` writes, the number `0x6fbef0` returns
 and the message. The census finds 37 calls of `0x6f2f30` and 32 of `0x6fc870`.
 
-Addresses: `0x6f2f30`, `0x6f2f43`, `0x6f2f5a`, `0x6f2f71`, `0x6fc870`, `0x6fc8a0`, `0x6fc8ad`, `0x6f5990`, `0x6f5f60`, `0x6fc780`
+Addresses: `0x6f2f30`, `0x6f2f43`, `0x6f2f5a`, `0x6f2f71`, `0x6fc870`, `0x6fc8a0`, `0x6fc8ad`, `0x6fc8b1`, `0x6fc8be`, `0x6fc8cf`, `0x6f5990`, `0x6f5f60`, `0x6fc780`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f2f30` takes `L` in `ecx` and `n` in `edx`: `sar ecx,4` on `[L+8] − [L+0xc]`, `cmp ecx,0x800;
@@ -274,8 +279,9 @@ jle` (`0x6f2f43`), so 2048 in all passes; `[L+0x18] − [L+8]` against `n shl 4`
 grow (`0x6f2f5a`); `[L+0x14]+4` against `[L+8] + 16·n` with `jae` (`0x6f2f71`). `0x6fc870` is `cdecl`
 and passes the address of its variable arguments; `0x6fc8a0` tests bit 0 of `[[L+0x14]+8]`
 (`0x6fc8ad`) and, when clear, calls `0x6fbef0` and `0x6fbb90` on the call, then `0x6f5c40` with a
-64-byte stack buffer, `[r+0x20] + 0x10` (`r` the result of `0x6fbb90`) and the length 60, and
-formats through `0x6f5c20`.
+60-byte stack buffer at `[ebp-0x40]` (`0x6fc8cf`; the frame is `sub esp,0x40`, and the message sits at
+`[ebp-4]`, `0x6fc8b1`), `[r+0x20] + 0x10` (`r` the result of `0x6fbb90`) and the length 60
+(`push 0x3c`, `0x6fc8be`), and formats through `0x6f5c20`.
 
 ## The context word
 
@@ -284,25 +290,30 @@ value at `+0x8`. A new value takes the current context `0xceeac0`. Copying a val
 word makes that word current while the nesting count `0xceeac4` is above 0; copying one with a zero
 word gives it the current context. The per-frame update zeroes the count. A script slot runs under
 its word, `RunScript` under `[0x83de24]`, an add-on's files under its name or 0. Context 0 is the
-client's own code: `RegisterForSave` raises otherwise, and `0x494a50` cases 0 and 11 refuse,
-signalling `MACRO_ACTION_FORBIDDEN` for `RunScript`'s word and `ADDON_ACTION_FORBIDDEN` with the
-word's text for any other.
+client's own code: `RegisterForSave` raises otherwise, and the action gate `0x494a50` refuses a
+nonzero context for some kinds (`ui/protected#protected-action-gate`), signalling
+`MACRO_ACTION_FORBIDDEN` for `RunScript`'s word and `ADDON_ACTION_FORBIDDEN` with the word's text.
 
-Addresses: `0x6f37f0`, `0x6f3ca9`, `0x6f94c8`, `0x6fc7c2`, `0x702690`, `0x48b980`, `0x48b9bb`, `0x51f387`, `0x4884e0`, `0x494a50`, `0x494a84`, `0x494ab8`, `0x494ac6`, `0x494add`, `0x494afb`, `0x4955a2`, `0x51ab30`, `0xceeac0`, `0xceeac4`, `0x83de24`, `0x8421cc`, `0xb4e3e4`
+Addresses: `0x6f37f0`, `0x6f3ca9`, `0x6f3caf`, `0x6f3cb5`, `0x6f94c8`, `0x6fc7c2`, `0x702690`, `0x48b980`, `0x48b9bb`, `0x51f387`, `0x4884e0`, `0x494a50`, `0x494ab8`, `0x494abf`, `0x494ac6`, `0x494acc`, `0x494add`, `0x494afb`, `0x495590`, `0x4955a2`, `0x490118`, `0x49015a`, `0x51ab30`, `0xceeac0`, `0xceeac4`, `0x83de24`, `0x8421cc`, `0xb4e3e4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`lua_newtable` (`0x6f3c90`) writes tag 5 and `[0xceeac0]` at `+0x4` (`0x6f3ca9`). The copy in
-`TFORPREP` (`0x6f94c8`) and in the error path (`0x6fc7c2`) is the pattern: test `[src+4]`, store it
-in `0xceeac0` when `0xceeac4` is nonzero, else store `0xceeac0` into `[dst+4]`. `0x48b980` saves the
-context, increments the count and stores `[0x83de24]` (`0x48b9bb`), the empty string's address,
-around `0x704cd0`. `0x51f387` stores the addon's name pointer or 0 by its `+0x24`. `0x4884e0` raises
-`0x8421cc` for a nonzero context. `0x494a50` maps its argument through `0x494b54` (`0x494a84`):
-cases 0 and 11 reach `0x494ab8`, which under the guard `0xb4e3e4` signals 0x1af (`0x494add`) when
-the context equals `[0x83de24]` (`0x494ac6`), else 0x1b0 with `%s` (`0x494afb`), and returns 0.
-Event 0x1af is `MACRO_ACTION_FORBIDDEN` and 0x1b0 `ADDON_ACTION_FORBIDDEN` in the table `0x51ab30`
-builds. `0x495590` zeroes the count (`0x4955a2`).
+`lua_newtable` (`0x6f3c90`) writes tag 5 at `+0` (`0x6f3ca9`) and `[0xceeac0]` at `+0x4`
+(`0x6f3caf`, `0x6f3cb5`). The copy in `TFORPREP` (`0x6f94c8`) and in the error path (`0x6fc7c2`)
+is the pattern: all 16 bytes move, then `[src+4]` is tested; a nonzero word goes into `0xceeac0`
+when `0xceeac4` is nonzero and leaves it alone when the count is 0; a zero word is replaced in the
+destination by `0xceeac0` (`0x6f94e0`, `0x6f94e6`). `0x48b980` saves the context, increments the
+count and stores `[0x83de24]` (`0x48b9bb`), the empty string's address, around `0x704cd0`.
+`0x51f387` stores the addon's name pointer or 0 by its `+0x24`. `0x4884e0` raises `0x8421cc` for a
+nonzero context. The arm `0x494ab8` of the gate `0x494a50` (`ui/protected#protected-action-gate`
+has the kinds that reach it) returns 0 at once while the guard `0xb4e3e4` is set (`0x494abf`);
+otherwise it sets the guard (`0x494acc`), signals 0x1af (`0x494add`) when the context equals
+`[0x83de24]` (`0x494ac6`), else 0x1b0 with `%s` and the context (`0x494afb`), clears the guard
+(`0x494ae2`, `0x494b03`) and returns 0. Event 0x1af is `MACRO_ACTION_FORBIDDEN` and 0x1b0
+`ADDON_ACTION_FORBIDDEN` in the table `0x51ab30` builds. `0x495590` zeroes the count (`0x4955a2`);
+it is registered on category 5 (`0x490118`, `0x49015a`), which every tick of a running context
+dispatches (`core/loop#frame-time`).
 
 ## debugstack
 
@@ -316,7 +327,7 @@ answers the joined arguments alone, `""` by default.
 
 Addresses: `0x703760`, `0x703768`, `0x703771`, `0x703778`, `0x703782`, `0x7037a2`, `0x703809`, `0x70382d`, `0x70383f`, `0x703857`, `0x703863`, `0x703877`, `0x703889`, `0x7038cd`, `0x7038fa`, `0x7039c4`, `0x7039cc`, `0x70397a`, `0x6fbaa0`, `0x6fbc70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x703768` to `0x703778` set 1, 12 and 10. Each of the three slots tests `lua_isnumber(1)`
@@ -336,7 +347,7 @@ last `tail`; otherwise every level prints, so up to `head + tail + 1` levels pri
 
 Addresses: `0x703760`, `0x70383c`, `0x70384c`, `0x703857`, `0x703863`, `0x70386e`, `0x703877`, `0x703880`, `0x7038a0`, `0x7038dc`, `0x7038e7`, `0x703903`, `0x703908`, `0x703916`, `0x70392a`, `0x703943`, `0x70394b`, `0x703963`, `0x70397a`, `0x703998`, `0x7039b0`, `0x872cb4`, `0x872c98`, `0x872c88`, `0x872c6c`, `0x872c70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `ebx` holds the next level (`0x70383c`); the limit is `head + start` (`0x70384c`) and `jbe`

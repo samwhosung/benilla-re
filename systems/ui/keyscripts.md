@@ -53,7 +53,7 @@ A frame that merely has the keyboard enabled does not take keys.
 
 Addresses: `0x76b7d0`, `0x76b7d6`, `0x76b7df`, `0x76b7e5`, `0x76b7f5`, `0x76b7fd`, `0x76ba0f`, `0x76ba12`, `0x76ba14`, `0x76ba1b`, `0x76ba25`, `0x76bba0`, `0x76bbaf`, `0x76bbc3`, `0x76bdf5`, `0x76b760`, `0x76b772`, `0x76b782`, `0x7026f0`, `0x76af00`, `0x76af38`, `0x7770a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76b7d0` returns 0 when `+0xd4` is 0 (`0x76b7df`) or both `+0x188` and `+0x190` are 0 (`0x76b7fd`); past that gate every
@@ -70,7 +70,7 @@ table the binding chord builder uses (`keybindings`, "Key names"). The character
 
 Addresses: `0x76b7d0`, `0x76b816`, `0x76b81b`, `0x76b8a9`, `0x76bba0`, `0x76b760`, `0x76b78d`, `0x41abb0`, `0x4b66b0`, `0x64a7f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76b7d0` and `0x76bba0` each decode the code with their own copy of the table, as the chord builder `0x4b66b0` does.
@@ -91,15 +91,20 @@ in the walk, only inside the edit box's own handlers: a box that is visible and 
 nobody else does and auto focus is set, takes every key it is reached with, except `PRINTSCREEN` and, with
 the arrow switch set, the arrow keys while Alt is not held. A frame ahead of it in the walk can take the key first.
 
-Addresses: `0x779ce8`, `0x779cf2`, `0x779cfd`, `0x77a900`, `0x77a917`, `0x77a956`, `0x77b160`, `0x77b179`, `0x77b17f`, `0x77b18e`, `0x77b1c7`, `0x77b1e0`, `0x77b215`, `0x77b35e`, `0xcf4dc8`, `0x77e3d0`, `0x77e410`, `0x77afc0`, `0x77b770`, `0x41f8f0`
+Addresses: `0x779ce8`, `0x779cf2`, `0x779cfd`, `0x77a900`, `0x77a917`, `0x77a956`, `0x77b160`, `0x77b179`, `0x77b17f`, `0x77b18e`, `0x77b1c7`, `0x77b1e0`, `0x77b215`, `0x77b35e`, `0xcf4dc8`, `0x77e3d0`, `0x77e410`, `0x77afc0`, `0x77b770`, `0x41f8f0`, `0x424510`, `0x41f969`, `0x42455b`, `0x4b66b0`, `0x4b6744`, `0x4b6747`, `0x4b674a`, `0x846e80`, `0x846e88`, `0x846e90`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The constructor calls `0x76af00` with kinds 0, 1 and 2 and `-1`. `0xcf4dc8` has twelve references, all in the edit box code,
 and two writers, `0x77e3d0` and `0x77e410`. `0x77b160` declines at `0x77b172` (not visible), `0x77b187` (`0x212`) and in the arrow gate
 (`0x77b18e`, which tests `0x41f8f0(2)`, the Alt key), then takes the focus test `0x77b1c7`/`0x77b215`; every processing arm ends in
-`mov eax,1` including the default (`0x77b35e`). Slot 0x58 `0x77b770` sends a repeat on to the box's key down when it has the focus or takes it, so a held key types again; slot 0x54 `0x77afc0` takes the input method events the same way.
+`mov eax,1` including the default (`0x77b35e`). `0x41f8f0(code)` finds the current context and calls `0x424510` (`0x41f969`),
+which answers 1 when the code is on the context's held-key list at `+0x1d0` (`cmp [eax+8],ecx`, `0x42455b`); the chord
+builder names codes 0, 1 and 2 `SHIFT`, `CTRL` and `ALT` (`0x4b6744`, `0x4b6747`, `0x4b674a`; strings `0x846e80`,
+`0x846e88`, `0x846e90`), so `0x41f8f0(2)` asks whether Alt is held. Slot 0x58 `0x77b770` sends a repeat on to the box's key down when it has the
+focus or takes it (nobody holds it and auto focus is set, `0x77b787` to `0x77b79b`, then slot 0x60), so a held key types
+again; slot 0x54 `0x77afc0` takes the input method events the same way (`0x77afe3` to `0x77aff7`).
 
 ## Typing and movement
 
@@ -125,14 +130,18 @@ scripts and a cursor refresh. The movement verbs gate on the taint word through 
 Losing the window's activation clears the eight movement direction bits at one instruction, the only
 bulk release in the client, and re-sends the state; gaining it does nothing. Mouse look and autorun stay set. The same
 event zeroes the modifier and button masks and the held-key set. A UI focus change has no such effect, and neither does
-an OS focus message, which the window procedure drops.
+an OS focus message: the window procedure queues no input record for one.
 
-Addresses: `0x766650`, `0x766657`, `0x766660`, `0x766687`, `0x765cf4`, `0x493050`, `0x48fe88`, `0x514490`, `0x51449e`, `0x5144a3`, `0x5144aa`, `0x5144b5`, `0x514640`, `0x5143e0`, `0x42d080`, `0x423cb0`, `0x423900`, `0x424790`, `0x4245b0`
+Addresses: `0x766650`, `0x766657`, `0x766660`, `0x766687`, `0x765cf4`, `0x493050`, `0x48fe88`, `0x514490`, `0x51449e`, `0x5144a3`, `0x5144aa`, `0x5144b5`, `0x514640`, `0x5143e0`, `0x42d080`, `0x42cfe0`, `0x42d5e0`, `0x42d0cb`, `0x42d35c`, `0x42cfd0`, `0x42d5a9`, `0x42d780`, `0x423cb0`, `0x423900`, `0x424790`, `0x4245b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x42d080` queues the activation flag; `0x423cb0` zeroes the masks and raises category 2 with it. `0x765cf4` registers
+`0x42d080` is not a function but the arm of the window procedure `0x42cfe0` that the index table `0x42d5e0`
+gives to message 6 (`WM_ACTIVATE`) alone; `di`, the low word of `wParam`, is the flag, 0 for `WA_INACTIVE`, and the arm
+queues it with `0x42d780(6, flag)` (`0x42d0cb`). `WM_SETFOCUS` (7), `WM_KILLFOCUS` (8), `WM_ACTIVATEAPP` (0x1c) and
+`WM_NCACTIVATE` (0x86) take index 7, to `0x42d35c`, which calls the hook `0x884e6c` when it is set, and only the
+unreached `0x42cfd0` sets it, else `DefWindowProcA` (`0x42d5a9` to `0x42d5b0`). `0x423cb0` zeroes the masks and raises category 2 with the flag. `0x765cf4` registers
 `0x766650` on category 2; it calls `0x42c8a0`, then, when the root's callback `[root+0x1134]` is set, builds a five-dword record whose
 last dword is the flag and calls it. `0x48fe88` installs `0x493050` there, once, in the game interface only, and it returns 1
 after calling `0x514490`. `0x514490` skips on a nonzero flag (`0x51449e`); otherwise `and eax,0xfffff00f` (`0x5144a3`) clears bits 4
