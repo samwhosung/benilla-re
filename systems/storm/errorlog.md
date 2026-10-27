@@ -80,3 +80,31 @@ streams at 16 and `0x66cac0` numbers them; `0x66cb0c` pushes 0x40 and `0x66cb20`
 result is stored at the record's `+0xc`. `0x66c900(print, argument, context)` prints the title through
 `0x66bf60` and reads `Eax` at `+0xb0`, `Ebx` `+0xa4`, `Ecx` `+0xac`, `Edx` `+0xa8` and `Esi` `+0xa0`
 for its first line (`0x66c940`).
+
+## Fatal error display
+
+`SErrDisplayAppFatal(fmt, ...)` (`0x64d0e0`) and `SErrDisplayAppFatal2(code, fmt, ...)` (`0x64cf80`)
+both call `0x64cfa0(code, fmt, args)`, the first with the code 0x85100086. It takes the error
+lock, collects the file and line recorded for this thread, formats the message into 2048 bytes
+with `_vsnprintf`, hands the code, file, message and line to `0x64d100`, which reports the error as
+`error <code & 0xffff>`, 134 for the first, and then calls `StormExitProcess(1)`: the process ends.
+The recorded file and line are null and 0, since only the unreached setter `0x64e5c0` writes them.
+A base archive that does not open reaches it from `MountArchives` (`storm/mount`).
+
+Addresses: `0x64d0e0`, `0x64cf80`, `0x64cfa0`, `0x64cfba`, `0x64cfc0`, `0x64cffe`, `0x64d003`, `0x64d008`, `0x64d020`, `0x64d070`, `0x64d080`, `0x64d0a3`, `0x64d0c4`, `0x64d2ca`, `0x64cc80`, `0x64e5c0`, `0x4038c1`, `0x4038ef`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x64d0e0` loads `ecx` with 0x85100086 (`0x64d0ea`), `edx` with its format and passes the address
+of its variadic arguments to `0x64cfa0` (`0x64d0ef`). `0x64d020` is `InterlockedIncrement` of
+`0x865cf0`, which starts at −1: the first caller initialises the two critical sections
+`0xc53be0` and `0xc53d18`, and every caller enters the one in `ecx`; `0x64d070` leaves it.
+`0x64cfba` reads `GetCurrentThreadId` and `0x64cfc0` compares it with `0xc53d14`, taking
+`0xc53d0c` and `0xc53d10` when equal; their one writer is `0x64e5c0`, which no call or stored
+address reaches (census with control `0x64cfa0`). `0x64d080` calls `_vsnprintf` with 0x7ff
+(`0x64d0a3`) and `0x64d100` (`0x64d0c4`) with the code, file, text, line, 0 and 1. `0x64cffe`
+calls `0x64d080`, `0x64d003` loads 1 and `0x64d008` calls `0x64cc80`, which stores it and
+calls `ExitProcess`. `0x4038c1` tests the result of `0x403b00` for each base archive and
+`0x4038ef` calls `0x64d0e0` with `Failed to open archive %s: %s` (`0x82ed90`), the archive name
+and the text of the last error. `0x64d2ca` masks the code with 0xffff for `: error %u: `.

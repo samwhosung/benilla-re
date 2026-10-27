@@ -103,7 +103,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403740	613	MountArchives		client			Mounts the patch, speech and base MPQ archives in priority order	verified	one	storm/mount#patch-archives	
 0x4039b0	290			client			Runs Client.cpp code that calls SStrPrintf, SMemReAlloc, SMemAlloc and 2 more; not read here	inferred	none		
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, logging a missing one and failing fatally on a bad one	verified	one	storm/mount#base-and-speech-archives	
+0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, returning 0 if missing and ending the client on a bad one	verified	one	storm/mount#base-and-speech-archives	
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
 0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	two	core/close#tail	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
@@ -18266,7 +18266,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bf240	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf250	159			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x5bf2f0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x5bf300	224			unassigned			Runs its object file code that calls 0x5c08b0, 0x5bfd20, 0x5bf0a0 and 5 more; not read here	inferred	none		
+0x5bf300	224	DestroyGxuLightLists		unassigned	orchestration	void __cdecl (void)	Empties the light table and frees the nodes of the three light lists with their allocation tags	verified	one	core/close#light-list-teardown	
 0x5bf3e0	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5bf3f0	227			unassigned	unreached		Runs its object file code that calls SMemAlloc, DeviceLightInitialize, 0x5c03d0 and 2 more; not read here	inferred	none		
 0x5bf4e0	338			unassigned	unreached		Runs its object file code that calls 0x5c07a0, 0x5c0b30, 0x5bfdb0 and 1 more; not read here	inferred	none		
@@ -23488,12 +23488,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64cea0	181			storm	boundary		Runs its object file code that calls 0x64ea40, SMemFree; not read here	inferred	none		
 0x64cf60	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64cf70	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64cf80	20	SErrDisplayAppFatal2	idb	storm	boundary		Runs its object file code that calls 0x64cfa0; not read here	inferred	none		
-0x64cfa0	118			storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070, 0x64d080 and 1 more; not read here	inferred	none		
-0x64d020	69			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64d070	8			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64d080	81			storm	boundary		Runs its object file code that calls __vsnprintf, 0x64d100; not read here	inferred	none		
-0x64d0e0	22	SErrDisplayAppFatal	idb	storm	boundary		Runs its object file code that calls 0x64cfa0; not read here	inferred	none		
+0x64cf80	20	SErrDisplayAppFatal2	idb	storm	orchestration	void __cdecl (uint32_t code, const char *format, ...)	Passes its code, format and variadic arguments to 0x64cfa0, which reports a fatal error and ends the process	verified	one	storm/errorlog#fatal-error-display	
+0x64cfa0	118	SErrDisplayAppFatalV		storm	orchestration	void __fastcall (uint32_t code, const char *format, va_list args)	Takes the error lock, formats and reports a fatal error through 0x64d080 and ends the process with exit code 1	verified	one	storm/errorlog#fatal-error-display	
+0x64d020	69	StormEnterSection		storm	host	void __fastcall (void *section)	Initialises Storm's two critical sections on the first call and enters the one in ecx	verified	one	storm/errorlog#fatal-error-display	
+0x64d070	8	StormLeaveSection		storm	host	void __fastcall (void *section)	Leaves the critical section in ecx	verified	one	storm/errorlog#fatal-error-display	
+0x64d080	81	SErrFormatAndDisplay		storm	orchestration	void __fastcall (uint32_t code, const char *file, uint32_t line, const char *format, va_list args, uint32_t arg5, uint32_t arg6)	Formats a message into 2048 bytes with _vsnprintf and passes it with the code, file and line to 0x64d100	verified	one	storm/errorlog#fatal-error-display	
+0x64d0e0	22	SErrDisplayAppFatal	idb	storm	orchestration	void __cdecl (const char *format, ...)	Passes the code 0x85100086 with its format and variadic arguments to 0x64cfa0, which ends the process	verified	one	storm/errorlog#fatal-error-display	
 0x64d100	1777			storm	boundary		Runs its object file code that calls SStrCopy, SStr::sub_64A450, 0x64de30 and 20 more; not read here	inferred	none		
 0x64d810	46			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64d870	175			storm	boundary		Runs its object file code that calls SStrLen, _strpbrk, SStrCopy and 1 more; not read here	inferred	none		

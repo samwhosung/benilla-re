@@ -78,7 +78,7 @@ a constant at each site: 1, 2, 5, 6, 8 to 0x11, 0x1b and 0x1c, and 7 and 4 in th
 The stop handler `0x403640` calls, in order: `0x401ee0` with all arguments 0, the game teardown, which acts
 only when `[0x882734]` is set (a world has been entered); `0x4036c0`, client systems; `0x5ab3d0`, network
 services; `0x4036a0`; `0x443d30`; `0x66fb00`, the world renderer; `0x706de0`, models; `0x448d30`, textures;
-`0x443520`; the connection library's shutdown `0x5bf300`, through the pointer `0x85f3f0`; `0x63c9b0`, which removes the callback and
+`0x443520`; the light lists' teardown `0x5bf300`, through the pointer `0x85f3f0`; `0x63c9b0`, which removes the callback and
 shuts the console; `0x442140`; `0x4633c0`; `0x463bb0`; `0x419d30`. It returns 1. Outside `0x401ee0` its direct calls
 write no file, signal no Lua event and send no packet.
 
@@ -93,6 +93,31 @@ and `0x40204d` clears it. The closure of the other fourteen callees, `0x5bf300` 
 `0x5ab630` or `0x5379a0` send, and none of the 485 event sites of `tables/event_sites.tsv`. The pointer `0x85f3f0` keeps its image value `0x5bf300`: its one writer, `0x5bf250`, has no reference.
 The control is the closure of `0x401ee0`, which reaches all three kinds (69 event sites). Indirect calls are
 not followed.
+
+## Light list teardown
+
+`0x5bf300`, which the stop handler calls through `[0x85f3f0]`, slot 1 of a table of function
+pointers from `0x85f3ec`, frees the nodes of the lighting objects' lists, in this order. It calls
+`0x5c08b0` on the table object at 0xc2a66c with 0. Then, while a list head holds a node, it empties
+the node's lists and frees it with `SMemFree(node, tag, -2, 0)`: the head at 0xc2a69c, a list at
+`+0x18` and the node's links, tag `.?AUCLightList@@`; the head at 0xc2a664, a list at `+0x50`, tag
+`.?AUCGxuLight@@`; the head at 0xc2a6f0, a link at `+0x14` and one at `+0xc`, tag
+`.?AVCGxuLightLink@@`. A head that is 0 or has its low bit set is empty. It writes no file and sends
+no packet.
+
+Addresses: `0x5bf300`, `0x5bf302`, `0x5bf307`, `0x5bf310`, `0x5bf326`, `0x5bf32d`, `0x5bf33c`, `0x5bf343`, `0x5bf359`, `0x5bf361`, `0x5bf368`, `0x5bf37e`, `0x5bf385`, `0x5bf39b`, `0x5bf3ae`, `0x5bf3d6`, `0x5c08b0`, `0x5bfd20`, `0x5bf0a0`, `0x5bf3e0`, `0x5c0d80`, `0x5bfce0`, `0x5c07a0`, `0x646430`, `0x85f3ec`, `0x85f3f0`, `0x5bf250`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5bf302` loads ecx with the table and `0x5bf307` calls with 0. Each loop reads its head
+(`0x5bf310`, `0x5bf343`, `0x5bf385`) and ends on `test al,1` or a zero. The calls on a node are
+`0x5bfd20` on `+0x18` (`0x5bf326`) and `0x5bf0a0` on the node (`0x5bf32d`); `0x5bfd20` on `+0x50`
+(`0x5bf359`), `0x5bf3e0` on `+8` (`0x5bf361`, a bare `ret`) and `0x5c0d80` twice (`0x5bf368`);
+`0x5bfce0` on `+0x14` (`0x5bf39b`) and an inline unlink of `+0xc` (`0x5bf3ae`). The tags are pushed
+at `0x5bf336`, `0x5bf378` and `0x5bf3d0`, `0x646430` being `SMemFree`; the names are the
+allocation tags. What the unlinking callees do is read as their call order and arguments. The
+table's setter `0x5bf250` has no caller or stored address, and the slots keep their file values.
 
 ## Network teardown
 
