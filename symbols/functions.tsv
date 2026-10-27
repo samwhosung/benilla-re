@@ -95,7 +95,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4035b0	49	SpamFilterCallback		client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035f0	21	ReloadUiCommand		client		uint32_t __fastcall (const char *name, const char *args)	Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	verified	one	glue/manager#rebuild-requests	
 0x403610	5			client			Runs Client.cpp code not read here	inferred	none		
-0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	one	net/dispatch#main-thread-drain	
+0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	two	net/dispatch#main-thread-drain	
 0x403640	88	ClientContextStop		client			Runs the game teardown, client systems and network services, then the other shutdowns and removes the callback	verified	one	core/close#stop-handler-order	
 0x4036a0	26	CacheUpdateShutdown	idb	client			Runs Client.cpp code that calls EventKillTimer; not read here	inferred	none		
 0x4036c0	100	DestroyClientSystems		client			Shuts down client systems at context stop, 0x6ec130 among them	inferred	none	spell/visuals#startup-and-shutdown	
@@ -1738,17 +1738,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41f3b0	15			base			Runs its object file code not read here	inferred	none		
 0x41f3c0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41f3d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x41f3f0	12	DeleteObjectThroughSlot1		base			Calls slot 1 of a non-null object's vtable with 1, deleting it	verified	one	core/events#observer-classes	
+0x41f3f0	12	DeleteObjectThroughSlot1		base			Calls slot 1 of a non-null object's vtable with 1, deleting it	verified	two	core/events#observer-classes	
 0x41f400	40			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x41f430	180			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x41f4f0	43			unassigned			Runs its object file code that calls 0x41dee0, SMemFree; not read here	inferred	none		
 0x41f520	43			unassigned			Runs its object file code that calls 0x41e330, SMemFree; not read here	inferred	none		
 0x41f550	47	EventInitialize		core	orchestration	void __fastcall (uint32_t threads, uint32_t polling)	Runs the module setups and starts the scheduler with at least one thread through 0x4219d0	verified	two	core/loop#startup-and-shutdown	
-0x41f580	5	InitEventInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x41f590; a static initializer	verified	one	core/loop#static-initializers	
-0x41f590	11	InitEventInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/loop#static-initializers	
+0x41f580	5	InitEventInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x41f590; a static initializer	verified	two	core/loop#static-initializers	
+0x41f590	11	InitEventInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/loop#static-initializers	
 0x41f5a0	25	EventDestroy		core	orchestration	void __cdecl (void)	Tears down the scheduler, the input state, the message pool, the input observer and the registration pools	verified	two	core/loop#startup-and-shutdown	
 0x41f5c0	5	EventDoMessageLoop		core	orchestration	void __cdecl (void)	Jumps to 0x420be0, which runs the frame loop on the calling thread	verified	two	core/loop#startup-and-shutdown	
-0x41f5d0	5	EventStopScheduler		core	orchestration	void __cdecl (void)	Jumps to 0x422030, which sets the shutdown event and wakes every slot	verified	one	core/loop#shutdown-event	
+0x41f5d0	5	EventStopScheduler		core	orchestration	void __cdecl (void)	Jumps to 0x422030, which sets the shutdown event and wakes every slot	verified	two	core/loop#shutdown-event	
 0x41f5e0	24	EventCreateContext		core	orchestration	uint32_t __fastcall (uint32_t interactive, void *startHandler, void *stopHandler, uint32_t idleTime, uint32_t flags)	Creates a context through 0x422090 and returns its handle	verified	two	core/loop#startup-and-shutdown	
 0x41f600	35	EventCreateBackgroundContext		core	unreached		Creates a context through 0x41f5e0 with idle time 500 ms, or 1 when the argument is nonzero	inferred	none	core/loop#contexts	
 0x41f630	163	EventIsContextInteractive		core	unreached		Returns whether the current thread's context has the interactive flag	inferred	none	core/events#unreached-functions	
@@ -1769,47 +1769,47 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41fe50	176	EventPumpInput		core	unreached		Drains the window input of the current context through 0x423920	inferred	none	core/events#unreached-functions	
 0x41ff00	198	EventSetTimerExA		core	unreached		Creates a timer on a context through 0x428960	inferred	none	core/events#unreached-functions	
 0x41ffd0	203	EventSetTimerExB		core	unreached		Creates a timer on a context through 0x428960	inferred	none	core/events#unreached-functions	
-0x4200a0	198	EventSetTimer	idb	core	orchestration	uint32_t __fastcall (uint32_t delay, void *handler, void *argument)	Creates a one-shot timer on the current context and returns its id	verified	one	core/events#timers	
+0x4200a0	198	EventSetTimer	idb	core	orchestration	uint32_t __fastcall (uint32_t delay, void *handler, void *argument)	Creates a one-shot timer on the current context and returns its id	verified	two	core/events#timers	
 0x420170	202	EventSetTimerEx		core	unreached		Creates a one-shot timer on the current context with the two-argument handler form	verified	one	core/events#unreached-functions	
 0x420240	198	EventSetTimerExC		core	unreached		Creates a timer on the current context through 0x428d00	inferred	none	core/events#unreached-functions	
 0x420310	202	EventSetTimerExD		core	unreached		Creates a timer on the current context through 0x428d00	inferred	none	core/events#unreached-functions	
-0x4203e0	171	EventKillTimer	idb	core	orchestration	void __fastcall (uint32_t id, uint32_t arg2, uint32_t arg3)	Kills a timer of the current context through 0x428820	verified	one	core/events#timers	
+0x4203e0	171	EventKillTimer	idb	core	orchestration	void __fastcall (uint32_t id, uint32_t arg2, uint32_t arg3)	Kills a timer of the current context through 0x428820	verified	two	core/events#timers	
 0x420490	169	EventGetTimerRemaining		core	unreached		Queries a timer of the current context through 0x428790	inferred	none	core/events#unreached-functions	
 0x420540	181	EventSetMouseMode	idb	core	orchestration	void __fastcall (uint32_t mode, uint32_t buttons)	Sets the mouse mode for a set of held buttons through 0x4241a0; error 0x57 for a mode of 2 or more	verified	one	core/input#buttons-and-capture	
 0x420600	153	EventGetCursorPos		core	orchestration	void __fastcall (float *x, float *y)	Writes the cursor position as client fractions passed through 0x41ad80, for the current context	verified	one	core/input#mouse-modes	
 0x4206a0	153	EventSetCursorPos		core	unreached		Moves the cursor through 0x4242b0	inferred	none	core/events#unreached-functions	
 0x420740	147	EventSetCursorRect		core	unreached		Sets the cursor confinement rectangle through 0x424370	inferred	none	core/events#unreached-functions	
-0x4207e0	5	InitEventTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4207f0; a static initializer	verified	one	core/loop#static-initializers	
-0x4207f0	15	InitEventTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/loop#static-initializers	
-0x420800	5	InitEventInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x420810; a static initializer	verified	one	core/loop#static-initializers	
-0x420810	19	InitEventInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/loop#static-initializers	
+0x4207e0	5	InitEventTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4207f0; a static initializer	verified	two	core/loop#static-initializers	
+0x4207f0	15	InitEventTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/loop#static-initializers	
+0x420800	5	InitEventInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x420810; a static initializer	verified	two	core/loop#static-initializers	
+0x420810	19	InitEventInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/loop#static-initializers	
 0x420830	24	GetElementLinkAt4		core	orchestration		Returns the link at +4 of an element, or the sentinel link for 0	verified	one	core/scheduler#intrusive-lists	
-0x420850	95	InitContextTable		core	orchestration	void __cdecl (void)	Builds the context table lock and its eight buckets once, under the guard bit 0xcf76cc	verified	one	core/loop#static-initializers	
-0x4208b0	12	RegisterDestroyContextTable		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	one	core/loop#static-initializers	
-0x4208c0	190	DestroyContextTable		core	orchestration	void __cdecl (void)	Unlinks every context table entry and destroys the bucket and table locks once	verified	one	core/loop#static-initializers	
+0x420850	95	InitContextTable		core	orchestration	void __cdecl (void)	Builds the context table lock and its eight buckets once, under the guard bit 0xcf76cc	verified	two	core/loop#static-initializers	
+0x4208b0	12	RegisterDestroyContextTable		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	two	core/loop#static-initializers	
+0x4208c0	190	DestroyContextTable		core	orchestration	void __cdecl (void)	Unlinks every context table entry and destroys the bucket and table locks once	verified	two	core/loop#static-initializers	
 0x420980	41	GetContextTableLink		core	orchestration		Returns the link of the element after a link, the sentinel at the end	verified	one	core/scheduler#intrusive-lists	
-0x4209b0	5	InitSchedInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4209c0; a static initializer	verified	one	core/loop#static-initializers	
-0x4209c0	11	InitSchedInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/loop#static-initializers	
-0x4209d0	10	StaticInitSlotLock		core	orchestration	void __cdecl (void)	Calls 0x4209e0 and registers 0x4209f0 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
-0x4209e0	10	InitSlotLock		core	orchestration	void __cdecl (void)	Builds the slot list lock 0x883ef4	verified	one	core/loop#static-initializers	
-0x4209f0	12	RegisterDestroySlotLock		core	orchestration	void __cdecl (void)	Registers 0x420a00 with _atexit	verified	one	core/loop#static-initializers	
-0x420a00	10	DestroySlotLock		core	orchestration	void __cdecl (void)	Destroys the slot list lock 0x883ef4	verified	one	core/loop#static-initializers	
-0x420a10	10	StaticInitSlotList		core	orchestration	void __cdecl (void)	Calls 0x420a20 and registers 0x420a50 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
-0x420a20	34	InitSlotList		core	orchestration	void __cdecl (void)	Makes 0x883ee8 an empty list	verified	one	core/loop#static-initializers	
-0x420a50	12	RegisterDestroySlotList		core	orchestration	void __cdecl (void)	Registers 0x420a60 with _atexit	verified	one	core/loop#static-initializers	
-0x420a60	145	DestroySlotList		core	orchestration	void __cdecl (void)	Unlinks every slot from the slot list	verified	one	core/loop#static-initializers	
-0x420b00	10	StaticInitThreadArray		core	orchestration	void __cdecl (void)	Calls 0x420b10 and registers 0x420b30 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
-0x420b10	23	InitThreadArray		core	orchestration	void __cdecl (void)	Clears the scheduler thread array 0x883ecc	verified	one	core/loop#static-initializers	
-0x420b30	12	RegisterDestroyThreadArray		core	orchestration	void __cdecl (void)	Registers 0x420b40 with _atexit	verified	one	core/loop#static-initializers	
-0x420b40	25	DestroyThreadArray		core	orchestration	void __cdecl (void)	Frees the scheduler thread array's storage	verified	one	core/loop#static-initializers	
-0x420b60	10	StaticInitStartEvent		core	orchestration	void __cdecl (void)	Calls 0x420b70 and registers 0x420b80 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
-0x420b70	15	InitStartEvent		core	host	void __cdecl (void)	Creates the start gate 0x883ec4 as a manual-reset event, unset	verified	one	core/loop#static-initializers	
-0x420b80	12	RegisterCloseStartEvent		core	orchestration	void __cdecl (void)	Registers 0x420b90 with _atexit	verified	one	core/loop#static-initializers	
-0x420b90	10	CloseStartEvent		core	host	void __cdecl (void)	Closes the start gate 0x883ec4	verified	one	core/loop#static-initializers	
-0x420ba0	10	StaticInitShutdownEvent		core	orchestration	void __cdecl (void)	Calls 0x420bb0 and registers 0x420bc0 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
-0x420bb0	15	InitShutdownEvent		core	host	void __cdecl (void)	Creates the shutdown event 0x883f24 as a manual-reset event, unset	verified	one	core/loop#static-initializers	
-0x420bc0	12	RegisterCloseShutdownEvent		core	orchestration	void __cdecl (void)	Registers 0x420bd0 with _atexit	verified	one	core/loop#static-initializers	
-0x420bd0	10	CloseShutdownEvent		core	host	void __cdecl (void)	Closes the shutdown event 0x883f24	verified	one	core/loop#static-initializers	
+0x4209b0	5	InitSchedInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4209c0; a static initializer	verified	two	core/loop#static-initializers	
+0x4209c0	11	InitSchedInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/loop#static-initializers	
+0x4209d0	10	StaticInitSlotLock		core	orchestration	void __cdecl (void)	Calls 0x4209e0 and registers 0x4209f0 with _atexit; a static initializer	verified	two	core/loop#static-initializers	
+0x4209e0	10	InitSlotLock		core	orchestration	void __cdecl (void)	Builds the slot list lock 0x883ef4	verified	one	core/loop#slot-lock-and-thread-array	
+0x4209f0	12	RegisterDestroySlotLock		core	orchestration	void __cdecl (void)	Registers 0x420a00 with _atexit	verified	two	core/loop#static-initializers	
+0x420a00	10	DestroySlotLock		core	orchestration	void __cdecl (void)	Destroys the slot list lock 0x883ef4	verified	one	core/loop#slot-lock-and-thread-array	
+0x420a10	10	StaticInitSlotList		core	orchestration	void __cdecl (void)	Calls 0x420a20 and registers 0x420a50 with _atexit; a static initializer	verified	two	core/loop#static-initializers	
+0x420a20	34	InitSlotList		core	orchestration	void __cdecl (void)	Makes 0x883ee8 an empty list	verified	two	core/loop#static-initializers	
+0x420a50	12	RegisterDestroySlotList		core	orchestration	void __cdecl (void)	Registers 0x420a60 with _atexit	verified	two	core/loop#static-initializers	
+0x420a60	145	DestroySlotList		core	orchestration	void __cdecl (void)	Unlinks every slot from the slot list	verified	two	core/loop#static-initializers	
+0x420b00	10	StaticInitThreadArray		core	orchestration	void __cdecl (void)	Calls 0x420b10 and registers 0x420b30 with _atexit; a static initializer	verified	two	core/loop#static-initializers	
+0x420b10	23	InitThreadArray		core	orchestration	void __cdecl (void)	Clears the scheduler thread array 0x883ecc	verified	one	core/loop#slot-lock-and-thread-array	
+0x420b30	12	RegisterDestroyThreadArray		core	orchestration	void __cdecl (void)	Registers 0x420b40 with _atexit	verified	two	core/loop#static-initializers	
+0x420b40	25	DestroyThreadArray		core	orchestration	void __cdecl (void)	Frees the scheduler thread array's storage	verified	one	core/loop#slot-lock-and-thread-array	
+0x420b60	10	StaticInitStartEvent		core	orchestration	void __cdecl (void)	Calls 0x420b70 and registers 0x420b80 with _atexit; a static initializer	verified	two	core/loop#static-initializers	
+0x420b70	15	InitStartEvent		core	host	void __cdecl (void)	Creates the start gate 0x883ec4 as a manual-reset event, unset	verified	two	core/loop#static-initializers	
+0x420b80	12	RegisterCloseStartEvent		core	orchestration	void __cdecl (void)	Registers 0x420b90 with _atexit	verified	two	core/loop#static-initializers	
+0x420b90	10	CloseStartEvent		core	host	void __cdecl (void)	Closes the start gate 0x883ec4	verified	two	core/loop#static-initializers	
+0x420ba0	10	StaticInitShutdownEvent		core	orchestration	void __cdecl (void)	Calls 0x420bb0 and registers 0x420bc0 with _atexit; a static initializer	verified	two	core/loop#static-initializers	
+0x420bb0	15	InitShutdownEvent		core	host	void __cdecl (void)	Creates the shutdown event 0x883f24 as a manual-reset event, unset	verified	two	core/loop#static-initializers	
+0x420bc0	12	RegisterCloseShutdownEvent		core	orchestration	void __cdecl (void)	Registers 0x420bd0 with _atexit	verified	two	core/loop#static-initializers	
+0x420bd0	10	CloseShutdownEvent		core	host	void __cdecl (void)	Closes the shutdown event 0x883f24	verified	two	core/loop#static-initializers	
 0x420be0	28	RunMainLoop		core	orchestration	void __cdecl (void)	Sets the start gate, runs 0x420c00 on slot 0x883f20, and clears 0x883f20 after	verified	two	core/loop#startup-and-shutdown	
 0x420c00	543	SchedulerThreadProc		core	orchestration	uint32_t __stdcall (uint32_t useMainSlot)	Runs the frame loop: sleeps until a context is due, runs its tick, reschedules or tears it down	verified	two	core/loop#the-loop	
 0x420e20	49	ContextStart		core	orchestration	uint32_t __thiscall (EvtContext *this)	Dispatches category 7 once per context, stamping +0x40; returns 0 when already started	verified	two	core/loop#one-tick	
@@ -1823,24 +1823,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x421430	303	PopDueContext		core	orchestration	EvtContext * __fastcall (uint32_t slot)	Removes and returns the root of a slot's heap, the context due soonest, or null	verified	two	core/loop#the-loop	core::heap_pop_min_matches_binary
 0x421560	12	GetSlotEvent		core	orchestration	void * __fastcall (uint32_t slot)	Returns the address of a slot's wake event, +0x20 of its record	verified	two	core/loop#the-loop	
 0x421570	708	RescheduleContext		core	orchestration	void __fastcall (uint32_t slot, EvtContext *context, uint32_t due, uint32_t cost)	Stores a context's next due time and cost and puts it back in a slot's heap	verified	two	core/loop#next-due-time	
-0x421840	25	UpdateHeapNodeIndex		core	orchestration	void __thiscall (void *this, uint32_t index)	Stores the heap and the index in the node at an index	verified	one	core/loop#scheduler-heap	
-0x421860	365	ResiftHeapNode		core	orchestration	void __thiscall (void *this)	Removes a node from its heap and inserts it again after a key change	verified	one	core/loop#scheduler-heap	core::heap_resift_matches_binary
+0x421840	25	UpdateHeapNodeIndex		core	orchestration	void __thiscall (void *this, uint32_t index)	Stores the heap and the index in the node at an index	verified	two	core/loop#scheduler-heap	
+0x421860	365	ResiftHeapNode		core	orchestration	void __thiscall (void *this)	Removes a node from its heap and inserts it again after a key change	verified	two	core/loop#scheduler-heap	core::heap_resift_matches_binary
 0x4219d0	597	InitScheduler		core	orchestration	void __fastcall (uint32_t threads, uint32_t polling)	Builds the slots for a power-of-two thread count, creates slot 0 and starts the extra loop threads	verified	two	core/loop#startup-and-shutdown	
 0x421c30	122	DeleteSlotArray		core	unreached		Destroys an array of slot locks and frees it	inferred	none	core/loop#unreached-functions	
 0x421cb0	580	DestroyScheduler		core	orchestration	void __cdecl (void)	Stops the loop threads and frees the slots, their locks and the thread array	verified	two	core/loop#startup-and-shutdown	
 0x421f00	50	PollUntilSignaled		core	orchestration		Calls 0x43f050 with 100 until the event it is given is signaled; a polling-mode helper thread entry	verified	one	core/scheduler#polling-mode	
-0x421f40	240	RemoveHeapNodeAt		core	orchestration	void __thiscall (void *this, uint32_t index)	Removes the node at an index from a heap and sifts the last node into its place	verified	one	core/loop#scheduler-heap	
+0x421f40	240	RemoveHeapNodeAt		core	orchestration	void __thiscall (void *this, uint32_t index)	Removes the node at an index from a heap and sifts the last node into its place	verified	two	core/loop#scheduler-heap	
 0x422030	90	StopScheduler		core	host	void __cdecl (void)	Sets the shutdown event 0x883f24 and, unless polling, every slot's wake event	verified	two	core/loop#start-and-stop	
 0x422090	516	EvtContext::EvtContext		core	orchestration		Allocates and builds a context, registers its start and stop handlers at 1000.0 and schedules it	verified	two	core/loop#contexts	
 0x4222a0	579	AddContextToScheduler		core	orchestration	void __thiscall (EvtContext *this)	Gives a context a handle and table entry, makes it due now and puts it in the least-loaded slot	verified	two	core/loop#contexts	
 0x4224f0	9	IEvtSchedulerIsContextInteractive	idb	core	orchestration	uint32_t __thiscall (EvtContext *this)	Returns bit 1 of a context's flags, the interactive flag	verified	two	core/loop#contexts	
-0x422500	60	SchedulerWorkerThreadProc		core	unreached		Registers a worker thread and runs 0x422540	inferred	none	core/loop#unreached-functions	
+0x422500	60	RegisterSchedulerWorkerThread		core	unreached		Clears the thread property slot, copies the main slot and registers the thread named Engine <id>	verified	two	core/loop#unreached-functions	
 0x422540	464	SchedulerWorkerLoop		core	unreached		Runs the frame loop's body for a worker thread's slot	inferred	none	core/loop#unreached-functions	
 0x422710	16	SchedulerWorkerExit		core	unreached		Releases a worker's slot and its thread record	inferred	none	core/loop#unreached-functions	
 0x422720	290	GrowHeapArrayTo		core	primitive		Raises a heap array's count to index + 1, growing its capacity to a quantum multiple, zeroing on request	verified	one	core/scheduler#growable-arrays	
 0x422850	266	ReserveHeapArray		core	primitive		Sets a heap array's count, growing its capacity to a quantum multiple only when it must	verified	one	core/scheduler#growable-arrays	
 0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/scheduler#growable-arrays	
-0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *this, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	one	core/loop#scheduler-heap	core::heap_key_le_matches_binary
+0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *this, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	two	core/loop#scheduler-heap	core::heap_key_le_matches_binary
 0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *this, uint32_t nodeOffset)	Zeroes a heap array's four dwords and stores the element-to-node offset as the fifth	verified	two	core/scheduler#growable-arrays	
 0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/scheduler#growable-arrays	
 0x4229c0	23	FreeThreadArrayStorage		core	orchestration		Frees the thread array's storage, tagged .PAVSThread@@, when it is not null	verified	one	core/scheduler#growable-arrays	
@@ -1848,10 +1848,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x422a50	102	EvtContextBase::DeletingDestructor		core	orchestration		Stores 0x801370, unlinks the link at +4, frees this when bit 0 is set and returns it	verified	one	core/scheduler#context-vtables	
 0x422ac0	137	DestroySlotRecord		core	orchestration		Clears a slot heap's node owners, frees its storage, closes its event and unlinks the slot	verified	one	core/scheduler#slot-acquire-and-release	
 0x422b50	226	GrowHeapArrayBy		core	primitive		Raises a heap array's capacity for count + add, rounding on request, and leaves the count	verified	one	core/scheduler#growable-arrays	
-0x422c40	5	InitSchedTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c50; a static initializer	verified	one	core/loop#static-initializers	
-0x422c50	15	InitSchedTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/loop#static-initializers	
-0x422c60	5	InitSchedInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c70; a static initializer	verified	one	core/loop#static-initializers	
-0x422c70	19	InitSchedInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/loop#static-initializers	
+0x422c40	5	InitSchedTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c50; a static initializer	verified	two	core/loop#static-initializers	
+0x422c50	15	InitSchedTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/loop#static-initializers	
+0x422c60	5	InitSchedInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c70; a static initializer	verified	two	core/loop#static-initializers	
+0x422c70	19	InitSchedInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/loop#static-initializers	
 0x422c90	177	LinkNode		core	orchestration		Unlinks a node, then links it after a reference link in mode 1, else before it	verified	one	core/scheduler#intrusive-lists	
 0x422d50	33	InitHandlerList		core	orchestration		Makes an empty handler list: link offset 0 and an end link marked by bit 0	verified	two	core/events#handler-records	
 0x422d80	17	GetListEndLink		core	orchestration		Returns its argument, or the sentinel link for 0	verified	one	core/scheduler#intrusive-lists	
@@ -1868,12 +1868,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4230e0	57	GetContextArrayQuantum		core	primitive		Returns 64 (stored as the quantum) for sizes of 64 and up, else the highest power of two not above the size	verified	one	core/scheduler#growable-arrays	
 0x423120	31	RoundUpToMultiple2		core	primitive		Rounds a size up to a multiple of a quantum	verified	one	core/scheduler#growable-arrays	
 0x423140	133	ReallocContextArray		core	orchestration		Sets the context array's capacity exactly, keeping the smaller of capacity and count elements	verified	one	core/scheduler#growable-arrays	
-0x4231d0	95	InitContextTableAgain		core	orchestration	void __cdecl (void)	Repeats 0x420850 under the same guard bit, then registers 0x4208c0 with _atexit	verified	one	core/events#static-initializers	
-0x423230	12	RegisterDestroyContextTable2		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	one	core/events#static-initializers	
+0x4231d0	95	InitContextTableAgain		core	orchestration	void __cdecl (void)	Repeats 0x420850 under the same guard bit, then registers 0x4208c0 with _atexit	verified	two	core/events#static-initializers	
+0x423230	12	RegisterDestroyContextTable2		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	two	core/events#static-initializers	
 0x423240	399	EvtContext::DeletingDestructor		core	orchestration		Frees a context's handlers, messages, held keys and timers, then the context when bit 0 is set	verified	two	core/loop#start-and-stop	
 0x4233d0	250	RemoveHeapNode		core	orchestration		Removes a node from the heap that owns it and sifts the last element into its place	verified	one	core/scheduler#context-destruction	
 0x4234d0	62	DestroyTimerHeap		core	orchestration		Clears the owner and index of every timer heap node and frees the heap array	verified	one	core/scheduler#context-destruction	
-0x423510	23	FreeUint32Array		core	orchestration	void __thiscall (void *this)	Frees an array's storage, tagged .I	verified	one	core/events#shared-arrays	
+0x423510	23	FreeUint32Array		core	orchestration	void __thiscall (void *this)	Frees an array's storage, tagged .I	verified	two	core/events#shared-arrays	
 0x423530	136	ClearMessageList		core	orchestration		Unlinks every message of a message list	verified	one	core/scheduler#context-destruction	
 0x4235c0	136	ClearKeyList		core	orchestration		Unlinks every record of the held-key list	verified	one	core/scheduler#context-destruction	
 0x423650	23	FreeTimerArray		core	orchestration		Frees the timer array's storage when it is not null	verified	one	core/scheduler#context-destruction	
@@ -1882,12 +1882,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x423740	91	DeleteKeyRecord		core	orchestration		Unlinks a held-key record and frees it when bit 0 of the argument is set	verified	one	core/scheduler#context-destruction	
 0x4237a0	60	UnlinkContextListNode		core	orchestration		Unlinks a link from its list and clears it	verified	one	core/scheduler#intrusive-lists	
 0x4237e0	136	ClearHandlerList		core	orchestration		Unlinks every record of a handler list	verified	one	core/scheduler#context-destruction	
-0x423870	5	InitQueueInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x423880; a static initializer	verified	one	core/events#static-initializers	
-0x423880	11	InitQueueInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
-0x423890	10	StaticInitCursorRect		core	orchestration	void __cdecl (void)	Calls 0x4238a0 and registers 0x4238d0 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x4238a0	41	InitCursorRect		core	orchestration	void __cdecl (void)	Zeroes the cursor confinement rectangle 0x883f48 to 0x883f54	verified	one	core/events#static-initializers	
-0x4238d0	12	RegisterReturnVoid		core	orchestration	void __cdecl (void)	Registers 0x4238e0 with _atexit	verified	one	core/events#static-initializers	
-0x4238e0	1	ReturnVoid		core	orchestration	void __cdecl (void)	Returns; registered with _atexit by 0x423890	verified	one	core/events#static-initializers	
+0x423870	5	InitQueueInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x423880; a static initializer	verified	two	core/events#static-initializers	
+0x423880	11	InitQueueInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/events#static-initializers	
+0x423890	10	StaticInitCursorRect		core	orchestration	void __cdecl (void)	Calls 0x4238a0 and registers 0x4238d0 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x4238a0	41	InitCursorRect		core	orchestration	void __cdecl (void)	Zeroes the cursor confinement rectangle 0x883f48 to 0x883f54	verified	two	core/events#static-initializers	
+0x4238d0	12	RegisterReturnVoid		core	orchestration	void __cdecl (void)	Registers 0x4238e0 with _atexit	verified	two	core/events#static-initializers	
+0x4238e0	1	ReturnVoid		core	orchestration	void __cdecl (void)	Returns; registered with _atexit by 0x423890	verified	two	core/events#static-initializers	
 0x4238f0	10	DestroyEventInput		core	orchestration	void __cdecl (void)	Restores the Num Lock state and mouse speed through 0x42cf60 and clears the masks through 0x423900	verified	one	core/loop#startup-and-shutdown	
 0x423900	13	ClearInputMasks		core	orchestration	void __cdecl (void)	Clears the held-button mask 0x883f40 and the modifier mask 0x883f34	verified	two	core/input#kinds-to-categories	
 0x423910	5	InitEventInput		core	orchestration	void __cdecl (void)	Jumps to 0x42cf20, which saves the Num Lock state and the mouse speed	verified	two	core/loop#startup-and-shutdown	
@@ -1918,16 +1918,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4242b0	61	SetCursorFromFractions		core	unreached		Moves the OS cursor to a point given in interface units	inferred	none	core/events#unreached-functions	
 0x4242f0	121	FractionsToClientPoint		core	unreached		Converts client fractions back to a client point	inferred	none	core/events#unreached-functions	
 0x424370	158	SetCursorRect		core	unreached		Stores the cursor confinement rectangle, or zeroes it for a null rectangle	inferred	none	core/events#unreached-functions	
-0x424410	5	InitQueueTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424420; a static initializer	verified	one	core/events#static-initializers	
-0x424420	15	InitQueueTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
-0x424430	5	InitQueueInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424440; a static initializer	verified	one	core/events#static-initializers	
-0x424440	19	InitQueueInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
-0x424460	5	InitMessageInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424470; a static initializer	verified	one	core/events#static-initializers	
-0x424470	11	InitMessageInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
-0x424480	10	StaticInitMessagePool		core	orchestration	void __cdecl (void)	Calls 0x424490 and registers 0x4244c0 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x424490	35	InitMessagePool		core	orchestration	void __cdecl (void)	Builds the message pool 0x883f64 with a 256-byte limit	verified	one	core/events#deferred-messages	
-0x4244c0	12	RegisterDestroyMessagePoolAtExit		core	orchestration	void __cdecl (void)	Registers 0x4244d0 with _atexit	verified	one	core/events#static-initializers	
-0x4244d0	20	DestroyMessagePoolAtExit		core	orchestration	void __cdecl (void)	Destroys the message pool 0x883f64	verified	one	core/events#deferred-messages	
+0x424410	5	InitQueueTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424420; a static initializer	verified	two	core/events#static-initializers	
+0x424420	15	InitQueueTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/events#static-initializers	
+0x424430	5	InitQueueInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424440; a static initializer	verified	two	core/events#static-initializers	
+0x424440	19	InitQueueInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/events#static-initializers	
+0x424460	5	InitMessageInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x424470; a static initializer	verified	two	core/events#static-initializers	
+0x424470	11	InitMessageInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/events#static-initializers	
+0x424480	10	StaticInitMessagePool		core	orchestration	void __cdecl (void)	Calls 0x424490 and registers 0x4244c0 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x424490	35	InitMessagePool		core	orchestration	void __cdecl (void)	Builds the message pool 0x883f64 with a 256-byte limit	verified	two	core/events#deferred-messages	
+0x4244c0	12	RegisterResetMessagePoolAtExit		core	orchestration	void __cdecl (void)	Registers 0x4244d0 with _atexit	verified	two	core/events#static-initializers	
+0x4244d0	20	ResetMessagePoolAtExit		core	orchestration	void __cdecl (void)	Resets the message pool's vtables at exit, freeing nothing	verified	two	core/events#deferred-messages	
 0x4244f0	1	InitEventQueue		core	orchestration	void __cdecl (void)	Returns; the message module's setup	verified	two	core/loop#startup-and-shutdown	
 0x424500	10	DestroyMessagePool		core	orchestration	void __cdecl (void)	Destroys the message pool 0x883f64	verified	one	core/loop#startup-and-shutdown	
 0x424510	114	IEvtQueueCheckSyncKeyState	idb	core	orchestration	uint32_t __fastcall (EvtContext *context, uint32_t key)	Returns 1 when a key code is on a context's held-key list	verified	two	core/events#held-keys-and-repeats	
@@ -1939,7 +1939,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x424920	42	UpdateSyncMouseState	idb	core	primitive	void __fastcall (EvtContext *context, uint32_t buttons, uint32_t down)	ORs buttons into the held-button mask, or clears them	verified	two	core/events#held-buttons	
 0x424950	81	IEvtQueueSetHandlerSkip		core	unreached		Marks records of a category skipped under the context lock	inferred	none	core/events#unreached-functions	
 0x4249b0	186	IEvtQueueDispatchMessage		core	unreached		Dispatches one queued message and frees it	inferred	none	core/events#unreached-functions	
-0x424a70	96	FreeMessage		core	orchestration		Unlinks a message and returns it to the pool or the heap by its size	verified	one	core/events#deferred-messages	
+0x424a70	96	FreeMessage		core	orchestration		Unlinks a message and returns it to the pool or the heap by its size	verified	two	core/events#deferred-messages	
 0x424ad0	298	IEvtQueueProcessMessages		core	orchestration	void __thiscall (EvtContext *this)	Takes a context's message queue and dispatches each message's category and payload	verified	two	core/loop#one-tick	
 0x424c00	197	IEvtQueuePostMessage		core	unreached		Copies a payload into a new message and appends it to a context's queue	inferred	none	core/events#deferred-messages	
 0x424cd0	159	AllocMessage		core	unreached		Allocates a message with room for a payload from the pool or the heap	inferred	none	core/events#deferred-messages	
@@ -1952,17 +1952,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x425220	41	GetHandlerLink		core	orchestration		Returns the link a handler link points at, or the end link marked by bit 0	verified	two	core/events#dispatch	
 0x425250	60	UnlinkHandler		core	orchestration		Unlinks a handler record from its list and clears its link	verified	two	core/events#dispatch	
 0x425290	41	GetMessageLink		core	orchestration		Returns the link a message link points at, or the end link marked by bit 0	verified	two	core/events#dispatch	
-0x4252c0	5	InitMessageTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4252d0; a static initializer	verified	one	core/events#static-initializers	
-0x4252d0	15	InitMessageTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
-0x4252e0	5	InitMessageInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4252f0; a static initializer	verified	one	core/events#static-initializers	
-0x4252f0	19	InitMessageInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
+0x4252c0	5	InitMessageTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4252d0; a static initializer	verified	two	core/events#static-initializers	
+0x4252d0	15	InitMessageTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/events#static-initializers	
+0x4252e0	5	InitMessageInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4252f0; a static initializer	verified	two	core/events#static-initializers	
+0x4252f0	19	InitMessageInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/events#static-initializers	
 0x425310	41	GetKeyLink		core	orchestration		Returns the link a held-key link points at, or the end link marked by bit 0	verified	two	core/events#dispatch	
 0x425340	60	UnlinkKeyRecord		core	orchestration		Unlinks a held-key record from its list and clears its link	verified	two	core/events#dispatch	
-0x425380	5	InitInputObserverInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x425390; a static initializer	verified	one	core/events#static-initializers	
-0x425390	11	InitInputObserverInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
-0x4253a0	10	StaticInitInputObserverPointer		core	orchestration	void __cdecl (void)	Calls 0x4253b0 and registers 0x4253c0 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x4253b0	11	InitInputObserverPointer		core	orchestration	void __cdecl (void)	Clears the input observer pointer 0x883f94	verified	one	core/events#static-initializers	
-0x4253c0	12	RegisterReleaseInputObserverAtExit		core	orchestration	void __cdecl (void)	Registers 0x4253d0 with _atexit	verified	one	core/events#static-initializers	
+0x425380	5	InitInputObserverInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x425390; a static initializer	verified	two	core/events#static-initializers	
+0x425390	11	InitInputObserverInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/events#static-initializers	
+0x4253a0	10	StaticInitInputObserverPointer		core	orchestration	void __cdecl (void)	Calls 0x4253b0 and registers 0x4253c0 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x4253b0	11	InitInputObserverPointer		core	orchestration	void __cdecl (void)	Clears the input observer pointer 0x883f94	verified	two	core/events#static-initializers	
+0x4253c0	12	RegisterReleaseInputObserverAtExit		core	orchestration	void __cdecl (void)	Registers 0x4253d0 with _atexit	verified	two	core/events#static-initializers	
 0x4253d0	29	ReleaseInputObserverAtExit		core	orchestration	void __cdecl (void)	Releases the input observer 0x883f94, deleting it at the last reference	verified	one	core/events#static-initializers	
 0x4253f0	1	InitInputObserverModule		core	orchestration	void __cdecl (void)	Returns; the input observer module's setup	verified	two	core/loop#startup-and-shutdown	
 0x425400	39	ReleaseInputObserver		core	orchestration	void __cdecl (void)	Releases the input observer 0x883f94 and clears it	verified	one	core/loop#startup-and-shutdown	
@@ -2008,31 +2008,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4260a0	76	InputObserverAttach13		core	unreached		Attaches the input observer to an event class and registers its handler at the first attach	inferred	none	core/events#unreached-functions	
 0x4260f0	63	InputObserverDetach13		core	unreached		Detaches the input observer from an event class and unregisters its handler at the last detach	inferred	none	core/events#unreached-functions	
 0x426130	5	ResetMouseModeThunk		core	unreached		Jumps to 0x420540	inferred	none	core/events#unreached-functions	
-0x426140	5	InitInputObserverTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x426150; a static initializer	verified	one	core/events#static-initializers	
-0x426150	15	InitInputObserverTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
-0x426160	5	InitInputObserverInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x426170; a static initializer	verified	one	core/events#static-initializers	
-0x426170	19	InitInputObserverInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
-0x426190	40	ObserverEvent::DeletingDestructorA		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
-0x4261c0	40	ObserverEvent::DeletingDestructorB		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
-0x4261f0	40	ObserverEvent::DeletingDestructorC		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
-0x426220	40	ObserverEvent::DeletingDestructorD		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
-0x426250	40	ObserverEvent::DeletingDestructorE		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
-0x426280	40	ObserverEvent::DeletingDestructorF		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	one	core/events#observer-classes	
+0x426140	5	InitInputObserverTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x426150; a static initializer	verified	two	core/events#static-initializers	
+0x426150	15	InitInputObserverTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/events#static-initializers	
+0x426160	5	InitInputObserverInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x426170; a static initializer	verified	two	core/events#static-initializers	
+0x426170	19	InitInputObserverInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/events#static-initializers	
+0x426190	40	ObserverEvent::DeletingDestructorA		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
+0x4261c0	40	ObserverEvent::DeletingDestructorB		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
+0x4261f0	40	ObserverEvent::DeletingDestructorC		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
+0x426220	40	ObserverEvent::DeletingDestructorD		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
+0x426250	40	ObserverEvent::DeletingDestructorE		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
+0x426280	40	ObserverEvent::DeletingDestructorF		core	orchestration		Resets an event object's vtable and frees it when bit 0 of the argument is set	verified	two	core/events#observer-classes	
 0x4262b0	5	ReturnZeroArg		core	unreached		Returns 0 and pops one argument; a shared vtable slot	inferred	none	core/events#unreached-functions	
-0x4262c0	5	InitObserverInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4262d0; a static initializer	verified	one	core/events#static-initializers	
-0x4262d0	11	InitObserverInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
-0x4262e0	10	StaticInitEventRegPool		core	orchestration	void __cdecl (void)	Calls 0x4262f0 and registers 0x426310 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x4262f0	27	InitEventRegPool		core	orchestration	void __cdecl (void)	Builds the registration pool 0x883fd0 and its lock	verified	one	core/events#static-initializers	
-0x426310	12	RegisterDestroyEventRegPool		core	orchestration	void __cdecl (void)	Registers 0x426320 with _atexit	verified	one	core/events#static-initializers	
-0x426320	20	DestroyEventRegPool		core	orchestration	void __cdecl (void)	Destroys the registration pool 0x883fd0 and its lock	verified	one	core/events#static-initializers	
-0x426340	10	StaticInitCallbackRegPool		core	orchestration	void __cdecl (void)	Calls 0x426350 and registers 0x426370 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x426350	27	InitCallbackRegPool		core	orchestration	void __cdecl (void)	Builds the callback registration pool 0x883ffc and its lock	verified	one	core/events#static-initializers	
-0x426370	12	RegisterDestroyCallbackRegPool		core	orchestration	void __cdecl (void)	Registers 0x426380 with _atexit	verified	one	core/events#static-initializers	
-0x426380	20	DestroyCallbackRegPool		core	orchestration	void __cdecl (void)	Destroys the callback registration pool 0x883ffc and its lock	verified	one	core/events#static-initializers	
-0x4263a0	10	StaticInitDispatchRegPool		core	orchestration	void __cdecl (void)	Calls 0x4263b0 and registers 0x4263d0 with _atexit; a static initializer	verified	one	core/events#static-initializers	
-0x4263b0	27	InitDispatchRegPool		core	orchestration	void __cdecl (void)	Builds the dispatch registration pool 0x883fa0 and its lock	verified	one	core/events#static-initializers	
-0x4263d0	12	RegisterDestroyDispatchRegPool		core	orchestration	void __cdecl (void)	Registers 0x4263e0 with _atexit	verified	one	core/events#static-initializers	
-0x4263e0	20	DestroyDispatchRegPool		core	orchestration	void __cdecl (void)	Destroys the dispatch registration pool 0x883fa0 and its lock	verified	one	core/events#static-initializers	
+0x4262c0	5	InitObserverInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4262d0; a static initializer	verified	two	core/events#static-initializers	
+0x4262d0	11	InitObserverInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/events#static-initializers	
+0x4262e0	10	StaticInitEventRegPool		core	orchestration	void __cdecl (void)	Calls 0x4262f0 and registers 0x426310 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x4262f0	27	InitEventRegPool		core	orchestration	void __cdecl (void)	Builds the registration pool 0x883fd0 and its lock	verified	two	core/events#static-initializers	
+0x426310	12	RegisterDestroyEventRegPool		core	orchestration	void __cdecl (void)	Registers 0x426320 with _atexit	verified	two	core/events#static-initializers	
+0x426320	20	DestroyEventRegPool		core	orchestration	void __cdecl (void)	Destroys the registration pool 0x883fd0 and its lock	verified	two	core/events#static-initializers	
+0x426340	10	StaticInitCallbackRegPool		core	orchestration	void __cdecl (void)	Calls 0x426350 and registers 0x426370 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x426350	27	InitCallbackRegPool		core	orchestration	void __cdecl (void)	Builds the callback registration pool 0x883ffc and its lock	verified	two	core/events#static-initializers	
+0x426370	12	RegisterDestroyCallbackRegPool		core	orchestration	void __cdecl (void)	Registers 0x426380 with _atexit	verified	two	core/events#static-initializers	
+0x426380	20	DestroyCallbackRegPool		core	orchestration	void __cdecl (void)	Destroys the callback registration pool 0x883ffc and its lock	verified	two	core/events#static-initializers	
+0x4263a0	10	StaticInitDispatchRegPool		core	orchestration	void __cdecl (void)	Calls 0x4263b0 and registers 0x4263d0 with _atexit; a static initializer	verified	two	core/events#static-initializers	
+0x4263b0	27	InitDispatchRegPool		core	orchestration	void __cdecl (void)	Builds the dispatch registration pool 0x883fa0 and its lock	verified	two	core/events#static-initializers	
+0x4263d0	12	RegisterDestroyDispatchRegPool		core	orchestration	void __cdecl (void)	Registers 0x4263e0 with _atexit	verified	two	core/events#static-initializers	
+0x4263e0	20	DestroyDispatchRegPool		core	orchestration	void __cdecl (void)	Destroys the dispatch registration pool 0x883fa0 and its lock	verified	two	core/events#static-initializers	
 0x426400	1	InitObserverModule		core	orchestration	void __cdecl (void)	Returns; the observer module's setup	verified	two	core/loop#startup-and-shutdown	
 0x426410	58	DestroyObserverPools		core	orchestration	void __cdecl (void)	Frees the three registration pools	verified	one	core/loop#startup-and-shutdown	
 0x426450	22	CObserver::~CObserver		core	unreached		Releases an observer's registrations through 0x426470 and resets its vtable	inferred	none	core/events#observer-classes	
@@ -2054,7 +2054,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x426ec0	198	AddCallbackReg		core	unreached		Adds a callback entry to a registration record	inferred	none	core/events#unreached-functions	
 0x426f90	283	AddDispatchReg		core	unreached		Adds a dispatch entry to a registration record	inferred	none	core/events#unreached-functions	
 0x4270b0	208	RemoveCallbackReg		core	unreached		Removes a callback entry from a registration record	inferred	none	core/events#unreached-functions	
-0x427180	18	IsEndLink		core	orchestration	uint32_t __fastcall (uintptr_t link)	Returns 1 for a null or bit-0-marked link, else 0	verified	one	core/events#shared-arrays	
+0x427180	18	IsEndLink		core	orchestration	uint32_t __fastcall (uintptr_t link)	Returns 1 for a null or bit-0-marked link, else 0	verified	two	core/events#shared-arrays	
 0x4271a0	239	RemoveDispatchReg		core	unreached		Removes a dispatch entry from a registration record	inferred	none	core/events#unreached-functions	
 0x427290	168	ClearCallbackRegs		core	unreached		Frees every callback entry of a registration record	inferred	none	core/events#unreached-functions	
 0x427340	149	ClearDispatchRegs		core	unreached		Frees every dispatch entry of a registration record	inferred	none	core/events#unreached-functions	
@@ -2077,10 +2077,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x427af0	60	UnlinkRegNodeB		core	unreached		Unlinks a node from its list and clears its link	inferred	none	core/events#unreached-functions	
 0x427b30	41	GetRegNodeLinkC		core	unreached		Returns the link a node's link points at, or the end link marked by bit 0	inferred	none	core/events#unreached-functions	
 0x427b60	60	UnlinkRegNodeC		core	unreached		Unlinks a node from its list and clears its link	inferred	none	core/events#unreached-functions	
-0x427ba0	5	InitObserverTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x427bb0; a static initializer	verified	one	core/events#static-initializers	
-0x427bb0	15	InitObserverTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
-0x427bc0	5	InitObserverInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x427bd0; a static initializer	verified	one	core/events#static-initializers	
-0x427bd0	19	InitObserverInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
+0x427ba0	5	InitObserverTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x427bb0; a static initializer	verified	two	core/events#static-initializers	
+0x427bb0	15	InitObserverTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/events#static-initializers	
+0x427bc0	5	InitObserverInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x427bd0; a static initializer	verified	two	core/events#static-initializers	
+0x427bd0	19	InitObserverInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/events#static-initializers	
 0x427bf0	25	GetRegNodeLinkD		core	unreached		Returns a node's link, or the end link for a null node	inferred	none	core/events#unreached-functions	
 0x427c10	136	ClearRegList		core	unreached		Unlinks every node of a registration list	inferred	none	core/events#unreached-functions	
 0x427ca0	135	DestroyRegBuckets		core	unreached		Unlinks and frees every bucket list of a registration table	inferred	none	core/events#unreached-functions	
@@ -2096,24 +2096,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x428420	74	HashEventClass		core	unreached		Returns the bucket of an event class in a registration table	inferred	none	core/events#unreached-functions	
 0x428470	156	EventRegTable::Destroy		core	unreached		Frees a registration table's buckets; a vtable slot	inferred	none	core/events#unreached-functions	
 0x428510	487	IEvtTimerProcess		core	orchestration	uint32_t __thiscall (EvtContext *this)	Runs every due timer of a context in due order with the lock released, dropping killed ones	verified	two	core/loop#one-tick	
-0x428700	5	InitTimerInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428710; a static initializer	verified	one	core/events#static-initializers	
-0x428710	11	InitTimerInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
+0x428700	5	InitTimerInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428710; a static initializer	verified	two	core/events#static-initializers	
+0x428710	11	InitTimerInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	core/events#static-initializers	
 0x428720	98	IEvtTimerTimeToNext		core	orchestration	uint32_t __fastcall (EvtContext *context, uint32_t now)	Returns the time to the earliest timer, 0 when overdue, or 0xffffffff with none	verified	two	core/loop#next-due-time	
 0x428790	142	IEvtTimerGetRemaining		core	unreached		Returns a timer's remaining time in seconds	inferred	none	core/events#unreached-functions	
-0x428820	305	IEvtTimerKill	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t id, uint32_t arg3, uint32_t arg4)	Clears a timer's handlers and drops killed timers from the heap's top	verified	one	core/events#timers	
+0x428820	305	IEvtTimerKill	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t id, uint32_t arg3, uint32_t arg4)	Clears a timer's handlers and drops killed timers from the heap's top	verified	two	core/events#timers	
 0x428960	451	IEvtTimerCreateA		core	unreached		Creates a timer with a delay in seconds	inferred	none	core/events#unreached-functions	
-0x428b30	458	IEvtTimerCreate		core	primitive	uint32_t __fastcall (EvtContext *context, uint32_t delay, void *handler, void *argument, void *handler2, uint32_t a, uint32_t b, uint32_t c)	Creates a timer due at now + delay with its delay in seconds as delay · 0.001f, and returns its id	verified	one	core/events#timers	core::evttimer_ticks_to_seconds_matches_binary
+0x428b30	458	IEvtTimerCreate		core	primitive	uint32_t __fastcall (EvtContext *context, uint32_t delay, void *handler, void *argument, void *handler2, uint32_t a, uint32_t b, uint32_t c)	Creates a timer due at now + delay with its delay in seconds as delay · 0.001f, and returns its id	verified	two	core/events#timers	core::evttimer_ticks_to_seconds_matches_binary
 0x428d00	467	IEvtTimerCreateB		core	unreached		Creates a timer with a delay in milliseconds	inferred	none	core/events#unreached-functions	
-0x428ee0	125	InsertHeapNode		core	orchestration	void __thiscall (void *this, void *node)	Appends a node to a heap and sifts it up	verified	one	core/events#timers	
-0x428f60	5	InitTimerTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428f70; a static initializer	verified	one	core/events#static-initializers	
-0x428f70	15	InitTimerTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
-0x428f80	5	InitTimerInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428f90; a static initializer	verified	one	core/events#static-initializers	
-0x428f90	19	InitTimerInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
+0x428ee0	125	InsertHeapNode		core	orchestration	void __thiscall (void *this, void *node)	Appends a node to a heap and sifts it up	verified	two	core/events#timers	
+0x428f60	5	InitTimerTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428f70; a static initializer	verified	two	core/events#static-initializers	
+0x428f70	15	InitTimerTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	core/events#static-initializers	
+0x428f80	5	InitTimerInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428f90; a static initializer	verified	two	core/events#static-initializers	
+0x428f90	19	InitTimerInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	core/events#static-initializers	
 0x428fb0	266	SetUint32ArrayCount		core	primitive	void __thiscall (void *this, uint32_t count)	Sets an array's count, growing its capacity to a quantum multiple	verified	one	core/events#shared-arrays	net::srp6_client_session
 0x4290c0	290	GrowTimerArrayTo		core	primitive		Grows the timer array to hold an index, rounding the capacity to its quantum	verified	one	core/events#timers	
 0x4291f0	226	AddUint32ArrayCount		core	primitive	void __thiscall (void *this, uint32_t count, uint32_t zero)	Adds to an array's count, growing its capacity to a quantum multiple and zeroing when asked	verified	one	core/events#shared-arrays	net::srp6_client_session
-0x4292e0	57	GetUint32ArrayQuantum		core	primitive	uint32_t __thiscall (void *this, uint32_t size)	Returns the largest power of two not above a size below 64, else 64, and 1 for 0	verified	one	core/events#shared-arrays	
-0x429320	31	RoundUpToQuantum		core	primitive	uint32_t __thiscall (void *this, uint32_t size, uint32_t quantum)	Rounds a size up to a multiple of a quantum	verified	one	core/events#shared-arrays	
+0x4292e0	57	GetUint32ArrayQuantum		core	primitive	uint32_t __thiscall (void *this, uint32_t size)	Returns the largest power of two not above a size below 64, else 64, and 1 for 0	verified	two	core/events#shared-arrays	
+0x429320	31	RoundUpToQuantum		core	primitive	uint32_t __thiscall (void *this, uint32_t size, uint32_t quantum)	Rounds a size up to a multiple of a quantum	verified	two	core/events#shared-arrays	
 0x429340	133	ReallocUint32Array		core	orchestration	void __thiscall (void *this, uint32_t capacity)	Reallocates an array's storage to a capacity, copying the elements	verified	one	core/events#shared-arrays	
 0x4293d0	3	OsGetCpuTicks		core	orchestration	uint64_t __cdecl (void)	Returns the time-stamp counter	verified	two	core/time#the-millisecond-clock	
 0x4293e0	34	OsGetAsyncTimeSec		core	unreached		Returns the millisecond clock times 0.001f	inferred	none	core/time#unreached-functions	
@@ -13392,9 +13392,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x537530	40	DeleteConnectionResponseBase		net	orchestration	void * __thiscall (void *this, uint32_t flags)	Restores the abstract connection-callback vtable and frees the object when flag bit 0 is set	inferred	none		
 0x537560	43	NetClient::DeletingDestructor		net	orchestration	NetClient * __thiscall (NetClient *this, uint32_t flags)	Runs the NetClient destructor 0x537590 and frees the object when flag bit 0 is set	inferred	none		
 0x537590	101	NetClient::~NetClient		net	orchestration	void __thiscall (NetClient *this)	Deinitializes, frees its node from the global NetClient list, and destroys the lock	inferred	none		
-0x537600	194	NetClient::Initialize	idb	net	primitive	uint32_t __thiscall (NetClient *this)	Starts the OS network on first use, then creates the event queue and connection, clears both handler tables, state 2	verified	one	net/dispatch#handler-tables	net::netclient_initialize
+0x537600	194	NetClient::Initialize	idb	net	primitive	uint32_t __thiscall (NetClient *this)	Starts the OS network on first use, then creates the queue, clears both handler tables, creates the connection, state 2	verified	two	net/dispatch#handler-tables	net::netclient_initialize
 0x5376d0	21	SelectSavedPropContext		net	orchestration	void __cdecl (void)	Selects the property context saved at network start-up on the calling thread when it is not already current	inferred	none		
-0x5376f0	176	NetClient::Deinitialize		net	primitive	void __thiscall (NetClient *this)	Tears a NetClient down: disconnects, frees its connection and queue, zeroes its tables, stops the platform last	verified	one	net/dispatch#handler-tables	net::netclient_deinitialize
+0x5376f0	176	NetClient::Deinitialize		net	primitive	void __thiscall (NetClient *this)	Tears a NetClient down: disconnects, frees its connection and queue, zeroes its tables, stops the platform last	verified	two	net/dispatch#handler-tables	net::netclient_deinitialize
 0x5377a0	70	LogClientNetStats		net	orchestration	void __cdecl (void)	Logs bytes sent, bytes received and the milliseconds since net start to the console	inferred	none		
 0x5377f0	46	NetClient::RequestDestroy		net	orchestration	uint32_t __thiscall (NetClient *this)	Disconnects and queues a destroy event so the next poll deletes the client; returns 0 when never initialized	inferred	none		
 0x537820	150	NetClient::Connect		net	orchestration	uint32_t __thiscall (NetClient *this, const char *address)	Splits "host:port" (port 9090 when none) and dials through 0x5378c0	verified	two	net/dial#world-address	net::dial_world_connect
@@ -13403,14 +13403,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5379a0	139	NetClient::Send	idb	net	primitive	void __thiscall (NetClient *this, CDataStore *msg)	Sends a message when connected and non-empty, counts its bytes, and switches the header cipher on after the first send	verified	one	net/wire#arming-the-cipher	net::netclient_send
 0x537a30	24	NetClient::SetLoginData		net	orchestration	void __thiscall (NetClient *this, const void *data)	Copies a 108-byte login block, account name then the 40-byte session key at its +0x44, into the client at +0x04	verified	one	net/session#session-key	
 0x537a50	4	NetClient::GetSessionKey		net	orchestration	uint8_t * __thiscall (NetClient *this)	Returns the address of the 40-byte session key at +0x48	verified	one	net/wire#arming-the-cipher	
-0x537a60	27	NetClient::SetMessageHandler	idb	net	orchestration	void __thiscall (NetClient *this, uint32_t opcode, void *handler, void *param)	Stores a handler and its context for an opcode, with no bound check	verified	one	net/dispatch#handler-tables	
-0x537a80	23	NetClient::ClearMessageHandler	idb	net	orchestration	void __thiscall (NetClient *this, uint32_t opcode)	Clears the handler and context for an opcode	verified	one	net/dispatch#handler-tables	
-0x537aa0	92	NetClient::DispatchMessage		net	primitive	uint32_t __thiscall (NetClient *this, uint32_t time, CDataStore *msg)	Reads the u16 opcode and calls its handler with context, opcode, time and message; an unhandled one is dropped	verified	one	net/dispatch#dispatch	net::netclient_dispatch
-0x537b00	3	NetClient::OnMessageOpcode		net	orchestration	void __thiscall (NetClient *this, uint32_t opcode)	Ignores the opcode the dispatcher announces before each handler	verified	one	net/dispatch#dispatch	
-0x537b10	122	NetClient::OnMessageReceived		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t unused, CDataStore *msg)	Counts received bytes and handles a pong inline; queues every other message as a copied data event	verified	one	net/dispatch#network-thread-handoff	
+0x537a60	27	NetClient::SetMessageHandler	idb	net	orchestration	void __thiscall (NetClient *this, uint32_t opcode, void *handler, void *param)	Stores a handler and its context for an opcode, with no bound check	verified	two	net/dispatch#handler-tables	
+0x537a80	23	NetClient::ClearMessageHandler	idb	net	orchestration	void __thiscall (NetClient *this, uint32_t opcode)	Clears the handler and context for an opcode	verified	two	net/dispatch#handler-tables	
+0x537aa0	92	NetClient::DispatchMessage		net	primitive	uint32_t __thiscall (NetClient *this, uint32_t time, CDataStore *msg)	Reads the u16 opcode and calls its handler with context, opcode, time and message; an unhandled one is dropped	verified	two	net/dispatch#dispatch	net::netclient_dispatch
+0x537b00	3	NetClient::OnMessageOpcode		net	orchestration	void __thiscall (NetClient *this, uint32_t opcode)	Ignores the opcode the dispatcher announces before each handler	verified	two	net/dispatch#dispatch	
+0x537b10	122	NetClient::OnMessageReceived		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t unused, CDataStore *msg)	Counts received bytes and handles a pong inline; queues every other message as a copied data event	verified	two	net/dispatch#network-thread-handoff	
 0x537b90	101	NetClient::OnConnected		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t b, uint32_t time, uint32_t d)	Resets the byte counters and ping ring, stamps the ping clock, sets the stats epoch, and queues a connect event	verified	one	net/dispatch#network-thread-handoff	
 0x537c00	42	NetClient::OnDisconnected		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t b, uint32_t c)	Samples the net stats and discards them, then queues a disconnect event when the queue exists	verified	one	net/dispatch#network-thread-handoff	
-0x537c30	29	NetClient::OnConnectFailed		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t b, uint32_t c)	Queues a connect-failure event	verified	one	net/dispatch#network-thread-handoff	
+0x537c30	29	NetClient::OnConnectFailed		net	orchestration	void __thiscall (NetClient *this, void *source, uint32_t b, uint32_t c)	Queues a connect-failure event	verified	two	net/dispatch#network-thread-handoff	
 0x537c50	138	NetClient::HandleData		net	primitive	uint32_t __thiscall (NetClient *this, uint32_t time, const void *data, uint32_t size)	Counts size plus 2 as received and, when connected, dispatches the bytes as a message under the client object manager	verified	one	net/dispatch#main-thread-drain	net::netclient_handle_data
 0x537ce0	29	NetClient::HandleConnect		net	orchestration	uint32_t __thiscall (NetClient *this)	Sets state 6 (connected) under the client object manager and returns 1	verified	one	net/session#connecting	
 0x537d00	51	NetClient::HandleDisconnect		net	orchestration	uint32_t __thiscall (NetClient *this)	Sets state 2, logs "NetClient::HandleDisconnect()", and runs the glue disconnect handler; returns 1	verified	one	net/session#disconnecting	
@@ -13422,7 +13422,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x537ff0	35	NetClient::HandleIdle	idb	net	primitive	void __thiscall (NetClient *this)	Pings once 30000 ms or more have passed since the last ping or connect, as a signed 32-bit difference	verified	one	net/session#ping-and-latency	net::netclient_idle
 0x538020	16	NetClient::SelectObjectManager		net	orchestration	void __thiscall (NetClient *this)	Makes the client object manager stored at +0x1ad8 current, saving the previous one, when there is one	inferred	none		
 0x538030	5	RestoreObjectManager		net	orchestration	void __thiscall (void *this)	Restores the client object manager saved by 0x538020	inferred	none		
-0x538040	11	NetClient::PollEventQueue	idb	net	orchestration	void __thiscall (NetClient *this)	Polls the client's event queue	verified	one	net/dispatch#main-thread-drain	
+0x538040	11	NetClient::PollEventQueue	idb	net	orchestration	void __thiscall (NetClient *this)	Polls the client's event queue	verified	two	net/dispatch#main-thread-drain	
 0x538050	43	NetClient::GetLocalAddress		net	unreached	uint32_t __thiscall (NetClient *this)	Returns the IPv4 address the connection's socket is bound to, or 0 without a connection	inferred	none	net/layout#unreached-functions	
 0x538080	60	UnlinkNetClientNode		net	orchestration	void __thiscall (void *this)	Unlinks a NetClient-list link from its neighbours and zeroes it	inferred	none		
 0x5380c0	5	InitCopy2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5380d0; a static initializer	verified	one	net/layout#static-initializers	
@@ -13471,11 +13471,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x538480	19	InitSquare34		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5384a0	5	InitSquare35Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5384b0; a static initializer	verified	one	net/layout#static-initializers	
 0x5384b0	19	InitSquare35		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
-0x5384d0	319	NETEVENTQUEUE::Poll	idb	net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Dispatches queued events in order under the lock, pings when no destroy came, frees all events, deletes a doomed client	verified	one	net/dispatch#main-thread-drain	
+0x5384d0	319	NETEVENTQUEUE::Poll	idb	net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Dispatches queued events in order under the lock, pings when no destroy came, frees all events, deletes a doomed client	verified	two	net/dispatch#main-thread-drain	
 0x538630	47	NETEVENTQUEUE::NETEVENTQUEUE	idb	net	orchestration	NETEVENTQUEUE * __thiscall (NETEVENTQUEUE *this, NetClient *owner)	Builds an empty event queue owned by a client: lock at +0x04, empty list with sentinel at +0x20	inferred	none		
 0x538660	156	NETEVENTQUEUE::~NETEVENTQUEUE		net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Frees every queued event, unlinks the list, and destroys the lock	inferred	none		
 0x538700	130	NETEVENTQUEUE::Clear		net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Frees every queued event and its data copy under the lock without dispatching	inferred	none	net/session#disconnecting	
-0x538790	218	NETEVENTQUEUE::AddEvent		net	primitive	void __thiscall (NETEVENTQUEUE *this, uint32_t type, void *source, NetClient *client, const void *data, uint32_t size)	Appends an event with a private copy of the data and a timestamp, and takes a reference on the client	verified	one	net/dispatch#network-thread-handoff	net::netclient_add_event
+0x538790	218	NETEVENTQUEUE::AddEvent		net	primitive	void __thiscall (NETEVENTQUEUE *this, uint32_t type, void *source, NetClient *client, const void *data, uint32_t size)	Appends an event with a private copy of the data and a timestamp, and takes a reference on the client	verified	two	net/dispatch#network-thread-handoff	net::netclient_add_event
 0x538870	41	NextEventQueueLink		net	orchestration	void * __thiscall (void *this, int32_t linkOffset)	Returns the link inside the next node: the untagged end pointer, or next plus the link offset	inferred	none		
 0x5388a0	60	TSLink_NETEVENTQUEUENODE_::Unlink	idb	net	orchestration	void __thiscall (TSLink_NETEVENTQUEUENODE_ *this)	Unlinks an event-queue link from its neighbours and zeroes it	verified	one	net/layout#object-files	
 0x5388e0	10	InitAnimationDataStore		dbc	orchestration	void __cdecl ()	Constructs the AnimationData store and registers its exit function	inferred	none		
@@ -17373,7 +17373,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ab390	3	IgnoreRealmConnectFailed		net	orchestration	void __thiscall (void *this, void *conn)	Ignores the realm connection's connect-failure notice	inferred	none		
 0x5ab3a0	37	ConsoleLogout		net	orchestration	uint32_t __fastcall (const char *name, const char *args)	Requests an instant logout on the current connection when in world, and returns 1	inferred	none		
 0x5ab3d0	177	ClientServices::Destroy		net	orchestration	void __cdecl (void)	Cancels the logon link, disconnects and deletes the world connection and the other session objects; sends nothing	verified	one	core/close#network-teardown	
-0x5ab490	6	ClientServices::GetCurrent	idb	net	orchestration	ClientConnection * __cdecl (void)	Returns the current ClientConnection	verified	one	net/dispatch#handler-tables	
+0x5ab490	6	ClientServices::GetCurrent	idb	net	orchestration	ClientConnection * __cdecl (void)	Returns the current ClientConnection	verified	two	net/dispatch#handler-tables	
 0x5ab4a0	6	ClientServices::GetLoginSession		net	orchestration	void * __cdecl (void)	Returns the login session 0xc28120, null before one is created	verified	one	net/login#survey-id	
 0x5ab4b0	226	ClientServices::Logon		net	orchestration	void __fastcall (const char *account, const char *password)	Creates the login session (rebuilt when flagged, with the realm holder), sets account and password, and dials realmList	verified	one	net/connection#starting-the-logon	
 0x5ab5a0	20	ForwardPin		net	orchestration	void __fastcall (uint32_t count, const uint8_t *digits)	Calls 0x5b3120 with its two arguments on the login session, when it exists	verified	one	random#the-c-runtime-rand	
@@ -17383,8 +17383,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ab610	12	SendSurveyFailure		net	orchestration	void __cdecl (void)	Sends a failed survey result to the login server	inferred	none		
 0x5ab620	12	GetSurveyId		net	orchestration	uint32_t __cdecl (void)	Returns the survey id the login session's link keeps from the logon proof reply	verified	one	net/login#survey-id	
 0x5ab630	23	ClientServices::Send	idb	net	orchestration	void __thiscall (CDataStore *this)	Sends a message on the current connection through 0x5379a0, when one exists	verified	two	net/connection#sending-a-packet	
-0x5ab650	25	ClientServices::SetMessageHandler	idb	net	orchestration	void __fastcall (uint32_t opcode, void *handler, void *param)	Registers an opcode handler and context on the current connection through 0x537a60	verified	one	net/dispatch#handler-tables	
-0x5ab670	14	ClientServices::ClearMessageHandler	idb	net	orchestration	void __thiscall (ClientServices *this)	Clears an opcode handler on the current connection through 0x537a80	verified	one	net/dispatch#handler-tables	
+0x5ab650	25	ClientServices::SetMessageHandler	idb	net	orchestration	void __fastcall (uint32_t opcode, void *handler, void *param)	Registers an opcode handler and context on the current connection through 0x537a60	verified	two	net/dispatch#handler-tables	
+0x5ab670	14	ClientServices::ClearMessageHandler	idb	net	orchestration	void __thiscall (ClientServices *this)	Clears an opcode handler on the current connection through 0x537a80	verified	two	net/dispatch#handler-tables	
 0x5ab680	67	GetRealmListAddress		net	orchestration	const char * __fastcall (uint32_t reload)	Returns the realmList CVar value, first registering it and loading realmlist.wtf, or again when reload is set	verified	two	net/connection#realm-selection	
 0x5ab6d0	21	SetRealmListAddress		net	unreached	void __fastcall (const char *address)	Sets the realmList CVar to a string	inferred	none	net/layout#unreached-functions	
 0x5ab6f0	191	SelectRealmByName		net	orchestration	uint8_t __cdecl (void)	Selects the first listed realm whose name matches realmName case-folded, copying its record; returns true when found	verified	one	net/session#connecting	
@@ -17852,15 +17852,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b3a40	10	InitCriticalSection2		net	orchestration	void __cdecl (void)	Constructs a global critical section by a tail call to 0x657990	verified	one	net/layout#static-initializers	
 0x5b3a50	12	RegisterRealmConnectionLockDelete		net	orchestration	void __cdecl (void)	Registers the deletion of the realm connection list lock with atexit	inferred	none		
 0x5b3a60	31	DeleteRealmConnectionLock		net	host	void __cdecl (void)	Deletes the realm connection list lock once	inferred	none		
-0x5b3a80	357	RealmConnection::RealmConnection		net	orchestration	RealmConnection * __thiscall (RealmConnection *this, void *listener)	Builds the connection, keeps its listener, handles ten opcodes with its message handler and joins the global list	verified	one	net/dispatch#realm-connection-messages	
+0x5b3a80	357	RealmConnection::RealmConnection		net	orchestration	RealmConnection * __thiscall (RealmConnection *this, void *listener)	Builds the connection, keeps its listener, handles ten opcodes with its message handler and joins the global list	verified	two	net/dispatch#realm-connection-messages	
 0x5b3bf0	43	RealmConnection::DeletingDestructor		net	orchestration	RealmConnection * __thiscall (RealmConnection *this, uint32_t flags)	Destroys the connection and frees it when flag bit 0 is set	inferred	none		
 0x5b3c20	342	RealmConnection::~RealmConnection		net	orchestration	void __thiscall (RealmConnection *this)	Unlinks and frees its list node, clears its ten handlers, frees the character list and runs the base destructor	inferred	none		
 0x5b3d80	40	RealmConnection::SetListener		net	orchestration	void __thiscall (RealmConnection *this, void *listener)	Replaces the connection's listener under the global connection lock	inferred	none		
-0x5b3db0	66	ClientServices::PollEventQueue	idb	net	orchestration	void __fastcall (uint32_t unused1, uint32_t unused2)	Drains the event queue of every connection in the global realm connection list under the list lock	verified	one	net/dispatch#main-thread-drain	
+0x5b3db0	66	ClientServices::PollEventQueue	idb	net	orchestration	void __fastcall (uint32_t unused1, uint32_t unused2)	Drains the event queue of every connection in the global realm connection list under the list lock	verified	two	net/dispatch#main-thread-drain	
 0x5b3e00	55	RealmConnection::HandleConnect		net	orchestration	void __thiscall (RealmConnection *this)	Logs Connected, clears the authenticated flag, tells the listener and runs the base connect handler	inferred	none		
 0x5b3e40	48	RealmConnection::HandleDisconnect		net	orchestration	void __thiscall (RealmConnection *this)	Logs Disconnected, tells the listener and runs the base disconnect handler	inferred	none		
 0x5b3e70	48	RealmConnection::HandleConnectFailure		net	orchestration	void __thiscall (RealmConnection *this)	Logs Can't Connect, tells the listener and runs the base connect-failure handler	inferred	none		
-0x5b3ea0	301	RealmConnection::MessageHandler		net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches a login-phase message to its handler, then logs and skips the rest when the message is not fully read	verified	one	net/dispatch#realm-connection-messages	
+0x5b3ea0	301	RealmConnection::MessageHandler		net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches a login-phase message to its handler; an unread rest is logged when a notify object is set, then dropped	verified	two	net/dispatch#realm-connection-messages	
 0x5b4000	432	RealmConnection::HandleAuthChallenge		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Answers the server seed with opcode 0x1ed: build, the logon link's +0x74 dword, account, client seed, digest, add-ons	verified	one	net/session#session-challenge	
 0x5b41b0	170	RealmConnection::HandleAuthResponse		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Reads the auth result, the billing fields after 0xc or 0x1b when 5 bytes remain, and the queue position after 0x1b	verified	one	net/session#session-response	
 0x5b4260	61	RealmConnection::HandleAddonInfo		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Logs the addon info message, applies it to the addon list and tells the listener	verified	one	ui/addons#the-order-lua-sees	
@@ -32519,7 +32519,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x760090	104	CDataAllocator::Destroy		base			Frees a data allocator's blocks	inferred	none		
 0x760100	92			base	unreached		Runs its object file code that calls 0x7602c0, SInterlockedIncrement, 0x760290; not read here	inferred	none		
 0x760160	171			base			Runs CDataRecycler.cpp code that calls SInterlockedDecrement, SInterlockedIncrement, 0x7602c0 and 3 more; not read here	inferred	none		
-0x760210	37	CDataAllocator::AllocLarge		base			Allocates a block with SMemAlloc and stores its size through a pointer	verified	one	core/events#deferred-messages	
+0x760210	37	CDataAllocator::AllocLarge		base			Allocates a block with SMemAlloc and stores its size through a pointer	verified	two	core/events#deferred-messages	
 0x760240	41			base			Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
 0x760270	26			base			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x760290	43			base			Runs its object file code that calls 0x65ad10; not read here	inferred	none		

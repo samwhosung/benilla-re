@@ -143,16 +143,15 @@ to a double. `0x7657d0` then draws from stratum 0, where the world frame's batch
 
 ## How much one tick handles
 
-The window input and the packet poll have no cap: every input record and packet waiting at the
-tick reaches its handlers before the interface's next `OnUpdate`, and a packet that arrives during
-the poll waits for the next tick. The asynchronous-read drain after it stops once more than 20 ms
-have passed since it started, after at least one read. `OnUpdate` runs once a tick with the tick's
-frame time, twice when a fade's end starts or ends a cinematic shot, and not at all while the
-loading screen, or another layer with flag bit 0 clear, covers the unit square (`core/framepass`).
+The window input and the packet poll have no cap: the input pump is called until it returns 0,
+and the poll walks every node queued when it takes the queue's lock, so both finish before the
+tick's frame pass. A packet that arrives during the poll waits for the next poll. The
+asynchronous-read drain after them stops once more than 20 ms have passed since it started, after
+at least one read. How often `OnUpdate` runs in the frame pass is `core/framepass`'s.
 
 Addresses: `0x423920`, `0x42c9f0`, `0x423983`, `0x4239a0`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x5384e0`, `0x538586`, `0x538790`, `0x53879f`, `0x537c50`, `0x537aa0`, `0x6ca190`, `0x443e70`, `0x443e81`, `0x443ef9`, `0x443f02`, `0x443f0d`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x423920` calls the pump `0x42c9f0` until it returns 0 (`0x423983`), handing each record to
@@ -238,18 +237,19 @@ current context's handle. `0x421370` takes the context's cost off its slot's loa
 `0x422030` sets the shutdown event `0x883f24` and the event of every slot, so a sleeping loop
 wakes, finds the shutdown event set and leaves. Three paths call it: an accepted quit from the
 window input, the last interactive context's teardown, and a window close the confirm-close
-query allows, which it does only when no callback is installed.
+query allows. The query, `0x423b50`, answers 1 when no callback is installed, else the callback's
+answer; a nonzero answer is what allows the close.
 
-Addresses: `0x422030`, `0x41f5d0`, `0x423ca0`, `0x883f24`
+Addresses: `0x422030`, `0x41f5d0`, `0x423ca0`, `0x883f24`, `0x4239a0`, `0x423a2e`, `0x423b50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x422030` sets `0x883f24` (`0x422035`), then, unless polling, sets `+0x20` of each slot in
 `0x883f18` under `0x883ef4` (`0x42206f`). Its callers are `0x420d4e`, `0x420e8f`, `0x422660` (in
-the unreached `0x422540`) and the jump at `0x41f5d0`, which `0x423ca0` reaches from the window
-switch's close case. The client installs a confirm-close callback in its start handler, so a
-window close takes the callback's path instead (`core/input#close-and-quit`).
+the unreached `0x422540`) and the jump at `0x41f5d0`, the target of the jump `0x423ca0`, which the
+window switch `0x4239a0` calls at `0x423a2e` when the query answers nonzero (`0x423a26`). What the
+client's callback answers is `core/input#close-and-quit`'s.
 
 ## Scheduler heap
 
@@ -260,7 +260,7 @@ comparator.
 
 Addresses: `0x421430`, `0x422970`, `0x421860`, `0x421f40`, `0x421840`, `0x428ee0`, `0x801368`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `core::heap_key_le_matches_binary`, `core::heap_pop_min_matches_binary`, `core::heap_resift_matches_binary`
 
 `0x422970` subtracts the other node's `+0xc` from its own and returns `setle` (`0x422979`,
@@ -276,20 +276,37 @@ and `0x421840` refreshes a node's owner and index. The tests run `0x422970`, `0x
 The scheduler's object files run 12 static initializers from the C runtime table. Each file
 copies +∞ into a global and stores 2π and 1/2π as floats, as every object file using the shared
 maths header does. The others build the context table `0xcf7700`, the slot list `0x883ee8`, the
-thread array `0x883ecc`, the slot lock `0x883ef4`, and the events `0x883ec4` and `0x883f24`, each
-registering a matching destructor with `_atexit`.
+events `0x883ec4` and `0x883f24`, the slot lock and the thread array (`Slot lock and thread
+array`), each registering a matching destructor with `_atexit`.
 
-Addresses: `0x827348`, `0x41f580`, `0x41f590`, `0x4207e0`, `0x4207f0`, `0x420800`, `0x420810`, `0x420850`, `0x4208b0`, `0x4208c0`, `0x4209b0`, `0x4209c0`, `0x4209d0`, `0x4209e0`, `0x4209f0`, `0x420a00`, `0x420a10`, `0x420a20`, `0x420a50`, `0x420a60`, `0x420b00`, `0x420b10`, `0x420b30`, `0x420b40`, `0x420b60`, `0x420b70`, `0x420b80`, `0x420b90`, `0x420ba0`, `0x420bb0`, `0x420bc0`, `0x420bd0`, `0x422c40`, `0x422c50`, `0x422c60`, `0x422c70`
+Addresses: `0x827348`, `0x41f580`, `0x41f590`, `0x4207e0`, `0x4207f0`, `0x420800`, `0x420810`, `0x420850`, `0x4208b0`, `0x4208c0`, `0x4209b0`, `0x4209c0`, `0x4209d0`, `0x4209f0`, `0x420a10`, `0x420a20`, `0x420a50`, `0x420a60`, `0x420b00`, `0x420b30`, `0x420b60`, `0x420b70`, `0x420b80`, `0x420b90`, `0x420ba0`, `0x420bb0`, `0x420bc0`, `0x420bd0`, `0x422c40`, `0x422c50`, `0x422c60`, `0x422c70`
+Confidence: verified
+Proof: two
+Test: none
+
+The slots from `0x827348` through `0x827374` hold them in table order, with nothing else between.
+They have five shapes, the first three behind a one-`jmp` thunk: `mov eax,[+∞]; mov [g],eax; ret`
+(2), `fld [π]; fadd st,st; fstp [g]; ret` (2), `fld 1.0; fdiv [g2π]; fstp [g]; ret` (2), `call
+init; jmp atexit-thunk` (5), and `0x420850` alone (1), the guarded initializer inline followed by
+a `jmp` to the thunk `0x4208b0`. `0x420850` builds
+the table's lock and eight bucket locks and lists under the guard bit `0xcf76cc`; `0x4208c0`
+unlinks every entry and destroys them. `0x420a20` makes `0x883ee8` an empty list. `0x420b70` and
+`0x420bb0` create the two events as manual-reset, initially unset.
+
+## Slot lock and thread array
+
+`0x4209e0` initializes the critical section `0x883ef4` that guards the slots, and `0x420a00` deletes
+it at exit. `0x420b10` zeroes the four dwords of the scheduler thread array `0x883ecc`, and
+`0x420b40` frees its storage, when it has any, at exit.
+
+Addresses: `0x4209e0`, `0x420a00`, `0x420b10`, `0x420b40`, `0x883ef4`, `0x883ecc`
 Confidence: verified
 Proof: one
 Test: none
 
-The slots from `0x827348` through `0x827374` hold them in table order. A shape census over the
-library matched each body: `mov eax,[+∞]; mov [g],eax; ret`, `fld [π]; fadd st,st; fstp [g];
-ret`, `fld 1.0; fdiv [g2π]; fstp [g]; ret`, or `call init; jmp atexit-thunk`. `0x420850` builds
-the table's lock and eight bucket locks and lists under the guard bit `0xcf76cc`; `0x4208c0`
-unlinks every entry and destroys them. `0x420a20` makes `0x883ee8` an empty list. `0x420b70` and
-`0x420bb0` create the two events as manual-reset, initially unset.
+`0x4209e0` is `mov ecx,0x883ef4; jmp 0x657990`, the critical section constructor, and `0x420a00` the
+same with `0x6579a0`, its destructor. `0x420b10` stores 0 at `0x883ecc`, `0x883ed0`, `0x883ed4` and
+`0x883ed8`. `0x420b40` frees the pointer at `0x883ed4` through `0x646430` when it is nonzero.
 
 ## Unreached functions
 
@@ -298,7 +315,7 @@ creator, a worker thread's registration, a second loop body and its exit, and an
 
 Addresses: `0x41f600`, `0x422500`, `0x422540`, `0x422710`, `0x421c30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The census is two scans over the whole image: every `e8`/`e9` whose target is one of them, and every
@@ -306,4 +323,6 @@ dword equal to one of their addresses at any byte alignment, outside the import 
 nothing outside this list; the control is `0x420c00`, whose address is the immediate of the
 `mov ecx` at `0x421b5b` and the target of the call at `0x420bec`; both appear. `0x422540` repeats
 the tick of `0x420c00` with its own calls of `0x428510`, `0x423920` and `0x420f70`, and nothing calls
-it; `0x422500` only names and registers its thread and returns (`0x42253b`).
+it. `0x422500` clears the thread's property slot (`0x41db50` with 0, `0x422508`), copies the main
+slot `0x883f20` into a word that only `0x422540` and `0x422710` touch (`0x42250d`, `0x422512`),
+names the thread `Engine <id>`, registers it (`0x437060`) and returns (`0x42253b`).

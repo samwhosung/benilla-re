@@ -115,7 +115,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x52fe44	uint8_t[66]	s_ownerEffectMap		ui	Maps a summon effect minus 42 to an arm of the owner title switch	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines
 0x52ffbc	void *[6]	s_cases52fe90		ui	Holds the 6 case addresses of the switch in 0x52fe90	inferred	none	
 0x531530	void *[9]	s_cases5313e0		ui	Holds the 9 case addresses of the switch in 0x5313e0	inferred	none	
-0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
+0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	two	net/dispatch#main-thread-drain
 0x58ca34	void *[8]	s_glSizingCases		gx	Holds the eight sizing-edge case addresses of 0x58c6d0's WM_SIZING switch	verified	one	gx/window#window-sizing
 0x598b00	void *[8]	s_d3dWindowCases		gx	Holds the eight case addresses of the message switch in 0x598750	verified	one	gx/window#direct3d-window-messages
 0x598b20	uint8_t[15]	s_d3dWindowCaseIndex		gx	Maps messages 1 to 0xf to the cases of 0x598750's switch	verified	one	gx/window#direct3d-window-messages
@@ -147,8 +147,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5b2c40	void *[18]	s_loginResultLogJumpTable		net	Holds the case addresses that pick a login result code's log string	verified	one	net/login#logon-results
 0x5b2e78	void *[11]	s_logonResultJumpTable		net	Holds the eleven cases that map a logon server result to a login state and code	verified	one	net/login#logon-results
 0x5b2ea4	uint8_t[253]	s_logonResultIndexTable		net	Maps a logon server result less 3 to its case in the eleven-entry switch	verified	one	net/login#logon-results
-0x5b3fd0	void *[6]	s_realmMessageJumpTable		net	Holds the realm connection handler's cases for opcodes 0x3a to 0x4c	verified	one	net/dispatch#realm-connection-messages
-0x5b3fe8	uint8_t[19]	s_realmMessageIndexTable		net	Maps opcodes 0x3a to 0x4c to their case in the realm connection handler	verified	one	net/dispatch#realm-connection-messages
+0x5b3fd0	void *[6]	s_realmMessageJumpTable		net	Holds the realm connection handler's cases for opcodes 0x3a to 0x4c	verified	two	net/dispatch#realm-connection-messages
+0x5b3fe8	uint8_t[19]	s_realmMessageIndexTable		net	Maps opcodes 0x3a to 0x4c to their case in the realm connection handler	verified	two	net/dispatch#realm-connection-messages
 0x5bcf70	void *[6]	s_selectStateJumpTable		net	Holds the case addresses of the select loop switch on connection state	verified	one	net/threads#select-loop
 0x5c26dc	const void *[6]	s_stripCases		font	Holds the case addresses of the token class switch of 0x5c2590	verified	one	font/markup#stripping
 0x5c2af4	void *[7]	s_cases5c2810		unassigned	Holds the 7 case addresses of the switch in 0x5c2810	inferred	none	
@@ -411,16 +411,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801354	float	s_defaultHandlerPriority		core	Holds 0.0, the priority 0x41fc90 registers with	verified	one	core/events#registration-calls
 0x801360	float	s_millisecondsToSeconds		core	Holds 0.001f (0x3a83126f), the frame time and timer factor	verified	one	core/loop#frame-time
 0x801364	void *[1]	EvtContext::vftable		core	Holds the context vtable: the deleting destructor 0x423240	verified	one	core/loop#start-and-stop
-0x801368	void *[1]	s_heapNodeVtable		core	Holds the heap node vtable: the comparator 0x422970	verified	one	core/loop#scheduler-heap
+0x801368	void *[1]	s_heapNodeVtable		core	Holds the heap node vtable: the comparator 0x422970	verified	two	core/loop#scheduler-heap
 0x80136c	void *[1]	s_contextBaseVtable		core	Holds the vtable of a context under construction: the deleting destructor 0x4229e0	verified	one	core/scheduler#context-vtables
 0x801370	void *[1]	s_contextRootVtable		core	Holds the vtable a context ends its destruction with: the deleting destructor 0x422a50	verified	one	core/scheduler#context-vtables
 0x801374	void *[1]	s_pureVirtualVtable		core	Holds a vtable of the pure virtual stub 0x40a2d7, stored in heap nodes being removed	verified	one	core/scheduler#context-vtables
-0x8013b0	void *[7]	s_inputObserverVtable		core	Holds the input observer vtable, which only the unreached 0x425430 stores	verified	one	core/events#observer-classes
+0x8013b0	void *[7]	s_inputObserverVtable		core	Holds the input observer vtable, which only the unreached 0x425430 stores	verified	two	core/events#observer-classes
 0x8013cc	void *[2]	s_inputEventVtableA		core	Holds an interface input event vtable the interface code stores	inferred	none	core/events#observer-classes
 0x8013f4	void *[2]	s_inputEventVtableF		core	Holds an interface input event vtable the interface code stores	inferred	none	core/events#observer-classes
-0x801404	void *[7]	s_observerVtable		core	Holds the observer vtable, which only 0x426450 stores	verified	one	core/events#observer-classes
-0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	one	core/events#observer-classes
-0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
+0x801404	void *[7]	s_observerVtable		core	Holds the observer vtable, which only 0x426450 stores	verified	two	core/events#observer-classes
+0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	two	core/events#observer-classes
+0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	two	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
 0x801490	const uint8_t[256]	s_hexDigitValue		os	Holds each byte's hex digit value: 0 to 15 for 0-9, A-F and a-f, and 0 for every other byte	verified	two	net/connection#opening-a-url
 0x8015a8	const float	s_infinityClock		core	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
@@ -1385,8 +1385,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832cc0	int32_t	s_schedulerCallGuard		core	Holds -1 plus the number of scheduler calls in flight	verified	one	core/scheduler#load-accounting
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
-0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
-0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	one	core/events#timers
+0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	two	core/events#shared-arrays
+0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	two	core/events#timers
 0x832f60	char[14]	s_textScreenshotStamp		unassigned	Holds the time format "%m%d%y_%H%M%S"	verified	one	gx/capture#screenshot-file
 0x832f70	uint32_t	s_idleSleepEnabled		os	Holds 1, the word that lets the pump sleep while the window is inactive	verified	one	core/input#message-filter-and-idle-sleep
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
@@ -2617,13 +2617,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
 0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	verified	one	core/scheduler#growable-arrays
-0x883ee8	void *[2]	s_slotListEnd		core	Holds the slot list's end link	verified	one	core/loop#static-initializers
+0x883ee8	void *[2]	s_slotListEnd		core	Holds the slot list's end link	verified	two	core/loop#static-initializers
 0x883ef0	uint32_t	s_interactiveContexts		core	Holds the count of live interactive contexts	verified	one	core/loop#contexts
-0x883ef4	uint8_t[24]	s_slotLock		core	Holds the critical section guarding the slots	verified	one	core/loop#shutdown-event
+0x883ef4	uint8_t[24]	s_slotLock		core	Holds the critical section guarding the slots	verified	two	core/loop#shutdown-event
 0x883f0c	uint32_t	s_schedulerPolling		core	Holds the polling flag; 0 in this build	verified	one	core/loop#startup-and-shutdown
 0x883f10	uint32_t	s_slotCount		core	Holds the number of scheduler slots, a power of two	verified	one	core/loop#startup-and-shutdown
 0x883f14	void *	s_slotLocks		core	Holds the array of one critical section per slot, its count stored before it	verified	one	core/scheduler#slot-acquire-and-release
-0x883f18	void **	s_slots		core	Holds the slot record pointer of each slot	verified	one	core/loop#shutdown-event
+0x883f18	void **	s_slots		core	Holds the slot record pointer of each slot	verified	two	core/loop#shutdown-event
 0x883f20	uint32_t	s_mainSlot		core	Holds the slot the main thread's loop serves	verified	one	core/loop#startup-and-shutdown
 0x883f24	void *	s_shutdownEvent		core	Holds the shutdown event; the loop leaves when it is set	verified	one	core/loop#the-loop
 0x883f30	uint32_t	s_mouseMode		core	Holds the mouse mode: 0 absolute, 1 relative	verified	one	core/input#buttons-and-capture
@@ -2634,7 +2634,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x883f5c	void *	s_confirmCloseCallback		core	Holds the confirm-close callback, or null	verified	one	core/input#close-and-quit
 0x883f60	void *	s_confirmCloseArgument		core	Holds the confirm-close callback's argument	verified	one	core/input#close-and-quit
 0x883f64	uint8_t[24]	s_messagePool		core	Holds the message pool object	inferred	none	core/events#deferred-messages
-0x883f7c	uint32_t	s_messagePoolLimit		core	Holds 0 in the file and 0x100 from 0x42449e: the largest message with its header the pool serves	verified	one	core/events#deferred-messages
+0x883f7c	uint32_t	s_messagePoolLimit		core	Holds 0 in the file and 0x100 from 0x42449e: the largest message with its header the pool serves	verified	two	core/events#deferred-messages
 0x883f94	void *	s_inputObserver		core	Holds the input observer, null in this build	verified	one	core/events#static-initializers
 0x883fa0	uint8_t[20]	s_dispatchRegPool		core	Holds the pool of dispatch registrations	inferred	none	core/events#static-initializers
 0x883fd0	uint8_t[20]	s_eventRegPool		core	Holds the pool of event registrations	inferred	none	core/events#static-initializers
@@ -3620,9 +3620,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d430	float	s_netSquare		net	Holds the square of 10.0 that InitSquare18 stores at start-up	verified	one	net/layout#static-initializers
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
-0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	two	net/dispatch#dispatch
 0xc0d488	uint32_t[3]	s_netClientNodeList		net	Holds the list of NETCLIENTNODE records, one per NetClient: the link offset 0, then the head's two link words	verified	one	net/session#netclient-construction
-0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	one	net/dispatch#handler-tables
+0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	two	net/dispatch#handler-tables
 0xc0d530	uint32_t[3]	s_resistancesRows		unassigned	Holds pointers to the Resistances rows in record order: capacity, count and array	verified	one	dbc#damage-class-check
 0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
@@ -3893,7 +3893,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/who#who-list-reply
 0xc2a1a0	uint8_t[24]	s_downloadLock		net	Holds the lock a download file's release and feed take	verified	one	net/download#releasing-a-download
 0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the Wow.ini Language and Country tag packed into a dword, first byte highest	verified	one	dbc#localized-strings
-0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
+0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	two	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
 0xc2a354	uint8_t[24]	s_socketBitmapLock		net	Holds the lock over the open-socket bitmap	verified	one	net/threads#socket-bitmap-and-callback-bracket
 0xc2a378	uint32_t *	s_openSocketBits		net	Points at the open-socket bitmap, 0x800 words the platform start sizes and zeroes	verified	one	net/threads#socket-bitmap-and-callback-bracket
@@ -4926,7 +4926,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf7288	int32_t	__no_lead_zeros		crt	Holds whether __store_num writes a number's own digits instead of a padded count	verified	one	crt/time#number-conversions
 0xcf728c	int32_t	__setlc_active		crt	Holds the count of _setlocale calls in progress, 0 since nothing calls _setlocale	verified	one	crt/time#the-strftime-format-loop
 0xcf7290	int32_t	__unguarded_readlc_active		crt	Counts the locale readers running without the locale lock, raised and lowered around each	verified	one	crt/time#the-strftime-format-loop
-0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
+0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	two	core/loop#static-initializers
 0xcf76e0	uint8_t[24]	s_contextHandleLock		core	Holds the critical section guarding the context handle counter	verified	one	core/scheduler#context-insert
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts
 0xcf76fc	uint32_t	s_contextHandlesWrapped		core	Holds 1 once the context handle counter has wrapped to 0	verified	one	core/scheduler#context-insert

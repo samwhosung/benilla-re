@@ -729,12 +729,12 @@ ClientConnection	0x0004	64	char[64]	m_account	net	Holds the account name copied 
 ClientConnection	0x0044	4	uint32_t	m_loginServerId	net	Holds the dword from the logon link that the auth session packet sends	verified	one	net/session#session-challenge
 ClientConnection	0x0048	40	uint8_t[40]	m_sessionKey	net	Holds the 40-byte session key that arms the header cipher	verified	one	net/session#session-key
 ClientConnection	0x0070	4	uint32_t	m_netState	net	Holds the connection state: 2 idle, 5 connecting, 6 connected, 7 closing	verified	one	net/session#connecting
-ClientConnection	0x0074	3312	void *[828]	m_handlers	net	Holds the packet handler of each opcode, null for none	verified	one	net/dispatch#handler-tables
-ClientConnection	0x0d64	3312	void *[828]	m_handlerContexts	net	Holds the context each handler is called with	verified	one	net/dispatch#handler-tables
-ClientConnection	0x1a54	4	void *	m_eventQueue	net	Holds the queue of events the network thread hands to the main thread	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x0074	3312	void *[828]	m_handlers	net	Holds the packet handler of each opcode, null for none	verified	two	net/dispatch#handler-tables
+ClientConnection	0x0d64	3312	void *[828]	m_handlerContexts	net	Holds the context each handler is called with	verified	two	net/dispatch#handler-tables
+ClientConnection	0x1a54	4	void *	m_eventQueue	net	Holds the queue of events the network thread hands to the main thread	verified	two	net/dispatch#main-thread-drain
 ClientConnection	0x1a58	4	void *	m_wowConnection	net	Holds the WowConnection that carries the socket	verified	one	net/dispatch#network-thread-handoff
-ClientConnection	0x1a5c	4	uint32_t	m_refCount	net	Holds the references: one per queued event and one for the poll in progress; zero on a marked client deletes it	verified	one	net/dispatch#main-thread-drain
-ClientConnection	0x1a60	1	uint8_t	m_deleting	net	Holds 1 once the connection is marked for deletion	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x1a5c	4	uint32_t	m_refCount	net	Holds the references: one per queued event and one for the poll in progress; zero on a marked client deletes it	verified	two	net/dispatch#main-thread-drain
+ClientConnection	0x1a60	1	uint8_t	m_deleting	net	Holds 1 once the connection is marked for deletion	verified	two	net/dispatch#main-thread-drain
 ClientConnection	0x1a64	4	uint32_t	m_lastPingTime	net	Holds the clock of the last ping or of connecting	verified	one	net/session#ping-and-latency
 ClientConnection	0x1a68	4	uint32_t	m_pingSequence	net	Holds the sequence number of the last ping sent	verified	one	net/session#ping-and-latency
 ClientConnection	0x1a6c	64	uint32_t[16]	m_latencySamples	net	Holds the ring of latency samples	verified	one	net/session#ping-and-latency
@@ -787,7 +787,7 @@ EvtContext	0x000c	4	uint32_t	m_handle	core	Holds the context's handle, its key i
 EvtContext	0x0010	24	uint8_t[24]	m_lock	core	Holds the critical section guarding the run state, messages and timers	verified	one	core/loop#one-tick
 EvtContext	0x0028	4	uint32_t	m_reserved	core	Holds 0 from the constructor; the event library reads it nowhere	verified	one	core/scheduler#context-fields
 EvtContext	0x002c	4	uint32_t	m_runState	core	Holds 0 running, 1 closing, 2 torn down	verified	two	core/loop#start-and-stop
-EvtContext	0x0030	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	one	core/loop#scheduler-heap
+EvtContext	0x0030	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	two	core/loop#scheduler-heap
 EvtContext	0x003c	4	uint32_t	m_dueTime	core	Holds the clock time the context is next due, the heap key	verified	two	core/loop#next-due-time
 EvtContext	0x0040	4	uint32_t	m_lastFrameTime	core	Holds the clock time of the last frame time or start dispatch	verified	two	core/loop#frame-time
 EvtContext	0x0044	4	uint32_t	m_flags	core	Holds 1 started, 2 interactive, 4 after-frame pending	verified	two	core/loop#start-and-stop
@@ -797,12 +797,12 @@ EvtContext	0x0050	4	uint32_t	m_cost	core	Holds the load the context adds to its 
 EvtContext	0x0054	4	uint32_t	m_costTarget	core	Holds the cost passed to the reschedule	verified	two	core/loop#contexts
 EvtContext	0x0058	4	uint32_t	m_costChanged	core	Holds 1 when the cost moved by more than an eighth	verified	one	core/loop#next-due-time
 EvtContext	0x005c	348	uint32_t[87]	m_handlerLists	core	Holds the 29 handler list heads of 12 bytes, one per category	verified	two	core/events#handler-records
-EvtContext	0x01b8	12	uint32_t[3]	m_messages	core	Holds the deferred message list head	verified	one	core/events#deferred-messages
+EvtContext	0x01b8	12	uint32_t[3]	m_messages	core	Holds the deferred message list head	verified	two	core/events#deferred-messages
 EvtContext	0x01c4	4	uint32_t	m_heldButtons	core	Holds the held-button mask the dispatch keeps	verified	two	core/events#held-buttons
 EvtContext	0x01c8	12	uint32_t[3]	m_heldKeys	core	Holds the held-key list head	verified	two	core/events#held-keys-and-repeats
-EvtContext	0x01d4	16	uint32_t[4]	m_timerTable	core	Holds the array of timer records by id	verified	one	core/events#timers
-EvtContext	0x01e4	16	uint32_t[4]	m_freeTimerIds	core	Holds the array of timer ids free for reuse	verified	one	core/events#timers
-EvtContext	0x01f4	20	uint32_t[5]	m_timerHeap	core	Holds the heap of timers ordered by due time	verified	one	core/events#timers
+EvtContext	0x01d4	16	uint32_t[4]	m_timerTable	core	Holds the array of timer records by id	verified	two	core/events#timers
+EvtContext	0x01e4	16	uint32_t[4]	m_freeTimerIds	core	Holds the array of timer ids free for reuse	verified	two	core/events#timers
+EvtContext	0x01f4	20	uint32_t[5]	m_timerHeap	core	Holds the heap of timers ordered by due time	verified	two	core/events#timers
 EvtContext	0x0208	4	void *	m_threadProps	core	Holds the property array the calling thread carries while the context runs	verified	one	core/scheduler#context-fields
 EvtContext	0x020c	4	void *	m_nameObject	core	Holds the name object, null unless the constructor was told to build one	verified	one	core/scheduler#context-fields
 EvtContext	0x0210	4	uint32_t	m_flagBit	core	Holds bit 1 of the constructor's third argument	verified	one	core/scheduler#context-fields
@@ -822,15 +822,15 @@ EvtThread	0x0018	4	uint32_t	m_contexts	core	Holds the number of contexts the slo
 EvtThread	0x001c	4	uint32_t	m_credit	core	Holds how many contexts the slot may hand to a lighter slot	verified	one	core/scheduler#load-accounting
 EvtThread	0x0020	4	void *	m_event	core	Holds the auto-reset event that wakes the slot's loop thread	verified	one	core/scheduler#slot-acquire-and-release
 EvtThread	0x0024	20	uint32_t[5]	m_heap	core	Holds the min-heap of contexts: capacity, count, storage, quantum, element offset 0x30	verified	one	core/scheduler#slot-acquire-and-release
-EvtTimer	0x0000	4	uint32_t	m_id	core	Holds the timer id, its index in the timer table	verified	one	core/events#timers
-EvtTimer	0x0004	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	one	core/events#timers
-EvtTimer	0x0010	4	uint32_t	m_dueTime	core	Holds the clock time the timer fires, the heap key	verified	one	core/events#timers
-EvtTimer	0x0014	4	float	m_delaySeconds	core	Holds the delay times 0.001f, passed to the function	verified	one	core/events#timers
-EvtTimer	0x0018	4	void *	m_function	core	Holds the function called as fastcall(&{delay, now}, argument)	verified	one	core/events#timers
-EvtTimer	0x001c	4	void *	m_argument	core	Holds the argument passed to the function in edx	verified	one	core/events#timers
-EvtTimer	0x0020	4	void *	m_functionEx	core	Holds the second form of function, called with two stack arguments	verified	one	core/events#timers
-EvtTimer	0x0028	8	uint32_t[2]	m_exStackArguments	core	Holds the two stack arguments of the second form	verified	one	core/events#timers
-EvtTimer	0x0030	4	void *	m_exArgument	core	Holds the edx argument of the second form	verified	one	core/events#timers
+EvtTimer	0x0000	4	uint32_t	m_id	core	Holds the timer id, its index in the timer table	verified	two	core/events#timers
+EvtTimer	0x0004	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	two	core/events#timers
+EvtTimer	0x0010	4	uint32_t	m_dueTime	core	Holds the clock time the timer fires, the heap key	verified	two	core/events#timers
+EvtTimer	0x0014	4	float	m_delaySeconds	core	Holds the delay times 0.001f, passed to the function	verified	two	core/events#timers
+EvtTimer	0x0018	4	void *	m_function	core	Holds the function called as fastcall(&{delay, now}, argument)	verified	two	core/events#timers
+EvtTimer	0x001c	4	void *	m_argument	core	Holds the argument passed to the function in edx	verified	two	core/events#timers
+EvtTimer	0x0020	4	void *	m_functionEx	core	Holds the second form of function, called with two stack arguments	verified	two	core/events#timers
+EvtTimer	0x0028	8	uint32_t[2]	m_exStackArguments	core	Holds the two stack arguments of the second form	verified	two	core/events#timers
+EvtTimer	0x0030	4	void *	m_exArgument	core	Holds the edx argument of the second form	verified	two	core/events#timers
 FfxRenderTarget	0x0000	4	uint32_t	m_handle	ffxeffects	Holds the target texture handle, 0 for the screen	verified	one	ffxeffects/targets#render-target-allocation
 FfxRenderTarget	0x0004	4	int32_t	m_allocWidth	ffxeffects	Holds the allocated texture width	verified	one	ffxeffects/targets#render-target-allocation
 FfxRenderTarget	0x0008	4	int32_t	m_allocHeight	ffxeffects	Holds the allocated texture height	verified	one	ffxeffects/targets#render-target-allocation
@@ -1136,10 +1136,10 @@ MovementGlobals	0x0124	4	uint32_t	m_flags	collision	Holds bit 0 once 0x616860 ha
 MovementGlobals	0x0128	4	uint32_t	m_lastTickTime	collision	Holds the clock at the last tick, written by 0x616860 and 0x616800	verified	one	collision/mover#per-frame-tick
 MovementGlobals	0x012c	4	uint32_t	m_stepTime	collision	Holds the end of the step being simulated, written per step by 0x616620	verified	one	collision/mover#local-player-step
 MovementGlobals	0x0130	4	uint32_t	m_heartbeatDeadline	collision	Holds the time of the active mover's next heartbeat, set by 0x615b80 and moved by 0x615ae0	verified	one	collision/mover#heartbeat-and-skipped-time
-NETEVENTQUEUENODE	0x0008	4	uint32_t	m_type	net	Holds the event type, 0x12 to 0x16	verified	one	net/dispatch#network-thread-handoff
-NETEVENTQUEUENODE	0x000c	4	uint32_t	m_time	net	Holds the client clock when the node was queued	verified	one	net/dispatch#network-thread-handoff
-NETEVENTQUEUENODE	0x0010	4	void *	m_data	net	Holds the node's own copy of the packet bytes	verified	one	net/dispatch#network-thread-handoff
-NETEVENTQUEUENODE	0x0014	4	uint32_t	m_length	net	Holds the length of the copied bytes	verified	one	net/dispatch#network-thread-handoff
+NETEVENTQUEUENODE	0x0008	4	uint32_t	m_type	net	Holds the event type, 0x12 to 0x16	verified	two	net/dispatch#network-thread-handoff
+NETEVENTQUEUENODE	0x000c	4	uint32_t	m_time	net	Holds the client clock when the node was queued	verified	two	net/dispatch#network-thread-handoff
+NETEVENTQUEUENODE	0x0010	4	void *	m_data	net	Holds the node's own copy of the packet bytes	verified	two	net/dispatch#network-thread-handoff
+NETEVENTQUEUENODE	0x0014	4	uint32_t	m_length	net	Holds the length of the copied bytes	verified	two	net/dispatch#network-thread-handoff
 NTempest::C2Vector	0x0000	4	float	m_x	cmath	Holds x	verified	one	cmath/types#vectors
 NTempest::C2Vector	0x0004	4	float	m_y	cmath	Holds y	verified	one	cmath/types#vectors
 NTempest::C33Matrix	0x0000	12	float[3]	m_row0	cmath	Holds row 0, entries (0, 0) to (0, 2)	verified	one	cmath/types#matrices

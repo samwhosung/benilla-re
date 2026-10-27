@@ -138,9 +138,9 @@ dispatches each message's category with its payload, freeing it after. The only 
 queues one, `0x424c00`, is called only by `0x41fa80`, which nothing reaches, so in this build the
 queue is always empty.
 
-Addresses: `0x424ad0`, `0x424a70`, `0x424c00`, `0x424cd0`, `0x41fa80`, `0x424490`, `0x4244d0`, `0x424500`, `0x883f64`, `0x883f7c`, `0x4251e0`, `0x4251f0`, `0x760210`, `0x42449e`
+Addresses: `0x424ad0`, `0x424a70`, `0x424c00`, `0x424cd0`, `0x41fa80`, `0x424490`, `0x4244d0`, `0x424500`, `0x883f64`, `0x883f7c`, `0x4251e0`, `0x4251f0`, `0x760210`, `0x42449e`, `0x41f5a0`, `0x41f5aa`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 A message is a size, a link, the category at `+0x0c` and a copy of the payload at `+0x10`
@@ -148,28 +148,35 @@ A message is a size, a link, the category at `+0x0c` and a copy of the payload a
 is at most `0x883f7c`, 0 in the file and 0x100 from `0x42449e`, so for payloads up to 240
 bytes, and otherwise through the pool's slot `0x760210`, which calls `SMemAlloc`. The drain swaps the queue at `+0x1b8` for an empty one (`0x424b2d` to `0x424b69`)
 and calls `0x4245b0(category = +0x0c, payload = +0x10)` (`0x424b7f` to `0x424b8a`). `0x424490`
-builds the pool and `0x4244d0`/`0x424500` destroy it.
+builds the pool. `0x4244d0`, the exit handler, only resets the pool's vtables; `0x424500`, which
+`0x41f5a0` calls (`0x41f5aa`), frees its cached blocks and its chunks.
 
 ## Timers
 
 `EventSetTimer` (`0x4200a0`) takes a delay in milliseconds, a function and an argument, and
-returns a timer id for the current context. The timer is due at `now + delay`; when the loop's
-timer phase finds it due, it is removed and its function called once as
-`fastcall(&{delay · 0.001f, now}, argument)`. Due timers run in due-time order and the phase reads
-the clock once. `EventKillTimer` (`0x4203e0`) clears a timer's functions, and dead timers are
-dropped from the heap's top.
+returns a timer id for the current context: the last id freed, else the next, at least 1. The
+timer is due at `now + delay`; when the loop's timer phase finds it due, it is removed from the
+heap, its id is freed, and its function is called once as `fastcall(&{delay · 0.001f, now},
+argument)` with the lock released. Due timers run in due-time order and the phase reads the clock
+once. `EventKillTimer` (`0x4203e0`) clears a timer's functions; a timer with none is dropped when
+it reaches the heap's top, and its id is freed then.
 
-Addresses: `0x4200a0`, `0x4203e0`, `0x428b30`, `0x428510`, `0x428720`, `0x428820`, `0x428ee0`, `0x4290c0`, `0x832f2c`
+Addresses: `0x4200a0`, `0x4203e0`, `0x428b30`, `0x428510`, `0x428720`, `0x428820`, `0x428ee0`, `0x4290c0`, `0x832f2c`, `0x423240`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `core::evttimer_ticks_to_seconds_matches_binary`
 
-`0x428b30` reuses an id from the free list or takes the next (at least 1), allocates a 0x38-byte
-record, and stores `due = now + delay` at `+0x10` (`0x428c09`, `0x428c14`), the delay as
+`0x428b30` takes the last id of the free list (`0x428b8d`) or the next, and loads that id's
+record (`0x428bc0`). Only an empty slot allocates a 0x38-byte record (`0x428bc5`, `0x428bd4`); a
+used id reuses its record. It stores `due = now + delay` at `+0x10` (`0x428c09`, `0x428c14`), the delay as
 `fild QWORD` of the unsigned delay times `0.001f` at `+0x14` (`0x428c4e` to `0x428c6b`), the
 functions at `+0x18` and `+0x20` and their arguments, then sift-inserts it in the heap at
 `+0x1f4`. `0x428510` reads the clock once (`0x42854e`), stops at a root with `due − now > 0`
-signed (`0x4285f2`), and calls with the lock released (`0x428659`). The test runs `0x428c4e` to `0x428c6e`.
+signed (`0x4285f2`), frees the id (`0x428647`, `0x4286aa`) and calls with the lock released
+(`0x428659`, `0x4286c4`), so a timer set inside the callback takes that id unless the callback
+freed another first. A dead root is dropped and its id freed at `0x4285e8`, and in `0x428820` at
+`0x428933`. The context's teardown frees every record (`0x42331d` in `0x423240`). The test runs
+`0x428c4e` to `0x428c6e`.
 
 ## Observer classes
 
@@ -181,10 +188,10 @@ destructors listed here.
 
 Addresses: `0x8013b0`, `0x801404`, `0x801420`, `0x801430`, `0x8013cc`, `0x8013f4`, `0x426190`, `0x4261c0`, `0x4261f0`, `0x426220`, `0x426250`, `0x426280`, `0x425430`, `0x426450`, `0x4265b0`, `0x41f3f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-The input observer vtable `0x8013b0` is stored only at `0x42545d`, in the unreached `0x425430`.
+The input observer vtable `0x8013b0` is stored only at `0x42545b`, in the unreached `0x425430`.
 The observer vtable `0x801404` is stored only by `0x426450`, which only the destructor slots
 `0x4254a0` and `0x4283f0` of those two vtables call. The registration vtables `0x801420` and
 `0x801430` are stored by `0x4265b0`, `0x427990` and `0x428470`, reached only from those slots.
@@ -194,13 +201,13 @@ are the type tags at `0x426414` to `0x42643a`.
 
 ## Shared arrays
 
-Growable arrays of dwords from these object files are used across the client: set the count,
-add elements, reallocate, free. Their capacity rounds up to a multiple of a quantum: the largest
-power of two not above the size for sizes below 64, else 64, and 1 for size 0.
+Growable arrays of dwords from these object files are used across the client. Their capacity
+rounds up to a multiple of a quantum: the largest power of two not above the size for sizes below
+64, else 64, and 1 for size 0.
 
 Addresses: `0x4292e0`, `0x429320`, `0x4291f0`, `0x428fb0`, `0x429340`, `0x423510`, `0x427180`, `0x832e00`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4292e0` repeats `x & (x − 1)` while nonzero and keeps the last nonzero value: the highest set
@@ -213,17 +220,19 @@ link, else 0. The other three were read for their calls only.
 
 The bus, message, observer and timer object files run 22 static initializers: the +∞, 2π and
 1/2π stores of each file, the context table and lock again, the cursor rectangle cleared, the
-message pool, and the three registration pools.
+message pool, the input observer pointer cleared, and the three registration pools.
 
 Addresses: `0x827378`, `0x4231d0`, `0x423230`, `0x423870`, `0x423880`, `0x423890`, `0x4238a0`, `0x4238d0`, `0x4238e0`, `0x424410`, `0x424420`, `0x424430`, `0x424440`, `0x424460`, `0x424470`, `0x424480`, `0x4244c0`, `0x4252c0`, `0x4252d0`, `0x4252e0`, `0x4252f0`, `0x425380`, `0x425390`, `0x4253a0`, `0x4253b0`, `0x4253c0`, `0x4253d0`, `0x426140`, `0x426150`, `0x426160`, `0x426170`, `0x4262c0`, `0x4262d0`, `0x4262e0`, `0x4262f0`, `0x426310`, `0x426320`, `0x426340`, `0x426350`, `0x426370`, `0x426380`, `0x4263a0`, `0x4263b0`, `0x4263d0`, `0x4263e0`, `0x427ba0`, `0x427bb0`, `0x427bc0`, `0x427bd0`, `0x428700`, `0x428710`, `0x428f60`, `0x428f70`, `0x428f80`, `0x428f90`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-They sit in the table from `0x827378` through `0x8273cc`, and the same shape census as
-`core/loop#static-initializers` matched each. `0x4231d0` repeats `0x420850` under the same guard
-bit, so it builds nothing and only registers the teardown `0x4208c0` again, which its own guard
-bit runs once. `0x4238a0` zeroes the cursor rectangle `0x883f48` to `0x883f54`.
+They sit in the table from `0x827378` through `0x8273cc`, in the five shapes of
+`core/loop#static-initializers`: the +∞ copy (5), 2π (5), 1/2π (5), `call init; jmp
+atexit-thunk` (6), and `0x4231d0` alone (1), a guarded initializer inline that ends in a `jmp` to
+the atexit thunk `0x423230`. `0x4231d0` repeats `0x420850` under the same guard bit `0xcf76cc`,
+which `0x420850`, in the earlier slot, has set, so it builds nothing and only registers the
+teardown `0x4208c0` again, which the teardown's own guard bit runs once. `0x4238a0` zeroes the cursor rectangle `0x883f48` to `0x883f54`.
 `0x4253b0` clears the input observer pointer `0x883f94`. `0x4262f0`, `0x426350` and `0x4263b0`
 build pools at `0x883fd0`, `0x883ffc` and `0x883fa0` with their locks.
 
@@ -234,15 +243,16 @@ message posting and handler marking they lead to, the cursor rectangle setters, 
 observer's converters and its attach and detach pairs, and the observer and registration classes
 (`Observer classes`): nothing reaches any of them.
 
-Addresses: `0x4254a0`, `0x4262b0`, `0x426450`, `0x426470`, `0x4265b0`, `0x4266c0`, `0x426850`, `0x426870`, `0x4269b0`, `0x4269e0`, `0x426c20`, `0x426c60`, `0x426d30`, `0x426d70`, `0x426ec0`, `0x426f90`, `0x4270b0`, `0x4271a0`, `0x427290`, `0x427340`, `0x427460`, `0x427550`, `0x427680`, `0x4276c0`, `0x4276e0`, `0x4276f0`, `0x427720`, `0x427750`, `0x427810`, `0x4278d0`, `0x427990`, `0x427a50`, `0x427a80`, `0x427ac0`, `0x427af0`, `0x427b30`, `0x427b60`, `0x427bf0`, `0x427c10`, `0x427ca0`, `0x427d30`, `0x427d80`, `0x427f70`, `0x427fa0`, `0x428050`, `0x428060`, `0x4281a0`, `0x4282e0`, `0x4283f0`, `0x428420`, `0x428470`, `0x425430`, `0x424c00`, `0x424cd0`, `0x41f630`, `0x41f6f0`, `0x41f7a0`, `0x41f840`, `0x41fa80`, `0x41fb90`, `0x41fe50`, `0x41ff00`, `0x41ffd0`, `0x420240`, `0x420310`, `0x420490`, `0x4206a0`, `0x420740`, `0x4242b0`, `0x4242f0`, `0x424370`, `0x424590`, `0x424950`, `0x4249b0`, `0x424d70`, `0x4250d0`, `0x4254d0`, `0x425520`, `0x425570`, `0x4255c0`, `0x425610`, `0x425690`, `0x425710`, `0x425790`, `0x425810`, `0x425890`, `0x425910`, `0x425960`, `0x4259a0`, `0x4259e0`, `0x425a30`, `0x425a70`, `0x425ac0`, `0x425b00`, `0x425b50`, `0x425b90`, `0x425be0`, `0x425c20`, `0x425c70`, `0x425cb0`, `0x425d00`, `0x425d40`, `0x425d90`, `0x425dd0`, `0x425e20`, `0x425e60`, `0x425eb0`, `0x425ef0`, `0x425f40`, `0x425f80`, `0x425fd0`, `0x426010`, `0x426060`, `0x4260a0`, `0x4260f0`, `0x426130`, `0x426a10`, `0x426af0`, `0x426bd0`, `0x426bf0`, `0x4273e0`, `0x427420`, `0x428790`, `0x428960`, `0x428d00`, `0x420170`
+Addresses: `0x4254a0`, `0x4262b0`, `0x426450`, `0x426470`, `0x4265b0`, `0x4266c0`, `0x426850`, `0x426870`, `0x4269b0`, `0x4269e0`, `0x426c20`, `0x426c60`, `0x426d30`, `0x426d70`, `0x426ec0`, `0x426f90`, `0x4270b0`, `0x4271a0`, `0x427290`, `0x427340`, `0x427460`, `0x427550`, `0x427680`, `0x4276c0`, `0x4276e0`, `0x4276f0`, `0x427720`, `0x427750`, `0x427810`, `0x4278d0`, `0x427990`, `0x427a50`, `0x427a80`, `0x427ac0`, `0x427af0`, `0x427b30`, `0x427b60`, `0x427bf0`, `0x427c10`, `0x427ca0`, `0x427d30`, `0x427d80`, `0x427f70`, `0x427fa0`, `0x428050`, `0x428060`, `0x4281a0`, `0x4282e0`, `0x4283f0`, `0x428420`, `0x428470`, `0x425430`, `0x424c00`, `0x424cd0`, `0x41f630`, `0x41f6f0`, `0x41f7a0`, `0x41f840`, `0x41fa80`, `0x41fb90`, `0x41fe50`, `0x41ff00`, `0x41ffd0`, `0x420240`, `0x420310`, `0x420490`, `0x4206a0`, `0x420740`, `0x4242b0`, `0x4242f0`, `0x424370`, `0x424590`, `0x424950`, `0x4249b0`, `0x424d70`, `0x4250d0`, `0x4254d0`, `0x425520`, `0x425570`, `0x4255c0`, `0x425610`, `0x425690`, `0x425710`, `0x425790`, `0x425810`, `0x425890`, `0x425910`, `0x425960`, `0x4259a0`, `0x4259e0`, `0x425a30`, `0x425a70`, `0x425ac0`, `0x425b00`, `0x425b50`, `0x425b90`, `0x425be0`, `0x425c20`, `0x425c70`, `0x425cb0`, `0x425d00`, `0x425d40`, `0x425d90`, `0x425dd0`, `0x425e20`, `0x425e60`, `0x425eb0`, `0x425ef0`, `0x425f40`, `0x425f80`, `0x425fd0`, `0x426010`, `0x426060`, `0x4260a0`, `0x4260f0`, `0x426130`, `0x426a10`, `0x426af0`, `0x426bd0`, `0x426bf0`, `0x4273e0`, `0x427420`, `0x428790`, `0x428960`, `0x428d00`, `0x420170`, `0x40153f`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The census of `core/loop#unreached-functions` finds no `e8`/`e9` and no dword at any alignment
-for any of them outside this list, the import tables, and the vtables of `Observer classes`.
-`0x41fa80`'s only dword match is unaligned, inside a float table. `0x420170`, the timer variant
-that sets the second function form, is called only at `0x40153f`, in the unreferenced `0x401530`. `0x425430`, which builds the input observer, is called 78 times,
-all from the attach and detach pairs here. The converters `0x425610` to `0x425890` are referenced
+for any of them outside this list, the import tables, the vtables of `Observer classes` and one
+call: `0x40153f`, in `0x401530`, to `0x420170`, the timer variant that sets the second function
+form. `0x401530` passes its three arguments on and follows a `ret`; nothing references it.
+`0x41fa80`'s only dword match is unaligned, inside a float table. `0x425430`, which builds the
+input observer, is called 78 times, all from the attach and detach pairs here. The converters `0x425610` to `0x425890` are referenced
 only by those pairs; the interface's live converter is `0x766f70`, which calls the same scaling
 `0x41ad80` at `0x766fb1`.
