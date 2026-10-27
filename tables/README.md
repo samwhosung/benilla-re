@@ -55,7 +55,7 @@ and `opcode_entries.tsv`.
 
 ## opcode_sends.tsv
 
-Every place the client puts an opcode into an outgoing packet and sends it (394 rows, 310 distinct
+Every place the client puts an opcode into an outgoing packet and sends it (390 rows, 310 distinct
 opcodes). `../tools/tables/opcode_sends.py` opens with the contract: it reads the function that
 holds each call to `ClientServices::Send 0x5ab630`, `NetClient::Send 0x5379a0` or the minigame's
 `0x728640`, follows the opcode written first into the packet's store, and resolves an opcode passed
@@ -73,7 +73,7 @@ as an argument through its callers.
 
 ## opcode_entries.tsv
 
-For each handler registration and each send, the entries of `../systems/` that cover the code (781 rows).
+For each handler registration and each send, the entries of `../systems/` that cover the code (777 rows).
 `../tools/tables/opcode_entries.py` opens with the contract.
 
 | column | meaning |

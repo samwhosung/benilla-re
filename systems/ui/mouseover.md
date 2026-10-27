@@ -94,9 +94,9 @@ For a unit, the publisher fires the tooltip's `OnTooltipSetDefaultAnchor` script
 and more. A corpse fires the script, builds its tooltip (`0x52aef0`) and plays the neutral sound. A game object
 whose floating-tooltip test holds (only the generic type, with its first data word nonzero) sets the tooltip's
 owner itself, to `UIParent` with the cursor mode 6, before building; every other game object fires the script,
-builds and plays the neutral sound. The owner is always set before the lines are added, because setting it clears the tooltip.
+then builds. Both play the neutral sound. The owner is set before the lines are added, because setting it clears the tooltip.
 
-Addresses: `0x492983`, `0x4929f6`, `0x492a7d`, `0x529fe0`, `0x52aa20`, `0x52aef0`, `0x52ffe0`, `0x6061e0`, `0x702690`, `0xb4b44c`, `0xb4b3c4`
+Addresses: `0x492983`, `0x4929f6`, `0x492a32`, `0x492a37`, `0x492a7d`, `0x458030`, `0x529fe0`, `0x52aa20`, `0x52aef0`, `0x52ffe0`, `0x6061e0`, `0x702690`, `0xb4b44c`, `0xb4b3c4`, `0x8432d4`
 Confidence: verified
 Proof: one
 Test: none
@@ -104,7 +104,7 @@ Test: none
 The script slot is `[tooltip+0x444]`, fired through `0x702690` (`0x49299a`, `0x492a59`, `0x492a94`). The unit leg signals event 0x150 at
 `0x4929ae`, reads the reaction twice (`0x4929bb`, `0x4929d8`) and plays the sound at `0x4929ca`, `0x4929e6` or `0x492aa8`. The game
 object leg calls the object's virtual `+0x5c` (`0x4929fa`) and, when it answers true, `0x52ffe0(UIParent+0x24, 6, 0, 0)`
-(`0x492a1e`) and the builder `0x52aa20` (`0x492a2d`). `0xb4b44c` is the frame found by the name `UIParent`
+(`0x492a1e`) and the builder `0x52aa20` (`0x492a2d`); `0x492a32` loads the neutral name `0x8432d4` and `0x492a37` plays it (`0x458030`). Every `SoundEntries.dbc` row named for one of the three highlight sounds (ids 103 to 105 and 897 to 899) has empty file columns, so none plays anything (`sound/entries#sound-definitions`). `0xb4b44c` is the frame found by the name `UIParent`
 (`0x490065`) and `0xb4b3c4` the one named `GameTooltip` (`0x490091`).
 
 ## The world input hook

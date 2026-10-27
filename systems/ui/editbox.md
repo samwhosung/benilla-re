@@ -125,9 +125,11 @@ with a nonzero class entry.
 With Ctrl held, letters act in the Emacs way: A selects all, B and F move back and forward a
 character, D deletes forward, K deletes to the end and U to the start, W deletes a word back, P
 and N walk the history back and forward, C copies, X cuts, and V pastes. Other letters do nothing.
-A password box copies an empty string instead of its text.
+A password box copies an empty string instead of its text. C and X pass the selection through `GxuStripControlCodes`
+(`font/markup#stripping`) with mask `0x500` first: colour, restore and link codes (`|c`, `|r`, `|H`, `|h`) are dropped,
+`||` becomes `|`, and a line break (CR, LF, CRLF or `|n`) becomes one `\n`.
 
-Addresses: `0x77b1fb`, `0x77b20e`, `0x77b221`, `0x77b239`, `0x77b265`, `0x77b291`, `0x77b2b5`, `0x77b2d9`, `0x77b2f9`, `0x77b319`, `0x77b339`, `0x77b359`, `0x77b387`, `0x77b39b`, `0x77b3bb`, `0x77c2e0`, `0x77c4a0`, `0x77c4d0`, `0x77c3f0`, `0x77e1d0`, `0x77e250`, `0x882748`
+Addresses: `0x77b1fb`, `0x77b20e`, `0x77b221`, `0x77b239`, `0x77b265`, `0x77b291`, `0x77b2b5`, `0x77b2d9`, `0x77b2f9`, `0x77b319`, `0x77b339`, `0x77b359`, `0x77b387`, `0x77b39b`, `0x77b3bb`, `0x77c2e0`, `0x77c4a0`, `0x77c4d0`, `0x77c3f0`, `0x77e1d0`, `0x77e230`, `0x77e239`, `0x77e250`, `0x5c2590`, `0x882748`
 Confidence: verified
 Proof: one
 Test: none
@@ -138,7 +140,10 @@ tests `0x41f8f0(1)`. A calls `0x77cca0(0, −1)` (`0x77b239`); F `0x77c750` (`0x
 W `0x77c3f0`; U `0x77c4a0`, `0x77c280` of minus the letters before the cursor; K `0x77c4d0`; P
 `0x77d030`; N `0x77cfd0`; C and X `0x77e1d0` (`0x77b387`), X then `0x77cd70` (`0x77b39b`); V
 `0x77e250` (`0x77b3bb`). `0x77e1d0` tests bit 3 and then passes the empty string at `0x882748`
-to `0x7a78c0`.
+to `0x7a78c0`. Otherwise it strips the selected bytes of the text at `+0x32c` (`+0x35c` to `+0x360`) with `push 0x500`
+(`0x77e230`) and `call 0x5c2590` (`0x77e239`) and passes the result to `0x7a78c0`. In the strip's table (`0x85f4d8`),
+`0x100` gates classes 0 and 1 and `0x400` classes 4 and 5, so they are dropped; `0x200` (class 2) and `0x800` (class 3)
+are clear in `0x500`, so those two are replaced. An empty selection (`+0x35c` equal to `+0x360`) copies nothing.
 
 ## Typed characters
 

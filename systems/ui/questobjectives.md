@@ -54,8 +54,9 @@ being the objective's own array index. It is not clamped by the client, and it c
 wrote. The required count is `+0x14ac[i]`. The name is the objective text in the template (`+0x14dc + i*0x100`)
 when it is non-empty, with the format `QUEST_OBJECTS_FOUND`, else the creature's name from the cache with
 `QUEST_MONSTERS_KILLED` (a game object always `QUEST_OBJECTS_FOUND`); the line type stays `monster` or `object`.
+The cached name is `names[GetPluralIndex(required) - 1]`, the index not clamped (`0x703cf0` gives 0 when the call fails).
 
-Addresses: `0x4e02f7`, `0x4e02fa`, `0x4e02fd`, `0x4e0300`, `0x4e0302`, `0x4e0306`, `0x4e0353`, `0x4e035e`, `0x4e0390`, `0x4e03da`, `0x4e03df`, `0x4e03e1`, `0x4e0425`, `0x4e040b`, `0x4e0491`, `0x4e04ca`, `0x4e04dc`, `0xc0e354`
+Addresses: `0x4e02f7`, `0x4e02fa`, `0x4e02fd`, `0x4e0300`, `0x4e0302`, `0x4e0306`, `0x4e0353`, `0x4e035e`, `0x4e03a1`, `0x4e03ab`, `0x4e03bb`, `0x4e0390`, `0x4e03da`, `0x4e03df`, `0x4e03e1`, `0x4e0425`, `0x4e040b`, `0x4e0466`, `0x4e0470`, `0x4e047c`, `0x4e0491`, `0x4e04ca`, `0x4e04dc`, `0x703cf0`, `0x7c8120`, `0x7c814e`, `0x7c8154`, `0x7c87c0`, `0x7c880b`, `0x7c8814`, `0xc0e354`
 Confidence: verified
 Proof: one
 Test: none
@@ -64,7 +65,10 @@ Test: none
 object id is the id masked with `0x7fffffff` (`0x4e0390`). The format key is chosen by `test cl,cl` on the first
 byte of the objective text (`0x4e03da`). A name missing from the cache is the single space `" "` (`0x82ee00`, at
 `0x4e0481` and `0x4e0601`), and the lookup sends the query with a callback that fires `QUEST_LOG_UPDATE` when it
-arrives; it logs `Invalid creature in quest` or `Invalid object in quest` on failure.
+arrives; it logs `Invalid creature in quest` or `Invalid object in quest` on failure. The creature record holds four names
+at `+0` (`0x4e047c`) and the object record four at `+8` (`0x4e03bb`), each indexed by `GetPluralIndex(required) - 1`
+(`0x4e0466`, `0x4e0470` and `0x4e03a1`, `0x4e03ab`). The record reader copies an empty name after the first from the slot before
+it (`0x7c814e` to `0x7c8154`; objects `0x7c880b`, `0x7c8814`), so a server that sends one name fills all four.
 
 ## Cache query callbacks
 

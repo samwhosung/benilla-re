@@ -107,7 +107,6 @@ opcode	name	role	site	function	entries	basis
 0x097	CMSG_JOIN_CHANNEL	send	0x49a62a	0x49a210	ui/chatchannels#walk-slots-already-held	opcode
 0x097	CMSG_JOIN_CHANNEL	send	0x49ee42	0x49eb70	ui/channelverbs#the-join-body	opcode
 0x098	CMSG_LEAVE_CHANNEL	send	0x49a38c	0x49a210	ui/chatchannels#walk-slots-already-held|ui/chatwindows#settings-file-backfill	opcode
-0x098	CMSG_LEAVE_CHANNEL	send	0x49a410	0x49a210	ui/chatchannels#walk-slots-already-held|ui/chatwindows#settings-file-backfill	opcode
 0x098	CMSG_LEAVE_CHANNEL	send	0x49f0cc	0x49ee70	ui/channelverbs#leavechannelbyname	opcode
 0x099	SMSG_CHANNEL_NOTIFY	handler	0x49861a	0x49bf80	ui/chatchannels#the-channel-notify-message	opcode
 0x09a	CMSG_CHANNEL_LIST	send	0x4a00da	0x4a00d0	ui/channeladmin#commands-naming-a-channel	opcode
@@ -554,7 +553,6 @@ opcode	name	role	site	function	entries	basis
 0x268	CMSG_SET_AMMO	send	0x4c7440	0x4c7300	ui/bags#pickup-of-an-inventory-slot	opcode
 0x268	CMSG_SET_AMMO	send	0x4c74e7	0x4c7300	ui/bags#pickup-of-an-inventory-slot	opcode
 0x268	CMSG_SET_AMMO	send	0x4c7646	0x4c7300	ui/bags#pickup-of-an-inventory-slot	opcode
-0x268	CMSG_SET_AMMO	send	0x4c77e1	0x4c7300	ui/bags#pickup-of-an-inventory-slot	opcode
 0x268	CMSG_SET_AMMO	send	0x5e14e0	0x5e1480	objectlayer/inventory#moving-items	opcode
 0x268	CMSG_SET_AMMO	send	0x5e1757	0x5e1480	objectlayer/inventory#moving-items	opcode
 0x269	SMSG_CORPSE_RECLAIM_DELAY	handler	0x48f4af	0x48f690	ui/deathui#the-reclaim-delay|ui/gameui#game-start-up	opcode
@@ -568,13 +566,11 @@ opcode	name	role	site	function	entries	basis
 0x26f	MSG_LIST_STABLED_PETS	send	0x5e02e8	0x5e02a0	objectlayer/interaction#talking-to-an-npc	opcode
 0x270	CMSG_STABLE_PET	send	0x4caec2	0x4cae50	ui/stable#stable-requests	opcode
 0x270	CMSG_STABLE_PET	send	0x4cb59a	0x4cb420	ui/stable#click-and-drag	opcode
-0x270	CMSG_STABLE_PET	send	0x4cb64f	0x4cb420	ui/stable#click-and-drag	opcode
 0x271	CMSG_UNSTABLE_PET	send	0x4cb022	0x4caf20	ui/stable#stable-requests	opcode
 0x271	CMSG_UNSTABLE_PET	send	0x4cb6bf	0x4cb420	ui/stable#click-and-drag	opcode
 0x272	CMSG_BUY_STABLE_SLOT	send	0x4cb182	0x4cb080	ui/stable#stable-requests	opcode
 0x273	SMSG_STABLE_RESULT	handler	0x4caa9d	0x4cacb0	ui/stable#the-result-message	opcode
 0x275	CMSG_STABLE_SWAP_PET	send	0x4cb514	0x4cb420	ui/stable#click-and-drag	opcode
-0x275	CMSG_STABLE_SWAP_PET	send	0x4cb59a	0x4cb420	ui/stable#click-and-drag	opcode
 0x275	CMSG_STABLE_SWAP_PET	send	0x4cb64f	0x4cb420	ui/stable#click-and-drag	opcode
 0x276	MSG_QUEST_PUSH_RESULT	handler	0x5e3803	0x5e38c0	objectlayer/quests#shared-quests|ui/questshare#the-sharers-answers	opcode
 0x276	MSG_QUEST_PUSH_RESULT	send	0x5011bf	0x501130	core/close#interaction-closer|core/close#packets-sent-in-the-world|ui/questshare#what-the-client-answers-itself	opcode

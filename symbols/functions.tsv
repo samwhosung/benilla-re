@@ -8648,7 +8648,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c2b40	225	Script::SetLootPortrait	idb	ui	primitive	int __fastcall (lua_State *L)	Bakes the loot source unit's portrait into a texture, returning 1, or clears it and returns nil	verified	one	ui/loot#loot-functions	
 0x4c2c30	41	Script::GetNumLootItems	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the loot row count through 0x4c2260	verified	one	ui/loot#loot-lua-reads	
 0x4c2c60	177	Script::GetLootSlotInfo	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the icon, name, count and quality of a loot slot, always four values	verified	one	ui/loot#loot-lua-reads	
-0x4c2d20	102	Script::GetLootSlotLink	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the item link of a loot slot, or nothing	verified	one	ui/loot#item-link-and-name	
+0x4c2d20	102	Script::GetLootSlotLink	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the item link of a loot slot, or nil	verified	one	ui/loot#item-link-and-name	
 0x4c2d90	97	Script::LootSlotIsItem	idb	ui	primitive	int __fastcall (lua_State *L)	Returns 1 when a loot slot is an item row, else nil	verified	one	ui/loot#loot-lua-reads	
 0x4c2e00	97	Script::LootSlotIsCoin	idb	ui	primitive	int __fastcall (lua_State *L)	Returns 1 when a loot slot is the coin row, else nil	verified	one	ui/loot#loot-lua-reads	
 0x4c2e70	69	Script::LootSlot	idb	ui	primitive	int __fastcall (lua_State *L)	Confirms the pending loot slot with the slot argument and returns nothing	verified	one	ui/loot#loot-functions	
