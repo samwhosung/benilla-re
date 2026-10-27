@@ -35,7 +35,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4013f0	23			client			Runs its object file code not read here	inferred	none		
 0x401410	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x401420	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x401440	15	IsDataLayoutParent		client		bool __cdecl (void)	Returns whether model.MPQ and interface.MPQ were both found under ..\Data\ (layout word 1)	verified	one	storm/mount#install-folder-and-data-path	
+0x401440	15	IsDataLayoutParent		client		bool __cdecl (void)	Returns whether model.MPQ and interface.MPQ were both found under ..\Data\ (layout word 1)	verified	two	storm/mount#install-folder-and-data-path	
 0x401450	17			client	unreached		Runs its object file code not read here	inferred	none		
 0x401470	124	EnumerateArchiveFiles		client			Passes each listfile name of the mounted archives that begins with a prefix to a callback	verified	two	ui/addons#finding-add-ons	
 0x4014f0	42	CallIfNameHasPrefix		client			Calls a callback for a name beginning with a prefix, ignoring case, and answers 1 otherwise	verified	two	ui/addons#finding-add-ons	
@@ -67,11 +67,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402100	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402110	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402120	222	ClientMain		client			Runs the application: start-up calls, the time manager, init, the event loop and teardown	verified	one	core/threads#application-body	
-0x402200	15	IsDataLayoutSplit		client		bool __cdecl (void)	Returns whether model.MPQ was found under ..\Data\ and interface.MPQ was not (layout word 2)	verified	one	storm/mount#install-folder-and-data-path	
-0x402210	161	SetBaseAndDataPaths		client		void __cdecl (void)	Sets the working folder and base path from -datadir or the exe folder, the data layout word, and Data\ as data path	verified	one	storm/mount#install-folder-and-data-path	
-0x4022c0	12	FindBaseArchiveRoot		client		uint32_t __fastcall (uint32_t index)	Returns which archive root holds the base archive of an index: 0 Data\, 1 ..\Data\, 2 neither	verified	one	storm/mount#install-folder-and-data-path	
-0x4022d0	74	FindArchiveRoot		client		uint32_t __fastcall (const char *name)	Returns the first archive root, 0 or 1, under which a file exists, or 2 when neither holds it	verified	one	storm/mount#base-and-speech-archives	
-0x402320	37	FormatArchivePath		client		void __fastcall (char *buffer, uint32_t size, uint32_t root, const char *name)	Formats an archive root followed by a file name into a buffer	verified	one	storm/mount#base-and-speech-archives	
+0x402200	15	IsDataLayoutSplit		client		bool __cdecl (void)	Returns whether model.MPQ was found under ..\Data\ and interface.MPQ was not (layout word 2)	verified	two	storm/mount#install-folder-and-data-path	
+0x402210	161	SetBaseAndDataPaths		client		void __cdecl (void)	Sets the working folder and base path from -datadir or the exe folder, the data layout word, and Data\ as data path	verified	two	storm/mount#install-folder-and-data-path	
+0x4022c0	12	FindBaseArchiveRoot		client		uint32_t __fastcall (uint32_t index)	Returns which archive root holds the base archive of an index: 0 Data\, 1 ..\Data\, 2 neither	verified	two	storm/mount#install-folder-and-data-path	
+0x4022d0	74	FindArchiveRoot		client		uint32_t __fastcall (const char *name)	Returns the first archive root, 0 or 1, under which a file exists, or 2 when neither holds it	verified	two	storm/mount#base-and-speech-archives	
+0x402320	37	FormatArchivePath		client		void __fastcall (char *buffer, uint32_t size, uint32_t root, const char *name)	Formats an archive root followed by a file name into a buffer	verified	two	storm/mount#base-and-speech-archives	
 0x402350	1253	InitializeGlobal	idb	client			Initializes the client's systems, then the event library and its interactive context	inferred	none	core/loop#startup-and-shutdown	
 0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	verified	two	core/close#confirm-close-callback	
 0x402a00	23			client			Runs Client.cpp code that calls EventSetTimer; not read here	inferred	none		
@@ -100,10 +100,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4036a0	26	CacheUpdateShutdown	idb	client			Runs Client.cpp code that calls EventKillTimer; not read here	inferred	none		
 0x4036c0	100	DestroyClientSystems		client			Shuts down client systems at context stop, 0x6ec130 among them	inferred	none	spell/visuals#startup-and-shutdown	
 0x403730	10			client			Runs Client.cpp code not read here	inferred	none		
-0x403740	613	MountArchives		client			Mounts the patch, speech and base MPQ archives in priority order	verified	one	storm/mount#patch-archives	
+0x403740	613	MountArchives		client			Mounts the patch, speech and base MPQ archives in priority order	verified	two	storm/mount#patch-archives	
 0x4039b0	290			client			Runs Client.cpp code that calls SStrPrintf, SMemReAlloc, SMemAlloc and 2 more; not read here	inferred	none		
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x403b00	147	OpenBaseArchive		client			Opens a base or speech archive under Data\ then ..\Data\, returning 0 if missing and ending the client on a bad one	verified	one	storm/mount#base-and-speech-archives	
+0x403b00	147	OpenBaseArchive		client			Opens an archive under Data\ then ..\Data\; returns 0 on a miss, ends the client on error 0x26, 0x8510006c or 0x85100083	verified	two	storm/mount#base-and-speech-archives	
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
 0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	two	core/close#tail	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
@@ -115,7 +115,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x404040	64	RunWowError		client		void __fastcall (const char *path)	Starts WowError.exe with a log path on its command line	verified	one	storm/errorlog#client-registration	
 0x404080	3			client			Runs its object file code not read here	inferred	none		
 0x404090	1			client			Runs its object file code not read here	inferred	none		
-0x4040a0	84	SaveInstallPath		client		void __cdecl (void)	Saves the exe folder with its trailing backslash as the registry value World of Warcraft\InstallPath	verified	one	storm/mount#install-folder-and-data-path	
+0x4040a0	84	SaveInstallPath		client		void __cdecl (void)	Saves the exe folder with its trailing backslash as the registry value World of Warcraft\InstallPath	verified	two	storm/mount#install-folder-and-data-path	
 0x404100	33	_WinMain@16	idb	client		int __stdcall (void *instance, void *previous, char *command_line, int show)	Sets the x87 control word to 0x023F through 0x409bf2 and 0x409c06, then runs the client	verified	one	METHOD#the-harness	
 0x404130	38			client			Runs its object file code not read here	inferred	none		
 0x404160	5			client			Runs its object file code not read here	inferred	none		
@@ -2204,10 +2204,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42aa30	70			os			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
 0x42aa80	126			os			Runs its object file code that calls SErrSetLastError, SStrCopy, SStrPack and 2 more; not read here	inferred	none		
 0x42ab00	287			os			Runs its object file code that calls SStrCmp, SStrCopy, SStrPack and 4 more; not read here	inferred	none		
-0x42ac20	70	OsSetCurrentDirectory		os		uint32_t __fastcall (const char *path)	Sets the working directory to a UTF-8 path with SetCurrentDirectoryW	verified	one	storm/mount#install-folder-and-data-path	
+0x42ac20	70	OsSetCurrentDirectory		os		uint32_t __fastcall (const char *path)	Sets the working directory to a UTF-8 path with SetCurrentDirectoryW	verified	two	storm/mount#install-folder-and-data-path	
 0x42ac70	83			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42acd0; not read here	inferred	none		
 0x42acd0	59			os			Runs its object file code that calls 0x65b080; not read here	inferred	none		
-0x42ad10	304	EnumerateFolderFiles		os	host	bool __fastcall (const char *folder, const char *pattern, void *callback, void *param, uint32_t withHidden)	Calls a callback for each entry a folder pattern lists, hidden ones on request, until one returns nonzero	verified	one	storm/mount#listing-a-folder	
+0x42ad10	304	EnumerateFolderFiles		os	host	bool __fastcall (const char *folder, const char *pattern, void *callback, void *param, uint32_t withHidden)	Calls a callback for each entry a folder pattern lists, hidden ones on request, until one returns nonzero	verified	two	storm/mount#listing-a-folder	
 0x42ae40	118			os	unreached		Runs its object file code not read here	inferred	none		
 0x42aec0	85			os	unreached		Runs its object file code that calls SStrLen; not read here	inferred	none		
 0x42af20	218			os	unreached		Runs its object file code that calls 0x42ae40, SStrCopy, SStrPack and 1 more; not read here	inferred	none		
@@ -2222,7 +2222,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b240	13			unassigned			Runs its object file code that calls 0x42b250; not read here	inferred	none		
 0x42b250	78			unassigned			Runs its object file code that calls __alloca_probe, 0x42b2a0; not read here	inferred	none		
 0x42b2a0	59			unassigned			Runs its object file code that calls 0x65b080; not read here	inferred	none		
-0x42b2e0	16	OsGetExeFolder		unassigned		void __fastcall (char *buffer, uint32_t size)	Writes the exe's path cut after its last backslash into a buffer	verified	one	storm/mount#install-folder-and-data-path	
+0x42b2e0	16	OsGetExeFolder		unassigned		void __fastcall (char *buffer, uint32_t size)	Writes the exe's path cut after its last backslash into a buffer	verified	two	storm/mount#install-folder-and-data-path	
 0x42b2f0	20			unassigned	unreached		Runs its object file code that calls 0x64cc60, 0x42b250; not read here	inferred	none		
 0x42b310	54			unassigned	unreached		Runs its object file code that calls 0x42b250; not read here	inferred	none		
 0x42b350	78			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
@@ -22719,97 +22719,97 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63cf50	1	EmptyConsoleStubA		console	unreached	void __cdecl (void)	Returns at once	verified	one	console/overview#unreached-code	
 0x63cf60	1	EmptyConsoleStubB		console	unreached	void __cdecl (void)	Returns at once	verified	one	console/overview#unreached-code	
 0x63cf70	6	SetMapCommandStub		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Returns 1; the handler of the command setmap	verified	one	console/commands#built-in-commands	
-0x63cf80	41	LineLinkBackSlot		console	orchestration	void * __thiscall (void *this, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	one	cvar/containers#links-and-lists	
-0x63cfb0	60	LineLinkUnlink		console	orchestration	void __thiscall (void *this)	Unlinks a link from its neighbours and zeroes both of its words	verified	one	cvar/containers#links-and-lists	
-0x63cff0	5	InitCvarInfinityThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63d000, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63d000	11	InitCvarInfinity		cvar	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	cvar/overview#shared-header-constants	
-0x63d010	10	InitCvarTable		cvar	orchestration	void __cdecl (void)	Runs 0x63d020 and registers the destructor 0x63d0f0	verified	one	cvar/overview#static-objects	
-0x63d020	190	InitCvarTableBody		cvar	orchestration	void __cdecl (void)	Builds the empty CVar table: vtable 0x80e1dc, list offset 0xc, mask -1	verified	one	cvar/overview#static-objects	
-0x63d0e0	12	InitCvarTableAtExit		cvar	orchestration	void __cdecl (void)	Registers the destructor 0x63d0f0 with _atexit	verified	one	cvar/overview#static-objects	
-0x63d0f0	359	InitCvarTableDtor		cvar	orchestration	void __cdecl (void)	Unlinks every record from the list and the buckets and frees the bucket vector	verified	one	cvar/overview#static-objects	
-0x63d260	20	CVar::ClearLinks		cvar	orchestration	void __thiscall (CVar *this)	Zeroes the five link words of a record from +4 to +0x14	verified	one	cvar/registry#cvar-record	
-0x63d280	243	CVar::~CVar		cvar	orchestration	void __thiscall (CVar *this)	Removes the console command of the name, frees the value strings and the name, and unlinks both links	verified	one	cvar/registry#record-teardown	
-0x63d380	183	CVar::Initialize	idb	cvar	orchestration	void __thiscall (CVar *this)	Makes the WTF directory, registers the four registry commands and reads the config file	verified	one	cvar/config#start-up	
-0x63d440	192	s_CreatePathDirectories	idb	cvar	host	uint32_t __fastcall (const char *path)	Creates every missing directory of a path, stopping when one cannot be made	verified	one	cvar/config#start-up	
-0x63d500	144	SetCommandHandler	idb	cvar	primitive	uint32_t __fastcall (const char *name, const char *args)	Runs the set command: sets a record by name or registers a new script-hidden one	verified	one	cvar/registry#commands-of-the-registry	
-0x63d590	174	CvarResetCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvar_reset: resets one record by name, or all records without one	verified	one	cvar/registry#commands-of-the-registry	
-0x63d640	174	CvarDefaultCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvar_default: restores one record by name, or all records without one	verified	one	cvar/registry#commands-of-the-registry	
-0x63d6f0	295	CvarListCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvarlist: writes every record with its value and any differing default or reset text	verified	one	cvar/registry#commands-of-the-registry	
-0x63d820	239	CVarLoadFile	idb	cvar	orchestration	void __fastcall (const char *name)	Loads a config file by name, or under WTF, and runs each line that begins with SET	verified	one	cvar/config#reading-the-file	
-0x63d910	107	CVarDeleteConfigFile		cvar	host	uint32_t __fastcall (const char *name)	Deletes a file by name, or under WTF, and returns whether one was deleted	verified	one	cvar/config#shutdown	
-0x63d980	357	SaveConfig		cvar	host	uint32_t __cdecl (void)	Writes SET lines for the records that differ from their default, only when the config is dirty	verified	one	cvar/config#writing-the-file	
-0x63daf0	147	CVarShutdown		cvar	orchestration	void __cdecl (void)	Saves the config, unregisters the four registry commands and frees every record	verified	one	cvar/config#shutdown	
-0x63db90	585	CVar::Register	idb	cvar	primitive	CVar * __fastcall (const char *name, const char *help, uint32_t flags, const char *def, void *cb, uint32_t category, uint8_t hidden, void *arg)	Registers a setting, or updates an existing one, and returns its record	verified	one	cvar/registry#registering-a-setting	
-0x63dde0	80	CVarCommandHandler		cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Writes the value of the setting named by the command, or sets it from the arguments	verified	one	cvar/registry#commands-of-the-registry	
-0x63de30	136	CVar::Lookup	idb	cvar	primitive	CVar * __thiscall (CVar *this)	Returns the record of a name, or 0	verified	one	cvar/registry#lookup	
-0x63dec0	143	CVar::LookupVisible		cvar	primitive	CVar * __thiscall (CVar *this)	Returns the record of a name only when it is visible to scripts	verified	one	cvar/registry#lookup	
-0x63df50	158	CVar::Set		cvar	primitive	uint32_t __thiscall (CVar *this, const char *text, uint8_t apply, uint8_t setReset, uint8_t setDefault, uint8_t force)	Runs the callback, then latches the text or stores it; always returns 1	verified	one	cvar/registry#setting-a-value	
-0x63dff0	29	CVar::Reset	idb	cvar	orchestration	void __thiscall (CVar *this)	Sets the value to the reset text, else the default text, without the callback	verified	one	cvar/registry#setting-a-value	
-0x63e010	29	CVar::Default	idb	cvar	orchestration	void __thiscall (CVar *this)	Sets the value to the default text, else the reset text, without the callback	verified	one	cvar/registry#setting-a-value	
-0x63e030	33	CVar::SetReadOnly		cvar	primitive	void __thiscall (CVar *this, uint8_t on)	Sets or clears the read-only bit of a record	verified	one	cvar/registry#flags-and-categories	
-0x63e060	72	CVar::Update	idb	cvar	orchestration	uint8_t __thiscall (CVar *this)	Applies a latched text through InternalSet and frees it	verified	one	cvar/registry#setting-a-value	
-0x63e0b0	238	CVar::InternalSet	idb	cvar	primitive	void __thiscall (CVar *this, const char *text, uint8_t apply, uint8_t setReset, uint8_t setDefault, uint8_t force)	Stores the text with its integer and float, and fills an empty reset or default slot	verified	one	cvar/registry#setting-a-value	
-0x63e1a0	263	CVarDumpToFile		cvar	unreached	void __fastcall (const char *file)	Writes the name, help and value of every record to a file	verified	one	cvar/config#dump-to-file	
-0x63e2b0	34	CVarTableFreeNode		cvar	orchestration	void __thiscall (void *this, CVar *node)	Destroys a record and frees it	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e2e0	185	CVarTableAllocNode		cvar	orchestration	CVar * __thiscall (void *this, void *bucket, uint32_t extra, uint32_t flags)	Allocates a zeroed record and links it first in the bucket	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e3a0	189	CVarTableClear		cvar	orchestration	void __thiscall (void *this)	Unlinks every record, sets the mask to -1 and frees the bucket vector	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e460	190	CVarTableDeletingDtor		cvar	orchestration	void * __thiscall (void *this, uint32_t flags)	Unlinks the records and buckets, frees the vector and, with bit 0 of the argument, the table	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e520	60	CVarLinkUnlink		cvar	orchestration	void __thiscall (void *this)	Unlinks a link from its neighbours and zeroes both of its words	verified	one	cvar/containers#links-and-lists	
-0x63e560	136	CVarBucketDrain		cvar	orchestration	void __thiscall (void *this)	Unlinks every object of a bucket and then its terminator	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e5f0	135	CVarBucketsFree		cvar	orchestration	void __thiscall (void *this)	Empties every bucket and frees the bucket vector	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e680	5	InitCvarTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63e690, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63e690	15	InitCvarTwoPi		cvar	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	cvar/overview#shared-header-constants	
-0x63e6a0	5	InitCvarInvTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63e6b0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63e6b0	19	InitCvarInvTwoPi		cvar	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	cvar/overview#shared-header-constants	
-0x63e6d0	25	CVarLinkGet		cvar	orchestration	void * __thiscall (void *this, void *object)	Returns an object's link in a list, the terminator for 0	verified	one	cvar/containers#links-and-lists	
-0x63e6f0	181	CVarLinkNode		cvar	orchestration	void __thiscall (void *this, void *node, uint32_t mode, void *dest)	Unlinks a node and links it after a destination for mode 1, else before it	verified	one	cvar/containers#links-and-lists	
-0x63e7b0	337	CVarTableInitBuckets		cvar	primitive	void __thiscall (void *this)	Sets mask 3 and sizes the bucket vector to four empty buckets	verified	one	cvar/containers#growth	
-0x63e910	176	CVarBucketDestroy		cvar	orchestration	void * __thiscall (void *this, uint32_t flags)	Unlinks every object of a bucket and its terminator and, with bit 0 of the argument, frees the bucket	verified	one	cvar/containers#records-and-virtual-slots	
-0x63e9c0	33	CVarListInit		cvar	orchestration	void __thiscall (void *this)	Makes a list empty	verified	one	cvar/containers#links-and-lists	
-0x63e9f0	483	CVarTableRehash		cvar	primitive	uint32_t __thiscall (void *this, uint32_t bucket)	Counts the chain of a bucket and doubles the bucket count when the counter passes 13	verified	one	cvar/containers#growth	
+0x63cf80	41	LineLinkBackSlot		console	orchestration	void * __thiscall (void *this, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	two	cvar/containers#links-and-lists	
+0x63cfb0	60	LineLinkUnlink		console	orchestration	void __thiscall (void *this)	Unlinks a link from its neighbours and zeroes both of its words	verified	two	cvar/containers#links-and-lists	
+0x63cff0	5	InitCvarInfinityThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63d000, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63d000	11	InitCvarInfinity		cvar	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	cvar/overview#shared-header-constants	
+0x63d010	10	InitCvarTable		cvar	orchestration	void __cdecl (void)	Runs 0x63d020 and registers the destructor 0x63d0f0	verified	two	cvar/overview#static-objects	
+0x63d020	190	InitCvarTableBody		cvar	orchestration	void __cdecl (void)	Builds the empty CVar table: vtable 0x80e1dc, list offset 0xc, mask -1	verified	two	cvar/overview#static-objects	
+0x63d0e0	12	InitCvarTableAtExit		cvar	orchestration	void __cdecl (void)	Registers the destructor 0x63d0f0 with _atexit	verified	two	cvar/overview#static-objects	
+0x63d0f0	359	InitCvarTableDtor		cvar	orchestration	void __cdecl (void)	Unlinks every record from the list and the buckets and frees the bucket vector	verified	two	cvar/overview#static-objects	
+0x63d260	20	CVar::ClearLinks		cvar	orchestration	void __thiscall (CVar *this)	Zeroes the five link words of a record from +4 to +0x14	verified	two	cvar/registry#cvar-record	
+0x63d280	243	CVar::~CVar		cvar	orchestration	void __thiscall (CVar *this)	Removes the console command of the name, frees the value strings and the name, and unlinks both links	verified	two	cvar/registry#record-teardown	
+0x63d380	183	CVar::Initialize	idb	cvar	orchestration	void __thiscall (CVar *this)	Makes the WTF directory, registers the four registry commands and reads the config file	verified	two	cvar/config#start-up	
+0x63d440	192	s_CreatePathDirectories	idb	cvar	host	uint32_t __fastcall (const char *path)	Creates every missing directory of a path, stopping when one cannot be made	verified	two	cvar/config#start-up	
+0x63d500	144	SetCommandHandler	idb	cvar	primitive	uint32_t __fastcall (const char *name, const char *args)	Runs the set command: sets a record by name or registers a new script-hidden one	verified	two	cvar/registry#commands-of-the-registry	
+0x63d590	174	CvarResetCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvar_reset: resets one record by name, or all records without one	verified	two	cvar/registry#commands-of-the-registry	
+0x63d640	174	CvarDefaultCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvar_default: restores one record by name, or all records without one	verified	one	cvar/registry#restoring-every-record	
+0x63d6f0	295	CvarListCommandHandler	idb	cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs cvarlist: writes every record with its value and any differing default or reset text	verified	two	cvar/registry#commands-of-the-registry	
+0x63d820	239	CVarLoadFile	idb	cvar	orchestration	void __fastcall (const char *name)	Loads a config file by name, or under WTF, and runs each line that begins with SET	verified	two	cvar/config#reading-the-file	
+0x63d910	107	CVarDeleteConfigFile		cvar	host	uint32_t __fastcall (const char *name)	Deletes a file by name, or under WTF, and returns whether one was deleted	verified	two	cvar/config#shutdown	
+0x63d980	357	SaveConfig		cvar	host	uint32_t __cdecl (void)	Writes SET lines for the records that differ from their default, only when the config is dirty	verified	two	cvar/config#writing-the-file	
+0x63daf0	147	CVarShutdown		cvar	orchestration	void __cdecl (void)	Saves the config, unregisters the four registry commands and frees every record	verified	two	cvar/config#shutdown	
+0x63db90	585	CVar::Register	idb	cvar	primitive	CVar * __fastcall (const char *name, const char *help, uint32_t flags, const char *def, void *cb, uint32_t category, uint8_t hidden, void *arg)	Registers a setting, or updates an existing one, and returns its record	verified	two	cvar/registry#registering-a-setting	
+0x63dde0	80	CVarCommandHandler		cvar	orchestration	uint32_t __fastcall (const char *name, const char *args)	Writes the value of the setting named by the command, or sets it from the arguments	verified	two	cvar/registry#commands-of-the-registry	
+0x63de30	136	CVar::Lookup	idb	cvar	primitive	CVar * __thiscall (CVar *this)	Returns the record of a name, or 0	verified	two	cvar/registry#lookup	
+0x63dec0	143	CVar::LookupVisible		cvar	primitive	CVar * __thiscall (CVar *this)	Returns the record of a name only when it is visible to scripts	verified	two	cvar/registry#lookup	
+0x63df50	158	CVar::Set		cvar	primitive	uint32_t __thiscall (CVar *this, const char *text, uint8_t apply, uint8_t setReset, uint8_t setDefault, uint8_t force)	Runs the callback, then latches the text or stores it; always returns 1	verified	two	cvar/registry#setting-a-value	
+0x63dff0	29	CVar::Reset	idb	cvar	orchestration	void __thiscall (CVar *this)	Sets the value to the reset text, else the default text, without the callback	verified	two	cvar/registry#setting-a-value	
+0x63e010	29	CVar::Default	idb	cvar	orchestration	void __thiscall (CVar *this)	Sets the value to the default text, else the reset text, without the callback	verified	two	cvar/registry#setting-a-value	
+0x63e030	33	CVar::SetReadOnly		cvar	primitive	void __thiscall (CVar *this, uint8_t on)	Sets or clears the read-only bit of a record	verified	two	cvar/registry#flags-and-categories	
+0x63e060	72	CVar::Update	idb	cvar	orchestration	uint8_t __thiscall (CVar *this)	Applies a latched text through InternalSet and frees it	verified	two	cvar/registry#setting-a-value	
+0x63e0b0	238	CVar::InternalSet	idb	cvar	primitive	void __thiscall (CVar *this, const char *text, uint8_t apply, uint8_t setReset, uint8_t setDefault, uint8_t force)	Stores the text with its integer and float, and fills an empty reset or default slot	verified	two	cvar/registry#setting-a-value	
+0x63e1a0	263	CVarDumpToFile		cvar	unreached	void __fastcall (const char *file)	Writes the name, help and value of every record to a file	verified	two	cvar/config#dump-to-file	
+0x63e2b0	34	CVarTableFreeNode		cvar	orchestration	void __thiscall (void *this, CVar *node)	Destroys a record and frees it	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e2e0	185	CVarTableAllocNode		cvar	orchestration	CVar * __thiscall (void *this, void *bucket, uint32_t extra, uint32_t flags)	Allocates a zeroed record and links it first in the bucket	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e3a0	189	CVarTableClear		cvar	orchestration	void __thiscall (void *this)	Unlinks every record, sets the mask to -1 and frees the bucket vector	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e460	190	CVarTableDeletingDtor		cvar	orchestration	void * __thiscall (void *this, uint32_t flags)	Unlinks the records and buckets, frees the vector and, with bit 0 of the argument, the table	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e520	60	CVarLinkUnlink		cvar	orchestration	void __thiscall (void *this)	Unlinks a link from its neighbours and zeroes both of its words	verified	two	cvar/containers#links-and-lists	
+0x63e560	136	CVarBucketDrain		cvar	orchestration	void __thiscall (void *this)	Unlinks every object of a bucket and then its terminator	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e5f0	135	CVarBucketsFree		cvar	orchestration	void __thiscall (void *this)	Empties every bucket and frees the bucket vector	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e680	5	InitCvarTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63e690, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63e690	15	InitCvarTwoPi		cvar	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	cvar/overview#shared-header-constants	
+0x63e6a0	5	InitCvarInvTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63e6b0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63e6b0	19	InitCvarInvTwoPi		cvar	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	cvar/overview#shared-header-constants	
+0x63e6d0	25	CVarLinkGet		cvar	orchestration	void * __thiscall (void *this, void *object)	Returns an object's link in a list, the terminator for 0	verified	two	cvar/containers#links-and-lists	
+0x63e6f0	181	CVarLinkNode		cvar	orchestration	void __thiscall (void *this, void *node, uint32_t mode, void *dest)	Unlinks a node and links it after a destination for mode 1, else before it	verified	two	cvar/containers#links-and-lists	
+0x63e7b0	337	CVarTableInitBuckets		cvar	primitive	void __thiscall (void *this)	Sets mask 3 and sizes the bucket vector to four empty buckets	verified	two	cvar/containers#growth	
+0x63e910	176	CVarBucketDestroy		cvar	orchestration	void * __thiscall (void *this, uint32_t flags)	Unlinks every object of a bucket and its terminator and, with bit 0 of the argument, frees the bucket	verified	two	cvar/containers#records-and-virtual-slots	
+0x63e9c0	33	CVarListInit		cvar	orchestration	void __thiscall (void *this)	Makes a list empty	verified	two	cvar/containers#links-and-lists	
+0x63e9f0	483	CVarTableRehash		cvar	primitive	uint32_t __thiscall (void *this, uint32_t bucket)	Adds a bucket's chain length to a counter and doubles the bucket count when an increment takes it past 13	verified	two	cvar/containers#growth	
 0x63ebe0	77	CVarBucketChainDrain		cvar	orchestration	void __thiscall (void *this)	Unlinks every object of a bucket chain	verified	one	cvar/containers#growth	
-0x63ec30	12	CVarListReset		cvar	orchestration	void __thiscall (void *this)	Points a list terminator at itself	verified	one	cvar/containers#links-and-lists	
-0x63ec40	317	CVarBucketsResize		cvar	primitive	void __thiscall (void *this, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	cvar/containers#growth	
-0x63ed80	41	CVarLinkBackSlot		cvar	orchestration	void * __thiscall (void *this, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	one	cvar/containers#links-and-lists	
-0x63edb0	57	BucketGranularity		cvar	primitive	uint32_t __thiscall (void *this, uint32_t size)	Returns the largest power of two not above a size, or stores and returns 0x15 for 0x15 and up	verified	one	cvar/containers#growth	
-0x63edf0	31	RoundUpToUnit		cvar	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t unit)	Rounds a value up to a multiple of a unit	verified	one	cvar/containers#growth	
-0x63ee10	264	CVarBucketsRealloc		cvar	primitive	void __thiscall (void *this, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	cvar/containers#growth	
-0x63ef20	5	InitCvarSquare10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef30, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63ef30	19	InitCvarSquare10		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63ef50	5	InitCvarSquare11p111111Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef60, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63ef60	19	InitCvarSquare11p111111		cvar	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63ef80	5	InitCvarSquare5p5555553Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef90, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63ef90	19	InitCvarSquare5p5555553		cvar	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63efb0	5	InitCvarSquare10BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63efc0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63efc0	19	InitCvarSquare10B		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63efe0	5	InitCvarSquare5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63eff0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63eff0	19	InitCvarSquare5		cvar	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f010	5	InitCvarSquare10CThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f020, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f020	19	InitCvarSquare10C		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f040	5	InitCvarSquare30Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f050, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f050	19	InitCvarSquare30		cvar	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f070	5	InitCvarSquare120Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f080, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f080	19	InitCvarSquare120		cvar	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f0a0	5	InitCvarSquare20Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f0b0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f0b0	19	InitCvarSquare20		cvar	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f0d0	5	InitCvarSquare10DThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f0e0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f0e0	19	InitCvarSquare10D		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f100	5	InitCvarSquare0p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f110, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f110	19	InitCvarSquare0p5		cvar	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f130	5	InitCvarSquare3Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f140, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f140	19	InitCvarSquare3		cvar	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f160	5	InitCvarSquare100Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f170, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f170	19	InitCvarSquare100		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f190	5	InitCvarFiveThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1a0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f1a0	11	InitCvarFive		cvar	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f1b0	5	InitCvarSquare50Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1c0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f1c0	19	InitCvarSquare50		cvar	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f1e0	5	InitCvarSquare100BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1f0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f1f0	19	InitCvarSquare100B		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f210	5	InitCvarSquare40Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f220, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f220	19	InitCvarSquare40		cvar	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x63f240	5	InitCvarSquare1p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f250, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x63f250	19	InitCvarSquare1p5		cvar	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
+0x63ec30	12	CVarListReset		cvar	orchestration	void __thiscall (void *this)	Points a list terminator at itself	verified	two	cvar/containers#links-and-lists	
+0x63ec40	317	CVarBucketsResize		cvar	primitive	void __thiscall (void *this, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	two	cvar/containers#growth	
+0x63ed80	41	CVarLinkBackSlot		cvar	orchestration	void * __thiscall (void *this, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	two	cvar/containers#links-and-lists	
+0x63edb0	57	BucketGranularity		cvar	primitive	uint32_t __thiscall (void *this, uint32_t size)	Returns the largest power of two not above a size, or stores and returns 0x15 for 0x15 and up	verified	two	cvar/containers#growth	
+0x63edf0	31	RoundUpToUnit		cvar	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t unit)	Rounds a value up to a multiple of a unit	verified	two	cvar/containers#growth	
+0x63ee10	264	CVarBucketsRealloc		cvar	primitive	void __thiscall (void *this, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	two	cvar/containers#growth	
+0x63ef20	5	InitCvarSquare10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef30, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63ef30	19	InitCvarSquare10		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63ef50	5	InitCvarSquare11p111111Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef60, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63ef60	19	InitCvarSquare11p111111		cvar	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63ef80	5	InitCvarSquare5p5555553Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63ef90, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63ef90	19	InitCvarSquare5p5555553		cvar	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63efb0	5	InitCvarSquare10BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63efc0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63efc0	19	InitCvarSquare10B		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63efe0	5	InitCvarSquare5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63eff0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63eff0	19	InitCvarSquare5		cvar	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f010	5	InitCvarSquare10CThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f020, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f020	19	InitCvarSquare10C		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f040	5	InitCvarSquare30Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f050, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f050	19	InitCvarSquare30		cvar	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f070	5	InitCvarSquare120Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f080, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f080	19	InitCvarSquare120		cvar	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f0a0	5	InitCvarSquare20Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f0b0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f0b0	19	InitCvarSquare20		cvar	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f0d0	5	InitCvarSquare10DThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f0e0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f0e0	19	InitCvarSquare10D		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f100	5	InitCvarSquare0p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f110, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f110	19	InitCvarSquare0p5		cvar	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f130	5	InitCvarSquare3Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f140, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f140	19	InitCvarSquare3		cvar	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f160	5	InitCvarSquare100Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f170, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f170	19	InitCvarSquare100		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f190	5	InitCvarFiveThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1a0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f1a0	11	InitCvarFive		cvar	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f1b0	5	InitCvarSquare50Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1c0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f1c0	19	InitCvarSquare50		cvar	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f1e0	5	InitCvarSquare100BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f1f0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f1f0	19	InitCvarSquare100B		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f210	5	InitCvarSquare40Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f220, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f220	19	InitCvarSquare40		cvar	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x63f240	5	InitCvarSquare1p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x63f250, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x63f250	19	InitCvarSquare1p5		cvar	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
 0x63f270	5	InitRegInfinityThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f280, a static initializer	verified	one	console/overview#shared-header-constants	
 0x63f280	11	InitRegInfinity		console	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	console/overview#shared-header-constants	
 0x63f290	5	InitRegTwoPiThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f2a0, a static initializer	verified	one	console/overview#shared-header-constants	
@@ -23294,16 +23294,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x646600	46			storm	boundary		Runs its object file code not read here	inferred	none		
 0x646630	3			storm	boundary		Runs its object file code not read here	inferred	none		
 0x646640	1			storm	unreached		Runs its object file code not read here	inferred	none		
-0x646650	85	ReadNt5OrLater		storm	host	bool * __thiscall (bool *this)	Stores whether GetVersionExA gives a major version of 5 or more, 0 when it fails, and returns the flag	verified	one	storm/files#opening-a-loose-file	
-0x6466b0	3	ReadFlagByte		storm	orchestration	bool __thiscall (bool *this)	Returns the byte at ecx	verified	one	storm/files#opening-a-loose-file	
+0x646650	85	ReadNt5OrLater		storm	host	bool * __thiscall (bool *this)	Stores whether GetVersionExA gives a major version of 5 or more, 0 when it fails, and returns the flag	verified	two	storm/files#opening-a-loose-file	
+0x6466b0	3	ReadFlagByte		storm	orchestration	bool __thiscall (bool *this)	Returns the byte at ecx	verified	two	storm/files#opening-a-loose-file	
 0x6466c0	10	InitLooseIndexThunk		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table and registers its destructor, a static initializer	verified	two	storm/mount#index-lifetime	
 0x6466d0	190	InitLooseIndex		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table empty, with bucket mask 0xffffffff	verified	two	storm/mount#index-lifetime	
 0x646790	12	InitLooseIndexAtExit		storm	orchestration	void __cdecl (void)	Registers the loose-file index table's destructor with _atexit	verified	two	storm/mount#index-lifetime	
 0x6467a0	359	InitLooseIndexExit		storm	orchestration	void __cdecl (void)	Frees the loose-file index table's nodes and buckets at exit	verified	two	storm/mount#index-lifetime	
 0x646910	1143	IndexLooseFolder		storm	orchestration	void __fastcall (const char *root, const char *prefix, void *listing)	Adds a folder's files to the loose-file index keyed below the root, walking subfolders but a Data prefix	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
 0x646d90	183	SFileStat		storm	host	int32_t __fastcall (const char *path, void *st)	Fills a _stat record for a UTF-8 path through _wstat or _stat, returning 0 on success	verified	two	storm/mount#loose-file-index	
-0x646e50	55	IsNt5OrLater		storm	host	bool __cdecl (void)	Returns whether GetVersionExA gave a major version of 5 or more, read on the first call	verified	one	storm/files#opening-a-loose-file	
-0x646e90	1	IsNt5OrLaterExit		storm	orchestration	void __cdecl (void)	Returns at once; the exit 0x646e50 registers for its flag	verified	one	storm/files#opening-a-loose-file	
+0x646e50	55	IsNt5OrLater		storm	host	bool __cdecl (void)	Returns whether GetVersionExA gave a major version of 5 or more, read on the first call	verified	two	storm/files#opening-a-loose-file	
+0x646e90	1	IsNt5OrLaterExit		storm	orchestration	void __cdecl (void)	Returns at once; the exit 0x646e50 registers for its flag	verified	two	storm/files#opening-a-loose-file	
 0x646ea0	246	BuildLooseIndex		storm	orchestration	void __cdecl (void)	Builds the loose-file index from the base folder, then its Data folder, and marks it built	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
 0x646fa0	20	SFileSetDiskPathMode		storm	unreached		Stores the byte that sends every name to the disk-path builder; nothing calls it	inferred	none	storm/mount#loose-files	
 0x646fc0	120	ClearLooseIndex		storm	orchestration	void __cdecl (void)	Empties the loose-file index and clears its built byte, so the next open builds it again	verified	two	storm/mount#index-lifetime	
@@ -23335,20 +23335,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6476e0	191	ReadBzFile		storm	orchestration	uint32_t __fastcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read)	Inflates up to a size of a .bz file, refilling 4 KiB of input, and returns 1 when it delivered bytes	verified	two	storm/bz#reading-a-bz-file	storm::bz_read_difftest, storm::bz_damaged_difftest
 0x6477a0	24	SFile::Open	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx; not read here	inferred	none		
 0x6477c0	1498	SFile::OpenEx	idb	storm	orchestration		Opens a name by its resolved kind; a .bz file is checked for BZ00 and set up to inflate	verified	two	storm/bz#opening-a-bz-file	storm::bz_open_header_difftest
-0x647db0	163	OpenLocalFile		storm	host	void * __fastcall (const char *name, const char *mode, const wchar_t *wideMode)	Opens a disk file with fopen, or with _wfopen of its UTF-16 name on Windows 2000 and later when option 11 is set	verified	one	storm/files#opening-a-loose-file	
+0x647db0	163	OpenLocalFile		storm	host	void * __fastcall (const char *name, const char *mode, const wchar_t *wideMode)	Opens a disk file with fopen, or with _wfopen of its UTF-16 name on Windows 2000 and later when option 11 is set	verified	two	storm/files#opening-a-loose-file	
 0x647e60	796	SFileResolveOpen		storm	orchestration	int32_t __fastcall (const char *name, char *out, uint32_t size, uint32_t flags, uint32_t *kind, void **archive)	Resolves an open name through the disk-path builder, or the loose-file index and then the archives	verified	two	storm/mount#loose-files	storm::resolve_matches_index, storm::index_hit_has_no_fallback
 0x648180	725			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrPack, 0x646d90 and 3 more; not read here	inferred	none		
 0x648460	373	SFile::Read	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file, void *buffer, uint32_t size, uint32_t *read, void *overlapped, uint32_t unused)	Reads from an open file by its kind, the .bz inflater for kind 1, or queues an overlapped read	verified	one	storm/bz#reading-a-bz-file	
-0x6485f0	36	SFile::LoadByName		storm	boundary	uint32_t __stdcall (const char *name, void **buffer, uint32_t *size, uint32_t extra, void *overlapped)	Calls SFile::Load with no archive and open flags 0	verified	one	storm/format#loading-a-whole-file	
-0x648620	210	SFile::Load	idb	storm	boundary	uint32_t __stdcall (void *archive, const char *name, void **buffer, uint32_t *size, uint32_t extra, uint32_t flags, void *overlapped)	Reads a whole file into a new buffer with extra zero bytes after it, closing it unless overlapped	verified	one	storm/format#loading-a-whole-file	
-0x648700	33	SFile::Unload		storm	boundary	int __stdcall (void *buffer)	Frees a buffer that SFile::Load returned and returns 1	verified	one	storm/format#freeing-a-loaded-file	
+0x6485f0	36	SFile::LoadByName		storm	boundary	uint32_t __stdcall (const char *name, void **buffer, uint32_t *size, uint32_t extra, void *overlapped)	Calls SFile::Load with no archive and open flags 0	verified	two	storm/format#loading-a-whole-file	
+0x648620	210	SFile::Load	idb	storm	boundary	uint32_t __stdcall (void *archive, const char *name, void **buffer, uint32_t *size, uint32_t extra, uint32_t flags, void *overlapped)	Reads a whole file into a new buffer with extra zero bytes after it, closing it unless overlapped	verified	two	storm/format#loading-a-whole-file	
+0x648700	33	SFile::Unload		storm	boundary	int __stdcall (void *buffer)	Frees a buffer that SFile::Load returned and returns 1	verified	two	storm/format#freeing-a-loaded-file	
 0x648730	126	SFile::Close	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file)	Closes an open file's FILE, archive file and kind-4 handle, destroys the object and frees it	verified	one	storm/bz#the-file-object	
 0x6487b0	59	SFileGetFileName		storm	orchestration		Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
 0x6487f0	129	SFile::GetFileSize	idb	storm	orchestration	uint32_t __stdcall (SFileObject *file, uint32_t *sizeHigh)	Returns an open file's size by its kind: fstat, a .bz header's size, or the archive or kind-4 size	verified	one	storm/bz#size-and-seeking	storm::bz_read_difftest
 0x648890	30	SFile::GetBasePath	idb	storm	boundary		Runs SFile2.cpp code that calls SStrCopy; not read here	inferred	none		
 0x6488b0	106	SFileSetBasePath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the base path with a trailing backslash and passes the path to 0x6571d0	verified	two	storm/mount#loose-file-index	
 0x648920	98	SFileSetDataPath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the data folder name with a trailing backslash	verified	two	storm/mount#loose-file-index	
-0x648990	6	GetDataPath		storm	orchestration	char * __cdecl (void)	Returns the address of the data path 0xc520c8	verified	one	storm/files#the-data-path-accessor	
+0x648990	6	GetDataPath		storm	orchestration	char * __cdecl (void)	Returns the address of the data path 0xc520c8	verified	two	storm/files#the-data-path-accessor	
 0x6489a0	98	SFileSetExtraIndexPath		storm	unreached	int32_t __stdcall (const char *path)	Stores a third folder for the loose-file index; nothing calls it	verified	two	storm/mount#loose-file-index	
 0x648a10	18	SFileExists		storm	orchestration	int32_t __stdcall (const char *name)	Resolves a name with open flags 0, the archives only, and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
 0x648a30	44	SFileExistsEx		storm	orchestration	int32_t __stdcall (const char *name, uint32_t flags)	Resolves a name with open flags without opening it and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
@@ -23361,8 +23361,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648cd0	20			storm	boundary		Runs SFile2.cpp code that calls SEventWait; not read here	inferred	none		
 0x648cf0	25			storm	unreached		Runs SFile2.cpp code that calls SEventWait; not read here	inferred	none		
 0x648d10	187			storm	boundary		Runs SFile2.cpp code that calls SCritSect::Enter, SEvent::Set, SCritSect::Leave and 3 more; not read here	inferred	none		
-0x648dd0	176	SFileOpenArchiveShim		storm	orchestration		Opens a .mpq name as an MPQ archive and any other name as a zip archive through SZip	verified	one	storm/files#zip-archive-listing	
-0x648e80	106	SFileOpenChild		storm	orchestration		Creates a child archive record for a prefix under a parent archive	verified	one	storm/mount#base-and-speech-archives	
+0x648dd0	176	SFileOpenArchiveShim		storm	orchestration		Opens a .mpq name as an MPQ archive and any other name as a zip archive through SZip	verified	two	storm/files#zip-archive-listing	
+0x648e80	106	SFileOpenChild		storm	orchestration		Creates a child archive record for a prefix under a parent archive	verified	two	storm/mount#base-and-speech-archives	
 0x648ef0	57			storm	boundary		Runs SFile2.cpp code that calls 0x668440, 0x653780, SMemFree; not read here	inferred	none		
 0x648f30	38			storm	unreached		Runs SFile2.cpp code that calls 0x6550b0; not read here	inferred	none		
 0x648f60	67	GetFileObjectExtraBytes		storm	unreached	uint32_t __stdcall (SFileObject *file, uint8_t *out)	Copies the 16 bytes at +0x44 of a kind 1 to 4 file object when +0x54 is set; nothing reaches it	verified	one	storm/bz#the-file-object	
@@ -23407,28 +23407,28 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a670	16	BuildPow10TableOnce		storm	boundary		Runs 0x64a680 once and sets its guard	verified	one	core/threads#string-conversion-table	
 0x64a680	88	BuildPow10Table		storm	primitive		Fills a table of 20 by 10 doubles with k times 10 to the power -(r+1)	verified	one	core/threads#string-conversion-table	storm::sstrtofloat_whole
 0x64a6e0	1			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string; null sets error 0x57 and gives 0	verified	one	storm/strings#string-length-and-append	storm::sstrlen_whole
+0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string; null sets error 0x57 and gives 0	verified	two	storm/strings#string-length-and-append	storm::sstrlen_whole
 0x64a720	49			storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x64a760	142	SStrPack		storm	primitive	uint32_t __stdcall (char *dest, const char *src, uint32_t size)	Appends a string to another below a buffer size, terminates it and returns the new length	verified	one	storm/strings#string-length-and-append	storm::sstrpack_whole
+0x64a760	142	SStrPack		storm	primitive	uint32_t __stdcall (char *dest, const char *src, uint32_t size)	Appends a string to another below a buffer size, terminates it and returns the new length	verified	two	storm/strings#string-length-and-append	storm::sstrpack_whole
 0x64a7f0	43	SStrPrintf	idb	storm	orchestration		Formats into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	core/threads#allocator-and-error-calls	
 0x64a820	140	ISStrVPrintf	idb	storm	primitive	uint32_t __fastcall (char *dest, uint32_t size, const char *fmt, va_list args)	Formats through vsnoprintf or the C runtime by Storm option 10, cutting a result that fills the buffer	verified	one	storm/printf#formatting-into-a-buffer	storm::isstrvprintf_difftest
 0x64a8b0	43	SStrVPrintf	idb	storm	orchestration	uint32_t __cdecl (char *dest, uint32_t size, const char *fmt, va_list args)	Formats a va_list into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	storm/printf#formatting-into-a-buffer	
-0x64a8e0	434	ParseDecimalDouble		storm	unreached		Reads a decimal float as SStrToFloat does, with the double 0.0 for null; nothing reaches it	verified	one	storm/strings#unreached-functions	
-0x64aaa0	434	SStrToFloat	idb	storm	primitive	float __stdcall (const char *string)	Reads a decimal float: an optional minus, digits, a fraction and an exponent at 53 bits; 0.0 and error 0x57 for null	verified	one	storm/strings#float-grammar	storm::sstrtofloat_whole
-0x64ac60	98	SStrToInt	idb	storm	primitive	int32_t __stdcall (const char *string)	Reads an optional minus and decimal digits in wrapping 32-bit arithmetic; 0 and error 0x57 for null	verified	one	storm/strings#string-to-integer	net::who_string_helpers, storm::sstrtoint_whole
+0x64a8e0	434	ParseDecimalDouble		storm	unreached		Reads a decimal float as SStrToFloat does, with the double 0.0 for null; nothing reaches it	verified	two	storm/strings#unreached-functions	
+0x64aaa0	434	SStrToFloat	idb	storm	primitive	float __stdcall (const char *string)	Reads a decimal float: an optional minus, digits, a fraction and an exponent at 53 bits; 0.0 and error 0x57 for null	verified	two	storm/strings#float-grammar	storm::sstrtofloat_whole
+0x64ac60	98	SStrToInt	idb	storm	primitive	int32_t __stdcall (const char *string)	Reads an optional minus and decimal digits in wrapping 32-bit arithmetic; 0 and error 0x57 for null	verified	two	storm/strings#string-to-integer	net::who_string_helpers, storm::sstrtoint_whole
 0x64acd0	269			storm	unreached		Runs its object file code that calls SErrSetLastError, __CIpow, __ftol and 1 more; not read here	inferred	none		
-0x64ade0	70	SStrToUnsigned	idb	storm	primitive	uint32_t __stdcall (const char *string)	Reads leading decimal digits as a wrapping 32-bit value; 0 for no digit, and error 0x57 for null	verified	one	storm/strings#string-to-unsigned	storm::sstrtounsigned_whole
+0x64ade0	70	SStrToUnsigned	idb	storm	primitive	uint32_t __stdcall (const char *string)	Reads leading decimal digits as a wrapping 32-bit value; 0 for no digit, and error 0x57 for null	verified	two	storm/strings#string-to-unsigned	storm::sstrtounsigned_whole
 0x64ae30	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64ae40	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x64ae50	320	SStrTokenize	idb	storm	primitive	void __stdcall (const char **cursor, char *out, uint32_t size, const char *delims, int32_t *quoted)	Copies the next token of a string cursor into a buffer, split at delimiters and quotes, and advances the cursor	verified	one	storm/strings#tokenizer	storm::sstrtokenize_whole
-0x64af90	199	SStrHash	idb	storm	primitive	uint32_t __stdcall (const char *text, uint32_t flags, uint32_t seed)	Hashes a string with a seed and a table of sixteen dwords, case and slashes folded unless flag 1	verified	one	storm/strings#seeded-string-hash	storm::str_hash
+0x64ae50	320	SStrTokenize	idb	storm	primitive	void __stdcall (const char **cursor, char *out, uint32_t size, const char *delims, int32_t *quoted)	Copies the next token of a string cursor into a buffer, split at delimiters and quotes, and advances the cursor	verified	two	storm/strings#tokenizer	storm::sstrtokenize_whole
+0x64af90	199	SStrHash	idb	storm	primitive	uint32_t __stdcall (const char *text, uint32_t flags, uint32_t seed)	Hashes a string with a seed and a table of sixteen dwords, case and slashes folded unless flag 1	verified	two	storm/strings#seeded-string-hash	storm::str_hash
 0x64b060	362			storm	unreached		Runs its object file code that calls SErrSetLastError, __allmul; not read here	inferred	none		
 0x64b1d0	493	bjhash	idb	storm	primitive	uint32_t __fastcall (const uint8_t *key, uint32_t length, uint32_t initval)	Hashes bytes with Bob Jenkins' lookup2 from an initial value	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b3f0	100	SStrHashHT	idb	storm	primitive	uint32_t __stdcall (const char *s)	Hashes a string folded to upper case with / read as \ through bjhash with initial value 0	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
 0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
-0x64b4a0	80	SStrStr2		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Returns where a string first occurs in another, case-sensitively, as 0x64b4f0 does; null for no match or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
-0x64b4f0	80	SStrStr		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Finds the first place a string occurs in another, case-sensitively; null for an empty haystack or a null argument	verified	one	storm/strings#string-find	storm::sstrstr_whole
+0x64b4a0	80	SStrStr2		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Returns where a string first occurs in another, case-sensitively, as 0x64b4f0 does; null for no match or a null argument	verified	two	storm/strings#string-find	storm::sstrstr_whole
+0x64b4f0	80	SStrStr		storm	boundary	char * __fastcall (const char *haystack, const char *needle)	Finds the first place a string occurs in another, case-sensitively; null for an empty haystack or a null argument	verified	two	storm/strings#string-find	storm::sstrstr_whole
 0x64b540	80	SStrStrI		storm	boundary		Finds a string in another without case; null for an empty haystack, no match or a null argument	verified	one	net/who#who-query-tags	net::who_string_helpers
 0x64b590	80			storm	unreached		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		
 0x64b5e0	221			storm	boundary		Runs its object file code that calls __allrem, __alldiv; not read here	inferred	none		
@@ -23638,8 +23638,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x650c50	1094			storm	boundary		Runs SFile.cpp code that calls 0x64e9b0, 0x657700, 0x657690 and 19 more; not read here	inferred	none		
 0x6510a0	811			storm	boundary		Runs SFile.cpp code that calls 0x651b60, 0x6508f0, 0x651b00 and 2 more; not read here	inferred	none		
 0x6513d0	125			storm	boundary		Runs SFile.cpp code that calls 0x651450, 0x64d100; not read here	inferred	none		
-0x651450	1615	SFileReadSectors		storm	orchestration		Reads a file's sectors: the offset table, per-sector decryption, then copy, codec or explode	verified	one	storm/format#block-flags-and-sectors	
-0x651aa0	93	DecryptBlock		storm	primitive	void __fastcall (void *data, uint32_t bytes, uint32_t key)	Decrypts whole dwords with the key stream seeded from the key	verified	one	storm/format#decryption	
+0x651450	1615	SFileReadSectors		storm	orchestration		Reads a file's sectors: offset table, decryption, then copy or codec dispatch; any other compression mask fails	verified	two	storm/format#block-flags-and-sectors	
+0x651aa0	93	DecryptBlock		storm	primitive	void __fastcall (void *data, uint32_t bytes, uint32_t key)	Decrypts whole dwords with the key stream seeded from the key	verified	two	storm/format#decryption	
 0x651b00	91			storm	boundary		Runs SFile.cpp code that calls 0x6513d0; not read here	inferred	none		
 0x651b60	307			storm	boundary		Runs SFile.cpp code that calls SMemAlloc, 0x6513d0, SMemFree and 1 more; not read here	inferred	none		
 0x651ca0	235			storm	boundary		Runs SFile.cpp code that calls SMemAlloc, SMemFree; not read here	inferred	none		
@@ -23653,9 +23653,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x652620	340			storm	boundary		Runs SFile.cpp code that calls SErrSetLastError, SMemAlloc, 0x6575c0 and 1 more; not read here	inferred	none		
 0x652780	424	SFileCreateSearchGroup		storm	unreached		Creates an overlay group of archives; nothing calls it	inferred	none	storm/mount#archive-list	
 0x652930	1941			storm	boundary		Runs SFile.cpp code that calls 0x6508b0, 0x650780, 0x652930 and 9 more; not read here	inferred	none		
-0x6530d0	108	SFileHashString		storm	primitive	uint32_t __fastcall (const char *name, int type)	Hashes an upper-cased name with backslashes to one of the four types	verified	one	storm/format#name-hash	
+0x6530d0	108	SFileHashString		storm	primitive	uint32_t __fastcall (const char *name, int type)	Hashes an upper-cased name with backslashes to one of the four types	verified	two	storm/format#name-hash	
 0x653140	25			storm	boundary		Runs SFile.cpp code not read here	inferred	none		
-0x653160	447	SFile::VerifyArchiveSignature		storm	boundary	uint32_t __stdcall (void *archive, uint32_t *result, const void *key, uint32_t keySize, const void *exponent, uint32_t exponentSize)	Checks the signature after an archive's data with a key, setting 5 when it passes and 1 otherwise	verified	one	storm/format#archive-signature-check	
+0x653160	447	SFile::VerifyArchiveSignature		storm	boundary	uint32_t __stdcall (void *archive, uint32_t *result, const void *key, uint32_t keySize, const void *exponent, uint32_t exponentSize)	Checks the signature after an archive's data with a key, setting 5 when it passes and 1 otherwise	verified	two	storm/format#archive-signature-check	
 0x653320	376			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, 0x662910, 0x66cb80 and 5 more; not read here	inferred	none		
 0x6534a0	124			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, MD5Init, 0x661dd0 and 1 more; not read here	inferred	none		
 0x653520	32			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, 0x653540; not read here	inferred	none		
@@ -23686,12 +23686,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6548b0	26			storm	boundary		Runs SFile.cpp code that calls 0x6548d0, 0x654920; not read here	inferred	none		
 0x6548d0	70			storm	boundary		Runs SFile.cpp code not read here	inferred	none		
 0x654920	116			storm	boundary		Runs SFile.cpp code that calls SErrSetLastError, 0x654f60, 0x6549a0 and 1 more; not read here	inferred	none		
-0x6549a0	1057	ArchiveLookup		storm	orchestration	int __fastcall (uint32_t arg1, uint32_t arg2, uint32_t flags, void *out1, void *out2, void *out3, char *path)	Walks the archive list and probes each hash table; returns 1 hit, 2 loose disk file, 3 deleted, 0 miss	verified	one	storm/mount#name-resolution	
+0x6549a0	1057	ArchiveLookup		storm	orchestration	int __fastcall (uint32_t arg1, uint32_t arg2, uint32_t flags, void *out1, void *out2, void *out3, char *path)	Walks the archive list and probes each hash table; returns 1 hit, 2 loose disk file, 3 deleted, 0 miss	verified	two	storm/mount#name-resolution	
 0x654dd0	168			storm	boundary		Runs SFile.cpp code that calls 0x654e90, 0x654e80, _strstr and 1 more; not read here	inferred	none		
 0x654e80	16			storm	boundary		Runs SFile.cpp code not read here	inferred	none		
 0x654e90	137			storm	boundary		Runs SFile.cpp code that calls 0x654f20, 0x64a420, __fullpath; not read here	inferred	none		
 0x654f20	54			storm	boundary		Runs SFile.cpp code that calls SStr::sub_64A450, SStrPack; not read here	inferred	none		
-0x654f60	171	PrepareCryptTable		storm	primitive	void __cdecl ()	Builds the 0x500-dword crypt table on first use	verified	one	storm/format#crypt-table	
+0x654f60	171	PrepareCryptTable		storm	primitive	void __cdecl ()	Builds the 0x500-dword crypt table on first use	verified	two	storm/format#crypt-table	
 0x655010	41			storm	unreached		Runs SFile.cpp code that calls 0x654f60, 0x6549a0; not read here	inferred	none		
 0x655040	108			storm	unreached		Runs SFile.cpp code that calls 0x650780, 0x6507e0; not read here	inferred	none		
 0x6550b0	91			storm	unreached		Runs SFile.cpp code that calls 0x650780, 0x6507e0, SErrSetLastError and 1 more; not read here	inferred	none		
@@ -23708,16 +23708,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x655510	42			storm	unreached		Runs SFile.cpp code that calls 0x6548d0, 0x655570; not read here	inferred	none		
 0x655540	42			storm	boundary		Runs SFile.cpp code that calls 0x655570; not read here	inferred	none		
 0x655570	254			storm	boundary		Runs SFile.cpp code that calls 0x656690, SFileGetFileSize, SMemAlloc and 4 more; not read here	inferred	none		
-0x655670	32	SFileOpenArchive		storm	orchestration		Opens an archive record through the inner open	verified	one	storm/format#header	
-0x655690	933	ArchiveOpen		storm	orchestration		Allocates a zero-filled archive record with its priority and loads its tables	verified	one	storm/format#header	
-0x655a40	417	ArchiveOpenChild		storm	orchestration		Fills a child record with its parent, prefix and priority and links it into the list	verified	one	storm/mount#base-and-speech-archives	
-0x655bf0	1334	ArchiveLoadTables		storm	orchestration	int __fastcall (ArchiveRecord *archive, uint32_t flags, uint32_t arg3, uint32_t arg4)	Finds the header, reads and decrypts the hash and block tables, and links the archive into the list	verified	one	storm/format#header	
-0x656130	142	ExpandBlockTable		storm	primitive	void __fastcall (void *table, uint32_t count)	Expands 16-byte block entries to 0x2c bytes from the last, zeroing the added fields	verified	one	storm/format#hash-and-block-tables	
+0x655670	32	SFileOpenArchive		storm	orchestration		Opens an archive record through the inner open	verified	two	storm/format#header	
+0x655690	933	ArchiveOpen		storm	orchestration		Allocates a zero-filled archive record with its priority and loads its tables	verified	two	storm/format#header	
+0x655a40	417	ArchiveOpenChild		storm	orchestration		Fills a child record with its parent, prefix and priority and links it into the list	verified	two	storm/mount#base-and-speech-archives	
+0x655bf0	1334	ArchiveLoadTables		storm	orchestration	int __fastcall (ArchiveRecord *archive, uint32_t flags, uint32_t arg3, uint32_t arg4)	Finds the header, reads and decrypts the hash and block tables, and links the archive into the list	verified	two	storm/format#header	
+0x656130	142	ExpandBlockTable		storm	primitive	void __fastcall (void *table, uint32_t count)	Expands 16-byte block entries to 0x2c bytes from the last, zeroing the added fields	verified	two	storm/format#hash-and-block-tables	
 0x6561c0	375			storm	boundary		Runs SFile.cpp code that calls 0x656690, SFileGetFileSize, SMemAlloc and 3 more; not read here	inferred	none		
 0x656340	28			storm	unreached		Runs SFile.cpp code that calls 0x6548d0, 0x656690; not read here	inferred	none		
 0x656360	36			storm	unreached		Runs SFile.cpp code that calls 0x656390; not read here	inferred	none		
 0x656390	762			storm	unreached		Runs SFile.cpp code that calls 0x6548d0, 0x656690, 0x650b00 and 13 more; not read here	inferred	none		
-0x656690	889	SFileOpenFileInArchives		storm	orchestration		Resolves a name, derives the file's key and sector count, and builds the file record	verified	one	storm/format#decryption	
+0x656690	889	SFileOpenFileInArchives		storm	orchestration		Resolves a name, derives the file's key and sector count, and builds the file record	verified	two	storm/format#decryption	
 0x656a10	56			storm	boundary		Runs SFile.cpp code not read here	inferred	none		
 0x656a50	63			storm	unreached		Runs SFile.cpp code that calls SErrSetLastError, 0x656a90; not read here	inferred	none		
 0x656a90	71			storm	unreached		Runs SFile.cpp code not read here	inferred	none		
@@ -24019,7 +24019,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x660800	60			storm	boundary		Runs SComp.cpp code that calls ZlibUncompress; not read here	inferred	none		
 0x660840	626			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
 0x660ac0	187			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
-0x660b80	133	Bzip2Compress		storm	unreached	void __fastcall (void *dest, uint32_t *destSize, const void *source, uint32_t sourceSize, uint32_t *flag, uint32_t unused)	Compresses a buffer with bzip2 at block size 9, giving the source size back when the output does not fit	verified	one	storm/format#compression-codecs	
+0x660b80	133	Bzip2Compress		storm	unreached	void __fastcall (void *dest, uint32_t *destSize, const void *source, uint32_t sourceSize, uint32_t *flag, uint32_t unused)	Compresses a buffer with bzip2 at block size 9, giving the source size back when the output does not fit	verified	two	storm/format#compression-codecs	
 0x660c10	31			storm	boundary		Runs SComp.cpp code that calls 0x738e00; not read here	inferred	none		
 0x660c30	55			storm	boundary		Runs SComp.cpp code that calls 0x660c70, 0x660cc0; not read here	inferred	none		
 0x660c70	65			storm	boundary		Runs SComp.cpp code not read here	inferred	none		
@@ -24039,7 +24039,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6619d0	81			storm	boundary		Runs SComp.cpp code that calls SMemFree; not read here	inferred	none		
 0x661a30	42			storm	unreached		Runs SComp.cpp code that calls 0x6614f0; not read here	inferred	none		
 0x661a60	30			storm	unreached		Runs SComp.cpp code that calls 0x661a80; not read here	inferred	none		
-0x661a80	423	SCompDecompress		storm	orchestration		Applies the codecs of a sector's mask in order, or copies when the sizes are equal	verified	one	storm/format#codecs	
+0x661a80	423	SCompDecompress		storm	orchestration		Applies the codecs of a sector's mask in order, or copies when the sizes are equal	verified	two	storm/format#codecs	
 0x661c30	43			storm	boundary		Runs SComp.cpp code that calls SMemFree; not read here	inferred	none		
 0x661c60	171			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661d10	41			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -24208,16 +24208,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x667910	359			storm	boundary		Runs its object file code that calls 0x6691f0, 0x668ff0, 0x669030 and 1 more; not read here	inferred	none		
 0x667a80	19			storm	boundary		Runs its object file code not read here	inferred	none		
 0x667aa0	294			storm	boundary		Runs its object file code that calls _fclose; not read here	inferred	none		
-0x667bd0	63	OpenZipFile		storm	orchestration	bool __thiscall (void *this, const char *name)	Opens a zip's file with fopen in binary mode and keeps its name, up to 0x100 bytes, at +0xc	verified	one	storm/files#zip-archive-listing	
-0x667c10	388	FindZipEndRecord		storm	host	bool __thiscall (void *this, void *record)	Finds the first PK 5 6 in the last 0x10016 bytes of a zip's file and reads the 22-byte end record	verified	one	storm/files#zip-archive-listing	
-0x667da0	82	ReadZipDirectory		storm	host	bool __thiscall (void *this, void *record)	Seeks to a zip's central directory and reads each record the end record counts	verified	one	storm/files#zip-archive-listing	
-0x667e00	22	SlashesToBackslashes		storm	orchestration	void __fastcall (char *text)	Replaces each / of a string with \ in place	verified	one	storm/files#zip-archive-listing	
-0x667e20	1114	ReadZipDirectoryEntry		storm	host	bool __thiscall (void *this)	Reads a zip's next central record, checks its local header, and adds it to the zip entry table	verified	one	storm/files#zip-archive-listing	
+0x667bd0	63	OpenZipFile		storm	orchestration	bool __thiscall (void *this, const char *name)	Opens a zip's file with fopen in binary mode and keeps its name, up to 0x100 bytes, at +0xc	verified	two	storm/files#zip-archive-listing	
+0x667c10	388	FindZipEndRecord		storm	host	bool __thiscall (void *this, void *record)	Finds the first PK 5 6 in the last 0x10016 bytes of a zip's file and reads the 22-byte end record	verified	two	storm/files#zip-archive-listing	
+0x667da0	82	ReadZipDirectory		storm	host	bool __thiscall (void *this, void *record)	Seeks to a zip's central directory and reads each record the end record counts	verified	two	storm/files#zip-archive-listing	
+0x667e00	22	SlashesToBackslashes		storm	orchestration	void __fastcall (char *text)	Replaces each / of a string with \ in place	verified	two	storm/files#zip-archive-listing	
+0x667e20	1114	ReadZipDirectoryEntry		storm	host	bool __thiscall (void *this)	Reads a zip's next central record, checks its local header, and adds it to the zip entry table	verified	two	storm/files#zip-archive-listing	
 0x668280	26			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x6682a0	120			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668320	29			storm	boundary		Runs SZip.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x668340	19			storm	boundary		Runs SZip.cpp code that calls SMemFree; not read here	inferred	none		
-0x668360	212	OpenZipArchive		storm	host	void * __fastcall (const char *name)	Opens a zip file and reads its central directory into the zip entry table; 0 on failure	verified	one	storm/files#zip-archive-listing	
+0x668360	212	OpenZipArchive		storm	host	void * __fastcall (const char *name)	Opens a zip file and reads its central directory into the zip entry table; 0 on failure	verified	two	storm/files#zip-archive-listing	
 0x668440	30			storm	boundary		Runs SZip.cpp code that calls 0x667aa0, SMemFree; not read here	inferred	none		
 0x668460	7			storm	boundary		Runs SZip.cpp code not read here	inferred	none		
 0x668470	157			storm	boundary		Runs SZip.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
@@ -24229,7 +24229,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x668750	502			storm	boundary		Runs SZip.cpp code that calls _fseek, 0x740c97, 0x732320 and 1 more; not read here	inferred	none		
 0x668950	447			storm	unreached		Runs SZip.cpp code that calls 0x668470, _fseek, SMemAlloc and 5 more; not read here	inferred	none		
 0x668b10	19			storm	unreached		Runs SZip.cpp code that calls SMemFree; not read here	inferred	none		
-0x668b30	97	EnumerateZipFiles		storm	orchestration	int __fastcall (void *zip, void *callback, void *data)	Calls a callback with each entry name of a zip until it returns 0, and returns 1	verified	one	storm/files#zip-archive-listing	
+0x668b30	97	EnumerateZipFiles		storm	orchestration	int __fastcall (void *zip, void *callback, void *data)	Calls a callback with each entry name of a zip until it returns 0, and returns 1	verified	two	storm/files#zip-archive-listing	
 0x668ba0	69			storm	boundary		Runs its object file code that calls _fopen, SMemAlloc; not read here	inferred	none		
 0x668bf0	41			storm	boundary		Runs its object file code that calls _fclose, SMemFree; not read here	inferred	none		
 0x668c20	12			storm	unreached		Runs its object file code not read here	inferred	none		
@@ -25273,100 +25273,100 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x688280	88	ClearSceneState		terrain	orchestration	void __thiscall (void *this)	Zeroes a 28-dword record	inferred	none		
 0x6882e0	1	SceneNoOpD		terrain	orchestration	void __thiscall (void *this)	Returns at once	inferred	none		
 0x6882f0	258	CopyFrustumState		terrain	orchestration	void __thiscall (void *this, uint32_t arg2)	Copies a frustum record field by field	inferred	none		
-0x688400	5	InitOptInfinityThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x688410, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x688410	11	InitOptInfinity		cvar	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	cvar/overview#shared-header-constants	
-0x688420	10	InitOptUseCount		cvar	orchestration	void __cdecl (void)	Runs 0x688430 and registers the destructor 0x688460	verified	one	cvar/overview#static-objects	
-0x688430	22	InitOptUseCountBody		cvar	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	one	cvar/overview#static-objects	
+0x688400	5	InitOptInfinityThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x688410, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x688410	11	InitOptInfinity		cvar	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	two	cvar/overview#shared-header-constants	
+0x688420	10	InitOptUseCount		cvar	orchestration	void __cdecl (void)	Runs 0x688430 and registers the destructor 0x688460	verified	two	cvar/overview#static-objects	
+0x688430	22	InitOptUseCountBody		cvar	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	two	cvar/overview#static-objects	
 0x688450	12	InitOptUseCountAtExit		cvar	orchestration	void __cdecl (void)	Registers the destructor 0x688460 with _atexit	verified	one	cvar/overview#static-objects	
-0x688460	14	InitOptUseCountDtor		cvar	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	cvar/overview#static-objects	
-0x688470	1179	RegisterVideoOptions		cvar	orchestration	void __cdecl (void)	Registers the 31 video option settings with their callbacks	verified	one	cvar/options#registration	
+0x688460	14	InitOptUseCountDtor		cvar	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	two	cvar/overview#static-objects	
+0x688470	1179	RegisterVideoOptions		cvar	orchestration	void __cdecl (void)	Registers the 31 video option settings with their callbacks	verified	two	cvar/options#registration	
 0x688910	1	VideoOptionsTeardown		cvar	orchestration	void __cdecl (void)	Returns at once; the world teardown calls it	verified	one	cvar/options#registration	
-0x688920	64	HandleLodOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the terrain LOD bit of the world flags	verified	one	cvar/options#switch-settings	
-0x688960	87	HandleFullAlphaOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the full-alpha bit of the world flags, inverted	verified	one	cvar/options#switch-settings	
-0x6889c0	5	InitOptTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6889d0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6889d0	15	InitOptTwoPi		cvar	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	cvar/overview#shared-header-constants	
-0x6889e0	5	InitOptInvTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6889f0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6889f0	19	InitOptInvTwoPi		cvar	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	cvar/overview#shared-header-constants	
-0x688a10	95	HandleDoodadAnimOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the doodad animation bit of the world flags, inverted	verified	one	cvar/options#switch-settings	
-0x688a70	64	HandleMapShadowsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the terrain shadow bit of the world flags	verified	one	cvar/options#switch-settings	
-0x688ab0	88	HandleLodDistOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Passes a terrain LOD distance from 50 to 250 on, else writes a line and uses 77; either way it keeps the set	verified	one	cvar/options#float-range-settings	
-0x688b10	89	HandleSmallCullOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a size culling value from 0.001 to 2 and stores it	verified	one	cvar/options#float-range-settings	
-0x688b70	83	HandleDistCullOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a distance culling value from 1 to 888.888916 and stores it	verified	one	cvar/options#float-range-settings	
-0x688bd0	56	HandleMaxLightsOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a light count from 1 to 4 and stores it	verified	one	cvar/options#integer-range-settings	
-0x688c10	51	CheckShadowLevel		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a shadow mip level of 1 or less and writes that it changes upon restart	verified	one	cvar/options#integer-range-settings	
-0x688c50	51	HandleAlphaMipOption		cvar	unreached	uint8_t __stdcall (const char *value, void *arg)	Accepts an alpha mip level of 1 or less and writes that it changes upon restart	verified	one	cvar/options#unregistered-callback	
-0x688c90	77	HandleTexLodBiasOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a texture LOD bias from -1 to 1 and passes it to a setter that does nothing	verified	one	cvar/options#float-range-settings	
-0x688ce0	89	HandleTrilinearOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the trilinear bit of the world flags, and sets the device value 4 when enabling	verified	one	cvar/options#switch-settings	
+0x688920	64	HandleLodOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the terrain LOD bit of the world flags	verified	two	cvar/options#switch-settings	
+0x688960	87	HandleFullAlphaOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the full-alpha bit of the world flags, inverted	verified	two	cvar/options#switch-settings	
+0x6889c0	5	InitOptTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6889d0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6889d0	15	InitOptTwoPi		cvar	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	two	cvar/overview#shared-header-constants	
+0x6889e0	5	InitOptInvTwoPiThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6889f0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6889f0	19	InitOptInvTwoPi		cvar	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	two	cvar/overview#shared-header-constants	
+0x688a10	95	HandleDoodadAnimOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the doodad animation bit of the world flags, inverted	verified	two	cvar/options#switch-settings	
+0x688a70	64	HandleMapShadowsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the terrain shadow bit of the world flags	verified	two	cvar/options#switch-settings	
+0x688ab0	88	HandleLodDistOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Passes a terrain LOD distance from 50 to 250 on, else writes a line and uses 77; either way it keeps the set	verified	two	cvar/options#float-range-settings	
+0x688b10	89	HandleSmallCullOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a size culling value from 0.001 to 2 and stores it	verified	two	cvar/options#float-range-settings	
+0x688b70	83	HandleDistCullOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a distance culling value from 1 to 888.888916 and stores it	verified	two	cvar/options#float-range-settings	
+0x688bd0	56	HandleMaxLightsOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a light count from 1 to 4 and stores it	verified	two	cvar/options#integer-range-settings	
+0x688c10	51	CheckShadowLevel		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a shadow mip level of 1 or less and writes the restart line; above 1 writes a range line and returns 0	verified	two	cvar/options#integer-range-settings	
+0x688c50	51	HandleAlphaMipOption		cvar	unreached	uint8_t __stdcall (const char *value, void *arg)	Accepts an alpha mip level of 1 or less and writes that it changes upon restart	verified	two	cvar/options#unregistered-callback	
+0x688c90	77	HandleTexLodBiasOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a texture LOD bias from -1 to 1 and passes it to a setter that does nothing	verified	two	cvar/options#float-range-settings	
+0x688ce0	89	HandleTrilinearOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the trilinear bit of the world flags, and sets the device value 4 when enabling	verified	two	cvar/options#switch-settings	
 0x688d40	77	ValidateFarClip		terrain	orchestration		Accepts a farclip from 177 to 777 and sets the world far clip, else prints the range	verified	one	terrain/world#distance-settings	
 0x688d90	77	ValidateNearClip		terrain	orchestration		Accepts a nearclip from 0.01 to 0.33 and stores it in the world copy, else prints the range	verified	one	terrain/world#distance-settings	
-0x688de0	58	HandleFrillDensityOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a frill density from 1 to 256 and passes it to the detail doodad setter	verified	one	cvar/options#integer-range-settings	
-0x688e20	110	HandleSpecularOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the specular bit of the world flags where the device supports it	verified	one	cvar/options#switch-settings	
-0x688e90	103	HandleMapObjOverbrightOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the map object overbright byte where the device supports it	verified	one	cvar/options#switch-settings	
-0x688f00	50	HandleMapObjLightLodOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a map object light LOD of 0 to 2 and stores it	verified	one	cvar/options#integer-range-settings	
-0x688f40	110	HandlePixelShadersOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the pixel shader bit of the world flags where the device supports it	verified	one	cvar/options#switch-settings	
-0x688fb0	77	HandleParticleDensityOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a particle density from 0.25 to 1 and passes it to the particle density setter	verified	one	cvar/options#float-range-settings	
-0x689000	70	HandleUnitDrawDistOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a unit draw distance from 100 to 300 and stores it	verified	one	cvar/options#float-range-settings	
-0x689050	50	HandleWaterLodOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Zeroes the water LOD global and rejects any nonzero value	verified	one	cvar/options#integer-range-settings	
-0x689090	124	HandleBaseMipOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a base mip level of 0 or 1 and sets it on the device	verified	one	cvar/options#integer-range-settings	
+0x688de0	58	HandleFrillDensityOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a frill density from 1 to 256 and passes it to the detail doodad setter	verified	two	cvar/options#integer-range-settings	
+0x688e20	110	HandleSpecularOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the specular bit of the world flags where the device supports it	verified	two	cvar/options#switch-settings	
+0x688e90	103	HandleMapObjOverbrightOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the map object overbright byte where the device supports it	verified	two	cvar/options#switch-settings	
+0x688f00	50	HandleMapObjLightLodOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a map object light LOD of 0 to 2 and stores it	verified	two	cvar/options#integer-range-settings	
+0x688f40	110	HandlePixelShadersOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the pixel shader bit of the world flags where the device supports it	verified	two	cvar/options#switch-settings	
+0x688fb0	77	HandleParticleDensityOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a particle density from 0.25 to 1 and passes it to the particle density setter	verified	two	cvar/options#float-range-settings	
+0x689000	70	HandleUnitDrawDistOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a unit draw distance from 100 to 300 and stores it	verified	two	cvar/options#float-range-settings	
+0x689050	50	HandleWaterLodOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Zeroes the water LOD global and rejects any nonzero value	verified	two	cvar/options#integer-range-settings	
+0x689090	124	HandleBaseMipOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a base mip level of 0 or 1 and sets it on the device	verified	two	cvar/options#integer-range-settings	
 0x689110	219	ValidateAnisotropy		terrain	orchestration		Accepts an anisotropy from 1 to 16 within the device limit, sets or clears world flag 0x80000000 and stores it	verified	one	terrain/render#texture-detail-bias	
 0x6891f0	88	ValidateTextureLodDistance		terrain	orchestration		Passes a texture detail distance from 80 to 777 on, else prints the range and uses 80; either way it keeps the set	verified	one	terrain/world#distance-settings	
 0x689250	141	ValidateHorizonFarClip		terrain	orchestration		Accepts a horizon far clip from the far clip plus 528 to 2112 and stores it, else prints the range	verified	one	terrain/world#distance-settings	
-0x6892e0	70	HandleFootprintsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the footprint bit of the world flags	verified	one	cvar/options#switch-settings	
-0x689330	203	HandleBspCacheOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Creates, clears or frees the BSP leaf cache, always accepting	verified	one	cvar/options#distance-and-texture-settings	
-0x689400	70	HandleTriangleStripsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the triangle strip bit of the world flags	verified	one	cvar/options#switch-settings	
-0x689450	137	HandleFootstepBiasOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a footstep bias from 0 to 1 and writes it without storing it	verified	one	cvar/options#float-range-settings	
-0x6894e0	39	HandleOcclusionOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Writes whether the hardware occlusion test is on, always accepting	verified	one	cvar/options#switch-settings	
-0x689510	145	HandleSpellEffectLevelOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Clamps a spell effect level to 0 to 2, stores it and sets the particle density for it	verified	one	cvar/options#integer-range-settings	
-0x6895b0	5	InitOptSquare10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6895c0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6895c0	19	InitOptSquare10		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6895e0	5	InitOptSquare11p111111Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6895f0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6895f0	19	InitOptSquare11p111111		cvar	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689610	5	InitOptSquare5p5555553Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689620, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689620	19	InitOptSquare5p5555553		cvar	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689640	5	InitOptSquare10BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689650, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689650	19	InitOptSquare10B		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689670	5	InitOptSquare5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689680, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689680	19	InitOptSquare5		cvar	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6896a0	5	InitOptSquare10CThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6896b0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6896b0	19	InitOptSquare10C		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6896d0	5	InitOptSquare30Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6896e0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6896e0	19	InitOptSquare30		cvar	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689700	5	InitOptSquare120Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689710, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689710	19	InitOptSquare120		cvar	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689730	5	InitOptSquare20Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689740, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689740	19	InitOptSquare20		cvar	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689760	5	InitOptSquare10DThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689770, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689770	19	InitOptSquare10D		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689790	5	InitOptSquare0p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6897a0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6897a0	19	InitOptSquare0p5		cvar	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6897c0	5	InitOptSquare3Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6897d0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6897d0	19	InitOptSquare3		cvar	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6897f0	5	InitOptSquare100Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689800, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689800	19	InitOptSquare100		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689820	5	InitOptFiveThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689830, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689830	11	InitOptFive		cvar	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689840	5	InitOptSquare50Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689850, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689850	19	InitOptSquare50		cvar	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689870	5	InitOptSquare100BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689880, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689880	19	InitOptSquare100B		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6898a0	5	InitOptSquare40Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6898b0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6898b0	19	InitOptSquare40		cvar	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6898d0	5	InitOptSquare1p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6898e0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6898e0	19	InitOptSquare1p5		cvar	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689900	5	InitOptProductThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689910, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689910	19	InitOptProduct		cvar	primitive	void __cdecl (void)	Stores -21 * -0.027777778 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689930	5	InitOptProductBThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689940, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689940	19	InitOptProductB		cvar	primitive	void __cdecl (void)	Stores the previous product times -255 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689960	5	InitOptProductCThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689970, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689970	19	InitOptProductC		cvar	primitive	void __cdecl (void)	Stores 18 * 0.027777778 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689990	5	InitOptProductDThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6899a0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6899a0	19	InitOptProductD		cvar	primitive	void __cdecl (void)	Stores the previous product times 256 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x6899c0	5	InitOptInvTwoPiBThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6899d0, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x6899d0	19	InitOptInvTwoPiB		cvar	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	cvar/overview#shared-header-constants	
-0x6899f0	5	InitOptSquare10EThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689a00, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689a00	19	InitOptSquare10E		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
-0x689a20	5	InitOptHalfOver10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689a30, a static initializer	verified	one	cvar/overview#shared-header-constants	
-0x689a30	19	InitOptHalfOver10		cvar	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
+0x6892e0	70	HandleFootprintsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the footprint bit of the world flags	verified	two	cvar/options#switch-settings	
+0x689330	203	HandleBspCacheOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Creates, clears or frees the BSP leaf cache, always accepting	verified	two	cvar/options#distance-and-texture-settings	
+0x689400	70	HandleTriangleStripsOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Sets or clears the triangle strip bit of the world flags	verified	two	cvar/options#switch-settings	
+0x689450	137	HandleFootstepBiasOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Accepts a footstep bias from 0 to 1 and writes it without storing it	verified	two	cvar/options#float-range-settings	
+0x6894e0	39	HandleOcclusionOption		cvar	orchestration	uint8_t __stdcall (const char *value, void *arg)	Writes whether the hardware occlusion test is on, always accepting	verified	two	cvar/options#switch-settings	
+0x689510	145	HandleSpellEffectLevelOption		cvar	primitive	uint8_t __stdcall (const char *value, void *arg)	Clamps a spell effect level to 0 to 2, stores it and sets the particle density for it	verified	two	cvar/options#integer-range-settings	
+0x6895b0	5	InitOptSquare10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6895c0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6895c0	19	InitOptSquare10		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6895e0	5	InitOptSquare11p111111Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6895f0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6895f0	19	InitOptSquare11p111111		cvar	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689610	5	InitOptSquare5p5555553Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689620, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689620	19	InitOptSquare5p5555553		cvar	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689640	5	InitOptSquare10BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689650, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689650	19	InitOptSquare10B		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689670	5	InitOptSquare5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689680, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689680	19	InitOptSquare5		cvar	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6896a0	5	InitOptSquare10CThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6896b0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6896b0	19	InitOptSquare10C		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6896d0	5	InitOptSquare30Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6896e0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6896e0	19	InitOptSquare30		cvar	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689700	5	InitOptSquare120Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689710, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689710	19	InitOptSquare120		cvar	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689730	5	InitOptSquare20Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689740, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689740	19	InitOptSquare20		cvar	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689760	5	InitOptSquare10DThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689770, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689770	19	InitOptSquare10D		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689790	5	InitOptSquare0p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6897a0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6897a0	19	InitOptSquare0p5		cvar	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6897c0	5	InitOptSquare3Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6897d0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6897d0	19	InitOptSquare3		cvar	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6897f0	5	InitOptSquare100Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689800, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689800	19	InitOptSquare100		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689820	5	InitOptFiveThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689830, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689830	11	InitOptFive		cvar	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689840	5	InitOptSquare50Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689850, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689850	19	InitOptSquare50		cvar	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689870	5	InitOptSquare100BThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689880, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689880	19	InitOptSquare100B		cvar	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6898a0	5	InitOptSquare40Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6898b0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6898b0	19	InitOptSquare40		cvar	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6898d0	5	InitOptSquare1p5Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6898e0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6898e0	19	InitOptSquare1p5		cvar	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689900	5	InitOptProductThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689910, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689910	19	InitOptProduct		cvar	primitive	void __cdecl (void)	Stores -21 * -0.027777778 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689930	5	InitOptProductBThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689940, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689940	19	InitOptProductB		cvar	primitive	void __cdecl (void)	Stores the previous product times -255 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689960	5	InitOptProductCThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689970, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689970	19	InitOptProductC		cvar	primitive	void __cdecl (void)	Stores 18 * 0.027777778 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689990	5	InitOptProductDThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6899a0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6899a0	19	InitOptProductD		cvar	primitive	void __cdecl (void)	Stores the previous product times 256 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6899c0	5	InitOptInv4p1666665Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x6899d0, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x6899d0	19	InitOptInv4p1666665		cvar	primitive	void __cdecl (void)	Stores 1 / 4.1666665 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x6899f0	5	InitOptSquare10EThunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689a00, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689a00	19	InitOptSquare10E		cvar	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
+0x689a20	5	InitOptHalfOver10Thunk		cvar	orchestration	void __cdecl (void)	Jumps to 0x689a30, a static initializer	verified	two	cvar/overview#shared-header-constants	
+0x689a30	19	InitOptHalfOver10		cvar	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	two	cvar/overview#shared-header-constants	
 0x689a50	5	InitDbcInfinityThunkVideoHardware		dbc	orchestration	void __cdecl ()	Jumps to the +inf initializer of the VideoHardware record file	inferred	none		
 0x689a60	11	InitDbcInfinityVideoHardware		dbc	orchestration	void __cdecl ()	Copies the float +inf into a word of the data section	inferred	none		
 0x689a70	6	GetVideoHardwarePath		dbc	primitive	const char * __cdecl (void)	Returns the path of VideoHardware.dbc	verified	one	console/hardware#hardware-table	
@@ -28180,7 +28180,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5a60	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a90	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned	orchestration	void __cdecl (void)	Registers violenceLevel with the locale table entry as its default and OnViolenceLevelChanged as callback	verified	one	cvar/defaults#formatted-defaults	
+0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned	orchestration	void __cdecl (void)	Registers violenceLevel with the locale table entry as its default and OnViolenceLevelChanged as callback	verified	two	cvar/defaults#formatted-defaults	
 0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel value clamped to the locale maximum and sets the blood-spurt name substitution	verified	one	gx/textures#texture-basename-substitution	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b60	10			unassigned			Runs its object file code that calls 0x6c5b70; not read here	inferred	none		

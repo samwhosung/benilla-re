@@ -40,7 +40,7 @@ CSimpleFrame		788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, fla
 CSimpleModel		988	0x81c608	ui	Holds a Model frame: a CSimpleFrame, its scene, model, camera, light, position, facing, scale, fog and bounding box	verified	one	ui/modelview#model-frame-fields
 CSimpleModelFFX		988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
 CSimpleTop		4408	0x81c380	ui	Holds the interface root: strata records, input lists, key takers, hover, pressed and moving frames	verified	one	ui/strata#construction-and-teardown
-CVar		196		cvar	Names the setting record: hash, links, name, category, flags, value, default, reset, latched, help and callback	verified	one	cvar/registry#cvar-record
+CVar		196		cvar	Names the setting record: hash, links, name, category, flags, value, default, reset, latched, help and callback	verified	two	cvar/registry#cvar-record
 CharacterSelectionDisplay		288		glue	Holds one character-list record: the session character record in its first 0x110 bytes, then the select screen state	verified	one	glue/flow#enter-world
 ChatChannel		160		ui	Holds one joined channel: slot number, name, member list, ChatChannels id, instance number and state	verified	one	ui/chatchannels#joined-channel-slots
 ChatMessageGroup		12		ui	Holds a message group: its name, whether a new second window shows it and the file version that added it	verified	one	ui/chatwindows#message-groups-of-a-window

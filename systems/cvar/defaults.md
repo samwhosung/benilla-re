@@ -20,7 +20,7 @@ A formatted default is text built by `SStrPrintf` just before the `Register` cal
 
 Addresses: `0x402c7b`, `0x402c5b`, `0x42cd60`, `0x82e994`, `0x884cb4`, `0x4571ca`, `0x457520`, `0x835e10`, `0x835e0c`, `0x48fd60`, `0x48fda4`, `0x48fd21`, `0x48fd65`, `0x80450c`, `0x804510`, `0x835160`, `0x6c5ae1`, `0x6c5aa6`, `0x835154`, `0x86c3f8`, `0x6c5aa0`, `0x63a950`, `0x63a9c1`, `0x63a910`, `0x63a97b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x402c5b` formats `0x82e994` (`%1.1f`) with the value of `0x42cd60`, which is the stored host speed (`0x884cb4`) times 0.1 (`core/input`). `0x457520` returns the pointer to `50` (`0x835e10`) when `0x639a00` returns a set flag and the copy of the detection record has 1 at `+0x18`, the processor class, and `100` (`0x835e0c`) otherwise. `ConsoleDeviceInitialize` sets the flag byte before the sound CVars register, so the class alone decides.
@@ -32,7 +32,7 @@ Three settings pick one of two literal texts by the locale index at `0xc0e080`. 
 
 Addresses: `0x603368`, `0x603374`, `0x603390`, `0x63a72f`, `0x63a738`, `0x63a889`, `0x63a8e0`, `0x63a8b9`, `0xc0e080`, `0x8558a4`, `0x82e748`, `0x82e570`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x603368` compares the index with 1 and `0x603374` branches to pick `0x82e748` (`1`) or `0x82e570` (`0`); the call is `0x603390`. `gxWindow` and `gxMaximize` take their text from a test of the same index against 4 (`0x63a738`, `0x63a8b9`) and register at `0x63a889` and `0x63a8e0`. The table of locale names has eight pointers at `0x8558a4`; the order is read from the strings.
@@ -43,7 +43,7 @@ The image holds no string `autoLootDefault`, `environmentDetail` or `groundEffec
 
 Addresses: `0x8423e8`, `0x488dd0`, `0x488d70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The scan is a case-insensitive search of the whole image file. The three absent names give no hit; `WorldDetail` gives three, two as the name strings that the script function table points to and one at `0x8423f2` inside the usage string at `0x8423e8`. The registrations of the settings are the rows of `tables/cvars.tsv`, which carry no such name.

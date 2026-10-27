@@ -8,19 +8,19 @@ Roots: `0x655670`, `0x6477c0`, `0x648460`, `0x648620`, `0x6549a0`
 
 ## Header
 
-`0x655bf0` tries offsets of the archive in steps of `0x200`, reading `0x1000` bytes at each, and takes the first
+`0x655bf0` tries offsets of the archive in steps of `0x200`, each served from a buffered read of `0x1000` bytes, and takes the first
 that passes four tests: the magic `0x1a51504d`, a header size of at least `0x20`, and at most `0x10000` hash
 entries and `0x10000` block entries. The 32-byte header is the magic, header size, archive size, a 16-bit version
 (not tested here), a 16-bit sector shift (low byte used; sector size `0x200 << shift`), then the offsets of the hash
 and block tables and their entry counts, relative to the header. A short read or no room for `0x20` bytes fails
 with `0x8510006c`.
 
-Addresses: `0x655bf0`, `0x655670`, `0x655690`
+Addresses: `0x655bf0`, `0x655670`, `0x655690`, `0x655c23`, `0x655c67`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-The copy is `rep movs` of 8 dwords into the record at `+0x14c` (`0x655c7a`), the tests are `0x655c7f`,
+A read of `0x1000` bytes happens only when the try offset is not below the end of the bytes already read (`cmp eax,edx; jb 0x655c67`, `0x655c23`), so the tries at `0x200` to `0xe00` reuse the read made at 0. The copy is `rep movs` of 8 dwords into the record at `+0x14c` (`0x655c7a`), the tests are `0x655c7f`,
 `0x655c87`, `0x655c9b` and `0x655c9f`, the step is `0x200` (`0x655cbf`; `0x1000` when the open flags have bit 4, with
 bit 3 ending the search at the first miss: `test cl,8` at `0x655caa`). The sector size is `0x200 << [rec+0x15a]`
 (`0x655d0a`). `0x655670` calls `0x655690`, which allocates the 0x2a0-byte record zero-filled and then calls
@@ -36,7 +36,7 @@ nonzero offset, and sets bit 0 of the cleared hash byte of each block whose flag
 
 Addresses: `0x655bf0`, `0x656130`, `0x651d90`, `0x655fde`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x655e15` and `0x655f05` call `DecryptBlock` on the two tables with the keys from the inline hash loops at
@@ -53,7 +53,7 @@ is the next seed. Five groups of 256 entries, `0x1400` bytes. The fill is entry-
 
 Addresses: `0x654f60`, `0xc53fbc`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x654f85` seeds the generator; `0x654faa` to `0x654fb7` multiplies by `0x7d` (125), adds 3 and divides by the modulus
@@ -69,7 +69,7 @@ types 1 and 2 are name hashes A and B, type 3 is a key.
 
 Addresses: `0x6530d0`, `0x41089b`, `0xc53fbc`, `0x883b08`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The hash loop at `0x654ba0` and its copies at `0x654bf0`, `0x655dc0` and `0x656828` read `[table + c·4 + type·0x400]`; the
@@ -88,7 +88,7 @@ it. The result is the exact match, else the last candidate, else a miss.
 
 Addresses: `0x6549a0`, `0x866520`, `0x866522`, `0x657420`, `0x657480`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x654c55` starts at `(count − 1) & hash0`; `0x654c72` to `0x654c85` compare A, B and the deleted index; the exact
@@ -102,18 +102,18 @@ Flags: `0x100` imploded, `0x200` compressed, `0x10000` encrypted, `0x20000` key 
 one unit, `0x2000000` delete marker, `0x80000000` exists. A one-unit file is one sector; any other is cut into
 sectors of the sector size. A compressed or imploded file starts with `count + 1` offsets (dwords) relative to
 the file; sector `i` lies between `table[i]` and `table[i + 1]`. A sector whose packed size is not below its
-unpacked size is stored as it is; otherwise `0x200` runs the codec dispatch and `0x100` the explode.
+unpacked size is stored as it is; otherwise `0x200` alone runs the codec dispatch. There is no explode path: any other value of the flags and `0xff00`, `0x100` and `0x300` included, fails the sector read.
 
-Addresses: `0x651450`, `0x656690`, `0x661a80`
+Addresses: `0x651450`, `0x656690`, `0x661a80`, `0x6513d0`, `0x6513ea`, `0x65140c`, `0x6519f4`, `0x661a60`, `0x661a75`, `0x651a76`, `0x651a8f`, `0x65199f`, `0x65157d`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x656690` counts the sectors (`0x6568a2` to `0x6568ad`; one for `0x1000000`, `0x65688b`) and stores the file's key
 at `+0x160`, the count at `+0x16c`. `0x651450` reads the table at `0x651549` when the flags have any of `0xff00` and
 the file is not one unit, checks that its entries do not decrease (`0x6515b3`) and decrypts it with the key − 1
 (`0x65158f` to `0x65159a`). The count is `⌈unpacked size / sector size⌉`. The raw copy is `cmp esi,edi; jbe` (`0x651982`, `0x651987`), the codec call `0x6519f4`,
-and the test `and ecx,0xff00; cmp ecx,0x200` at `0x651993` to `0x651999`.
+and the test `and ecx,0xff00; cmp ecx,0x200; jne 0x651a76` at `0x651993` to `0x65199f`. `0x651a76` frees the temporary buffer (`0x651a8f`) unless it is the caller's and returns 0, with no error set. `0x651450` is the only sector reader: its one caller `0x6513d0` (`0x6513ea`, `0x65140c`); `0x661a80` has the callers `0x6519f4` and the unreached wrapper `0x661a60` (`0x661a75`). No `and`, `test` or `or` of the immediate `0x100` lies in `0x640000` to `0x670000` (control: the scan finds `0x10000` at `0x65157d`), and none of the explode's tables is among the image's bytes (searched as bytes, words and dwords; a zlib table is the control).
 
 ## Decryption
 
@@ -125,7 +125,7 @@ the name after the last `:` and then after the last `\`, never `/`. With `0x2000
 
 Addresses: `0x651aa0`, `0x656690`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x651ac5` adds the table dword; `0x651ace` to `0x651ad8` update the running value; `0x651ade` to `0x651af1` the key.
@@ -141,7 +141,7 @@ packed and unpacked sizes copy the bytes.
 
 Addresses: `0x661a80`, `0x80fa1c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The table at `0x80fa1c` holds six `{mask, function}` pairs in the order `0x40, 0x80, 0x20, 0x01, 0x02, 0x10`. The functions are, by the names of the format, ADPCM mono, ADPCM stereo, sparse, Huffman, zlib and one unnamed here. The bit test
@@ -157,7 +157,7 @@ the census finds 27 call sites and no stored address.
 
 Addresses: `0x648700`, `0x648713`, `0x648620`, `0x646430`, `0x6f1238`, `0x6f1254`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x648700` pushes 0, `0x4ee` and the path `E:\build\buildWoW\Storm\Source\SFile2.cpp`, then the
@@ -176,7 +176,7 @@ returns 0; a failed read frees the buffer, closes the file and returns 0. The fi
 
 Addresses: `0x648620`, `0x648636`, `0x64864c`, `0x648666`, `0x648674`, `0x648685`, `0x64869a`, `0x6486bf`, `0x6486e1`, `0x6485f0`, `0x64860b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x648636` opens and `0x64864c` takes the size with `SFile::GetFileSize`; `0x648666` is `SMemAlloc(size +
@@ -197,7 +197,7 @@ key; the survey passes its own.
 
 Addresses: `0x653160`, `0x653174`, `0x6531aa`, `0x6531d9`, `0x653210`, `0x653241`, `0x65325c`, `0x653275`, `0x65327d`, `0x653299`, `0x6532e7`, `0x6532f9`, `0x6529d0`, `0x473f66`, `0x80e648`, `0x80e748`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x653174` stores the defaults only when both pointers are null. `0x6531aa` finds the archive's record
@@ -218,7 +218,7 @@ to `sourceSize`; any other non-zero answer raises the error `0x85100083` with th
 
 Addresses: `0x80f9ec`, `0x6614f0`, `0x661a30`, `0x661a51`, `0x6615dd`, `0x660b80`, `0x660b9d`, `0x660ba2`, `0x660baa`, `0x660bef`, `0x660bf8`, `0x738cd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6615dd` loads the table; `0x6614f0` is reached only from the unreached `0x661a30`, which calls it at `0x661a51`. `0x660b9d` pushes `0, 0, 9`,

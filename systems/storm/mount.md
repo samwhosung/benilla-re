@@ -20,7 +20,7 @@ in every case. `ClientMain` writes the exe's folder to the registry value
 
 Addresses: `0x402210`, `0x40222b`, `0x402242`, `0x40224f`, `0x402255`, `0x40225c`, `0x402268`, `0x402286`, `0x40229d`, `0x4022c0`, `0x88273c`, `0x401440`, `0x402200`, `0x4040a0`, `0x4040eb`, `0x4021bb`, `0x42b2e0`, `0x42ac20`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x40222b` reads switch 1 with `CmdLineGetString` (`storm/scmd`); an empty answer takes `0x42b2e0`
@@ -35,15 +35,15 @@ answer layout 1 and 2; `ClientMain` calls `0x4040a0` from `0x4021cd` only when b
 
 ## Patch archives
 
-`0x403740` collects `Data\patch-?.MPQ` through the operating system's wildcard (one character for `?`, so
-`patch-10.MPQ` does not match, and hidden files are skipped), sorts the matches case-insensitively descending,
+`0x403740` collects `Data\patch-?.MPQ` through the operating system's wildcard match (Windows' rule for `?`, not read
+here) and skips hidden files, sorts the matches case-insensitively descending,
 then adds `Data\patch.MPQ`, and opens the array from its end. The opening order is `patch.MPQ`, `patch-2`,
 `patch-3`, and so on upward, from priority `0x40`, one more for each open that succeeds; a patch that fails to open
 is skipped silently. Only the `Data` directory is searched.
 
 Addresses: `0x403740`, `0x42ad10`, `0x4039b0`, `0x403ae0`, `0x41a350`, `0x41a4b0`, `0x648dd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x42ad10` passes `Data\` plus the pattern to `FindFirstFileW` and `FindNextFileW` (`0x42ad7b`, `0x42ae09`), calls the
@@ -68,7 +68,7 @@ when nothing matches.
 
 Addresses: `0x42ad10`, `0x42ad2a`, `0x42ad35`, `0x42b3df`, `0x42ad47`, `0x42ad68`, `0x42ad7b`, `0x42ada3`, `0x42ada8`, `0x42adba`, `0x42add2`, `0x42addd`, `0x42ade9`, `0x42adfa`, `0x42ae09`, `0x42ae17`, `0x42ae29`, `0x42b3d0`, `0x42b1c0`, `0x42acd0`, `0x748769`, `0x74873e`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x42ad2a` copies `ecx` into a 0x104-byte buffer and `0x42ad47` appends `edx`, both with the bound
@@ -85,33 +85,30 @@ copies `nFileSizeLow`, and `0x42adba`, `0x42add2` and `0x42addd` test 0x10, 0x1 
 ## Base and speech archives
 
 `speech2.MPQ` opens next, if present, at the next priority. Then each patch that opened gets a child record for
-the prefix `speech2` when a real `speech2.MPQ` exists. Then the ten base archives, `model`, `texture`, `terrain`,
+the prefix `speech2` if a real `speech2.MPQ` exists. Then the ten base archives, `model`, `texture`, `terrain`,
 `wmo`, `sound`, `misc`, `interface`, `fonts`, `speech`, `dbc` (`.MPQ`), at the fixed priorities `0x3f` down to `0x36`
-whether or not each opens. A base or speech2 name is tried under `Data\` and then `..\Data\`. A base archive that does not open, missing or
-bad, ends the client with `Failed to open archive %s: %s` (`storm/errorlog#fatal-error-display`); a missing speech2 is
-skipped, a bad one is fatal; a patch that fails is skipped without a word.
+whether or not each opens. A base or speech2 name is tried under `Data\` and then `..\Data\`. An open that fails with error `0x26`, `0x8510006c` or `0x85100083` ends the client with `Failed to open archive %s` (the rooted path; `storm/errorlog#fatal-error-display`), speech2 included. A base archive that fails with another code, missing included, ends it with `Failed to open archive %s: %s`; a speech2 or patch failing so is skipped.
 
-Addresses: `0x403740`, `0x403b00`, `0x4022d0`, `0x402320`, `0x648e80`, `0x655a40`, `0x82e12c`, `0x4038c1`, `0x4038ef`, `0x40381b`
+Addresses: `0x403740`, `0x403b00`, `0x4022d0`, `0x402320`, `0x648e80`, `0x655a40`, `0x82e12c`, `0x4038c1`, `0x4038ef`, `0x40381b`, `0x403b43`, `0x403b5b`, `0x403b6f`, `0x64cf80`, `0x64d0e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4038b5` to `0x403912` walk the ten-entry table at `0x82e12c`, with the priority in `[ebp-8]` starting at `0x3f`
 (`0x40389f`) and decremented for each entry (`0x403908`). `0x403b00` formats `%s%s` of each root (`0x82e124`) and the
-name through `0x402320` and tries `0x648dd0`, twice (`0x403b78`); on failure it reports error `0x26` as `0x85100083`,
-and `0x8510006c` and `0x85100083` go to `SErrDisplayAppFatal2` (`0x403b6f`). The child record is `0x648e80`, which
+name through `0x402320` and tries `0x648dd0`, twice (`0x403b78`); on failure `0x403b43` reads the error: `0x26` becomes `0x85100083`, and `0x8510006c` and `0x85100083` go to the fatal display (`0x64cf80` at `0x403b6f`, text `0x82edd0`); any other code tries the next root (`0x403b5b`). After two roots it returns 0, and for a base archive `0x4038ef` ends the client with the text `0x82ed90` (`%s: %s`, code `0x85100086`). The child record is `0x648e80`, which
 `0x655a40` completes (`0x403886`). `0x4022d0` tests which root holds a file (`0x42a4e0`) and returns 0, 1 or 2.
 
 ## base.MPQ and the speech setting
 
 `Data\base.MPQ` is opened at priority `0x64`, `telemetry.dat` read from it, and the archive closed again, all before
 `0x403740` runs, so a file only in `base.MPQ` is not found for the rest of the run. The CVar
-`disableOptionalSpeech` (default `0`) is registered right after the mount; when its value is not 0 at start-up the
+`disableOptionalSpeech` (default `0`) is registered after the mount, the console registry and the config reads; when its value is not 0 at start-up the
 `speech2.MPQ` mount is closed. The setting is read once.
 
 Addresses: `0x5aa2d0`, `0x402350`, `0x63db90`, `0x648ef0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x402361` calls `0x5aa2d0` and `0x402366` the mount. The open is `0x648dd0("Data\base.MPQ", 0x64, …)`
@@ -129,7 +126,7 @@ Patches override base archives by priority alone.
 
 Addresses: `0x655bf0`, `0x656012`, `0x655690`, `0x652780`, `0xc53fe0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6559bb` stores the priority, `0x655958` allocates with the zero flag (`push 8`); the insert loop is `0x656012` to
@@ -147,7 +144,7 @@ archive's copy is not used.
 
 Addresses: `0x6549a0`, `0x654cff`, `0x656690`, `0x654aea`, `0x654b7d`, `0x654d3a`, `0x654d53`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x654aa4` loads the head, `0x654ce7` the next record. A hit reads the in-memory bit `+0xb & 1` (`0x654cff` to
@@ -308,22 +305,22 @@ over every length to 40, the 1023-byte cap and a fuzz.
 
 ## Start-up order
 
-The start-up routine `0x402350` runs, in order: the mount, the console command registry, the CVar machinery, the
-CVar `disableOptionalSpeech`, the command line, `Wow.ini` for the region, language and country, the opening and parsing of
-`Startup_Strings.dbc`, the console device, the event library, the clock, the random seed `0x44ea80` and the start
-handler `0x402840`. The handler runs the object heaps, the font and texture caches and the M2 cache, then `0x402ad0`,
-which opens with the system message state, text drawing, the client's console commands, the `DBFilesClient` tables, the
-sound interface, the script engine, the interface types, the network handlers and the world, and ends by
-posting event 6.
+The start-up routine `0x402350` runs, in order: the command line, `base.MPQ`, the mount, the console command registry, the CVar machinery, the CVar `disableOptionalSpeech`, `Wow.ini`, `Startup_Strings.dbc`, the console device, the event library, the clock, the random seed `0x44ea80` and the creation of the interactive context. That call only registers the start handler `0x402840` on event 7 and the stop handler `0x403640` on event 4 (`core/loop`); neither runs there. The start event runs `0x402840`, and its last call `0x402ad0` ends by registering `0x403620` as the handler of event 6; nothing is posted.
 
-Addresses: `0x402350`, `0x402840`, `0x402ad0`, `0x44ea80`, `0x41f5e0`, `0x41fc90`
+Addresses: `0x402350`, `0x402840`, `0x402ad0`, `0x44ea80`, `0x41f5e0`, `0x41fc90`, `0x41fca0`, `0x403ba0`, `0x419c70`, `0x5aa2d0`, `0x422090`, `0x422265`, `0x422280`, `0x424f00`, `0x41fd46`, `0x403620`, `0x403640`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-The calls in order, with their sites: `0x403740` (`0x402366`), `0x6400e0`, `0x63d380`, `0x63d820`, `0x63db90`,
-`Wow.ini` (`0x4442c0` to `0x445900`), `0x6477a0` on `Startup_Strings.dbc` (`0x402586`), `0x63a230`, `0x41f550`, `0x42c940`,
-`0x42c010` (`0x402802`), `0x44ea80` (`0x40280d`), `0x41f5e0` (`0x402825`); in `0x402840`: `0x463910`, `0x442170`, `0x63b460`,
-`0x443300`, `0x448bd0`, eight CVars, `0x706dd0`, `0x402a00`, `0x402ad0`; in `0x402ad0`: `0x44cd10`, `0x409040`, `0x402ba0`, `0x53f4f0`,
-`0x408000`, `0x456fe0`, `0x7039e0`, `0x6ef070`, `0x46cc60`, `0x51ab30`, `0x61f5a0`, `0x476020`, `0x5ab1d0`, `0x554ff0`, `0x66f6c0`, `0x46a400`, `0x46b840`,
-`0x5142a0`, `0x50b6f0`, `0x6ec0e0`, `0x6c91a0`, and the jump to `0x41fc90`.
+The calls in order, with their sites: `0x403ba0` (`0x40235c`; it registers the client's 17 switches, then `0x419c70` registers the 15 base switches and parses, `storm/scmd`), `0x5aa2d0` (`0x402361`), `0x403740` (`0x402366`), `0x6400e0`, `0x63d380`, `0x63d820`, `0x63db90`, `Wow.ini` (`0x4442c0` to `0x445900`), `0x6477a0` on `Startup_Strings.dbc` (`0x402586`), `0x63a230`, `0x419ce0` (`0x4027ec`), `0x41f550`, `0x42c940`, `0x42c010` (`0x402802`), `0x44ea80` (`0x40280d`), `0x41f5e0` (`0x402825`). `0x41f5e0` calls `0x422090`, which calls `0x424f00`, the handler registration, at `0x422265` (event 7) and `0x422280` (event 4). `0x402ad0` ends with `edx` `0x403620` and `ecx` 6 and a jump to `0x41fc90`, which reaches `0x424f00` through `0x41fca0` (`0x41fd46`).
+
+## Start handler calls
+
+The start handler `0x402840` calls, in order: `0x419d20`, `0x463910`, `0x463290` (the object heaps), `0x442170` (the stock fonts), `0x63b460` (the console screen), `0x443300` (the asynchronous-read drain), `0x448bd0` (the texture cache), eight CVar registrations, `0x706dd0` (the M2 cache), `0x402a00` and `0x402ad0`. `0x402ad0` calls `0x44cd10` and `0x409040` (the system message state and layer), `0x402ba0` (the client's console commands), `0x53f4f0` (the `DBFilesClient` tables), `0x408000`, `0x456fe0` (sound), `0x7039e0` (the script engine), `0x6ef070` (the frame types), `0x46cc60`, `0x51ab30`, `0x61f5a0`, `0x476020`, `0x5ab1d0`, `0x61eef0`, `0x554ff0` (the network handlers), `0x554f40`, `0x66f6c0` (the world), two calls through slots (`0x402b25`, `0x402b30`), `0x46a400`, `0x63df50` only when a CVar's integer is 1 (`0x402b41`, `0x402b54`), `0x46b840`, `0x5142a0`, `0x50b6f0`, `0x6ec0e0` and `0x6c91a0`.
+
+Addresses: `0x402840`, `0x402ad0`, `0x419d20`, `0x463910`, `0x463290`, `0x442170`, `0x63b460`, `0x443300`, `0x448bd0`, `0x63db90`, `0x706dd0`, `0x402a00`, `0x44cd10`, `0x409040`, `0x402ba0`, `0x53f4f0`, `0x408000`, `0x456fe0`, `0x7039e0`, `0x6ef070`, `0x46cc60`, `0x51ab30`, `0x61f5a0`, `0x476020`, `0x5ab1d0`, `0x61eef0`, `0x554ff0`, `0x554f40`, `0x66f6c0`, `0x402b25`, `0x402b30`, `0x46a400`, `0x402b41`, `0x402b54`, `0x63df50`, `0x46b840`, `0x5142a0`, `0x50b6f0`, `0x6ec0e0`, `0x6c91a0`
+Confidence: verified
+Proof: two
+Test: none
+
+The sequence is read from the call sites of `0x402840` (`0x402840` to `0x4029ea`) and `0x402ad0` (`0x402ad0` to `0x402b8e`); the first seven calls of `0x402840` come before its eight `0x63db90` registrations.

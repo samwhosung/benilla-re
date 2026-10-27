@@ -24,7 +24,7 @@ answers 0.0. A digit is a byte, sign-extended, minus `'0'` below 10 unsigned.
 
 Addresses: `0x64aaa0`, `0x64aab1`, `0x64aab8`, `0x64aad7`, `0x64aae6`, `0x64ab05`, `0x64ab4b`, `0x64ab9b`, `0x64ab9f`, `0x64abaa`, `0x64abeb`, `0x64ac0a`, `0x64ac0f`, `0x64ac19`, `0x64ac2d`, `0x64ac48`, `0x64e850`, `0x7ffd74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtofloat_whole`
 
 `0x64aab1` passes 0x57 to `SErrSetLastError` and `0x64aab8` loads the float 0.0. `0x64aad7`
@@ -46,7 +46,7 @@ runtime's `0x73f940`; a value is a correctly rounded decimal only as far as its 
 
 Addresses: `0x64aaa0`, `0x64aac6`, `0x64aace`, `0x64ab12`, `0x64ab19`, `0x64ab31`, `0x64ab46`, `0x64ab59`, `0x64ab64`, `0x64ab76`, `0x64abb6`, `0x64abc6`, `0x64abe4`, `0x64ac3b`, `0x64ac40`, `0x64a670`, `0x64a680`, `0x73f940`, `0x80e5a0`, `0x802970`, `0xc52560`, `0xc52ba0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtofloat_whole`
 
 `0x64aac6` builds the table through `0x64a670` while the guard `0xc52ba0` is 0. `0x64ab12` is
@@ -70,7 +70,7 @@ the value past that range is not derived.
 
 Addresses: `0x64aaa0`, `0x64ab48`, `0x64ab98`, `0x64abee`, `0x64ac48`, `0x64ac4f`, `0x688b7c`, `0x688b96`, `0x68900c`, `0x689026`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtofloat_whole`
 
 The extent holds three stores of a float value, all `qword` and none `dword`: `fstp` at `0x64ab48`,
@@ -88,7 +88,7 @@ gives 0; a null `s` sets error 0x57 and gives 0.
 
 Addresses: `0x64ac60`, `0x64ac6a`, `0x64ac7b`, `0x64ac8f`, `0x64aca2`, `0x64aca5`, `0x64acbc`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtoint_whole`, `net::who_string_helpers`
 
 `0x64ac6a` passes 0x57 to `SErrSetLastError` and returns 0. `0x64ac7b` compares with `-`. The digit
@@ -104,7 +104,7 @@ test is `0x64ac8f`; `0x64aca2` and `0x64aca5` are `lea eax,[eax+eax*4]; lea eax,
 
 Addresses: `0x64ade0`, `0x64adea`, `0x64adf1`, `0x64adf7`, `0x64ae00`, `0x64ae0d`, `0x64ae11`, `0x64ae14`, `0x64ae1d`, `0x64ae20`, `0x64e850`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtounsigned_whole`
 
 `0x64adea` passes 0x57 to `SErrSetLastError` (`0x64e850`) and returns 0. The first byte is
@@ -126,7 +126,7 @@ nonzero `size`, sets error 0x57 and writes nothing. `eax` is no result.
 
 Addresses: `0x64ae50`, `0x64ae5b`, `0x64ae5f`, `0x64ae77`, `0x64ae79`, `0x64ae8d`, `0x64aeb0`, `0x64aeda`, `0x64af00`, `0x64af46`, `0x64af4b`, `0x64af4e`, `0x64af66`, `0x64af6a`, `0x64af73`, `0x64af77`, `0x64af7f`, `0x64af86`, `0x64a3c0`, `0x64e850`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtokenize_whole`
 
 `0x64ae5b` to `0x64ae77` test the cursor, `*cursor`, `out` with `size`, and the delimiters;
@@ -152,7 +152,7 @@ the string, and `""` gives an empty token with `*quoted` set.
 
 Addresses: `0x64ae50`, `0x64aebf`, `0x64aece`, `0x64af04`, `0x64af09`, `0x64af10`, `0x64af12`, `0x64af14`, `0x64af2a`, `0x64af30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrtokenize_whole`
 
 `0x64aebf` compares the byte with `"` when the delimiter-quote flag `edi` is set; `0x64aece` stores
@@ -174,7 +174,7 @@ limit gets no byte and its NUL is rewritten at its old end. `size` 0x7fffffff ha
 
 Addresses: `0x64a6f0`, `0x64a6fa`, `0x64a707`, `0x64a718`, `0x64a760`, `0x64a773`, `0x64a785`, `0x64a789`, `0x64a791`, `0x64a7a0`, `0x64a7a9`, `0x64a7ac`, `0x64a7b4`, `0x64a7c0`, `0x64a7c5`, `0x64a7c9`, `0x64a7d0`, `0x64e850`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrlen_whole`, `storm::sstrpack_whole`
 
 `0x64a6fa` and `0x64a773` pass 0x57 to `SErrSetLastError` (`0x64e850`). `SStrLen` tests the first byte at `0x64a707`
@@ -199,7 +199,7 @@ argument sets error 0x57 and gives null. `SStrStrI` (`0x64b540`) is the same loo
 
 Addresses: `0x64b4f0`, `0x64b4a0`, `0x64b4f4`, `0x64b4fb`, `0x64b501`, `0x64b50d`, `0x64b514`, `0x64b520`, `0x64b523`, `0x64b52a`, `0x64b52c`, `0x64b534`, `0x64b53a`, `0x64a480`, `0x64a4aa`, `0x40de80`, `0x64b540`, `0x64a6f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::sstrstr_whole`
 
 `0x64b4f4` and `0x64b4fb` test the two arguments and `0x64b501` passes 0x57 to `SErrSetLastError`. `0x64b50d` keeps the
@@ -225,7 +225,7 @@ null `text` sets error 0x57 and returns 0. Every caller passes flags 0 and seed 
 
 Addresses: `0x64af90`, `0x64af99`, `0x64afae`, `0x64afb9`, `0x64afd0`, `0x64afd2`, `0x64afe7`, `0x64aff3`, `0x64aff7`, `0x64b004`, `0x64b011`, `0x64b047`, `0x80e4e0`, `0x449ec0`, `0x449fc5`, `0x47ae43`, `0x49b792`, `0x6a323e`, `0x7a5274`, `0x7a66cf`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::str_hash`
 
 `0x64af99` refuses a null `text` (`push 0x57`, `SErrSetLastError`); `0x64afae` replaces a zero seed; `0x64afb9` tests
@@ -244,5 +244,5 @@ and no dword of the image, at any alignment, holds its address. The controls: th
 
 Addresses: `0x64a8e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
