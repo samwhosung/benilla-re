@@ -23,7 +23,7 @@ Test: none
 
 Addresses: `0x5bc3ee`, `0x5bc3f2`, `0x5bb430`, `0x43f5e3`, `0x43c23a`, `0x43c257`, `0x43c27b`, `0x43c29d`, `0x43c2bf`, `0x43c310`, `0x43c379`, `0x43c468`, `0x43b8b6`, `0x885400`, `0x438cb4`, `0x438e81`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5bc3ee` skips the dial for any state but 0 and `0x5bc3f2` calls `ClientLink::SetState` (`0x5bb430`) with 1. `0x43f5e3` returns 0 for a null object. `0x43c23a` and `0x43c257` test the host and the callback. `0x43c310` increments the id at `+0x61c` and repeats while it is 0 or a request in the list at `+0x628` has it. `0x43c379` returns 0 when the thread call returns 0. `0x43b8b6` is the thread's `SetEvent` on the event that `0x43c468` waits on. `0x43c27b` calls `SMemAlloc` for `0x34` bytes; a null result takes `0x43c29d`, which zeroes `esi`, and `0x43c2bf` stores `[esi+8]`. `0x885400` is stored at `0x438cb4` and cleared at `0x438e81`, its only writers.
@@ -67,7 +67,7 @@ A piece is copied at most 1,023 bytes into a 1,024-byte buffer and is not trimme
 
 Addresses: `0x43b908`, `0x43b915`, `0x43b947`, `0x43b94f`, `0x43f3ea`, `0x43f3fd`, `0x43f407`, `0x43f412`, `0x43f417`, `0x43f370`, `0x43ba18`, `0x43ba1e`, `0x43ba29`, `0x43bac4`, `0x43baec`, `0x43baef`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::dial_digit_piece`, `net::dial_resolve_thread`
 
 `0x43b908` pushes `0x400` as the size of the `SStrCopy` at `0x43b915`. The compares at `0x43b947` and `0x43b94f` are signed, so a byte of `0x80` to `0xff` is below `0x30`. `0x43f3ea` to `0x43f3f7` take the distance to the colon plus 1, capped at `0x20`, as the size of the `SStrCopy` into a 32-byte local (`0x43f3fd`), which leaves at most 31 bytes and a NUL; `htons` (ordinal 9, `0x43f417`) takes the port's low word. `0x43f412` stores family 2 and the last eight bytes are zeroed; `0x43f370` writes the same layout for a name's addresses. A null result of `gethostbyname` returns to the loop (`0x43ba18`), as does a miss at `0x43ba1e` or `0x43ba29` (`h_addrtype`, `h_length`). `0x43bac4` to `0x43baec` append an entry, and `0x43baef` repeats while the next address pointer is not null.
@@ -78,7 +78,7 @@ The text `ClientLink::Connect` resolves is the value of the CVar `realmList`, wh
 
 Addresses: `0x5ab4b0`, `0x5ab57a`, `0x5ab586`, `0x5ab680`, `0x5ab6bf`, `0x5b2fb0`, `0x5b2fbe`, `0x5b300b`, `0x5b3016`, `0x5b3022`, `0x5b2200`, `0x5b2219`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5ab57a` calls `0x5ab680` with `ecx` 0 and `0x5ab586` passes its result to `0x5b2fb0`. `0x5ab6bf` loads the CVar's value text, `[handle+0x20]`. `0x5b2fbe` `jne` returns when `[esi+5]` is set. `0x5b300b` is the listener's slot 4 with state 1 and the names `LOGIN_STATE_CONNECTING` and `LOGIN_OK`. `0x5b3016` substitutes the default for a null text, and `0x5b3022` calls `0x5bc3e0`. `0x5b2200` stores 1 at `+0xc` and calls slot 3 of its owner before `0x5b2219`.
@@ -89,7 +89,7 @@ The thread adds each entry, under the OsTcp object's lock (an event at `+0x618` 
 
 Addresses: `0x43b8e9`, `0x43ba5a`, `0x43ba6a`, `0x43bafe`, `0x43bb47`, `0x43bb4a`, `0x43bb5e`, `0x43ae20`, `0x43b5bf`, `0x43b5e8`, `0x43b5f5`, `0x43b61e`, `0x43b625`, `0x43b810`, `0x43b790`, `0x439800`, `0x439859`, `0x43985e`, `0x64bd40`, `0x43c200`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::dial_resolve_thread`
 
 `0x43b8e9` and `0x43ba5a` return when the request is not found. `0x43ba6a` `je 0x43bafe` leaves on a null first pointer with `esi` still 0, so the flag store at `0x43bb47` is skipped; `0x43bb4a` unlocks and `0x43bb5e` wakes the OsTcp thread only after the flag. `0x43b5bf` tests `+0x20` of the head of the list at the object's `+0x628`; a set flag reaches `0x43b5e8`, which links the request into a local list after `0x441170` unlinks it, and `0x43b5f5` decrements the count at `+0x614`. `0x43b61e` calls `0x43b810`, which pushes `+0x1c`, `+0x28` and `+0x2c` and calls `[request+0x18]`; `0x43b625` calls `0x43b790`. `0x439859` pushes `0x43ae20` for the thread `0x439800` makes with the name `OsTcp_Base`; `0x64bd40` calls `CreateThread`. The test runs the resolver side whole.
@@ -100,7 +100,7 @@ The OsTcp thread's scan of the request list holds the lock at `+0x618` and tests
 
 Addresses: `0x43b580`, `0x43b588`, `0x43b5aa`, `0x43b5b0`, `0x43b5bf`, `0x43b5c4`, `0x43b5fd`, `0x43ba6a`, `0x43b8d2`, `0x43bb29`, `0x43bb47`, `0x43c43a`, `0x43c452`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x43b580` loads the count at `+0x614` and `0x43b588` skips the scan at 0. `0x43b5aa` waits on `+0x618` with no timeout. `0x43b5b0` loads the head, `[edi+0x628]`; an end marker or null leaves (`0x43b5b9`, `0x43b5bd`). `0x43b5bf` loads the head's `+0x20`, and `0x43b5c4` `je 0x43b5b0` returns to the head load with the lock still held. Only a set flag goes on, and the loop ends at `0x43b5fd`, which releases the lock. The resolver waits on the same lock at `0x43b8d2` and `0x43bb29`, before it stores the flag at `0x43bb47`. `0x43c43a` to `0x43c452` link a new request in at the head of the list.
@@ -144,7 +144,7 @@ A failed lookup stores 0, so the connect goes to 0.0.0.0. The hostent's type and
 
 Addresses: `0x5b6e6d`, `0x5b6e8d`, `0x5b6e6f`, `0x5b6e86`, `0x5b6ea4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::dial_connect_host`
 
 `0x5b6e8d` stores 0 for a null `gethostbyname` result. `0x5b6e6d` loads the first pointer of `h_addr_list` and `0x5b6e6f` reads a byte through it with no test. The function reads `[ebp+8]` and `[ebp+0xc]` only, never `[ebp+0x10]`, and `0x5b6ea4` sets the result 1. The test runs the function whole with a hostent of type 23 and length 16.

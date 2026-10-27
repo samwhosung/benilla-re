@@ -22,7 +22,7 @@ Roots: `0x5aab20`, `0x5aaba0`, `0x5aabb0`, `0x5aabe0`, `0x5aac50`, `0x5aae20`, `
 
 Addresses: `0x5aa400`, `0x5aa440`, `0x5aa920`, `0x5aaa50`, `0x5aaba0`, `0x5aab80`, `0x5aac30`, `0x5ab0e0`, `0x5ab300`, `0x5aa854`, `0x85cae8`, `0x5aab90`, `0x5aac43`, `0x5ab0f3`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5aa400` is `mov [ecx+0x1b20],eax`, `mov [ecx+0x1b10],edx`, `mov [ecx+0x1b14],eax`, `mov [ecx+0x1b08],0`, then `0x5aa440` with 1. The operation names are the strings `0x5aa440` selects through the jump table `0x5aa854`; the code names are `0x85cae8`. `0x5aaba0` ignores its four stack arguments (`ret 0x10`). `0x5aac30` and `0x5ab0e0` respectively compare the reply byte with `0x2e` and `0x39` (`cmp al,0x2e`, `cmp al,0x39`; `sete`) and call `0x5aa920(flag, byte)`; `0x5ab300` calls it with (1, `0x2b`) or (0, `0x2c`). A reply byte outside the code table is stored as it is; `GetStatus` prints its number (`session`). Of the 16 call sites of `0x5aa920`, found by a scan of `call` and `jmp` (the same scan finds the 4 of `0x5ab1a0`), exactly three pass a server byte as the code: `0x5aab90`, `0x5aac43` and `0x5ab0f3`.
@@ -33,7 +33,7 @@ Test: none
 
 Addresses: `0x5aabb0`, `0x5aac50`, `0x5ab100`, `0x5aae20`, `0x5aab20`, `0x5aaa50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Each begin is followed by `cmp [reg+0x1b00],0`; the zero branch is `push 4; call 0x5aaa50` (`0x5aabca`, `0x5aac6e`, `0x5ab11e`, `0x5aae3b`) and a return before any packet is built. In `0x5aab20`, `0x5aab4f` loads `+0x1b00` and `0x5aab59` calls `0x5aa920(1, 5)`.
@@ -44,7 +44,7 @@ Each begin is followed by `cmp [reg+0x1b00],0`; the zero branch is `push 4; call
 
 Addresses: `0x5ab4b0`, `0x5ab4b4`, `0x5ab4f2`, `0x5ab5d0`, `0x5ab5e8`, `0xc2811c`, `0x5b3250`, `0x5b32b0`, `0x5b30b0`, `0x5b2fb0`, `0xc28118`, `0xc28120`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5ab4b4` loads `0xc2811c`; the destroy path calls `0x5b3250` and frees (`0x646430`) at `0x5ab4d8` to `0x5ab4e6`, stores 0 to `0xc28120` and clears the byte (`0x5ab4f2`). `0x5ab507` allocates `0x1f8` and `0x5ab52d` `0x14`; `0x5ab53f` stores the vtable. `0x5ab573` calls `0x5b30b0` with the account and password, `0x5ab57a` `0x5ab680` with `ecx` 0, `0x5ab586` `0x5b2fb0`. `0x5ab5e8` is the only store of 1 to the byte.
@@ -64,20 +64,20 @@ Test: none
 
 `0x5ab680` returns the text of the CVar `realmList`. On first use, or when `ecx` is non-zero, it registers the CVar with the default `us.logon.worldofwarcraft.com:3724` and the help text "Address of realm list server" and loads `realmlist.wtf`; otherwise it returns the held value. `0x5ab7d0` returns `realmName`, registering it on first use with an empty default and "Last realm connected to". `0x5ab930` returns record `i` of the realm holder `0xc28118` (stride `0x134`), creating the holder first when it is absent, or null when `i` is not below the holder's count. `0x5ab9a0` returns `0xc27fb8`, the selected-realm copy, when the byte `0xc28134` is non-zero, else null.
 
-Addresses: `0x5ab680`, `0x5ab7d0`, `0x5ab930`, `0x5ab9a0`, `0xc2812c`, `0xc28130`, `0xc28134`, `0xc27fb8`
+Addresses: `0x5ab680`, `0x5ab691`, `0x5ab69a`, `0x5ab7d0`, `0x5ab7db`, `0x63dc1a`, `0x63dc26`, `0x5ab930`, `0x5ab9a0`, `0xc2812c`, `0xc28130`, `0xc28134`, `0xc27fb8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x5ab680` tests the CVar handle `0xc2812c` and `ecx` (`0x5ab685`, `0x5ab689`): a handle with `ecx` zero jumps to the load of `[eax+0x20]`, the value text. Otherwise `0x63db90` registers the CVar with flags 6 and `0x63d820` reads `realmlist.wtf`. `0x5ab7d0` does the same for the handle `0xc28130`, the name `realmName` and the help text "Last realm connected to". `0x5ab930` compares the index with `[ecx+8]` unsigned (`0x5ab97a`) and returns `index * 0x134 + [ecx+0xc]`. `0x5ab9a0` is `neg al; sbb eax,eax; and eax,0xc27fb8` on the byte.
+`0x5ab680` tests the CVar handle `0xc2812c` and `ecx` (`0x5ab685`, `0x5ab689`): a handle with `ecx` zero jumps to the load of `[eax+0x20]`, the value text. Otherwise `0x63db90` registers the CVar with flags 0 and category 6 (`0x5ab691` pushes the category, `0x5ab69a` the flags; `0x63dc1a` to `0x63dc26` OR the flags into the record's `+0x1c`) and `0x63d820` reads `realmlist.wtf`. `0x5ab7d0` does the same for the handle `0xc28130`, the name `realmName`, the help text "Last realm connected to" and the same flags and category (`0x5ab7db`). `0x5ab930` compares the index with `[ecx+8]` unsigned (`0x5ab97a`) and returns `index * 0x134 + [ecx+0xc]`. `0x5ab9a0` is `neg al; sbb eax,eax; and eax,0xc27fb8` on the byte.
 
 ## Character list request
 
-`0x5aabb0` begins operation 6 and sends `CMSG_CHAR_ENUM` (`0x37`, no body) through `0x5b4690` when linked. The reply, `SMSG_CHAR_ENUM`, is read by `0x5b42a0`; on return it calls slot 4 of the response object, `0x5ab300`, with the connection, the record array and a flag, 1 when the packet was read to its end. `0x5aabe0(callback, argument)` calls `callback(record, argument)` with `ecx` the record and `edx` the argument for each of the held records, stride `0x110`, and returns their count.
+`0x5aabb0` begins operation 6 and sends `CMSG_CHAR_ENUM` (`0x37`, no body) through `0x5b4690` when linked. The reply, `SMSG_CHAR_ENUM`, is read by `0x5b42a0`; on return it calls slot 4 of the response object, `0x5ab300`, with the connection, the record array and a flag, 1 when the packet was read to its end with a count of at most 10. `0x5aabe0(callback, argument)` calls `callback(record, argument)` with `ecx` the record and `edx` the argument for each of the held records, stride `0x110`, and returns their count.
 
 Addresses: `0x5aabb0`, `0x5b4690`, `0x5aabe0`, `0x5b42a0`, `0x5ab300`, `0x80a3f4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5b4690` puts `0x37` through `0x418190` and sends with `0x5379a0`. `0x5b4574` calls `[vtable+0x10]` of the object at `+0x1adc` with the connection, `&conn+0x1ae0` and `esi`; slot 4 of `0x80a3f4` is `0x5ab300`. `0x5aabe0` loops `[ebx+0x1ae4]` times over `[ebx+0x1ae8] + 0x110·i` (`0x5aac00` to `0x5aac15`); the callback is `call [ebp+8]`.
@@ -88,7 +88,7 @@ Test: none
 
 Addresses: `0x5b42a0`, `0x5b42d5`, `0x5b4385`, `0x5b44b2`, `0x5b44e8`, `0x5b4840`, `0x5b47b0`, `0x5b47f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The reads are the getters `0x4190b0` (guid), `0x4191b0` (string, cap `0x30`), `0x418cb0` (byte), `0x418eb0` and `0x419130` (dword, float) in the order above (`0x5b4398` to `0x5b44ab`). `0x5b42d5` `cmp [ebp-1],0xa; jbe` zeroes the count and sets a flag that forces the flag argument to 0. The record is `0x110` bytes (`0x5b4840`, `0x5b4385` `imul esi,esi,0x110`). `0x5b44e8` tests the byte at `+0x108`, the ninth of the first run: when it is zero it becomes 1 and `+0x10a` is set to 1; otherwise `+0x10a` is 0. `0x5b4523` to `0x5b4563` free and zero the array when the end check fails. Roles of the fields are in `glue/select`.
@@ -99,7 +99,7 @@ The reads are the getters `0x4190b0` (guid), `0x4191b0` (string, cap `0x30`), `0
 
 Addresses: `0x5aac50`, `0x5ab100`, `0x5b4590`, `0x5b45c0`, `0x5aac30`, `0x5ab0e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5aac9f` puts `0x36` with `0x418190`, `0x5aacab` puts the name with `0x418430` and `0x5aacb9` to `0x5aad29` nine `0x418070` bytes from `[esi+0x30]` to `[esi+0x38]`. `0x5ab12f` puts `0x38` and `0x5ab15e` the guid with `0x418370`. `0x5b45aa` and `0x5b45da` are `call [edx+0x44]` and `call [edx+0x48]` after `0x418cb0` reads the byte; the vtable `0x80a398` holds `0x5aac30` and `0x5ab0e0` there.
@@ -110,7 +110,7 @@ Test: none
 
 Addresses: `0x5aae20`, `0x5b4700`, `0x5b45f0`, `0x5aad70`, `0x5aaf40`, `0x5aae70`, `0x401ee0`, `0x5aae08`, `0x5aad97`, `0x5aad9c`, `0x80a3e4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5aad97` `cmp eax,5; ja 0x5aadf7` on the byte less 1, then `jmp [eax*4+0x5aae08]`; the six legs push `0x3e`, `0x3f`, `0x40`, `0x42`, `0x43`, `0x44` and call `0x5aaa50`; `0x5aadf7` pushes `0x41`. `0x5aad70` calls `0x5aaf40` first, which stores 0 at `+0x1b04` and, when `+0x1b18` is set, calls `0x5aae70(0)`. The vtable slot `0x80a3e4` holds `0x5aad70`; the image has no other reference to it and no call. `0x5aad8d` is `call 0x401ee0` with `ecx = edx = 1` and 1 on the stack. `0x5b45f4` reads the byte over the low byte of the packet-store argument slot, so a body-less packet hands `0x5aad70` the low byte of that pointer. Operation 8 stays the current operation: `0x5aa920` writes the code, the failed result and the done flag, and leaves `+0x1b10` at 8.
@@ -121,7 +121,7 @@ Test: none
 
 Addresses: `0x5ab000`, `0x5aaff0`, `0x5aaf80`, `0x5ab0d0`, `0x5afd30`, `0x5ab049`, `0x5ab07c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5ab00d` loads `+0x1b1d`; with it set and `bl` (instant) zero `0x5ab01a` returns. `0x5ab020` compares `+0x1b18` with 0 and returns when equal. `0x5ab049` calls `0x5afd30` (the account-data flush, `accountdata`) before the packet. `0x5ab062` `neg bl; sbb ebx,ebx; add ebx,0x4b` gives `0x4a` for a non-zero `bl` and `0x4b` for zero. A connection that is not the current one only runs `0x5aaf40`.
@@ -132,7 +132,7 @@ Test: none
 
 Addresses: `0x5b4630`, `0x5b4620`, `0x5b4680`, `0x5aaef0`, `0x5aaeb0`, `0x5aaf60`, `0x401560`, `0x5aaf11`, `0x5aaf21`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The slots are `0x80a398` +0x50 (`0x5aaeb0`), +0x54 (`0x5aaef0`), +0x58 (`0x5aaf60`), called at `0x5b4622`, `0x5b4669` and `0x5b4682`. `0x5b4630` reads a dword with `0x418e30` and a byte with `0x418cb0`. In `0x5aaef0`, `0x5aaefb` tests the result; zero reaches `0x5aaf02`, which tests the flag, then `0x5aaf11` adds `0x114` to `(+0x1b1c != 0)`: event 276 `PLAYER_CAMPING` or 277 `PLAYER_QUITING` through `0x703e50`. `0x5aaf21` pushes `0x180` for `0x496720`. `0x5aaf6d` loads `0x116`, event 278 `LOGOUT_CANCEL`. `0x5aaecf` loads `+0x1b1c` after the teardown call and `0x5aaee3` jumps to `0x401560`.
@@ -143,7 +143,7 @@ The slots are `0x80a398` +0x50 (`0x5aaeb0`), +0x54 (`0x5aaef0`), +0x58 (`0x5aaf6
 
 Addresses: `0x5abc10`, `0x5abd00`, `0x429ff0`, `0x85cc34`, `0x5abc64`, `0x5abca1`, `0x5abcac`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The prefix test is `0x64a4c0` (case-insensitive) against `0x85d6bc` for its length (`0x5abc2e`). Each later character must be `/`, `.`, `-` or satisfy `_isalpha` (`0x5abc64`; mask `0x103`), so digits are rejected, in the path as well as the host. The host is copied until a NUL, `/`, or the end of the 128-byte buffer (`0x5abc78` to `0x5abc9c`); the terminator is then stored at `[ecx]`, which is the saved frame pointer's low byte when 128 characters were copied. The table `0x85cc34` holds ten string pointers (`cmp esi,0x28`); `0x5abcac` tests a leading `*`, finds the first `.` with `0x64a3f0` and compares the rest with the pattern from its second byte, both with the length bound `0x7fffffff`, so the comparison covers the whole string.
@@ -161,7 +161,7 @@ copy, gives above 32.
 
 Addresses: `0x429ff0`, `0x42a000`, `0x42a014`, `0x42a01c`, `0x42a04b`, `0x42a050`, `0x42a057`, `0x42a059`, `0x42a08e`, `0x42a096`, `0x42a0b3`, `0x42a0c7`, `0x42a0f3`, `0x42a104`, `0x42a129`, `0x42a138`, `0x42a15e`, `0x42a166`, `0x801490`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `ecx` is the URL; `0x42a000` and `0x42a005` test it, `GetActiveWindow` at `0x42a007` gives the window
@@ -181,7 +181,7 @@ the `> 32` test, `0x42a0b3` a 7-byte `repz cmpsb` of `esi`, the URL as passed, a
 
 Addresses: `0x5abd20`, `0x5abd40`, `0x5abd50`, `0x5abd90`, `0x5abdc0`, `0x5abd70`, `0x5abd80`, `0x6c9ae0`, `0xc27d80`, `0xc27d88`, `0xc27d08`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::connection_check_name`
 
 `0x5abd20` is `test ecx,ecx; jle`, `cmp ecx,0x53; jge`, then `mov eax,[ecx*4+0x85cae8]`; the other branch returns `0x882748`, an empty string. `0x5abd50` calls `0x6c9ae0` with the locale `[0xc0e080]` in `ecx` and the name in `edx`, then `add eax,0x45`; the codes from `0x45` (`CHAR_NAME_NO_NAME`) to `0x52` (`CHAR_NAME_SUCCESS`) are the validator's results from 0 up. `0x5abd90` is `rep movs` of `0x44` dwords to `0xc27d80`. `0x5abdc0` is `neg al; sbb eax,eax; and eax,0xc27d88`.
@@ -192,21 +192,21 @@ The response object `0x80a3f4` is the connection's `+0x1adc` listener. Slot 2 is
 
 Addresses: `0x80a3f4`, `0x5ab280`, `0x5ab2f0`, `0x5ab300`, `0x5b4260`, `0x46ae50`, `0x5ab288`, `0x5ab2a6`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x5ab286` `cmp al,0x1b`; the wait branch pushes `[esi+0x1b20]`, `0x1b` and `0xa` for `0x5aa400` and then `ecx = [esi+0x1af0]` for `0x46ae50`. `0x5ab2f0` is `mov ecx,6; call 0x703e50`. `0x5b4260` calls `0x51da70` on the data store, then slot 3 of the object (`0x5b4290`).
+`0x5ab286` `cmp al,0x1b`; the wait branch pushes `[esi+0x1b20]`, `0x1b` and `0xa` for `0x5aa400` and then `ecx = [esi+0x1af0]` for `0x46ae50`. `0x5ab2f0` is `mov ecx,6; call 0x703e50`. `0x5b4260` calls slot 5 (`+0x14`) of the listener, when one is set, with the string "SMSG_ADDON_INFO" (`0x5b427c`), then `0x51da70` on the data store, then slot 3 of the object (`0x5b4290`).
 
 ## Telemetry record
 
-At start-up `0x5aa2d0` clears 32 bytes at `0xc27e90` and reads the 28-byte `telemetry.dat` from `Data\base.MPQ`; on success it copies the bytes to `0xc27e94`, stores the word `0x14` at `0xc27e90` and sets the byte `0xc28135`. `0x5ab9b0`, slot 1 of the realm holder's vtable `0x803808`, returns 0 while that byte is clear; otherwise it appends the 32-byte record to the logon object's array (capacity `+4`, count `+8`, pointer `+0xc`, step `+0x10`), sets its first dword to 1 and returns 1. A full array grows to a multiple of its step: the stored one, else 8 from 8 records on (then stored), else the next power of two. The logon proof sends the count and records (`login`).
+At start-up `0x5aa2d0` clears 32 bytes at `0xc27e90` and reads the 28-byte `telemetry.dat` from `Data\base.MPQ`; on success it copies the bytes to `0xc27e94`, stores the word `0x14` at `0xc27e90` and sets the byte `0xc28135`. `0x5ab9b0`, slot 1 of the realm holder's vtable `0x803808`, returns 0 while that byte is clear; otherwise it appends the 32-byte record to the logon object's array (capacity `+4`, count `+8`, pointer `+0xc`, step `+0x10`), sets the array's flag dword `+0`, not the record's, to 1 and returns 1. A full array grows to a multiple of its step: the stored one, else 8 from 8 records on (then stored), else the next power of two. The logon proof sends the count and records (`login`).
 
 Addresses: `0x5aa2d0`, `0x5ab9b0`, `0xc27e90`, `0xc28135`, `0x803808`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::telemetry_append`
 
-`0x5aa2d6` zeroes 8 dwords at `0xc27e90`; `0x5aa2f2` is the archive open, `0x5aa31f` the file open; `0x5aa32f` `cmp [ebp-4],esi` requires a read length of `0x1c`; `0x5aa334` to `0x5aa350` copy 7 dwords, set `0xc28135` and the word `0x14`. `0x5ab9b4` loads `0xc28135`. `0x5abab4` to `0x5abac7` store the count, the first dword 1 and `rep movs` 8 dwords from `0xc27e90`. The byte and the record have no other writer. `0x5ab9e1` to `0x5aba0c` pick the step, clearing low bits (`lea eax,[esi-1]; and eax,esi`) below 8; `0x5ab9fe`, a step of 1 when that leaves 0, cannot run: only a count of `0xffffffff` makes the needed count 0, and 0 is never above the capacity, so `0x5ab9d4` `jbe` skips the growth. `0x5aba15` rounds up by `div`; `0x5aba3f` reallocates with `0x10`, and on null `0x5aba54` allocates, `0x5aba86` copies 8 dwords a record and `0x5abaa1` frees the old block.
+`0x5aa2d6` zeroes 8 dwords at `0xc27e90`; `0x5aa2f2` is the archive open, `0x5aa31f` the file open; `0x5aa32f` `cmp [ebp-4],esi` requires a read length of `0x1c`; `0x5aa334` to `0x5aa350` copy 7 dwords, set `0xc28135` and the word `0x14`. `0x5ab9b4` loads `0xc28135`. `0x5abab4` to `0x5abac7` store the count, the array's `+0` dword 1 (`mov [ebx],1`, `ebx` the array argument) and `rep movs` 8 dwords from `0xc27e90`, whose first dword is the word `0x14`. The byte and the record have no other writer. `0x5ab9e1` to `0x5aba0c` pick the step, clearing low bits (`lea eax,[esi-1]; and eax,esi`) below 8; `0x5ab9fe`, a step of 1 when that leaves 0, cannot run: only a count of `0xffffffff` makes the needed count 0, and 0 is never above the capacity, so `0x5ab9d4` `jbe` skips the growth. `0x5aba15` rounds up by `div`; `0x5aba3f` reallocates with `0x10`, and on null `0x5aba54` allocates, `0x5aba86` copies 8 dwords a record and `0x5abaa1` frees the old block.
 
 ## Sending a packet
 
@@ -214,7 +214,7 @@ Test: `net::telemetry_append`
 
 Addresses: `0x5ab630`, `0x5ab490`, `0x5379a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x5ab630` calls `0x5ab490` and returns when the result is null (`0x5ab635`, `0x5ab637`); otherwise it pushes the store, calls `0x5ab490` again to load `ecx`, and calls `0x5379a0` (`0x5ab641`).

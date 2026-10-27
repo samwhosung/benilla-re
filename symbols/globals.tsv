@@ -422,7 +422,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	one	core/events#observer-classes
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
-0x801490	const uint8_t[256]	s_hexDigitValue		os	Holds each byte's hex digit value: 0 to 15 for 0-9, A-F and a-f, and 0 for every other byte	verified	one	net/connection#opening-a-url
+0x801490	const uint8_t[256]	s_hexDigitValue		os	Holds each byte's hex digit value: 0 to 15 for 0-9, A-F and a-f, and 0 for every other byte	verified	two	net/connection#opening-a-url
 0x8015a8	const float	s_infinityClock		core	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
 0x8015ac	const float	s_piClock		core	Holds pi, 0x40490fdb, which the clock file doubles into 2 pi at start-up	verified	one	core/time#static-initializers
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
@@ -719,7 +719,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a2a8	uint32_t[2]	s_d3dCullMode		gx	Holds the D3DCULL value for cull off and on: none, clockwise	verified	one	gx/renderstate#cull-fog-and-masks
 0x80a2d8	void *[4]	StatusSink::vftable		image	Holds the status sink vtable: the deleting destructor and three more slots	verified	one	image/overview#initializers-and-statics
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
-0x80a3f4	void *[14]	s_responseObjectVtable		net	Holds the slots of the response object the world connection notifies	verified	one	net/connection#response-object
+0x80a3f4	void *[14]	s_responseObjectVtable		net	Holds the slots of the response object the world connection notifies	verified	two	net/connection#response-object
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
 0x80a658	void *[23]	RealmConnection::vftable		net	Holds RealmConnection's vtable, six slots of it pure virtual	verified	one	net/dispatch#dispatch
 0x80a700	double	s_latencyScale		net	Holds -1/32768, the factor that scales rand() into the simulated delay	verified	one	net/wire#simulated-latency
@@ -2679,7 +2679,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884ef8	void *	s_threadRecords		os	Holds the list's last link (sentinel previous) of the registered thread records	verified	one	core/threads#engine-thread-records
 0x884f00	uint32_t	s_threadRecordCount		os	Holds the number of registered thread records	verified	one	core/threads#engine-thread-records
 0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
-0x885400	OsTcp *	s_osTcp		os	Holds the OsTcp object, set by the OsTcp start-up and null before it and after the shutdown	verified	one	net/dial#logon-dial-start
+0x885400	OsTcp *	s_osTcp		os	Holds the OsTcp object, set by the OsTcp start-up and null before it and after the shutdown	verified	two	net/dial#logon-dial-start
 0x885604	uint32_t	s_presentSuppressed		unassigned	Holds the flag that skips the frame pass's present block while a movie plays	verified	one	gx/capture#capture-request-and-frame-order
 0x885608	float	s_framePassElapsed		unassigned	Holds the frame time summed since the last frame pass, which the pass hands its layers and clears	verified	two	core/framepass#elapsed-time
 0x88560c	void *	s_screenshotCallback		unassigned	Holds the completion callback of the pending screenshot request, or 0	verified	one	gx/capture#capture-request-and-frame-order
@@ -3872,18 +3872,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc21cd0	uint8_t[24624]	s_fsErrorRgb565		image	Holds the error rows of the RGB565 dither	verified	one	image/convert#dithered-16-bit-palettes
 0xc27d08	char[64]	s_logonAccountName		net	Holds the account name the logon authenticated with	verified	one	net/connection#status-text-and-names
 0xc27d80	SelectedCharacterRecord	s_selectedCharacter		net	Holds the selected character's list entry from the last EnterWorld, empty before it	verified	one	ui/unitplayer#the-selected-character-record
-0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	one	net/connection#telemetry-record
+0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	two	net/connection#telemetry-record
 0xc27eb8	uint32_t			net	Holds data whose address ClientConnection::PollStatus takes; not read here	inferred	none	
 0xc27fb8	uint8_t[308]	s_selectedRealm		net	Holds the selected realm's 308-byte record; its address text is at +0x109	verified	one	net/session#connecting
 0xc28114	void *	s_clientServices		unassigned	Holds the client services object, at +0x1ad8 of which ClntObjMgrCreate stores the object block	verified	one	objectlayer/manager#manager-block
 0xc28118	void *	s_realmList		net	Holds the realm list the realm selection searches	verified	one	net/session#connecting
-0xc2811c	uint8_t	s_logonRebuild		net	Holds the byte that makes the next logon destroy and rebuild the logon object	verified	one	net/connection#starting-the-logon
+0xc2811c	uint8_t	s_logonRebuild		net	Holds the byte that makes the next logon destroy and rebuild the logon object	verified	two	net/connection#starting-the-logon
 0xc28120	void *	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	verified	one	net/login#survey-id
 0xc28128	ClientConnection *	s_clientConnection		net	Holds the session, the one live NetClient	verified	one	net/session#connecting
-0xc2812c	void *	s_realmListCVar		net	Holds the handle of the realmList CVar once registered	verified	one	net/connection#realm-selection
-0xc28130	void *	s_realmNameCVar		net	Holds the handle of the realmName CVar once registered	verified	one	net/connection#realm-selection
-0xc28134	uint8_t	s_realmSelected		net	Holds the byte that says the selected-realm copy is valid	verified	one	net/connection#realm-selection
-0xc28135	uint8_t	s_telemetryPresent		net	Holds the byte set once telemetry.dat has been read	verified	one	net/connection#telemetry-record
+0xc2812c	void *	s_realmListCVar		net	Holds the handle of the realmList CVar once registered	verified	two	net/connection#realm-selection
+0xc28130	void *	s_realmNameCVar		net	Holds the handle of the realmName CVar once registered	verified	two	net/connection#realm-selection
+0xc28134	uint8_t	s_realmSelected		net	Holds the byte that says the selected-realm copy is valid	verified	two	net/connection#realm-selection
+0xc28135	uint8_t	s_telemetryPresent		net	Holds the byte set once telemetry.dat has been read	verified	two	net/connection#telemetry-record
 0xc28168	FriendList *	s_friendList		net	Holds the FriendList object, created at each world entry and freed at teardown	verified	one	net/friends#friend-list-object
 0xc2817c	uint32_t[14]	s_whoSortChain		net	Holds seven pairs of sort key and direction for the who results	verified	one	net/who#who-sort-keys
 0xc281b8	WhoResult[50]	s_whoResults		net	Holds the 50 who result records of 160 bytes	verified	one	net/who#who-list-reply
