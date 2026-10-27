@@ -1541,9 +1541,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419e10	10			client			Runs its object file code not read here	inferred	none		
 0x419e20	6			client			Runs its object file code not read here	inferred	none		
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
-0x419ed0	295	CStatus::Prepend		client			Puts a formatted line of a severity first in a status	verified	one	ui/framexml#the-load-status-and-its-log	
-0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status, raising its highest severity	verified	one	ui/framexml#the-load-status-and-its-log	
-0x41a100	74	CStatus::Merge		client	orchestration	void __thiscall (CStatus *this, CStatus *other)	Adds each line of another status through this status's own Add, the line's text as the format	verified	one	ui/framexml#merging-one-status-into-another	
+0x419ed0	295	CStatus::Prepend		client			Puts a formatted line of a severity first in a status	verified	two	ui/framexml#the-load-status-and-its-log	
+0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status, raising its highest severity	verified	two	ui/framexml#the-load-status-and-its-log	
+0x41a100	74	CStatus::Merge		client	orchestration	void __thiscall (CStatus *this, CStatus *other)	Adds each line of another status through this status's own Add, the line's text as the format	verified	two	ui/framexml#merging-one-status-into-another	
 0x41a150	23	CStatus::IsEmpty	idb	client			Runs Status.cpp code not read here	inferred	none		
 0x41a170	126	CStatus::Clear	idb	client			Runs Status.cpp code that calls SMemFree; not read here	inferred	none		
 0x41a1f0	117	CStatus::GetErrorStr	idb	client			Runs Status.cpp code that calls SStrLen, SStrCopy; not read here	inferred	none		
@@ -6622,7 +6622,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x484c90	5	InitCatalog484ca0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x484ca0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x484ca0	14184	InitCatalog484ca0		ui	orchestration	void __cdecl (void)	Fills the 465 message catalog rows with key, kind, sound name, voice id and chat type	verified	one	ui/auctionmessages#message-routes	
 0x488410	38	SetCatalogRow		ui	primitive	void __thiscall (void *this, const char *key, uint32_t kind, const char *sound, uint32_t voice, uint32_t chatType)	Stores one message catalog row: key, kind, sound name, voice id and chat type	verified	one	ui/auctionmessages#message-routes	
-0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration	int __fastcall (lua_State *L)	Sets the FrameXML trace level from a number argument and returns the level	verified	one	ui/framexml#the-load-status-and-its-log	
+0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration	int __fastcall (lua_State *L)	Sets the FrameXML trace level from a number argument and returns the level	verified	two	ui/framexml#the-load-status-and-its-log	
 0x4884a0	44	GameScriptGetBuildInfo		ui	orchestration	int __fastcall (lua_State *L)	Returns the strings 1.12.1, 5875 and Sep 19 2006	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x4884d0	8	Script::ReloadUI	idb	ui	orchestration	int __fastcall (lua_State *L)	Requests an interface reload through 0x491380 and returns nothing	verified	one	ui/bindings#reloading-the-interface	
 0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration	int __fastcall (lua_State *L)	Adds a name to the flat saved variables, raising unless the context word is 0	verified	one	ui/savedvariables#saved-variables-written	
@@ -7030,7 +7030,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4958a0	61	RestorePlayerControlOnArrival		ui	orchestration	void __cdecl (void)	Sets the player-control flag to 1 without an event and makes the active player the active mover	verified	one	ui/gameui#control-back-on-arrival	
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
 0x495920	24	CancelCastAndClearCursor		ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
-0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Registers the eight game frame types, WorldFrame one-shot	verified	one	ui/framexml#frame-types	
+0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Registers the eight game frame types, WorldFrame one-shot	verified	two	ui/framexml#frame-types	
 0x4959d0	43	CGWorldFrame::Create	idb	ui	orchestration		Creates the world frame under a parent	verified	one	ui/framexml#frame-types	
 0x495a00	40	CGMinimapFrame::Create	idb	ui	orchestration		Allocates 0x344 bytes under MinimapFrame.h and constructs a Minimap under the parent	verified	one	ui/gameui#frame-factories	
 0x495a30	70	CreateLootButton		ui	orchestration	void * __thiscall (CSimpleFrame *this)	Allocates a LootButton, a button of 0x4e0 bytes with one slot dword, and installs its vtables	verified	one	ui/loot#the-row-widget	
@@ -23864,7 +23864,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65abb0	58			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
 0x65abf0	41			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
 0x65ac20	191	SLogVWrite	idb	storm	orchestration	void __stdcall (uint32_t log, const char *format, va_list args)	Writes one stamped, indented line ending in CR LF into a log's buffer, opening its file first	verified	one	storm/log#writing-a-log-line	
-0x65ace0	22	SLogWrite	idb	storm	boundary	void __cdecl (void *log, const char *format, ...)	Writes a formatted line to a log, handing its variadic arguments to 0x65ac20 as a list	verified	one	ui/framexml#building-the-game-interface	
+0x65ace0	22	SLogWrite	idb	storm	boundary	void __cdecl (void *log, const char *format, ...)	Writes a formatted line to a log, handing its variadic arguments to 0x65ac20 as a list	verified	two	ui/framexml#building-the-game-interface	
 0x65ad00	9			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65ad10	25			storm	boundary		Runs its object file code not read here	inferred	none		
 0x65ad30	11	SInterlockedIncrement	idb	storm	boundary	int32_t __thiscall (void *this)	Adds 1 to the dword at ecx atomically and returns the new value	verified	one	core/threads#host-calls	
@@ -24046,7 +24046,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x661d40	60			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661d80	17			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661da0	36	MD5Init		storm	orchestration		Starts an MD5 context	inferred	none		storm::md5
-0x661dd0	190	MD5Update		storm	boundary	void __fastcall (void *context, const uint8_t *input, uint32_t length)	Adds bytes to an MD5 context, transforming each full 64-byte block	verified	one	ui/framexml#the-signature-digest	storm::md5
+0x661dd0	190	MD5Update		storm	boundary	void __fastcall (void *context, const uint8_t *input, uint32_t length)	Adds bytes to an MD5 context, transforming each full 64-byte block	verified	two	ui/framexml#the-signature-digest	storm::md5
 0x661e90	105	MD5Final		storm	primitive		Finishes an MD5 context into a 16-byte digest and clears it	inferred	none		storm::md5
 0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		storm::md5
 0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
@@ -29490,19 +29490,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eda80	12	InitConstruct6eda70Register		ui	orchestration	void __cdecl (void)	Registers 0x6eda90 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x6eda90	10	InitConstruct6eda70Exit		ui	orchestration	void __cdecl (void)	Runs 0x6ef780 on a global object	verified	one	ui/initexits#exit-calls	
 0x6edaa0	138	ReadXMLFile		ui	orchestration		Reads and hashes a file and parses it into a node tree, reporting a failure to open or parse	verified	one	ui/framexml#loading-one-file	
-0x6edb30	7	SetFrameXMLDebug		ui	orchestration	void __fastcall (int level)	Stores the FrameXML trace level	verified	one	ui/framexml#the-load-status-and-its-log	
-0x6edb40	6	GetFrameXMLDebug		ui	orchestration	int __cdecl (void)	Returns the FrameXML trace level	verified	one	ui/framexml#the-load-status-and-its-log	
-0x6edb50	60	CountTocLines		ui	primitive	int __fastcall (const char *text)	Counts the lines of a toc text that do not begin with #	verified	one	ui/framexml#running-a-toc	
-0x6edb90	627	LoadTocFile		ui	primitive	int __fastcall (const char *toc, void *md5, CStatus *status)	Runs each line of a toc not beginning with # as a file under the toc's directory, hashing the toc	verified	one	ui/framexml#running-a-toc	ui::glue_geom_6edb90_progress_ratio
+0x6edb30	7	SetFrameXMLDebug		ui	orchestration	void __fastcall (int level)	Stores the FrameXML trace level	verified	two	ui/framexml#the-load-status-and-its-log	
+0x6edb40	6	GetFrameXMLDebug		ui	orchestration	int __cdecl (void)	Returns the FrameXML trace level	verified	two	ui/framexml#the-load-status-and-its-log	
+0x6edb50	60	CountTocLines		ui	primitive	int __fastcall (const char *text)	Counts the lines of a toc text that do not begin with #	verified	two	ui/framexml#running-a-toc	
+0x6edb90	627	LoadTocFile		ui	primitive	int __fastcall (const char *toc, void *md5, CStatus *status)	Runs each line of a toc not beginning with # as a file under the toc's directory, hashing the toc	verified	two	ui/framexml#running-a-toc	ui::glue_geom_6edb90_progress_ratio
 0x6ede10	1095	LoadFrameXMLFile		ui	primitive	int __fastcall (const char *path, void *md5, CStatus *status)	Collapses .. in a path and runs a .lua file or loads an XML file and its top-level elements	verified	one	ui/framexml#loading-one-file	
 0x6ee260	5	InitInfinity6ee270Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6ee270, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6ee270	11	InitInfinity6ee270		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6ee280	632	CreateFrameFromXML		ui	primitive	CSimpleFrame * __fastcall (XMLNode *node, CSimpleFrame *parent, CStatus *status)	Creates a frame of a node's type under the parent attribute or argument and loads the node into it	verified	one	ui/framexml#creating-a-frame-from-xml	
-0x6ee500	492	RegisterXMLTemplate		ui	primitive		Keeps a virtual node by name with its context word, refusing a name the client's own code holds	verified	one	ui/framexml#templates	
-0x6ee6f0	137	FindXMLTemplate		ui	primitive	XMLNode * __fastcall (const char *name)	Returns the template node of a name, ignoring case, or null	verified	one	ui/framexml#templates	
-0x6ee780	113	ClearXMLTemplates		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the XML template table	verified	one	ui/framexml#emptying-the-two-tables	
-0x6ee800	113	ClearFrameFactories		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the frame type factory table	verified	one	ui/framexml#emptying-the-two-tables	
-0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type factory by name with a one-shot flag, ignoring a name already taken	verified	one	ui/framexml#frame-types	
+0x6ee500	492	RegisterXMLTemplate		ui	primitive		Keeps a virtual node by name with its context word, refusing a name the client's own code holds	verified	two	ui/framexml#templates	
+0x6ee6f0	137	FindXMLTemplate		ui	primitive	XMLNode * __fastcall (const char *name)	Returns the template node of a name, ignoring case, or null	verified	two	ui/framexml#templates	
+0x6ee780	113	ClearXMLTemplates		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the XML template table	verified	two	ui/framexml#emptying-the-two-tables	
+0x6ee800	113	ClearFrameFactories		ui	orchestration	void __cdecl (void)	Unlinks and deletes every entry of the frame type factory table	verified	two	ui/framexml#emptying-the-two-tables	
+0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type factory by name with a one-shot flag, ignoring a name already taken	verified	two	ui/framexml#frame-types	
 0x6eea00	5	InitDouble6eea10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6eea10, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6eea10	15	InitDouble6eea10		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x6eea20	5	InitQuotient6eea30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6eea30, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -29511,22 +29511,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eea60	19	InitSquare6eea60		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x6eea80	5	InitQuotient6eea90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6eea90, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6eea90	19	InitQuotient6eea90		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Allocates a Button object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Allocates a Button object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
 0x6eeb20	1			ui	orchestration		Runs FrameXML.cpp code not read here	inferred	none		
-0x6eeb30	109	Create_SimpleCheckButton	idb	ui	orchestration		Allocates a CheckButton object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eeba0	109	Create_SimpleEditBox	idb	ui	orchestration		Allocates a EditBox object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Allocates a Frame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eec80	109	Create_SimpleMessageFrame	idb	ui	orchestration		Allocates a MessageFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eecf0	109	Create_SimpleModel	idb	ui	orchestration		Allocates a Model object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eed60	109	Create_SimpleScrollFrame	idb	ui	orchestration		Allocates a ScrollFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eedd0	111	Create_SimpleScrollingMessageFrame	idb	ui	orchestration		Allocates a ScrollingMessageFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eee40	109	Create_SimpleSlider	idb	ui	orchestration		Allocates a Slider object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eeeb0	109	Create_SimpleHTML	idb	ui	orchestration		Allocates a SimpleHTML object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eef20	109	Create_SimpleStatusBar	idb	ui	orchestration		Allocates a StatusBar object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Allocates a ColorSelect object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates a MovieFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
-0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	one	ui/framexml#frame-types	
-0x6ef160	37			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x6eeb30	109	Create_SimpleCheckButton	idb	ui	orchestration		Allocates a CheckButton object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eeba0	109	Create_SimpleEditBox	idb	ui	orchestration		Allocates a EditBox object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Allocates a Frame object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eec80	109	Create_SimpleMessageFrame	idb	ui	orchestration		Allocates a MessageFrame object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eecf0	109	Create_SimpleModel	idb	ui	orchestration		Allocates a Model object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eed60	109	Create_SimpleScrollFrame	idb	ui	orchestration		Allocates a ScrollFrame object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eedd0	111	Create_SimpleScrollingMessageFrame	idb	ui	orchestration		Allocates a ScrollingMessageFrame object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eee40	109	Create_SimpleSlider	idb	ui	orchestration		Allocates a Slider object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eeeb0	109	Create_SimpleHTML	idb	ui	orchestration		Allocates a SimpleHTML object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eef20	109	Create_SimpleStatusBar	idb	ui	orchestration		Allocates a StatusBar object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Allocates a ColorSelect object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates a MovieFrame object and constructs it, answering it or 0	verified	two	ui/framexml#the-frame-factories	
+0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	two	ui/framexml#frame-types	
+0x6ef160	37	SetTocProgress		unassigned	orchestration	void __fastcall (void *callback, void *context, uint32_t total)	Stores the toc progress callback, its context word and the total, and zeroes the count of lines loaded	verified	one	ui/framexml#running-a-toc	
 0x6ef190	180	InitTable6ef190		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef250	34	FreeRecord6ef250		ui	orchestration		Clears the record its argument points at through 0x6ef280 and frees it	verified	one	ui/containers#block-frees	
 0x6ef280	225			unassigned	primitive		Runs its object file code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
@@ -29537,7 +29537,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ef670	180	InitTable6ef670		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef730	34	FreeRecord6ef730		ui	orchestration		Clears the record its argument points at through 0x6efce0 and frees it	verified	one	ui/containers#block-frees	
 0x6ef760	25			unassigned	orchestration		Runs its object file code that calls 0x6f00f0; not read here	inferred	none		
-0x6ef780	373			unassigned	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, 0x6efff0 and 1 more; not read here	inferred	none		
+0x6ef780	373	UnlinkTable6ef780		unassigned	orchestration	void __thiscall (void *this)	Unlinks every entry and bucket chain of a table and frees its bucket array, leaving the entries	verified	one	ui/framexml#emptying-the-two-tables	
 0x6ef900	189	EmptyTable6ef900		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x6ef9c0	43	DeletingDestructor6ef9c0		ui	orchestration		Destroys the object through 0x6ef430 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6ef9f0	136	ClearList6ef9f0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
@@ -29583,7 +29583,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f10d0	5	InitInfinity6f10e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f10e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f10e0	11	InitInfinity6f10e0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f10f0	268	CheckTocSignature		ui	orchestration		Checks a toc's .sig file: 0 unreadable, 1 bad size or verification, 2 digest differs, 3 good	verified	one	ui/framexml#building-the-game-interface	
-0x6f1200	108	ComputeTocDigest		unassigned	orchestration	void __fastcall (const char *toc, const char *file, uint8_t *digest)	Computes the MD5 digest a toc's signature is checked against	verified	one	ui/framexml#the-signature-digest	
+0x6f1200	108	ComputeTocDigest		unassigned	orchestration	void __fastcall (const char *toc, const char *file, uint8_t *digest)	Computes the MD5 digest a toc's signature is checked against	verified	two	ui/framexml#the-signature-digest	
 0x6f1270	535			unassigned	primitive		Runs its object file code that calls SStrPrintf, SStrLen, 0x64b4f0 and 9 more; not read here	inferred	none		
 0x6f1490	101			unassigned	orchestration		Runs its object file code that calls SStrTokenize, 0x6f1270; not read here	inferred	none		
 0x6f1500	115			unassigned	primitive		Runs its object file code that calls 0x6f1580; not read here	inferred	none		
@@ -29624,20 +29624,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2840	19	InitQuotient6f2840		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x6f2860	20			unassigned	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
 0x6f2880	20			unassigned	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
-0x6f28a0	279	XMLStartElement		ui	primitive		Appends a node for an element as the last child of the current one and copies its attributes	verified	one	ui/framexml#xml-trees	
-0x6f29c0	16	XMLEndElement		ui	orchestration		Makes the current node's parent current	verified	one	ui/framexml#xml-trees	
-0x6f29d0	86	XMLCharacterData		ui	primitive		Appends character data to the current node's body	verified	one	ui/framexml#xml-trees	
-0x6f2a30	141	ParseXMLBuffer		ui	orchestration		Parses a buffer with expat into a node tree, never freeing the parser	verified	one	ui/framexml#xml-trees	
+0x6f28a0	279	XMLStartElement		ui	primitive		Appends a node for an element as the last child of the current one and copies its attributes	verified	two	ui/framexml#xml-trees	
+0x6f29c0	16	XMLEndElement		ui	orchestration		Makes the current node's parent current	verified	two	ui/framexml#xml-trees	
+0x6f29d0	86	XMLCharacterData		ui	primitive		Appends character data to the current node's body	verified	two	ui/framexml#xml-trees	
+0x6f2a30	141	ParseXMLBuffer		ui	orchestration		Parses a buffer with expat into a node tree, never freeing the parser	verified	two	ui/framexml#xml-trees	
 0x6f2ac0	50			ui	orchestration		Runs XMLTree.cpp code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
 0x6f2b00	3			ui	orchestration		Runs XMLTree.cpp code not read here	inferred	none		
-0x6f2b10	81	InitXMLNode		ui	orchestration		Builds a node with a parent and a copied tag and empty children, body and attributes	verified	one	ui/framexml#xml-trees	
+0x6f2b10	81	InitXMLNode		ui	orchestration		Builds a node with a parent and a copied tag and empty children, body and attributes	verified	two	ui/framexml#xml-trees	
 0x6f2b70	209			ui	primitive		Runs XMLTree.cpp code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
 0x6f2c50	58	FindXMLChild		ui	orchestration	XMLNode * __thiscall (XMLNode *this, const char *name)	Returns the first child whose tag matches a name ignoring case, or null	verified	one	ui/framexml#xml-trees	
 0x6f2c90	5	InitInfinity6f2ca0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f2ca0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f2ca0	11	InitInfinity6f2ca0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f2cb0	31			ui	unreached		Runs XMLTree.cpp code not read here	inferred	none		
 0x6f2cd0	32			ui	unreached		Runs XMLTree.cpp code not read here	inferred	none		
-0x6f2cf0	73	GetXMLAttribute		ui	primitive	const char * __thiscall (XMLNode *this, const char *name)	Returns the value of the first attribute matching a name ignoring case, or null	verified	one	ui/framexml#xml-trees	
+0x6f2cf0	73	GetXMLAttribute		ui	primitive	const char * __thiscall (XMLNode *this, const char *name)	Returns the value of the first attribute matching a name ignoring case, or null	verified	two	ui/framexml#xml-trees	
 0x6f2d40	211			ui	primitive		Runs XMLTree.cpp code that calls SStrCmpI, SMemReAlloc, SStrDupA and 1 more; not read here	inferred	none		
 0x6f2e20	69			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6f2e70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33304,7 +33304,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x769820	1297	CSimpleFrame::LoadXML		ui	orchestration		Applies an XML node's inheritance, layout, attributes and child elements to a frame	verified	one	ui/frames#loading-from-xml	ui::glue769_769820_set_alpha_quantize
 0x769d40	43	DeleteTitleRegion		ui	orchestration		Destroys a title region and frees it when asked	verified	one	ui/frames#destruction	
 0x769d70	369	CSimpleFrame::LoadXMLLayers		ui	orchestration		Creates each Texture and FontString of each Layer of an XML node in its draw layer	verified	one	ui/frames#loading-from-xml	
-0x769ef0	363	CSimpleFrame::LoadXMLScripts		ui	orchestration		Sets each Scripts child's handler and enables the input its name needs, reporting unknown names	verified	one	ui/framexml#script-elements	
+0x769ef0	363	CSimpleFrame::LoadXMLScripts		ui	orchestration		Sets each Scripts child's handler and enables the input its name needs, reporting unknown names	verified	two	ui/framexml#script-elements	
 0x76a060	104	CSimpleFrame::LoadXMLChildren		ui	orchestration		Creates the Frames children of a node, its template first, with the frame as parent	verified	one	ui/framexml#child-frames-and-names	
 0x76a0d0	544	CSimpleFrame::GetScriptByName		ui	orchestration		Returns the script slot of a handler name, OnEvent included, or 0	verified	one	ui/frames#script-slots-by-name	
 0x76a2f0	206	CSimpleFrame::PostLoadXML		ui	orchestration		Ends the load: undefers layout, loads children, runs OnLoad, then OnShow when visible	verified	one	ui/visibility#show-and-hide-scripts	
@@ -37307,9 +37307,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7e6640	19	InitSkyDrawTenSquared5		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
 0x7e6660	5	InitSkyDrawHalfTenthThunk		lighting	orchestration		Jumps to 0x7e6670; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x7e6670	19	InitSkyDrawHalfTenth		lighting	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
-0x7e6690	21	CreateXmlParser		unassigned	boundary	void * __cdecl (const char *encoding)	Creates an expat parser without namespace processing through 0x7e66d0	verified	one	ui/framexml#xml-trees	
+0x7e6690	21	CreateXmlParser		unassigned	boundary	void * __cdecl (const char *encoding)	Creates an expat parser without namespace processing through 0x7e66d0	verified	two	ui/framexml#xml-trees	
 0x7e66b0	29			unassigned	unreached		Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
-0x7e66d0	415	CreateXmlParserWithSeparator		unassigned	boundary	void * __cdecl (const char *encoding, const void *memsuite, const char *separator)	Creates an expat parser; a null separator leaves namespace processing off	verified	one	ui/framexml#xml-trees	
+0x7e66d0	415	CreateXmlParserWithSeparator		unassigned	boundary	void * __cdecl (const char *encoding, const void *memsuite, const char *separator)	Creates an expat parser; a null separator leaves namespace processing off	verified	two	ui/framexml#xml-trees	
 0x7e6870	381			unassigned			Runs its object file code that calls 0x7f9370, 0x7ed5b0, 0x7f8870; not read here	inferred	none		
 0x7e69f0	188			unassigned	unreached		Runs its object file code that calls 0x7e6ab0, 0x7ed490, 0x7e6870 and 1 more; not read here	inferred	none		
 0x7e6ab0	45			unassigned	unreached		Runs its object file code not read here	inferred	none		
