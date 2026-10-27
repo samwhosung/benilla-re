@@ -7447,9 +7447,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6e80	15	InitDouble4a6e80		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4a6e90	5	InitQuotient4a6ea0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4a6ea0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4a6ea0	19	InitQuotient4a6ea0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4a6ec0	567	GetMapAreaAtPoint		ui	primitive		Returns the area id under a point of the displayed map, or 0	verified	one	ui/geometry#the-cell-of-a-point	ui::geo_4a6ec0
+0x4a6ec0	567	GetMapAreaAtPoint		ui	primitive		Returns the area id under a point of the displayed map, or 0	verified	two	ui/geometry#the-cell-of-a-point	ui::geo_4a6ec0
 0x4a7100	418	MapPointToWorld		ui	unreached		Converts a point of the selected map to a world position and map id, or answers 0	verified	one	ui/worldmap#unreached-map-teleport	
-0x4a72b0	104	WorldPositionToMapView		ui	primitive		Maps a world position onto the world map view, with the vertical axis flipped	verified	one	ui/geometry#world-to-map	ui::geo_4a72b0
+0x4a72b0	104	WorldPositionToMapView		ui	primitive		Maps a world position onto the world map view, with the vertical axis flipped	verified	two	ui/geometry#world-to-map	ui::geo_4a72b0
 0x4a7320	64	FindWorldMapContinent		ui	primitive		Returns the WorldMapContinent row for a map id, or 0	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7360	478	ProjectWorldPosition		ui	primitive		Normalises a world position to the displayed map for a map id	verified	one	ui/worldmap#unit-and-corpse-positions	ui::geo_4a7360
 0x4a7540	212	DrillMap		ui	primitive		Selects the continent or zone whose rectangle holds the cursor	verified	one	ui/worldmap#hover-and-click	
@@ -29595,8 +29595,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f17b0	19	InitQuotient6f17b0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x6f17d0	69	ParseFrameStrata		ui	primitive		Finds a stratum name in 0x8119f8, ignoring case, and writes its index	verified	one	ui/frames#loading-from-xml	
 0x6f1820	31	GetFrameStrataName		ui	primitive		Returns the name of a stratum index from 0x8119f8, or UNKNOWN	verified	one	ui/strata#strata-and-their-names	
-0x6f1840	69	ParseAnchorPoint		ui	primitive		Finds an anchor point name in 0x811a38, ignoring case, and writes its index	verified	one	ui/anchors#point-slots-and-point-names	
-0x6f1890	31	GetAnchorPointName		ui	primitive		Returns the name of an anchor point index from 0x811a38, or UNKNOWN	verified	one	ui/anchors#point-slots-and-point-names	
+0x6f1840	69	ParseAnchorPoint		ui	primitive		Finds an anchor point name in 0x811a38, ignoring case, and writes its index	verified	two	ui/anchors#point-slots-and-point-names	
+0x6f1890	31	GetAnchorPointName		ui	primitive		Returns the name of an anchor point index from 0x811a38, or UNKNOWN	verified	two	ui/anchors#point-slots-and-point-names	
 0x6f18b0	69	DrawLayerNameToId		ui	primitive	bool __fastcall (const char *name, int *id)	Looks a draw layer name up ignoring case and stores its index 0 to 4	verified	one	ui/draworder#regions-within-a-frame	
 0x6f1900	31	DrawLayerIdToName		ui	primitive	const char * __fastcall (int id)	Returns the name of a draw layer index, or UNKNOWN	verified	one	ui/draworder#regions-within-a-frame	
 0x6f1920	69	ParseBlendMode		ui	primitive		Looks a blend mode name up, ignoring case, in the five value and name pairs at 0x811aa8	verified	one	ui/button#checked-textures	
@@ -30112,7 +30112,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x701b10	43	DeleteScriptObject		ui	orchestration		Destroys a script object and frees it when asked	verified	one	ui/script#the-script-object	
 0x701b40	97	DestructScriptObject		ui	orchestration		Unregisters all events, releases OnEvent and frees the event index array	verified	one	ui/script#the-script-object	
 0x701bb0	23	FreeUint32ArrayData		ui	host		Frees the block that the dword at this+0x8 points at, tagged unsigned int, when it is not null	verified	one	ui/containers#block-frees	
-0x701bd0	244	LockScriptObject		ui	orchestration		Makes the object's table on first use, counts a holder and sets a name global when unset	verified	one	ui/frames#names-and-lookup-by-name	
+0x701bd0	244	LockScriptObject		ui	orchestration		Makes the object's table on first use, counts a holder and sets a name global when unset	verified	two	ui/frames#names-and-lookup-by-name	
 0x701cd0	163	UnlockScriptObject		ui	orchestration		Counts a holder down and at zero clears the table's object and metatable and frees it	verified	one	ui/frames#destruction	
 0x701d80	409	FrameScriptRegisterMethods		ui	orchestration		Adds name and function pairs to a method hash table as registry references	inferred	none	ui/methods#method-tables-and-lookup	
 0x701f20	212	FrameScriptUnregisterMethods		ui	orchestration		Frees the function references and nodes of a method hash table	inferred	none	ui/methods#method-tables-and-lookup	
@@ -30122,9 +30122,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x702280	338	FrameScriptUnregisterEvent		ui	orchestration		Removes an object from the listeners of an event name and its index	verified	one	ui/script#registering-for-an-event	
 0x7023e0	262	FrameScriptRegisterAllEvents		ui	orchestration		Appends an object to the listeners of every event it is not on	verified	one	ui/script#registering-for-an-event	
 0x7024f0	153	FrameScriptUnregisterAllEvents		ui	orchestration		Removes an object from every event it listens to and empties its index array	verified	one	ui/script#registering-for-an-event	
-0x702590	44	GetScriptObjectScriptByName		ui	orchestration		Returns the OnEvent slot for the name OnEvent, else 0	verified	one	ui/frames#script-slots-by-name	
+0x702590	44	GetScriptObjectScriptByName		ui	orchestration		Returns the OnEvent slot for the name OnEvent, else 0	verified	two	ui/frames#script-slots-by-name	
 0x7025c0	173	SetScriptObjectScript		ui	orchestration		Compiles text as a handler named after the object and handler into its slot, 0 for empty text	verified	one	ui/framexml#script-elements	
-0x702670	21	FrameScriptReleaseScript		ui	orchestration		Releases a script slot's function reference when set	verified	one	ui/frames#destruction	
+0x702670	21	FrameScriptReleaseScript		ui	orchestration		Releases a script slot's function reference when set	verified	two	ui/frames#destruction	
 0x702690	84	FrameScriptExecute		ui	orchestration		Runs a script slot with the slot's context word as the current context	verified	one	ui/visibility#show-and-hide-scripts	
 0x7026f0	29	FrameScriptExecuteVarArgs		ui	orchestration		Runs a script slot with a format and its variable arguments	verified	one	ui/script#running-a-handler	
 0x702710	96	FrameScriptExecuteV		ui	orchestration		Runs a script slot with a format and an argument list under the slot's context word	verified	one	ui/script#running-a-handler	
@@ -33152,9 +33152,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x764360	43	CSimpleTop::DeletingDestructor		ui	orchestration		Destroys the top and frees it when bit 0 of the argument is set	verified	one	ui/strata#construction-and-teardown	
 0x764390	526	CSimpleTop::~CSimpleTop		ui	orchestration		Deletes queued objects and frames, frees strata nodes, removes cursor and input registrations	verified	one	ui/strata#construction-and-teardown	
 0x7645a0	229	CFrameStrataNode::DeletingDestructor		ui	orchestration		Unlinks a level node's frames and batches, destroys its five batches and frees it when asked	inferred	none	ui/strata#construction-and-teardown	
-0x764690	3	CSimpleTop::DoNothing		ui	orchestration		Returns, popping one argument; the frame destructor calls it	verified	one	ui/frames#destruction	
-0x7646a0	112	CSimpleTop::RegisterFrame		ui	orchestration		Links a frame into the top's frame list at +0xcc0 through its +0x304 link	verified	one	ui/frames#construction	
-0x764710	99	CSimpleTop::UnregisterFrame		ui	orchestration		Takes a frame out of its level and unlinks it from the top's frame list	verified	one	ui/frames#destruction	
+0x764690	3	CSimpleTop::DoNothing		ui	orchestration		Returns, popping one argument; the frame destructor calls it	verified	two	ui/frames#destruction	
+0x7646a0	112	CSimpleTop::RegisterFrame		ui	orchestration		Links a frame into the top's frame list at +0xcc0 through its +0x304 link	verified	two	ui/frames#construction	
+0x764710	99	CSimpleTop::UnregisterFrame		ui	orchestration		Takes a frame out of its level and unlinks it from the top's frame list	verified	two	ui/frames#destruction	
 0x764780	410	CSimpleTop::ShowFrame		ui	orchestration		Puts a visible frame into its stratum's level node, creating nodes, and enters its input kinds	verified	one	ui/strata#strata-records-and-level-nodes	
 0x764920	255	CSimpleTop::HideFrame		ui	orchestration		Takes a frame out of its level node and input lists, ending its move unless kept	verified	one	ui/frames#destruction	
 0x764a20	64	CSimpleTop::NotifyFrameMoved		ui	orchestration		Marks a frame's stratum levels dirty, raises the frame being moved or sized unchecked and asks for a hover pick	verified	one	ui/strata#dirty-marks	
@@ -33229,62 +33229,62 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x767050	19	TopInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x767070	5	TopInitHalfTenthThunk		ui	orchestration		Jumps to 0x767080; a static initializer	verified	one	ui/README#static-initializers	
 0x767080	19	TopInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
-0x7670a0	10	LayoutInitQueueThunk		ui	orchestration		Calls 0x7670b0, then registers the queue's exit handler; a static initializer	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x7670b0	34	InitLayoutQueue		ui	orchestration		Makes the layout queue empty with link offset 0x6c	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x7670e0	12	RegisterDestroyLayoutQueue		ui	orchestration		Registers 0x7670f0 with _atexit	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x7670f0	165	DestroyLayoutQueue		ui	orchestration		Unlinks every queued frame and the queue's terminator at exit	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x7671a0	78	CLayoutFrame::GetPointX		ui	orchestration		Returns the first x a point of a list of point indices gives that is not +inf	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_composed_resolve
-0x7671f0	78	CLayoutFrame::GetPointY		ui	orchestration		Returns the first y a point of a list of point indices gives that is not +inf	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_composed_resolve
+0x7670a0	10	LayoutInitQueueThunk		ui	orchestration		Calls 0x7670b0, then registers the queue's exit handler; a static initializer	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x7670b0	34	InitLayoutQueue		ui	orchestration		Makes the layout queue empty with link offset 0x6c	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x7670e0	12	RegisterDestroyLayoutQueue		ui	orchestration		Registers 0x7670f0 with _atexit	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x7670f0	165	DestroyLayoutQueue		ui	orchestration		Unlinks every queued frame and the queue's terminator at exit	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x7671a0	78	CLayoutFrame::GetPointX		ui	orchestration		Returns the first x a point of a list of point indices gives that is not +inf	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_composed_resolve
+0x7671f0	78	CLayoutFrame::GetPointY		ui	orchestration		Returns the first y a point of a list of point indices gives that is not +inf	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_composed_resolve
 0x767240	5	LayoutInitInfinityThunk		ui	orchestration		Jumps to 0x767250; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x767250	11	LayoutInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
-0x767260	100	CLayoutFrame::GetCenterX		ui	primitive		Resolves the horizontal centre from points 1, 4, 7, else from left, right and width	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x767260	100	CLayoutFrame::GetCenterX		ui	primitive		Resolves the horizontal centre from points 1, 4, 7, else from left, right and width	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
 0x7672d0	141	CombineCenter		ui	primitive		Returns (near+far)·0.5, near+d·0.5 or far−d·0.5, or +inf, by which inputs are finite	verified	one	ui/anchors#edge-resolution-from-size	ui::layout_combine_center
-0x767360	100	CLayoutFrame::GetCenterY		ui	primitive		Resolves the vertical centre from points 3, 4, 5, else from bottom, top and height	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
-0x7673d0	102	CLayoutFrame::GetLeft		ui	primitive		Resolves the left edge from points 0, 3, 6, else from right, centre and width	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x767360	100	CLayoutFrame::GetCenterY		ui	primitive		Resolves the vertical centre from points 3, 4, 5, else from bottom, top and height	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x7673d0	102	CLayoutFrame::GetLeft		ui	primitive		Resolves the left edge from points 0, 3, 6, else from right, centre and width	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
 0x767440	132	CombineEdge		ui	primitive		Returns b+c, a+c·0.5 or 2a−b, or +inf, by which inputs are finite and c nonzero	verified	one	ui/anchors#edge-resolution-from-size	ui::layout_combine_edge
-0x7674d0	100	CLayoutFrame::GetTop		ui	primitive		Resolves the top edge from points 0, 1, 2, else from bottom, centre and height	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
-0x767540	100	CLayoutFrame::GetRight		ui	primitive		Resolves the right edge from points 2, 5, 8, else from left, centre and width	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
-0x7675b0	102	CLayoutFrame::GetBottom		ui	primitive		Resolves the bottom edge from points 6, 7, 8, else from top, centre and height	verified	one	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
-0x767620	84	CLayoutFrame::ClearAllPoints		ui	orchestration		Frees all nine points, telling each relative frame its dependent left	verified	one	ui/anchors#point-slots-and-point-names	
+0x7674d0	100	CLayoutFrame::GetTop		ui	primitive		Resolves the top edge from points 0, 1, 2, else from bottom, centre and height	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x767540	100	CLayoutFrame::GetRight		ui	primitive		Resolves the right edge from points 2, 5, 8, else from left, centre and width	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x7675b0	102	CLayoutFrame::GetBottom		ui	primitive		Resolves the bottom edge from points 6, 7, 8, else from top, centre and height	verified	two	ui/anchors#edge-resolution-from-points	ui::layout_767_span, ui::layout_composed_resolve
+0x767620	84	CLayoutFrame::ClearAllPoints		ui	orchestration		Frees all nine points, telling each relative frame its dependent left	verified	two	ui/anchors#point-slots-and-point-names	
 0x767680	100	CLayoutFrame::CLayoutFrame		ui	orchestration		Zeroes points, rectangle, size and links, empties the dependents and sets the scale to 1.0	verified	one	ui/frames#vtables-and-the-two-parts	
-0x7676f0	43	CLayoutFrame::DeletingDestructor		ui	orchestration		Destroys a layout frame and frees it when bit 0 of the argument is set	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x767720	211	CLayoutFrame::~CLayoutFrame		ui	orchestration		Destroys the points and dependents, unlinks the queue link and empties the dependents list	verified	one	ui/anchors#construction-and-the-xml-anchors	
-0x767800	544	CLayoutFrame::LoadXML		ui	orchestration		Reads Size, setAllPoints and the Anchors of an XML node, then lays the frame out	verified	one	ui/frames#loading-from-xml	
-0x767a20	303	CLayoutFrame::CalculateRect		ui	primitive		Resolves left, bottom, right and top and moves the rectangle onto the screen when clamped	verified	one	ui/anchors#rectangle-calculation-and-screen-clamp	ui::layout_assemble_rect, ui::layout_composed_resolve
-0x767b50	137	CLayoutFrame::SetAbsolutePoint		ui	unreached		Replaces a point with an offset that names no frame; nothing reaches it	verified	one	ui/anchors#absolute-and-relative-points	
-0x767be0	3	AnchorPointGetNoFrame		ui	orchestration		Returns 0: the point names no frame	verified	one	ui/anchors#absolute-and-relative-points	
-0x767bf0	6	AbsolutePointGetX		ui	unreached		Returns the stored x, ignoring the scale; a slot of 0x81c42c, which only unreached code installs	verified	one	ui/anchors#absolute-and-relative-points	
-0x767c00	6	AbsolutePointGetY		ui	unreached		Returns the stored y, ignoring the scale; a slot of 0x81c42c, which only unreached code installs	verified	one	ui/anchors#absolute-and-relative-points	
-0x767c10	40	DeleteAbsolutePoint		ui	unreached		Restores the point base vtable and frees the point when asked; a slot of 0x81c42c, which only unreached code installs	verified	one	ui/anchors#absolute-and-relative-points	
-0x767c40	40	DeleteAnchorPoint		ui	orchestration		Restores the point base vtable and frees the point when asked	verified	one	ui/anchors#absolute-and-relative-points	
-0x767c70	245	CLayoutFrame::SetPoint		ui	primitive		Sets a point relative to another frame and point with an offset, recording the dependency	verified	one	ui/anchors#absolute-and-relative-points	ui::glue_767_767c70_anchor_change_detect
-0x767d70	4	RelativePointGetFrame		ui	orchestration		Returns the frame the point is relative to	verified	one	ui/anchors#absolute-and-relative-points	
-0x767d80	40	DeleteRelativePoint		ui	orchestration		Restores the point base vtable and frees the point when asked	verified	one	ui/anchors#absolute-and-relative-points	
-0x767db0	182	CLayoutFrame::SetAllPoints		ui	orchestration		Pins points 0 and 8 to the same points of another frame with no offset	verified	one	ui/anchors#dependents	
-0x767e70	88	CLayoutFrame::ClearPointsTo		ui	orchestration		Frees every point relative to a frame and lays the frame out when asked	verified	one	ui/anchors#dependents	
+0x7676f0	43	CLayoutFrame::DeletingDestructor		ui	orchestration		Destroys a layout frame and frees it when bit 0 of the argument is set	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x767720	211	CLayoutFrame::~CLayoutFrame		ui	orchestration		Destroys the points and dependents, unlinks the queue link and empties the dependents list	verified	two	ui/anchors#construction-and-the-xml-anchors	
+0x767800	544	CLayoutFrame::LoadXML		ui	orchestration		Reads Size, setAllPoints and the Anchors of an XML node, then lays the frame out	verified	two	ui/frames#loading-from-xml	
+0x767a20	303	CLayoutFrame::CalculateRect		ui	primitive		Resolves left, bottom, right and top and moves the rectangle onto the screen when clamped	verified	two	ui/anchors#rectangle-calculation-and-screen-clamp	ui::layout_assemble_rect, ui::layout_composed_resolve
+0x767b50	137	CLayoutFrame::SetAbsolutePoint		ui	unreached		Replaces a point with an offset that names no frame; nothing reaches it	verified	two	ui/anchors#absolute-and-relative-points	
+0x767be0	3	AnchorPointGetNoFrame		ui	orchestration		Returns 0: the point names no frame	verified	two	ui/anchors#absolute-and-relative-points	
+0x767bf0	6	AbsolutePointGetX		ui	unreached		Returns the stored x, ignoring the scale; a slot of 0x81c42c, which only unreached code installs	verified	two	ui/anchors#absolute-and-relative-points	
+0x767c00	6	AbsolutePointGetY		ui	unreached		Returns the stored y, ignoring the scale; a slot of 0x81c42c, which only unreached code installs	verified	two	ui/anchors#absolute-and-relative-points	
+0x767c10	40	DeleteAbsolutePoint		ui	unreached		Restores the point base vtable and frees the point when asked; a slot of 0x81c42c, which only unreached code installs	verified	two	ui/anchors#absolute-and-relative-points	
+0x767c40	40	DeleteAnchorPoint		ui	orchestration		Restores the point base vtable and frees the point when asked	verified	two	ui/anchors#absolute-and-relative-points	
+0x767c70	245	CLayoutFrame::SetPoint		ui	primitive		Sets a point relative to another frame and point with an offset, recording the dependency	verified	two	ui/anchors#absolute-and-relative-points	ui::glue_767_767c70_anchor_change_detect
+0x767d70	4	RelativePointGetFrame		ui	orchestration		Returns the frame the point is relative to	verified	two	ui/anchors#absolute-and-relative-points	
+0x767d80	40	DeleteRelativePoint		ui	orchestration		Restores the point base vtable and frees the point when asked	verified	two	ui/anchors#absolute-and-relative-points	
+0x767db0	182	CLayoutFrame::SetAllPoints		ui	orchestration		Pins points 0 and 8 to the same points of another frame with no offset	verified	two	ui/anchors#dependents	
+0x767e70	88	CLayoutFrame::ClearPointsTo		ui	orchestration		Frees every point relative to a frame and lays the frame out when asked	verified	two	ui/anchors#dependents	
 0x767ed0	5	CLayoutFrame::ClearAllPointsThunk		ui	orchestration		Jumps to 0x767620	inferred	none	ui/methods#region-parent-and-anchor-methods	
-0x767ee0	189	CLayoutFrame::AddDependent		ui	orchestration		Records a frame and point mask in the dependents list, ORing into an existing node	verified	one	ui/anchors#dependents	
-0x767fa0	111	CLayoutFrame::RemoveDependent		ui	orchestration		Clears a point mask of a dependent and frees its node when no bit remains	verified	one	ui/anchors#dependents	
-0x768010	77	CLayoutFrame::IsAnchoredTo		ui	orchestration		Answers whether any chain of relative points reaches a frame	verified	one	ui/anchors#dependents	
-0x768060	119	CLayoutFrame::SetDeferResize		ui	orchestration		Defers layout and leaves the queue, or ends the deferral and lays out a pending frame	verified	one	ui/anchors#deferred-layout	
-0x7680e0	203	CLayoutFrame::Resize		ui	orchestration		Resolves now when forced, else marks pending and queues the frame or its dependents	verified	one	ui/anchors#invalidation-and-the-layout-queue	
-0x7681b0	345	CLayoutFrame::QueueResize		ui	orchestration		Queues a frame before the first queued frame relative to it, else at the tail	verified	one	ui/anchors#invalidation-and-the-layout-queue	
-0x768310	7	CLayoutFrame::IsResizePending		ui	orchestration		Returns flag 4 of +0x3c, set while a layout is pending	verified	one	ui/anchors#invalidation-and-the-layout-queue	
-0x768320	55	CLayoutFrame::GetRect		ui	orchestration		Copies the resolved rectangle and answers whether it is valid	verified	one	ui/anchors#relative-point-coordinates	
-0x768360	110	CLayoutFrame::SetLayoutScale		ui	primitive		Stores a nonzero scale that changed by 2^-22 or more, invalidating the rectangle	verified	one	ui/anchors#size-scale-and-stored-rectangle	ui::glue_767_768360_rsub_change_detect
-0x7683d0	29	CLayoutFrame::SetWidth		ui	orchestration		Stores the width, clears flag 8 and lays the frame out	verified	one	ui/anchors#size-scale-and-stored-rectangle	
-0x7683f0	29	CLayoutFrame::SetHeight		ui	orchestration		Stores the height, clears flag 8 and lays the frame out	verified	one	ui/anchors#size-scale-and-stored-rectangle	
-0x768410	4	CLayoutFrame::GetHeight		ui	orchestration		Returns the height +0x54	verified	one	ui/anchors#size-scale-and-stored-rectangle	
-0x768420	4	CLayoutFrame::GetWidth		ui	orchestration		Returns the width +0x50	verified	one	ui/anchors#size-scale-and-stored-rectangle	
+0x767ee0	189	CLayoutFrame::AddDependent		ui	orchestration		Records a frame and point mask in the dependents list, ORing into an existing node	verified	two	ui/anchors#dependents	
+0x767fa0	111	CLayoutFrame::RemoveDependent		ui	orchestration		Clears a point mask of a dependent and frees its node when no bit remains	verified	two	ui/anchors#dependents	
+0x768010	77	CLayoutFrame::IsAnchoredTo		ui	orchestration		Answers whether any chain of relative points reaches a frame	verified	two	ui/anchors#dependents	
+0x768060	119	CLayoutFrame::SetDeferResize		ui	orchestration		Defers layout and leaves the queue, or ends the deferral and lays out a pending frame	verified	two	ui/anchors#deferred-layout	
+0x7680e0	203	CLayoutFrame::Resize		ui	orchestration		Resolves now when forced, else marks pending and queues the frame or its dependents	verified	two	ui/anchors#invalidation-and-the-layout-queue	
+0x7681b0	345	CLayoutFrame::QueueResize		ui	orchestration		Queues a frame before the first queued frame relative to it in the drain's walk, else at the head	verified	two	ui/anchors#invalidation-and-the-layout-queue	
+0x768310	7	CLayoutFrame::IsResizePending		ui	orchestration		Returns flag 4 of +0x3c, set while a layout is pending	verified	two	ui/anchors#invalidation-and-the-layout-queue	
+0x768320	55	CLayoutFrame::GetRect		ui	orchestration		Copies the resolved rectangle and answers whether it is valid	verified	two	ui/anchors#relative-point-coordinates	
+0x768360	110	CLayoutFrame::SetLayoutScale		ui	primitive		Stores a nonzero scale that changed by 2^-22 or more, invalidating the rectangle	verified	two	ui/anchors#size-scale-and-stored-rectangle	ui::glue_767_768360_rsub_change_detect
+0x7683d0	29	CLayoutFrame::SetWidth		ui	orchestration		Stores the width, clears flag 8 and lays the frame out	verified	two	ui/anchors#size-scale-and-stored-rectangle	
+0x7683f0	29	CLayoutFrame::SetHeight		ui	orchestration		Stores the height, clears flag 8 and lays the frame out	verified	two	ui/anchors#size-scale-and-stored-rectangle	
+0x768410	4	CLayoutFrame::GetHeight		ui	orchestration		Returns the height +0x54	verified	two	ui/anchors#size-scale-and-stored-rectangle	
+0x768420	4	CLayoutFrame::GetWidth		ui	orchestration		Returns the width +0x50	verified	two	ui/anchors#size-scale-and-stored-rectangle	
 0x768430	287	CLayoutFrame::PinToParentOffset		ui	primitive		Anchors a point to the parent at the frame's current offset and sets the given size	verified	one	ui/resizebounds#the-drag	ui::glue_765_768430_edge_rect
 0x768550	409	CLayoutFrame::ResizeByFactor		ui	unreached		Scales a frame's size about a point, clamped to its resize bounds; nothing live reaches it	verified	one	ui/README#starts-the-listing-hides	
 0x768710	1331	CLayoutFrame::ApplyDragDelta		ui	primitive		Moves or resizes a frame by a cursor difference at a point, clamped to its resize bounds	verified	one	ui/resizebounds#the-drag	ui::geo_768710
 0x768c70	77	CLayoutFrame::IsPointInRect		ui	orchestration		Answers whether a point lies in the valid rectangle, all four edges inclusive and NaN outside	verified	one	ui/input#mouse-buttons	
-0x768cc0	47	CLayoutFrame::SetClampedToScreen		ui	orchestration		Sets or clears flag 0x10 and lays the frame out	verified	one	ui/anchors#size-scale-and-stored-rectangle	
-0x768cf0	44	CLayoutFrame::OnFrameSizeChanged		ui	orchestration		Lays out every dependent frame	verified	one	ui/anchors#resolving-and-the-changed-callback	
-0x768d20	252	CLayoutFrame::OnFrameResize		ui	primitive		Resolves the rectangle, stores it and calls slot 0 when it moved by 1e-5 or more	verified	one	ui/anchors#resolving-and-the-changed-callback	ui::layout_recompute
-0x768e20	167	CLayoutFrame::DestroyLayout		ui	orchestration		Clears the frame's points, every point relative to it, its dependents and its queue link	verified	one	ui/anchors#dependents	
-0x768ed0	145	LayoutPendingFrames		ui	orchestration		Resolves the queued frames in up to 32 passes, each failure costing one of six retries	verified	one	ui/anchors#the-queue-drain	
+0x768cc0	47	CLayoutFrame::SetClampedToScreen		ui	orchestration		Sets or clears flag 0x10 and lays the frame out	verified	two	ui/anchors#size-scale-and-stored-rectangle	
+0x768cf0	44	CLayoutFrame::OnFrameSizeChanged		ui	orchestration		Lays out every dependent frame	verified	two	ui/anchors#resolving-and-the-changed-callback	
+0x768d20	252	CLayoutFrame::OnFrameResize		ui	primitive		Resolves the rectangle, stores it and calls slot 0 when it moved by 1e-5 or more	verified	two	ui/anchors#resolving-and-the-changed-callback	ui::layout_recompute
+0x768e20	167	CLayoutFrame::DestroyLayout		ui	orchestration		Clears the frame's points, every point relative to it, its dependents and its queue link	verified	two	ui/anchors#dependents	
+0x768ed0	145	LayoutPendingFrames		ui	orchestration		Resolves the queued frames in up to 32 passes, each failure costing one of six retries	verified	two	ui/anchors#the-queue-drain	
 0x768f70	5	LayoutInitTwoPiThunk		ui	orchestration		Jumps to 0x768f80; a static initializer	verified	one	ui/README#static-initializers	
 0x768f80	15	LayoutInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x768f90	5	LayoutInitInvTwoPiThunk		ui	orchestration		Jumps to 0x768fa0; a static initializer	verified	one	ui/README#static-initializers	
@@ -33298,15 +33298,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x769090	715	CSimpleFrame::CSimpleFrame	idb	ui	orchestration		Builds a frame, joins the top's frame list and the parent, and makes it visible	verified	one	ui/frames#vtables-and-the-two-parts	
 0x769360	5	FrameInitInfinityThunk		ui	orchestration		Jumps to 0x769370; a static initializer	verified	one	ui/README#static-initializers	
 0x769370	11	FrameInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
-0x769380	43	CSimpleFrame::DeletingDestructor		ui	orchestration		Destroys a frame and frees it when bit 0 of the argument is set	verified	one	ui/frames#destruction	
-0x7693b0	958	CSimpleFrame::~CSimpleFrame		ui	orchestration		Releases the frame's table, title region, regions, children, slots and lists	verified	one	ui/frames#destruction	
+0x769380	43	CSimpleFrame::DeletingDestructor		ui	orchestration		Destroys a frame and frees it when bit 0 of the argument is set	verified	two	ui/frames#destruction	
+0x7693b0	958	CSimpleFrame::~CSimpleFrame		ui	orchestration		Releases the frame's table, title region, regions, children, slots and lists	verified	two	ui/frames#destruction	
 0x769770	168	CSimpleFrame::PreLoadXML		ui	orchestration		Sets the name and id from an XML node, marks the frame loading and defers its layout	verified	one	ui/visibility#show-and-hide-scripts	
-0x769820	1297	CSimpleFrame::LoadXML		ui	orchestration		Applies an XML node's inheritance, layout, attributes and child elements to a frame	verified	one	ui/frames#loading-from-xml	ui::glue769_769820_set_alpha_quantize
-0x769d40	43	DeleteTitleRegion		ui	orchestration		Destroys a title region and frees it when asked	verified	one	ui/frames#destruction	
+0x769820	1297	CSimpleFrame::LoadXML		ui	orchestration		Applies an XML node's inheritance, layout, attributes and child elements to a frame	verified	two	ui/frames#loading-from-xml	ui::glue769_769820_set_alpha_quantize
+0x769d40	43	DeleteTitleRegion		ui	orchestration		Destroys a title region and frees it when asked	verified	two	ui/frames#destruction	
 0x769d70	369	CSimpleFrame::LoadXMLLayers		ui	orchestration		Creates each Texture and FontString of each Layer of an XML node in its draw layer	verified	one	ui/frames#loading-from-xml	
 0x769ef0	363	CSimpleFrame::LoadXMLScripts		ui	orchestration		Sets each Scripts child's handler and enables the input its name needs, reporting unknown names	verified	one	ui/framexml#script-elements	
 0x76a060	104	CSimpleFrame::LoadXMLChildren		ui	orchestration		Creates the Frames children of a node, its template first, with the frame as parent	verified	one	ui/framexml#child-frames-and-names	
-0x76a0d0	544	CSimpleFrame::GetScriptByName		ui	orchestration		Returns the script slot of a handler name, OnEvent included, or 0	verified	one	ui/frames#script-slots-by-name	
+0x76a0d0	544	CSimpleFrame::GetScriptByName		ui	orchestration		Returns the script slot of a handler name, OnEvent included, or 0	verified	two	ui/frames#script-slots-by-name	
 0x76a2f0	206	CSimpleFrame::PostLoadXML		ui	orchestration		Ends the load: undefers layout, loads children, runs OnLoad, then OnShow when visible	verified	one	ui/visibility#show-and-hide-scripts	
 0x76a3c0	54	CSimpleFrame::SetFrameFlag		ui	primitive	void __thiscall (CSimpleFrame *this, uint32_t mask, bool value)	Sets or clears the bits of mask in the frame flags +0xb4	verified	one	ui/layoutcache#which-frames-are-saved	
 0x76a400	111	CSimpleFrame::SetDrawsItself		ui	orchestration		Sets the draw-itself bits of a frame and its descendants, marking its own layers dirty	verified	one	ui/visibility#parent-change	
@@ -33320,13 +33320,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a690	128	CSimpleFrame::SetAlpha		ui	orchestration		Stores the alpha byte and, on a change, refreshes the regions and gives every child the same byte	verified	one	ui/visibility#alpha	
 0x76a710	27	CSimpleFrame::EnableDrawLayer		ui	orchestration		Switches a draw layer on and marks it dirty	verified	one	ui/framestate#draw-layers	
 0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	verified	one	ui/framestate#draw-layers	
-0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Appends a region node at the tail of the frame's region list	verified	one	ui/frames#child-and-region-lists	
-0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	verified	one	ui/frames#what-the-region-list-holds	
-0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and links it at the head of a draw layer's list, marking the layer dirty	verified	one	ui/draworder#regions-within-a-frame	
+0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Links a region node at the head of the frame's region list	verified	two	ui/frames#child-and-region-lists	
+0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	verified	two	ui/frames#what-the-region-list-holds	
+0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and links it at the head of a draw layer's list, marking the layer dirty	verified	two	ui/draworder#regions-within-a-frame	
 0x76a910	113	CSimpleFrame::RemoveRegionFromLayer		ui	orchestration		Removes a region from a draw layer's list, marking the layer dirty	inferred	none	ui/frames#frame-fields	
 0x76a990	63	CSimpleFrame::NotifyLayerChanged		ui	orchestration		Marks a draw layer dirty in the frame's own mask or its level node	verified	one	ui/framestate#draw-layers	
 0x76a9d0	78	CSimpleFrame::NotifyAllLayersChanged		ui	unreached		Marks all five draw layers dirty; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x76aa20	142	CSimpleFrame::AddChild		ui	orchestration		Adds a child frame node to the frame's children	verified	one	ui/frames#child-and-region-lists	
+0x76aa20	142	CSimpleFrame::AddChild		ui	orchestration		Adds a child frame node to the frame's children	verified	two	ui/frames#child-and-region-lists	
 0x76aab0	96	CSimpleFrame::RemoveChild		ui	orchestration		Frees the child node of a frame	verified	one	ui/visibility#parent-change	
 0x76ab10	249	CSimpleFrame::SetParent		ui	orchestration		Moves a frame under a new parent, taking its stratum, level plus one and scale	verified	one	ui/visibility#parent-change	
 0x76ac10	62	SetFrameScale		ui	primitive		Stores the frame's own scale and recomputes the effective scale	verified	one	ui/visibility#scale	ui::glue_767_76ac10_rsub_change_detect
@@ -33348,12 +33348,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b2f0	5	FrameInitDragThresholdThunk		ui	orchestration		Jumps to 0x76b300; a static initializer	verified	one	ui/README#static-initializers	
 0x76b300	19	FrameInitDragThreshold		ui	primitive		Stores 0.01 squared in 0xcf0c14, the squared drag-start distance	verified	one	ui/README#static-initializers	ui::dist2_76b320
 0x76b320	125	CSimpleFrame::OnMouseMove		ui	primitive		Starts a drag past the threshold and answers the hit test; slot 0x3c	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::dist2_76b320
-0x76b3a0	79	CSimpleFrame::EmitLayer		ui	orchestration		Walks the regions of one enabled draw layer from the last link and calls each one to emit into a batch	verified	one	ui/draworder#regions-within-a-frame	
-0x76b3f0	306	CSimpleFrame::OnFrameRender		ui	orchestration		Rebuilds a self-drawing frame's own five batches, submits them and draws its children that do not hold 0x4000	verified	one	ui/draworder#frames-that-draw-themselves	
+0x76b3a0	79	CSimpleFrame::EmitLayer		ui	orchestration		Walks the regions of one enabled draw layer from the last link and calls each one to emit into a batch	verified	two	ui/draworder#regions-within-a-frame	
+0x76b3f0	306	CSimpleFrame::OnFrameRender		ui	orchestration		Rebuilds a self-drawing frame's own five batches, submits them and draws its children that do not hold 0x4000	verified	two	ui/draworder#frames-that-draw-themselves	
 0x76b530	25	CSimpleFrame::MarkLayerDirty		ui	orchestration		Sets a bit of the frame's own dirty-layer mask +0x1f8	verified	one	ui/visibility#parent-change	
 0x76b550	42	CSimpleFrame::RefreshRegions		ui	orchestration		Calls slot 0x24 of each region	inferred	none		
 0x76b580	212	CSimpleFrame::OnFrameSizeChanged		ui	primitive		Lays out dependents, computes the hit rectangle and runs the size callback on a size change	verified	one	ui/input#hit-test	ui::apply_rect_screen
-0x76b660	54	CSimpleFrame::OnSizeChanged		ui	orchestration	void __thiscall (CSimpleFrame *this, float width, float height)	Runs the OnSizeChanged script with the width and height as arg1 and arg2 when it is set	verified	one	ui/frames#the-onsizechanged-script	
+0x76b660	54	CSimpleFrame::OnSizeChanged		ui	orchestration	void __thiscall (CSimpleFrame *this, float width, float height)	Runs the OnSizeChanged script with the width and height as arg1 and arg2 when it is set	verified	two	ui/frames#the-onsizechanged-script	
 0x76b6a0	76	CSimpleFrame::OnEnter		ui	orchestration		Shows the +0xa4 frame, switches layer 4 on and runs OnEnter	verified	one	ui/hover#entering-and-leaving	
 0x76b6f0	109	CSimpleFrame::OnLeave		ui	orchestration		Hides the +0xa4 frame, switches layer 4 off, may end a drag and runs OnLeave	verified	one	ui/hover#entering-and-leaving	
 0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as UTF-8 text when visible and the script is set	verified	one	ui/keyscripts#the-test-a-frame-makes	
@@ -33386,10 +33386,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c4c0	5	FrameInitHalfTenthThunk		ui	orchestration		Jumps to 0x76c4d0; a static initializer	verified	one	ui/README#static-initializers	
 0x76c4d0	19	FrameInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x76c4f0	50	CScriptRegion::CScriptRegion		ui	orchestration		Builds the script object and layout parts and stores the region vtables	verified	one	ui/frames#vtables-and-the-two-parts	
-0x76c530	43	CScriptRegion::DeletingDestructor		ui	orchestration		Destroys a region and frees it when bit 0 of the argument is set	verified	one	ui/frames#destruction	
-0x76c560	67	CScriptRegion::~CScriptRegion		ui	orchestration		Releases the region's table and name and destroys its layout and script parts	verified	one	ui/frames#destruction	
+0x76c530	43	CScriptRegion::DeletingDestructor		ui	orchestration		Destroys a region and frees it when bit 0 of the argument is set	verified	two	ui/frames#destruction	
+0x76c560	67	CScriptRegion::~CScriptRegion		ui	orchestration		Releases the region's table and name and destroys its layout and script parts	verified	two	ui/frames#destruction	
 0x76c5b0	153	CScriptRegion::ExpandName		ui	orchestration		Writes a name with a leading $parent replaced by the nearest named ancestor's name	verified	one	ui/widgettype#finding-a-widget-by-name	
-0x76c650	132	CScriptRegion::SetName		ui	orchestration		Stores the expanded name and makes it a Lua global for the region's table when unset	verified	one	ui/frames#names-and-lookup-by-name	
+0x76c650	132	CScriptRegion::SetName		ui	orchestration		Stores the expanded name and makes it a Lua global for the region's table when unset	verified	two	ui/frames#names-and-lookup-by-name	
 0x76c6e0	20	CScriptRegion::GetLayoutParent		ui	orchestration		Returns the parent's layout part, or 0	inferred	none	ui/frames#vtables-and-the-two-parts	
 0x76c700	94	CScriptRegion::GetLayoutFrameByName		ui	orchestration		Finds a region by a name with $parent expanded against the frame, returning its layout part	verified	one	ui/widgettype#finding-a-widget-by-name	
 0x76c760	124	FindFrameOfType		ui	orchestration		Returns the object a global of a name holds when it is a table passing a type test	verified	one	ui/widgettype#finding-a-widget-by-name	
@@ -33502,7 +33502,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fd90	11	InitInfinity76fd90		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x76fda0	40	LoadUiPixelShaders		ui	primitive		Loads the interface pixel shaders from a name list into the two-slot table	verified	one	ui/texture#desaturating	
 0x76fdd0	32			ui	primitive		Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
-0x76fdf0	41	CSimpleTexture::PreLoadXML		ui	orchestration	void __thiscall (CSimpleTexture *this, XMLNode *node, CStatus *status)	Names a texture from its XML node's name attribute when it is not empty	verified	one	ui/frames#a-textures-name-from-xml	
+0x76fdf0	41	CSimpleTexture::PreLoadXML		ui	orchestration	void __thiscall (CSimpleTexture *this, XMLNode *node, CStatus *status)	Names a texture from its XML node's name attribute when it is not empty	verified	two	ui/frames#a-textures-name-from-xml	
 0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
 0x7701c0	54	CSimpleTexture::AnchorToParent		ui	primitive	void __thiscall (CSimpleTexture *this, void *node, void *status)	Pins a parented texture with no anchor point to its parent with SetAllPoints	verified	one	ui/regions#the-implicit-anchor	
 0x770200	245	CSimpleTexture::SetTexture		ui	primitive		Loads a texture file with wrap, filter and shader index, or answers 1 for the file already held	verified	one	ui/texture#settexture	
@@ -33574,9 +33574,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772d40	191	CSimpleFontString::OnFrameSizeChanged		ui	primitive	void __thiscall (CSimpleFontString *this, float *rect)	Rebuilds the text when the rectangle's size changed, else moves it and notifies the layer on an off-screen change	verified	one	ui/fonttext#font-string-rectangle-callback	ui::textglue_rect_axis2_settled, ui::textglue_rect_axis_settled, ui::textglue_rect_pos_transform, ui::textglue_settled_poseps
 0x772e00	72	RectWhollyOffScreen		ui	primitive	bool __thiscall (float *this)	Answers 1 for a rectangle with its top or right below 0 or its bottom or left above 1.0	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x772e50	41	CSimpleFontString::Emit		ui	orchestration		Appends the font string to a layer batch when it has a font and text	verified	one	ui/draworder#what-a-batch-drains	
-0x772e80	55	BatchInit		ui	orchestration	void __thiscall (void *this)	Zeroes a layer batch, empties its quad array and callback list and stores its vtable	verified	one	ui/draworder#batch-construction	
+0x772e80	55	BatchInit		ui	orchestration	void __thiscall (void *this)	Zeroes a layer batch, empties its quad array and callback list and stores its vtable	verified	two	ui/draworder#batch-construction	
 0x772ec0	43	DeletingDestructor772ec0		ui	orchestration		Destroys the object through 0x772ef0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x772ef0	213	BatchDestroy		ui	orchestration	void __thiscall (void *this)	Empties a layer batch, unlinks its callback list and frees its quad records	verified	one	ui/draworder#batch-construction	
+0x772ef0	213	BatchDestroy		ui	orchestration	void __thiscall (void *this)	Empties a layer batch, unlinks its callback list and frees its quad records	verified	two	ui/draworder#batch-construction	
 0x772fd0	164	CSimpleTexture::AppendQuad		ui	primitive	void __thiscall (CSimpleTexture *this, void *batch)	Appends a 0x1c-byte quad record of the texture's image, vertices, texcoords, blend, colours and shader	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773080	130	CSimpleFontString::AppendToBatch		ui	orchestration	void __thiscall (CSimpleFontString *this, void *batch)	Appends the text to a batch when its rectangle is valid and not wholly off screen	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773110	142	BatchAddCallback		ui	primitive		Adds a draw callback and its context to a batch, drained after the quads and the text	verified	one	ui/draworder#what-a-batch-drains	
@@ -33584,7 +33584,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7731c0	15	CompareQuadHandles		ui	primitive	int __cdecl (int *a, int *b)	Returns the first dword of one quad record minus that of the other, the texture handles	verified	one	ui/draworder#layer-batches	
 0x7731d0	104	BatchBegin		ui	orchestration		Empties a batch: zeroes the quad count, frees the text sub-batch and releases the callback list	verified	one	ui/draworder#layer-batches	
 0x773240	60	Unlink773240		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x773280	231	QuadArrayReserve		ui	primitive	void __thiscall (void *this, uint32_t extra, uint32_t round)	Grows the batch's quad array to hold extra more records, rounded to its step when asked	verified	one	ui/draworder#batch-construction	
+0x773280	231	QuadArrayReserve		ui	primitive	void __thiscall (void *this, uint32_t extra, uint32_t round)	Grows the batch's quad array to hold extra more records, rounded to its step when asked	verified	two	ui/draworder#batch-construction	
 0x773370	41	NextLink773370		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x7733a0	8	LayoutThunk7733a0		ui	primitive		Moves this back by 0x24 and jumps to 0x770e20	verified	one	ui/containers#layout-thunks	
 0x7733b0	11	FontPartDeletingDestructor		ui	orchestration	void * __thiscall (void *this, uint32_t free_flag)	Moves from the font part back to the font string and jumps to its deleting destructor	verified	one	ui/fonttext#font-part-and-region-slots	
@@ -33612,10 +33612,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the frame's title region, making one or clearing its anchors	verified	one	ui/framemethods#the-title-region	
 0x773a20	520	Frame::CreateTexture	idb	ui	orchestration	int __fastcall (lua_State *L)	Creates a texture of the frame with a name, layer and template, the template only from a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773c30	558	Frame::CreateFontString	idb	ui	orchestration	int __fastcall (lua_State *L)	Creates a font string of the frame, inheriting a font object or else a template named by a string	verified	one	ui/script#creating-a-frame-from-lua	
-0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
-0x773f60	288	Frame::GetRegions	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
-0x774080	242	Frame::GetNumChildren	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
-0x774180	288	Frame::GetChildren	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
+0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	verified	two	ui/frames#reading-the-lists-from-lua	
+0x773f60	288	Frame::GetRegions	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetRegions, its pair in the table 0x878ec0	verified	two	ui/frames#reading-the-lists-from-lua	
+0x774080	242	Frame::GetNumChildren	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	verified	two	ui/frames#reading-the-lists-from-lua	
+0x774180	288	Frame::GetChildren	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method GetChildren, its pair in the table 0x878ec0	verified	two	ui/frames#reading-the-lists-from-lua	
 0x7742a0	188	Frame::GetFrameStrata	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the name of the frame stratum, UNKNOWN for an index outside the eight	verified	one	ui/framemethods#strata-level-and-texture-alpha	
 0x774360	310	Frame::SetFrameStrata	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method SetFrameStrata, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x7744a0	187	Frame::GetFrameLevel	idb	ui	orchestration	int __fastcall (lua_State *L)	Pushes the frame level as a number	verified	one	ui/framemethods#strata-level-and-texture-alpha	
@@ -33885,7 +33885,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77fac0	405	CScriptRegion::UpdateFrameAlpha		ui	primitive		Folds the owning frame's alpha into the vertex colour array	verified	one	ui/texture#the-frames-alpha-in-the-colour	
 0x77fc60	70	CScriptRegion::Unregister		ui	orchestration		Takes a registered region out of its parent's draw layer list and defers its layout	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fcb0	90	CScriptRegion::Register		ui	orchestration		Links a shown, unregistered region into its visible parent's draw layer list	verified	one	ui/visibility#walking-a-show-or-hide	
-0x77fd10	218	CScriptRegion::SetRegionParent		ui	primitive		Moves a region to a new parent and draw layer, linking it into the new parent's region list	verified	one	ui/frames#what-the-region-list-holds	
+0x77fd10	218	CScriptRegion::SetRegionParent		ui	primitive		Moves a region to a new parent and draw layer, linking it into the new parent's region list	verified	two	ui/frames#what-the-region-list-holds	
 0x77fdf0	29	CScriptRegion::NotifyLayerChanged		ui	orchestration		Tells the parent frame its layer changed while the region is registered	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x77fe10	5	InitDouble77fe20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77fe20, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77fe20	15	InitDouble77fe20		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34860,8 +34860,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a2f50	19	RegionMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x7a2f70	5	FramePointInitInfinityThunk		ui	orchestration		Jumps to 0x7a2f80; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x7a2f80	11	FramePointInitInfinity		ui	orchestration		Copies +inf into 0xcf550c, the undefined coordinate of the layout	verified	one	ui/README#static-initializers	
-0x7a2f90	194	RelativePointGetX		ui	primitive		Returns the x of a relative point: the relative frame's edge or centre plus the scaled offset	verified	one	ui/anchors#relative-point-coordinates	ui::anchor_resolve_x
-0x7a3070	194	RelativePointGetY		ui	primitive		Returns the y of a relative point: the relative frame's edge or centre plus the scaled offset	verified	one	ui/anchors#relative-point-coordinates	ui::anchor_resolve_y
+0x7a2f90	194	RelativePointGetX		ui	primitive		Returns the x of a relative point: the relative frame's edge or centre plus the scaled offset	verified	two	ui/anchors#relative-point-coordinates	ui::anchor_resolve_x
+0x7a3070	194	RelativePointGetY		ui	primitive		Returns the y of a relative point: the relative frame's edge or centre plus the scaled offset	verified	two	ui/anchors#relative-point-coordinates	ui::anchor_resolve_y
 0x7a3150	5	FramePointInitInfinity2Thunk		ui	orchestration		Jumps to 0x7a3160; a static initializer	verified	one	ui/README#static-initializers	
 0x7a3160	11	FramePointInitInfinity2		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x7a3170	5	FramePointInitTwoPiThunk		ui	orchestration		Jumps to 0x7a3180; a static initializer	verified	one	ui/README#static-initializers	

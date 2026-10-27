@@ -367,10 +367,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x77b6cc	uint8_t[56]	s_caseIndexes77b160		ui	Holds the 56 case indexes of the switch in 0x77b160	inferred	none	ui/editbox#ctrl-letter-keys
 0x77b704	void *[11]	s_cases77b160At77b704		ui	Holds the 11 case addresses of the switch in 0x77b160	inferred	none	ui/editbox#keys
 0x78aac4	uint8_t[116]	s_caseIndexes78a7b0		ui	Holds the 116 case indexes of the switch in 0x78a7b0	inferred	none	ui/simplehtml#whitespace-in-a-block
-0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	one	ui/anchors#relative-point-coordinates
-0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
-0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
-0x7a3140	uint8_t[9]	s_pointYCaseIndex		ui	Holds the case of each anchor point for the y getter: 0, 0, 0, 1, 1, 1, 2, 2, 2	verified	one	ui/anchors#relative-point-coordinates
+0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	two	ui/anchors#relative-point-coordinates
+0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	two	ui/anchors#relative-point-coordinates
+0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	two	ui/anchors#relative-point-coordinates
+0x7a3140	uint8_t[9]	s_pointYCaseIndex		ui	Holds the case of each anchor point for the y getter: 0, 0, 0, 1, 1, 1, 2, 2, 2	verified	two	ui/anchors#relative-point-coordinates
 0x7a3850	void *[6]	s_cases7a37e0		ui	Holds the six button name arms of the hyperlink click firer 0x7a37e0	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
 0x7a3868	uint8_t[16]	s_caseIndexes7a37e0		ui	Maps a button mask to a button name arm, 5 for none	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
 0x7c229c	void *[4]	s_circleBoxModeCases		cmath	Holds the four mode case addresses of the circle against a box test 0x7c2040	verified	one	cmath/geometry#circle-and-point-against-a-box
@@ -466,7 +466,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8029c8	const float	s_splineChordStep		spline	Holds 0.05, the parameter step of the 20 chords of a segment length	verified	one	spline#arc-length-and-parameter
 0x8029cc	const float	s_bytePackBias		unassigned	Holds 512.0, the bias that leaves a byte in a float's low mantissa bits	verified	one	lighting/daynight#colour-band-value
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
-0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
+0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	two	ui/anchors#absolute-and-relative-points
 0x8029d8	float	s_floatInfinity		fastmath	Holds +inf as a float, read only by the initializer 0x454aa0	verified	one	fastmath#static-initializers
 0x8029dc	float	s_floatPi		fastmath	Holds pi as a float, read only by the initializer 0x455b70	verified	one	fastmath#static-initializers
 0x8029e0	double[64]	s_exp2Table		fastmath	Holds 2 to the i/64 for i from 0 to 63, indexed by the top six mantissa bits	verified	one	fastmath#software-exp2
@@ -552,19 +552,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8062e0	const uint32_t[94]	s_chatTypeEvents		ui	Holds the event id each of the 94 chat types fires; type 89 holds 540, which has no name	verified	one	ui/chatevents#the-ten-event-arguments
 0x806458	char[8]	s_maskCharacters		ui	Holds the mask characters !@#$%^&*	verified	one	ui/chatfilter#masking
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	verified	one	ui/chatcolors#changechatcolor
-0x806524	const float	s_mapInvVerticalSpan		ui	Holds 1/41.75, the divisor that turns the vertical world span of a map into 0 to 1	verified	one	ui/geometry#the-rectangle-of-a-continent
-0x806528	const float	s_mapInvHorizontalSpan		ui	Holds 1/62.625, the divisor that turns the horizontal world span of a map into 0 to 1	verified	one	ui/geometry#the-rectangle-of-a-continent
-0x80652c	const float	s_mapVerticalOrigin		ui	Holds 20.875, the vertical offset of a continent rectangle before its scale	verified	one	ui/geometry#the-rectangle-of-a-continent
-0x806530	const float	s_mapHorizontalOrigin		ui	Holds 31.3125, the horizontal offset of a continent rectangle before its scale	verified	one	ui/geometry#the-rectangle-of-a-continent
+0x806524	const float	s_mapInvVerticalSpan		ui	Holds 1/41.75, the divisor that turns the vertical world span of a map into 0 to 1	verified	two	ui/geometry#the-rectangle-of-a-continent
+0x806528	const float	s_mapInvHorizontalSpan		ui	Holds 1/62.625, the divisor that turns the horizontal world span of a map into 0 to 1	verified	two	ui/geometry#the-rectangle-of-a-continent
+0x80652c	const float	s_mapVerticalOrigin		ui	Holds 20.875, the vertical offset of a continent rectangle before its scale	verified	two	ui/geometry#the-rectangle-of-a-continent
+0x806530	const float	s_mapHorizontalOrigin		ui	Holds 31.3125, the horizontal offset of a continent rectangle before its scale	verified	two	ui/geometry#the-rectangle-of-a-continent
 0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
 0x80653c	const float	s_oneTwentyEight		unassigned	Holds 128.0	verified	one	lighting/clouds#cloud-cover
-0x806540	const float	s_mapNegCells		ui	Holds -128.0, the multiplier that gives the row of an area bitmap cell	verified	one	ui/geometry#the-cell-of-a-point
-0x806544	const float	s_float37f5c290		ui	Holds the float 0.000029296876 (0x37f5c290)	verified	one	ui/geometry#the-cell-of-a-point
-0x806548	const float	s_float427a8000		ui	Holds the float 62.625 (0x427a8000)	verified	one	ui/geometry#click-to-world
+0x806540	const float	s_mapNegCells		ui	Holds -128.0, the multiplier that gives the row of an area bitmap cell	verified	two	ui/geometry#the-cell-of-a-point
+0x806544	const float	s_float37f5c290		ui	Holds the float 0.000029296876 (0x37f5c290)	verified	two	ui/geometry#the-cell-of-a-point
+0x806548	const float	s_float427a8000		ui	Holds the float 62.625 (0x427a8000)	verified	two	ui/geometry#click-to-world
 0x80654c	float	s_tileSize		terrain	Holds 533.33331 (0x44055555), a tile's side in yards	verified	one	terrain/files#wdl
-0x806550	const float	s_float42270000		ui	Holds the float 41.75 (0x42270000)	verified	one	ui/geometry#click-to-world
-0x806554	const float	s_float37fb27eb		ui	Holds the float 0.00002994012 (0x37fb27eb)	verified	one	ui/geometry#world-to-map
-0x806558	const float	s_float383c5df1		ui	Holds the float 0.000044910183 (0x383c5df1)	verified	one	ui/geometry#world-to-map
+0x806550	const float	s_float42270000		ui	Holds the float 41.75 (0x42270000)	verified	two	ui/geometry#click-to-world
+0x806554	const float	s_float37fb27eb		ui	Holds the float 0.00002994012 (0x37fb27eb)	verified	two	ui/geometry#world-to-map
+0x806558	const float	s_float383c5df1		ui	Holds the float 0.000044910183 (0x383c5df1)	verified	two	ui/geometry#world-to-map
 0x80655c	const float	s_float3fd55555		unassigned	Holds the float 1.6666666 (0x3fd55555)	inferred	none	
 0x806574	const float	s_float40b1c71cAt806574		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
 0x8065ec	const float	s_mailRangeYards		ui	Holds 5.5555553, the mailbox walk-away range in yards, squared into the range cell	verified	one	ui/mail#opening-and-closing
@@ -825,7 +825,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c5bc	const float	s_stopNearSquared		collision	Holds 9.0, the squared distance under which a stop-form move flushes at its point	verified	one	collision/ride#monster-move-body
 0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
-0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
+0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	two	ui/anchors#resolving-and-the-changed-callback
 0x80c5d0	const float	s_onePointTwoFive		unassigned	Holds 1.25	verified	one	lighting/celestial#static-tracks
 0x80c5d4	const float	s_drunkCosineMean		objectlayer	Holds 0.333333, the factor that takes the mean of the three drunk sway cosines	verified	one	objectlayer/unitbody#drunk-sway
 0x80c5d8	const float	s_drunkRateC		objectlayer	Holds 0.195, the rate of the third drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
@@ -1146,8 +1146,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811914	float	s_movingRangeBonus		spell	Holds 8/3 (0x402aaaab), the yards a maximum range gains when caster and target both have movement flags 0x200d	verified	one	spell/records#range-bonuses-and-modifier
 0x81199c	float	s_shardRateScaleLevel1		spell	Holds 0.66, the shard rate scale at spellEffectLevel 1	verified	one	spell/visuals#emitter-initialization
 0x8119f8	uint32_t[16]	s_frameStrataNames		ui	Holds eight pairs of a stratum index and its name, BACKGROUND 1 to TOOLTIP 8	verified	one	ui/strata#strata-and-their-names
-0x811a38	uint32_t[18]	s_anchorPointNames		ui	Holds nine pairs of an anchor point index and its name	verified	one	ui/anchors#point-slots-and-point-names
-0x811a80	uint32_t[10]	s_drawLayerNames		ui	Holds five pairs of a draw layer index and its name, BACKGROUND 0 to HIGHLIGHT 4	verified	one	ui/draworder#regions-within-a-frame
+0x811a38	uint32_t[18]	s_anchorPointNames		ui	Holds nine pairs of an anchor point index and its name	verified	two	ui/anchors#point-slots-and-point-names
+0x811a80	uint32_t[10]	s_drawLayerNames		ui	Holds five pairs of a draw layer index and its name, BACKGROUND 0 to HIGHLIGHT 4	verified	two	ui/draworder#regions-within-a-frame
 0x811aa8	const uint32_t[10]	s_blendModeNames		ui	Holds five pairs of a blend mode and its name: DISABLE 0, BLEND 2, ALPHAKEY 1, ADD 3 and MOD 4	verified	one	ui/button#checked-textures
 0x811ad0	const uint32_t[12]	s_justifyNames		ui	Holds six pairs of a justify bit and its name, LEFT 1 to BOTTOM 0x20	verified	one	ui/fontstring#justify
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1181,16 +1181,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c370	const float	s_infinityTop		unassigned	Holds +inf, 0x7f800000, the literal that TopInitInfinity copies at start-up	verified	one	ui/README#static-initializers
 0x81c378	const float	s_inputPriority		ui	Holds 1.0, the priority of the top's input handlers	verified	one	ui/input#the-handlers
 0x81c380	void *[11]	CSimpleTop::vftable		ui	Holds the vtable of CSimpleTop	verified	one	ui/strata#construction-and-teardown
-0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	one	ui/anchors#edge-resolution-from-points
-0x81c3c4	uint32_t[3]	s_centerYPoints		ui	Holds the anchor points 3, 4, 5 that fix a vertical centre	verified	one	ui/anchors#edge-resolution-from-points
-0x81c3d0	uint32_t[3]	s_leftPoints		ui	Holds the anchor points 0, 3, 6 that fix a left edge	verified	one	ui/anchors#edge-resolution-from-points
-0x81c3dc	uint32_t[3]	s_topPoints		ui	Holds the anchor points 0, 1, 2 that fix a top edge	verified	one	ui/anchors#edge-resolution-from-points
-0x81c3e8	uint32_t[3]	s_rightPoints		ui	Holds the anchor points 2, 5, 8 that fix a right edge	verified	one	ui/anchors#edge-resolution-from-points
-0x81c3f4	uint32_t[3]	s_bottomPoints		ui	Holds the anchor points 6, 7, 8 that fix a bottom edge	verified	one	ui/anchors#edge-resolution-from-points
-0x81c400	void *[11]	CLayoutFrame::vftable		ui	Holds the vtable of CLayoutFrame	verified	one	ui/anchors#resolving-and-the-changed-callback
-0x81c42c	void *[4]	s_absolutePointVtable		ui	Holds the vtable of an anchor point with no relative frame	verified	one	ui/anchors#absolute-and-relative-points
-0x81c43c	void *[4]	s_anchorPointVtable		ui	Holds the base vtable of an anchor point, with two pure getters	verified	one	ui/anchors#absolute-and-relative-points
-0x81c44c	void *[4]	s_relativePointVtable		ui	Holds the vtable of an anchor point relative to another frame	verified	one	ui/anchors#absolute-and-relative-points
+0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	two	ui/anchors#edge-resolution-from-points
+0x81c3c4	uint32_t[3]	s_centerYPoints		ui	Holds the anchor points 3, 4, 5 that fix a vertical centre	verified	two	ui/anchors#edge-resolution-from-points
+0x81c3d0	uint32_t[3]	s_leftPoints		ui	Holds the anchor points 0, 3, 6 that fix a left edge	verified	two	ui/anchors#edge-resolution-from-points
+0x81c3dc	uint32_t[3]	s_topPoints		ui	Holds the anchor points 0, 1, 2 that fix a top edge	verified	two	ui/anchors#edge-resolution-from-points
+0x81c3e8	uint32_t[3]	s_rightPoints		ui	Holds the anchor points 2, 5, 8 that fix a right edge	verified	two	ui/anchors#edge-resolution-from-points
+0x81c3f4	uint32_t[3]	s_bottomPoints		ui	Holds the anchor points 6, 7, 8 that fix a bottom edge	verified	two	ui/anchors#edge-resolution-from-points
+0x81c400	void *[11]	CLayoutFrame::vftable		ui	Holds the vtable of CLayoutFrame	verified	two	ui/anchors#resolving-and-the-changed-callback
+0x81c42c	void *[4]	s_absolutePointVtable		ui	Holds the vtable of an anchor point with no relative frame	verified	two	ui/anchors#absolute-and-relative-points
+0x81c43c	void *[4]	s_anchorPointVtable		ui	Holds the base vtable of an anchor point, with two pure getters	verified	two	ui/anchors#absolute-and-relative-points
+0x81c44c	void *[4]	s_relativePointVtable		ui	Holds the vtable of an anchor point relative to another frame	verified	two	ui/anchors#absolute-and-relative-points
 0x81c468	const float	s_dragDistance		ui	Holds 0.01, the distance whose square starts a drag	verified	one	ui/README#static-initializers
 0x81c46c	void *[11]	s_simpleFrameLayoutVtable		ui	Holds the vtable of a CSimpleFrame's layout part	verified	one	ui/frames#vtables-and-the-two-parts
 0x81c498	void *[36]	CSimpleFrame::vftable		ui	Holds the vtable of CSimpleFrame	verified	one	ui/visibility#alpha
@@ -1683,7 +1683,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x845070	int32_t	s_mapZone		unassigned	Holds the selected zone index within the continent, -1 for none	verified	one	ui/worldmap#the-selection
 0x845074	int32_t	s_mapDirectArea		unassigned	Holds the WorldMapArea row id of the selected instance map, -1 for none	verified	one	ui/worldmap#the-selection
 0x845078	void *[46]	s_worldMapFunctions		ui	Holds the 23 name and function pairs of the world map Lua functions, GetMapContinents to ShowMiniWorldMapArrowFrame	verified	one	ui/scriptapi#function-tables
-0x845374	char[26]	s_textInterfaceWorldMapSZmp		ui	Holds the string "Interface\WorldMap\%s.zmp"	verified	one	ui/geometry#the-area-bitmap
+0x845374	char[26]	s_textInterfaceWorldMapSZmp		ui	Holds the string "Interface\WorldMap\%s.zmp"	verified	two	ui/geometry#the-area-bitmap
 0x8453c0	char[35]	s_textInterfaceMinimapMinimapArrowMdx		ui	Holds the string "Interface\Minimap\MinimapArrow.mdx"	inferred	none	
 0x8457cc	int32_t	s_bgActiveSlot		ui	Holds the queue slot of the active battleground, -1 for none	verified	one	ui/battlefield#caches-and-lifecycle
 0x8457d0	int32_t	s_bgScoreFilter		ui	Holds the team shown first in the score list, -1 for all	verified	one	ui/battlefield#caches-and-lifecycle
@@ -2418,9 +2418,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
 0x8783a4	char[53]	s_simpleTopPath		ui	Holds the source path of CSimpleTop.cpp	verified	one	ui/input#input-lists
 0x8783e4	char[23]	s_strataNodeTag		ui	Holds .PAVCFrameStrataNode@@, the allocation tag of the level node arrays	verified	one	ui/strata#strata-records-and-level-nodes
-0x878440	char[33]	s_relativeFrameMissing		ui	Holds the error the XML anchors report for a relativeTo name that finds no frame	verified	one	ui/anchors#construction-and-the-xml-anchors
+0x878440	char[33]	s_relativeFrameMissing		ui	Holds the error the XML anchors report for a relativeTo name that finds no frame	verified	two	ui/anchors#construction-and-the-xml-anchors
 0x878500	char[55]	s_layoutFramePath		ui	Holds the source path of CLayoutFrame.cpp	verified	one	ui/README#frame-core-object-files
-0x878540	char[29]	s_frameNodeTag		ui	Holds the allocation tag of a dependent node, the type name of CLayoutFrame's FRAMENODE	verified	one	ui/anchors#dependents
+0x878540	char[29]	s_frameNodeTag		ui	Holds the allocation tag of a dependent node, the type name of CLayoutFrame's FRAMENODE	verified	two	ui/anchors#dependents
 0x878590	const char[10]	s_tagMaxResize		ui	Holds the XML element name maxResize of a frame's maximum size	verified	one	ui/resizebounds#the-xml-element
 0x87859c	const char[10]	s_tagMinResize		ui	Holds the XML element name minResize of a frame's minimum size	verified	one	ui/resizebounds#the-xml-element
 0x8785a8	const char[13]	s_tagResizeBounds		ui	Holds the XML element name ResizeBounds of a frame's resize bounds	verified	one	ui/resizebounds#the-xml-element
@@ -2431,14 +2431,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87879c	char[7]	s_framesElement		ui	Holds Frames, the XML element name	verified	one	ui/framexml#child-frames-and-names
 0x878870	char *	s_regionTypeName		ui	Points to Region, the type name of CScriptRegion	verified	one	ui/frames#vtables-and-the-two-parts
 0x878874	char[56]	s_scriptRegionPath		ui	Holds the source path of CScriptRegion.cpp	verified	one	ui/README#frame-core-object-files
-0x8788ac	char[4]	s_topName		ui	Holds Top, what $parent becomes when no ancestor is named	verified	one	ui/frames#names-and-lookup-by-name
-0x8788b0	char[8]	s_parentPrefix		ui	Holds $parent, the name prefix replaced by an ancestor's name	verified	one	ui/frames#names-and-lookup-by-name
+0x8788ac	char[4]	s_topName		ui	Holds Top, what $parent becomes when no ancestor is named	verified	two	ui/frames#names-and-lookup-by-name
+0x8788b0	char[8]	s_parentPrefix		ui	Holds $parent, the name prefix replaced by an ancestor's name	verified	two	ui/frames#names-and-lookup-by-name
 0x878948	uint32_t[46]	s_modelMethods		ui	Holds the 23 pairs of a name and a function of the Model methods	verified	one	ui/model#lua-methods
 0x878b44	char[23]	s_textInvalidModelFileS		ui	Holds the string "Invalid model file: %s"	inferred	none	
 0x878c00	char[122]	s_textUsageSSetLightEnabledOmniDirXDirYDirZ		ui	Holds a string that opens "Usage: %s:SetLight(enabled[, omni, dirX, dirY, dirZ, ambIntensity[, ambR, ambG, ambB], dir…"	verified	one	ui/modelanim#setlight-and-getlight
 0x878cf0	uint32_t			ui	Holds a dword that Script::SetPortraitTexture, Texture::SetTexture read; not read here	inferred	none	ui/nameplatedraw#blend-and-batch-state
 0x878d70	char[56]	s_pathCSimpleRenderCpp		ui	Holds the source path of CSimpleRender.cpp, passed to the allocator as the file	verified	one	ui/fonttext#creating-and-freeing-a-string
-0x878e7c	char[28]	s_typeCSimpleBatchedTexture		ui	Holds the RTTI name of the batched quad record, passed to the allocator as its tag	verified	one	ui/draworder#batch-construction
+0x878e7c	char[28]	s_typeCSimpleBatchedTexture		ui	Holds the RTTI name of the batched quad record, passed to the allocator as its tag	verified	two	ui/draworder#batch-construction
 0x878ec0	uint32_t[136]	s_frameMethods		ui	Holds the 68 pairs of a name and a function of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x879544	char[54]	s_textSCreateTextureCouldnTFindInheritedNodeS		ui	Holds the string "%s:CreateTexture(): Couldn't find inherited node "%s""	inferred	none	
@@ -4718,7 +4718,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceef60	uint32_t	s_eventCapacity		ui	Holds the capacity of the event record array	verified	one	ui/script#the-event-table
 0xceef64	uint32_t	s_eventCount		ui	Holds the number of event records	verified	one	ui/script#the-event-table
 0xceef68	void *	s_eventRecords		ui	Points to the event records, 0x10 bytes each: name and listener list	verified	one	ui/script#the-event-table
-0xceef6c	uint32_t	s_lastTypeId		ui	Holds the last script type id handed out	verified	one	ui/frames#the-region-type-id
+0xceef6c	uint32_t	s_lastTypeId		ui	Holds the last script type id handed out	verified	two	ui/frames#the-region-type-id
 0xceef74	void *	s_luaState		ui	Points to the Lua state of the interface, 0 while closed	verified	one	ui/luastate#opening-and-replacing-the-state
 0xceefb0	M2Cache	s_m2Cache		models	Holds the model cache	verified	one	models/cache#cache-object
 0xceffec	float	s_m2LightGridScale		models	Holds the scale from world units to a scene light grid cell	verified	one	models/lights#scene-light-grid
@@ -4791,13 +4791,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf0bc0	float	s_topInfinity		ui	Holds +inf, the top file's copy of the shared header's value	verified	one	ui/README#static-initializers
 0xcf0bc8	uint32_t	s_lastInputTime		ui	Holds the time of the last key or mouse event the top's handlers received	verified	one	ui/input#the-handlers
 0xcf0bd8	void *	s_simpleTop		ui	Points to the CSimpleTop its constructor stores; its destructor stores 0	verified	one	ui/frames#construction
-0xcf0bec	uint32_t	s_layoutQueueLinkOffset		ui	Holds 0x6c, the offset of the layout queue link in a layout frame	verified	one	ui/anchors#invalidation-and-the-layout-queue
-0xcf0bf0	void *	s_layoutQueueTail		ui	Points to the layout queue terminator's previous link, the tail	verified	one	ui/anchors#invalidation-and-the-layout-queue
-0xcf0bf4	void *	s_layoutQueueHead		ui	Points to the first queued layout frame, tagged by bit 0 when empty	verified	one	ui/anchors#invalidation-and-the-layout-queue
+0xcf0bec	uint32_t	s_layoutQueueLinkOffset		ui	Holds 0x6c, the offset of the layout queue link in a layout frame	verified	two	ui/anchors#invalidation-and-the-layout-queue
+0xcf0bf0	void *	s_layoutQueueHead		ui	Points to the layout queue terminator's next link, the head	verified	two	ui/anchors#invalidation-and-the-layout-queue
+0xcf0bf4	void *	s_layoutQueueTail		ui	Points to the layout queue terminator's previous link, the tail, where the drain starts; tagged by bit 0 when empty	verified	two	ui/anchors#invalidation-and-the-layout-queue
 0xcf0c10	uint32_t	s_frameTypeId		ui	Holds the script type id of Frame, assigned on first use	verified	one	ui/methods#finding-self
 0xcf0c14	float	s_dragThresholdSq		ui	Holds 0.0001, the squared distance a pressed frame moves before its drag starts	verified	one	ui/README#static-initializers
-0xcf0c1c	uint32_t	s_frameCount		ui	Counts the CSimpleFrame objects that exist	verified	one	ui/frames#construction
-0xcf0c3c	uint32_t	s_regionTypeId		ui	Holds the script type id of Region, assigned on first use	verified	one	ui/frames#the-region-type-id
+0xcf0c1c	uint32_t	s_frameCount		ui	Counts the CSimpleFrame objects that exist	verified	two	ui/frames#construction
+0xcf0c3c	uint32_t	s_regionTypeId		ui	Holds the script type id of Region, assigned on first use	verified	two	ui/frames#the-region-type-id
 0xcf0c5c	uint32_t	s_modelTypeId		ui	Holds the model frame type id, assigned from a counter on first use	inferred	none	
 0xcf0cc0	char[4096]	s_fontStringFitBuffer		ui	Holds the text a FontString shortens with ... to fit its box	verified	one	ui/fontstring#size-and-fitting
 0xcf1cc4	uint32_t	s_fontStringCount		ui	Holds the number of live font strings, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#creating-and-freeing-a-string
@@ -4827,7 +4827,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf53b4	uint32_t[10]	s_checkButtonMethodHash		ui	Holds the hash table of the 6 CheckButton methods: vtable, list, chain counter, bucket vector and mask	verified	one	ui/button#lua-methods
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
-0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates
+0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	two	ui/anchors#relative-point-coordinates
 0xcf552c	uint32_t[3]	s_soundObjectList		sound	Holds the list head of sounds that follow objects, link offset 0x10	verified	one	sound/engine#the-sound-object
 0xcf553c	uint32_t			unassigned	Holds a dword that Sound::Initialize, Sound::DupeCheckFailed, Sound::DecrementCategory read; not read here	inferred	none	
 0xcf5574	uint32_t[3]	s_soundAllList		sound	Holds the list head of every sound, link offset 0	verified	one	sound/engine#the-sound-object

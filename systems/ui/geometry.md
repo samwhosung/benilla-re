@@ -20,7 +20,7 @@ the array at `0xb6e668`, counted at `0xb6e664`. A zone of a continent is a row w
 
 Addresses: `0x4a5d00`, `0x4a5d0b`, `0x4a5d1f`, `0x4a5d31`, `0x4a5d7d`, `0x4a5e0c`, `0x4a5e16`, `0x4a5e66`, `0x4a5ebb`, `0x4a5ed6`, `0x4a5ef1`, `0x4a6390`, `0x4a6019`, `0x4a6104`, `0xb6e664`, `0xb6e668`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4a5d00` counts the `WorldMapArea` rows (32 bytes) whose area id at `+0x08` is 0 (`0x4a5d1f` to `0x4a5d3f`) and resizes the array
@@ -39,7 +39,7 @@ the four floats as the record held them.
 
 Addresses: `0x4a5f22`, `0x4a5f30`, `0x4a5f36`, `0x4a5f42`, `0x4a5f4b`, `0x4a5f57`, `0x4a5f64`, `0x4a5f78`, `0x4a5f9a`, `0x4a5fba`, `0x4a5fdd`, `0x806524`, `0x806528`, `0x806530`, `0x80652c`, `0x806534`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The loop over the `WorldMapContinent` rows (0x34 bytes apart, `0x4a5f36`) compares the row's map id at `+0x04` with the record's (`0x4a5f30`).
@@ -57,7 +57,7 @@ the record keeps its grid and its remap is skipped.
 
 Addresses: `0x4a5feb`, `0x4a5ffc`, `0x4a600f`, `0x4a601b`, `0x4a604b`, `0x4a6054`, `0x4a6070`, `0x4a607a`, `0x4a6085`, `0x4a6095`, `0x4a6099`, `0x4a60a2`, `0x4a60c7`, `0x4a60e0`, `0x4a60ed`, `0x6477a0`, `0x648460`, `0x648730`, `0x845374`, `0xc0e048`, `0xc0e04c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x4a5feb` pushes the format at `0x845374` and the row's name at `+0x0c` to the formatter `0x64a7f0` (`0x4a5ffc`), and `0x6477a0` opens the
@@ -76,7 +76,7 @@ grid. A direct area, the world view and a missing row give 0.
 
 Addresses: `0x4a6ec0`, `0x4a6ec7`, `0x4a6ed6`, `0x4a6f05`, `0x4a6f0e`, `0x4a6f1f`, `0x4a6f31`, `0x4a6fbc`, `0x4a6fd1`, `0x4a6ff6`, `0x4a7005`, `0x4a7020`, `0x4a70b8`, `0x4a70c6`, `0x4a70cc`, `0x4a70d6`, `0x4a70dc`, `0x4a70e0`, `0x84506c`, `0x845070`, `0x845074`, `0x806544`, `0x80653c`, `0x806540`, `0xc0d5bc`, `0xc0d5c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::geo_4a6ec0`
 
 The clamp-and-compare at `0x4a7032` to `0x4a7071` accepts a coordinate of exactly 1.0, which gives column or row 128: it reads into the next row, or past the 128×128 grid on the last.
@@ -100,7 +100,7 @@ pair for the second; `v` is not read. No call reaches `0x4a7100`: its only calle
 
 Addresses: `0x4a7100`, `0x4a7117`, `0x4a7145`, `0x4a7152`, `0x4a715e`, `0x4a716b`, `0x4a7195`, `0x4a71c4`, `0x4a71d6`, `0x4a71df`, `0x4a71f3`, `0x4a71fc`, `0x4a7207`, `0x4a726f`, `0x4a727d`, `0x4a7286`, `0x4a7292`, `0x4a7712`, `0x80654c`, `0x806548`, `0x806550`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 At the world level (`0x4a7117`) the loop tests `u` and `v` against the edges `+0x10018`, `+0x10020`, `+0x10014` and `+0x1001c` (`0x4a7145`, `0x4a7152`,
@@ -112,14 +112,14 @@ from its four floats (`0x4a726f` to `0x4a7289`); both products use the argument 
 
 `0x4a72b0(a, b)` and the world leg of `0x4a7360` put a world position on the world view. For the `WorldMapContinent` row of the map id, the
 horizontal result is `f6·k6 + 0.5 − b·c6·s` and the vertical one `f7·k7 + 0.5 − a·c7·s`, with `k6`, `k7`, `c6` and `c7` the constants below.
-`0x4a72b0` returns the horizontal result and one minus the vertical one; `0x4a7360` returns both unchanged. The two
-projections do not invert `0x4a7100`: its offset term is `f6·533.3333` where the inverse of this formula has `f6·533.3333 / s`, so a round trip
-closes only when `s` is 1, or when `f6` is 0 on the horizontal axis and `f7` is 0 on the vertical one.
+`0x4a72b0` returns the horizontal result and one minus the vertical one; `0x4a7360` returns both unchanged. Neither inverts `0x4a7100`: composed with it, each result is off by a term in `(1 − s)`, and `0x4a72b0`'s vertical result is `1 − v` before that term.
 
-Addresses: `0x4a72b0`, `0x4a72b6`, `0x4a72c9`, `0x4a72d8`, `0x4a72de`, `0x4a72e6`, `0x4a72f5`, `0x4a72fb`, `0x4a7303`, `0x4a7305`, `0x4a730e`, `0x4a7320`, `0x4a7360`, `0x4a7393`, `0x4a73b3`, `0x4a73d1`, `0x4a73d5`, `0x806554`, `0x806558`, `0x7ff9d8`
+Addresses: `0x4a72b0`, `0x4a72b6`, `0x4a72c9`, `0x4a72d8`, `0x4a72de`, `0x4a72e6`, `0x4a72f5`, `0x4a72fb`, `0x4a7303`, `0x4a7305`, `0x4a730c`, `0x4a730e`, `0x4a7320`, `0x4a7360`, `0x4a7393`, `0x4a73b3`, `0x4a73d1`, `0x4a73d5`, `0x806554`, `0x806558`, `0x7ff9d8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::geo_4a72b0`, `ui::geo_4a7360`
+
+Composed with `0x4a7100` for the point `(u, v)`, before float rounding, the horizontal result is `u + f6·(1 − s) / 62.625` and the vertical result of `0x4a7360` is `v + f7·(1 − s) / 41.75`; each is the point only when `s` is 1 or `f6` or `f7` is 0. The vertical result of `0x4a72b0` is `1 − v − f7·(1 − s) / 41.75` (`fsub st,st(1)` at `0x4a730c`), never `v`.
 
 `k6` is `[0x806528]` (1/62.625) and `k7` is `[0x806524]` (1/41.75); `f6` and `f7` are multiplied by them, not divided. `c6` is `[0x806554]` and `c7` is `[0x806558]`.
 

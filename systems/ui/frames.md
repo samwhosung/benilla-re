@@ -22,13 +22,13 @@ name, the method table, the script slot by name, the type test by id, the parent
 test by name and the type name. A layout slot that must act on the frame is a thunk that moves
 `ecx` back by 0x24.
 
-Addresses: `0x76c4f0`, `0x76c513`, `0x76c51a`, `0x81c580`, `0x81c5a0`, `0x769090`, `0x7692e5`, `0x7692eb`, `0x81c498`, `0x81c46c`, `0x81c528`, `0x81c554`, `0x76c410`, `0x76c420`, `0x76c6e0`, `0x76c700`, `0x76c430`, `0x76c440`, `0x76c460`, `0x76c480`, `0x878870`
+Addresses: `0x76c4f0`, `0x76c511`, `0x76c518`, `0x81c580`, `0x81c5a0`, `0x769090`, `0x7692e5`, `0x7692eb`, `0x81c498`, `0x81c46c`, `0x81c528`, `0x81c554`, `0x76c410`, `0x76c420`, `0x76c6e0`, `0x76c700`, `0x76c430`, `0x76c440`, `0x76c460`, `0x76c480`, `0x878870`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x76c4f0` calls the script object's constructor `0x701ae0` and `0x767680`, zeroes `+0x98` and
-`+0x9c`, and stores `0x81c5a0` at `+0x24` and `0x81c580` at `+0x0` (`0x76c513`, `0x76c51a`).
+`+0x9c`, and stores `0x81c5a0` at `+0x24` and `0x81c580` at `+0x0` (`0x76c511`, `0x76c518`).
 `0x769090` stores `0x81c498` and `0x81c46c` (`0x7692e5`, `0x7692eb`). Slot 4 of `0x81c580` is
 `0x46ff70` (`+0x98`); slot 0x14 is `0x76c430`, `mov [ecx+0x9c],arg`; slot 0x10 is `0x76c440`,
 `arg == [0xcf0c3c]`; slot 0x18 is `0x76c460`, `SStrCmpI(arg, "Region")`; slot 0x1c is `0x76c480`,
@@ -41,14 +41,19 @@ Each script class answers its type test by comparing the argument with a type id
 shared counter the first time one is needed: `CScriptRegion`'s is `0xcf0c3c`, numbered from
 `0xceef6c`. A lookup by name accepts an object only when its type test passes for the id asked.
 
-Addresses: `0x76c700`, `0x76c440`, `0xcf0c3c`, `0xceef6c`, `0x7a11d0`
+Addresses: `0x76c700`, `0x76c738`, `0x76c440`, `0xcf0c3c`, `0xceef6c`, `0x7a11d0`, `0x7a11e9`, `0x7a2b70`, `0x7a2b89`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x76c700` tests `[0xcf0c3c]` and, when 0, increments `[0xceef6c]` and stores it there; `0x7a11d0`,
-the Lua `GetObjectType` of regions, opens with the same test (`mov eax,[0xcf0c3c]; test eax,eax;
-jne`). A writer census of `0xcf0c3c` finds those stores only.
+`0x76c700` tests `[0xcf0c3c]` and, when 0, increments `[0xceef6c]` and stores it there (`0x76c738`).
+The same lazy init (`mov eax,[0xceef6c]; inc eax; mov [0xceef6c],eax; mov [0xcf0c3c],eax`) is in each of
+the 19 Lua methods of regions from `0x7a11d0` (`GetObjectType`) to `0x7a2b70` (`ClearAllPoints`), after
+the test of `[0xcf0c3c]` each opens with (`mov eax,[0xcf0c3c]; test eax,eax; jne`): the stores are at
+`0x7a11e9`, `0x7a12a9`, `0x7a13a7`, `0x7a1478`, `0x7a156d`, `0x7a182e`, `0x7a199e`, `0x7a1abe`,
+`0x7a1bde`, `0x7a1cfe`, `0x7a1e1e`, `0x7a1f3d`, `0x7a204e`, `0x7a216d`, `0x7a227c`, `0x7a235d`,
+`0x7a255f`, `0x7a295d` and `0x7a2b89`. A census of `.text` for writes to `0xcf0c3c` finds these 20
+stores and no other; every one is that init.
 
 ## Names and lookup by name
 
@@ -60,7 +65,7 @@ and the object passes the type test.
 
 Addresses: `0x76c650`, `0x76c5b0`, `0x76c5dd`, `0x76c629`, `0x76c760`, `0x701bd0`, `0x701c6c`, `0x701cb8`, `0x8788ac`, `0x8788b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76c5b0` compares the prefix `$parent` (`0x8788b0`) case-insensitively for its length, copies
@@ -84,7 +89,7 @@ count `+0x4` again.
 
 Addresses: `0x76fdf0`, `0x76fdfe`, `0x76fe07`, `0x76fe0f`, `0x6f2751`, `0x773ba1`, `0x773bd5`, `0x76c650`, `0x701bd0`, `0x701c46`, `0x701c6c`, `0x701cb8`, `0x6f2cf0`, `0x838090`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76fdfe` calls `GetXMLAttribute(node, "name")` (the string at `0x838090`); `0x76fe07` tests the
@@ -129,7 +134,7 @@ move it to the end.
 
 Addresses: `0x769216`, `0x76921c`, `0x769221`, `0x76922c`, `0x7692bc`, `0x7692c7`, `0x76a750`, `0x76a7c6`, `0x76a7d4`, `0x76a7d7`, `0x76aa20`, `0x76abdb`, `0x77fd6e`, `0x76ab10`, `0x76ab20`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The constructor stores the header's own address in the head slot, the terminator's next pointer, and the same address
@@ -150,7 +155,7 @@ layer, so its order is creation order and not BACKGROUND to HIGHLIGHT.
 
 Addresses: `0x773e60`, `0x773f05`, `0x773f20`, `0x773f43`, `0x773f60`, `0x774080`, `0x774125`, `0x774180`, `0x774018`, `0x77402d`, `0x774032`, `0x77404f`, `0x774056`, `0x77405a`, `0x77406a`, `0x701bd0`, `0x6f3810`, `0x6f2f30`, `0x6f3bc0`, `0x878ec0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x773e60` and `0x774080` count the list in a loop with two tests, the tag bit and null (`0x773f20` to `0x773f2c`),
@@ -165,11 +170,11 @@ argument error call is not reached, as the error unwinds.
 A region is in its parent's list from the moment it is attached and leaves it when it is detached. The title
 region of a frame is never in the list: it is a bare object whose parent setter stores the parent and nothing else,
 so `GetRegions` does not return it and `GetNumRegions` does not count it. A button's label and state textures are in
-the list. A region detached with `SetParent(nil)` is removed. Hiding a frame or region changes no list.
+the list. A region detached with `SetParent(nil)` is removed. Hiding a frame or a region changes neither the region list nor the child list. It does unlink the frame from its level list and each region from its layer list (`draworder`).
 
-Addresses: `0x77fd10`, `0x77fd2d`, `0x77fd47`, `0x77fd55`, `0x77fd69`, `0x77fd6e`, `0x76a7f0`, `0x76c430`, `0x81c554`, `0x7739df`, `0x769b79`, `0x778d20`, `0x778d49`, `0x778fd0`, `0x779017`, `0x779110`, `0x779139`, `0x76ad50`, `0x76ada2`, `0x76adc9`, `0x7733e5`, `0x769e74`
+Addresses: `0x77fd10`, `0x77fd2d`, `0x77fd47`, `0x77fd55`, `0x77fd69`, `0x77fd6e`, `0x76a7f0`, `0x76c430`, `0x81c554`, `0x7739df`, `0x769b79`, `0x778d20`, `0x778d49`, `0x778fd0`, `0x779017`, `0x779110`, `0x779139`, `0x76ad50`, `0x76ad9d`, `0x764920`, `0x76ada2`, `0x76adbf`, `0x77fc60`, `0x77fc95`, `0x76a910`, `0x76adc9`, `0x7733e5`, `0x769e74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x77fd10(parent, layer, show)` is the one gateway: it detaches the region from its old parent through slot 0x0b
@@ -177,7 +182,7 @@ Test: none
 parent is not null (`0x77fd69`, `0x77fd6e`). The title region is built by the Lua method (`0x7739df`) and the XML
 element (`0x769b79`) as an object of vtable `0x81c554`, whose slot 5 is `0x76c430` (`0x76c436` stores `+0x9c`), and
 neither path reaches `0x77fd10`. The label setter `0x778d20` and the state texture setters `0x778fd0` and `0x779110` call
-`0x77fd10` (`0x778d49`, `0x779017`, `0x779139`). `0x76ad50` walks both lists read-only, and a hidden region keeps its node.
+`0x77fd10` (`0x778d49`, `0x779017`, `0x779139`). `0x76ad50`, the frame's hide, does nothing to a frame that is not visible. Otherwise it calls `0x764920` (`0x76ad9d`), which takes the frame out of its level list, and for each node of the region list calls `0x77fc60` (`0x76adbf`), which for a registered region calls `0x76a910` (`0x77fc95`) to free the region's node in its layer list; it then walks the child list calling each child's hide. It changes neither the region list nor the child list, so a hidden region keeps its node.
 
 ## Construction
 
@@ -187,14 +192,14 @@ counts the frame in `0xcf0c1c`, takes the top from `0xcf0bd8` and joins its fram
 parent passed to it, switches the first four layers on, and makes itself visible through slot
 0x88.
 
-Addresses: `0x769090`, `0x769099`, `0x769272`, `0x7692f2`, `0x7692f8`, `0x76930d`, `0x769318`, `0x76934a`, `0xcf0c1c`, `0x7646a0`
+Addresses: `0x769090`, `0x769099`, `0x769272`, `0x7692f2`, `0x769307`, `0x76930d`, `0x769318`, `0x76934a`, `0xcf0c1c`, `0x7646a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x769090` calls `0x76c4f0` (`0x769099`), stores 1 at `+0xac`, 3 at `+0xc0`, 0xff at the byte
 `+0xc8`, 1.0 at `+0xb8` and `+0xbc`, builds five batches with 0x772e80 (`0x769272`), increments
-`0xcf0c1c` (`0x7692f2`), stores `[0xcf0bd8]` at `+0xa0` (`0x7692f8`), calls `0x7646a0`
+`0xcf0c1c` (`0x7692f2`), stores `[0xcf0bd8]` at `+0xa0` (`0x769307`), calls `0x7646a0`
 (`0x76930d`), which links the frame into the top's list at `+0xcc0` through `+0x304`, and `0x76ab10`
 with the parent (`0x769318`); it stores 1 at `+0x198` to `+0x1a4`, 0 at `+0x1a8` and 1 at `+0xd0`,
 then calls slot 0x88 (`0x76934a`).
@@ -208,7 +213,7 @@ batches and `CScriptRegion`.
 
 Addresses: `0x7693b0`, `0x769380`, `0x764710`, `0x764690`, `0x701cd0`, `0x702670`, `0x76c560`, `0x76c530`, `0x769d40`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7693b0` stores 3 at `+0xac`, calls `0x764710` (the top's `0x764920` with 0, then the unlink from
@@ -228,7 +233,7 @@ has no slot.
 
 Addresses: `0x76a0d0`, `0x702590`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76a0d0` (slot 0xc of `0x81c498`) asks `0x702590` first, which compares with `OnEvent` and
@@ -246,7 +251,7 @@ range for an update.
 
 Addresses: `0x76b580`, `0x76b5eb`, `0x76b5f6`, `0x76b606`, `0x76b611`, `0x76b623`, `0x76b631`, `0x76b63b`, `0x76b63e`, `0x8029d4`, `0x76b660`, `0x76b663`, `0x76b671`, `0x76b679`, `0x76b680`, `0x76b68a`, `0x81c4e0`, `0x7026f0`, `0x77a8d0`, `0x7871f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76b580`, called on the layout part, compares the width and height changes between the old
@@ -272,7 +277,7 @@ loads the child `Frames` and ends the load (`visibility`).
 
 Addresses: `0x769770`, `0x769820`, `0x769d70`, `0x769ef0`, `0x76a060`, `0x76a2f0`, `0x76af00`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x769820` (slot 8 of the layout vtable) reads `inherits` and calls slot 8 with the inherited
