@@ -142,12 +142,12 @@ before `0x496720`. `0x4bdc00` is `push 0x1a3; call 0x496720`.
 
 | id | event | signalled by |
 |---|---|---|
-| 353 | `PET_BAR_UPDATE` | pet state changes: `0x4bc90c`, `0x4bc951`, `0x4bc974`, `0x4bdb4f`, `0x4bcb68`, `0x4bcc7c`, `0x4bd429`, `0x4bd6a9` |
+| 353 | `PET_BAR_UPDATE` | pet state changes: `0x4bc90c`, `0x4bc951`, `0x4bc974`, `0x4bdb4f`, `0x4bcb68`, `0x4bcc7c`, `0x4bcdc6`, `0x4bd429`, `0x4bd6a9` |
 | 354 | `PET_BAR_UPDATE_COOLDOWN` | `0x4bce90`, from the cooldown store when its bank is the pet's |
 | 355, 356 | `PET_BAR_SHOWGRID`, `PET_BAR_HIDEGRID` | `0x4bce70`, `0x4bce80` |
 | 385 | `PET_DISMISS_START` | `0x4bd6e0` |
 
-Addresses: `0x4bce70`, `0x4bce80`, `0x4bce90`, `0x4bc951`, `0x4bc974`, `0x4bcb68`, `0x4bcc7c`, `0x4bd429`, `0x4bd6a9`
+Addresses: `0x4bce70`, `0x4bce80`, `0x4bce90`, `0x4bc951`, `0x4bc974`, `0x4bcb68`, `0x4bcc7c`, `0x4bcdc6`, `0x4bd429`, `0x4bd6a9`
 Confidence: verified
 Proof: one
 Test: none
@@ -222,7 +222,7 @@ Test: none
 `0x4bcbf4 test cl,1` is the bit 31 requirement and `0x4bcc04 test dl,1` the bit 30 toggle
 (`or 0x40000000` or `and 0xbfffffff`); `0x4bcc17` stores before `0x4bcc19` copies and `0x4bcc1e push
 0x174` sends. `0x4bd190` scans the raw array backwards for an entry equal under `& 0x3fffffff` and writes
-the full word. `0x4bccb0` sends 0x2f3 (`0x4bcd5f`) and is called only from the book function.
+the full word. `0x4bccb0` sends 0x2f3 (`0x4bcd5f`), then signals `PET_BAR_UPDATE` at `0x4bcdc6`, and is called only from the book function.
 
 ## Picking up and dropping pet actions
 
@@ -358,8 +358,9 @@ Bit-exact coverage: `ui::luabind_4b49a0_get_shapeshift_form_cooldown` covers `0x
 
 ## Other pet functions
 
-`GetPetTimeRemaining` (`0x4be600`) pushes nil when the expiry tick `0xb714a8` is 0, else the milliseconds
-left, 0 once it has passed (no scaling to seconds). `GetPetFoodTypes` (`0x4bea10`) returns, as
+`GetPetTimeRemaining` (`0x4be600`) pushes nil when the expiry tick `0xb714a8` is 0, else `tick - now` in
+milliseconds (no scaling to seconds). It pushes 0 only when the tick equals the clock; a tick that has
+passed pushes 2^32 minus the milliseconds since it passed. `GetPetFoodTypes` (`0x4bea10`) returns, as
 strings, the localized name of each food type whose bit (the type minus 1) is set in the word at
 `+0x1c` of the pet's creature family record, in table order; it returns no value for a pet that fails
 `0x6116e0`. `GetPetIcon` (`0x4beb10`) pushes the string at `+0x44` of that family record, or nil.
@@ -369,8 +370,10 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4be607` loads the tick, `0x4be614` and `0x4be61f` read the clock, `0x4be628` makes a passed tick 0, and
-`0x4be634` pushes the integer. `0x4bea5d call 0x6055e0` gives the family id, which indexes the
+`0x4be607` loads the tick, `0x4be614` and `0x4be61f` read the clock, `0x4be61b sub ecx,eax; je` takes
+`0x4be628` (zero) only when the tick equals the first reading, and any other tick falls through to the
+second reading and `0x4be624 sub esi,eax`. `0x4be62a` and `0x4be62d` store the result as the low dword
+of a quadword with a zero high dword, and `0x4be634 fild qword` pushes it as an unsigned number. `0x4bea5d call 0x6055e0` gives the family id, which indexes the
 `CreatureFamily` store (at 0xc0de7c); `0x4bea86` starts the loop over the 40-byte food records at 0xc0dbe0,
 `0x4beaad` loads a record's type, `0x4beaba` tests the family's mask word and `0x4bead2` pushes the name of
 the active locale. `0x4beb66` loads the family record's string at `+0x44`. `0x4beb90` registers the 28
