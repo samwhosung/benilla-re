@@ -306,7 +306,10 @@ link address, and `0x468940` unlinks a node and links it again by a placement ar
 
 ## List destructors
 
-`0x467430` and `0x464ec0` are destructors that unlink a node and free it.
+`0x464ec0` unlinks a watcher record's two links (at `+8`, `0x464ec6`-`0x464ef8`, and at `+0`
+through `0x468b60`, `0x464f08`), then frees it when bit 0 of its argument is set. `0x467430` is
+no list code: it destroys a `WDataStore`, calling its own `InternalDestroy` through its vtable and then
+`CDataStore`'s (`0x7ff9e8`), each unless `+0xc` is −1, and frees it on bit 0 (`0x646430`).
 
 Addresses: `0x467430`, `0x464ec0`
 Confidence: verified
