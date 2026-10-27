@@ -265,7 +265,7 @@ opcode	name	role	site	function	entries	basis
 0x11f	CMSG_SET_TRADE_GOLD	send	0x5d464d	0x5d45f0	net/server#trade-sends|objectlayer/trade#offering-money	opcode
 0x11f	CMSG_SET_TRADE_GOLD	send	0x5d4724	0x5d4680	net/server#trade-sends|objectlayer/trade#offering-money	opcode
 0x120	SMSG_TRADE_STATUS	handler	0x5d47a6	0x5d47c0	objectlayer/trade#trade-status-message|ui/trade#names-in-refusal-messages	function
-0x121	SMSG_TRADE_STATUS_EXTENDED	handler	0x5d47b6	0x5d4990	objectlayer/trade#trade-extended-status-message|ui/trade#the-partners-offer	function
+0x121	SMSG_TRADE_STATUS_EXTENDED	handler	0x5d47b6	0x5d4990	net/server#trade-sends|objectlayer/trade#trade-extended-status-message|ui/trade#the-partners-offer	function
 0x122	SMSG_INITIALIZE_FACTIONS	handler	0x4d529c	0x4d5640	ui/reputationwire#faction-messages	opcode
 0x123	SMSG_SET_FACTION_VISIBLE	handler	0x4d52be	0x4d5710	ui/reputationwire#faction-messages	opcode
 0x124	SMSG_SET_FACTION_STANDING	handler	0x4d52cf	0x4d5760	ui/reputationwire#faction-messages	opcode
@@ -776,7 +776,7 @@ opcode	name	role	site	function	entries	basis
 0x336	CMSG_BUY_LOTTERY_TICKET_OBSOLETE	send	0x4c4466	0x4c4400	ui/lottery#buying	opcode
 0x337	SMSG_LOTTERY_RESULT_OBSOLETE	handler	0x4c3d3d	0x4c3e60	ui/lottery#query-result	opcode
 0x33b	SMSG_DEFENSE_MESSAGE	handler	0x49866a	0x49de30	ui/chatserver#defence-message	opcode
-?		send	0x56b5fa	0x56b430	warden/cache#lookup-and-store	function
-?		send	0x619bb9	0x619b50	collision/fallwire#fall-start-silence|collision/handlers#unreached-functions|collision/knockback#jump-emission	function
-?		send	0x619c05	0x619b50	collision/fallwire#fall-start-silence|collision/handlers#unreached-functions|collision/knockback#jump-emission	function
-?		send	0x61a9e6	0x61a820	collision/fallwire#fall-start-silence|collision/fallwire#airborne-sends|collision/handlers#state-change-broadcaster|collision/knockback#jump-emission|collision/replay#replay-cases-20-to-38|collision/resolve#transport-detach-test|objectlayer/moveemitter#drain-sites	function
+?		send	0x56b5fa	0x56b430	net/server#send-site-rows|warden/cache#lookup-and-store	function
+?		send	0x619bb9	0x619b50	collision/fallwire#fall-start-silence|collision/handlers#unreached-functions|collision/knockback#jump-emission|net/server#send-site-rows	function
+?		send	0x619c05	0x619b50	collision/fallwire#fall-start-silence|collision/handlers#unreached-functions|collision/knockback#jump-emission|net/server#send-site-rows	function
+?		send	0x61a9e6	0x61a820	collision/fallwire#fall-start-silence|collision/fallwire#airborne-sends|collision/handlers#state-change-broadcaster|collision/knockback#jump-emission|collision/replay#replay-cases-20-to-38|collision/resolve#transport-detach-test|net/server#send-site-rows|objectlayer/moveemitter#drain-sites	function
