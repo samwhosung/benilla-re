@@ -19,7 +19,7 @@ byte at `+0xc8` times 1/255.
 
 Addresses: `0x773700`, `0x77376e`, `0x77379c`, `0x7737d4`, `0x7737df`, `0x774680`, `0x774754`, `0x774dc0`, `0x774e63`, `0x774e75`, `0x774fc0`, `0x77505f`, `0x775080`, `0x77511f`, `0x775280`, `0x77531f`, `0x775340`, `0x7753d6`, `0x7753e7`, `0x804578`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::luabind_774dc0_get_alpha`
 
 `0x7737d4` and `0x774754` call the slots with the type text as the one stack argument. `0x77379c` and `0x7737a4` build the
@@ -37,7 +37,7 @@ true.
 
 Addresses: `0x7758d0`, `0x775955`, `0x775990`, `0x775a15`, `0x7754f0`, `0x775575`, `0x775440`, `0x7754ce`, `0x7754d8`, `0x76a3c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x775955` tests `[frame+0xd4]` and `0x775a15` `[frame+0xd0]`. `0x775575` is `test byte [edi+0xb4],1`. `0x7754d8` calls
@@ -53,26 +53,26 @@ index 2 and is true when absent.
 
 Addresses: `0x776420`, `0x7764b4`, `0x7764d0`, `0x776555`, `0x776590`, `0x776624`, `0x776640`, `0x7766c5`, `0x776a50`, `0x776adb`, `0x776b2f`, `0x776b40`, `0x776bc5`, `0x776c00`, `0x776c94`, `0x768cc0`, `0x768cd2`, `0x776cb0`, `0x776d35`, `0x76a3c0`, `0x7680e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The setters push the mask (`0x100` at `0x7764b4`, `0x200` at `0x776624`, `0x1000` at `0x776b2f`) and the flag for `0x76a3c0`. The
-getters test `ah` against 1 (`0x776555`), 2 (`0x7766c5`) and 0x10 (`0x776bc5`) of the dword `+0xb4`. `0x776adb` tests `ah,3` before
+getters load the dword `+0xb4` (`0x776555`, `0x7766c5`, `0x776bc5`) and test `ah` against 1, 2 and 0x10 six bytes later. `0x776adb` tests `ah,3` before
 the user-placed store. `0x768cc0` sets bit 0x10 at `+0x3c` of the layout part (frame `+0x60`) and calls `Resize(0)`.
 
 ## Moving and sizing
 
 `StartMoving()` raises `Frame %s is not movable` unless bit 0x100 is set; otherwise, when the top frame is not already
-moving or sizing a frame, it starts a move of this frame in mode 3 from the current cursor, with point 4. `StopMovingOrSizing()`
+moving or sizing a frame, it starts a move of this frame in mode 3 from the top's stored cursor, with point 4. `StopMovingOrSizing()`
 ends the operation when this frame is the one in progress. The machinery is in `ui/input`.
 
-Addresses: `0x776700`, `0x77678b`, `0x7767aa`, `0x7767dc`, `0x7767e2`, `0x77680e`, `0x77681d`, `0x776822`, `0x776990`, `0x776a35`, `0x776a40`, `0x7652b0`, `0x765640`, `0x41ad80`
+Addresses: `0x776700`, `0x77678b`, `0x7767aa`, `0x7767dc`, `0x7767e2`, `0x7767ec`, `0x7767f2`, `0x41ad87`, `0x41ad9f`, `0x77680e`, `0x77681d`, `0x776822`, `0x776990`, `0x776a35`, `0x776a40`, `0x7652b0`, `0x765640`, `0x41ad80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x77678b` tests bit 0x100 of `+0xb4`, `0x7767dc` loads the top frame from `+0xa0` and `0x7767e2` its in-progress frame `+0xcfc`.
-`0x776822` calls `StartMovingOrSizing(frame, 3, x, y, 4)` with the screen delta of the cursor from `0x41ad80`. `0x776a35`
+`0x776822` calls `StartMovingOrSizing(frame, 3, x, y, 4)`. Its x and y are the top's stored cursor `+0x1118` and `+0x111c` (`0x7767ec`, `0x7767f2`) scaled by `0x41ad80` (x times `[0x832a44]`, y times `[0x832a48]`, `0x41ad87` to `0x41ad9f`); nothing is subtracted. `0x776a35`
 compares `+0xcfc` with the frame and `0x776a40` calls `0x765640`.
 
 ## Drag buttons and keyboard input
@@ -84,7 +84,7 @@ clears the mask. `EnableKeyboard([flag])` enables or disables both the key bit a
 
 Addresses: `0x776d60`, `0x776e29`, `0x776e44`, `0x776e5f`, `0x776e6e`, `0x776e92`, `0x776ec0`, `0x776f53`, `0x776f5d`, `0x776f68`, `0x776f75`, `0x76af00`, `0x76af50`, `0x776f90`, `0x777035`, `0x77703e`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x776e24` to `0x776e74` compare each name; `0x776e6e` makes 4 for an equal `RightButton` and 0 for any other unknown name. The mask is
@@ -100,7 +100,7 @@ nothing; a press inside it starts a drag of the frame (`ui/input`).
 
 Addresses: `0x773910`, `0x773995`, `0x7739a2`, `0x7739ad`, `0x7739b7`, `0x7739c4`, `0x7739c9`, `0x7739cf`, `0x7739df`, `0x7739f2`, `0x773a12`, `0x773820`, `0x7738bf`, `0x7738f4`, `0x767ed0`, `0x768060`, `0x76c4f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x773995` loads `[frame+0xa8]`; a nonzero value takes `0x7739a2`, `ClearAllPoints`. A new region is `SMemAlloc(0xa0)` from
@@ -115,7 +115,7 @@ calls slot `+0x14` (set parent) with the frame, and `0x7739f2` passes bit 2 of t
 
 Addresses: `0x7742a0`, `0x7744a0`, `0x79b690`, `0x6f1820`, `0x77f8c0`, `0x804578`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x77433f` loads `[frame+0xc0]` into `ecx` for `GetFrameStrataName` and `0x77434e` pushes the returned name with `lua_pushstring`. `0x77453f` is `fild [frame+0xc4]` and `0x77454d` `lua_pushnumber`. `0x79b740` calls `CScriptRegion::GetVertexColor`, `0x79b745` loads the byte at `+3`, `0x79b754` multiplies by the double at `0x804578`, 0.00392156862745098.

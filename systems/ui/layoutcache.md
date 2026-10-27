@@ -23,7 +23,7 @@ governs nothing but this file.
 
 Addresses: `0x490c79`, `0x490e10`, `0x490e24`, `0x490e60`, `0x490e72`, `0x490e7f`, `0x490e88`, `0x490e8e`, `0x490e97`, `0x76a3c0`, `0x49067e`, `0x490706`, `0x7652e5`, `0x776b36`, `0x776a50`, `0x776ad5`, `0x776b40`, `0x776bc5`, `0x5afed0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_4c0_490e60_round_pos_legs`
 
 `0x490c79` hands `0x490e10` to `0x5afed0` for section 6, which opens the file for writing only while
@@ -45,7 +45,7 @@ minus the root's top, `W` and `H` the same of the extents, each plus 0.5 and tru
 
 Addresses: `0x490f1e`, `0x490f5c`, `0x490f93`, `0x490fa2`, `0x490fb7`, `0x490fbf`, `0x490fcc`, `0x490fd1`, `0x490fd9`, `0x490fdf`, `0x49101c`, `0x491099`, `0x4910a8`, `0x4910d3`, `0x49113b`, `0x490edf`, `0x490eed`, `0x490f10`, `0x768320`, `0x41ad70`, `0x41ae40`, `0x40a2b0`, `0x64a7f0`, `0x42a5d0`, `0x7ffd68`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The formats are `Frame: %s\n`, `FrameLevel: %d\n`, `X: %d\n`, `Y: %d\n`, `W: %d\n` and `H: %d\n`, each
@@ -60,7 +60,7 @@ root's top, which is why `X` needs no root term (the root's left is 0). The top 
 ## Reading a record
 
 The reader takes the file a line at a time, splitting at CR and LF into 128 bytes, and matches the
-prefixes `Frame: `, `FrameLevel: `, `X: `, `Y: `, `W: ` and `H: ` in that order. A `Frame: ` line applies
+prefixes `Frame: `, `FrameLevel: `, `X: `, `Y: `, `W: ` and `H: ` in that order, ignoring case. A `Frame: ` line applies
 the record in progress, then resets `X`, `Y`, `W` and the level to 0, 0, 0 and −1, but not `H`, so a
 record without an `H:` line inherits the previous record's. The name is looked up as a frame
 global; a name that does not resolve gives a null frame and the record, with all its lines, is
@@ -68,7 +68,7 @@ dropped without a message. The last record is applied at the end of the file.
 
 Addresses: `0x490380`, `0x49038c`, `0x490391`, `0x4903ef`, `0x49040b`, `0x490421`, `0x49045b`, `0x49045d`, `0x49045f`, `0x490462`, `0x490469`, `0x490456`, `0x4905c0`, `0x4900c2`, `0x76c760`, `0x64ae50`, `0x64a4c0`, `0x64ac60`, `0x5afe50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x490380` returns when the handle is −1, sizes a buffer with the file size, reads it, writes a NUL
@@ -89,7 +89,7 @@ at once. A frame at the corner (0, 0) is therefore never moved, and any authored
 
 Addresses: `0x4905e0`, `0x4905f5`, `0x490600`, `0x490607`, `0x49061a`, `0x490670`, `0x49067e`, `0x490689`, `0x4906c7`, `0x4906fa`, `0x490706`, `0x490710`, `0x767ed0`, `0x767620`, `0x767c70`, `0x76a4f0`, `0x7683d0`, `0x7683f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_4905e0_device_position`
 
 `0x4905e0` takes the frame in `ecx`, the level in `edx` and `X`, `Y`, `W`, `H` on the stack. It
@@ -111,7 +111,7 @@ frame and kind and leaves the bit set.
 
 Addresses: `0x7652b0`, `0x7652c6`, `0x7652d7`, `0x7652e5`, `0x768430`, `0x76849f`, `0x7684dc`, `0x7684e1`, `0x765640`, `0x776990`, `0x776a35`, `0x776a40`, `0x765479`, `0x776822`, `0x776981`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7652b0` calls `0x768430` on the frame's layout part with zeros (`0x7652c6`) and continues only on a

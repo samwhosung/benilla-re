@@ -23,7 +23,7 @@ unit is about the screen height over 768 in device pixels; the float steps are
 
 Addresses: `0x764180`, `0x764284`, `0x764287`, `0x76428f`, `0x41ad10`, `0x41ad80`, `0x41ae40`, `0x41ae50`, `0x41ae60`, `0x41ae70`, `0x41ad70`, `0x832a44`, `0x832a48`, `0x832a4c`, `0x7ffd68`, `0x6f1eb0`, `0x6f1eeb`, `0x6f1efd`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x41ad10(a)` stores `a` at `0x832a40`, `a·0.75` at `0x832a4c`, `1/√(a²+1)` at `0x832a48` (`0x41ad3e`)
@@ -43,7 +43,7 @@ two tables also replace slots 4, 5 and 6.
 
 Addresses: `0x81c400`, `0x81c46c`, `0x81c718`, `0x81c778`, `0x81c6ec`, `0x81c74c`, `0x81cec4`, `0x81c5d8`, `0x81c8b4`, `0x81c8bc`, `0x81c8dc`, `0x768420`, `0x768410`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `0x76d080`, `0x76d0d0`, `0x770670`, `0x772d40`, `0x76c700`, `0x76c6e0`, `0x46ff60`, `0x7671a0`, `0x767573`, `0x767579`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::layout_composed_resolve`
 
 Slot 0 is the callback `0x76b580` in most tables, and slots 7 and 8 are the plain frame's `0x768420` and `0x768410` or a class's own. The font string's tables store `0x772ca0`, `0x772830` and `0x772860` in slots 4 to 6. Slot 2 is `0x769820` in the plain frames, `0x76cac0` in the model tables, and `0x7788c0`, `0x782ef0`, `0x767800` or `0x770f40` in others. The edge resolvers read the size with `mov eax,[esi]; call [eax+0x1c]` (`0x767573`, `0x767579`) and
@@ -65,7 +65,7 @@ answer is 0.0. The image is loaded on demand.
 
 Addresses: `0x770720`, `0x770790`, `0x770729`, `0x77072e`, `0x770736`, `0x770739`, `0x77073b`, `0x77074e`, `0x770778`, `0x44b3b0`, `0x44b3c1`, `0x44b3ee`, `0x44b3fd`, `0x6f1eb0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_unit_convert_1024`
 
 `0x770720` calls the plain getter, compares with 0.0 by `fcom; test ah,0x44; jp`, which falls through
@@ -83,7 +83,7 @@ fixes the opposite edge of a font string.
 
 Addresses: `0x772930`, `0x772a60`, `0x772890`, `0x7729b0`, `0x772937`, `0x77294a`, `0x772957`, `0x772971`, `0x77297a`, `0x772983`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::textglue_set_scaled_chain`
 
 `0x772930` stores the plain width, tests it against 0.0 and, when equal, calls `0x772890` for the
@@ -100,18 +100,20 @@ a texture is pinned to its parent with `SetAllPoints` and a font string gets one
 parent chosen by its horizontal justification: LEFT to LEFT, RIGHT to RIGHT, otherwise CENTER to
 CENTER, with zero offsets. The test is on the slots, so an `<Anchor>`, a template's anchors or
 `setAllPoints` suppress it alike. A texture so pinned ignores its authored size while both corners
-stand. The frame loader applies none; a frame without anchors stays rectless.
+stand. The frame loader applies none; a frame without anchors stays rectless, and a `setAllPoints` pin
+there needs the attribute `true` and no `Anchors` child.
 
-Addresses: `0x7701c0`, `0x7701c1`, `0x7701cc`, `0x7701d4`, `0x7701dd`, `0x7701ec`, `0x771480`, `0x7714a3`, `0x7714ae`, `0x7714bc`, `0x7714c6`, `0x7714d2`, `0x7714e4`, `0x767db0`, `0x767c70`, `0x767800`, `0x767a06`, `0x767a12`
+Addresses: `0x7701c0`, `0x7701c1`, `0x7701cc`, `0x7701d4`, `0x7701dd`, `0x7701ec`, `0x771480`, `0x7714a3`, `0x7714ae`, `0x7714bc`, `0x7714c6`, `0x7714d2`, `0x7714e4`, `0x767db0`, `0x767c70`, `0x767800`, `0x767879`, `0x767890`, `0x76789c`, `0x767a06`, `0x767a12`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Both functions load the parent `[this+0x9c]`, return without it, and scan the slots `[this+0x28]` to
 `[this+0x48]` for a non-null one. The texture calls `0x767db0(parent layout, 1)`: corners 0 and 8,
 offsets 0 (`anchors`). The font string tests the justify word `[this+0x120]` for bit 1 then bit 4 and calls `0x767c70(3,
-parent, 3, 0, 0, 1)`, `(5, parent, 5, …)` or `(4, parent, 4, …)`. `0x767800` calls `0x767db0` only when the
-`setAllPoints` attribute is present (`0x767a06` to `0x767a12`). With both corners pinned every edge
+parent, 3, 0, 0, 1)`, `(5, parent, 5, …)` or `(4, parent, 4, …)`. A plain frame's load `0x767800` calls
+`0x767db0` only when `setAllPoints` equals `true` ignoring case (`0x767879`) and the element has no `Anchors`
+child (`0x767890`, `0x76789c`; `0x767a06` to `0x767a12`); with both, `true` is logged and ignored. With both corners pinned every edge
 resolves from a point and the size is never asked.
 
 ## Where it applies
@@ -122,7 +124,7 @@ run no load and no implicit anchor, so such a region stays rectless until it is 
 
 Addresses: `0x6f26f0`, `0x6f2751`, `0x6f275e`, `0x6f2765`, `0x6f2780`, `0x6f27f5`, `0x773a20`, `0x773ba6`, `0x773ba8`, `0x773bef`, `0x773c30`, `0x773ddc`, `0x773e25`, `0x778b96`, `0x7788c0`, `0x769d70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7701c0` has two callers, `0x6f2765` in the texture element adder `0x6f26f0` and `0x773bef` in
@@ -144,7 +146,7 @@ edges.
 
 Addresses: `0x768d20`, `0x768d55`, `0x768d58`, `0x7680e0`, `0x7680ee`, `0x768140`, `0x76815f`, `0x768ed0`, `0x76fc6e`, `0x7705b0`, `0x770670`, `0x7706e0`, `0x772fd0`, `0x773080`, `0x7730b0`, `0x7730b5`, `0x7730bc`, `0x772e00`, `0x768320`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::layout_recompute`
 
 `0x768d20` on failure clears flag 1, sets flag 8 and returns before the callback (`anchors`). The
@@ -167,13 +169,13 @@ Textures and font strings share a region base. `0x77f640(parent, layer, sublevel
 and sublevel. `0x77f6f0` is its destructor body: it stores the vtables, calls `SetRegionParent(0, 1, 0)`, frees the arrays at `+0xb8` and `+0xa8` and ends in
 `CScriptRegion::~CScriptRegion`. `0x77f570(p)` stores `p` at `this` and, for a nonnull `p`, increments the count at `p+4`.
 
-Addresses: `0x77f640`, `0x77f646`, `0x77f682`, `0x77f688`, `0x77f6ae`, `0x77f6f0`, `0x77f6f9`, `0x77f706`, `0x77f71e`, `0x77f737`, `0x77f740`, `0x77f570`, `0x77fd10`, `0x76c4f0`, `0x76c560`, `0x81c9c8`, `0x84f09c`, `0x854040`
+Addresses: `0x77f640`, `0x77f646`, `0x77f682`, `0x77f688`, `0x77f6ae`, `0x77f6c0`, `0x77f6c6`, `0x77fe63`, `0x77f6f0`, `0x77f6f9`, `0x77f706`, `0x77f71e`, `0x77f737`, `0x77f740`, `0x77f570`, `0x77fd10`, `0x76c4f0`, `0x76c560`, `0x81c9c8`, `0x84f09c`, `0x854040`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x77f6f0` pushes `0, 1, 0` before `0x77fd10` (`0x77f706`); the two frees pass the tags `0x84f09c` (line −2) and `0x854040`. `0x77f640` is called by the texture
-constructor (`0x76fc57`) and the font string constructor (`0x770d44`), `0x77f6f0` by the font string destructor body (`0x770efc`) and `0x76fd76`. `0x77f570` has two callers, in the backdrop constructor (`0x77e63e`)
+`0x77f6f0` pushes `0, 1, 0` before `0x77fd10` (`0x77f706`); the two frees pass the tags `0x84f09c` and `0x854040`, each with line −2 (`0x77f717`, `0x77f730`). `0x77f640` is called by the texture
+constructor (`0x76fc57`) and the font string constructor (`0x770d44`). `0x77f6f0` has three callers: the call at `0x77f6c6` in the deleting destructor `0x77f6c0` (slot 0 of `0x81c9f4`, also the target of the `jmp` at `0x77fe63`), and the jumps at `0x770efc` (the font string destructor body) and `0x76fd76`. `0x77f570` has two callers, in the backdrop constructor (`0x77e63e`)
 and the font object constructor (`0x783a5c`).
 
 ## Pixel alignment
@@ -186,7 +188,7 @@ unless it already is a whole number of pixels, and a negative length is truncate
 
 Addresses: `0x7666a0`, `0x7666b3`, `0x7666e0`, `0x7666f6`, `0x76670a`, `0x76671f`, `0x766725`, `0x766737`, `0x766750`, `0x7667ba`, `0x7667cf`, `0x7667e7`, `0x41ae40`, `0x41ae50`, `0x41ae60`, `0x41ae70`, `0x58a250`, `0x808120`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_765_7666a0_ratio_round_x`, `ui::glue_765_766750_ratio_round_y`
 
 `0x7666b3` compares the length with the float 2.38e-07 (`0x8029d4`). `0x7666e0` reads the viewport as four floats from the device (`0x58a250`) and takes right less left

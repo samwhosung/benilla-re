@@ -21,57 +21,60 @@ The script object is 0x24 bytes with the vtable `0x811f4c`: a count of holders o
 (`+0xc`), and an array of the event indices it listens to (capacity `+0x14`, count `+0x18`, data
 `+0x1c`, grow step `+0x20`). Its Lua table is made on first use: a table whose element 0 is the
 object as light userdata, with the metatable the global `__framescript_meta` holds. Releasing the
-last holder clears element 0 and the metatable, and frees the reference.
+last holder clears element 0, leaves the metatable, and frees the reference.
 
-Addresses: `0x701ae0`, `0x701b10`, `0x701b40`, `0x701bd0`, `0x701bde`, `0x701bf3`, `0x701bfc`, `0x701c0d`, `0x701c2c`, `0x701c3d`, `0x701cd0`, `0x811f4c`, `0x8729ec`
+Addresses: `0x701ae0`, `0x701b10`, `0x701b40`, `0x701bd0`, `0x701bde`, `0x701bf3`, `0x701bfc`, `0x701c0d`, `0x701c2c`, `0x701c3d`, `0x701cd0`, `0x701d03`, `0x701d0a`, `0x701d16`, `0x701d32`, `0x701d37`, `0x811f4c`, `0x8729ec`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x701ae0` stores −2 at `+0x8` and zeroes the rest under `0x811f4c`. `0x701bd0` makes the table
 when `+0x4` is 0: new table, `pushnumber(0)`, the object as light userdata (`0x701bfc`), the set
 into the table, the global `__framescript_meta` (`0x701c0d`) as metatable (`0x701c2c`), and a
 registry reference stored at `+0x8` (`0x701c3d`); then it counts one holder. `0x701cd0` counts one
-down and at zero stores nil at element 0 and as metatable, frees the reference and stores −2.
+down and at zero sets element 0 to nil (`pushnumber(0)` `0x701d03`, `pushnil` `0x701d0a`, `lua_rawset` `0x701d16`), frees
+the reference (`0x701d32`) and stores −2 (`0x701d37`); it calls no `lua_setmetatable`. Its name argument, which clears a
+global, is in `widgettype`.
 `0x701b40` unregisters every event, releases `OnEvent` and frees the index array.
 
 ## The event table
 
 The event names are an array of 0x10-byte records at `0xceef68`, counted by `0xceef64`: the name,
-and a list of listener nodes, each holding one script object. Installing a new table destroys the
-old records with their listeners, allocates the new array and copies each name. An event is
+and a list of listener nodes, each holding one script object. Installing a new table frees the
+old records' names and unlinks their listener nodes without freeing them, allocates the new array and copies each name. An event is
 signalled by its index into this array.
 
 Addresses: `0x703d90`, `0x7053b0`, `0x705530`, `0x701a40`, `0x7019b0`, `0x7019c0`, `0xceef60`, `0xceef64`, `0xceef68`, `0x872990`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x703d90(names, count)` calls `0x701a40` on each old record, frees the array tagged
-`.?AVFrameScript_EventObject@@`, zeroes the three globals, grows the array through `0x7053b0` and
-stores `SStrDupA` of each non-empty name at `+0x0` of record `i·0x10`. `0x7053b0` builds each new
-record as a name and an empty list (`+0x8` terminator, `+0xc` first link). The static initializer
+`0x703d90(names, count)` calls `0x701a40` on each old record. That frees the name (`0x701a54`), then relinks each node's
+neighbours and zeroes the node's links (`0x701a89` to `0x701a99`); its one call is the name's free, so no node is freed.
+The installer frees the array tagged `.?AVFrameScript_EventObject@@`, zeroes the three globals, grows the array through
+`0x7053b0` and stores `SStrDupA` of each non-empty name at `+0x0` of record `i·0x10`. `0x7053b0` builds each new
+record as a name and an empty list (the terminator link at `+0x8`: head `+0x8`, tail `+0xc`). The static initializer
 `0x7019b0` calls `0x7019c0`, which zeroes the globals, and registers its exit handler.
 
 ## Registering for an event
 
 Registering an object for an event name compares the name, ignoring case, with every record. For
-a match where the object is already a listener it answers 1 at once; otherwise it appends a
-listener node to the record's list and the record's index to the object's array. An unknown name
+a match where the object is already a listener it answers 1 at once; otherwise it links a
+listener node at the head of the record's list and appends the record's index to the object's array. An unknown name
 changes nothing. Unregistering walks the object's array from the end, freeing its node in each
-record of that name and removing the index. Registering for all events appends the object to
+record of that name and removing the index. Registering for all events links the object into
 every record it is not already in; unregistering from all frees every node of the object and
 empties its array.
 
 Addresses: `0x702140`, `0x702181`, `0x7021a8`, `0x7021bf`, `0x702280`, `0x7023e0`, `0x7024f0`, `0x7052d0`, `0x705570`, `0x872a08`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702140` loops over `[0xceef64]` records calling `SStrCmpI` (`0x702181`), scans the record's
 list for `[node+0x8] == object` (`0x7021a8`), and calls `0x7052d0(2, 0, 0)` (`0x7021bf`), which
-allocates a node tagged `.?AUEVENTLISTENERNODE@@` and links it before the list's terminator, the
-tail. The index array grows through `0x429340`. `0x702280` unlinks with
+allocates a node tagged `.?AUEVENTLISTENERNODE@@` and links it at the head, after the list's
+terminator. The index array grows through `0x429340`. `0x702280` unlinks with
 `0x705570` and frees each node whose object matches; `0x7023e0` and `0x7024f0` are the all-events
 forms.
 
@@ -85,7 +88,7 @@ argument runner instead, which also sets `arg1` onward.
 
 Addresses: `0x703e50`, `0x703e56`, `0x703e5e`, `0x703e7a`, `0x703e99`, `0x703ea4`, `0x703ec8`, `0x703ee8`, `0x703eee`, `0x703efb`, `0x703f04`, `0x703f3d`, `0x703f50`, `0x84b648`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x703e50` is `fastcall(index)`: `shl ecx,0x4` into `[0xceef68]` (`0x703e56`) and the first link
@@ -100,7 +103,7 @@ arguments)`.
 
 Only `0x703e50` and `0x703f50` deliver an event: 485 direct calls and tail jumps, 149 of them to
 `0x703f50`. Every site's id is a constant on each path into it except at three sites.
-`0x49b199` fires the dword of `0x8062e0` at the chat type, 0 to 93 (`chatevents`). `0x5de4c1` fires the
+`0x49b199` fires the dword of `0x8062e0` at the chat type, below 94 (`chatevents`). `0x5de4c1` fires the
 argument a watcher on the active player is registered with (`objectlayer/playerfields`).
 `0x515e7a` fires `0x515e50`'s `edx`, which its 38 callers set to a constant, to 17 or 23 plus a
 power-type byte, or, from the watcher callback `0x51bd50`, to the watched field's offset over 4
@@ -131,7 +134,7 @@ or 234, which the client takes without a bound: 223 is 17 + 206 and 23 + 200, 25
 
 Addresses: `0x51ab30`, `0x51ae6f`, `0x51af87`, `0x51b0d1`, `0x51b45f`, `0x51b4e1`, `0x51b5a9`, `0xceef68`, `0x7019c0`, `0x7019f0`, `0x704060`, `0x703d90`, `0x703e50`, `0x703f50`, `0x5e573c`, `0x5e579b`, `0x5e57ae`, `0x5e58c4`, `0x5e58dd`, `0x6004e6`, `0x5e5234`, `0x5e53ce`, `0x4666e3`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 No site's id set holds the six (`tables/event_sites.tsv`, with every site resolved). A scan of
@@ -148,60 +151,67 @@ block stores field 30 as the u32 it reads (`0x4666e3`); neither path bounds the 
 
 ## Listener order
 
-Listeners of an event run in the order they registered: registering appends at the tail of the
-event's list, and signalling walks from the head. Registering an object already on the list
+Listeners of an event run in the order they registered: registering links at the head of the
+event's list, and signalling walks from the tail along the previous links. Registering an object already on the list
 changes nothing, so it keeps its place; unregistering frees its node at once, so registering it
-again puts it last. Registering for all events appends the object to every list it is not on, so
+again puts it last. Registering for all events links the object into every list it is not on, so
 per-event and all-event registrations interleave by time. Nothing else orders a list.
 
 Addresses: `0x702140`, `0x7021a8`, `0x702264`, `0x7021bf`, `0x7052d0`, `0x705359`, `0x705364`, `0x705368`, `0x702280`, `0x702309`, `0x702318`, `0x7023e0`, `0x703e50`, `0x703ecd`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x7052d0` with its first argument 2 (`0x7021bf`) links the node after the record's tail cursor
-`[rec+0x8]` (`0x705359` to `0x705364`) and makes it the new tail (`0x705368`); the first node of an
-empty list is written into the head `[rec+0xc]`, which no later append changes. The walk starts at
-`[rec+0xc]` (`0x703ecd`) and follows `+0x4`. A match at `0x7021a8` returns 1 at `0x702264` before
+`0x7052d0` with its first argument 2 (`0x7021bf`) links the node before the record's head `[rec+0x8]`
+(`0x705359` to `0x705364`) and makes it the new head (`0x705368`); the first node of an empty list
+is also written into the tail `[rec+0xc]`, which no later insert changes. The walk starts at the
+tail `[rec+0xc]` (`0x703ecd`) and follows `+0x4`. A match at `0x7021a8` returns 1 at `0x702264` before
 any insert. `0x702280` unlinks (`0x702309`) and frees the node (`0x702318`). `0x7023e0` runs the
-same append per record.
+same insert per record.
 
 ## Changes during a signal
 
-The walk reads each node's successor before running its listener and reads nothing else ahead.
-A listener that unregisters itself is safe. One that unregisters the next listener leaves the walk
-holding a freed node, which it then reads: a fault of the client. An object registered during the
-signal is reached unless the running listener is the last. A signal raised inside a listener runs
-to its end first, and the outer `event`, `this` and arguments are restored after it. An error ends
-only its own listener: the error handler runs and the walk goes on.
+The walk reads each node's successor before running its listener and nothing else ahead. A listener
+that unregisters itself is safe. One that unregisters the next listener leaves the walk on a freed node
+whose links the unlink zeroed: the walk runs that object's `OnEvent` once more, though it is
+unregistered, then stops at the zero link, so the listeners after it miss the signal. An object registered during the signal is reached unless
+the running listener is the last. A signal raised inside a listener runs to its end first, and the outer
+`event`, `this` and arguments are restored after it. An error ends only its own listener: the error
+handler runs and the walk goes on.
 
-Addresses: `0x703ee8`, `0x703f00`, `0x702318`, `0x704e79`, `0x704e80`, `0x704e8e`, `0x705199`
+Addresses: `0x703ee8`, `0x703eeb`, `0x703efb`, `0x703f00`, `0x702318`, `0x70559d`, `0x7055a3`, `0x646430`, `0x645790`, `0x645eb0`, `0x645777`, `0x645fc5`, `0x645fda`, `0x6460c0`, `0x646170`, `0x704e79`, `0x704e80`, `0x704e8e`, `0x705199`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x703ee8` loads `[node+0x4]` into `edi` before the call and `0x703f00` continues from it; a tail
-node's successor is the tagged end, so a node appended after it is not seen. `0x702318` frees with
-no deferral. After `lua_pcall` (`0x704e79`, `0x705199`) a nonzero result pops the message
+`0x703ee8` loads `[node+0x4]` into `edi` before the call and `0x703f00` continues from it; the head
+node's successor is the tagged end, so a node linked after it is not seen. `0x702318` frees with
+no deferral, through `0x646430` and `0x645790` into `0x645eb0`. A node is a 12-byte block behind an
+8-byte header (`0x645777` answers block + 8). `0x645eb0` stores that header (`0x645fc5`, `0x645fda`),
+not the node, and the allocator's own free array; the unlink had zeroed `[node]` and `[node+4]` (`0x70559d`,
+`0x7055a3`), so the walk reads next 0 (`0x703ee8`), runs the object's handler (`0x703eeb` to
+`0x703efb`) and ends. That holds while the block stays committed and unreused: a free that coalesces to a block of 4096 bytes
+or more releases its pages (`0x6460c0`, `0x646170`). After `lua_pcall` (`0x704e79`, `0x705199`) a nonzero result pops the message
 (`0x704e80`) and `0x704e8e` pops the handler; both runners return normally.
 
 ## Handler arguments
 
 The argument runner sets `arg1` onward before `this` and restores `this` before them. `%d` gives a
 signed integer, `%u` an unsigned one and `%f` a double, each as a number; `%s` gives a string, or
-nil for a null pointer. Any other letter after `%`, and any other character, is skipped. Only the
-arguments the format names are set: a handler reads a higher `argN` as whatever that global holds,
+nil for a null pointer. Any other letter after `%`, and any other character, is skipped, and a
+skipped letter takes no argument: `%d%x%s` with −1, 7 and a string reads 7 as the string pointer.
+Only the arguments the format names are set: a handler reads a higher `argN` as whatever that global holds,
 nil unless an enclosing signal set it.
 
 Addresses: `0x704f10`, `0x704f7e`, `0x704f89`, `0x704fa6`, `0x704fbe`, `0x704fe3`, `0x704ffb`, `0x705045`, `0x705100`, `0x7051be`, `0x705212`, `0x7052a4`, `0x7052b8`, `0x6f3890`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x704f7e` tests for `%` and `0x704f89` indexes `0x7052b8` by the letter minus `d`: `d` to case 0
 (`fild dword`, `0x704fa6`), `f` to 1 (`fld qword`, `0x704fe3`), `s` to 2 (`0x6f3890`, which
 pushes nil for null, `0x704ffb`), `u` to 3 (the dword zero-extended, `0x704fbe`), every other
-letter to `0x705095`. Each value is set as `argN` after its old value is referenced (`0x705045`);
+letter to `0x705095`, which moves neither argument cursor (`edi`, `ebx`). Each value is set as `argN` after its old value is referenced (`0x705045`);
 `this` follows (`0x705100`). After the call `this` is restored (`0x7051be`), then `arg1` to `argN`
 in order (`0x705212`).
 
@@ -216,7 +226,7 @@ global `arg1`, `arg2` and so on, each saved before and restored after the call.
 
 Addresses: `0x702690`, `0x702698`, `0x7026a8`, `0x7026ad`, `0x7026b7`, `0x7026c5`, `0x7026d6`, `0x7026f0`, `0x702710`, `0x704d50`, `0x704de5`, `0x704e16`, `0x704e2b`, `0x704e4f`, `0x704e79`, `0x704ea7`, `0x704ef0`, `0x704f10`, `0x704f73`, `0x704f98`, `0x7052a4`, `0x7052b8`, `0xceeac0`, `0xceeac4`, `0x8722c8`, `0x8722dc`, `0x872e64`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702690` increments `[0xceeac4]` and, when the result is not 0 (`je` at `0x7026a8` on the
@@ -236,7 +246,7 @@ handler name the object has no slot for fails.
 
 Addresses: `0x7025c0`, `0x702670`, `0x704c70`, `0x704cb0`, `0x872a28`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7025c0` gets the slot through slot 0xc of the object, calls `0x702670` (which calls `0x704cb0`
@@ -250,8 +260,9 @@ The client reads and writes globals through small helpers, each on the current s
 `lua_gettable` and `lua_settable` on the globals: `0x704250` sets a global to a single-precision
 float, `0x704300` to a string or, for a null or empty one, nil, and `0x704350` reads one as text
 when it is a string or number, answering whether it is one. `0x7040e0` raises a Lua error with a
-formatted message prefixed by the calling position, as `luaL_error` does. The integer and nil
-forms are unreached (`README`).
+formatted message prefixed by the calling position, as `luaL_error` does. The four other
+helpers are unreached (`README`): the integer set `0x7041a0` and get `0x7041f0`, the float get
+`0x7042a0` and the nil set `0x7043b0`.
 
 Addresses: `0x704250`, `0x70425c`, `0x704300`, `0x70430d`, `0x70431f`, `0x704350`, `0x704378`, `0x7040e0`, `0x7040f2`, `0x704113`, `0x7041a0`, `0x7041f0`, `0x7042a0`, `0x7043b0`
 Confidence: verified
@@ -275,7 +286,7 @@ same way, discarding an error after the handler.
 
 Addresses: `0x703bf0`, `0x703c0d`, `0x703c12`, `0x703c4d`, `0x703cad`, `0x703cb7`, `0x703cf0`, `0x703d47`, `0x703d6f`, `0x704ae0`, `0x704bc0`, `0x704cd0`, `0x704ce0`, `0x704cf0`, `0x704d22`, `0x872cc8`, `0x872cd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x703c0d` takes the fast path for gender 0 and a negative count to `0x704350` (`0x703c12`). The
@@ -299,7 +310,7 @@ defaults to `ARTWORK`.
 
 Addresses: `0x7060b0`, `0x7060d5`, `0x7060e9`, `0x70610f`, `0x706121`, `0x70613f`, `0x706158`, `0x7061ab`, `0x7061cb`, `0x7061dd`, `0x7061ed`, `0x706211`, `0x706232`, `0x70623b`, `0x70628b`, `0x7062a0`, `0x7062af`, `0x773a20`, `0x773ae0`, `0x773b12`, `0x773c30`, `0x773d25`, `0x773d39`, `0x773d47`, `0x6f3690`, `0x6f7c80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7060d5` tests `lua_isstring(1)`; `0x7060e9` to `0x70610f` accept type −1, 0 or 5 for argument 3.

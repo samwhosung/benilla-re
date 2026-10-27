@@ -29,7 +29,7 @@ Index 0 has no name, so only a frame that keeps the top's own stratum record 0 u
 
 Addresses: `0x8119f8`, `0x6f17d0`, `0x6f1820`, `0x769090`, `0x7690d0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x8119f8` holds eight pairs of an index and a name pointer, read from the bytes. `0x6f17d0`
@@ -48,7 +48,7 @@ frames added while the update pass walks the level.
 
 Addresses: `0x764180`, `0x7642b4`, `0x7642c1`, `0x764780`, `0x764801`, `0x764815`, `0x76482c`, `0x764849`, `0x764854`, `0x76485a`, `0x766850`, `0x766a90`, `0x766ae0`, `0x8783e4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The constructor allocates nine zeroed 0x18-byte records with `SMemAlloc(0x18)` into `+0xcd4`
@@ -69,12 +69,12 @@ frame's input kinds join their lists.
 
 Addresses: `0x764780`, `0x764882`, `0x764893`, `0x7648b3`, `0x7648c9`, `0x7648d1`, `0x7648e4`, `0x764901`, `0x76490c`, `0x764920`, `0x76493a`, `0x764942`, `0x76498f`, `0x7649a4`, `0x7649f4`, `0x764a0d`, `0x7668c0`, `0x766aa0`, `0x766880`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x764780` compares the level with `+0x8` and stores `level + 1` (`0x764882`). With the cursor
-`+0x18` set it links the frame before the first list's terminator (`0x7648b3` to `0x7648c4`),
-else `0x7668c0(frame, 2, 0)` appends to the second (`0x7648d1`). `test ah,0x20` on `+0xb4` guards
+`+0x18` set it links the frame at the head of the first list (`0x7648b3` to `0x7648c4`),
+else `0x7668c0(frame, 2, 0)` inserts at the head of the second (`0x7648d1`). `test ah,0x20` on `+0xb4` guards
 the store of 0xffffffff into `+0x10c` (`0x7648e4`); `+0x4` gets 1 and `+0x0` ORs `+0x10c ≠ 0`.
 `0x76afa0` registers the input kinds. `0x764920` (frame, keep-drag) first ends a move of this frame
 unless kept (`0x76493a`), removes its input kinds, and, when linked, advances the cursor past it
@@ -84,11 +84,12 @@ unless kept (`0x76493a`), removes its input kinds, and, when linked, advances th
 
 A laid-out frame whose rectangle changes marks its stratum's levels dirty, raises the frame being
 moved or sized without the overlap check, and asks for a new hover pick. A frame whose region
-changes in one draw layer marks that layer of its level node and its stratum's draw-dirty flag.
+changes in one draw layer marks that layer of its level node and its stratum's draw-dirty flag; a frame that draws itself
+(bit 0x2000 of `+0xb4`) marks its own layer mask instead.
 
-Addresses: `0x764a20`, `0x764a36`, `0x764a4c`, `0x7650f0`, `0x7651ac`, `0x764a51`, `0x764a60`, `0x764a8a`, `0x764a90`, `0x76b648`, `0x76a990`, `0x76a9d0`
+Addresses: `0x764a20`, `0x764a36`, `0x764a4c`, `0x7650f0`, `0x7651ac`, `0x764a51`, `0x764a60`, `0x764a8a`, `0x764a90`, `0x76b648`, `0x76a990`, `0x76a999`, `0x76a9d0`, `0x76a9d9`, `0x76b530`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x764a20` stores 1 in the record's `+0x4` (`0x764a36`), calls the raise `0x7650f0(+0xcfc, 0)` when
@@ -96,7 +97,8 @@ a frame is being moved or sized (`0x764a4c`), which without the check moves that
 bit 0x10 is already set (`0x7651ac`), and stores 1 in `+0x1100` (`0x764a51`); its caller is the
 frame's rectangle callback (`0x76b648`). `0x764a60(frame, layer)` ORs `1 << layer` into the node's
 `+0x10c` (`0x764a8a`) and stores 1 in the record's `+0x0` (`0x764a90`); `0x76a990` and `0x76a9d0`
-call it for a visible frame of a top, one layer or all five.
+call it for a visible frame of a top, one layer or all five; a frame with bit 0x2000 set goes to `0x76b530`
+(`0x76a999`, `0x76a9d9`), which ORs the layer into `+0x1f8`, and never reaches `0x764a60`.
 
 ## Raising a frame
 
@@ -109,7 +111,7 @@ in use, its children following. `Lower` does nothing.
 
 Addresses: `0x7650f0`, `0x7650fb`, `0x765113`, `0x76513e`, `0x765150`, `0x765191`, `0x765221`, `0x76524d`, `0x765254`, `0x7651a3`, `0x7651ac`, `0x7651be`, `0x7651d8`, `0x7651dd`, `0x7652a0`, `0x76a5b0`, `0x76a5c0`, `0x767010`, `0x766c70`, `0x766bc0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::overlap_autoraise`, `ui::is_descendant`
 
 `0x7650f0` walks `+0x9c` until `test [edi+0xb4],0x1` (`0x765113`). With the check (`0x76513e`) it
@@ -133,7 +135,7 @@ changes the stratum, and `Lower` does nothing.
 
 Addresses: `0x76a5b0`, `0x76a5c0`, `0x7652a0`, `0x775a50`, `0x775a91`, `0x775ad6`, `0x775afd`, `0x775b0a`, `0x775b20`, `0x775b61`, `0x775b3d`, `0x76aeec`, `0x766392`, `0x7652d7`, `0x764a4c`, `0x775440`, `0x76a3c0`, `0x765010`, `0x7650f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 A census of `call` and `jmp` to `0x76a5b0` finds `0x7652d7` (the start of a move or size), `0x766392`
@@ -156,7 +158,7 @@ no string argument `Usage: %s:SetFrameStrata(level)`.
 
 Addresses: `0x6f17d0`, `0x769820`, `0x769945`, `0x76994c`, `0x769953`, `0x769957`, `0x769961`, `0x769971`, `0x769978`, `0x7699a4`, `0x7699ad`, `0x774360`, `0x7743f0`, `0x77440b`, `0x774412`, `0x77441a`, `0x77444f`, `0x774456`, `0x76a470`, `0x6f4940`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f17d0` is called only from `0x769961` and `0x77440b` and stores the index only on a hit. In the
@@ -176,7 +178,7 @@ O compacts to O, O, E, O with the count 4. A trailing empty run is dropped from 
 
 Addresses: `0x764eb0`, `0x764eed`, `0x764efb`, `0x764f18`, `0x764f20`, `0x764f41`, `0x764f71`, `0x764fb6`, `0x764fd3`, `0x764fd8`, `0x764fe3`, `0x764f62`, `0x764ff1`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::level_compact`, `ui::level_compact_ignores_visibility`, `ui::level_compact_leaves_interior_gaps`
 
 `0x764eb0` loops over levels below the record's `+0x8`; a node's frame list is non-empty when its
@@ -200,7 +202,7 @@ parent takes the parent's stratum and the parent's level plus one.
 
 Addresses: `0x76a470`, `0x76a481`, `0x76a498`, `0x76a4a5`, `0x76a4b6`, `0x76a4dd`, `0x76a4f0`, `0x76a4fd`, `0x76a50f`, `0x76a53b`, `0x76a582`, `0x76a595`, `0x76ab10`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::set_frame_strata`, `ui::set_frame_level`
 
 `0x76a470` returns when equal (`0x76a481`); with `+0xd4` set it calls `0x764920(frame, 1)` and
@@ -224,7 +226,7 @@ drained again, and a pending hover pick is made from the last mouse position.
 
 Addresses: `0x764330`, `0x764340`, `0x765650`, `0x765660`, `0x7656b6`, `0x7656ba`, `0x765707`, `0x765710`, `0x765713`, `0x76572d`, `0x765757`, `0x765799`, `0x7657a1`, `0x7657b4`, `0x7657be`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::render_traverse_order`
 
 The constructor calls 0x442800 with `ecx` 0, `edx` 4, then 1.0, 0, `0x764330` and the address of
@@ -244,18 +246,21 @@ when its levels are dirty, it recomputes the overlap bit 0x10 of every toplevel 
 its draw is dirty, it rebuilds the batches of each level whose layer mask is set; and it draws the
 batches of each level from the lowest. A rebuilt batch gathers, for its draw layer, the regions of
 every frame in the level that does not draw itself, from the oldest link to the newest (`draworder`).
+Every batch of a level is unlinked first and every non-empty one, rebuilt or not, is linked again in layer order.
 
-Addresses: `0x7657d0`, `0x7657f1`, `0x765847`, `0x765851`, `0x765896`, `0x7658e2`, `0x765920`, `0x765a90`
+Addresses: `0x7657d0`, `0x7657f1`, `0x765847`, `0x765851`, `0x765885`, `0x765896`, `0x7658e2`, `0x765920`, `0x7659b2`, `0x765a01`, `0x765a5b`, `0x765a7a`, `0x765a85`, `0x765a90`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7657d0` calls `0x7ad7f0(0)` (`0x7657f1`); for a record with `+0x4` set, each frame with bit 1
 of `+0xb4` gets `0x76a3c0(0x10, 0x765a90(frame))` (`0x765847`, `0x765851`) and `+0x4` is cleared.
-With `+0x0` set, `0x765920` runs per node (`0x765896`) and `+0x0` becomes whether any node is
-still dirty. `0x765920` loops five layers of 0x30 bytes from `+0x1c`, unlinks each from `+0x110`,
-and for a set bit calls 0x7731d0, slot 0x44 of each frame without bit 0x2000 with the batch and
-layer, and 0x7731a0, relinking a batch that holds something; then clears `+0x10c`. Drawing is
+With `+0x0` set, it is cleared (`0x765885`) and `0x765920` runs per node (`0x765896`); that
+function always returns 0 (`0x765a7a`, `0x765a85`), so `+0x0` ends 0. `0x765920` loops five layers of 0x30
+bytes from `+0x1c`, unlinks each from `+0x110`, and for a set bit calls 0x7731d0, slot 0x44 of each frame
+without bit 0x2000 with the batch and layer, and 0x7731a0. A batch with a nonzero `[batch+4]` is then
+linked at the head of `+0x110` (`0x765a01` to `0x765a5b`); `0x7659b2` jumps there for a clear bit, so clean
+batches relink too. It then clears `+0x10c`. Drawing is
 0x76fb00 per batch of `+0x110` (`0x7658e2`). `0x765a90` is the overlap test of `Raising a
 frame`.
 
@@ -264,20 +269,22 @@ frame`.
 The top's constructor builds its `CLayoutFrame`, its frame list (link offset 0x304), the queue of
 objects to delete (0x304), the strata records and 36 input lists, a 782-entry table of the frame
 that took each key, the cursor position, and the pass and input registrations; it sets the
-hover-pick flag and zeroes the four host callbacks `+0x1128` to `+0x1134`. Of this file's code only
+hover-pick flag, zeroes the nine dwords `+0x1104` to `+0x1124` and then writes the cursor into `+0x1118` and
+`+0x111c`, and zeroes the four host callbacks `+0x1128` to `+0x1134`. Of this file's code only
 `0x764ce0`, which nothing calls, links an object onto the deletion list. The destructor deletes
 the queued objects and every frame, frees the records and nodes, removes the cursor and the input
 registrations, closes the pass registration and clears `0xcf0bd8`.
 
-Addresses: `0x764180`, `0x76418b`, `0x7641b8`, `0x7641df`, `0x764206`, `0x76422a`, `0x76424c`, `0x76425e`, `0x76426b`, `0x764282`, `0x764302`, `0x764360`, `0x764390`, `0x7643ea`, `0x764436`, `0x76446c`, `0x7644c0`, `0x7644c7`, `0x7644cf`, `0x7644d4`, `0x764592`, `0x7645a0`, `0x766980`, `0x766a10`, `0x766b10`, `0x766d10`, `0x766d50`, `0xcf0bd8`, `0x81c380`
+Addresses: `0x764180`, `0x76418b`, `0x7641b8`, `0x7641df`, `0x764206`, `0x76422a`, `0x76424c`, `0x76425e`, `0x76426b`, `0x764282`, `0x7642ef`, `0x7642fa`, `0x764302`, `0x76431b`, `0x764360`, `0x764390`, `0x7643ea`, `0x764436`, `0x76446c`, `0x7644c0`, `0x7644c7`, `0x7644cf`, `0x7644d4`, `0x764592`, `0x7645a0`, `0x766980`, `0x766a10`, `0x766b10`, `0x766d10`, `0x766d50`, `0xcf0bd8`, `0x81c380`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x764180` calls `0x767680` (`0x76418b`), stores 0x304 as the link offset of `+0xcc0` and
-`+0xccc` (`0x7641b8`, `0x7641df`), zeroes 36 lists of 0x1c bytes (`0x764206`), stores 1 at
+`0x764180` calls `0x767680` (`0x76418b`), stores 0x304 as the link offset of the lists at `+0xcbc` and
+`+0xcc8` (`0x7641b8`, `0x7641df`; their terminators are `+0xcc0` and `+0xccc`), zeroes 36 lists of 0x1c bytes (`0x764206`), stores 1 at
 `+0x1100` (`0x76422a`), the vtable `0x81c380` (`0x76424c`) and `0xcf0bd8` (`0x76425e`), calls
-`0x765bf0` (`0x76426b`) and clears 0x30e dwords from `+0x84` (`0x764282`). `0x764390` deletes
+`0x765bf0` (`0x76426b`) and clears 0x30e dwords from `+0x84` (`0x764282`). `rep stos` zeroes the nine dwords from
+`+0x1104` (`0x7642ef` to `0x7642fa`); `0x420600` and `0x41ade0` then store the cursor (`0x764302` to `0x76431b`). `0x764390` deletes
 through slot 0 (`0x7643ea`, `0x764436`), frees each node with `0x7645a0`, then `SetCursor(0)`
 (`0x7644c0`), `0x765d10`, `HandleClose(+0x74)` and the store of 0 (`0x7644d4`); `0x764360` is the
 deleting destructor. `0x766fc0` answers no layout parent and `0x766fd0` no frame by name.
