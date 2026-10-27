@@ -34,12 +34,12 @@ function.
 
 Addresses: `0x6f2ec0`, `0x6f2ecc`, `0x6f2f19`, `0x6f2f24`, `0x6f2f80`, `0x6f2f9c`, `0x6f3007`, `0x6f3080`, `0x6f309a`, `0x6f30bb`, `0x6f30c5`, `0x6f30d0`, `0x6f3140`, `0x6f318b`, `0x6f31a0`, `0x6f3218`, `0x6f326b`, `0x6f32b0`, `0x6f3347`, `0x6f3350`, `0x6f33eb`, `0x6f3363`, `0x6f33ad`, `0x6f30e1`, `0x6f31b9`, `0x6f32c8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The index walk is `0x6f3363` to `0x6f33ad` in `lua_pushvalue`: `idx > 0` gives `base + idx*16 - 16`,
 `idx > -10000` gives `top + idx*16`, `-10001` (`0xffffd8ef`) gives `L+0x40`, `-10000`
-(`0xffffd8f0`) gives `[G+0x30]` with `G = [L+0x10]`, and any other negative `idx` indexes the running
+(`0xffffd8f0`) gives the address `G+0x30` with `G = [L+0x10]` (`0x6f33aa`, `0x6f33ad`; nothing is loaded from it), and any other negative `idx` indexes the running
 function's upvalues from `closure+0x10` when `0xffffd8ef - idx` does not exceed the byte at
 `closure+7`. The same walk is inlined at `0x6f30e1`, `0x6f31b9`, `0x6f32c8`. Upstream `lua_remove`,
 `lua_insert`, `lua_replace`, `lua_pushvalue` and `lua_xmove` are these loops.
@@ -65,7 +65,7 @@ answer 0 or 1: `lua_iscfunction` for a function with a C body, `lua_isuserdata` 
 
 Addresses: `0x6f3410`, `0x6f341e`, `0x6f3480`, `0x6f348a`, `0x6f34a0`, `0x6f34a9`, `0x6f3530`, `0x6f353b`, `0x6f3550`, `0x6f3574`, `0x6f3590`, `0x6f35bb`, `0x6f35e0`, `0x6f3605`, `0x6f3400`, `0x6f3409`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaA_indexAcceptable` is the walk of `Stack moves` plus the positive-index bound: the positive
@@ -92,7 +92,7 @@ pointer for a userdata, table, function or thread. A slot that does not fit answ
 
 Addresses: `0x6f3660`, `0x6f366b`, `0x6f366f`, `0x6f3677`, `0x6f36e0`, `0x6f36f7`, `0x6f3701`, `0x6f3720`, `0x6f3729`, `0x6f3740`, `0x6f375c`, `0x6f3770`, `0x6f3779`, `0x6f3790`, `0x6f37a9`, `0x6f37bc`, `0x6f45a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 A full userdata's block begins 16 bytes past its header (`0x6f375c`), the offset
@@ -119,7 +119,7 @@ the threshold `[G+0x24]`.
 
 Addresses: `0x6f3810`, `0x6f3816`, `0x6f382f`, `0x6f3840`, `0x6f384f`, `0x6f3862`, `0x6f3876`, `0x6f38c0`, `0x6f38e3`, `0x6f38f0`, `0x6f3912`, `0x6f3030`, `0x6f3039`, `0x6f3047`, `0x6f304f`, `0x6f4560`, `0x6f457c`, `0x6f4584`, `0x6f45a0`, `0x6f45b0`, `0x6f45c7`, `0x6f45de`, `0x6f45f0`, `0x6f3857`, `0x6f4573`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The threshold test is `cmp ecx,[eax+0x24]; jb` before the call to `luaC_collectgarbage`
@@ -152,7 +152,7 @@ table or full userdata, and `lua_getfenv` and `lua_setfenv` the environment of a
 
 Addresses: `0x6f3a40`, `0x6f3ab3`, `0x6f3b00`, `0x6f3b6f`, `0x6f3bc0`, `0x6f3c30`, `0x6f3c6a`, `0x6f3cf0`, `0x6f3cfe`, `0x6f3d03`, `0x6f3d37`, `0x6f3d50`, `0x6f3db5`, `0x6f3dc4`, `0x6f3e20`, `0x6f3e94`, `0x6f3e99`, `0x6f3ea0`, `0x6f3f17`, `0x6f3f60`, `0x6f3fd8`, `0x6f4020`, `0x6f4099`, `0x6f409e`, `0x6f40a3`, `0x6f40d0`, `0x6f413f`, `0x6f4450`, `0x6f44c1`, `0x6f44e0`, `0x6f450c`, `0x6f4542`, `0x6f44cd`, `0x6f44d5`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `lua_next` raises the top by one slot on a result and lowers it by one at the end (`0x6f44cd`,
@@ -178,7 +178,7 @@ a light userdata argument. `lua_dump` writes a Lua function that has no upvalues
 
 Addresses: `0x6f41a0`, `0x6f4237`, `0x6f4250`, `0x6f4256`, `0x6f4260`, `0x6f427c`, `0x6f4290`, `0x6f4298`, `0x6f42d7`, `0x6f4315`, `0x6f4370`, `0x6f437b`, `0x6f4383`, `0x6f438a`, `0x6f4399`, `0x6f4224`, `0x6f422e`, `0x6f4232`, `0x6f41af`, `0x6f6960`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `lua_pcall` stores the function slot and the result count in a two-word record on its frame
@@ -207,7 +207,7 @@ for a C function, the debug name for a Lua one, null past the count.
 
 Addresses: `0x6f3020`, `0x6f3023`, `0x6f3026`, `0x6f43e0`, `0x6f43e6`, `0x6f43f0`, `0x6f43f6`, `0x6f4430`, `0x6f4660`, `0x6f4671`, `0x6f46b3`, `0x6f46e0`, `0x6f4745`, `0x6f47b0`, `0x6f47c0`, `0x6f6ee0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `lua_atpanic` returns the old value, which opening a state sets to `0x6f6ee0` at `[G+0x2c]`.
@@ -223,7 +223,7 @@ Nothing live reaches these 16 functions, which belong to the library the client 
 
 Addresses: `0x6f2ec0`, `0x6f2f80`, `0x6f3020`, `0x6f3030`, `0x6f34a0`, `0x6f3530`, `0x6f3590`, `0x6f3720`, `0x6f4260`, `0x6f4290`, `0x6f4430`, `0x6f4560`, `0x6f45b0`, `0x6f4660`, `0x6f46e0`, `0x6f47b0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `cargo xtask census --all` marks each of these rows `unreached`: no `call` or `jmp` target, no stored dword and no fall-through reaches it from live code. The control is the same run listing `lua_gettop` (`0x6f3070`) as live, with 582 call sites in the image.

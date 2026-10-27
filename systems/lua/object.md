@@ -37,7 +37,7 @@ pushes one string. The client's `pushstr` pushes `(null)` for a null pointer (`0
 
 Addresses: `0x6f5bc8`, `0x6f5830`, `0x6f5834`, `0x6f583f`, `0x6f586b`, `0x6f589a`, `0x6f58b0`, `0x6f58b3`, `0x6f58c0`, `0x6f58cd`, `0x6f58e3`, `0x6f5900`, `0x6f5911`, `0x6f593e`, `0x6f5964`, `0x6f5990`, `0x6f59aa`, `0x6f59b2`, `0x6f59f9`, `0x6f5a40`, `0x6f5a97`, `0x6f5abe`, `0x6f5b31`, `0x6f5bc0`, `0x6f5bee`, `0x6f5c0d`, `0x6f5c20`, `0x6f5c2d`, `0x6f5c40`, `0x6f5c49`, `0x6f5c6b`, `0x6f5ceb`, `0x6f5cd7`, `0x6f5d5d`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaO_log2` indexes a 256-byte table by the highest nonzero byte, adding 24, 16, 8 or 0.
@@ -86,7 +86,7 @@ allocates `len + 0x11` bytes, links it into the bucket and doubles the table thr
 
 Addresses: `0x6f9c30`, `0x6f9c46`, `0x6f9c50`, `0x6f9c76`, `0x6f9ce5`, `0x6f9d00`, `0x6f9d0f`, `0x6f9d2a`, `0x6f9d31`, `0x6f9d76`, `0x6f9d90`, `0x6f9dae`, `0x6f9e0f`, `0x6f9e19`, `0x6f9e30`, `0x6f9e45`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The hash loop of `luaS_newlstr` is the one in the upstream 5.0 source: `l1 = len`, stepping down by
@@ -116,7 +116,7 @@ nth local variable name alive at an instruction.
 
 Addresses: `0x6f9e70`, `0x6f9e89`, `0x6f9e96`, `0x6f9eb0`, `0x6f9ecd`, `0x6f9eda`, `0x6f9f10`, `0x6f9f25`, `0x6f9f27`, `0x6f9f3e`, `0x6f9f43`, `0x6f9f60`, `0x6f9f79`, `0x6f9f87`, `0x6f9fb6`, `0x6f9fc0`, `0x6f9fe0`, `0x6f9ff3`, `0x6fa000`, `0x6fa050`, `0x6fa069`, `0x6fa102`, `0x6fa110`, `0x6fa129`, `0x6fa140`, `0x6fa150`, `0x6fa175`, `0x6fa168`, `0x6fa16d`, `0x6fa18d`, `0x6fbb54`, `0x6fbbf2`, `0x6fc4f5`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The open-upvalue list is sorted by decreasing level: `luaF_findupval` walks it while the level is
@@ -147,7 +147,7 @@ of two) and picks the sizes with `computesizes`: the largest array part at least
 
 Addresses: `0x6fa4f0`, `0x6fa50a`, `0x6fa517`, `0x6fa52c`, `0x6fa53c`, `0x6fa549`, `0x6fa560`, `0x6fa584`, `0x6fa5d0`, `0x6fa5e2`, `0x6fa5e9`, `0x6fa601`, `0x6fa620`, `0x6fa690`, `0x6fa6bc`, `0x6fa6d9`, `0x6fa6f0`, `0x6fa9c0`, `0x6fa9d5`, `0x6fa9dd`, `0x6fa9ec`, `0x6faa00`, `0x6faa67`, `0x6faab6`, `0x6faac2`, `0x6faae7`, `0x6fab00`, `0x6fab90`, `0x6fac1f`, `0x6fac2f`, `0x6fac63`, `0x6facfd`, `0x6fad5e`, `0x6fabe1`, `0x6fa98c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `resize` keeps the old node vector, or copies the dummy node into a temporary when the old size
@@ -202,7 +202,7 @@ position.
 
 Addresses: `0x6fa1a0`, `0x6fa1ac`, `0x6fa1e5`, `0x6fa201`, `0x6fa1b3`, `0x6fa1c6`, `0x6fa222`, `0x6fa260`, `0x6fa267`, `0x6fa27e`, `0x6fa28b`, `0x6fa420`, `0x6fa428`, `0x6fa43e`, `0x6fa458`, `0x6fa467`, `0x6fa485`, `0x6fa4a0`, `0x6fa4af`, `0x6fa4bf`, `0x6fa4d0`, `0x6fa700`, `0x6fa706`, `0x6fa70e`, `0x6fa72f`, `0x6fa736`, `0x6fa743`, `0x6fa748`, `0x6fa760`, `0x6fa771`, `0x6fa780`, `0x6fa785`, `0x6fa78a`, `0x6fa7a0`, `0x6fa7e0`, `0x6fa7b7`, `0x6fa7ef`, `0x6fa800`, `0x6fa804`, `0x6fa809`, `0x6fa814`, `0x6fa840`, `0x6fa851`, `0x6fa85b`, `0x6fa867`, `0x6fa87f`, `0x6fa892`, `0x6fa8a0`, `0x6fa8b8`, `0x6fa8ca`, `0x6fa8f7`, `0x6fa95e`, `0x6fa98c`, `0x6fa995`, `0x6fad80`, `0x6fad91`, `0x6fadba`, `0x6fa48a`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `hashnum` adds 1.0 before it sums the two 32-bit words of the double, as upstream does to make
@@ -228,7 +228,7 @@ limit while 4 places remain, else raises the caller's message.
 
 Addresses: `0x6fc980`, `0x6fc983`, `0x6fc989`, `0x6fc996`, `0x6fc99e`, `0x6fc9a4`, `0x6fc9ab`, `0x6fc900`, `0x6fc90e`, `0x6fc919`, `0x6fc920`, `0x6fc92a`, `0x6fc92c`, `0x6fc936`, `0x6fc93f`, `0x6fc962`, `0x6fc967`, `0x6fc9a3`, `0x6fc954`, `0x6fc94e`, `0x6fc951`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 A census of `call` and `jmp` targets finds 56 sites calling `luaM_irealloc` and one calling
@@ -249,7 +249,7 @@ Nothing live reaches this function, which belongs to the library the client link
 
 Addresses: `0x6f9e30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `cargo xtask census --all` marks each of these rows `unreached`: no `call` or `jmp` target, no stored dword and no fall-through reaches it from live code. The control is the same run listing `lua_gettop` (`0x6f3070`) as live, with 582 call sites in the image.

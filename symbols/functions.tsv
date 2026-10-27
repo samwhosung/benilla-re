@@ -29646,75 +29646,75 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2ea0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ec0	106	luaA_pushobject		lua	unreached		Copies a value to the stack top and grows the stack when one slot is left	verified	one	lua/api#stack-moves	
 0x6f2f30	80	lua_checkstack		lua	boundary	int __fastcall (lua_State *L, int32_t size)	Makes room for size more stack slots, returning 0 when that passes 2048 in use	verified	one	ui/luastate#stack-room-and-run-errors	
-0x6f2f80	155	lua_xmove		lua	unreached		Moves the top n values of one state onto the top of another	verified	one	lua/api#stack-moves	
-0x6f3020	10	lua_atpanic		lua	unreached		Replaces the panic function of the global state and returns the old one	verified	one	lua/api#state-and-upvalues	
+0x6f2f80	155	lua_xmove		lua	unreached		Moves the top n values of one state onto the top of another	verified	two	lua/api#stack-moves	
+0x6f3020	10	lua_atpanic		lua	unreached		Replaces the panic function of the global state and returns the old one	verified	two	lua/api#state-and-upvalues	
 0x6f3030	55	lua_newthread		lua	unreached		Pushes a new thread sharing the global state of the first	verified	one	lua/api#pushing-values	
 0x6f3070	10	lua_gettop	idb	lua	boundary		Returns the number of values on the stack	verified	one	ui/luastate#reading-numeric-arguments	
-0x6f3080	73	lua_settop	idb	lua	boundary		Sets the stack top to an index, filling new slots with nil or lowering it for a negative index	verified	one	lua/api#stack-moves	
-0x6f30d0	193	lua_remove		lua	boundary		Removes the value at an index and shifts the values above it down one slot	verified	one	lua/api#stack-moves	
-0x6f31a0	265	lua_insert	idb	lua	boundary		Moves the top value to an index, shifting the values from there up one slot	verified	one	lua/api#stack-moves	
-0x6f32b0	156	lua_replace		lua	boundary		Pops the top value into an index	verified	one	lua/api#stack-moves	
-0x6f3350	173	lua_pushvalue		lua	boundary		Pushes a copy of the value at an index	verified	one	lua/api#stack-moves	
+0x6f3080	73	lua_settop	idb	lua	boundary		Sets the stack top to an index, filling new slots with nil or lowering it for a negative index	verified	two	lua/api#stack-moves	
+0x6f30d0	193	lua_remove		lua	boundary		Removes the value at an index and shifts the values above it down one slot	verified	two	lua/api#stack-moves	
+0x6f31a0	265	lua_insert	idb	lua	boundary		Moves the top value to an index, shifting the values from there up one slot	verified	two	lua/api#stack-moves	
+0x6f32b0	156	lua_replace		lua	boundary		Pops the top value into an index	verified	two	lua/api#stack-moves	
+0x6f3350	173	lua_pushvalue		lua	boundary		Pushes a copy of the value at an index	verified	two	lua/api#stack-moves	
 0x6f3400	16	lua_type		lua	boundary		Returns the type tag of a stack index, or -1 for an absent one	verified	one	ui/luastate#reading-numeric-arguments	
-0x6f3410	101	luaA_indexAcceptable		lua	boundary		Resolves a stack or pseudo index to its slot, null for an index past the top	verified	one	lua/api#index-lookup-and-tests	
-0x6f3480	18	lua_typename		lua	boundary		Returns the name of a type tag, or no value for -1	verified	one	lua/api#index-lookup-and-tests	
-0x6f34a0	33	lua_iscfunction		lua	unreached		Tests whether the value at an index is a function with a C body	verified	one	lua/api#index-lookup-and-tests	
+0x6f3410	101	luaA_indexAcceptable		lua	boundary		Resolves a stack or pseudo index to its slot, null for an index past the top	verified	two	lua/api#index-lookup-and-tests	
+0x6f3480	18	lua_typename		lua	boundary		Returns the name of a type tag, or no value for -1	verified	two	lua/api#index-lookup-and-tests	
+0x6f34a0	33	lua_iscfunction		lua	unreached		Tests whether the value at an index is a function with a C body	verified	two	lua/api#index-lookup-and-tests	
 0x6f34d0	49	lua_isnumber		lua	boundary		Returns whether a stack value is a number or a string that converts to one	verified	one	ui/luastate#reading-numeric-arguments	
 0x6f3510	24	lua_isstring	idb	lua	boundary		Returns whether a stack value is a string or a number	verified	one	ui/luastate#reading-numeric-arguments	
-0x6f3530	30	lua_isuserdata		lua	unreached		Tests whether the value at an index is a full or a light userdata	verified	one	lua/api#index-lookup-and-tests	
-0x6f3550	55	lua_rawequal		lua	boundary		Compares two stack values without metamethods, 0 when either index is invalid	verified	one	lua/api#index-lookup-and-tests	
-0x6f3590	71	lua_equal		lua	unreached		Compares two stack values with the equality metamethod, 0 when the tags differ	verified	one	lua/api#index-lookup-and-tests	
-0x6f35e0	56	lua_lessthan		lua	boundary		Compares two stack values with the order metamethod, 0 when either index is invalid	verified	one	lua/api#index-lookup-and-tests	
+0x6f3530	30	lua_isuserdata		lua	unreached		Tests whether the value at an index is a full or a light userdata	verified	two	lua/api#index-lookup-and-tests	
+0x6f3550	55	lua_rawequal		lua	boundary		Compares two stack values without metamethods, 0 when either index is invalid	verified	two	lua/api#index-lookup-and-tests	
+0x6f3590	71	lua_equal		lua	unreached		Compares two stack values with the equality metamethod, 0 when the tags differ	verified	two	lua/api#index-lookup-and-tests	
+0x6f35e0	56	lua_lessthan		lua	boundary		Compares two stack values with the order metamethod, 0 when either index is invalid	verified	two	lua/api#index-lookup-and-tests	
 0x6f3620	51	lua_tonumber		lua	boundary		Returns a stack value as a number, 0.0 for anything that does not convert	verified	one	ui/luastate#reading-numeric-arguments	
-0x6f3660	36	lua_toboolean		lua	boundary		Returns 0 for nil and false and 1 for any other value	verified	one	lua/api#reading-values	
+0x6f3660	36	lua_toboolean		lua	boundary		Returns 0 for nil and false and 1 for any other value	verified	two	lua/api#reading-values	
 0x6f3690	78	lua_tostring	idb	lua	boundary		Returns a stack value as text, converting a number in place, null for other types	verified	one	ui/script#creating-a-frame-from-lua	
-0x6f36e0	56	lua_strlen		lua	boundary		Returns the byte length of a string or a number converted to a string	verified	one	lua/api#reading-values	
-0x6f3720	31	lua_tocfunction		lua	unreached		Returns the C function of a C closure, else null	verified	one	lua/api#reading-values	
-0x6f3740	36	lua_touserdata		lua	boundary		Returns the block of a full userdata or the pointer of a light userdata, else null	verified	one	lua/api#reading-values	
-0x6f3770	21	lua_tothread		lua	boundary		Returns the state of a thread value, else null	verified	one	lua/api#reading-values	
-0x6f3790	54	lua_topointer		lua	boundary		Returns the address that identifies a userdata, table, function or thread, else null	verified	one	lua/api#reading-values	
+0x6f36e0	56	lua_strlen		lua	boundary		Returns the byte length of a string or a number converted to a string	verified	two	lua/api#reading-values	
+0x6f3720	31	lua_tocfunction		lua	unreached		Returns the C function of a C closure, else null	verified	two	lua/api#reading-values	
+0x6f3740	36	lua_touserdata		lua	boundary		Returns the block of a full userdata or the pointer of a light userdata, else null	verified	two	lua/api#reading-values	
+0x6f3770	21	lua_tothread		lua	boundary		Returns the state of a thread value, else null	verified	two	lua/api#reading-values	
+0x6f3790	54	lua_topointer		lua	boundary		Returns the address that identifies a userdata, table, function or thread, else null	verified	two	lua/api#reading-values	
 0x6f37f0	23	lua_pushnil	idb	lua	boundary		Pushes nil stamped with the current context word	verified	one	ui/luastate#the-context-word	
-0x6f3810	43	lua_pushnumber	idb	lua	boundary		Pushes a number	verified	one	lua/api#pushing-values	
-0x6f3840	78	lua_pushlstring		lua	boundary		Pushes a string of a given length, interned	verified	one	lua/api#pushing-values	
+0x6f3810	43	lua_pushnumber	idb	lua	boundary		Pushes a number	verified	two	lua/api#pushing-values	
+0x6f3840	78	lua_pushlstring		lua	boundary		Pushes a string of a given length, interned	verified	two	lua/api#pushing-values	
 0x6f3890	37	lua_pushstring	idb	lua	boundary		Pushes a string, or nil for a null pointer	verified	one	ui/script#handler-arguments	
-0x6f38c0	46	lua_pushvfstring		lua	boundary		Pushes a string formatted from a format and an argument list	verified	one	lua/api#pushing-values	
-0x6f38f0	42	lua_pushfstring	idb	lua	boundary		Pushes a string formatted from a format and its arguments	verified	one	lua/api#pushing-values	
+0x6f38c0	46	lua_pushvfstring		lua	boundary		Pushes a string formatted from a format and an argument list	verified	two	lua/api#pushing-values	
+0x6f38f0	42	lua_pushfstring	idb	lua	boundary		Pushes a string formatted from a format and its arguments	verified	two	lua/api#pushing-values	
 0x6f3920	193	lua_pushcclosure		lua	boundary		Pushes a C closure of a function with upvalues	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f39f0	37	lua_pushboolean		lua	boundary		Pushes a Lua boolean, called from seven places and no unit function	verified	one	ui/unittokens#what-the-functions-push	
 0x6f3a20	28	lua_pushlightuserdata		lua	boundary		Pushes a light userdata stamped with the current context word	verified	one	ui/luastate#what-a-new-state-holds	
-0x6f3a40	187	lua_gettable	idb	lua	boundary		Replaces the key on top with the value at the table index, through metamethods	verified	one	lua/api#tables-and-metatables	
-0x6f3b00	182	lua_rawget		lua	boundary		Replaces the key on top with the raw value at the table index	verified	one	lua/api#tables-and-metatables	
-0x6f3bc0	196	lua_rawgeti		lua	boundary		Pushes the raw value at an integer key of the table at an index	verified	one	lua/api#tables-and-metatables	
+0x6f3a40	187	lua_gettable	idb	lua	boundary		Replaces the key on top with the value at the table index, through metamethods	verified	two	lua/api#tables-and-metatables	
+0x6f3b00	182	lua_rawget		lua	boundary		Replaces the key on top with the raw value at the table index	verified	two	lua/api#tables-and-metatables	
+0x6f3bc0	196	lua_rawgeti		lua	boundary		Pushes the raw value at an integer key of the table at an index	verified	two	lua/api#tables-and-metatables	
 0x6f3c90	66	lua_newtable		lua	boundary		Pushes a new table stamped with the current context word	verified	one	ui/luastate#the-context-word	
 0x6f3ce0	5			lua	unreached		Runs its object file code not read here	inferred	none		
-0x6f3cf0	86	lua_getmetatable		lua	boundary		Pushes the metatable of a table or full userdata, returning 0 when it has none	verified	one	lua/api#tables-and-metatables	
+0x6f3cf0	86	lua_getmetatable		lua	boundary		Pushes the metatable of a table or full userdata, returning 0 when it has none	verified	two	lua/api#tables-and-metatables	
 0x6f3d50	196	lua_getfenv		lua	boundary		Pushes the environment of a Lua function, the globals for any other value	verified	one	lua/api#tables-and-metatables	
-0x6f3e20	127	lua_settable	idb	lua	boundary		Stores the top value at the table index under the key below it, through metamethods	verified	one	lua/api#tables-and-metatables	
-0x6f3ea0	182	lua_rawset		lua	boundary		Stores the top value at the table index under the key below it, without metamethods	verified	one	lua/api#tables-and-metatables	
-0x6f3f60	186	lua_rawseti		lua	boundary		Stores the top value at an integer key of the table at an index	verified	one	lua/api#tables-and-metatables	
-0x6f4020	171	lua_setmetatable		lua	boundary		Pops a table or nil into the metatable of the table or userdata at an index	verified	one	lua/api#tables-and-metatables	
+0x6f3e20	127	lua_settable	idb	lua	boundary		Stores the top value at the table index under the key below it, through metamethods	verified	two	lua/api#tables-and-metatables	
+0x6f3ea0	182	lua_rawset		lua	boundary		Stores the top value at the table index under the key below it, without metamethods	verified	two	lua/api#tables-and-metatables	
+0x6f3f60	186	lua_rawseti		lua	boundary		Stores the top value at an integer key of the table at an index	verified	two	lua/api#tables-and-metatables	
+0x6f4020	171	lua_setmetatable		lua	boundary		Pops a table or nil into the metatable of the table or userdata at an index	verified	two	lua/api#tables-and-metatables	
 0x6f40d0	163	lua_setfenv		lua	boundary		Pops a table into the environment of the Lua function at an index, returning 0 for other values	verified	one	lua/api#tables-and-metatables	
 0x6f4180	27	lua_call		lua	boundary		Calls a function with arguments and results, unprotected	verified	one	ui/luastate#error-handlers	
-0x6f41a0	164	lua_pcall	idb	lua	boundary		Calls a function in protected mode with a handler index, returning the status	verified	one	lua/api#calls-and-chunks	
-0x6f4250	12	f_call		lua	boundary		Calls the function and result count of an argument record through luaD_call	verified	one	lua/api#calls-and-chunks	
+0x6f41a0	164	lua_pcall	idb	lua	boundary		Calls a function in protected mode with a handler index, returning the status	verified	two	lua/api#calls-and-chunks	
+0x6f4250	12	f_call		lua	boundary		Calls the function and result count of an argument record through luaD_call	verified	two	lua/api#calls-and-chunks	
 0x6f4260	44	lua_cpcall		lua	unreached		Calls a C function in protected mode with one light userdata argument	verified	one	lua/api#calls-and-chunks	
 0x6f4290	141	f_Ccall		lua	unreached		Pushes a C closure and a light userdata and calls the closure	verified	one	lua/api#calls-and-chunks	
 0x6f4320	74	lua_load		lua	boundary		Loads a chunk through a reader and the protected parser	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x6f4370	65	lua_dump		lua	boundary		Writes a Lua function with no upvalues through a chunk writer, returning 0 for other values	verified	one	lua/api#calls-and-chunks	
+0x6f4370	65	lua_dump		lua	boundary		Writes a Lua function with no upvalues through a chunk writer, returning 0 for other values	verified	two	lua/api#calls-and-chunks	
 0x6f43c0	8	lua_enablegc		lua	boundary		Stores 1 in the state word +0x60 that lets the collector run	verified	one	ui/luastate#the-collector-switch	
 0x6f43d0	8	lua_disablegc		lua	boundary		Stores 0 in the state word +0x60, stopping the collector	verified	one	ui/luastate#the-collector-switch	
-0x6f43e0	10	lua_getgcthreshold		lua	boundary		Returns the collector threshold in kilobytes	verified	one	lua/api#state-and-upvalues	
-0x6f43f0	10	lua_getgccount		lua	boundary		Returns the allocated memory in kilobytes	verified	one	lua/api#state-and-upvalues	
+0x6f43e0	10	lua_getgcthreshold		lua	boundary		Returns the collector threshold in kilobytes	verified	two	lua/api#state-and-upvalues	
+0x6f43f0	10	lua_getgccount		lua	boundary		Returns the allocated memory in kilobytes	verified	two	lua/api#state-and-upvalues	
 0x6f4400	43	lua_setgcthreshold		lua	boundary		Sets the collection threshold in kilobytes and collects when the count reaches it	verified	one	ui/luastate#the-collector-switch	
-0x6f4430	6	lua_version		lua	unreached		Returns the version text	verified	one	lua/api#state-and-upvalues	
+0x6f4430	6	lua_version		lua	unreached		Returns the version text	verified	two	lua/api#state-and-upvalues	
 0x6f4440	8	lua_error	idb	lua	boundary		Raises the top value as a Lua error, never returning	verified	one	ui/luastate#the-c-function-contract	
-0x6f4450	141	lua_next		lua	boundary		Advances a table traversal from the key on top, returning 0 at the end	verified	one	lua/api#tables-and-metatables	
-0x6f44e0	113	lua_concat		lua	boundary		Concatenates the top n values into one string, an empty string for none	verified	one	lua/api#tables-and-metatables	
-0x6f4560	69	lua_newuserdata		lua	unreached		Pushes a new full userdata of a given size and returns its block	verified	one	lua/api#pushing-values	
-0x6f45b0	167	lua_pushupvalues		lua	unreached		Pushes the upvalues of the running C function and returns how many	verified	one	lua/api#pushing-values	
-0x6f4660	120	lua_getupvalue		lua	unreached		Pushes the nth upvalue of the function at an index and returns its name	verified	one	lua/api#state-and-upvalues	
-0x6f46e0	204	aux_upvalue		lua	unreached		Finds the nth upvalue of a function and returns its name	verified	one	lua/api#state-and-upvalues	
-0x6f47b0	91	lua_setupvalue		lua	unreached		Pops a value into the nth upvalue of the function at an index and returns its name	verified	one	lua/api#state-and-upvalues	
+0x6f4450	141	lua_next		lua	boundary		Advances a table traversal from the key on top, returning 0 at the end	verified	two	lua/api#tables-and-metatables	
+0x6f44e0	113	lua_concat		lua	boundary		Concatenates the top n values into one string, an empty string for none	verified	two	lua/api#tables-and-metatables	
+0x6f4560	69	lua_newuserdata		lua	unreached		Pushes a new full userdata of a given size and returns its block	verified	two	lua/api#pushing-values	
+0x6f45b0	167	lua_pushupvalues		lua	unreached		Pushes the upvalues of the running C function and returns how many	verified	two	lua/api#pushing-values	
+0x6f4660	120	lua_getupvalue		lua	unreached		Pushes the nth upvalue of the function at an index and returns its name	verified	two	lua/api#state-and-upvalues	
+0x6f46e0	204	aux_upvalue		lua	unreached		Finds the nth upvalue of a function and returns its name	verified	two	lua/api#state-and-upvalues	
+0x6f47b0	91	lua_setupvalue		lua	unreached		Pops a value into the nth upvalue of the function at an index and returns its name	verified	two	lua/api#state-and-upvalues	
 0x6f4810	143	luaL_argerror		lua	boundary		Raises a bad argument error naming the called function, or a bad self for a method	verified	one	lua/auxlib#argument-checks	
 0x6f48a0	58	luaL_typerror		lua	boundary		Raises an argument error saying which type was expected and which was found	verified	one	lua/auxlib#argument-checks	
 0x6f48e0	88	luaL_where		lua	boundary		Pushes the source name and current line of a call level, or an empty string	verified	one	lua/auxlib#argument-checks	
@@ -29759,45 +29759,45 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f57c0	35	lua_dobuffer		lua	unreached		Loads a buffer as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f57f0	28	lua_dostring		lua	unreached		Loads a null-ended string as a chunk and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f5810	22	luaO_int2fb		lua	primitive	int32_t __fastcall (uint32_t x)	Encodes a size as a byte: a 3-bit mantissa under a 5-bit exponent, rounded up	verified	two	lua/object#the-floating-byte-size-code	lua::luao_int2fb_difftest
-0x6f5830	113	luaO_log2		lua	primitive		Returns floor(log2(x)) of an unsigned integer by byte table, -1 for 0	verified	one	lua/object#basic-object-functions	
-0x6f58b0	60	luaO_rawequalObj		lua	primitive		Compares two values by tag, then by number or by payload	verified	one	lua/object#basic-object-functions	
-0x6f5900	132	luaO_str2d		lua	primitive		Converts a string to a number with strtod, allowing trailing spaces	verified	one	lua/object#basic-object-functions	
+0x6f5830	113	luaO_log2		lua	primitive		Returns floor(log2(x)) of an unsigned integer by byte table, -1 for 0	verified	two	lua/object#basic-object-functions	
+0x6f58b0	60	luaO_rawequalObj		lua	primitive		Compares two values by tag, then by number or by payload	verified	two	lua/object#basic-object-functions	
+0x6f5900	132	luaO_str2d		lua	primitive		Converts a string to a number with strtod, allowing trailing spaces	verified	two	lua/object#basic-object-functions	
 0x6f5990	452	luaO_pushvfstring	idb	lua	boundary		Pushes a string formatted from a format and an argument list with %s, %c, %d, %f and %%	verified	one	lua/object#basic-object-functions	
-0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer, which upstream does not	verified	one	lua/object#basic-object-functions	
-0x6f5c20	20	luaO_pushfstring		lua	boundary		Pushes a string formatted from a format and its arguments	verified	one	lua/object#basic-object-functions	
-0x6f5c40	311	luaO_chunkid		lua	primitive		Writes the short name of a chunk source for messages	verified	one	lua/object#basic-object-functions	
+0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer, which upstream does not	verified	two	lua/object#basic-object-functions	
+0x6f5c20	20	luaO_pushfstring		lua	boundary		Pushes a string formatted from a format and its arguments	verified	two	lua/object#basic-object-functions	
+0x6f5c40	311	luaO_chunkid		lua	primitive		Writes the short name of a chunk source for messages	verified	two	lua/object#basic-object-functions	
 0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	one	ui/luastate#the-c-function-contract	
 0x6f5db0	108	luaD_rawrunprotected		lua	boundary		Runs a function under setjmp, checking its address first	verified	one	ui/luastate#the-c-function-contract	
-0x6f5e20	71	luaD_reallocstack	idb	lua	boundary		Reallocates the stack to a new size and rebases every pointer into it	verified	one	lua/runtime#stack-and-call-records	
+0x6f5e20	71	luaD_reallocstack	idb	lua	boundary		Reallocates the stack to a new size and rebases every pointer into it	verified	two	lua/runtime#stack-and-call-records	
 0x6f5e70	122	correctstack		lua	boundary		Rebases the stack top, the open upvalues and the call records after the stack moved	verified	one	lua/runtime#stack-and-call-records	
 0x6f5ef0	105	luaD_reallocCI		lua	boundary		Reallocates the call-record vector and rebases the current and last records	verified	one	lua/runtime#stack-and-call-records	
-0x6f5f60	24	luaD_growstack	idb	lua	boundary		Grows the stack to twice its size, or by the needed size plus five when that is more	verified	one	lua/runtime#stack-and-call-records	
+0x6f5f60	24	luaD_growstack	idb	lua	boundary		Grows the stack to twice its size, or by the needed size plus five when that is more	verified	two	lua/runtime#stack-and-call-records	
 0x6f5f80	200	luaD_callhook		lua	boundary		Calls the debug hook, checking its address first	verified	one	ui/luastate#the-c-function-contract	
 0x6f6050	363	luaD_precall		lua	boundary		Prepares a call, checking a C function address before calling it	verified	one	ui/luastate#the-c-function-contract	
-0x6f61c0	60	luaD_growCI		lua	boundary		Doubles the call-record vector, raising stack overflow when the new size passes 4096	verified	one	lua/runtime#stack-and-call-records	
+0x6f61c0	60	luaD_growCI		lua	boundary		Doubles the call-record vector, raising stack overflow when the new size passes 4096	verified	two	lua/runtime#stack-and-call-records	
 0x6f6200	361	adjust_varargs		lua	boundary		Collects the extra arguments of a vararg function into an arg table with n	verified	one	lua/runtime#stack-and-call-records	
 0x6f6370	253	tryfuncTM		lua	boundary		Replaces a non-function by its __call metamethod and shifts it into the argument list	verified	one	lua/runtime#stack-and-call-records	
 0x6f6470	199	luaD_poscall		lua	boundary		Pops a call record and moves the wanted results down, padding with nil	verified	one	lua/runtime#stack-and-call-records	
 0x6f6540	84	callrethooks		lua	boundary		Calls the return hook and the tail-return hooks of the current call	verified	one	lua/runtime#stack-and-call-records	
 0x6f65a0	118	luaD_call	idb	lua	boundary		Calls a function with a result count, counting C nesting and running the collector	verified	one	lua/runtime#stack-and-call-records	
 0x6f6620	93	lua_resume		lua	unreached		Resumes a coroutine in protected mode and restores the state on an error	verified	one	lua/runtime#errors-and-protected-calls	
-0x6f6680	204	seterrorobj		lua	boundary		Puts the error value for a status code at a stack slot and sets the top after it	verified	one	lua/runtime#errors-and-protected-calls	
+0x6f6680	204	seterrorobj		lua	boundary		Puts the error value for a status code at a stack slot and sets the top after it	verified	two	lua/runtime#errors-and-protected-calls	
 0x6f6760	70	restore_stack_limit		lua	boundary		Resets the last usable slot and shrinks an oversized call-record vector	verified	one	lua/runtime#stack-and-call-records	
 0x6f67b0	170	resume		lua	unreached		Starts a coroutine or finishes the call it was suspended in, then runs the machine	verified	one	lua/runtime#errors-and-protected-calls	
-0x6f6860	251	lua_yield		lua	unreached		Marks the current call suspended, moving its results to the base, and returns -1	verified	one	lua/runtime#errors-and-protected-calls	
-0x6f6960	158	luaD_pcall		lua	boundary		Runs a function in protected mode and restores the state on an error	verified	one	lua/runtime#errors-and-protected-calls	
+0x6f6860	251	lua_yield		lua	unreached		Marks the current call suspended, moving its results to the base, and returns -1	verified	two	lua/runtime#errors-and-protected-calls	
+0x6f6960	158	luaD_pcall		lua	boundary		Runs a function in protected mode and restores the state on an error	verified	two	lua/runtime#errors-and-protected-calls	
 0x6f6a00	115	luaD_protectedparser		lua	primitive		Parses a chunk under protection with the binary flag forced to 0	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6a80	134	f_parser		lua	boundary		Compiles a chunk as source, the undump unreached, and pushes its closure	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6b10	101	luaE_newthread		lua	unreached		Creates a thread state that shares the global state and globals of another	verified	one	lua/runtime#state-open-and-close	
-0x6f6b80	19	mallocstate		lua	boundary		Allocates the 104-byte record of a state	verified	one	lua/runtime#state-open-and-close	
-0x6f6ba0	159	stack_init		lua	boundary		Allocates the stack of 45 slots and the 8 call records of a state	verified	one	lua/runtime#state-open-and-close	
+0x6f6b80	19	mallocstate		lua	boundary		Allocates the 104-byte record of a state	verified	two	lua/runtime#state-open-and-close	
+0x6f6ba0	159	stack_init		lua	boundary		Allocates the stack of 45 slots and the 8 call records of a state	verified	two	lua/runtime#state-open-and-close	
 0x6f6c40	69	preinit_state		lua	boundary		Zeroes a new state and stores 1 in its collector switch +0x60	verified	one	ui/luastate#the-collector-switch	
 0x6f6c90	36	luaE_freethread		lua	boundary		Closes the upvalues of a thread and frees its stack and its record	verified	one	lua/runtime#state-open-and-close	
-0x6f6cc0	17	freestate		lua	boundary		Frees the 104-byte record of a state	verified	one	lua/runtime#state-open-and-close	
-0x6f6ce0	63	freestack		lua	boundary		Frees the call records and the stack of a state	verified	one	lua/runtime#state-open-and-close	
+0x6f6cc0	17	freestate		lua	boundary		Frees the 104-byte record of a state	verified	two	lua/runtime#state-open-and-close	
+0x6f6ce0	63	freestack		lua	boundary		Frees the call records and the stack of a state	verified	two	lua/runtime#state-open-and-close	
 0x6f6d20	80	lua_open		lua	boundary		Creates a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
-0x6f6d70	354	f_luaopen		lua	boundary		Builds the global state of a new Lua state: tables, string table, tag method names	verified	one	lua/runtime#state-open-and-close	
-0x6f6ee0	3	default_panic		lua	boundary		Returns 0, the panic function a new state starts with	verified	one	lua/runtime#state-open-and-close	
+0x6f6d70	354	f_luaopen		lua	boundary		Builds the global state of a new Lua state: tables, string table, tag method names	verified	two	lua/runtime#state-open-and-close	
+0x6f6ee0	3	default_panic		lua	boundary		Returns 0, the panic function a new state starts with	verified	two	lua/runtime#state-open-and-close	
 0x6f6ef0	142	close_state		lua	boundary		Closes upvalues, sweeps every object, and frees the string table, the stacks and the global state	verified	one	lua/runtime#state-open-and-close	
 0x6f6f80	89	lua_close		lua	boundary		Destroys a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
 0x6f6fe0	5	callallgcTM		lua	boundary		Runs the pending finalizers; the protected function close_state uses	verified	one	lua/runtime#state-open-and-close	
@@ -29806,7 +29806,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7120	167	do1gcTM		lua	boundary		Calls the __gc metamethod of one userdata with the userdata as argument	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f71d0	55	luaC_sweep	idb	lua	boundary		Sweeps the userdata list, the string table and the main list, freeing everything when asked	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f7210	66	sweeplist		lua	boundary		Frees the objects of a list whose mark byte is at most a limit, clears the mark of the rest, returns the count freed	verified	one	lua/runtime#sweeping-and-finalizers	
-0x6f7260	109	freeobj		lua	boundary		Frees an object according to its type tag	verified	one	lua/runtime#sweeping-and-finalizers	
+0x6f7260	109	freeobj		lua	boundary		Frees an object according to its type tag	verified	two	lua/runtime#sweeping-and-finalizers	
 0x6f72f0	65	sweepstrings		lua	boundary		Sweeps every bucket of the string table and lowers the string count	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f7340	41	luaC_collectgarbage	idb	lua	primitive		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
 0x6f7370	107	checkSizes		lua	boundary		Halves the string table and the work buffer when they are mostly unused	verified	one	lua/runtime#sweeping-and-finalizers	
@@ -29824,7 +29824,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f79f0	37	valismarked		lua	primitive	int __fastcall (void *o)	Marks a string value, then answers 1 for a value below tag 4 or a marked object	verified	one	lua/gc#clearing-weak-keys	lua::valismarked_whole
 0x6f7a20	131			lua	boundary		Runs its object file code that calls 0x6f79f0, 0x6f79d0; not read here	inferred	none		
 0x6f7ab0	101			lua	boundary		Runs its object file code that calls 0x6f74a0, 0x6f7860; not read here	inferred	none		
-0x6f7b20	31	luaC_link		lua	boundary		Puts a new object on the main list with its type tag and a clear mark	verified	one	lua/runtime#sweeping-and-finalizers	
+0x6f7b20	31	luaC_link		lua	boundary		Puts a new object on the main list with its type tag and a clear mark	verified	two	lua/runtime#sweeping-and-finalizers	
 0x6f7b40	94	luaT_init		lua	boundary		Interns the tag method names and fixes them against collection	verified	one	lua/runtime#state-open-and-close	
 0x6f7ba0	39	luaT_gettm	idb	lua	boundary		Looks a metamethod name up in a metatable and records an absent one in its flags	verified	one	lua/runtime#metamethod-access	
 0x6f7bd0	69	luaT_gettmbyobj		lua	boundary		Returns a metamethod of a table or full userdata, nil for any other type	verified	one	ui/luastate#lua-50-behaviour-kept	
@@ -29837,7 +29837,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7f40	250	luaV_settable		lua	boundary		Stores a key in a value through __newindex, following tables up to 100 times	verified	one	lua/runtime#metamethod-access	
 0x6f8040	327	callTM		lua	boundary		Calls a metamethod with three arguments and no result	verified	one	lua/runtime#metamethod-access	
 0x6f8190	126	luaV_lessthan		lua	boundary		Compares two values with <, through __lt for non-numbers and non-strings	verified	one	lua/runtime#order-equality-and-arithmetic	
-0x6f8210	129	call_orderTM		lua	boundary		Calls an order metamethod when both operands have the same one, else answers -1	verified	one	lua/runtime#order-equality-and-arithmetic	
+0x6f8210	129	call_orderTM		lua	boundary		Calls an order metamethod when both operands have the same one, else answers -1	verified	two	lua/runtime#order-equality-and-arithmetic	
 0x6f82a0	140	luaV_strcmp		lua	boundary		Compares two strings with strcoll, continuing past embedded zero bytes	verified	one	lua/runtime#order-equality-and-arithmetic	
 0x6f8330	231	luaV_equalval		lua	boundary		Compares two values of the same tag, calling __eq for tables and userdata	verified	one	lua/runtime#order-equality-and-arithmetic	
 0x6f8440	144	get_compTM		lua	boundary		Returns the metamethod two metatables share for a comparison event, or null	verified	one	lua/runtime#order-equality-and-arithmetic	
@@ -29845,41 +29845,41 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f8670	161	call_binTM		lua	boundary		Calls the metamethod of an operator found on the first or second operand and stores its result	verified	one	lua/runtime#metamethod-access	
 0x6f8720	4432	luaV_execute		lua	boundary		Runs Lua bytecode, dispatching 35 opcodes through 0x6f9870	verified	one	ui/luastate#lua-50-behaviour-kept	
 0x6f9900	210	traceexec		lua	boundary		Calls the count hook and the line hook for the next instruction of a Lua function	verified	one	lua/runtime#order-equality-and-arithmetic	
-0x6f99e0	159	luaV_lessequal		lua	boundary		Compares two values with <=, through __le or the negated swapped __lt	verified	one	lua/runtime#order-equality-and-arithmetic	
-0x6f9a80	399	Arith		lua	boundary		Performs an arithmetic operator on two values, through the metamethod for non-numbers	verified	one	lua/runtime#order-equality-and-arithmetic	
-0x6f9c30	28	luaS_freeall		lua	boundary		Frees the string hash vector	verified	one	lua/object#strings	
+0x6f99e0	159	luaV_lessequal		lua	boundary		Compares two values with <=, through __le or the negated swapped __lt	verified	two	lua/runtime#order-equality-and-arithmetic	
+0x6f9a80	399	Arith		lua	boundary		Performs an arithmetic operator on two values, through the metamethod for non-numbers	verified	two	lua/runtime#order-equality-and-arithmetic	
+0x6f9c30	28	luaS_freeall		lua	boundary		Frees the string hash vector	verified	two	lua/object#strings	
 0x6f9c50	166	luaS_resize		lua	boundary		Rehashes every string into a string vector of a new power-of-two size	verified	one	lua/object#strings	
-0x6f9d00	132	luaS_newlstr		lua	primitive		Returns the interned string of a block of bytes, creating it when absent	verified	one	lua/object#strings	
-0x6f9d90	153	newlstr		lua	boundary		Allocates a new string, copies the bytes and links it into its hash bucket	verified	one	lua/object#strings	
-0x6f9e30	63	luaS_newudata		lua	unreached		Allocates a full userdata of a size with the default metatable and links it for the collector	verified	one	lua/object#strings	
-0x6f9e70	56	luaF_newCclosure		lua	boundary		Allocates a C closure for a number of upvalues and links it for the collector	verified	one	lua/object#closures-and-prototypes	
-0x6f9eb0	91	luaF_newLclosure		lua	boundary		Allocates a Lua closure with the given environment and links it for the collector	verified	one	lua/object#closures-and-prototypes	
-0x6f9f10	71	luaF_findupval		lua	boundary		Finds or creates the open upvalue of a stack slot in the sorted list	verified	one	lua/object#closures-and-prototypes	
-0x6f9f60	115	luaF_close		lua	boundary		Closes the open upvalues at or above a stack level by copying their values in	verified	one	lua/object#closures-and-prototypes	
+0x6f9d00	132	luaS_newlstr		lua	primitive		Returns the interned string of a block of bytes, creating it when absent	verified	two	lua/object#strings	
+0x6f9d90	153	newlstr		lua	boundary		Allocates a new string, copies the bytes and links it into its hash bucket	verified	two	lua/object#strings	
+0x6f9e30	63	luaS_newudata		lua	unreached		Allocates a full userdata of a size with the default metatable and links it for the collector	verified	two	lua/object#strings	
+0x6f9e70	56	luaF_newCclosure		lua	boundary		Allocates a C closure for a number of upvalues and links it for the collector	verified	two	lua/object#closures-and-prototypes	
+0x6f9eb0	91	luaF_newLclosure		lua	boundary		Allocates a Lua closure with the given environment and links it for the collector	verified	two	lua/object#closures-and-prototypes	
+0x6f9f10	71	luaF_findupval		lua	boundary		Finds or creates the open upvalue of a stack slot in the sorted list	verified	two	lua/object#closures-and-prototypes	
+0x6f9f60	115	luaF_close		lua	boundary		Closes the open upvalues at or above a stack level by copying their values in	verified	two	lua/object#closures-and-prototypes	
 0x6f9fe0	97	luaF_newproto		lua	boundary		Allocates a zeroed function prototype and links it for the collector	verified	one	lua/object#closures-and-prototypes	
 0x6fa050	186	luaF_freeproto		lua	boundary		Frees the seven blocks of a function prototype	verified	one	lua/object#closures-and-prototypes	
 0x6fa110	54	luaF_freeclosure		lua	boundary		Frees a C or Lua closure by its size	verified	one	lua/object#closures-and-prototypes	
-0x6fa150	69	luaF_getlocalname		lua	boundary		Returns the name of the nth local variable that is alive at an instruction, or null	verified	one	lua/object#closures-and-prototypes	
-0x6fa1a0	163	luaH_mainposition		lua	boundary		Returns the node where the hash of a key places it	verified	one	lua/object#table-access	
-0x6fa260	60	hashnum		lua	primitive		Hashes a number to a node by adding 1, summing the two words and taking a modulo	verified	one	lua/object#table-access	
+0x6fa150	69	luaF_getlocalname		lua	boundary		Returns the name of the nth local variable that is alive at an instruction, or null	verified	two	lua/object#closures-and-prototypes	
+0x6fa1a0	163	luaH_mainposition		lua	boundary		Returns the node where the hash of a key places it	verified	two	lua/object#table-access	
+0x6fa260	60	hashnum		lua	primitive		Hashes a number to a node by adding 1, summing the two words and taking a modulo	verified	two	lua/object#table-access	
 0x6fa2a0	379	luaH_next		lua	boundary		Answers the entry after a key: the array part by index, then the nodes by slot	verified	one	ui/luastate#lua-50-behaviour-kept	
-0x6fa420	117	luaH_index		lua	boundary		Returns the traversal position of a key for next, raising for a key that is not in the table	verified	one	lua/object#table-access	
-0x6fa4a0	70	arrayindex		lua	primitive		Returns the integer value of a number key when it is a valid array index, else -1	verified	one	lua/object#table-access	
-0x6fa4f0	103	luaH_new		lua	boundary		Allocates a table with given array and node sizes and the default metatable	verified	one	lua/object#table-creation-and-growth	
+0x6fa420	117	luaH_index		lua	boundary		Returns the traversal position of a key for next, raising for a key that is not in the table	verified	two	lua/object#table-access	
+0x6fa4a0	70	arrayindex		lua	primitive		Returns the integer value of a number key when it is a valid array index, else -1	verified	two	lua/object#table-access	
+0x6fa4f0	103	luaH_new		lua	boundary		Allocates a table with given array and node sizes and the default metatable	verified	two	lua/object#table-creation-and-growth	
 0x6fa560	100	setarrayvector		lua	boundary		Resizes the array part of a table and fills new slots with nil	verified	one	lua/object#table-creation-and-growth	
-0x6fa5d0	181	setnodevector		lua	boundary		Allocates the node vector of a table for a log2 size, all nodes empty	verified	one	lua/object#table-creation-and-growth	
-0x6fa690	104	luaH_free		lua	boundary		Frees the node vector, the array and the record of a table	verified	one	lua/object#table-creation-and-growth	
-0x6fa700	95	luaH_getnum		lua	boundary		Returns the value of an integer key, from the array part or the node chain	verified	one	lua/object#table-access	
+0x6fa5d0	181	setnodevector		lua	boundary		Allocates the node vector of a table for a log2 size, all nodes empty	verified	two	lua/object#table-creation-and-growth	
+0x6fa690	104	luaH_free		lua	boundary		Frees the node vector, the array and the record of a table	verified	two	lua/object#table-creation-and-growth	
+0x6fa700	95	luaH_getnum		lua	boundary		Returns the value of an integer key, from the array part or the node chain	verified	two	lua/object#table-access	
 0x6fa760	59	luaH_getstr	idb	lua	boundary		Returns the value stored under an interned string key, the shared nil object when absent	verified	one	lua/object#table-access	
-0x6fa7a0	90	luaH_get		lua	boundary		Returns the value stored under a key, the shared nil object when absent	verified	one	lua/object#table-access	
+0x6fa7a0	90	luaH_get		lua	boundary		Returns the value stored under a key, the shared nil object when absent	verified	two	lua/object#table-access	
 0x6fa800	50	luaH_getany		lua	boundary		Walks the chain of the main position of a key and compares by raw equality	verified	one	lua/object#table-access	
-0x6fa840	94	luaH_set		lua	boundary		Returns the slot for a key, creating the key when absent and refusing nil and NaN keys	verified	one	lua/object#table-access	
+0x6fa840	94	luaH_set		lua	boundary		Returns the slot for a key, creating the key when absent and refusing nil and NaN keys	verified	two	lua/object#table-access	
 0x6fa8a0	274	newkey		lua	boundary		Inserts a new key, moving a colliding node out of its main position when needed	verified	one	lua/object#table-access	
-0x6fa9c0	55	rehash		lua	boundary		Recounts a table and resizes it to the best array and node sizes	verified	one	lua/object#table-creation-and-growth	
+0x6fa9c0	55	rehash		lua	boundary		Recounts a table and resizes it to the best array and node sizes	verified	two	lua/object#table-creation-and-growth	
 0x6faa00	245	numuse		lua	boundary		Counts the live keys of a table per power-of-two slice and computes the new sizes	verified	one	lua/object#table-creation-and-growth	
 0x6fab00	143	computesizes		lua	primitive	void __fastcall (int32_t *nums, int32_t ntotal, int32_t *narray, int32_t *nhash)	Chooses the array size so that at least half of its slots are in use	verified	two	lua/object#choosing-the-array-size	lua::computesizes_difftest
-0x6fab90	493	resize		lua	boundary		Rebuilds a table with new array and node sizes and reinserts its entries	verified	one	lua/object#table-creation-and-growth	
-0x6fad80	71	luaH_setnum		lua	boundary		Returns the slot for an integer key, creating the key when absent	verified	one	lua/object#table-access	
+0x6fab90	493	resize		lua	boundary		Rebuilds a table with new array and node sizes and reinserts its entries	verified	two	lua/object#table-creation-and-growth	
+0x6fad80	71	luaH_setnum		lua	boundary		Returns the slot for an integer key, creating the key when absent	verified	two	lua/object#table-access	
 0x6fadd0	5			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fade0	11			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fadf0	1			lua	unreached		Runs its object file code not read here	inferred	none		
@@ -29891,11 +29891,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fb350	90	PoolFreeChunks		lua	host	void __thiscall (void *this)	Frees a pool's chunks from the last, each one's memory and record, then its chunk array	verified	one	lua/pools#closing-the-pools	
 0x6fb3b0	133	PoolResizeChunkArray		lua	host	void __thiscall (void *this, uint32_t count)	Reallocates a pool's chunk array to a count, allocating and copying when the reallocation fails	verified	one	lua/pools#allocating-from-the-pools	lua::realloc_pool_whole
 0x6fb440	56	PoolChunkArrayFree		lua	host	void * __thiscall (void *this, uint32_t flags)	Frees a pool's chunk array data, and the pool too with flag bit 0	verified	one	lua/pools#allocating-from-the-pools	
-0x6fb480	58	luaZ_fill		lua	boundary		Calls the reader for the next block of a stream and returns its first byte, or -1 at the end	verified	one	lua/runtime#input-streams	
+0x6fb480	58	luaZ_fill		lua	boundary		Calls the reader for the next block of a stream and returns its first byte, or -1 at the end	verified	two	lua/runtime#input-streams	
 0x6fb4c0	42	luaZ_lookahead		lua	boundary		Returns the next byte of a stream without consuming it, or -1 at the end	verified	one	lua/runtime#input-streams	
-0x6fb4f0	35	luaZ_init		lua	boundary		Sets up a stream with a reader, its data and a name	verified	one	lua/runtime#input-streams	
-0x6fb520	146	luaZ_read		lua	boundary		Copies a number of bytes out of a stream, refilling it as needed, and returns the bytes missing	verified	one	lua/runtime#input-streams	
-0x6fb5c0	56	luaZ_openspace		lua	boundary		Grows a work buffer to at least a number of bytes, 32 at the least, and returns it	verified	one	lua/runtime#input-streams	
+0x6fb4f0	35	luaZ_init		lua	boundary		Sets up a stream with a reader, its data and a name	verified	two	lua/runtime#input-streams	
+0x6fb520	146	luaZ_read		lua	boundary		Copies a number of bytes out of a stream, refilling it as needed, and returns the bytes missing	verified	two	lua/runtime#input-streams	
+0x6fb5c0	56	luaZ_openspace		lua	boundary		Grows a work buffer to at least a number of bytes, 32 at the least, and returns it	verified	two	lua/runtime#input-streams	
 0x6fb600	52	luaU_dump		lua	boundary		Writes a function as a precompiled chunk through a writer	verified	one	lua/chunks#dumping-a-function	
 0x6fb640	135	DumpFunction		lua	boundary		Writes a function prototype and its nested prototypes	verified	one	lua/chunks#dumping-a-function	
 0x6fb6d0	25	DumpByte		lua	boundary		Writes one byte through the dump writer	verified	one	lua/chunks#dumping-a-function	
@@ -29910,18 +29910,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fb870	163	DumpConstants		lua	boundary		Writes a prototype's constants and nested prototypes	verified	one	lua/chunks#dumping-a-function	
 0x6fb920	21	DumpNumber		lua	boundary		Writes an eight-byte number through the dump writer	verified	one	lua/chunks#dumping-a-function	
 0x6fb940	160	DumpHeader		lua	boundary		Writes a precompiled chunk's header	verified	one	lua/chunks#dumping-a-function	
-0x6fb9e0	40	luaG_inithooks		lua	boundary		Saves the pc of every call record above the base and marks the hooks initialized	verified	one	lua/runtime#hooks-and-locals	
-0x6fba10	42	currentpc		lua	boundary		Returns the index of the current instruction of a Lua call record, -1 for a C function	verified	one	lua/runtime#error-messages	
-0x6fba40	48	lua_sethook		lua	unreached		Sets the debug hook, its event mask and its count	verified	one	lua/runtime#hooks-and-locals	
-0x6fba70	4	lua_gethook		lua	unreached		Returns the debug hook function	verified	one	lua/runtime#hooks-and-locals	
-0x6fba80	5	lua_gethookmask		lua	unreached		Returns the debug hook's event mask	verified	one	lua/runtime#hooks-and-locals	
-0x6fba90	4	lua_gethookcount		lua	unreached		Returns the debug hook's instruction count	verified	one	lua/runtime#hooks-and-locals	
+0x6fb9e0	40	luaG_inithooks		lua	boundary		Saves the pc of every call record above the base and marks the hooks initialized	verified	two	lua/runtime#hooks-and-locals	
+0x6fba10	42	currentpc		lua	boundary		Returns the index of the current instruction of a Lua call record, -1 for a C function	verified	two	lua/runtime#error-messages	
+0x6fba40	48	lua_sethook		lua	unreached		Sets the debug hook, its event mask and its count	verified	two	lua/runtime#hooks-and-locals	
+0x6fba70	4	lua_gethook		lua	unreached		Returns the debug hook function	verified	two	lua/runtime#hooks-and-locals	
+0x6fba80	5	lua_gethookmask		lua	unreached		Returns the debug hook's event mask	verified	two	lua/runtime#hooks-and-locals	
+0x6fba90	4	lua_gethookcount		lua	unreached		Returns the debug hook's instruction count	verified	two	lua/runtime#hooks-and-locals	
 0x6fbaa0	120	lua_getstack		lua	boundary		Fills a debug record for a call level and answers whether it exists	verified	one	ui/luastate#debugstack	
 0x6fbb20	102	lua_getlocal		lua	unreached		Pushes a local of a call level and returns its name, or null	verified	one	lua/runtime#hooks-and-locals	
 0x6fbb90	18	getluaproto		lua	boundary		Returns the prototype of a Lua call record, null for a C function	verified	one	lua/runtime#error-messages	
-0x6fbbb0	190	lua_setlocal		lua	unreached		Sets a local of a call level from the top value and returns its name, or null	verified	one	lua/runtime#hooks-and-locals	
+0x6fbbb0	190	lua_setlocal		lua	unreached		Sets a local of a call level from the top value and returns its name, or null	verified	two	lua/runtime#hooks-and-locals	
 0x6fbc70	171	lua_getinfo		lua	boundary		Fills a debug record with the fields its option letters ask for	verified	one	ui/luastate#debugstack	
-0x6fbd20	79	info_tailcall		lua	boundary		Fills a debug record for a tail call that left no frame	verified	one	lua/runtime#hooks-and-locals	
+0x6fbd20	79	info_tailcall		lua	boundary		Fills a debug record for a tail call that left no frame	verified	two	lua/runtime#hooks-and-locals	
 0x6fbd70	310	auxgetinfo		lua	primitive		Fills debug fields, naming an unnamed function by a global that holds it	verified	one	ui/luastate#function-names-from-globals	
 0x6fbef0	35	currentline		lua	boundary		Returns the source line of the current instruction, -1 for a C function	verified	one	lua/runtime#error-messages	
 0x6fbf20	99	funcinfo		lua	boundary		Fills the source name, line, kind and short source of a function for lua_getinfo	verified	one	lua/runtime#error-messages	
@@ -29932,18 +29932,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fc400	47	checkopenop		lua	boundary		Checks the instruction after an open call	verified	one	lua/chunks#the-code-checker	
 0x6fc430	38	checkRK		lua	boundary		Answers whether an operand is a valid register or constant of a prototype	verified	one	lua/chunks#the-code-checker	
 0x6fc460	86	getfuncname		lua	boundary		Names the function of a call from the calling instruction, or null	verified	one	ui/luastate#function-names-from-globals	
-0x6fc4c0	265	getobjname		lua	boundary		Names the value in a register from the instructions that loaded it	verified	one	lua/runtime#error-messages	
-0x6fc5f0	37	kname		lua	boundary		Returns the text of a string constant named by an index, or a question mark	verified	one	lua/runtime#error-messages	
-0x6fc620	126	luaG_typeerror		lua	boundary		Raises a type error for a value, with its variable name when it has one	verified	one	lua/runtime#error-messages	
-0x6fc6a0	36	isinstack		lua	boundary		Tests whether a value lies among the stack slots of a call record	verified	one	lua/runtime#error-messages	
+0x6fc4c0	265	getobjname		lua	boundary		Names the value in a register from the instructions that loaded it	verified	two	lua/runtime#error-messages	
+0x6fc5f0	37	kname		lua	boundary		Returns the text of a string constant named by an index, or a question mark	verified	two	lua/runtime#error-messages	
+0x6fc620	126	luaG_typeerror		lua	boundary		Raises a type error for a value, with its variable name when it has one	verified	two	lua/runtime#error-messages	
+0x6fc6a0	36	isinstack		lua	boundary		Tests whether a value lies among the stack slots of a call record	verified	two	lua/runtime#error-messages	
 0x6fc6d0	25	luaG_concaterror		lua	boundary		Raises a type error for the operand of a concatenation that is not a string	verified	one	lua/runtime#error-messages	
 0x6fc6f0	51	luaG_aritherror		lua	boundary		Raises a type error for the operand of an arithmetic operator that is not a number	verified	one	lua/runtime#error-messages	
-0x6fc730	80	luaG_ordererror		lua	boundary		Raises an order comparison error naming one or two types	verified	one	lua/runtime#error-messages	
+0x6fc730	80	luaG_ordererror		lua	boundary		Raises an order comparison error naming one or two types	verified	two	lua/runtime#error-messages	
 0x6fc780	225	luaG_errormsg	idb	lua	boundary		Calls the error function with the message when set and throws, never returning	verified	one	ui/luastate#the-c-function-contract	
 0x6fc870	40	luaG_runerror		lua	boundary	void __cdecl (lua_State *L, const char *fmt, ...)	Formats an error message, passes it to 0x6fc8a0 and throws it through luaG_errormsg	verified	one	ui/luastate#stack-room-and-run-errors	
 0x6fc8a0	85	addinfo		lua	boundary		Prefixes a message with the source and line of a Lua call record	verified	one	lua/runtime#error-messages	
-0x6fc900	114	luaM_growaux		lua	boundary		Doubles a vector's capacity, at least 4 and at most a limit, raising a message past it	verified	one	lua/object#allocation	
-0x6fc980	46	luaM_irealloc	idb	lua	boundary		Adds the size change to the block count and reallocates through luaM_reallocPool, ignoring the file and line	verified	one	lua/object#allocation	
+0x6fc900	114	luaM_growaux		lua	boundary		Doubles a vector's capacity, at least 4 and at most a limit, raising a message past it	verified	two	lua/object#allocation	
+0x6fc980	46	luaM_irealloc	idb	lua	boundary		Adds the size change to the block count and reallocates through luaM_reallocPool, ignoring the file and line	verified	two	lua/object#allocation	
 0x6fc9b0	139	luaY_parser		lua	boundary		Compiles a chunk from source	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fca40	73	next		lua	boundary		Moves the lexer to the next token, taking the lookahead token when one is held	verified	one	lua/compiler#parser-tokens-and-checks	
 0x6fca90	100	open_func		lua	boundary		Starts the state of a function being compiled with a new prototype and constant table	verified	one	lua/compiler#function-states-and-blocks	
