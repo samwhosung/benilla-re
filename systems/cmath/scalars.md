@@ -5,7 +5,7 @@ constants, the minimum, median, maximum, range and mean of 3, 5 and 9 integers, 
 vectors of two and three, bit-pattern estimates of reciprocals and roots, splitting a float into a
 whole part and a fraction, and shaping functions. Three routines are live: the normalization of a
 vector of two, the reciprocal square root estimate and the high multiply `0x455c70` in the file's
-middle, derived in `cmath/overview#high-product`. Everything else is reached by nothing.
+middle, derived in `cmath/overview#high-product`. Everything else is reached by nothing, bar the file's three header initializers.
 
 The file's initializers in the C runtime's run (`0x827564` to `0x82756c`) are the header triple, +∞
 `0x455c00`, 2π `0x456780` and 1/2π `0x4567a0`. The next file starts at `0x4567d0`.
@@ -21,7 +21,7 @@ zero test. `0x456250` does the same for two doubles; `0x4562f0` and `0x4562b0` t
 
 Addresses: `0x456250`, `0x456280`, `0x4562b0`, `0x4562f0`, `0x50a8eb`, `0x7e56fd`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `spline::normalize2_f32_diff`
 
 `0x456280` is `fld [edx]; fld [ecx]; …; fsqrt; fdivr 1.0` and then two `fmul; fstp`. The two callers are
@@ -38,7 +38,7 @@ with the magic in `edx`, and `0x456370` and `0x456380` are the in-place forms of
 
 Addresses: `0x456330`, `0x456350`, `0x456370`, `0x456380`, `0x4563a0`, `0x4563b0`, `0x4563c0`, `0x4563d0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::fast_inv_sqrt_seed_difftest`
 
 The magic numbers its callers pass are derived with the cloud colours in
@@ -57,7 +57,7 @@ results differ from the exact quotient.
 
 Addresses: `0x455c60`, `0x455c80`, `0x455c90`, `0x455ca0`, `0x455cc0`, `0x455ce0`, `0x455d00`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x455ca0` is `x = 3n; x += x >> 4; x += x >> 8; (x + (x >> 16) + 2) >> 4`; `0x455cc0` is the signed
@@ -76,14 +76,16 @@ three is the sum through `0x455c90`; the means of five and nine are the sum thro
 
 Addresses: `0x455d20`, `0x455d40`, `0x455d70`, `0x455d90`, `0x455de0`, `0x455e00`, `0x455e30`, `0x455e70`, `0x455ea0`, `0x455ee0`, `0x455f00`, `0x455f50`, `0x4560e0`, `0x456130`, `0x456210`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The median of five trims the extremes: `lo = max(min(a, b), min(d, e))`, `hi = min(max(a, b),
 max(d, e))` and the median of `lo`, `c` and `hi` through `0x455d40`; the range of five trims the same
 way into `0x455d90`. The median of nine is a network of compare-exchanges
 (`t = b − a; a += min(t, 0); b −= min(t, 0)`, the minimum by `setg` and a mask). The routines with
-branches use signed compares (`jl`, `jg`). A transcription of the minimum, median, maximum and range
+branches use signed compares (`jl`, `jg`) except the range of nine, `0x456130`, whose range test is an unsigned `jbe` on
+`x − min` against `max − min` (`0x456156`, `0x456170`, `0x456186`, `0x45619f`); a signed `jge` then picks the bound. The unsigned
+test accepts the same values as `min ≤ x ≤ max`, so no result changes. A transcription of the minimum, median, maximum and range
 of three and nine, and of the minimum, maximum and trimmed median and range of five, agrees with
 sorting over random inputs.
 
@@ -96,7 +98,7 @@ or a float. A negative whole number gives a part one too low and a fraction of 1
 
 Addresses: `0x4563e0`, `0x456420`, `0x456470`, `0x4564c0`, `0x40a2b0`, `0x4563f3`, `0x456442`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `__ftol` is `0x40a2b0`. `0x456442` compares `x` with 0.0 and `jp` skips the `dec ecx` for `x ≥ 0` and NaN.
@@ -111,7 +113,7 @@ the qword is the integer indefinite `0x8000000000000000`.
 
 Addresses: `0x40a2b0`, `0x40a2c9`, `0x40a2cf`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::ftol_difftest`, `cmath::fistp_difftest`
 
 A bare `fistp` rounds by the control word the client runs, to nearest with ties to even, and stores the
@@ -132,7 +134,7 @@ the gain built from it: `0.5·bias(2x, 1 − g)` for `x < 0.5` and `1 − 0.5·b
 
 Addresses: `0x456510`, `0x456540`, `0x456570`, `0x4565c0`, `0x456620`, `0x456640`, `0x456660`, `0x4566a0`, `0x455c20`, `0x456700`, `0x456720`, `0x456740`, `0x456760`, `0x455bb0`, `0x73f940`, `0x80297c`, `0x8030a0`, `0x8030a8`, `0x8030b0`, `0x801628`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x455c20(x, y)` is a smooth zigzag of the phase `p = x·y`: with `f = p − ⌊p⌋` it is `1 − (6 − 4f)·f²`,
@@ -153,7 +155,7 @@ initializer reads any of them.
 
 Addresses: `0x455c00`, `0x455c10`, `0x456780`, `0x456790`, `0x4567a0`, `0x4567b0`, `0xb05ea4`, `0xb05eac`, `0xb05ea8`, `0x803098`, `0x80309c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x455c00`, `0x456780` and `0x4567a0` are each one `jmp` to the next function. A scan of the listing and
@@ -161,16 +163,18 @@ of every dword of the image finds `0xb05eac` read only at `0x4567b6`.
 
 ## Unreached code
 
-Nothing live reaches the file's functions other than `0x455c70` (`cmath/overview#high-product`), `0x456280`
-and `0x456330`. The census is a scan of every `call`, `jmp` and `jcc` target in the listing and of every
+Nothing live reaches the file's functions other than `0x455c70` (`cmath/overview#high-product`), `0x456280`,
+`0x456330` and the three header-initializer thunks `0x455c00`, `0x456780` and `0x4567a0` with their bodies
+`0x455c10`, `0x456790` and `0x4567b0`. The census is a scan of every `call`, `jmp` and `jcc` target in the listing and of every
 dword of the image for each address; its control is `0x456330`, with two call sites. The routines that
 call others in the file (`0x455de0`, `0x455ee0`, `0x456210`, `0x455c20`, `0x456640`, `0x456660`, `0x4566a0`,
 `0x456540`) are themselves unreached. `0x455bb0` is unreached too (placement in `cmath/scalars#shaping-functions`).
 
-Addresses: `0x456330`, `0x455c70`, `0x456280`, `0x455c20`, `0x455c60`, `0x455de0`, `0x455ee0`, `0x456210`, `0x456540`, `0x456640`, `0x456660`, `0x4566a0`, `0x455bb0`
+Addresses: `0x456330`, `0x455c70`, `0x456280`, `0x455c00`, `0x455c10`, `0x456780`, `0x456790`, `0x4567a0`, `0x4567b0`, `0x827564`, `0x827568`, `0x82756c`, `0x40a404`, `0x455c20`, `0x455c60`, `0x455de0`, `0x455ee0`, `0x456210`, `0x456540`, `0x456640`, `0x456660`, `0x4566a0`, `0x455bb0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x455c80` is called by the unreached batch routines `0x454fd0`, `0x455260` and `0x4555f0` of the fast-math file.
-No address in the file is stored in a table.
+The slots `0x827564`, `0x827568` and `0x82756c` of the C runtime's initializer table hold the three thunks, which
+`__initterm` (`0x40a404`) runs from `__cinit`; no other address in the file is stored in a table.

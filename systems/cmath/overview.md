@@ -20,17 +20,18 @@ Roots: `0x455c70`, `0x7bf680`, `0x7c0120`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `
 
 `0x455c70` returns in `eax` the high 32 bits of the unsigned 64-bit product of `ecx` and `edx`; it
 takes no stack arguments and returns with a plain `ret`. It is the plain high-half multiply
-`(a·b) >> 32`, called from the random library, the sound code and other systems.
+`(a·b) >> 32`, called from the sound code and other systems; six of its sites are in unreached code.
 
-Addresses: `0x455c70`, `0x455c72`, `0x455c74`
+Addresses: `0x455c70`, `0x455c72`, `0x455c74`, `0x4501fb`, `0x450339`, `0x450478`, `0x4505a8`, `0x4506d8`, `0x455c80`, `0x455c87`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::mul_high32_difftest`
 
 `0x455c70` is `mov eax,ecx; mul edx; mov eax,edx; ret`, so the product is unsigned (`mul`) and the
-low dword is dropped. It has 17 call sites: `0x4501fb`, `0x450339`, `0x450478`, `0x4505a8`, `0x4506d8`
-in the random library, `0x458d45`, `0x458e95`, `0x45bcc8` and `0x4601de` in the sound code, and
-eight more in other systems, one of them in the unreached `0x455c80`.
+low dword is dropped. It has 17 call sites. Six are in unreached code: `0x4501fb`, `0x450339`, `0x450478`, `0x4505a8` and
+`0x4506d8` in the random library's shuffles (`0x450100`, `0x450240`, `0x450380`, `0x4504b0`, `0x4505e0`,
+which nothing live calls), and `0x455c87` in the unreached `0x455c80`. Among the others are `0x458d45`,
+`0x458e95`, `0x45bcc8` and `0x4601de` in the sound code.
 The test runs the whole function over the zeros, the extremes, each power of two and a step
 either side, and a fuzz of pairs.
 

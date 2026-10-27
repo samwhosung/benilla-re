@@ -21,7 +21,7 @@ index list names.
 
 Addresses: `0x7bf680`, `0x7bf69a`, `0x7bf69f`, `0x7bf6a2`, `0x7bf6a4`, `0x7bf6ac`, `0x7bf6b4`, `0x7bf6b9`, `0x7bf6c1`, `0x7bf6c6`, `0x7bf6c8`, `0x7c1450`, `0x7c145e`, `0x7c1463`, `0x7c14b6`, `0x7c1513`, `0x7c1531`, `0x7c1560`, `0x7c16b0`, `0x7c173f`, `0x7c1759`, `0x7c1770`, `0x7c1839`, `0x6992c0`, `0x4549a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::dominant_axis_difftest`
 
 `0x7bf69a fcom [ebp-4]` compares `|x|` with `|y|`, `test ah,0x41; jne 0x7bf6b4` takes `|x|` at most `|y|` or NaN to
@@ -42,7 +42,7 @@ Both outputs are optional; with both null a non-parallel ray reports a hit.
 
 Addresses: `0x7c22b0`, `0x7c22cb`, `0x7c22d0`, `0x7c22db`, `0x7c22f4`, `0x7c22f6`, `0x7c22fe`, `0x7c2338`, `0x7c2344`, `0x7c2360`, `0x7c2367`, `0x7c236f`, `0x7c2373`, `0x7c237b`, `0x7c2384`, `0x7c238d`, `0x7c23a1`, `0x7c23b5`, `0x811658`, `0x7ffd74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::ray_plane_difftest`, `cmath::raymesh_composed_difftest`
 
 `0x7c22d0 fcomp qword [0x811658]; test ah,5; jp 0x7c2338` goes to the non-parallel leg for `|D|` at least
@@ -61,9 +61,9 @@ to the current, with `side(V) = V.A ≥ Q.A` (false for NaN): a change of side c
 `(Vprev.B − Vcur.B)·(Vcur.A − Q.A)` with `(Vcur.B − Q.B)·(Vprev.A − Vcur.A)`, and the accumulator toggles when
 `term2 ≤ term1` equals the current side. `n` of 0 gives 0.
 
-Addresses: `0x7c23e0`, `0x7c23e9`, `0x7c2409`, `0x7c241c`, `0x7c2443`, `0x7c2448`, `0x7c245e`, `0x7c2499`, `0x7c24a0`, `0x7c24ab`, `0x7c24ed`, `0xcf5c7c`, `0xcf5c80`, `0x7c18d0`, `0x7c18c0`, `0x7c24f0`, `0x7c2620`, `0x7c2740`, `0x7c2773`, `0x7c277e`, `0x7c278c`
+Addresses: `0x7c23e0`, `0x7c23e9`, `0x7c2409`, `0x7c241c`, `0x7c2443`, `0x7c2448`, `0x7c245e`, `0x7c2499`, `0x7c24a0`, `0x7c24ab`, `0x7c24ed`, `0xcf5c7c`, `0xcf5c80`, `0x7c18d0`, `0x7c18da`, `0x7c18f6`, `0x7c18c0`, `0x7c24f0`, `0x7c2620`, `0x7c2740`, `0x7c2773`, `0x7c277e`, `0x7c278c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::point_in_poly_difftest`, `cmath::raymesh_composed_difftest`
 
 `0x7c24f0` and `0x7c2620` are the same test over 16-bit and 32-bit index lists. `0x7c2740` intersects a
@@ -71,7 +71,7 @@ ray with a facet record (plane, then three vertices at `+0x10`): `0x7c22b0`, the
 normal, then `0x7c23e0` with `n` 3.
 
 `0x7c23e9 mov eax,[eax*8+0xcf5c80]` reads the first kept axis and `0x7c245e` the second, from the dwords at
-`0xcf5c7c`; `0x7c18d0` stores 2, 2, 1, 0, 0, 1 in address order from `0xcf5c80`. `0x7c2499 fcompp` and `test ah,0x41;
+`0xcf5c7c`; `0x7c18d0` stores 2, 2, 1, 0, 0, 1 in instruction order, to `0xcf5c80`, `0xcf5c84`, `0xcf5c7c`, `0xcf5c88`, `0xcf5c8c` and `0xcf5c90` (`0x7c18da` to `0x7c18f6`); in address order from `0xcf5c7c` the values are 1, 2, 2, 0, 0, 1. `0x7c2499 fcompp` and `test ah,0x41;
 jp` give `term2 ≤ term1` as a clear parity (NaN false). The 32-bit routine `0x7c2620` differs from `0x7c24f0` by index
 width only (a normalized diff shows `movzx` against `mov` and the stride). The wrapper passes `edx+0x10` and 3
 (`0x7c2784`, `0x7c2786`).
@@ -87,7 +87,7 @@ range-checked. `0x7c2c40` is the same for 32-bit indices.
 
 Addresses: `0x7c29f0`, `0x7c2a48`, `0x7c2a81`, `0x7c2ac1`, `0x7c2ada`, `0x7c2adc`, `0x7c2ae7`, `0x7c2ae9`, `0x7c2af4`, `0x7c2b03`, `0x7c2b0c`, `0x7c2b55`, `0x7c2b58`, `0x7c2b5b`, `0x7c2b63`, `0x7c2b68`, `0x7c2b70`, `0x7c2bcb`, `0x7c2bce`, `0x7c2bd6`, `0x7c2be2`, `0x7c2bea`, `0x7c2bf0`, `0x7c2c10`, `0x7c2c2c`, `0x7c2c40`, `0x81d9bc`, `0x80e2e4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::intersect_difftest`
 
 `0x7c2adc fcom [0x81d9bc]` (−1e-6) with `test ah,0x41; jne 0x7c2b03` continues for `det` at most −1e-6 or NaN,
@@ -107,7 +107,7 @@ three 16-bit indices into the vertex array in `edx`. None has a caller.
 
 Addresses: `0x7c27d0`, `0x7c2894`, `0x7c28a1`, `0x7c28ba`, `0x7c2909`, `0x7c2916`, `0x7c297c`, `0x7c2990`, `0x7c29d5`, `0x7c2e90`, `0x7c2f43`, `0x7c2f93`, `0x7c2fa7`, `0x7c3037`, `0x7c3041`, `0x7c30a0`, `0x7c317b`, `0x4549a0`, `0x80e2e4`, `0x81d9bc`, `0x7ffd74`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c27d0` forms `−slack` at `[ebp-0xc]` and `1 + slack` at `[ebp-0x10]`, and `0x7c2894 fcom [0x81d9bc]` with `0x7c28a1 fcom [0x80e2e4]` repeat the
@@ -126,7 +126,7 @@ with every term rounded to a float.
 
 Addresses: `0x7c1af0`, `0x7c1b3d`, `0x7c1b56`, `0x7c1b6b`, `0x7c1b70`, `0x7c1b75`, `0x7c1b7d`, `0x7c1b93`, `0x7c1b96`, `0x7c1b9e`, `0x7c1bb8`, `0x7c1bbd`, `0x7c1bc5`, `0x7c1bd2`, `0x7c1c26`, `0x4549f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c1b6b fcomp 0.0; test ah,5; jp` continues for `tca` at least 0 or NaN,
@@ -143,7 +143,7 @@ original direction. A null `outT` returns 1 after the test.
 
 Addresses: `0x7c1c40`, `0x7c1c58`, `0x7c1c65`, `0x7c1c8e`, `0x7c1cb4`, `0x7c1ced`, `0x7c1cf0`, `0x7c1d06`, `0x7c1d12`, `0x7c1d2f`, `0x7c1d31`, `0x7c1d41`, `0x7c1d4d`, `0x7c1d66`, `0x7c1d7a`, `0x4549f0`, `0x4549a0`, `0x80306c`, `0x7ffd74`, `0x7ff9d8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c1c58 call 0x4549f0` is the self dot of the direction and `0x7c1c65` stores `1/|dir|` at `[ebp-8]`. `B` is stored as a float at
@@ -160,7 +160,7 @@ first two axes and returns a byte, with `r²` the rounded squared radius. Per ax
 
 Addresses: `0x7c2040`, `0x7c2046`, `0x7c2057`, `0x7c2061`, `0x7c2067`, `0x7c206e`, `0x7c211e`, `0x7c21ab`, `0x7c21e1`, `0x7c2213`, `0x7c2229`, `0x7c223a`, `0x7c2250`, `0x7c2259`, `0x7c2280`, `0x7c2288`, `0x7c229c`, `0x68af10`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::sphere_aabb_difftest`
 
 The flag is set by an outside axis in both modes. For a centre between the faces, mode 0 sets it when the smaller of `dmin` and `dmax` is at most
@@ -178,7 +178,7 @@ and `d = (q − a)·ab`: `t = 0` for `d ≤ 0`, `t = 1` for `d` above `|ab|²`, 
 
 Addresses: `0x7c46d0`, `0x7c4711`, `0x7c4735`, `0x7c4740`, `0x7c4742`, `0x7c4760`, `0x7c4763`, `0x7c476a`, `0x7c476e`, `0x7c4789`, `0x7c47b8`, `0x7c47be`, `0x7c47d7`, `0x6c4300`, `0x7ffd74`, `0x7ff9d8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `cmath::seg_proj_difftest`
 
 `0x7c4735 fcomp 0.0; test ah,0x41; jp 0x7c474a` goes on for `d` above 0 and NaN; the fall-through loads 0.0 for `t`.
@@ -227,7 +227,7 @@ float and the negated sine an exact negation. Its one caller, `0x68c17e`, is in 
 
 Addresses: `0x7c42f0`, `0x68c17e`, `0x68c0f0`, `0x7c430b`, `0x7c430d`, `0x7c430f`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7c430b fsincos` leaves the cosine on top; `0x7c430d fstp [eax]` stores the cosine at `[ebp-8]` and `0x7c430f fstp [edx]` the sine at `[ebp-4]`. The four
@@ -242,11 +242,11 @@ are in `collision/overview#object-files`. Nothing else in the listing refers to 
 
 The image gives no source path for these files, so the initializer names number them in this order: `InitCmathFile01` for the file at `0x7bc090` to `InitCmathFile12` for the file at `0x7c43b0`.
 
-Addresses: `0x7bc090`, `0x7bc0a0`, `0x7bdf00`, `0x7bdf10`, `0x7bdf20`, `0x7bdf30`, `0x7be0c0`, `0x7be0d0`, `0x7bf630`, `0x7bf640`, `0x7bf650`, `0x7bf660`, `0x7bf6e0`, `0x7bf6f0`, `0x7bf760`, `0x7bf770`, `0x7bf780`, `0x7bf790`, `0x7bf840`, `0x7bf850`, `0x7bf980`, `0x7bf990`, `0x7bf9a0`, `0x7bf9b0`, `0x7bfa30`, `0x7bfa40`, `0x7bfa50`, `0x7bfa60`, `0x7bfa70`, `0x7bfa80`, `0x7bfb20`, `0x7bfb30`, `0x7c00a0`, `0x7c00b0`, `0x7c00c0`, `0x7c00d0`, `0x7c0170`, `0x7c0180`, `0x7c12d0`, `0x7c12e0`, `0x7c12f0`, `0x7c1300`, `0x7c13a0`, `0x7c13b0`, `0x7c1400`, `0x7c1410`, `0x7c1420`, `0x7c1430`, `0x7c1570`, `0x7c1580`, `0x7c1850`, `0x7c1860`, `0x7c1870`, `0x7c1880`, `0x7c18a0`, `0x7c18b0`, `0x7c42a0`, `0x7c42b0`, `0x7c42c0`, `0x7c42d0`, `0x7c4340`, `0x7c4350`, `0x7c4360`, `0x7c4370`, `0x7c4380`, `0x7c4390`, `0x7c43b0`, `0x7c43c0`, `0xcf5c04`, `0xcf5c08`, `0xcf5c0c`, `0xcf5c10`, `0xcf5c14`, `0xcf5c18`, `0xcf5c1c`, `0xcf5c20`, `0xcf5c24`, `0xcf5c28`, `0xcf5c2c`, `0xcf5c30`, `0xcf5c34`, `0xcf5c38`, `0xcf5c3c`, `0xcf5c40`, `0xcf5c44`, `0xcf5c48`, `0xcf5c4c`, `0xcf5c50`, `0xcf5c54`, `0xcf5c58`, `0xcf5c5c`, `0xcf5c60`, `0xcf5c64`, `0xcf5c68`, `0xcf5c6c`, `0xcf5c70`, `0xcf5c74`, `0xcf5c78`, `0xcf5c94`, `0xcf5c98`, `0xcf5c9c`, `0xcf5ca0`
+Addresses: `0x7bc090`, `0x7bc0a0`, `0x7bdf00`, `0x7bdf10`, `0x7bdf20`, `0x7bdf30`, `0x7be0c0`, `0x7be0d0`, `0x7bf630`, `0x7bf640`, `0x7bf650`, `0x7bf660`, `0x7bf6e0`, `0x7bf6f0`, `0x7bf760`, `0x7bf770`, `0x7bf780`, `0x7bf790`, `0x7bf840`, `0x7bf850`, `0x7bf980`, `0x7bf990`, `0x7bf9a0`, `0x7bf9b0`, `0x7bfa30`, `0x7bfa40`, `0x7bfa50`, `0x7bfa60`, `0x7bfa70`, `0x7bfa80`, `0x7bfb20`, `0x7bfb30`, `0x7c00a0`, `0x7c00b0`, `0x7c00c0`, `0x7c00d0`, `0x7c0170`, `0x7c0180`, `0x7c12d0`, `0x7c12e0`, `0x7c12f0`, `0x7c1300`, `0x7c13a0`, `0x7c13b0`, `0x7c1400`, `0x7c1410`, `0x7c1420`, `0x7c1430`, `0x7c1570`, `0x7c1580`, `0x7c1850`, `0x7c1860`, `0x7c1870`, `0x7c1880`, `0x7c18a0`, `0x7c18b0`, `0x7c42a0`, `0x7c42b0`, `0x7c42c0`, `0x7c42d0`, `0x7c4340`, `0x7c4350`, `0x7c4360`, `0x7c4370`, `0x7c4380`, `0x7c4390`, `0x7c43b0`, `0x7c43c0`, `0x82da98`, `0x7c18c0`, `0x7c1900`, `0xcf5c04`, `0xcf5c08`, `0xcf5c0c`, `0xcf5c10`, `0xcf5c14`, `0xcf5c18`, `0xcf5c1c`, `0xcf5c20`, `0xcf5c24`, `0xcf5c28`, `0xcf5c2c`, `0xcf5c30`, `0xcf5c34`, `0xcf5c38`, `0xcf5c3c`, `0xcf5c40`, `0xcf5c44`, `0xcf5c48`, `0xcf5c4c`, `0xcf5c50`, `0xcf5c54`, `0xcf5c58`, `0xcf5c5c`, `0xcf5c60`, `0xcf5c64`, `0xcf5c68`, `0xcf5c6c`, `0xcf5c70`, `0xcf5c74`, `0xcf5c78`, `0xcf5c94`, `0xcf5c98`, `0xcf5c9c`, `0xcf5ca0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-Every run entry is a five-byte jump to a body ten bytes on. The +∞ bodies are `mov eax,[+∞]; mov [dest],eax`; the 2π bodies are `fld [π]; fadd st,st; fstp [dest]`, and the 1/2π bodies `fld 1.0; fdiv [2π]; fstp [dest]`.
+Every run entry but one is a five-byte jump to a body 16 (0x10) bytes on, as `0x7bc090` to `0x7bc0a0`. The exception is the slot `0x82da98`, which holds `0x7c18c0`: `call 0x7c18d0; jmp 0x7c1900`. The +∞ bodies are `mov eax,[+∞]; mov [dest],eax`; the 2π bodies are `fld [π]; fadd st,st; fstp [dest]`, and the 1/2π bodies `fld 1.0; fdiv [2π]; fstp [dest]`.
 The slots before the run, `0x82da18` and `0x82da1c`, are the 2π and 1/2π of the file below it. The tenth file's run also holds `0x7c18c0`, the polygon axis initializer. The +∞ at `0x7c43c0` opens the twelfth file, not the
 eleventh, whose 2π and 1/2π are `0x7c4360` and `0x7c4380`. A raw search of the image for each of the 36 copies' addresses finds the same references as the listing.
