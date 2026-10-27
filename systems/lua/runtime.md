@@ -39,15 +39,15 @@ nil. `tryfuncTM` makes a non-function callable through `__call` and `adjust_vara
 
 Addresses: `0x6f5e20`, `0x6f5e45`, `0x6f5e4d`, `0x6f5e62`, `0x6f5e70`, `0x6f5e81`, `0x6f5e84`, `0x6f5ed8`, `0x6f5ee5`, `0x6f5ef0`, `0x6f5f1a`, `0x6f5f2b`, `0x6f5f60`, `0x6f5f63`, `0x6f5f67`, `0x6f5f6f`, `0x6f61c0`, `0x6f61c7`, `0x6f61d3`, `0x6f61df`, `0x6f61f2`, `0x6f6200`, `0x6f6266`, `0x6f6294`, `0x6f62f2`, `0x6f6302`, `0x6f6370`, `0x6f6382`, `0x6f6393`, `0x6f639b`, `0x6f63a4`, `0x6f6470`, `0x6f6479`, `0x6f648b`, `0x6f649c`, `0x6f64b2`, `0x6f6517`, `0x6f6540`, `0x6f6550`, `0x6f6574`, `0x6f65a0`, `0x6f65ae`, `0x6f65bf`, `0x6f65cf`, `0x6f65df`, `0x6f65ea`, `0x6f65f5`, `0x6f6760`, `0x6f6773`, `0x6f6769`, `0x6f67a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaD_reallocstack` stores `size - 6` slots as the usable end (`add edi,0xfffffffa`): the stack
 keeps five extra slots. The line numbers 153 and 162 that `luaD_reallocstack` and
 `luaD_reallocCI` pass are upstream's 122 and 131 plus 31 each, so the client's `ldo.c` has 31
 added lines before them. `luaD_call` raises `C stack overflow` when the count reaches exactly 200
-(`0xc8`) and throws status 5 from 225 (`0xe1`) on. The return-hook test is bit 2 of the hook
-mask at `[L+0x30]` (`0x6f6479`).
+(`0xc8`) and throws status 5 from 225 (`0xe1`) on. The return-hook test is bit 1 (value 2) of the hook
+mask at `[L+0x30]` (`0x6f6479`, `test byte [esi+0x30],0x2`).
 
 ## Errors and protected calls
 
@@ -68,7 +68,7 @@ record suspended and returns -1.
 
 Addresses: `0x6f6680`, `0x6f66aa`, `0x6f66d9`, `0x6f6960`, `0x6f696a`, `0x6f6975`, `0x6f697a`, `0x6f6984`, `0x6f6996`, `0x6f69ab`, `0x6f69b5`, `0x6f69da`, `0x6f6620`, `0x6f6638`, `0x6f6658`, `0x6f6665`, `0x6f666f`, `0x6f67b0`, `0x6f67d2`, `0x6f67e5`, `0x6f67ef`, `0x6f67f4`, `0x6f6838`, `0x6f6842`, `0x6f6860`, `0x6f6880`, `0x6f68a0`, `0x6f694c`, `0x6f6953`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `resume` raises its two messages itself with `luaG_runerror`; the 5.0.1 and later sources return
@@ -101,7 +101,7 @@ records, and `callallgcTM` is the protected function that runs the last finalize
 
 Addresses: `0x6fb2f0`, `0x6f6f54`, `0x6f6b10`, `0x6f6b14`, `0x6f6b21`, `0x6f6b28`, `0x6f6b37`, `0x6f6b80`, `0x6f6b8d`, `0x6f6ba0`, `0x6f6bb8`, `0x6f6be4`, `0x6f6c90`, `0x6f6c9b`, `0x6f6ca4`, `0x6f6caf`, `0x6f6cc0`, `0x6f6ccb`, `0x6f6ce0`, `0x6f6cfd`, `0x6f6d17`, `0x6f6d70`, `0x6f6d88`, `0x6f6ddd`, `0x6f6e3b`, `0x6f6e62`, `0x6f6e87`, `0x6f6e96`, `0x6f6e9d`, `0x6f6ec8`, `0x6f6ee0`, `0x6f6ef0`, `0x6f6ef6`, `0x6f6f09`, `0x6f6f10`, `0x6f6f46`, `0x6f6f79`, `0x6f6fe0`, `0x6f7b40`, `0x6f7b72`, `0x6f7b8c`, `0x6f6f1e`, `0x6f6f5c`, `0x6f6e0b`, `0x6f6d63`, `0x6f6fc5`, `0x6f6fa9`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The line numbers `lstate.c` passes in the allocating functions are one above upstream's: 50, 66, 70,
@@ -134,7 +134,7 @@ string table and work buffer, and then sets the next threshold in a function the
 
 Addresses: `0x6f7080`, `0x6f7099`, `0x6f70aa`, `0x6f70da`, `0x6f7120`, `0x6f712a`, `0x6f7146`, `0x6f71bd`, `0x6f71d0`, `0x6f71da`, `0x6f71e8`, `0x6f71f1`, `0x6f71ff`, `0x6f7210`, `0x6f7229`, `0x6f722e`, `0x6f723e`, `0x6f7260`, `0x6f7267`, `0x6fa050`, `0x6f7273`, `0x6fa110`, `0x6f7278`, `0x6fa690`, `0x6f7291`, `0x6f6c90`, `0x6f7296`, `0x6f72f0`, `0x6f7317`, `0x6f731c`, `0x6f7370`, `0x6f738c`, `0x6f739c`, `0x6f73c1`, `0x6f73d6`, `0x6f7b20`, `0x6f7b29`, `0x6f7b31`, `0x6f7b34`, `0x6f7b38`, `0x6f7340`, `0x6f73e0`, `0x6f734a`, `0x6f7353`, `0x6f735a`, `0x6f7362`, `0x6fae00`, `0x6fae67`, `0x6fae83`, `0x6f727d`, `0x6f729e`, `0x6f72b7`, `0x6f73af`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaC_collectgarbage` (`0x6f7340`, `ui/luastate`) calls the marking at `0x6f73e0` (`0x6f734a`),
@@ -200,7 +200,7 @@ joins the top values, strings and numbers directly and others through `__concat`
 
 Addresses: `0x6f8190`, `0x6f81a3`, `0x6f81b2`, `0x6f81cc`, `0x6f81d7`, `0x6f81f3`, `0x6f8202`, `0x6f99e0`, `0x6f99f3`, `0x6f9a02`, `0x6f9a1c`, `0x6f9a27`, `0x6f9a43`, `0x6f9a54`, `0x6f9a73`, `0x6f8210`, `0x6f821e`, `0x6f823d`, `0x6f8246`, `0x6f8262`, `0x6f8270`, `0x6f82a0`, `0x6f82bd`, `0x6f82fe`, `0x6f8330`, `0x6f8339`, `0x6f8359`, `0x6f83c4`, `0x6f83dc`, `0x6f83ea`, `0x6f8440`, `0x6f846e`, `0x6f84a1`, `0x6f8481`, `0x6f84bc`, `0x6f84d0`, `0x6f8507`, `0x6f851e`, `0x6f8533`, `0x6f8546`, `0x6f85ad`, `0x6f8635`, `0x6f9a80`, `0x6f9a93`, `0x6f9aa8`, `0x6f9b5e`, `0x6f9bf3`, `0x6f9c01`, `0x6f9900`, `0x6f990b`, `0x6f9926`, `0x6f9932`, `0x6f9970`, `0x6f99bb`, `0x6f9b72`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaV_lessequal` calls `call_orderTM` with the event `0xc` (`0x6f9a43`) and, when it answers -1,
@@ -236,7 +236,7 @@ message with `source:line:` of a Lua function. `currentpc` and `currentline` rea
 
 Addresses: `0x6fba10`, `0x6fba13`, `0x6fba1b`, `0x6fba35`, `0x6fbb90`, `0x6fbb9b`, `0x6fbef0`, `0x6fbef9`, `0x6fbf0c`, `0x6fbf20`, `0x6fbf2c`, `0x6fbf49`, `0x6fbf66`, `0x6fbf6d`, `0x6fbf7d`, `0x6fc4c0`, `0x6fc4f5`, `0x6fc508`, `0x6fc577`, `0x6fc59a`, `0x6fc5bd`, `0x6fc5f0`, `0x6fc603`, `0x6fc60b`, `0x6fc620`, `0x6fc63e`, `0x6fc658`, `0x6fc66b`, `0x6fc687`, `0x6fc6a0`, `0x6fc6b0`, `0x6fc6b9`, `0x6fc6be`, `0x6fc6d0`, `0x6fc6d3`, `0x6fc6db`, `0x6fc6e0`, `0x6fc6f0`, `0x6fc701`, `0x6fc70f`, `0x6fc716`, `0x6fc730`, `0x6fc754`, `0x6fc76b`, `0x6fc8a0`, `0x6fc8ad`, `0x6fc8b9`, `0x6fc8c4`, `0x6fc8d2`, `0x6fc8e0`, `0x6fc8e6`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaG_runerror` (`ui/luastate`) calls `addinfo` and then `luaG_errormsg`. `getobjname` finds the
@@ -261,7 +261,7 @@ of bytes out. `luaZ_openspace` grows the lexer's work buffer to at least 32 byte
 
 Addresses: `0x6fb480`, `0x6fb490`, `0x6fb4b2`, `0x6fb4a0`, `0x6fb4c0`, `0x6fb4c8`, `0x6fb4db`, `0x6fb4dc`, `0x6fb4f0`, `0x6fb4f6`, `0x6fb4fc`, `0x6fb4ff`, `0x6fb502`, `0x6fb508`, `0x6fb520`, `0x6fb548`, `0x6fb573`, `0x6fb57d`, `0x6fb59e`, `0x6fb5a8`, `0x6fb5c0`, `0x6fb5cd`, `0x6fb5d1`, `0x6fb5e6`, `0x6fb4a4`, `0x6fb4aa`, `0x700067`, `0x700104`, `0x70016e`, `0x7001cb`, `0x7001eb`, `0x7002ee`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `luaZ_fill` stores the size minus 1 as the count and the block as `p`, then returns the byte at `p` and
@@ -286,7 +286,7 @@ lines -1, no upvalues, and nil at the stack top.
 
 | function | name | decided by |
 |---|---|---|
-| `0x6fb9e0` | `luaG_inithooks` | call records from the current down to the first (`0x6fb9e4`..`0x6fb9ff`), `currentpc` each (`0x6fb9f2`), flag set (`0x6fba01`) |
+| `0x6fb9e0` | `luaG_inithooks` | call records from the current down to, not including, the base record (`0x6fb9e4`..`0x6fb9ff`), `currentpc` each (`0x6fb9f2`); the loop stops at the base without visiting it (`0x6fb9e7`, `0x6fb9ea`, `0x6fb9ff`), flag set (`0x6fba01`) |
 | `0x6fba40` | `lua_sethook` | empty function or mask clears both (`0x6fba43`..`0x6fba51`), count twice (`0x6fba56`, `0x6fba59`), mask (`0x6fba5c`), function (`0x6fba5f`), flag cleared (`0x6fba62`) |
 | `0x6fba70` | `lua_gethook` | `[L+0x3c]` (`0x6fba70`) |
 | `0x6fba80` | `lua_gethookmask` | byte `[L+0x30]` (`0x6fba80`) |
@@ -297,7 +297,7 @@ lines -1, no upvalues, and nil at the stack top.
 
 Addresses: `0x6fb9e0`, `0x6fb9e4`, `0x6fb9ff`, `0x6fb9f2`, `0x6fba01`, `0x6fba40`, `0x6fba43`, `0x6fba51`, `0x6fba56`, `0x6fba59`, `0x6fba5c`, `0x6fba5f`, `0x6fba62`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbb24`, `0x6fbb32`, `0x6fbb3a`, `0x6fbb47`, `0x6fbb54`, `0x6fbb6b`, `0x6fbbb0`, `0x6fbbb4`, `0x6fbbc1`, `0x6fbbce`, `0x6fbbd9`, `0x6fbbf2`, `0x6fbbfb`, `0x6fbc0c`, `0x6fbc4c`, `0x6fbd20`, `0x6fbd23`, `0x6fbd2c`, `0x6fbd3e`, `0x6fbd45`, `0x6fbd48`, `0x6fbd4e`, `0x6fbd53`, `0x6fbd5d`, `0x6f9970`, `0x6fbc26`, `0x6fbd63`, `0x6fbd6a`, `0x6fb9e7`, `0x6fb9fd`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The hook fields of the state are the mask byte at `+0x30`, the initialized flag at `+0x32`, the
@@ -319,7 +319,7 @@ Nothing live reaches these 10 functions, which belong to the library the client 
 
 Addresses: `0x6f6620`, `0x6f67b0`, `0x6f6860`, `0x6f6b10`, `0x6fba40`, `0x6fba70`, `0x6fba80`, `0x6fba90`, `0x6fbb20`, `0x6fbbb0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `cargo xtask census --all` marks each of these rows `unreached`: no `call` or `jmp` target, no stored dword and no fall-through reaches it from live code. The control is the same run listing `lua_gettop` (`0x6f3070`) as live, with 582 call sites in the image.
