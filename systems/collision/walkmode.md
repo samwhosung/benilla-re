@@ -141,13 +141,13 @@ walk). The fly test is `0x5fd19f test cl,4` (finalized: skip) and `0x5fd1a4 test
 ## Walk playback rate
 
 `0x5fe2f0` scales a locomotion clip's rate to the mover: rate = `0x7c4c90(0)` ÷
-(`‖row 2 of the model matrix‖` × the sequence's authored speed), where `0x711a20` fills the denominator at
-`out+8` from the model's matrix words `+0xbc`, `+0xc0`, `+0xc4` and the sequence field `+0x0c`
-(stride `0x44`). The rate stays 1.0 when the animation is not one of `0x5fee80`'s moving ids or
+(`‖first row of the model matrix‖` × the sequence's authored speed), where `0x711a20` fills the denominator at
+`out+8` from the model's matrix words `+0xbc`, `+0xc0`, `+0xc4` (words 0 to 2 of the matrix `0x710626` writes at
+`+0xbc`) and the sequence field `+0x0c` (stride `0x44`). The rate stays 1.0 when the animation is not one of `0x5fee80`'s moving ids or
 when the denominator is not above 0. No walk-speed term enters it, and nothing branches on the
 unit being the local player.
 
-Addresses: `0x5fe2f0`, `0x5fe4be`, `0x5fe50a`, `0x5fe515`, `0x5fe520`, `0x5fe526`, `0x5fe528`, `0x5fe53c`, `0x5fe541`, `0x5fe54d`, `0x711a20`, `0x711ab6`, `0x711af0`, `0x711af3`, `0x5fee80`
+Addresses: `0x5fe2f0`, `0x5fe4be`, `0x5fe50a`, `0x5fe515`, `0x5fe520`, `0x5fe526`, `0x5fe528`, `0x5fe53c`, `0x5fe541`, `0x5fe54d`, `0x711a20`, `0x711ab6`, `0x711af0`, `0x711af3`, `0x710626`, `0x5fee80`
 Confidence: verified
 Proof: one
 Test: none
