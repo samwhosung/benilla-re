@@ -56,7 +56,7 @@ fn callback_list_link_difftest() {
     let node_at = |i: usize| block + 0x40 + 0x20 * i as u32;
     let mut s = 0x5eed_0001u32;
     // Which (mode, reference kind, node already linked) combinations ran: the reference is the
-    // terminator (0), the head (1), a middle node (2) or the tail (3) of the list as it was.
+    // terminator (0), the tail (1), a middle node (2) or the head (3) of the list as it was.
     let mut seen = [[[0u32; 2]; 4]; 2];
     let mut ops = 0u32;
     for run in 0..60u32 {
@@ -224,8 +224,8 @@ impl<'a> Rig<'a> {
         None
     }
 
-    /// The callbacks the exe holds for `key`, from the head of its node's list at `+0x1f4`
-    /// (the first at `+0x1fc`, each next at `+4`), with the function, id and data each holds.
+    /// The callbacks the exe holds for `key`, from the tail of its node's list at `+0x1f4`
+    /// (the tail at `+0x1fc`, each previous at `+4`), with the function, id and data each holds.
     fn list_of(&self, key: u32) -> Vec<Callback> {
         let Some(node) = self.node_of(key) else {
             return Vec::new();

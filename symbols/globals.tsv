@@ -291,7 +291,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x63679c	void *[4]	s_bevelCountCases		collision	Holds the case addresses of 0x636610 for one to four planes	verified	one	collision/walking#bevel-contact-direction
 0x63c794	uint32_t[8]	s_keyJumpTable		console	Holds the jump targets of the keys 0x206 to 0x20d in the key-down handler	verified	one	console/screen#keys
 0x63c938	uint32_t[12]	s_keyRepeatJumpTable		console	Holds the jump targets of the keys 0x202 to 0x20d in the key-repeat handler	verified	one	console/screen#keys
-0x6485d8	uint32_t[5]	s_fileReadKinds		storm	Holds the five cases of SFile::Read by file kind: 0x6484c0, 0x6484fb, 0x64851c twice, 0x648568	verified	one	dbc#record-reads
+0x6485d8	uint32_t[5]	s_fileReadKinds		storm	Holds the five cases of SFile::Read by file kind: 0x6484c0, 0x6484fb, 0x64851c twice, 0x648568	verified	two	dbc#record-reads
 0x64ec4c	void *[13]	s_getStormOptionCases		storm	Holds the 13 case addresses of 0x64ead0's switch on the option id less one	verified	one	storm/printf#storm-options
 0x64ee8c	void *[13]	s_setStormOptionCases		storm	Holds the 13 case addresses of 0x64ec80's switch on the option id less one, 8 the failure	verified	one	storm/printf#storm-options
 0x669a80	void *[4]	s_vsnoprintfReadCases		storm	Holds the four cases that read an argument by kind in 0x6697d0's second pass	verified	one	storm/printf#ordered-conversions
@@ -341,9 +341,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x703078	void *[9]	s_cases702f40		ui	Holds the 9 case addresses of the switch in 0x702f40	inferred	none	ui/luabase#type-and-tostring
 0x7039c4	const uint32_t[2]	s_debugstackNameCases		ui	Holds debugstack's two description arms, by name and by kind	verified	two	ui/luastate#debugstacks-lines
 0x7039cc	const uint8_t[8]	s_debugstackNameKinds		ui	Maps the first letter of a name kind, f to m, to the two arms of 0x7039c4	verified	two	ui/luastate#debugstacks-lines
-0x704a40	const uint32_t[7]	s_serializeTypeCases		ui	Holds the serializer case addresses for the Lua types nil to function	verified	one	ui/savedvariables#the-saved-variables-format
-0x704a5c	const uint32_t[4]	s_serializeEscapeCases		ui	Holds the string escape case addresses: NUL, LF, quote or backslash, and plain	verified	one	ui/savedvariables#the-saved-variables-format
-0x704a6c	const uint8_t[93]	s_serializeEscapeKinds		ui	Maps the bytes 0 to 92 to the escape cases of 0x704a5c	verified	one	ui/savedvariables#the-saved-variables-format
+0x704a40	const uint32_t[7]	s_serializeTypeCases		ui	Holds the serializer case addresses for the Lua types nil to function	verified	two	ui/savedvariables#the-saved-variables-format
+0x704a5c	const uint32_t[4]	s_serializeEscapeCases		ui	Holds the string escape case addresses: NUL, LF, quote or backslash, and plain	verified	two	ui/savedvariables#the-saved-variables-format
+0x704a6c	const uint8_t[93]	s_serializeEscapeKinds		ui	Maps the bytes 0 to 92 to the escape cases of 0x704a5c	verified	two	ui/savedvariables#the-saved-variables-format
 0x7052a4	void *[5]	s_handlerFormatCases		ui	Holds the case addresses of the argument runner's format letters	verified	two	ui/script#running-a-handler
 0x7052b8	uint8_t[18]	s_handlerFormatIndex		ui	Holds the case of each letter from d to u for the argument runner	verified	two	ui/script#running-a-handler
 0x70b728	void *[6]	s_m2DrawKindTable		models	Holds the draw routine of each element kind, 0 to 5	verified	one	models/render#list-draw
@@ -675,9 +675,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090b4	void *[9]	s_connectionResponseBaseVftable		net	Holds the abstract base vtable NetClient sets first: a deleting destructor, four pure slots, four empty ones	verified	one	net/session#netclient-construction
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
-0x809128	const float	s_infinityDbCache		dbcache	Holds +inf, 0x7f800000, the literal the DBCache file copies at start-up	verified	one	dbcache/clones#initializers-of-the-saved-caches
+0x809128	const float	s_infinityDbCache		dbcache	Holds +inf, 0x7f800000, the literal the DBCache file copies at start-up	verified	two	dbcache/clones#initializers-of-the-saved-caches
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
-0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	one	dbcache/callbacks#item-node-allocation
+0x80915c	void *[4]	s_itemCacheVtable		dbcache	Holds the item cache's vtable; slot 1 is the node allocator 0x55b250	verified	two	dbcache/callbacks#item-node-allocation
 0x80917c	void *[4]	s_nameCacheVtable		dbcache	Holds the vtable of the names cache object; slot 0 frees a node	inferred	none	
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
@@ -1339,7 +1339,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e92c	char[4]	s_text10		unassigned	Holds the string "1.0"	inferred	none	
 0x82e930	char[13]	s_textDesktopGamma		client	Holds the string "DesktopGamma"	inferred	none	
 0x82e994	char[6]	s_textMouseSpeedFormat		unassigned	Holds the string "%1.1f"	verified	one	cvar/defaults#formatted-defaults
-0x82e99c	char[18]	s_checkAddonVersionName		client	Holds checkAddonVersion, the CVar that refuses out-of-date add-ons	verified	one	ui/addons#whether-an-add-on-may-load
+0x82e99c	char[18]	s_checkAddonVersionName		client	Holds checkAddonVersion, the CVar that refuses out-of-date add-ons	verified	two	ui/addons#whether-an-add-on-may-load
 0x82e9d8	char[14]	s_textMovieSubtitle		client	Holds the string "movieSubtitle"	inferred	none	
 0x82ecc8	char[6]	s_argDelimiters		unassigned	Holds the tokenizer delimiters tab, CR, LF, quote and space, with no comma	verified	one	console/commands#world-port-command
 0x82ed90	char[30]	s_failedToOpenArchive		client	Holds "Failed to open archive %s: %s", the fatal message for a base archive that does not open	verified	one	storm/errorlog#fatal-error-display
@@ -1599,7 +1599,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x840404	char[21]	s_textIgPlayerInviteAccept		unassigned	Holds the string "igPlayerInviteAccept"	inferred	none	
 0x84133c	char[20]	s_textERRPASSIVEABILITY		ui	Holds the string "ERR_PASSIVE_ABILITY"	inferred	none	
 0x842180	char[14]	s_textERRBANKFULL		ui	Holds the string "ERR_BANK_FULL"	inferred	none	
-0x8421a8	char[35]	s_registerForSaveUsage		ui	Holds the usage message of RegisterForSave	verified	one	ui/savedvariables#saved-variables-written
+0x8421a8	char[35]	s_registerForSaveUsage		ui	Holds the usage message of RegisterForSave	verified	two	ui/savedvariables#saved-variables-written
 0x8421cc	char[56]	s_registerForSaveBlizzardOnly		ui	Holds the message RegisterForSave raises for a nonzero context word	verified	two	ui/luastate#the-context-word
 0x8422e8	char[40]	s_textUsageRegisterCVarCvarDefault		ui	Holds the string "Usage: RegisterCVar("cvar" [, default])"	inferred	none	
 0x842310	char[30]	s_textCouldnTFindCVarNamedS		ui	Holds the string "Couldn't find CVar named '%s'"	inferred	none	
@@ -1635,7 +1635,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x842e44	char[44]	s_textUsageIsAddOnLoadOnDemandIndexOrName		ui	Holds the string "Usage: IsAddOnLoadOnDemand(index or "name")"	inferred	none	
 0x842e70	char[38]	s_textUsageIsAddOnLoadedIndexOrName		ui	Holds the string "Usage: IsAddOnLoaded(index or "name")"	inferred	none	
 0x842e98	char[34]	s_textUsageLoadAddOnIndexOrName		ui	Holds the string "Usage: LoadAddOn(index or "name")"	inferred	none	
-0x842ebc	char[14]	s_textUNKNOWNERROR		ui	Holds the string "UNKNOWN_ERROR"	verified	one	ui/addons#the-in-game-add-on-functions
+0x842ebc	char[14]	s_textUNKNOWNERROR		ui	Holds the string "UNKNOWN_ERROR"	verified	two	ui/addons#the-in-game-add-on-functions
 0x842ecc	uint8_t			ui	Holds a byte that Script::LoadAddOn, CGGameUI::Initialize read; not read here	inferred	none	ui/framexml#building-the-game-interface
 0x842f7c	char[32]	s_frameXMLTocPath		ui	Holds Interface\FrameXML\FrameXML.toc	verified	two	ui/framexml#building-the-game-interface
 0x842f9c	char[32]	s_textInterfaceFrameXMLBindingsXml		ui	Holds the string "Interface\FrameXML\Bindings.xml"	verified	two	ui/framexml#building-the-game-interface
@@ -1915,11 +1915,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x852470	char[18]	s_textEXECUTECHATLINE		ui	Holds the string "EXECUTE_CHAT_LINE"	inferred	none	
 0x853230	char[18]	s_textScreenshotFailed		unassigned	Holds the event name "SCREENSHOT_FAILED"	verified	one	gx/capture#completion-events
 0x853244	char[21]	s_textScreenshotSucceeded		unassigned	Holds the event name "SCREENSHOT_SUCCEEDED"	verified	one	gx/capture#completion-events
-0x85365c	const char *[8]	s_addOnReasonNames		ui	Points to the add-on reason names LOADABLE to INTERFACE_VERSION	verified	one	ui/addons#whether-an-add-on-may-load
+0x85365c	const char *[8]	s_addOnReasonNames		ui	Points to the add-on reason names LOADABLE to INTERFACE_VERSION	verified	two	ui/addons#whether-an-add-on-may-load
 0x85367c	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/addons#the-in-game-add-on-functions
 0x853690	char[18]	s_textInterfaceVersion		ui	Holds the string INTERFACE_VERSION	verified	two	ui/luastate#the-library-scripts-see
-0x853724	char[18]	s_addOnsPrefix		ui	Holds Interface\AddOns\	verified	one	ui/addons#finding-add-ons
-0x853738	char[5]	s_tocExtension		ui	Holds .toc	verified	one	ui/addons#finding-add-ons
+0x853724	char[18]	s_addOnsPrefix		ui	Holds Interface\AddOns\	verified	two	ui/addons#finding-add-ons
+0x853738	char[5]	s_tocExtension		ui	Holds .toc	verified	two	ui/addons#finding-add-ons
 0x853740	char[8]	s_textSecure		ui	Holds the string "Secure:"	inferred	none	
 0x853748	char[14]	s_textLoadOnDemand		ui	Holds the string "LoadOnDemand:"	inferred	none	
 0x853758	char[9]	s_textDisabled		unassigned	Holds the string "disabled"	inferred	none	
@@ -1939,15 +1939,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8537f4	char[6]	s_textNotes		ui	Holds the string "Notes"	inferred	none	
 0x8537fc	char[11]	s_textInterface		ui	Holds the string "Interface:"	inferred	none	
 0x853838	char[6]	s_textTitle		ui	Holds the string "Title"	inferred	none	
-0x853840	char[27]	s_addOnTocFormat		ui	Holds the format of an add-on's toc path	verified	one	ui/addons#finding-add-ons
-0x853878	char[27]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	one	ui/addons#reading-the-url-file
-0x853928	char[4]	s_addOnsTxtSeparators		ui	Holds CR, LF and the quote, the separators of AddOns.txt	verified	one	ui/addons#enable-state
-0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	one	ui/addons#enable-state
-0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	one	ui/addons#enable-state
-0x853968	char[9]	s_addOnsTxtLineFormat		ui	Holds %s: %s with CR LF, the AddOns.txt line format	verified	one	ui/addons#enable-state
-0x853980	char[40]	s_legacyCharacterSavedVariablesFormat		ui	Holds the format of the realm-less character saved variables path	verified	one	ui/savedvariables#saved-variables-read
-0x8539a8	char[43]	s_characterSavedVariablesFormat		ui	Holds the format of the character saved variables path	verified	one	ui/savedvariables#saved-variables-read
-0x8539d4	char[37]	s_accountSavedVariablesFormat		ui	Holds the format of the account saved variables path	verified	one	ui/savedvariables#saved-variables-read
+0x853840	char[27]	s_addOnTocFormat		ui	Holds the format of an add-on's toc path	verified	two	ui/addons#finding-add-ons
+0x853878	char[27]	s_addOnUrlPath		ui	Holds "Interface\AddOns\%s\%s.url", the path of an add-on's URL file	verified	two	ui/addons#reading-the-url-file
+0x8538e0	char[29]	s_addOnUrlFileFormat		ui	Holds the text of an add-on's URL file: [InternetShortcut], CR LF, URL=%s, CR LF	verified	two	ui/addons#the-add-on-url-file
+0x853928	char[4]	s_addOnsTxtSeparators		ui	Holds CR, LF and the quote, the separators of AddOns.txt	verified	two	ui/addons#enable-state
+0x85392c	char[26]	s_accountAddOnsTxtFormat		ui	Holds the format of an account's AddOns.txt path	verified	two	ui/addons#enable-state
+0x853948	char[32]	s_characterAddOnsTxtFormat		ui	Holds the format of a character's AddOns.txt path	verified	two	ui/addons#enable-state
+0x853968	char[9]	s_addOnsTxtLineFormat		ui	Holds %s: %s with CR LF, the AddOns.txt line format	verified	two	ui/addons#enable-state
+0x853980	char[40]	s_legacyCharacterSavedVariablesFormat		ui	Holds the format of the realm-less character saved variables path	verified	two	ui/savedvariables#saved-variables-read
+0x8539a8	char[43]	s_characterSavedVariablesFormat		ui	Holds the format of the character saved variables path	verified	two	ui/savedvariables#saved-variables-read
+0x8539d4	char[37]	s_accountSavedVariablesFormat		ui	Holds the format of the account saved variables path	verified	two	ui/savedvariables#saved-variables-read
 0x8539fc	char[18]	s_textLoadingAddOnS		ui	Holds the string "Loading add-on %s"	inferred	none	
 0x853b88	char *[41]	s_cursorNames		ui	Holds the cursor names by cursor id, from Point at 1 to UnableSkinAlliance at 0x28	verified	one	spell/targeting#the-targeting-cursor
 0x854040	char[3]	s_arrayTagE		ui	Holds .E, the allocation tag of the region base's array at +0xa8	verified	two	ui/regions#the-region-base
@@ -2011,14 +2012,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8553a4	const char[52]	s_errTrainerService		ui	Holds the error text Invalid trainer service in SetTrainerService(index) of SetTrainerService	verified	one	ui/tooltipbuff#trainer-services
 0x85544c	const char[38]	s_errCraftSpell		ui	Holds the error text Invalid craft in SetCraftSpell(index) of SetCraftSpell	verified	one	ui/tooltipbuff#craft-spells
 0x855808	int32_t	s_physicalResistIndex		ui	Holds the index of the damage class row marked physical, −1 until the table is checked	verified	one	ui/tooltipunitstatus#the-studied-creature-lines
-0x85580c	char[23]	s_pathWowClientDbH		dbc	Holds ..\..\DB/WowClientDB.h, the tag of the allocations in the table loaders	verified	one	dbc#the-loader
-0x8558a4	char *[8]	s_localeNames		unassigned	Holds the eight locale tags enUS to xxYY the locale index counts through	verified	one	dbc#localized-strings
-0x855b3c	char[49]	s_cancelCallbackIgnored		dbcache	Holds the console message CancelCallback prints when it is called while a list is being run	verified	one	dbcache/callbacks#cancelling-a-callback
-0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	one	dbcache/overview#name-cache-node
+0x85580c	char[23]	s_pathWowClientDbH		dbc	Holds ..\..\DB/WowClientDB.h, the tag of the allocations in the table loaders	verified	two	dbc#the-loader
+0x8558a4	char *[8]	s_localeNames		unassigned	Holds the eight locale tags enUS to xxYY the locale index counts through	verified	two	dbc#localized-strings
+0x855b3c	char[49]	s_cancelCallbackIgnored		dbcache	Holds the console message CancelCallback prints when it is called while a list is being run	verified	two	dbcache/callbacks#cancelling-a-callback
+0x855ec8	const char[58]	s_nameCacheHashTypeName		dbcache	Holds the type name of the name cache node, the tag of its allocations	verified	two	dbcache/overview#name-cache-node
 0x856450	uint32_t			unassigned	Holds a dword that SendBugReport reads; not read here	inferred	none	
 0x85645c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x858348	char[32]	s_textDBFilesClientChatProfanityDbc		dbc	Holds the string "DBFilesClient\ChatProfanity.dbc"	inferred	none	
-0x858b00	char[41]	s_pathGameObjectDisplayInfoDbc		dbc	Holds DBFilesClient\GameObjectDisplayInfo.dbc	verified	one	dbc#record-files
+0x858b00	char[41]	s_pathGameObjectDisplayInfoDbc		dbc	Holds DBFilesClient\GameObjectDisplayInfo.dbc	verified	two	dbc#record-files
 0x859410	char[33]	s_textDBFilesClientNamesProfanityDbc		dbc	Holds the string "DBFilesClient\NamesProfanity.dbc"	inferred	none	
 0x859458	char[32]	s_textDBFilesClientNamesReservedDbc		dbc	Holds the string "DBFilesClient\NamesReserved.dbc"	inferred	none	
 0x859a84	char[31]	s_textDBFilesClientSpamMessagesDbc		dbc	Holds the string "DBFilesClient\SpamMessages.dbc"	inferred	none	
@@ -2193,7 +2194,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x866834	char[14]	s_textBlockTable		storm	Holds the string (block table), whose type 3 hash decrypts the block table	verified	one	storm/format#hash-and-block-tables
 0x866844	char[13]	s_textHashTable		storm	Holds the string (hash table), whose type 3 hash decrypts the hash table	verified	one	storm/format#hash-and-block-tables
 0x866aa0	char[28]	s_textUU02u02u02u03u		storm	Holds the string "%u/%u %02u:%02u:%02u.%03u  "	inferred	none	
-0x866bd8	const uint32_t[256]	s_crc32Table		storm	Holds the CRC-32 table of the reflected polynomial 0xedb88320, 0x77073096 at index 1	verified	one	ui/addons#the-auth-packets-add-on-block
+0x866bd8	const uint32_t[256]	s_crc32Table		storm	Holds the CRC-32 table of the reflected polynomial 0xedb88320, 0x77073096 at index 1	verified	two	ui/addons#the-auth-packets-add-on-block
 0x8670e0	char[4]	s_int64LengthModifier		storm	Holds I64, the length FixUpLongLongFormatSpecifier writes over ll	verified	one	storm/printf#parsing-a-conversion
 0x867918	float[16]	s_liquidScrollDirections		terrain	Holds the eight (x, y) steps the liquid texture offsets add each frame, the compass directions	verified	one	terrain/world#world-frame
 0x867958	float	s_detailDoodadHorizon		terrain	Holds 70.0, the detail doodad distance	inferred	none	
@@ -2395,10 +2396,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x872cbc	char[11]	s_compatChunkName		ui	Holds compat.lua	verified	two	ui/luastate#what-a-new-state-holds
 0x872cc8	char[8]	s_getTextName		ui	Holds GetText	verified	one	ui/chatserver#the-text-lookup
 0x872cd0	char[15]	s_getPluralIndexName		ui	Holds GetPluralIndex	verified	two	ui/script#text-counts-and-running-code
-0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	one	ui/savedvariables#the-saved-variables-format
+0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	two	ui/savedvariables#the-saved-variables-format
 0x872e28	char[6]	s_savedNumberFormat		ui	Holds %.16g, the format of a saved number	verified	two	ui/savedvariables#saved-numbers
-0x872e30	char[16]	s_savedInfinity		ui	Holds nil --[[ inf ]], the text saved for an infinity	verified	one	ui/savedvariables#the-saved-variables-format
-0x872e40	char[16]	s_savedNaN		ui	Holds nil --[[ nan ]], the text saved for a NaN	verified	one	ui/savedvariables#the-saved-variables-format
+0x872e30	char[16]	s_savedInfinity		ui	Holds nil --[[ inf ]], the text saved for an infinity	verified	two	ui/savedvariables#the-saved-variables-format
+0x872e40	char[16]	s_savedNaN		ui	Holds nil --[[ nan ]], the text saved for a NaN	verified	two	ui/savedvariables#the-saved-variables-format
 0x872e50	char[17]	s_textErrorLoadingS		ui	Holds the string "Error loading %s"	verified	one	ui/framexml#loading-one-file
 0x872e64	char[5]	s_thisGlobalName		ui	Holds this, the global a handler runs with	verified	two	ui/script#running-a-handler
 0x872e74	uint32_t			ui	Holds a dword that LoadFrameScriptFunctions, UnloadFrameScriptFunctions read; not read here	inferred	none	
@@ -2574,11 +2575,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8824a0	void *	s_getStringTypeW		crt	Holds GetStringTypeW, bound from kernel32.dll by its first call (0x4156bd); 0x413ed3 calls it	verified	one	net/who#who-filter-decoding
 0x8824c0	void *	s_wideCharToMultiByte		crt	Holds WideCharToMultiByte, bound from kernel32.dll by its first call (0x4155bb)	verified	one	storm/files#opening-a-loose-file
 0x8824ec	void *	s_setWindowTextW		crt	Holds SetWindowTextW, bound from user32.dll by its first call (0x748942)	verified	one	storm/unicode#counting-utf-16-units
-0x8824fc	uint32_t *	s_startupStringsRecords		dbc	Points at the Startup_Strings records, 0x2c bytes each	verified	one	dbc#startup-strings
-0x882500	uint32_t	s_startupStringsCount		dbc	Holds the Startup_Strings record count	verified	one	dbc#startup-strings
+0x8824fc	uint32_t *	s_startupStringsRecords		dbc	Points at the Startup_Strings records, 0x2c bytes each	verified	two	dbc#startup-strings
+0x882500	uint32_t	s_startupStringsCount		dbc	Holds the Startup_Strings record count	verified	two	dbc#startup-strings
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
 0x882508	uint32_t	s_startupStringsMaxId		client	Holds Startup_Strings.dbc's largest id	inferred	none	
-0x88250c	uint32_t	s_startupStringsLoaded		dbc	Holds 1 once Startup_Strings is loaded	verified	one	dbc#startup-strings
+0x88250c	uint32_t	s_startupStringsLoaded		dbc	Holds 1 once Startup_Strings is loaded	verified	two	dbc#startup-strings
 0x88262c	uint32_t	s_newWorldMapId		client	Holds the map id of the world being entered, which NewWorldHandler reads from the packet	verified	one	ui/worldenter#a-world-transfer
 0x882630	uint32_t			unassigned	Holds a dword that ClientRegisterConsoleCommands reads and writes; not read here	inferred	none	
 0x882640	uint32_t			unassigned	Holds a dword that ClientRegisterConsoleCommands, Script::SetMovieSubtitles read and write; not read here	inferred	none	
@@ -2593,7 +2594,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882704	uint32_t			client	Holds a dword that ClientRegisterConsoleCommands reads and writes; not read here	inferred	none	
 0x882720	uint32_t	s_readTos		cvar	Points at the readTOS option's record	inferred	none	
 0x88272c	uint32_t	s_pvpRealmGate		unassigned	Holds 1 when the selected realm type allows player killing, set at world entry	verified	one	ui/zonetext#the-realm-gate
-0x882730	int32_t	s_iniRegion		client	Holds the WoW Config Region value of Wow.ini, 0 in the file and without the file or the key	verified	one	dbc#wowini-values
+0x882730	int32_t	s_iniRegion		client	Holds the WoW Config Region value of Wow.ini, 0 in the file and without the file or the key	verified	two	dbc#wowini-values
 0x882734	uint32_t	s_gameInitialized		client	Holds 1 from the end of ClientInitializeGame until ClientDestroyGame ends	verified	one	core/close#stop-handler-order
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
 0x88273c	uint32_t	s_dataLayout		client	Holds the data layout: 1 with both archives under ..\Data\, 2 with only model.MPQ there, 0 otherwise	verified	one	storm/mount#install-folder-and-data-path
@@ -3603,14 +3604,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe1198	const char *	s_eventNames		ui	Holds the first event name pointer; the names follow in event order and index 0x150 is UPDATE_MOUSEOVER_UNIT	verified	one	ui/tooltipobject#the-publisher
 0xbe160c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe17b8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1b48	uint32_t	s_stockInterfaceNumber		ui	Holds the interface number of the stock FrameXML.toc, which nothing reads	verified	one	ui/addonfiles#stock-interface-number
-0xbe1b64	uint32_t[3]	s_addOnList		ui	Holds the add-on list: its link offset, its sentinel link and its head	verified	one	ui/addons#finding-add-ons
-0xbe1b7c	void *	s_addOnBuckets		ui	Holds the bucket array of the add-on record hash, 12 bytes a bucket, keyed by folder name	verified	one	ui/addoninfo#finding-a-record-by-name
-0xbe1b84	uint32_t	s_addOnBucketMask		ui	Holds the add-on hash's bucket mask; -1 while it has no buckets	verified	one	ui/addoninfo#finding-a-record-by-name
-0xbe1b90	uint32_t	s_numAddOnNames		ui	Counts the names in the sorted add-on array	verified	one	ui/addons#the-order-lua-sees
-0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	one	ui/addons#the-order-lua-sees
-0xbe1bd0	uint32_t			ui	Holds a dword that LoadCharacterAddOnState reads and writes; not read here	inferred	none	
-0xbe1bd8	uint32_t	s_addOnStateListEnd		ui	Holds the end link of the add-on state list: the address of its head with bit 0 set	verified	one	ui/addonfiles#character-add-on-state
+0xbe1b48	uint32_t	s_stockInterfaceNumber		ui	Holds the interface number of the stock FrameXML.toc, which nothing reads	verified	two	ui/addonfiles#stock-interface-number
+0xbe1b64	uint32_t[3]	s_addOnList		ui	Holds the add-on list's header: its link offset, its head and its tail	verified	two	ui/addons#finding-add-ons
+0xbe1b7c	void *	s_addOnBuckets		ui	Holds the bucket array of the add-on record hash, 12 bytes a bucket, keyed by folder name	verified	two	ui/addoninfo#finding-a-record-by-name
+0xbe1b84	uint32_t	s_addOnBucketMask		ui	Holds the add-on hash's bucket mask; -1 while it has no buckets	verified	two	ui/addoninfo#finding-a-record-by-name
+0xbe1b90	uint32_t	s_numAddOnNames		ui	Counts the names in the sorted add-on array	verified	two	ui/addons#the-order-lua-sees
+0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	two	ui/addons#the-order-lua-sees
+0xbe1bd0	uint32_t[3]	s_addOnStateList		ui	Holds the add-on state list's header: its link offset, its head and its tail	verified	one	ui/addonfiles#character-add-on-state
 0xbe1c28	uint32_t[256]	s_cursorPictureBuffer		ui	Holds the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture
 0xbe2c2c	uint32_t	s_cursorMode		ui	Holds the mode of the cursor shown now	verified	one	ui/worldcursor#setting-the-mode
 0xbe2c48	uint32_t	s_cursorPictureState		ui	Holds 0 for no payload picture, else 1, 2 or 3 by the picture's source	verified	one	ui/cursor#dragging-picture
@@ -3646,7 +3646,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	two	net/dispatch#dispatch
 0xc0d488	uint32_t[3]	s_netClientNodeList		net	Holds the list of NETCLIENTNODE records, one per NetClient: the link offset 0, then the head's two link words	verified	one	net/session#netclient-construction
 0xc0d4b4	uint32_t	s_netClientCount		net	Counts the initialized NetClient objects: the first starts the network platform, the last stops it	verified	two	net/dispatch#handler-tables
-0xc0d530	uint32_t[3]	s_resistancesRows		unassigned	Holds pointers to the Resistances rows in record order: capacity, count and array	verified	one	dbc#damage-class-check
+0xc0d530	uint32_t[3]	s_resistancesRows		unassigned	Holds pointers to the Resistances rows in record order: capacity, count and array	verified	two	dbc#damage-class-check
 0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message
@@ -3820,16 +3820,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e054	uint32_t[5]	s_areaPoiStore		dbc	Holds the AreaPOI.dbc store: records of 0x74 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-landmarks
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
-0xc0e07c	float	s_infinityDbCacheCopy		dbcache	Holds the DBCache file's copy of +inf, written at start-up and read by nothing	verified	one	dbcache/clones#initializers-of-the-saved-caches
-0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	one	dbc#localized-strings
+0xc0e07c	float	s_infinityDbCacheCopy		dbcache	Holds the DBCache file's copy of +inf, written at start-up; no other instruction names it	verified	two	dbcache/clones#initializers-of-the-saved-caches
+0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index, the position of the Wow.ini Language and Country tag among the locale names	verified	two	dbc#localized-strings
 0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
-0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
-0xc0e138	uint8_t[60]	s_petNameCache		dbcache	Holds the pet name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
+0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	two	dbcache/overview#caches-that-are-not-saved
+0xc0e138	uint8_t[60]	s_petNameCache		dbcache	Holds the pet name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	two	dbcache/overview#caches-that-are-not-saved
 0xc0e174	uint8_t[60]	s_pageTextCache		dbcache	Holds the page text cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e1b0	uint8_t[60]	s_questCache		dbcache	Holds the quest cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
-0xc0e1ec	uint8_t[60]	s_guildCache		dbcache	Holds the guild cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
-0xc0e228	uint8_t[60]	s_nameCache		dbcache	Holds the names cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-not-saved
+0xc0e1ec	uint8_t[60]	s_guildCache		dbcache	Holds the guild cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	two	dbcache/overview#caches-that-are-not-saved
+0xc0e228	uint8_t[60]	s_nameCache		dbcache	Holds the names cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	two	dbcache/overview#caches-that-are-not-saved
 0xc0e264	void *	s_npcTextCache		dbcache	Holds the NPC text cache store, npccache.wdb	verified	one	ui/gossip#the-greeting
 0xc0e2a0	uint8_t[60]	s_itemCache		dbcache	Holds the item cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache/overview#caches-that-are-saved
 0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
@@ -3915,7 +3915,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/who#who-list-reply
 0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/who#who-list-reply
 0xc2a1a0	uint8_t[24]	s_downloadLock		net	Holds the lock a download file's release and feed take	verified	one	net/download#releasing-a-download
-0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the Wow.ini Language and Country tag packed into a dword, first byte highest	verified	one	dbc#localized-strings
+0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the Wow.ini Language and Country tag packed into a dword, first byte highest	verified	two	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	two	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
 0xc2a354	uint8_t[24]	s_socketBitmapLock		net	Holds the lock over the open-socket bitmap	verified	one	net/threads#socket-bitmap-and-callback-bracket
@@ -4739,7 +4739,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceea60	char[64]	s_fontFlagsText		ui	Holds the flags text FormatFontFlags builds and returns, emptied and rewritten by each call	verified	one	ui/fontmethods#font-flags-text
 0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	two	ui/luastate#the-context-word
 0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	two	ui/luastate#the-context-word
-0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	one	ui/savedvariables#the-saved-variables-format
+0xceeb60	char[1024]	s_serializeBuffer		ui	Holds the line the saved-variables writer builds	verified	two	ui/savedvariables#the-saved-variables-format
 0xceef60	uint32_t	s_eventCapacity		ui	Holds the capacity of the event record array	verified	two	ui/script#the-event-table
 0xceef64	uint32_t	s_eventCount		ui	Holds the number of event records	verified	two	ui/script#the-event-table
 0xceef68	void *	s_eventRecords		ui	Points to the event records, 0x10 bytes each: name and listener list	verified	two	ui/script#the-event-table

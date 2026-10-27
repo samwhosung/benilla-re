@@ -19,11 +19,11 @@ every name in the mounted archives' `(listfile)`s that begins with that prefix a
 registers the folder name before its first separator, in listfile order. Then every loose
 subfolder not beginning with `.` registers its name, in the order the file system lists them. A
 name already registered, ignoring case, is skipped, and a folder without a readable
-`<Name>\<Name>.toc` registers nothing. Records join the list at its tail.
+`<Name>\<Name>.toc` registers nothing. Records join the list at its head, so a walk from its tail visits them in registration order.
 
 Addresses: `0x46b084`, `0x51c740`, `0x51c743`, `0x51c760`, `0x51c777`, `0x51c78f`, `0x51c910`, `0x51c932`, `0x51c986`, `0x51d7b0`, `0x51d7b4`, `0x51d7bc`, `0x51c9b0`, `0x51ca10`, `0x51ca62`, `0x51ca69`, `0x51caf5`, `0x521ad0`, `0x401470`, `0x4014fe`, `0x648fb0`, `0x42ad10`, `0x853724`, `0x853738`, `0x853840`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x46b084` tail-jumps to `0x51c740`, which resets (`0x51fa40`, `0x51c743`) and scans. `0x51c777`
@@ -33,7 +33,7 @@ walks the archives through `0x401470`, whose adapter `0x4014f0` compares the pre
 cuts it at the first `\` or `/` and registers it (`0x51c986`). `0x51d7b0` requires the directory
 attribute 0x10 (`0x51d7b4`) and a first character other than `.` (`0x51d7bc`). In `0x51c9b0` a name
 match returns at `0x51ca10`; the toc is read at `0x51ca62`, failure returning at `0x51ca69`;
-`0x51caf5` calls `0x521ad0` on `0xbe1b64` with 2, the tail append.
+`0x51caf5` calls `0x521ad0` on `0xbe1b64` with mode 2 and no reference, a head insert (`ui/draworder`).
 
 ## Toc directives
 
@@ -57,7 +57,7 @@ this order:
 
 Addresses: `0x51cc22`, `0x51cc2e`, `0x51cc69`, `0x51cc8e`, `0x51cca6`, `0x51cd18`, `0x51cd5f`, `0x51ce6e`, `0x51ce8c`, `0x51ceaa`, `0x51cfbe`, `0x51d0be`, `0x51d1be`, `0x51d204`, `0x51d223`, `0x51d23c`, `0x51d27c`, `0x51d295`, `0x51d2cc`, `0x51ca75`, `0x51cbf9`, `0x520550`, `0x5205b9`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 In `0x51c9b0`, `0x51cc22` and `0x51cc2e` require `#` twice. The compares run in the table's order
@@ -80,7 +80,7 @@ name)` answers a stored value, or nil.
 
 Addresses: `0x51cbb3`, `0x51cbf3`, `0x51d3c6`, `0x51d580`, `0x51d5a0`, `0x51d5c2`, `0x51d5e1`, `0x51d600`, `0x51d79c`, `0x8558a4`, `0xc0e080`, `0x48e530`, `0x48e5b5`, `0x51e220`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51cbb3` to `0x51cbf3` add the key `Title` with the folder name. `0x51d580` keeps the position
@@ -99,7 +99,7 @@ by 1 and compared unsigned with the count.
 
 Addresses: `0x51da70`, `0x51dc30`, `0x51dc4f`, `0x51dcac`, `0x51dcd1`, `0x51deb0`, `0x51df20`, `0x51def0`, `0x51df00`, `0x5b4282`, `0xbe1b90`, `0xbe1b94`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51da70`'s tail `0x51dc30` zeroes `0xbe1b90`, walks the list, skips a record whose `+0x29` is set
@@ -113,42 +113,42 @@ the count and `0x51df00` the name or 0 for an index not below it.
 An add-on that declares `Secure` takes its key from `<Name>.pub` and its URL from `<Name>.url` in
 its folder, and is named to the realm server in the auth packet's add-on block. The server's reply,
 read for these add-ons in list order, can replace the key and URL, which the client then writes back
-to those files, and gives a state: 0 bans the add-on, 2 hides it from the list, and 1 or 2 has its
+to those files, and gives a state: 0 bans the add-on, 2 hides it from the list, and every state but 0 has its
 toc checked against its signature. A good signature makes the add-on secure (`+0x24` 0) and stores
 the digest its files must hash to; a mismatched one marks it corrupt. Every other add-on stays
 insecure (`+0x24` 1).
 
-Addresses: `0x51d3f4`, `0x51d3fd`, `0x51d404`, `0x51d910`, `0x51da70`, `0x51daa5`, `0x51dac4`, `0x51daee`, `0x51daf5`, `0x51db08`, `0x51db0d`, `0x51db34`, `0x51db6d`, `0x51db77`, `0x51db84`, `0x51dbeb`, `0x51dbfb`, `0x51dc04`, `0x51dc0a`, `0x51dce0`, `0x51dde0`, `0x6f10f0`
+Addresses: `0x51d3f4`, `0x51d3fd`, `0x51d404`, `0x51d910`, `0x51da70`, `0x51daa5`, `0x51dab6`, `0x51dac4`, `0x51dacc`, `0x51dad4`, `0x51dade`, `0x51db90`, `0x51db92`, `0x51daee`, `0x51daf5`, `0x51db08`, `0x51db0d`, `0x51db34`, `0x51db6d`, `0x51db77`, `0x51db84`, `0x51dbeb`, `0x51dbfb`, `0x51dc04`, `0x51dc0a`, `0x51dce0`, `0x51dde0`, `0x6f10f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 At registration `0x51d3f4` tests `+0x28` and calls `0x51d410` and `0x51d4c0`, which read the two
 files into `+0xc1` (0x101 bytes) and `+0x30`. `0x51d910` builds the block from the same records
-(next entry). `0x51da70` reads, per record with `+0x28` (`0x51daa5`), a state byte, a key flag
-(`0x51dac4`) and, when set, a byte and a 256-byte key (`0x51daee`) written by `0x51dce0`
-(`0x51daf5`), and a revision whose excess over `+0x20` sets `+0xc0` (`0x51db08`, `0x51db0d`); then a
+(next entry). `0x51da70` reads, per record with `+0x28` (`0x51daa5`), a state byte (`0x51dab6`) and a key flag into `+0xc1`
+(`0x51dac4`); a zero flag skips to the URL (`0x51dacc`). Otherwise it reads a second byte (`0x51dad4`), a 256-byte key
+(`0x51daee`) only when that byte is nonzero (`0x51dade`), written by `0x51dce0` (`0x51daf5`), and a revision whose excess over `+0x20` sets `+0xc0` (`0x51db08`, `0x51db0d`); then a
 URL flag and string (`0x51db34`) written by `0x51dde0` (`0x51db6d`). It stores 1 in `+0x24`
-(`0x51db77`); state 2 sets `+0x29` (`0x51db84`), state 0 stores 2 (`0x51dc0a`); `0x6f10f0`'s 2 sets
+(`0x51db77`); state 2 sets `+0x29` (`0x51db84`) and state 0 stores 2 (`0x51dc0a`, past the check `0x51db90`); every other state reaches the check (`0x51db92`), where `0x6f10f0`'s 2 sets
 `+0x2a` (`0x51dc04`) and 3 stores 0 (`0x51dbfb`), with the digest at `+0x1c2`.
 
 ## The add-on URL file
 
 `WriteAddOnURL` writes `Interface\AddOns\<name>\<name>.url` as an internet shortcut: the text
-`[InternetShortcut]`, a line break, `URL=<url>` and a line break, replacing the file. An empty or
+`[InternetShortcut]`, CR LF, `URL=<url>` and CR LF, with no NUL, replacing the file. An empty or
 missing URL deletes the file instead. A file that cannot be created is skipped.
 
-Addresses: `0x51dde0`, `0x51ddf1`, `0x51de13`, `0x51de20`, `0x51de2d`, `0x51de49`, `0x51de56`, `0x51de88`, `0x51de8f`, `0x51de9a`, `0x42a460`, `0x42a4b2`, `0x42a4d0`, `0x42a5d0`, `0x42a601`, `0x42a910`, `0x42a94c`
+Addresses: `0x51dde0`, `0x51ddf1`, `0x51de13`, `0x51de20`, `0x51de2d`, `0x51de49`, `0x51de56`, `0x51de7a`, `0x51de88`, `0x51de8f`, `0x51de9a`, `0x42a460`, `0x42a4b2`, `0x42a4d0`, `0x42a5d0`, `0x42a601`, `0x42a910`, `0x42a94c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51ddf1` formats the path with the add-on's name `+0x14` twice and `0x51de13` passes it and the URL
 `+0x30` to `0x51de20`. `0x51de2d` tests the URL for null or an empty first byte and `0x51de9a` deletes
 through `0x42a910`, which converts the path to UTF-16 and calls `DeleteFileW` (`0x42a94c`). `0x51de49`
 calls `0x42a460(path, 0x40000000, 0, 2, 0x80)`, which checks the path, the access and a disposition of
-1 to 5 and calls `CreateFileW` (`0x42a4b2`); −1 returns. `0x51de56` formats the text,
-`0x51de88` writes its length through `0x42a5d0`, a `WriteFile` wrapper that raises 0x57 for a null
+1 to 5 and calls `CreateFileW` (`0x42a4b2`); −1 returns. `0x51de56` formats the text (`0x8538e0`, `[InternetShortcut]\r\nURL=%s\r\n`),
+`0x51de7a` measures it with `SStrLen` and `0x51de88` writes that length through `0x42a5d0`, a `WriteFile` wrapper that raises 0x57 for a null
 buffer or count pointer (`0x42a601`), and `0x51de8f` closes with `0x42a4d0`, `CloseHandle`.
 
 ## Reading the URL file
@@ -161,7 +161,7 @@ byte gives an empty string. The file is freed and the return value goes unread.
 
 Addresses: `0x51d500`, `0x51d516`, `0x51d524`, `0x51d53a`, `0x51d549`, `0x51d552`, `0x51d554`, `0x51d55e`, `0x51d571`, `0x51d4c0`, `0x51d4f3`, `0x648620`, `0x64a3f0`, `0x64a620`, `0x64a6f0`, `0x648700`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::addon_url_parse_difftest`
 
 `0x51d516` calls `SFile::Load(0, path, &buffer, 0, 1, 1, 0)`; the extra byte is zeroed
@@ -176,22 +176,21 @@ formats the path `Interface\AddOns\%s\%s.url` (`0x853878`) with the add-on's nam
 
 With any add-on registered, the auth packet gets a u32, the size of the block before compression,
 and then the block compressed with zlib at its default level. The block holds, for each add-on that
-declares `Secure`, in list order: the folder name as a NUL-terminated string; a byte, the first of
-the 0x101-byte `.pub` file or the one the server's reply gives, 0 without either; a u32, the key's
+declares `Secure`, in list order: the folder name as a NUL-terminated string; a byte: the first of the 0x101-byte `.pub` file (any other size is none) or of the server reply's, 0 without either; a u32, the key's
 CRC-32 when that byte is nonzero, whatever its value, else 0; and a u32, the CRC-32 of the URL's
 text, or 0 for none or an empty one. An empty registry adds nothing; one with no `Secure` add-on
 adds the size 0 and an empty stream.
 
-Addresses: `0x51d910`, `0x51d917`, `0x51d924`, `0x51d961`, `0x51d96f`, `0x51d980`, `0x51d98d`, `0x51d99e`, `0x51d9ab`, `0x51d9b5`, `0x51d9ca`, `0x51d9d7`, `0x51d4a0`, `0x52060f`, `0x51da02`, `0x51da0f`, `0x51da20`, `0x51da33`, `0x51da3f`, `0x4181f0`, `0x4182b0`, `0x418c10`, `0x6628d0`, `0x662860`, `0x6605a0`, `0xbe1b64`
+Addresses: `0x51d910`, `0x51d494`, `0x51d4a2`, `0x51d917`, `0x51d924`, `0x51d961`, `0x51d96f`, `0x51d980`, `0x51d98d`, `0x51d99e`, `0x51d9ab`, `0x51d9b5`, `0x51d9ca`, `0x51d9d7`, `0x51d4a0`, `0x52060f`, `0x51da02`, `0x51da0f`, `0x51da20`, `0x51da33`, `0x51da3f`, `0x4181f0`, `0x4182b0`, `0x418c10`, `0x6628d0`, `0x662860`, `0x6605a0`, `0xbe1b64`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x51d917` reads the list head `0xbe1b6c` and `0x51d924` returns on an empty list before writing.
+`0x51d917` reads the list tail `0xbe1b6c` and `0x51d924` returns on an empty list before writing.
 The records go into a local store: per record with `+0x28` (`0x51d961`), `PutCString` of `+0x14`
 (`0x51d96f`), the byte `+0xc1` (`0x51d980`), and `0x4182b0` of `0x6628d0(+0xc2, 0x100, 0, 7)` when
-`+0xc1` is nonzero (`0x51d98d`, `0x51d99e`, `0x51d9ab`), else 0. `0x51d4a0` stores the file's first
-byte there, and the constructor zeroes it (`0x52060f`); then a nonempty `+0x30` (`0x51d9b5`)
+`+0xc1` is nonzero (`0x51d98d`, `0x51d99e`, `0x51d9ab`), else 0. `0x51d494` accepts only a file of 0x101 bytes, and `0x51d4a0` and `0x51d4a2` load and store its first
+byte there; the constructor zeroes it (`0x52060f`); then a nonempty `+0x30` (`0x51d9b5`)
 gives `0x6628d0(url, SStrLen(url), 0, 7)` (`0x51d9ca`, `0x51d9d7`). `0x6628d0` calls `0x662860`,
 whose flags 1 and 4 start at 0xffffffff and invert the result over the table `0x866bd8`, standard
 CRC-32. The packet then gets the store's size (`0x4181f0`, `0x51da02`); `0x51da0f` takes the bytes,
@@ -209,7 +208,7 @@ passes. The reason `INSECURE` exists but the check never gives it.
 
 Addresses: `0x51e780`, `0x51e812`, `0x51e824`, `0x51e832`, `0x51e841`, `0x51e85b`, `0x51e876`, `0x51e889`, `0x51e8ae`, `0x51e8d5`, `0x51e909`, `0x51e915`, `0x51d7d0`, `0x51f180`, `0x402c3b`, `0x82e99c`, `0x85365c`, `0x51e930`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Codes go to the first out argument: 1 (miss), 2 when `0x51e470(name, character, 1)` is 0
@@ -232,7 +231,7 @@ matches its digest; signals `ADDON_LOADED` with its name; and then loads each ad
 
 Addresses: `0x51f240`, `0x51f2d6`, `0x51f2fa`, `0x51f313`, `0x51f32d`, `0x51f350`, `0x51f5ee`, `0x51f387`, `0x51f3fa`, `0x51f443`, `0x51f4b5`, `0x51f53b`, `0x51f54e`, `0x51f565`, `0x51f56e`, `0x51f5ad`, `0x51f5d3`, `0x51c7c0`, `0x51c854`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51f2d6` tests `+0x18`; `0x51f2fa` calls `0x51e780`; `0x51f313` stores 1 before the loops over
@@ -254,10 +253,10 @@ member once: with A requiring B and B requiring A, loading A loads B's files and
 
 Addresses: `0x51f600`, `0x51f61e`, `0x51f62b`, `0x4900a3`, `0x4900b2`, `0x51f313`, `0x51f2d6`, `0x51e812`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x51f600` walks the list from `0xbe1b6c` and calls `0x51f240` with `dl` 0 for each record whose
+`0x51f600` walks the list from its tail `0xbe1b6c` and calls `0x51f240` with `dl` 0 for each record whose
 `+0x2c` is 0 (`0x51f61e`, `0x51f62b`); its one caller is `0x4900a3`, before `0x4900b2`. In a cycle
 B's check of A passes at `0x51e812`, B's load of A returns at the loaded test `0x51f2d6`, and B's
 files then run before A's.
@@ -275,7 +274,7 @@ nodes, and the in-game `ResetDisabledAddOns` rereads the current character's. Th
 
 Addresses: `0x51ebe0`, `0x51ebf9`, `0x51ec1a`, `0x51ecde`, `0x51ed1c`, `0x51ed49`, `0x51ed6a`, `0x51ed72`, `0x51edd3`, `0x51ee69`, `0x51ef20`, `0x51ef5e`, `0x51ef8a`, `0x51efb6`, `0x51f044`, `0x853928`, `0x853948`, `0x85392c`, `0x853968`, `0x64af66`, `0x46d990`, `0x4723c0`, `0x4724d2`, `0x48e837`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51ebe0(character)` reloads every node for null (`0x51ec1a`), else finds or creates (`0x51ee69`)
@@ -300,7 +299,7 @@ and 0 for the current character, and `EnableAllAddOns` and `DisableAllAddOns` fo
 
 Addresses: `0x51e470`, `0x51e542`, `0x51e5ca`, `0x51e5dc`, `0x51e5f0`, `0x51e600`, `0x51e607`, `0x51e61c`, `0x51e623`, `0x51e64b`, `0x51ea20`, `0x51eb62`, `0x51ebb9`, `0x51ebbc`, `0x48e6fc`, `0x48e7cc`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 For a named character `0x51e542` skips other nodes and the walk ends after its node. A hit adds its
@@ -325,7 +324,7 @@ count.
 
 Addresses: `0x48e390`, `0x48e405`, `0x48e44b`, `0x48e46b`, `0x48e4a5`, `0x48e4e6`, `0x48e4fd`, `0x48e50c`, `0x48e980`, `0x48ea90`, `0x48eafe`, `0x48eb3a`, `0x48e840`, `0x48e865`, `0x48e89d`, `0x48e8c7`, `0x48e8e0`, `0x48e5e0`, `0x51e350`, `0x51e660`, `0x51e6f0`, `0x51e980`, `0x837d70`, `0x842ebc`, `0x85367c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `IsAddOnLoadOnDemand` (`0x48e840`) is the pattern: `lua_isnumber(1)`, `__ftol`, `dec`, `0x51df00`

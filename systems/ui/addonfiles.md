@@ -10,18 +10,18 @@ Roots: `0x51fb50`, `0x51f0b0`, `0x51f1a0`
 
 Addresses: `0x51fb50`, `0x51fbf0`, `0x42a820`, `0x42aa80`, `0x646fc0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The callback receives the folder name at `[ecx+8]` and a pointer to the note byte in `edx`, builds `Interface\AddOns\<name>\<name>.toc`, tests it with `OsFileExists`, formats `Interface\AddOns\<name>` and its `.old` twin, moves the first to the second and stores 1 in the note byte. It returns 0 so the walk continues.
 
 ## Character add-on state
 
-`0x51f0b0(name)` drops the nodes of the add-on state list at 0xbe1bd8. A node holds a character name at +8 and the enable table and lists of that character; with a name it removes the first node whose name matches without regard to case, with a null name every node. Removing frees the name, empties the node's tables and lists and frees the node. It is called by `LoadCharSelectRoster` and `ApplyCharacterRename`.
+`0x51f0b0(name)` drops the nodes of the add-on state list, whose header is at 0xbe1bd0, walking from its tail 0xbe1bd8 along the previous links. A node holds a character name at +8 and the enable table and lists of that character; with a name it removes the first node whose name matches without regard to case, with a null name every node. Removing frees the name, empties the node's tables and lists and frees the node. It is called by `LoadCharSelectRoster` and `ApplyCharacterRename`.
 
-Addresses: `0x51f0b0`, `0x4724d0`, `0x4725f0`
+Addresses: `0x51f0b0`, `0x4724d0`, `0x4725f0`, `0xbe1bd0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51f0e9` to `0x51f0fa` compare the names with `SStrCmpI`; a match, or a null name, reaches the frees at `0x51f0fe`. After a named match `0x51f15f` leaves the loop (`test edi,edi; jne`); a null name continues with the next node saved at `[ebp-4]`.
@@ -32,7 +32,7 @@ Test: none
 
 Addresses: `0x51f1a0`, `0x63df50`, `0x46d9e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51f1a6` tests `cl`; the two branches push the strings `1` and `0` before the call. The CVar record is the dword at 0x882630, the one `tables/cvars.tsv` lists for checkAddonVersion, whose default is 1.
@@ -43,7 +43,7 @@ Test: none
 
 Addresses: `0x51d7e0`, `0x51d800`, `0x648620`, `0x64ae50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The census finds no `call`, `jmp` or stored address that names `0x51d7e0`, and `0x51d800` is called only by it. A positive control: the same scan names `0x51f0b0` from its two callers.

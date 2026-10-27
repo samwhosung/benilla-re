@@ -19,13 +19,13 @@ revision.
 
 Addresses: `0x51e050`, `0x51e054`, `0x51e067`, `0x51e079`, `0x51e07e`, `0x51e0a2`, `0x51e0b0`, `0x51e0d0`, `0x51e0d5`, `0x51e0e7`, `0x51e0ff`, `0x51e13b`, `0x51e16c`, `0x51e180`, `0x51e1fc`, `0x51e203`, `0x51e208`, `0x51e20e`, `0x51e3e0`, `0x51e45c`, `0x51e468`, `0xbe1b7c`, `0xbe1b84`, `0x8537f4`, `0x64b3f0`, `0x64a4c0`, `0x51dac9`, `0x51db0d`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::addon_notes_lookup_difftest`, `ui::addon_url_lookup_difftest`, `ui::addon_update_flag_lookup_difftest`
 
 `0x51e054` tests the mask `0xbe1b84` for −1; `0x51e067` hashes the name, `0x51e079` masks it and
-`0x51e07e` reads the bucket's head at `+8` of its 12 bytes in `0xbe1b7c`; a tagged or null head ends
+`0x51e07e` reads the bucket's tail at `+8` of its 12-byte header in `0xbe1b7c`; a tagged or null tail ends
 the walk. `0x51e0a2` compares `[rec+0]` with the hash and `0x51e0b0` calls `SStrCmpI([rec+0x14],
-name, 0x7fffffff)`; a miss follows the link at the bucket's offset `+0` into the record
+name, 0x7fffffff)`; a miss steps to the previous member, `[link+4]`, the link lying at the bucket's link offset `+0` into the record
 (`0x51e0d0`). The metadata walk is the same over `+0xb4` with the mask `+0xbc` (`0x51e0d5`,
 `0x51e0ff`), the key `Notes` at `0x8537f4` (`0x51e0e7`, `0x51e13b`) and the value `+0x18`
 (`0x51e16c`). `0x51e1fc` loads `+0x30`, `0x51e203` tests its first byte, `0x51e208` compares `+0x24`

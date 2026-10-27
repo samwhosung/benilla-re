@@ -16,39 +16,38 @@ largest id (`+0xc`) and a loaded flag (`+0x10`). The id map holds `largest id + 
 of its record's first column; an unused id is null. A start-up constructor zeroes the store and sets the
 largest id to −1; users compare an id with `+0xc` and index `+8`.
 
-Addresses: `0xc0dce4`, `0x53aa40`, `0x53aa50`, `0x53aa80`, `0x53aa90`, `0x5f4035`
+Addresses: `0xc0dce4`, `0x53aa40`, `0x53aa50`, `0x53aa80`, `0x53aa90`, `0x5f4010`, `0x5f4031`, `0x5f4033`, `0x5f4035`, `0x5f4046`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x53aa40` is the static initializer thunk (`call 0x53aa50; jmp 0x53aa80`); `0x53aa50` writes `+0`, `+8`, `+4`, `+0x10` with 0 and `+0xc` with
 −1 (`0x53aa52` to `0x53aa6b`); `0x53aa80` registers the exit function `0x53aa90` with `atexit`, which runs only when the loaded flag is set, calls
 each record's destructor (`0x579da0`), frees the record block (tag `..\..\DB/WowClientDB.h`, line `0x8e`) and
-the id map. Its user `0x5f4035` tests the id against the store's `+0xc` (`cmp eax,…; jg`) and indexes `+8`. Census over the 149 stores:
-144 have a `-1` store at `+0xc` in a 33-byte constructor with one thunk caller and an exit function; the five `Light*`
-stores are not matched by it.
+the id map. One user, `0x5f4010`, refuses an id below 0 (`test; jl`, `0x5f4031`, `0x5f4033`) or above the store's `+0xc` (`cmp eax,…; jg`, `0x5f4035`, signed), indexes `+8` and refuses a null entry (`0x5f4046`, `0x5f4048`). Census over the 149 stores:
+each has one `-1` store at `+0xc`, in a 33-byte constructor with one `e8` caller, a thunk that jumps to a registration of an exit function, and the thunk named by one dword. No store is an exception, the five `Light*` ones included.
 
 ## The loader
 
-`WowClientDB<T>::Load(store)` does nothing when the loaded flag is set. It opens the table's file (a failed open is the fatal
-error `0x85100079`), reads the magic and returns, leaving the store unloaded, unless it is `WDBC` (`0x43424457`); reads the record
-count into `+4` and returns on 0; reads the field count and record size and fails fatally on a mismatch with the
-type's; allocates the records and string block as one block; reads each record with the type's `Read`, ignoring its
-result, and keeps the largest first column in `+0xc`; reads the string block; closes the file; allocates and zeroes the
-id map and stores each record's address at its first column; sets the loaded flag.
+`WowClientDB<T>::Load(store)` does nothing when the loaded flag is set. It opens the table's file, reads the magic and returns, closing the file and leaving the store unloaded, unless it is `WDBC` (`0x43424457`); reads the record count into `+4` and returns on 0; reads the field count and record size and compares them with the type's; allocates the records and string block as one block; reads each record with the type's `Read`, ignoring its result, and keeps the largest first column in `+0xc`; reads the string block; closes the file; allocates and zeroes the id map and stores each record's address at its first column; sets the loaded flag.
 
-Addresses: `0x554b00`, `0x545d50`, `0x579db0`, `0x648460`, `0x6477a0`, `0x648730`, `0x64cf80`, `0x64d0e0`, `0x85580c`, `0x82e490`, `0x82e460`, `0x82e440`, `0x5408d0`, `0x540b00`, `0x540d40`, `0x540f70`, `0x5411b0`, `0x5413f0`, `0x541620`, `0x541840`, `0x541a70`, `0x541cc0`, `0x541ef0`, `0x542120`, `0x542360`, `0x5425a0`, `0x5427e0`, `0x542a20`, `0x542c50`, `0x542e90`, `0x5430d0`, `0x543300`, `0x543540`, `0x543780`, `0x5439b0`, `0x543bf0`, `0x543e20`, `0x544060`, `0x544290`, `0x5444d0`, `0x544700`, `0x544930`, `0x544b70`, `0x544da0`, `0x544fe0`, `0x545220`, `0x545470`, `0x5456b0`, `0x5458e0`, `0x545b10`, `0x545f90`, `0x5461c0`, `0x5463f0`, `0x546620`, `0x546860`, `0x546a90`, `0x546cc0`, `0x546f00`, `0x547130`, `0x547360`, `0x547590`, `0x5477d0`, `0x547a00`, `0x547c30`, `0x547e70`, `0x5480c0`, `0x548300`, `0x548530`, `0x548760`, `0x548990`, `0x548bc0`, `0x548df0`, `0x549030`, `0x549280`, `0x5494d0`, `0x549700`, `0x549940`, `0x549b70`, `0x549db0`, `0x549fe0`, `0x54a220`, `0x54a470`, `0x54a6b0`, `0x54a8e0`, `0x54ab30`, `0x54ad60`, `0x54afa0`, `0x54b1d0`, `0x54b400`, `0x54b640`, `0x54b870`, `0x54bab0`, `0x54bce0`, `0x54bf20`, `0x54c150`, `0x54c380`, `0x54c5c0`, `0x54c7f0`, `0x54ca30`, `0x54cc60`, `0x54cea0`, `0x54d0e0`, `0x54d320`, `0x54d560`, `0x54d7b0`, `0x54d9e0`, `0x54dc20`, `0x54de60`, `0x54e0a0`, `0x54e2e0`, `0x54e510`, `0x54e750`, `0x54e980`, `0x54ebc0`, `0x54ee00`, `0x54f040`, `0x54f280`, `0x54f4b0`, `0x54f6e0`, `0x54f920`, `0x54fb50`, `0x54fd90`, `0x54ffd0`, `0x550220`, `0x550460`, `0x550690`, `0x5508e0`, `0x550b20`, `0x550d50`, `0x550f90`, `0x5511c0`, `0x551400`, `0x551640`, `0x551880`, `0x551ab0`, `0x551cf0`, `0x551f20`, `0x552150`, `0x552390`, `0x5525c0`, `0x552800`, `0x552a30`, `0x552c70`, `0x552eb0`, `0x5530f0`, `0x553330`, `0x553570`, `0x5537b0`, `0x5539f0`, `0x553c40`, `0x553e70`, `0x5540a0`, `0x5542d0`, `0x554500`, `0x554740`
+Addresses: `0x554b00`, `0x404780`, `0x545d50`, `0x579db0`, `0x648460`, `0x6477a0`, `0x648730`, `0x85580c`, `0x5408d0`, `0x540b00`, `0x540d40`, `0x540f70`, `0x5411b0`, `0x5413f0`, `0x541620`, `0x541840`, `0x541a70`, `0x541cc0`, `0x541ef0`, `0x542120`, `0x542360`, `0x5425a0`, `0x5427e0`, `0x542a20`, `0x542c50`, `0x542e90`, `0x5430d0`, `0x543300`, `0x543540`, `0x543780`, `0x5439b0`, `0x543bf0`, `0x543e20`, `0x544060`, `0x544290`, `0x5444d0`, `0x544700`, `0x544930`, `0x544b70`, `0x544da0`, `0x544fe0`, `0x545220`, `0x545470`, `0x5456b0`, `0x5458e0`, `0x545b10`, `0x545f90`, `0x5461c0`, `0x5463f0`, `0x546620`, `0x546860`, `0x546a90`, `0x546cc0`, `0x546f00`, `0x547130`, `0x547360`, `0x547590`, `0x5477d0`, `0x547a00`, `0x547c30`, `0x547e70`, `0x5480c0`, `0x548300`, `0x548530`, `0x548760`, `0x548990`, `0x548bc0`, `0x548df0`, `0x549030`, `0x549280`, `0x5494d0`, `0x549700`, `0x549940`, `0x549b70`, `0x549db0`, `0x549fe0`, `0x54a220`, `0x54a470`, `0x54a6b0`, `0x54a8e0`, `0x54ab30`, `0x54ad60`, `0x54afa0`, `0x54b1d0`, `0x54b400`, `0x54b640`, `0x54b870`, `0x54bab0`, `0x54bce0`, `0x54bf20`, `0x54c150`, `0x54c380`, `0x54c5c0`, `0x54c7f0`, `0x54ca30`, `0x54cc60`, `0x54cea0`, `0x54d0e0`, `0x54d320`, `0x54d560`, `0x54d7b0`, `0x54d9e0`, `0x54dc20`, `0x54de60`, `0x54e0a0`, `0x54e2e0`, `0x54e510`, `0x54e750`, `0x54e980`, `0x54ebc0`, `0x54ee00`, `0x54f040`, `0x54f280`, `0x54f4b0`, `0x54f6e0`, `0x54f920`, `0x54fb50`, `0x54fd90`, `0x54ffd0`, `0x550220`, `0x550460`, `0x550690`, `0x5508e0`, `0x550b20`, `0x550d50`, `0x550f90`, `0x5511c0`, `0x551400`, `0x551640`, `0x551880`, `0x551ab0`, `0x551cf0`, `0x551f20`, `0x552150`, `0x552390`, `0x5525c0`, `0x552800`, `0x552a30`, `0x552c70`, `0x552eb0`, `0x5530f0`, `0x553330`, `0x553570`, `0x5537b0`, `0x5539f0`, `0x553c40`, `0x553e70`, `0x5540a0`, `0x5542d0`, `0x554500`, `0x554740`
+Confidence: verified
+Proof: two
+Test: none
+
+`GameObjectDisplayInfo`'s `0x545d50`: the guard `0x545d5a`; open `0x545d6f`; magic `0x545da5`; count `0x545dd2`; the 12-field test `0x545dfe` and 48-byte test `0x545e36`; the allocation, `count·0x30 + string size`, tag `0x85580c` line `0x4c` (`0x545e76`); `Read` at `0x545eb9`, the maximum `0x545ec3` to `0x545ed4`; the string read `0x545ef6`; the id map `0x545f2f` (line `0x61`) and its fill `0x545f60` to `0x545f69`; the flag `0x545f7c`. The five inline loads in `0x53f8b0` read the record count through `0x554b00`, a four-byte `SFile::Read` into the store's `+4` (calls `0x53f91a`, `0x53fb2c`, `0x53fd43`, `0x53ff54`, `0x54016c`), and the magic, field count, record size and string size through `0x404780`, which has the same bytes (20 calls, `0x53f8f9` to `0x5401ea`). Census over the 144 out-of-line loaders (the addresses above): each has the `WDBC` compare, the call to `SFile::Open`, the allocations of lines `0x4c` and `0x61`, the loaded-flag store and one `[reg+reg·4]` store of the record pointer, and the field count and record size it compares are the ones in `tables/dbc_schemas.tsv` for its table.
+
+## Loader errors
+
+A table that cannot be loaded ends the client. A failed open, a field count that differs from the type's and a record size that differs each call `0x64cf80` with the code `0x85100079`, the file name and a message; a string block that cannot be read calls `0x64d0e0`, whose code is `0x85100086`. Both reach `0x64cfa0`, which reports the error and ends the process with `ExitProcess`. The messages are `Unable to open %s`, `%s has wrong number of columns (found %i, expected %i)`, `%s has wrong row size (found %i, expected %i)` and `%s: Cannot read string table`. A magic other than `WDBC` and a record count of 0 return with no message.
+
+Addresses: `0x545d50`, `0x53f8b0`, `0x64cf80`, `0x64d0e0`, `0x64cfa0`, `0x64cc80`, `0x82e4c8`, `0x82e490`, `0x82e460`, `0x82e440`
 Confidence: verified
 Proof: one
 Test: none
 
-`GameObjectDisplayInfo`'s `0x545d50`: the guard `0x545d5a`; open `0x545d6f`; magic `0x545da5`; count `0x545dd2`; the
-12-field test `0x545dfe` and 48-byte test `0x545e36` (formats `0x82e490`, `0x82e460`); the allocation, `count·0x30 + string size`,
-tag `0x85580c` line `0x4c` (`0x545e76`); `Read` at `0x545eb9`, the maximum `0x545ec3` to `0x545ed4`; the string read `0x545ef6`, with
-`0x82e440` and `0x64d0e0` on failure; the id map `0x545f2f` (line `0x61`) and its fill `0x545f60` to `0x545f69`; the flag `0x545f7c`. The inline loads of five tables in `0x53f8b0` read their header dwords through `0x554b00`, a four-byte `SFile::Read` (calls `0x53f91a`, `0x53fb2c`, `0x53fd43`, `0x53ff54`, `0x54016c`).
-Census over the 144 out-of-line loaders (the addresses above): each has the `WDBC` compare, the call to `SFile::Open`, the allocations of lines `0x4c` and `0x61`, the loaded-flag store
-and one `[reg+reg·4]` store of the record pointer, and the field count and record size it compares are the ones in `tables/dbc_schemas.tsv` for its table. The fatal messages are `%s has wrong number of
-columns (found %i, expected %i)`, `%s has wrong row size (found %i, expected %i)` (`0x82e490`, `0x82e460`) and `%s: Cannot read string table` (`0x82e440`).
+`0x545d78` to `0x545d88` push the open message and call `0x64cf80`; the column test `0x545dfe` and the row-size test `0x545e36` push `0x82e490` and `0x82e460` (`0x545e16`, `0x545e4e`); the string read `0x545ef6` calls `0x64d0e0` with `0x82e440` (`0x545f0a`). `0x64cf80` passes its arguments to `0x64cfa0` (`0x64cf8d`), as `0x64d0e0` does with `0x85100086` (`0x64d0ea`, `0x64d0ef`). `0x64cfa0` calls `0x64d080` to report (`0x64cffe`) and `0x64cc80` (`0x64d008`), which calls `ExitProcess` (`0x64cc87`). `0x53f8b0` makes the same four calls for each of its five tables: 20 calls, `0x53f8eb` to `0x540299`.
 
 ## Load order
 
@@ -59,13 +58,13 @@ start-up routine `0x402350`; `VideoHardware` through `0x63a230`; and 149 by `Sta
 with no branch. `ClientDBInitialize` then runs four fix-ups, `0x53f510`, `0x53f5c0`, `0x53f640` and `0x588bf0`, and jumps to
 `0x6d6160` with `cl = 1`. No other code calls a loader.
 
-Addresses: `0x402350`, `0x53f4f0`, `0x53f8b0`, `0x63a230`, `0x63a26b`, `0x641260`, `0x53f510`, `0x53f5c0`, `0x53f640`, `0x588bf0`, `0x6d6160`
+Addresses: `0x402350`, `0x53f4f0`, `0x53f8b0`, `0x53fac0`, `0x540321`, `0x540326`, `0x5408b7`, `0x5408bc`, `0x63a230`, `0x63a26b`, `0x641260`, `0x53f510`, `0x53f5c0`, `0x53f640`, `0x588bf0`, `0x6d6160`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x53f4f0` is seven instructions (`0x53f4f0` to `0x53f50b`). In `0x53f8b0` the 144 calls (`0x53fac0` on) all
-target `0x5408d0` to `0x554740`; the last pair is `0x5408b7`, `0x5408bc`. Census: the 145 loader addresses (the 144 and `0x53f8b0`) are each the
+`0x53f4f0` is seven instructions (`0x53f4f0` to `0x53f50b`). In `0x53f8b0` the 144 `mov ecx; call` pairs (`0x540321`, `0x540326` on) all
+target `0x5408d0` to `0x554740`; the last pair is `0x5408b7`, `0x5408bc`. `0x53fac0` is the loaded-flag store of the first inline table, `AnimationData`. Census: the 145 loader addresses (the 144 and `0x53f8b0`) are each the
 target of exactly one `e8` or `e9` (the 144 from inside `0x53f8b0`, `0x53f8b0` from `0x53f4f0`), and none occurs as a
 dword in the image. The one caller of `0x641260` is `0x63a26b`.
 
@@ -79,7 +78,7 @@ stays −1.
 
 Addresses: `0x53f510`, `0x53f51b`, `0x53f52c`, `0x53f537`, `0x53f552`, `0x53f56c`, `0x53f598`, `0x53f59e`, `0x53f5a9`, `0x53f4f5`, `0xc0d530`, `0x855808`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x53f51b` stores −1 in `0x855808` first. The count is compared with 7, `0x53f52c` calls `ConsolePrintf`
@@ -93,37 +92,36 @@ one caller is `ClientDBInitialize` (`0x53f4f5`).
 
 Each table's record type has an object file of ten functions, in this order: a file-name getter (`mov eax,<string>; ret`),
 a constructor that returns its record (`mov eax,ecx; ret`), a destructor (`ret`), `Read`, and the three
-header initializers (+∞, 2π, 1/2π), each a `jmp` thunk and a body. Each `Read` is the only code that names its
+header initializers (2π, 1/2π, +∞), each a `jmp` thunk and a body. Each `Read` is the only code that names its
 `Error reading <Type>Rec` string, and the file name in the getter is the type's.
 
 Addresses: `0x579d80`, `0x579d90`, `0x579da0`, `0x579db0`, `0x579e60`, `0x579e70`, `0x579e80`, `0x579e90`, `0x579eb0`, `0x579ec0`, `0x4567f0`, `0x456820`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The example is `GameObjectDisplayInfo` (`0x579d80` returns `0x858b00`). `0x579e70` stores π + π in `0xc0e5b4`, `0x579e90` stores
-1 divided by it in `0xc0e5b0` and `0x579ec0` copies +∞ to `0xc0e5b8`. Census over the 1,514 functions from `0x573000` to `0x58a000`: 149
-getters, 149 constructors, 150 destructors, 149 each of the two arithmetic initializers and 150 of the +∞ copy, 454 thunks; 151 `Error reading` strings
+1 divided by it in `0xc0e5b0` and `0x579ec0` copies +∞ to `0xc0e5b8`. Census over the 1,572 functions from `0x573040` to `0x58a000` (the range starts inside a function): 149
+getters, 149 constructors, 150 destructors, 149 each of the two arithmetic initializers and 150 of the +∞ copy, 455 thunks; 151 `Error reading` strings
 (`Startup_Strings` and `VideoHardware` included), each referenced by exactly one function, and each getter's table the one its
-`Read` names. The control is the 149 groups of getter file name against `Read` error string: no mismatch. Three tables have extra functions: `AnimationData`, `ZoneMusic`
-and `LightSkybox`.
+`Read` names. The control is the 149 groups of getter file name against `Read` error string: no mismatch. Extra functions: `AnimationData` starts with a +∞ copy of its own (`0x573a20`, `0x573a30`) and `ZoneMusic` has the 150th `ret` (`0x588d00`). From `0x5894c0` the range is `gx` code, with the seven thunks that initialize no header constant (`0x5894c0`, `0x589580`, `0x589660`, `0x589780`, `0x5899b0`, `0x5899c0`, `0x5899f0`).
 
 ## Record reads
 
 A `Read(this = record, file, stringBase)` calls `SFile::Read` (`0x648460`) once for each column, in order, into the
 record or a stack temporary, with the column's size in bytes; a read that returns 0 logs `Error reading <Type>Rec` and
-makes `Read` return false. Columns that are string offsets go to temporaries and, on success, are stored as `stringBase + offset`,
+makes `Read` return false; a short read of a plain file still returns 1. Columns that are string offsets go to temporaries and, on success, are stored as `stringBase + offset`,
 or the address of an empty string (`0x882748`) when `stringBase` is null. A record's size is the sum of the sizes, its
 field count the number of dwords, a byte counting one; `tables/dbc_schemas.tsv` holds both and the string columns.
 
-Addresses: `0x579db0`, `0x648460`, `0x574070`, `0x882748`, `0x63cb50`, `0x6485d8`, `0x53fd6d`, `0x53fd9b`
+Addresses: `0x579db0`, `0x648460`, `0x64846c`, `0x64849b`, `0x6484f3`, `0x574070`, `0x882748`, `0x63cb50`, `0x6485d8`, `0x53fd6d`, `0x53fd9b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `AreaTable`'s `Read` (`0x574070`) makes 21 four-byte reads and one of 16 bytes, 25 fields of 100 bytes, which its inline load checks (`0x53fd6d`,
 `0x53fd9b`). `GameObjectDisplayInfo`'s `0x579db0` reads an id (4 bytes), a name offset (4) and `Sound[10]` (40) into `+0`, a temporary
-and `+8`, and stores `stringBase + offset` at `+4` (`0x579e2e` to `0x579e34`). `SFile::Read` is not a column reader: it tests the
+and `+8`, and stores `stringBase + offset` at `+4` (`0x579e2e` to `0x579e34`). `SFile::Read` answers 1 at once for a size of 0 (`0x64846c`) and hands an overlapped request to `0x647610` (`0x64849b`); for kind 0 it answers `setg` of the byte count (`0x6484f3`), so only 0 bytes fail. It is not a column reader: it tests the
 file's kind at `[file+0]` and jumps through `0x6485d8` (`0x6484b9`): kind 0 `_fread`, 1 `0x6476e0`, 2 and 3 the archive read
 `0x656b40`, 4 the zip read `0x668750`.
 
@@ -146,7 +144,7 @@ string column when `stringBase` is null.
 
 Addresses: `0x5753b0`, `0x575476`, `0x575540`, `0x575687`, `0x5756a5`, `0x5756ca`, `0x575a80`, `0x575b67`, `0x587450`, `0x5874f5`, `0x589030`, `0x589159`, `0x583750`, `0x58497a`, `0x584998`, `0x584b69`, `0x648460`, `0x63cb50`, `0x882748`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `dbc::char_hair_geosets_read_difftest`, `dbc::char_sections_read_difftest`, `dbc::character_facial_hair_styles_read_difftest`, `dbc::spell_read_difftest`, `dbc::weapon_impact_sounds_read_difftest`, `dbc::light_params_read_difftest`
 
 Each read's result goes to a register or a stack slot; after the last call `neg; sbb; inc` and
@@ -187,23 +185,23 @@ ignoring case. Each line appends its value's pieces to its key: a `,` ends a pie
 empty middle one; a piece opening with `"` runs to the next `"`, a `,` right after it skipped, and any
 other text there starts the next piece. An empty value appends nothing.
 
-Addresses: `0x4442c0`, `0x444460`, `0x444480`, `0x444507`, `0x44451f`, `0x444540`, `0x4445f0`, `0x44463c`, `0x444661`, `0x444671`, `0x44469b`, `0x4446c8`, `0x4446e5`, `0x444710`, `0x44471e`, `0x444732`, `0x444750`, `0x444769`, `0x44476d`, `0x444779`, `0x444790`, `0x4448d9`, `0x44488e`, `0x444e10`, `0x402496`
+Addresses: `0x4442c0`, `0x444460`, `0x444480`, `0x4444b8`, `0x4444d0`, `0x444507`, `0x44451f`, `0x444540`, `0x4445f0`, `0x44463c`, `0x444661`, `0x444671`, `0x44469b`, `0x4446c8`, `0x4446e5`, `0x444710`, `0x44471e`, `0x444732`, `0x444750`, `0x444769`, `0x44476d`, `0x444779`, `0x444790`, `0x4448d9`, `0x44488e`, `0x444e10`, `0x402496`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x444460` refuses a null name (error 0x57) and jumps to `0x444480`, which copies the name into 260
-bytes, cuts trailing `__ismbcspace` characters with no lower bound (spaces alone walk below the buffer),
-loads the file with `SFile::LoadByName` (`0x444507`), parses it (`0x44451f`) and frees the buffer, or
-returns 0. `0x444540` walks its NUL-terminated copy (`0x4446c8`) through six states: line start
-(`0x4445f0`: CR or LF stays, `//` by a two-byte `SStrCmp`, `[`, else a key), comment and after `]`
+`0x444460` refuses a null name (error 0x57), else `0x444480` copies the name into 260
+bytes, cuts trailing `__ismbcspace` characters with no lower bound (`0x4444b8` guards only the first, the loop `0x4444d0` not: spaces alone walk below it),
+loads the file with `SFile::LoadByName` (`0x444507`), parses it (`0x44451f`), frees the buffer, or
+returns 0. `0x444540` walks the copy (`0x4446c8`) through six states: line start
+(`0x4445f0`: CR or LF stays, `//` by `SStrCmp`, `[`, else a key), comment and after `]`
 (`0x444661`), section (`0x44463c`: a line end restores the last closed section, `]` closes it), key
 (`0x444671`: a line end drops it, `=` ends it) and value (`0x44469b`: a line end hands it to
 `0x444710`). A state takes effect from the next character, so a key's first character is never its `=`.
-`0x4446e5` hands over a value open at the end. `0x444710` returns for a null section (`0x44471e`) or an
+`0x4446e5` hands over an open value at the end. `0x444710` returns for a null section (`0x44471e`) or an
 empty value (`0x444732`), else calls `0x444790(section, key, piece, 0, 1)` per piece (`0x444779`); a `,`
 ends a piece (`0x444750`, `0x44476d`), and after a closing quote the next starts at once (`0x444769`).
-The 0 skips the clearing at `0x4448d9`. `0x444790` finds a section by `SStrHashHT` and `0x444e10`, a key
+The 0 skips the clearing (`0x4448d9`). `0x444790` finds a section by `SStrHashHT` and `0x444e10`, a key
 by `SStrCmpI` (`0x44488e`), creating either.
 
 ## Wow.ini values
@@ -218,7 +216,7 @@ or the key, and `0x6c91a0` copies it to `0x86c9e0`, the name charsets' region.
 
 Addresses: `0x4452c0`, `0x4452d6`, `0x4452f0`, `0x4452f8`, `0x445356`, `0x4453cb`, `0x445410`, `0x44542c`, `0x445470`, `0x445480`, `0x445497`, `0x44549c`, `0x4455d0`, `0x4455ec`, `0x445612`, `0x4024a4`, `0x4024bd`, `0x40256a`, `0x445900`, `0x882730`, `0x402b79`, `0x6c91a0`, `0x6c91b8`, `0x86c9e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `dbc::wow_ini_value_int_difftest`
 
 `0x4452c0` compares the index with the count `+0x1c` of the key (`jae` at `0x4452d6`) and reads the
@@ -244,7 +242,7 @@ Without the file or either key neither word is written.
 
 Addresses: `0x574070`, `0x57435c`, `0x8558a4`, `0xc0e080`, `0xc2a2a4`, `0x402496`, `0x4024a4`, `0x4024d6`, `0x4024f7`, `0x402513`, `0x402528`, `0x402537`, `0x402540`, `0x402551`, `0x402562`, `0x444460`, `0x4455d0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `AreaTable`'s `Read` reads eight offsets into temporaries (`0x5741ec` and before) and the flags into `+0x4c` (`0x574211`), then `0x57436d`
@@ -264,7 +262,7 @@ the title is `World of Warcraft`.
 
 Addresses: `0x402350`, `0x4567f0`, `0x456820`, `0x8824fc`, `0x882500`, `0x88250c`, `0x63a230`, `0x82e42c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x402580` to `0x402797` is the load, into the store at `0x8824fc`: record reads through `0x456820` with a constructor call `0x456800`, the

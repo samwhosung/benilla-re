@@ -22,7 +22,7 @@ read as a single-precision float; other lines are ignored. `VARIABLES_LOADED` fo
 
 Addresses: `0x51f491`, `0x51f4a2`, `0x51f4b5`, `0x51f4df`, `0x51f518`, `0x51f53b`, `0x8539d4`, `0x8539a8`, `0x853980`, `0x4913b0`, `0x4913c4`, `0x4913e6`, `0x49144a`, `0x4914bf`, `0x4914ef`, `0x491534`, `0x491541`, `0x49156a`, `0x491580`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x51f491` formats `0x8539d4`, `0x51f4a2` tests existence and `0x51f4b5` runs it with no MD5 and no
@@ -37,21 +37,21 @@ signals 0x1ae on every path.
 
 The saved-variables files are written only in the interface's shutdown, after
 `PLAYER_LEAVING_WORLD` and `PLAYER_LOGOUT`: the flat file, then each loaded add-on's files.
-`AddOns.txt` follows them there, and the glue's `SaveAddOns` writes it too. For each loaded
+`AddOns.txt` follows them there; the glue's `SaveAddOns` writes it too. For each loaded
 add-on its account file and character file are rewritten from its declared names, an existing file
-first renamed to `.bak`, each name read from the globals with the context word 0; with no names the
-file is deleted. The realm-less character file is deleted. A written add-on is then marked not
+first renamed to `.bak` (`MoveFileW`, which fails when a `.bak` exists; nothing deletes it, so the file is then overwritten in place), each name read from the globals with the context word 0; with no names the
+file is deleted. The realm-less character file is deleted. A written add-on is marked not
 loaded. The flat file holds the names `RegisterForSave` collected, which raises unless called with
 context 0.
 
-Addresses: `0x490bd0`, `0x490c20`, `0x490c2a`, `0x490c7e`, `0x490c83`, `0x490c88`, `0x51f650`, `0x51f711`, `0x51f74b`, `0x51f794`, `0x51f7c5`, `0x51f7e1`, `0x51f7fc`, `0x51f859`, `0x51f8eb`, `0x51f937`, `0x51f94f`, `0x51f9ac`, `0x51f9f7`, `0x51fa03`, `0x491730`, `0x4917a1`, `0x491812`, `0x4884e0`, `0x48851c`, `0x4915d0`, `0x8421a8`
+Addresses: `0x42a820`, `0x490bd0`, `0x490c20`, `0x490c2a`, `0x490c7e`, `0x490c83`, `0x490c88`, `0x51f650`, `0x51f711`, `0x51f74b`, `0x51f794`, `0x51f7c5`, `0x51f7e1`, `0x51f7fc`, `0x51f859`, `0x51f8eb`, `0x51f937`, `0x51f94f`, `0x51f9ac`, `0x51f9f7`, `0x51fa03`, `0x491730`, `0x4917a1`, `0x491812`, `0x4884e0`, `0x48851c`, `0x4915d0`, `0x8421a8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x490bd0` calls `0x490a80` (`0x490c20`), signals `PLAYER_LOGOUT` (`0x490c2a`), then `0x491730`
 (`0x490c7e`), `0x51f650` (`0x490c83`) and `0x51ef20` (`0x490c88`). `0x51f650` skips records
-with `+0x18` 0 (`0x51f711`); a nonzero `+0x6c` (`0x51f74b`) renames (`0x51f794`), creates
+with `+0x18` 0 (`0x51f711`); a nonzero `+0x6c` (`0x51f74b`) renames (`0x51f794`: `OsMoveFile` `0x42a820` calls `MoveFileW`, bound on first use, with no delete before it and its result unread), creates (disposition 2, `CREATE_ALWAYS`)
 (`0x51f7c5`), stores context 0 (`0x51f7e1`) and serializes each name (`0x51f7fc`); zero deletes
 (`0x51f859`). The character file repeats this with `+0x7c` (`0x51f8eb` to `0x51f9ac`); `0x51f9f7`
 deletes the realm-less file and `0x51fa03` clears `+0x18`. `0x491730` renames (`0x4917a1`) and
@@ -68,7 +68,7 @@ Functions, userdata and threads are written as `nil` with a comment.
 
 Addresses: `0x7043f0`, `0x704422`, `0x704448`, `0x704455`, `0x872ce0`, `0xceeb60`, `0x51f80d`, `0x491846`, `0x51f960`, `0x704480`, `0x704a40`, `0x7044e9`, `0x704507`, `0x40a1b8`, `0x40a1a4`, `0x872e40`, `0x872e30`, `0x704560`, `0x70457f`, `0x704a5c`, `0x704a6c`, `0x70459e`, `0x7049a9`, `0x7049f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7043f0` writes `0x82edfc` (2 bytes), the name and `0x872ce0`, then calls `0x704480` at depth 1,
@@ -118,14 +118,14 @@ A table is written as `{` and CR LF, each entry one tab deeper as `[key] = value
 twice. A frame's table is its name, unquoted. Entries keyed by NaN, an infinity, a table, a
 function or userdata are skipped with a comment.
 
-Addresses: `0x704607`, `0x704613`, `0x704642`, `0x704670`, `0x7046bc`, `0x7046e7`, `0x704727`, `0x704744`, `0x704766`, `0x70488f`, `0x7048a3`, `0x704928`, `0x70497b`, `0x8722d4`
+Addresses: `0x704607`, `0x6f3740`, `0x70471c`, `0x704613`, `0x704642`, `0x704670`, `0x7046bc`, `0x7046e7`, `0x704727`, `0x704744`, `0x704766`, `0x70488f`, `0x7048a3`, `0x704928`, `0x70497b`, `0x8722d4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-A table first reads element 0 as a light userdata and writes `GetName` (`0x704613`, `0x704642`).
+A table first reads element 0 as a userdata, light or full (`0x6f3740` answers types 2 and 7), and writes `GetName` (`0x704613`, `0x704642`).
 Otherwise the light userdata whose reference is `0x8722d4` marks it as a key (`0x704670`,
 `0x7046bc`) until `0x70497b` removes the mark on the way out. `0x7046e7` writes the brace; the
-indent grows by a tab per depth up to 128 (`0x704727`); `lua_next` walks the entries (`0x704744`).
+indent grows by a tab per depth up to 127 tabs, depth 128 and deeper keeping 127 (`0x70471c`, `0x704727`); `lua_next` walks the entries (`0x704744`).
 Keys dispatch at `0x704766`, a light userdata equal to the mark being dropped (`0x70488f`) and
 others reaching the skip comment (`0x7048a3`); `0x704928` writes the closing brace.
