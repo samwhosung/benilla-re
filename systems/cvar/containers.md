@@ -16,9 +16,9 @@ set at the end; both are 0 while unlinked. A list is a link offset (an object's 
 link: its `+0` is the last link, its `+4` the first object, and an empty list points at itself. `LinkNode(node, mode, dest)` unlinks the node and
 links it after `dest`'s link (the terminator when 0) for mode 1, else before it: with `dest` 0, mode 1 makes the node first and mode 2 last.
 
-Addresses: `0x63e520`, `0x63e6d0`, `0x63e6f0`, `0x63ed80`, `0x63e9c0`, `0x63ec30`, `0x63e543`, `0x63e54a`, `0x63e538`, `0x63e540`, `0x63e74b`, `0x63e74f`, `0x63e767`, `0x6404a0`, `0x6406a0`, `0x6406c0`, `0x640670`, `0x640970`, `0x6409f0`, `0x63cfb0`, `0x63cf80`
+Addresses: `0x63e520`, `0x63e6d0`, `0x63e6f0`, `0x63ed80`, `0x63e9c0`, `0x63ec30`, `0x63e9d7`, `0x63e543`, `0x63e54a`, `0x63e538`, `0x63e540`, `0x63e74b`, `0x63e74f`, `0x63e767`, `0x6404a0`, `0x6406a0`, `0x6406c0`, `0x640670`, `0x640970`, `0x6409f0`, `0x63cfb0`, `0x63cf80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Unlinking points the next link back at the previous one, makes the previous link's next the removed link's next, and zeroes the link. `0x63e520` takes the next link: for an end mark (bit 0 set, or 0) it is the terminator, otherwise the next object plus
@@ -27,7 +27,7 @@ the offset, found as this link minus the previous link's next field (`0x63e538` 
 for node 0. `0x63e6f0` decrements the mode at `0x63e74e`: 1 takes the branch at `0x63e767`, which links after `dest`;
 the other path stores the link after `dest`'s previous link. `0x63ed80` returns the slot that holds the next link's back
 pointer, or the terminator's for an end mark; with offset −1 it resolves the offset from the link itself.
-`0x63e9c0` makes an empty list and `0x63ec30` re-initialises a terminator. The command registry's twins
+`0x63e9c0` makes an empty list, storing 0 in the offset dword (`0x63e9d7`), and `0x63ec30` re-initialises a terminator. The command registry's twins
 and the console's `0x63cfb0` and `0x63cf80` are the same code.
 
 ## Hash table object
@@ -41,7 +41,7 @@ lookup walks the bucket from its first object and accepts the first whose stored
 
 Addresses: `0x63d020`, `0x63d0be`, `0x63d0d2`, `0x63de79`, `0x63de87`, `0x64b3f0`, `0xc4ed94`, `0xc4ed98`, `0xc4ed9c`, `0xc4eda0`, `0xc4eda4`, `0xc4eda8`, `0xc4edac`, `0xc4edb0`, `0xc4edb4`, `0xc4edb8`, `0x80e1dc`, `0x80e268`, `0x865124`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The CVar table is at `0xc4ed94` (vtable `0x80e1dc`), the command table at `0xc4f848` (vtable `0x80e268`). `0x63d020` builds the empty CVar table: the terminator `0xc4ed9c` points at itself, `0xc4eda0` holds its address with bit 0 set,
@@ -55,21 +55,21 @@ lookup (`0x63de30`) hashes with `0x64b3f0`, reads the first object of the bucket
 
 The first insertion makes four buckets with mask 3. Before each later insertion the table calls
 `0x63e9f0` with the bucket index; it returns 1 when it grew. The call lowers the chain counter by 3 (to 0 if it is below 4),
-adds 1 for each object it walks in that bucket, and grows when the counter passes 13, unless the mask is already `0x1fff`. Growth
+adds 1 for each object it walks in that bucket, and grows when an increment takes it past 13 (an empty bucket never grows), unless the mask is already `0x1fff`. Growth
 unlinks every object into a temporary list in bucket order, resizes the vector to twice the buckets, empties all of
 them with link offset 4, sets the mask to the new count minus one, and links each object at the end of
 its new bucket.
 
-Addresses: `0x63e7b0`, `0x63e9f0`, `0x63ea0a`, `0x63ea0f`, `0x63e7bb`, `0x63e85e`, `0x63ea40`, `0x63ea6b`, `0x63ea57`, `0x63ea74`, `0x63eb65`, `0x63eb90`, `0x63ec40`, `0x63ebe0`, `0x63ee10`, `0x63edb0`, `0x63edf0`, `0x63dcb4`, `0x640780`, `0x640a00`, `0x640b40`, `0x6409a0`
+Addresses: `0x63e7b0`, `0x63e9f0`, `0x63ea0a`, `0x63ea0f`, `0x63e7bb`, `0x63e85e`, `0x63ea40`, `0x63ea6b`, `0x63ea57`, `0x63ea74`, `0x63eb65`, `0x63eb90`, `0x63ec40`, `0x63ec8a`, `0x63ebe0`, `0x63ee10`, `0x63edb0`, `0x63edd9`, `0x63edf0`, `0x63dcb4`, `0x640780`, `0x640a00`, `0x640b40`, `0x6409a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63e7b0` stores mask 3 (`0x63e7bb`), sizes the vector with `0x63edb0`, `0x63edf0` and `0x63ee10`, and stores the count 4 (`0x63e85e`). `0x63e9f0` first compares the mask with
-`0x1fff` (`0x63e9f9`); `0x63ea0a` compares the counter with 3 and `0x63ea0f` subtracts 3. `0x63dcb4` is the call in the CVar registration. The loop `0x63ea40` to `0x63ea6b` adds 1 per object
-and compares with 0xd at `0x63ea57`. At `0x63ea74` the new count is twice the old; `0x63eb65` stores the new mask, and `0x63eb90` calls
+`0x1fff` (`0x63e9f9`); `0x63ea0a` compares the counter with 3 and `0x63ea0f` subtracts 3. `0x63dcb4` is the call in the CVar registration. The loop `0x63ea40` to `0x63ea6b` leaves at an end mark or null link first, adds 1 per object
+and compares with 0xd at `0x63ea57`, after the increment. At `0x63ea74` the new count is twice the old; `0x63eb65` stores the new mask, and `0x63eb90` calls
 `LinkNode` with mode 2 and destination 0. `0x63ec40` sets the count: it rounds a larger size up to a multiple of the granularity
-(`0x63edf0`), where the granularity is the largest power of two not above the size, at most 0x15 (`0x63edb0`), and reallocates through
+(`0x63edf0`), where the granularity is the largest power of two not above the size (at least 1) below 0x15, and 0x15 itself from there up, stored at vector `+0xc` (`0x63edd9`, inline `0x63ec8a`) kept for later sizes. With none stored, sizes 4, 8, 20, 40 and 100 round to 4, 8, 32, 42 and 105. It reallocates through
 `0x63ee10`, which tries `SMemReAlloc` and otherwise allocates and copies. `0x63ebe0` unlinks a bucket's whole chain. The command table
 inlines the first-time sizing at `0x63fa95`; `0x640780`, `0x640a00` and `0x640b40` are the twins.
 
@@ -82,7 +82,7 @@ the mask to −1 and frees the bucket array. Neither frees the records themselve
 
 Addresses: `0x63e2b0`, `0x63e2e0`, `0x63e3a0`, `0x63e460`, `0x63e560`, `0x63e5f0`, `0x63e910`, `0x63d260`, `0x63d280`, `0x63e358`, `0x63e407`, `0x80e1e0`, `0x80e1e4`, `0x80e1e8`, `0x865388`, `0x646430`, `0x6462e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The vtable words `0x80e1dc` to `0x80e1e8` hold these four in order. `0x63e2e0` allocates under the tag `0x865388` with flag 8

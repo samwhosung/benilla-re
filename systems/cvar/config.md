@@ -15,7 +15,7 @@ when the realm list address is first asked for, and again on each ask whose argu
 
 Addresses: `0x63d380`, `0x63d440`, `0x63d395`, `0x63d39b`, `0x63d3bd`, `0x63d3cb`, `0x63d3e1`, `0x63d3f7`, `0x63d40d`, `0x63d423`, `0x63d42e`, `0x648890`, `0x42a960`, `0x42a760`, `0x402375`, `0x40237f`, `0x403be7`, `0x5ab6b5`, `0x5ab689`, `0xc4edd4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63d395` stores the file name at `0xc4edd4`. `0x63d39b` gets the base path (`0x648890`) and `0x63d3bd` formats `%s%s\` with `WTF`; `0x63d3cb` creates the
@@ -66,7 +66,7 @@ and otherwise tries `WTF\<name>`; it returns 1 when it deleted a file.
 
 Addresses: `0x63daf0`, `0x63d910`, `0x63dafa`, `0x63db04`, `0x63db0e`, `0x63db18`, `0x63db1d`, `0x63db3c`, `0x63db6f`, `0x63d91c`, `0x63d927`, `0x63d948`, `0x63d95f`, `0x42a4e0`, `0x42a910`, `0x403bec`, `0x403bf1`, `0x640160`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63daf0` calls `SaveConfig`, then unregisters `set`, `cvar_reset`, `cvar_default` and `cvarlist` with `0x63fb40` at `0x63dafa` to `0x63db18`,
@@ -81,7 +81,7 @@ or an error line in class 3 when the file cannot be made or written. Nothing cal
 
 Addresses: `0x63e1a0`, `0x63e1bd`, `0x63e24f`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63e1bd` opens the file (`0x42a460`) and `0x63e24f` writes each line with `0x42a5d0`. The census over every byte of `.text` and every dword of the image finds no call, jump or stored address for `0x63e1a0` (`unreached`);
