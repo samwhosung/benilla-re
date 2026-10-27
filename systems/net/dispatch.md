@@ -25,7 +25,7 @@ stack.
 
 Addresses: `0x537600`, `0x537665`, `0x537a60`, `0x537a80`, `0x5ab650`, `0x5ab670`, `0x5ab490`, `0x5376f0`, `0xc0d4b4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::netclient_initialize`, `net::netclient_deinitialize`
 
 `0x537665` to `0x53768a` are two `rep stos` of `0x33c` dwords from `+0x74` and from `+0xd64`.
@@ -33,9 +33,10 @@ Test: `net::netclient_initialize`, `net::netclient_deinitialize`
 stack arguments, `ret 0xc`; `0x537a80` stores zero at both, `ret 4`. `0x5ab650` pushes its stack
 argument, `edx` and `ecx` and calls `0x537a60` on `0x5ab490()`, which returns the pointer held at `0xc28128`.
 `0x537600` starts the platform (`0x5b7080`) for the first client of the count `0xc0d4b4` and
-returns 0 when that fails; otherwise it increments the count, builds the event queue and the
-connection in allocations of 40 and `0x130` bytes, zeroes the tables, sets state 2 and stores the
-clock in `0xc0d474`, returning 1. `NetClient::Deinitialize` (`0x5376f0`) does nothing in state
+returns 0 when that fails; otherwise it increments the count, builds the event queue in an
+allocation of 40 bytes (`0x537647`), zeroes the tables, builds the connection in one of `0x130`
+bytes (`0x53768c`), sets state 2 and stores the clock in `0xc0d474`, returning 1.
+`NetClient::Deinitialize` (`0x5376f0`) does nothing in state
 0; otherwise it disconnects, closes and releases the connection, zeroes both tables, destroys
 the queue, decrements the count, stops the platform when it reaches 0, sets state 0 and then
 tail-calls `0x5377a0` if the count is 0. The tests run both whole; a failed allocation, which
@@ -43,25 +44,27 @@ stores a null object, is not among their inputs.
 
 ## Dispatch
 
-`0x537aa0` reads the packet's 16-bit opcode, calls the client's slot 16 with it, and calls the
-handler registered for it with the context in `ecx`, the opcode in `edx`, and the packet's time
-and data store on the stack. A handler returns with `ret 8`. With no handler, it calls the data
-store's slot 6 instead, and the packet is dropped. The opcode is not range-checked: one above
-`0x33b` reads past the tables. A packet with no opcode bytes leaves the 16-bit read unwritten,
-so the opcode is the high half of the store pointer it is read over. Each call counts one in
-`0xc0d46c`. Slot 16 is `0x537b00`,
-which returns, in all three vtables that hold it.
+`0x537aa0` reads the packet's 16-bit opcode, counts one in `0xc0d46c`, calls the client's slot 16
+with it (`0x537b00`, a bare return in all three vtables that hold it), and calls the registered
+handler with the context in `ecx`, the opcode in `edx`, and the packet's time and data store on
+the stack. A handler returns with `ret 8`. With none, it calls the data store's slot 6 and drops
+the packet. The opcode is not range-checked: from `0x33c` to `0x677` the handler comes
+from the context table, and the context, like every handler above `0x677`, from past both tables.
+A packet with no opcode bytes leaves the 16-bit read unwritten, so the opcode is the store
+pointer's high half.
 
-Addresses: `0x537aa0`, `0x537abe`, `0x537acc`, `0x537acf`, `0x537ae5`, `0x537af2`, `0x537b00`, `0xc0d46c`
+Addresses: `0x537aa0`, `0x537abe`, `0x537acc`, `0x537acf`, `0x537adc`, `0x537ae5`, `0x537af2`, `0x537b00`, `0xc0d46c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::netclient_dispatch`
 
 `0x537ab4` increments `0xc0d46c`; `0x537abe` is the data store's 16-bit get; `0x537acc` is
 `call [edx+0x40]` on the client's vtable; `0x537acf` loads `[esi+edi*4+0x74]`, and a zero jumps
 to `0x537aee`, `call [edx+0x18]` on the data store. Otherwise `ecx` is `[esi+edi*4+0xd64]`,
 `edx` the opcode, and the pushes are the store, then the time (`0x537ada`, `0x537adb`). The
-only bound on `edi` is the 16-bit read. That read goes to `[ebp+0xe]`, the high half of the
+only bound on `edi` is the 16-bit read, and `0x74 + 4·0x33c = 0xd64`: for `0x33c` to `0x677` the
+handler load is in the context table, which ends at `0x1a54`, where the context load of `0x33c`
+and the handler load of `0x678` begin. That read goes to `[ebp+0xe]`, the high half of the
 store-pointer argument (`0x537aaf`); a store of 0 bytes, which a frame with `N = 0` gives
 (`wire`), fails it and leaves that half in place. The data hook reads the same way into
 `[ebp+0x12]` (`0x537b39`). `0x537b00` is `ret 4`, slot 16 of `0x809070`, `0x80a398`
@@ -77,21 +80,23 @@ queue node of type `0x12`. Connecting, a failed connection and disconnecting que
 types `0x13`, `0x15` and `0x14`. A node records the clock when it is queued, which is the time
 its handler gets.
 
-Addresses: `0x537b10`, `0x537b34`, `0x537b4b`, `0x537b56`, `0x537b7c`, `0x537b90`, `0x537c00`, `0x537c30`, `0x538790`, `0x5387fd`, `0x53880b`
+Addresses: `0x537b10`, `0x537b34`, `0x537b4b`, `0x537b56`, `0x537b7c`, `0x537b90`, `0x537c00`, `0x537c30`, `0x538790`, `0x5387fd`, `0x5387f7`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::netclient_add_event`
 
-`0x537b34` is an interlocked add of the store's size to `+0x1ab8`. `0x537b4b` compares the 16-bit
-opcode with `0x1dd` and calls `0x537d60` at `0x537b56`; else `0x538790(0x12, …, this, data,
-length)` at `0x537b7c`. `0x537b90` (slot 2), `0x537c30` (slot 3) and `0x537c00` (slot 4) queue
-`0x13`, `0x15` and `0x14`. `0x538790` allocates a 24-byte node tagged `.?AUNETEVENTQUEUENODE@@`,
-stores the type at `+0x8`, a copy of the data at `+0x10` and its length at `+0x14`, stores
-`OsGetAsyncTimeMs()` at `+0xc` (`0x538851`), and increments the client's `+0x1a5c`, all under the
-queue's lock. Its second argument is not read. The node goes last: its `+0` takes the queue's last
-link `+0x20`, its `+4` that link's `+4`, which becomes the node (`0x5387fd`), as does `+0x20`.
-When the node's allocation fails it links the queue's own `+0x20` and writes the type through a
-null node (`0x53880b`). The test runs `0x538790` whole but for that path.
+`0x537b34` is an interlocked add of the store's size to `+0x1ab8`. `0x537b4b` compares the opcode
+with `0x1dd` and calls `0x537d60` at `0x537b56`; else `0x538790(0x12, …, this, data, length)` at
+`0x537b7c`. `0x537b90` (slot 2), `0x537c30` (slot 3) and `0x537c00` (slot 4) queue `0x13`, `0x15`
+and `0x14`. `0x538790` allocates a 24-byte node tagged `.?AUNETEVENTQUEUENODE@@`, stores the type
+at `+0x8`, a copy of the data at `+0x10` and its length at `+0x14`, `OsGetAsyncTimeMs()` at `+0xc`
+(`0x538851`), and increments the client's `+0x1a5c`, all under the queue's lock. Its second
+argument is not read. The node goes last: its `+0` takes the queue's last link `+0x20`, its `+4`
+that link's `+4`, which becomes the node (`0x5387fd`), as does `+0x20`. On a failed allocation the
+appended link is the queue's own `+0x20`: its unlink (`0x5387ce` to `0x5387e9`) zeroes `+0x20` and
+`+0x24`, `0x5387f2` loads 0 and `0x5387f7` reads address 4 and faults, before the write through
+the null node (`0x53880b`). Whether the allocator returns null is not read. The test runs
+`0x538790` whole but for that path.
 
 ## Main-thread drain
 
@@ -102,31 +107,31 @@ marks the client for deletion. A node is skipped once the client is so marked. A
 nodes, unless this poll handled a `0x16`, the client runs its keepalive check. Slot 12
 dispatches only in state 6.
 
-Addresses: `0x403620`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x538529`, `0x538597`, `0x537c50`, `0x537c71`, `0x537ca0`, `0xc2a2d8`, `0xc2a314`, `0x537cac`
+Addresses: `0x403620`, `0x5b3db0`, `0x538040`, `0x5384d0`, `0x538529`, `0x538597`, `0x537c50`, `0x537c71`, `0x537ca0`, `0x537ca5`, `0x537cb0`, `0x537cc1`, `0x417bd0`, `0xc2a2d8`, `0xc2a314`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `net::netclient_handle_data`
 
 `0x403620` is registered for category 6, which the loop dispatches every tick (`core/loop`), by
-the client's start code at `0x402b84` (in `0x402ad0`), the image's only reference to it, so it is never removed:
-the poll and its keepalive run in every screen, the character screens included. It calls
-`0x5b3db0`,
-which walks the list at `0xc2a2d0` (head word `0xc2a2d8`) under the lock `0xc2a314` and
-calls `0x538040` for each client; that tail-jumps to `0x5384d0` with the queue at `+0x1a54`. At
-`0x538529`, `jmp [eax*4+0x538610]` on the type less `0x12`, five entries, reached only while the
-client's `+0x1a60` is zero; type `0x16` sets it. `0x538597` calls `0x537ff0` unless a `0x16` node set the local flag at `0x53855f`.
-Slot 12, `0x537c50`, adds the length plus 2 to `0xc0d468`, requires `+0x70 == 6` (`0x537c71`), wraps
-the data in a store (window `0xffffffff`) for `0x537aa0` (`0x537ca0`), and frees a buffer a
-handler left it owning (`0x537cac`). The client's `+0x1a5c` is a reference count: one per
-queued node and one for the poll in progress (`0x5384f1`); each handled node and the end of the poll
-release one (`0x53856b`, `0x5385a4`), and when it reaches zero on a marked client the poll calls the
-client's slot 0 with 1.
+the client's start code at `0x402b84` (in `0x402ad0`), the image's only reference to it, so it is
+never removed. It calls `0x5b3db0`, which walks the list at
+`0xc2a2d0` (head word `0xc2a2d8`) under the lock `0xc2a314` and calls `0x538040` for each client;
+that tail-jumps to `0x5384d0` with the queue `+0x1a54`. At `0x538529`, `jmp
+[eax*4+0x538610]` on the type less `0x12`, five entries, reached only while the client's `+0x1a60`
+is zero, which type `0x16` sets. `0x538597` calls `0x537ff0` unless a `0x16` node set the local flag
+at `0x53855f`. Slot 12, `0x537c50`, adds the length plus 2 to `0xc0d468`, requires `+0x70 == 6` (`0x537c71`), wraps
+the data in a store (window `0xffffffff`) for `0x537aa0` (`0x537ca0`). When the window has changed
+(`0x537ca5`, `0x537cb0`) it calls the store's slot 1, `0x417bd0` (`0x537cc1`), which frees the data
+pointer when it and the window are nonzero and zeroes `+4`, `+8`, `+0xc`. The client's `+0x1a5c`
+is a reference count: a node and the poll each hold one (`0x5384f1`); each handled node and
+the poll's end release one (`0x53856b`, `0x5385a4`), and at zero on a marked client the poll calls
+the client's slot 0 with 1.
 
 ## Realm connection messages
 
 `RealmConnection::MessageHandler` handles ten opcodes and returns the handler's result. After
-the handler, a packet the handler did not read to the end is reported as `Message under read`
-and discarded.
+the handler, a packet the handler did not read to the end is discarded, and reported as
+`Message Under Read!` when the connection has a notify object.
 
 | opcode | message | handler |
 |---|---|---|
@@ -141,9 +146,9 @@ and discarded.
 | `0x4d` | `SMSG_LOGOUT_COMPLETE` | `0x5b4620` |
 | `0x4f` | `SMSG_LOGOUT_CANCEL_ACK` | `0x5b4680` |
 
-Addresses: `0x5b3a80`, `0x5b3ea0`, `0x5b3ecb`, `0x5b3fd0`, `0x5b3fe8`, `0x5b3f9a`, `0x5b3fc1`
+Addresses: `0x5b3a80`, `0x5b3ea0`, `0x5b3ecb`, `0x5b3fd0`, `0x5b3fe8`, `0x5b3f9a`, `0x5b3fa7`, `0x5b3fc1`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The constructor `0x5b3a80` registers `0x5b3ea0` for each opcode with the connection as context
@@ -151,7 +156,7 @@ The constructor `0x5b3a80` registers `0x5b3ea0` for each opcode with the connect
 to `0x4c` go through the byte table `0x5b3fe8` (`movzx eax,byte [eax+0x5b3fe8]`, 19 entries) into
 the jump table `0x5b3fd0` at `0x5b3ecb`, whose five targets call the handlers for `0x3a`, `0x3b`,
 `0x3c`, `0x41` and `0x4c`; the sixth entry is the exit for the opcodes between. `0x5b3f9a` calls the
-store's slot 5, and a zero result logs through the notify object's slot 5 with the strings
-`RealmConnection::MessageHandler` and `Message under read` and calls the store's slot 6
-(`0x5b3fc1`). The message names are the server's names for these opcodes; each handler's own
+store's slot 5, and a zero result logs through the notify object's slot 5, held at `+0x1adc` and
+tested at `0x5b3fa7`, with the strings `RealmConnection::MessageHandler` and `Message Under Read!`;
+with or without it, it then calls the store's slot 6 (`0x5b3fc1`). The message names are the server's names for these opcodes; each handler's own
 debug string names the first three (`SMSG_AUTH_CHALLENGE` at `0x5b401e`).

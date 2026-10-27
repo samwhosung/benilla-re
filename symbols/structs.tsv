@@ -55,7 +55,7 @@ EvtContext		532	0x801364	core	Holds a scheduled context: its run state, due time
 EvtHandler		24		core	Holds a registered handler: its link, function, argument, priority and skip flag	verified	two	core/events#handler-records
 EvtKeyDown		12		core	Holds a held-key record: its list link and the key code	verified	one	core/events#held-keys-and-repeats
 EvtThread		56		core	Holds a scheduler slot: its list link, thread count, load, event and heap of contexts	verified	one	core/scheduler#slot-acquire-and-release
-EvtTimer		56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	one	core/events#timers
+EvtTimer		56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	two	core/events#timers
 FfxRenderTarget		28		ffxeffects	Holds a full-screen effect target: handle, allocated and wanted size and the reciprocals of the allocation	verified	one	ffxeffects/targets#render-target-allocation
 FriendList		1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
 FriendSlot		32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
@@ -83,7 +83,7 @@ M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority
 M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
 Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#matrices
 MovementGlobals		312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
-NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
+NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	two	net/dispatch#network-thread-handoff
 NTempest::C2Vector		8		cmath	Holds a vector of two floats: x, y	verified	one	cmath/types#vectors
 NTempest::C33Matrix	later-build	36		cmath	Holds a 3×3 matrix of floats row by row: entry (r, c) at float 3r + c	verified	one	cmath/types#matrices
 NTempest::C34Matrix	later-build	48		cmath	Holds a rotation with a translation: a 3×3 row by row, then the translation as a fourth row	verified	one	cmath/types#matrices
