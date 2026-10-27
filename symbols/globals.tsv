@@ -55,7 +55,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
 0x480d00	uint32_t[4]	s_hitTestValueTargets		ui	Holds the jump targets of 0x480c90 for unit, game object, corpse and other types	verified	one	ui/worldpick#the-candidate-filters
 0x480d10	uint8_t[121]	s_hitTestValueCaseTable		ui	Maps an object type mask less 9 to the cases of 0x480c90: unit and player 0, game object 1, corpse 2, else 3	verified	one	ui/worldpick#the-candidate-filters
-0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
+0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	two	ui/framexml#building-the-game-interface
 0x492ab8	void *[4]	s_hoverKindArms		ui	Holds the four arms of the mouseover kind switch of 0x492890	verified	one	ui/tooltipobject#the-publisher
 0x492ac8	uint8_t[121]	s_hoverKindMap		ui	Maps an object type mask minus 9 to an arm of the mouseover kind switch	verified	one	ui/tooltipobject#the-publisher
 0x493f50	void *[4]	s_targetKindCases		ui	Holds the four case addresses of the targeting kind filter 0x493e40	verified	one	ui/targeting#the-candidate-filter
@@ -1631,8 +1631,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x842e98	char[34]	s_textUsageLoadAddOnIndexOrName		ui	Holds the string "Usage: LoadAddOn(index or "name")"	inferred	none	
 0x842ebc	char[14]	s_textUNKNOWNERROR		ui	Holds the string "UNKNOWN_ERROR"	verified	one	ui/addons#the-in-game-add-on-functions
 0x842ecc	uint8_t			ui	Holds a byte that Script::LoadAddOn, CGGameUI::Initialize read; not read here	inferred	none	ui/framexml#building-the-game-interface
-0x842f7c	char[32]	s_frameXMLTocPath		ui	Holds Interface\FrameXML\FrameXML.toc	verified	one	ui/framexml#building-the-game-interface
-0x842f9c	char[32]	s_textInterfaceFrameXMLBindingsXml		ui	Holds the string "Interface\FrameXML\Bindings.xml"	verified	one	ui/framexml#building-the-game-interface
+0x842f7c	char[32]	s_frameXMLTocPath		ui	Holds Interface\FrameXML\FrameXML.toc	verified	two	ui/framexml#building-the-game-interface
+0x842f9c	char[32]	s_textInterfaceFrameXMLBindingsXml		ui	Holds the string "Interface\FrameXML\Bindings.xml"	verified	two	ui/framexml#building-the-game-interface
 0x842fbc	char[12]	s_textBlockTrades		ui	Holds the string "BlockTrades"	inferred	none	
 0x842fc8	const char[13]	s_cvarUberTooltips		ui	Holds the option name UberTooltips whose value 0 asks for compact spell tooltips	verified	one	ui/tooltipspell#who-passes-what
 0x843068	char[2]	s_text2		unassigned	Holds the string "2"	inferred	none	
@@ -2320,25 +2320,25 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x870e20	uint32_t	s_lightningLastUpdate		spell	Holds the clock of the last lightning update, -1 by default; written by 0x6eca20 and 0x6ec130	verified	one	spell/visuals#frame-update
 0x870e24	char *[7]	s_areaShardModelPaths		spell	Holds the seven shard model paths 0x6ece30 indexes by type, unbounded; read only there	verified	one	spell/visuals#area-shard-emitter-creation
 0x870fec	char[32]	s_textLoadingTableOfContentsS		unassigned	Holds the string "** Loading table of contents %s"	inferred	none	
-0x87100c	char[19]	s_textLoadingFileS		ui	Holds the string "++ Loading file %s"	verified	one	ui/framexml#the-load-status-and-its-log
-0x871020	char[34]	s_textUnnamedVirtualNodeAtTopLevel		ui	Holds the string "Unnamed virtual node at top level"	verified	one	ui/framexml#the-elements-of-a-file
-0x871044	char[8]	s_virtualAttribute		ui	Holds virtual, the XML attribute name	verified	one	ui/framexml#the-elements-of-a-file
-0x87104c	char[31]	s_unnamedFontNode		ui	Holds the message for a Font element without a name	verified	one	ui/framexml#the-elements-of-a-file
-0x87106c	char[5]	s_textFont		ui	Holds the string "Font"	verified	one	ui/framexml#the-elements-of-a-file
-0x871074	char[13]	s_scriptsChunkFormat		ui	Holds %s:<Scripts>, the chunk name of a Script body	verified	one	ui/framexml#the-elements-of-a-file
-0x871084	char[7]	s_scriptElement		ui	Holds Script, the XML element name	verified	one	ui/framexml#the-elements-of-a-file
-0x87108c	char[41]	s_includeWithoutFile		ui	Holds the message for an Include element without a file	verified	one	ui/framexml#the-elements-of-a-file
+0x87100c	char[19]	s_textLoadingFileS		ui	Holds the string "++ Loading file %s"	verified	two	ui/framexml#the-load-status-and-its-log
+0x871020	char[34]	s_textUnnamedVirtualNodeAtTopLevel		ui	Holds the string "Unnamed virtual node at top level"	verified	two	ui/framexml#the-elements-of-a-file
+0x871044	char[8]	s_virtualAttribute		ui	Holds virtual, the XML attribute name	verified	two	ui/framexml#the-elements-of-a-file
+0x87104c	char[31]	s_unnamedFontNode		ui	Holds the message for a Font element without a name	verified	two	ui/framexml#the-elements-of-a-file
+0x87106c	char[5]	s_textFont		ui	Holds the string "Font"	verified	two	ui/framexml#the-elements-of-a-file
+0x871074	char[13]	s_scriptsChunkFormat		ui	Holds %s:<Scripts>, the chunk name of a Script body	verified	two	ui/framexml#the-elements-of-a-file
+0x871084	char[7]	s_scriptElement		ui	Holds Script, the XML element name	verified	two	ui/framexml#the-elements-of-a-file
+0x87108c	char[41]	s_includeWithoutFile		ui	Holds the message for an Include element without a file	verified	two	ui/framexml#the-elements-of-a-file
 0x8710b8	char[5]	s_fileAttribute		ui	Holds file, the XML attribute name	verified	one	ui/framexml#the-elements-of-a-file
-0x8710c0	char[8]	s_includeElement		ui	Holds Include, the XML element name	verified	one	ui/framexml#the-elements-of-a-file
+0x8710c0	char[8]	s_includeElement		ui	Holds Include, the XML element name	verified	two	ui/framexml#the-elements-of-a-file
 0x8710c8	char[5]	s_luaExtension		ui	Holds .lua	verified	one	ui/framexml#loading-one-file
 0x8710d0	char[32]	s_unableToCreateFrameType		ui	Holds the message for a factory that creates nothing	verified	one	ui/framexml#creating-a-frame-from-xml
 0x8710f0	char[31]	s_frameParentNotFound		ui	Holds the message for a parent name that finds no frame	verified	one	ui/framexml#creating-a-frame-from-xml
 0x871110	char[9]	s_inheritsAttribute		ui	Holds inherits, the XML attribute name	verified	one	ui/framexml#creating-a-frame-from-xml
 0x87111c	char[7]	s_parentAttribute		ui	Holds parent, the XML attribute name	verified	one	ui/framexml#creating-a-frame-from-xml
 0x871124	char[23]	s_unknownFrameType		ui	Holds the message for an element naming no frame type	verified	one	ui/framexml#creating-a-frame-from-xml
-0x871154	char[24]	s_textCreatingSNamedS		ui	Holds the string "-- Creating %s named %s"	verified	one	ui/framexml#the-load-status-and-its-log
-0x87116c	char[26]	s_textAddedVirtualFrameS		ui	Holds the string "-- Added virtual frame %s"	verified	one	ui/framexml#the-load-status-and-its-log
-0x871188	char[39]	s_textVirtualObjectNamedSAlreadyExists		ui	Holds the string "Virtual object named %s already exists"	verified	one	ui/framexml#templates
+0x871154	char[24]	s_textCreatingSNamedS		ui	Holds the string "-- Creating %s named %s"	verified	two	ui/framexml#the-load-status-and-its-log
+0x87116c	char[26]	s_textAddedVirtualFrameS		ui	Holds the string "-- Added virtual frame %s"	verified	two	ui/framexml#the-load-status-and-its-log
+0x871188	char[39]	s_textVirtualObjectNamedSAlreadyExists		ui	Holds the string "Virtual object named %s already exists"	verified	two	ui/framexml#templates
 0x871404	char[7]	s_textBOTTOM		ui	Holds the string "BOTTOM"	inferred	none	
 0x87145c	char[3]	s_textOn		ui	Holds the string "on"	inferred	none	
 0x871460	char[4]	s_textOff		ui	Holds the string "off"	inferred	none	
@@ -2425,9 +2425,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87859c	const char[10]	s_tagMinResize		ui	Holds the XML element name minResize of a frame's minimum size	verified	one	ui/resizebounds#the-xml-element
 0x8785a8	const char[13]	s_tagResizeBounds		ui	Holds the XML element name ResizeBounds of a frame's resize bounds	verified	one	ui/resizebounds#the-xml-element
 0x8785b8	char[55]	s_simpleFramePath		ui	Holds the source path of CSimpleFrame.cpp	verified	one	ui/README#frame-core-object-files
-0x8786a8	char[33]	s_inheritedNodeNotFound		ui	Holds the message for an inherits name that finds no template	verified	one	ui/framexml#templates
+0x8786a8	char[33]	s_inheritedNodeNotFound		ui	Holds the message for an inherits name that finds no template	verified	two	ui/framexml#templates
 0x8786cc	char[11]	s_textFontString		ui	Holds the string "FontString"	inferred	none	
-0x878778	char[36]	s_unknownScriptElement		ui	Holds the message for a Scripts child naming no handler	verified	one	ui/framexml#script-elements
+0x878778	char[36]	s_unknownScriptElement		ui	Holds the message for a Scripts child naming no handler	verified	two	ui/framexml#script-elements
 0x87879c	char[7]	s_framesElement		ui	Holds Frames, the XML element name	verified	one	ui/framexml#child-frames-and-names
 0x878870	char *	s_regionTypeName		ui	Points to Region, the type name of CScriptRegion	verified	one	ui/frames#vtables-and-the-two-parts
 0x878874	char[56]	s_scriptRegionPath		ui	Holds the source path of CScriptRegion.cpp	verified	one	ui/README#frame-core-object-files
@@ -2734,7 +2734,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05f50	uint32_t[10]	s_footstepTable		sound	Holds the footstep hash table	verified	one	sound/objects#footstep-table
 0xb05f78	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0xb05f88	float	s_duckStartVolume		sound	Holds the SoundVolume the duck ramps from	verified	one	sound/objects#the-duck
-0xb05fa0	uint32_t	s_interfaceSoundSuppression		sound	Counts the open suppressions of interface sounds	verified	one	ui/framexml#sound-while-loading
+0xb05fa0	uint32_t	s_interfaceSoundSuppression		sound	Counts the open suppressions of interface sounds	verified	two	ui/framexml#sound-while-loading
 0xb05fa4	uint32_t	s_wrappedItemDropSound		sound	Holds the SoundEntries id of (DONOTRENAME)WrappedItemDrop	verified	one	sound/interface#item-sounds
 0xb05fa8	uint32_t	s_wrappedItemPickupSound		sound	Holds the SoundEntries id of (DONOTRENAME)WrappedItemPickup	verified	one	sound/interface#item-sounds
 0xb05fac	uint32_t	s_combatMiss2HSound		sound	Holds the SoundEntries id of (DONOTRENAME)Combat Miss 2H	verified	one	sound/interface#named-sounds
@@ -4702,15 +4702,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcee94c	uint32_t[3]	s_lightningObjects		spell	Holds the chain list: link offset 0, then the terminator link	verified	one	spell/visuals#static-lists-and-pools
 0xcee96c	uint32_t[3]	s_blizzardObjects		spell	Holds the emitter list: link offset 0, then the terminator link	verified	one	spell/visuals#static-lists-and-pools
 0xcee9a8	void *	s_spellEffectLevelCVar		spell	Holds the spellEffectLevel CVar record; written by 0x6ec0e0 and cleared by 0x6ec130	verified	one	spell/visuals#startup-and-shutdown
-0xcee9b8	void *	s_tocProgressCallback		ui	Holds the progress callback that LoadTocFile calls with the count of lines loaded	verified	one	ui/framexml#running-a-toc
+0xcee9b8	void *	s_tocProgressCallback		ui	Holds the progress callback that LoadTocFile calls with the lines loaded over the total, 0 for none	verified	two	ui/framexml#running-a-toc
 0xcee9bc	uint32_t	s_staticObject6ef780		ui	Holds the first dword of the static object that 0x6eda90 destroys through 0x6ef780 at exit	verified	one	ui/initexits#exit-calls
 0xcee9d8	uint32_t	s_frameFactoryBuckets		ui	Points to the bucket array of the frame type factory table	verified	one	ui/framexml#creating-a-frame-from-xml
 0xcee9e8	uint32_t	s_staticObject6ed970		ui	Holds the first dword of the static object that 0x6ed960 destroys through 0x6ed970 at exit	verified	one	ui/initexits#exit-calls
-0xcee9fc	uint32_t	s_tocLinesLoaded		ui	Counts the toc lines loaded, for the progress callback	verified	one	ui/framexml#running-a-toc
+0xcee9fc	uint32_t	s_tocLinesLoaded		ui	Counts the toc lines loaded, for the progress callback	verified	two	ui/framexml#running-a-toc
 0xceea00	uint32_t	s_staticObject6ef430		ui	Holds the first dword of the static object that 0x6eda50 destroys through 0x6ef430 at exit	verified	one	ui/initexits#exit-calls
-0xceea1c	uint32_t	s_xmlTemplateBuckets		ui	Points to the bucket array of the XML template table	verified	one	ui/framexml#templates
+0xceea1c	uint32_t	s_xmlTemplateBuckets		ui	Points to the bucket array of the XML template table	verified	two	ui/framexml#templates
 0xceea30	uint32_t	s_frameXMLDebugLevel		ui	Holds the FrameXML trace level FrameXML_Debug sets, 0 by default	verified	one	ui/framexml#the-load-status-and-its-log
-0xceea3c	uint32_t	s_tocLinesTotal		ui	Holds the total of toc lines for the progress callback	verified	one	ui/framexml#running-a-toc
+0xceea38	uint32_t	s_tocProgressContext		ui	Holds the context word LoadTocFile passes the progress callback in ecx	verified	one	ui/framexml#running-a-toc
+0xceea3c	uint32_t	s_tocLinesTotal		ui	Holds the total of toc lines for the progress callback	verified	two	ui/framexml#running-a-toc
 0xceea60	char[64]	s_fontFlagsText		ui	Holds the flags text FormatFontFlags builds and returns, emptied and rewritten by each call	verified	one	ui/fontmethods#font-flags-text
 0xceeac0	uint32_t	s_scriptContext		ui	Holds the current execution-context word new values take	verified	one	ui/luastate#the-context-word
 0xceeac4	int32_t	s_scriptContextDepth		ui	Holds the nesting count of context changes, zeroed each frame	verified	one	ui/luastate#the-context-word

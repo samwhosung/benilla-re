@@ -10,7 +10,7 @@ file loader `0x6ede10`, the frame creator `0x6ee280`, the template table and the
 `XMLTree.cpp` builds the node tree with the linked expat 1.95.5. What a frame does with its own node
 is in `frames` (`Loading from XML`), `anchors` and `visibility`; each widget type's own elements
 are in `xmltypes`; the order a game interface is built in is here, under its builder in
-`GameUI.cpp`.
+`GameUI.cpp`. Vtable slots are named by byte offset.
 
 Roots: `0x6edb90`, `0x6ede10`, `0x6ee280`, `0x6ee500`, `0x6ee6f0`, `0x6ee780`, `0x6ee800`, `0x6ee880`, `0x6ef070`, `0x6edb30`, `0x6edb40`, `0x6edb50`, `0x6f2a30`, `0x6f2c50`, `0x6f2cf0`
 
@@ -18,16 +18,16 @@ Roots: `0x6edb90`, `0x6ede10`, `0x6ee280`, `0x6ee500`, `0x6ee6f0`, `0x6ee780`, `
 
 Among its steps, `CGGameUI::Initialize` runs, in this order: a fresh Lua state; the C functions; the
 549 event names; the frame types of `GameUI.cpp`; `Logs\FrameXML.log` opened into a load status; the
-signature check of `FrameXML.toc`, as the glue's (`glue/manager`), quitting with code 10 unless it
+signature check of `FrameXML.toc`, as the glue's (`glue/manager`), calling `0x401560(10)` unless it
 passes; an MD5 over `FrameXML.toc`, every file it loads and `Bindings.xml`, checked against the
-signature's digest, quitting with 10 on a mismatch; the lookups of `UIParent` and `GameTooltip`;
+signature's digest, calling it on a mismatch; the lookups of `UIParent` and `GameTooltip`;
 every addon that is not loaded on demand; the saved variables. Each status line is then written to
 the log as the log's format string, so a `%` in a line is read as a conversion: a fault of the
 client.
 
 Addresses: `0x48fbf0`, `0x48fe97`, `0x48fe9c`, `0x48feab`, `0x48feb5`, `0x48ff06`, `0x48ff4d`, `0x48ff57`, `0x48ff90`, `0x48ffed`, `0x490018`, `0x490026`, `0x490038`, `0x490043`, `0x49006a`, `0x490096`, `0x4900a3`, `0x4900b2`, `0x490187`, `0x4901a1`, `0x65ace0`, `0x842ecc`, `0x842f7c`, `0x842f9c`, `0x6f10f0`, `0x401560`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_48fbf0_finite_diff`
 
 `0x48fe97` calls `0x703b80`, `0x48fe9c` `0x490250`, `0x48feab` `0x703d90(0xbe1198, 0x225)`,
@@ -35,10 +35,11 @@ Test: `ui::glue_48fbf0_finite_diff`
 `0x842f7c` and `0x842f9c`; `0x48ff57` jumps through `0x4901c8`: answers 0 to 2 add a line and fall
 to `0x48ff90`, `0x401560(10)`, and 3 goes on. `0x48ffed` runs `0x6edb90` with the MD5 context;
 `0x490018` loads `Bindings.xml` with it; `0x490026` finishes it and `0x490038` compares four dwords
-with the signature's, quitting at `0x490043`. `0x49006a` and `0x490096` look up `UIParent` and
+with the signature's, calling it at `0x490043`. `0x49006a` and `0x490096` look up `UIParent` and
 `GameTooltip` with `0x76c760`. `0x4900a3` calls `0x51f600`, `0x4900b2` `0x4913b0`. The loop at
 `0x490187` passes each status line as the format of `SLogWrite` (`0x4901a1`); `0x65ace0` is
-variadic and hands the list at `[ebp+0x10]` to `0x65ac20`.
+variadic and hands the list at `[ebp+0x10]` to `0x65ac20`. `0x401560` stores its argument and closes
+the current context, then returns. Answers 0 and 1 leave the digest unwritten.
 
 ## Running a toc
 
@@ -46,12 +47,13 @@ variadic and hands the list at `[ebp+0x10]` to `0x65ac20`.
 BF`, and splits the text at CR and LF, skipping empty lines and keeping at most 1,023 bytes of a
 line. Each line that does not begin with `#` is appended to the toc's directory, up to and including
 its last backslash, stripped of trailing spaces (not tabs), and loaded with `0x6ede10`. The result
-of each load is ignored, and a progress callback runs after each line. It answers 0 only when the
-toc does not open; then `Couldn't open %s` is reported.
+of each load is ignored. After each loaded line, while a callback is set and the lines loaded are
+below the total, the callback runs with their ratio. It answers 0 only when the toc
+does not open; then `Couldn't open %s` is reported.
 
 Addresses: `0x6edb90`, `0x6edbe5`, `0x6edc28`, `0x6edc66`, `0x6edc71`, `0x6edcc6`, `0x6edcd9`, `0x6edd24`, `0x6edd51`, `0x6edd91`, `0x6eddf0`, `0x82edfc`, `0x6edb50`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_geom_6edb90_progress_ratio`
 
 `0x6edbe5` finds the last `\`; the prefix is copied when it is shorter than 0x103 bytes. The toc is
@@ -59,8 +61,11 @@ read with one byte of padding (`0x6edc28`) and hashed (`0x6edc66`); `0x6edc71` t
 bytes. `0x6edcc6` tokenizes with `0x82edfc` (CR, LF) into 0x400 bytes, `SStrTokenize` skipping
 leading separators; an empty token ends the loop, `#` skips the
 line (`0x6edcd9`), and `0x6edd24` trims spaces backwards. `0x6edd51`'s `eax` is overwritten before
-any test. `0x6edd91` calls `[0xcee9b8]` with the count `0xcee9fc` over `0xceea3c`; `0x6eddf0`
-answers 1. `0x6edb50` counts the lines not beginning with `#`, for that progress total.
+any test. `0x6edd5e` skips the callback `[0xcee9b8]` when none is set, `0x6edd6d` when the count `0xcee9fc`
+has reached the total `0xceea3c`; else the count rises and `0x6edd91` calls it with `[0xceea38]` in
+`ecx` and count over total as a stack float. `0x6ef160` sets the three and zeroes the count;
+`0x4900ad` clears them. `0x6eddf0` answers 1. `0x6edb50` counts the lines not beginning with `#`,
+for that total; `0x48ffb5` runs it before the BOM is skipped, so a BOM'd first `#` line counts.
 
 ## The signature digest
 
@@ -74,7 +79,7 @@ on it when full and then on each whole 64 bytes of the input in place, and keeps
 
 Addresses: `0x6f1200`, `0x6f120f`, `0x6f121e`, `0x6f1238`, `0x6f124b`, `0x6f1254`, `0x6f125f`, `0x6f11dc`, `0x6f11eb`, `0x661dd0`, `0x661dfd`, `0x661e1b`, `0x661e34`, `0x661e4f`, `0x661f00`, `0x661f3e`, `0x661f63`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f11dc` passes the toc in `ecx`, `CheckTocSignature`'s own `edx` and its output buffer;
@@ -120,7 +125,7 @@ include cycle. An including path with no `\`, or a directory of 0x104 bytes or m
 
 Addresses: `0x6edf77`, `0x6edf9b`, `0x6edfbe`, `0x6edfc5`, `0x6edfd2`, `0x6ee000`, `0x6edffb`, `0x6ee00d`, `0x6ee017`, `0x6ee03d`, `0x6ee070`, `0x6ee0bf`, `0x6ee0d4`, `0x6ee0ff`, `0x6ee10f`, `0x6ee127`, `0x6ee14c`, `0x6ee158`, `0x6ee162`, `0x6ee190`, `0x6ee1bd`, `0x6ee1c4`, `0x6ee1e1`, `0x6ee1e6`, `0x8710c0`, `0x8710b8`, `0x871084`, `0x87106c`, `0x871044`, `0x871074`, `0x87108c`, `0x87104c`, `0x871020`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6edf77` takes the root's first child; each tag is compared ignoring case. `Include` without
@@ -129,10 +134,10 @@ Test: none
 bytes or more (`0x6edfd2`) jumps straight to `0x6ee000`, which loads `[ebp-0x33c]`, written only
 by the arm it skips. `Script`: `0x6ee070` tests `file` for `\`,
 `0x6ee0bf` appends otherwise, `0x6ee0d4` runs the file, then `0x6ee0ff` formats `0x871074` and
-`0x6ee10f` runs the body. `Font` needs a `name` (`0x87104c` otherwise): `0x783870` then `0x783c30`.
+`0x6ee10f` runs the body through `0x704cd0` with a null status (`0x704cd1`), which `0x704ae0` never reports
+to (`0x704b18`, `0x704b74`): its errors reach only the error handler, not the status behind `FrameXML.log`. `Font` needs a `name` (`0x87104c` otherwise): `0x783870` then `0x783c30`.
 Any other tag: `virtual` equal to `true` and a `name` go to `0x6ee500` (`0x871020` without a name);
-else `0x6ee280` with no parent and then `LayoutPendingFrames` (`0x6ee1e6`). The recursion carries no
-depth count.
+else `0x6ee280` with no parent and then `LayoutPendingFrames` (`0x6ee1e6`).
 
 ## Templates
 
@@ -144,13 +149,14 @@ there is no list, and a miss reports `Couldn't find inherited node: %s` and load
 A hit re-enters the frame's own load with the template's node first, so a template's regions and
 scripts are applied before the frame's own.
 
-Addresses: `0x6ee500`, `0x6ee561`, `0x6ee594`, `0x6ee5a4`, `0x6ee5c1`, `0x6ee6bb`, `0x6ee6c1`, `0x6ee6f0`, `0x64b3f0`, `0x64a4c0`, `0x769820`, `0x76984a`, `0x76985c`, `0x769861`, `0xceea1c`, `0x871188`, `0x8786a8`
+Addresses: `0x6ee500`, `0x6ee561`, `0x6ee56f`, `0x64b428`, `0x64b42d`, `0x6ee594`, `0x6ee5a4`, `0x6ee5c1`, `0x6ee6bb`, `0x6ee6c1`, `0x6ee6f0`, `0x64b3f0`, `0x64a4c0`, `0x769820`, `0x76984a`, `0x76985c`, `0x769861`, `0xceea1c`, `0x871188`, `0x8786a8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6ee500(node, name, context, status)` hashes the name with `SStrHashHT`, which upper-cases `a`
-to `z`, and compares with `SStrCmpI` (`0x6ee561`) in `0xceea1c`. On a hit `0x6ee594` reads the
+to `z` and reads `/` as `\` (`0x64b428`, `0x64b42d`), and looks it up in `0xceea1c`: the hash
+compare is `0x6ee561`, the name compare `SStrCmpI` at `0x6ee56f`, which keeps `/` and `\` apart. On a hit `0x6ee594` reads the
 held context: 0, or a nonzero new context, reports `0x871188` (`0x6ee5a4`); otherwise `0x6ee5c1`
 frees the old node. `0x6ee6bb` stores the node and context and `0x6ee6c1` detaches the node from its
 file's tree. `0x6ee6f0` answers the node or 0. `0x769820` reads `inherits`, looks it up
@@ -192,36 +198,38 @@ and `TaxiRouteFrame`; the glue registers `ModelFFX`. Registering a taken name do
 
 Addresses: `0x6ee880`, `0x6ee8e3`, `0x6ef070`, `0x495940`, `0x46a4fe`, `0x6ee439`, `0x6ee4c8`, `0x6eeab0`, `0x6eec10`, `0x6ef000`, `0x4959d0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6ee880(name, factory, flag)` answers 0 on a name already present (`0x6ee8e3`) and otherwise
 stores the factory at `+0x18` and the flag at `+0x1c` of a new entry. `0x6ef070` makes 13 calls with
 flag 0, `Button` with `0x6eeab0` through `MovieFrame` with `0x6ef000`; `0x495940` makes eight,
 `WorldFrame` (`0x4959d0`) with flag 1; `0x46a4fe` registers `ModelFFX` with 0. In `0x6ee280` a set
-flag (`0x6ee439`) unlinks the entry and frees it (`0x6ee4c8`).
+flag (`0x6ee439`) unlinks the entry and frees it (`0x6ee4c8`) through the table's slot 0, `0x6ef730`.
 
 ## Emptying the two tables
 
-`0x6ee800` empties the frame type table and `0x6ee780` the template table. Each unlinks every
-entry from the table's list of all entries, sets that list's count to 0, and then deletes the
-entries of every bucket through the table's own delete. The client stop empties both
+`0x6ee800` empties the frame type table and `0x6ee780` the template table. Each zeroes the
+table's probe counter, unlinks every entry from the table's list of all entries, and then deletes
+the entries of every bucket through the table's own delete. The client stop empties both
 (`DestroyClientSystems`); the template table is also emptied when the glue resumes and when the
 game interface is built. The frame types registered at startup and by `UI_Init` therefore stay
 until the client stops, but for the one-shot `WorldFrame`.
 
-Addresses: `0x6ee800`, `0x6ee780`, `0xcee9bc`, `0xceea00`, `0x6f01d0`, `0x6efd80`, `0x6ee853`, `0x6ee7d3`, `0x4036f7`, `0x4036fc`, `0x46a99f`, `0x48ffd9`, `0x6ee4bd`, `0x6eda90`
+Addresses: `0x6ee800`, `0x6ee780`, `0xcee9bc`, `0xceea00`, `0x6f01d0`, `0x6efd80`, `0x6ee853`, `0x6ee7a5`, `0x6ee7d3`, `0x4036f7`, `0x4036fc`, `0x46a99f`, `0x48ffd9`, `0x6ee4bd`, `0x6eda90`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x6ee800` zeroes `+0x10` of `0xcee9bc`, unlinks the head of the list `+0xc` with `0x6f01d0` until
+`0x6ee800` zeroes `+0x10` of `0xcee9bc`, the probe counter `0x6f0460` raises per chain step
+(`0x6f04ac`), unlinks the head of the list `+0xc` with `0x6f01d0` until
 the head is a terminator (bit 0 set) or null, then for each of the `+0x18` buckets at `+0x1c`
 (12 bytes each) passes the bucket's head `+0x8` to the table's slot 0 until it is a terminator
-(`0x6ee853`). `0x6ee780` does the same on `0xceea00` with `0x6efd80` (`0x6ee7d3`). The callers:
+(`0x6ee853`). `0x6ee780` does the same on `0xceea00`, unlinking with `0x6efd80` (`0x6ee7a5`) and deleting through slot 0 (`0x6ee7d3`). The callers:
 `0x6ee800` from `0x4036fc` alone; `0x6ee780` from `0x4036f7`, `0x46a99f` in `CGlueMgr::Resume` and
-`0x48ffd9` in `CGGameUI::Initialize`. The other sites that load the factory table's delete are
-the one-shot removal (`0x6ee4bd`) and the exit destructor (`0x6eda90`).
+`0x48ffd9` in `CGGameUI::Initialize`. The only other load of the factory table's delete is the
+one-shot removal (`0x6ee4bd`). The exit destructor `0x6eda90` goes to `0x6ef780`, which only unlinks
+the entries and frees the bucket array (`0x6ef856`), so entries held at exit are never freed.
 
 ## The frame factories
 
@@ -233,11 +241,11 @@ with the extra argument 8), `Slider` 0x338 (`0x789400`), `SimpleHTML` 0x374 (`0x
 
 Addresses: `0x6eeab0`, `0x6eeadf`, `0x6eeaf8`, `0x6eeb30`, `0x6eeb5f`, `0x6eeb78`, `0x6eeba0`, `0x6eebcf`, `0x6eebe8`, `0x6eec10`, `0x6eec3f`, `0x6eec58`, `0x6eec80`, `0x6eecaf`, `0x6eecc8`, `0x6eecf0`, `0x6eed1f`, `0x6eed38`, `0x6eed60`, `0x6eed8f`, `0x6eeda8`, `0x6eedd0`, `0x6eedff`, `0x6eee1a`, `0x6eee40`, `0x6eee6f`, `0x6eee88`, `0x6eeeb0`, `0x6eeedf`, `0x6eeef8`, `0x6eef20`, `0x6eef4f`, `0x6eef68`, `0x6eef90`, `0x6eefbf`, `0x6eefd8`, `0x6ef000`, `0x6ef02f`, `0x6ef048`, `0x6462e0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 Every factory is 109 bytes (111 for `ScrollingMessageFrame`) of the same shape: it pushes the size, the path `FrameXML.cpp` and a line number to `SMemAlloc` (`0x6462e0`), and on a nonzero answer calls the constructor with
-the object. The calls to `SMemAlloc` are at `0x6eeadf`, `0x6eeb5f`, `0x6eebcf`, `0x6eec3f`, `0x6eecaf`, `0x6eed1f`, `0x6eed8f`, `0x6eedff`, `0x6eee6f`, `0x6eeedf`, `0x6eef4f`, `0x6eefbf` and `0x6ef02f` in the order of the list.
+the object.
 
 ## Child frames and names
 
@@ -268,7 +276,7 @@ enabled even for an empty body; Lua's `SetScript` enables nothing.
 
 Addresses: `0x769ef0`, `0x769f10`, `0x769f44`, `0x769f6b`, `0x7025c0`, `0x7025ec`, `0x7025f6`, `0x70263c`, `0x702656`, `0x704c70`, `0x704c87`, `0x704c9f`, `0x774780`, `0x7748b9`, `0x7748d0`, `0x7749e6`, `0x878778`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x769ef0` passes each child's tag and body to `0x7025c0` (`0x769f10`); a failure reports `0x878778`
@@ -289,7 +297,7 @@ creating a frame and adding a template also trace a line.
 
 Addresses: `0x41a000`, `0x419ed0`, `0x6ee200`, `0x6ee21c`, `0x6ee22d`, `0x6eddaf`, `0x6eddc8`, `0x6eddd9`, `0x6edb30`, `0x6edb40`, `0x488440`, `0x488475`, `0x6ee291`, `0x6ee6c6`, `0xceea30`, `0x87100c`, `0x870fec`, `0x871154`, `0x87116c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `CStatus::Add` (`0x41a000`) appends and `0x419ed0` puts a line first. `0x6ee200` reads the level
@@ -301,31 +309,31 @@ then pushes the level. `0x6ee291` and `0x6ee6c6` gate the traces `0x871154` and 
 
 ## Merging one status into another
 
-`CStatus::Merge(other)` (`0x41a100`, slot 2 of `CStatus::vftable` `0x7ffa10`) walks `other`'s lines
-first to last and passes each to the receiver's own slot 3, `Add(this, severity, text)`, the line's
-text as the format and no arguments. `other` keeps its lines. For a receiver whose slot 3 is
+`CStatus::Merge(other)` (`0x41a100`, slot 8 of `CStatus::vftable` `0x7ffa10`) walks `other`'s lines
+first to last and passes each to the receiver's own slot 0xc, `Add(this, severity, text)`, the line's
+text as the format and no arguments. `other` keeps its lines. For a receiver whose slot 0xc is
 `CStatus::Add` (`0x41a000`), as the load's own statuses are, each line is formatted a second time: a
 `%` directive is expanded again (`%%` gives `%`) from whatever words lie above the call, the line is
 cut to 255 bytes, a line that formats to nothing is dropped with its severity, and the receiver's
-highest severity rises with each line. The three overrides of slot 3, `0x4b5fc0`, `0x6ed9b0` and
+highest severity rises with each line. The three overrides of slot 0xc, `0x4b5fc0`, `0x6ed9b0` and
 `0x5a79e0`, discard the line.
 
-Addresses: `0x41a100`, `0x41a109`, `0x41a129`, `0x41a133`, `0x41a13e`, `0x41a000`, `0x41a04f`, `0x41a05f`, `0x41a0f0`, `0x7ffa10`, `0x6ee22d`, `0x6eddd9`, `0x6edf6b`, `0x6edca1`, `0x6edbc2`, `0x4b5fc0`, `0x6ed9b0`, `0x5a79e0`, `0x4420b0`, `0x806908`, `0x80a2d8`, `0xcee9e8`
+Addresses: `0x41a100`, `0x41a109`, `0x41a129`, `0x41a133`, `0x41a13e`, `0x41a000`, `0x41a04f`, `0x41a05f`, `0x41a0f0`, `0x7ffa10`, `0x6ee22d`, `0x6eddd9`, `0x6edf6b`, `0x6edca1`, `0x6edbc2`, `0x419ed0`, `0x4b5fc0`, `0x6ed9b0`, `0x5a79e0`, `0x4420b0`, `0x806908`, `0x80a2d8`, `0xcee9e8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x41a109` loads `[other+0xc]`, the first line, and the loop ends at a pointer with bit 0 set or at
 0. `0x41a129` pushes the line's `+0` (text) and `+4` (severity) and `this`; `0x41a133` is `call
 [eax+0xc]`, `add esp,0xc` after it; `0x41a13e` steps through the link at `[other+4]` from the line.
-`CStatus::vftable` holds `0x41a000` in slot 3; `0x41a000` formats its format and arguments with
+`CStatus::vftable` holds `0x41a000` in slot 0xc; `0x41a000` formats its format and arguments with
 `SStrVPrintf` into a 256-byte buffer (`0x41a04f`), returns at `0x41a05f` when the result is empty,
-and raises `+0x10` at `0x41a0f0`. The load merges a file's status through slot 2 at `0x6ee22d` and a
+and raises `+0x10` at `0x41a0f0`. The load merges a file's status through slot 8 at `0x6ee22d` and a
 toc's at `0x6eddd9`, into `CStatus` locals whose vtable `0x7ffa10` is stored at `0x6edf6b` and
-`0x6edca1`. The overrides are slot 3 of `0x806908` (`0x4b5fc0`), of the vtable of the object `0xcee9e8`
+`0x6edca1`. The overrides are slot 0xc of `0x806908` (`0x4b5fc0`), of the vtable of the object `0xcee9e8`
 (`0x6ed9b0`), which `0x6edbc2` puts in place of a null status, and of `0x80a2d8` (`0x5a79e0`, a bare
 `ret`); `0x4b5fc0` and `0x6ed9b0` are the same bytes, `SStrVPrintf` into a 0x200-byte buffer and
-`0x4420b0`.
+`0x4420b0`. All three keep slot 0x10, `0x419ed0`, which still stores lines.
 
 ## Sound while loading
 
@@ -336,7 +344,7 @@ queued.
 
 Addresses: `0x458f50`, `0x458f60`, `0x458030`, `0x45804d`, `0xb05fa0`, `0x48fbfa`, `0x49016d`, `0x4908d5`, `0x490a56`, `0x490a94`, `0x490b64`, `0x490bd1`, `0x490cd9`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x458f50` increments and `0x458f60` decrements `0xb05fa0`. `0x458030` returns at `0x45804d` when
@@ -354,7 +362,7 @@ object is never freed.
 
 Addresses: `0x6f2a30`, `0x6f2a3e`, `0x7e6690`, `0x7e66d0`, `0x7e685d`, `0x6f2a79`, `0x6f2a98`, `0x6f28a0`, `0x6f29c0`, `0x6f29d0`, `0x6f2b10`, `0x6f2c50`, `0x6f2cf0`, `0x882094`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f2a30` creates the parser with a null encoding (`0x6f2a3e`): expat's `XML_ParserCreate` (`0x7e6690`)
