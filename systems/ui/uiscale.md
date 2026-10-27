@@ -50,26 +50,27 @@ device rectangle and calls `0x492f70` (`0x4908ad`). The sink `0x494550` compares
 `UIParent` (`0x49456a`), and it calls `0x76ac10(UIParent, v, 1)` (`0x49457a`) and drains the queue
 `0x768ed0`.
 
-## The fullscreen frame scale
+## SetupFullscreenScale
 
-`SetupFullscreenScale(frame)` sets the frame's own scale to the smaller of `0.75·a` and 1.0, where `a` is the
-aspect of the `gxResolution` setting while `widescreen` is on and 4/3 otherwise, the same call `frame:SetScale` makes without the force flag. It reads no `uiScale`
-and writes no anchor or size. A non-table argument raises `Usage: SetupFullscreenScale(frame)`, a table
-without a frame behind it `SetupFullscreenScale(): Couldn't find 'this' in frame object`, and any other object
-`SetupFullscreenScale(): Wrong object type, expected frame`. The call returns no value.
+`SetupFullscreenScale(frame)` sets the frame's own scale to `A`, the float at `0x832a4c` (`0.75·a`), and to 1.0 when `A` is
+1.0 or more or not a number. `a` is the aspect of the `gxResolution` setting while `widescreen` is on and 4/3 otherwise, as
+of the last glue or interface build (`screencoord#when-the-cells-change`). It is the call `frame:SetScale` makes (`0x76ac10`,
+no force flag), reads no `uiScale` and writes no anchor or size. A non-table argument raises `Usage:
+SetupFullscreenScale(frame)`, a table without a frame behind it `SetupFullscreenScale(): Couldn't find 'this' in frame
+object`, and any other object `SetupFullscreenScale(): Wrong object type, expected frame`. The call returns no value.
 
-Addresses: `0x48c270`, `0x48c282`, `0x48c2b1`, `0x48c2e9`, `0x48c306`, `0x48c30e`, `0x48c31d`, `0x48c323`, `0x48c335`, `0x41ad70`, `0x41ad10`, `0x76ac10`, `0x6f4940`, `0x83e2b8`, `0x8012cc`, `0x8015b8`
+Addresses: `0x48c270`, `0x48c282`, `0x48c2b1`, `0x48c2e9`, `0x48c306`, `0x48c30e`, `0x48c31d`, `0x48c323`, `0x48c330`, `0x48c335`, `0x48c342`, `0x41ad70`, `0x41ad10`, `0x76ac10`, `0x6f4940`, `0x83e2b8`, `0x832a4c`, `0x8012cc`, `0x8015b8`
 Confidence: verified
 Proof: one
 Test: none
 
 The binding is entry `SetupFullscreenScale` of the pair table at `0x83e2b8`, with no direct caller. It checks the argument
-is a table (`0x48c282`), unwraps element 0 (`0x6f3bc0`, `0x6f3740`), rejects a null pointer (`0x48c2b1`) and
+is a table (`0x48c282`, else `0x48c342`), unwraps element 0 (`0x6f3bc0`, `0x6f3740`), rejects a null pointer (`0x48c2b1`) and
 asks the object's type slot for the frame class id (`0x48c2e9`). `0x41ad70` loads `[0x832a4c]`, which `0x41ad10` sets
-to `a` times `0.75` (`0x8012cc`); `fcomp` against 1.0 (`0x48c30e`) then takes the value when it is below 1.0 and
-1.0 when it is equal, above or not a number (`0x48c31d`). It calls `0x76ac10(value, 0)` (`0x48c323`, `0x48c335`). A
-widescreen window of 16:9 gets 1.0 and a 5:4 window 0.9375; with the widescreen option off the aspect is 4/3 and
-the result is 1.0.
+to `a` times `0.75` (`0x8012cc`); `fcomp` against 1.0 (`0x48c30e`) and `test ah,5; jp` (`0x48c31d`) keep the value only when
+C0 is set (below 1.0) and otherwise store 1.0 (`0x48c330`): equal, above or unordered. It calls `0x76ac10(value, 0)`
+(`0x48c323`, `0x48c335`). A widescreen window of 16:9 gets 1.0 and a 5:4 window 0.9375; with the widescreen option off
+the aspect is 4/3 and the result is 1.0.
 
 ## The automatic scale
 
@@ -110,16 +111,3 @@ screen functions divide G48 (width: G44) by the reader and multiply by `0.75a ·
 (`modelview#model-unit-to-pixel`).
 
 Bit-exact coverage: `ui::luabind_48b_screen_getters` covers the whole of `0x494590`.
-
-## SetupFullscreenScale
-
-`SetupFullscreenScale(frame)` sets the frame's own scale to the screen aspect scale when that is below 1 and to 1 otherwise. A
-non-frame argument raises `SetupFullscreenScale(): Wrong object type, expected frame`, an unresolved one `SetupFullscreenScale(): Couldn't find 'this' in frame object`, and a
-missing one `Usage: SetupFullscreenScale(frame)`. The aspect scale is the aspect times 0.75, so it is 1 at 4:3 and wider screens give 1.
-
-Addresses: `0x48c270`, `0x48c306`, `0x48c30e`, `0x48c323`, `0x48c335`, `0x41ad70`, `0x76ac10`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x48c306` calls `GetScaledScreenAspect` and `0x48c30e` compares it with the double 1.0; `jp` after `test ah,5` jumps for equal or greater to the store of 1.0 at `0x48c330`, and the less case reaches `SetFrameScale` with the aspect at `0x48c323`.
