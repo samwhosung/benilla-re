@@ -18,15 +18,22 @@ and the mouse (7), slider and color select with the mouse. Message frame, model,
 frame, simple HTML, status bar and movie frame start with 0, as does a tooltip. The world frame starts with keys,
 mouse and wheel (0xe) and the minimap with the mouse (4).
 
-Addresses: `0x769090`, `0x7786a0`, `0x779ced`, `0x779cf8`, `0x779d03`, `0x789467`, `0x78b2b5`, `0x481960`, `0x4edbc0`, `0x76af00`
+Addresses: `0x769090`, `0x7786a0`, `0x779ced`, `0x779cf8`, `0x779d03`, `0x789467`, `0x78b2b5`, `0x481960`, `0x4edbc0`, `0x76af00`, `0x764ac3`, `0x765df0`, `0x765e80`, `0x765f10`, `0x765e24`, `0x765e31`, `0x765f56`, `0x765f61`, `0x769ef0`, `0x769f6b`, `0x769fa4`, `0x776f5d`, `0x776f68`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7690d9` stores 0 in the frame constructor. The enables are `0x778771` (button, kind 2), `0x779ced`, `0x779cf8` and
 `0x779d03` (edit box, kinds 0, 1 and 2), `0x789467` (slider), `0x78b2b5` (color select), `0x481b09`, `0x481b14` and `0x481b1f`
 (world frame, kinds 1 to 3, `edi` being 1) and `0x4edc38` (minimap). Only these three instructions write `+0xcc`:
 the constructor, the enable `0x76af38` and the disable `0x76af8e`.
+
+Bit 0 is characters and bit 1 keys. A list record is `root+0xd10+(stratum+9·kind)·0x1c` (`0x764ac3`). The
+character walks `0x765df0` and `0x765e80` start at `root+0xe24` and subtract 0x1c before each record
+(`0x765e24`, `0x765e31`), which puts the first at kind 0, stratum 8, and the key-down walk `0x765f10` starts at
+`root+0xf20` (`0x765f56`, `0x765f61`), kind 1. The script elements agree: in `0x769ef0`, `OnChar` enables kind 0
+(`0x769f6b`) and `OnKeyDown` or `OnKeyUp` kind 1 (`0x769fa4`), and the Lua `EnableKeyboard` enables kind 1
+(`0x776f5d`) and then kind 0 (`0x776f68`).
 
 ## Switching input kinds
 
@@ -37,14 +44,18 @@ keyboard calls work the same. A disable runs the removal tail of `ui/input`, an 
 pick. `IsMouseEnabled()` reads bit 2 and nothing else and returns the number 1 or nil, never a boolean;
 `IsMouseWheelEnabled()` reads bit 3.
 
-Addresses: `0x769820`, `0x777070`, `0x777130`, `0x7772b0`, `0x76af00`, `0x76af50`, `0x6f1c10`
+Addresses: `0x769820`, `0x777070`, `0x777130`, `0x7772b0`, `0x76af00`, `0x76af50`, `0x6f1c10`, `0x769a93`, `0x769abf`, `0x769ef0`, `0x76a02f`, `0x76a044`, `0x8790a0`, `0x879164`, `0x87860c`, `0x87861c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue769_769820_set_alpha_quantize`
 
 `0x769ab1` skips the enable for a false attribute and no `0x76af50` call exists on that path. `0x7770f5` passes
 default 1 to `0x6f1c10`; `0x77710d` enables with kind 2, `0x77711a` disables. `0x7771bb` and `0x77733b` shift the mask
-by 2 and 3. There is no `enableMouseWheel` attribute.
+by 2 and 3. There is no `enableMouseWheel` attribute: `0x769820` reads `enableMouse` (`0x87861c`, `0x769a93`) and
+`enableKeyboard` (`0x87860c`, `0x769abf`), and the image's one string that matches `EnableMouseWheel` ignoring
+case (`0x879164`) is referenced only from the method table at `0x8790a0`. An XML `<OnMouseWheel>` script element does
+enable the wheel: `0x769ef0` compares each script element's name with it (`0x76a02f`) and calls `0x76af00` with kind 3
+(`0x76a044`).
 
 ## A hidden frame's bit
 
@@ -56,7 +67,7 @@ child's own effective-visibility word `+0xd4`.
 
 Addresses: `0x76af00`, `0x76ae10`, `0x764780`, `0x76afa0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76af1b` tests `+0xd4` before `0x764aa0`; `0x76af38` ors the bit in either way. `0x76ae10` requires the frame
@@ -72,14 +83,18 @@ alpha, so a fully transparent frame with the mouse bit still takes the pointer. 
 goes to the pressed frame, else the hovered one, so a frame the hover pick never chose cannot get `OnMouseDown`
 or `OnMouseUp`.
 
-Addresses: `0x7660d0`, `0x76b320`, `0x76b020`, `0x482aa0`, `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80`, `0x7cba30`
+Addresses: `0x7660d0`, `0x76b320`, `0x76b020`, `0x482aa0`, `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80`, `0x7cba30`, `0x76b026`, `0x76b034`, `0x76b041`, `0x76b047`, `0x76b061`, `0x76b069`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::dist2_76b320`, `ui::point_in_rect`
 
 `0x7660d0` calls slot 0x3c at `0x766207`. The base slot is `0x76b320`; the six overrides are the world frame's
 `0x482aa0`, the minimap's `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80` and the nameplate's `0x7cba30`, each of which
-calls `0x76b320`. `0x76b020` reads `+0x60` bit 0 and the rectangle at `+0xd8` to `+0xe4` only.
+calls `0x76b320`. `0x76b020` answers 0 when `+0x60` bit 0 is clear (`0x76b026`), then tests `+0xb4` bit 0x2000
+(`0x76b034` to `0x76b041`), the bit of a frame that draws itself (`ui/input#hit-test`). With it clear the point is
+tested against its own rectangle at `+0xd8` to `+0xe4`. With it set the function climbs `+0x9c` past ancestors
+with the bit (`0x76b047` to `0x76b061`), answers 0 when it runs out, and otherwise tests the intersection of the first
+other ancestor's rectangle and the frame's own (`0x76b069` on). It reads no alpha or mask.
 
 `0x77a860` is the edit box's slot at `+0x3c` of its vtable `0x81c910`. It returns 0 when `0x76b320` does; otherwise, with the drag flag `+0x364` set, it asks `0x77d0d0` for the glyph index at the event's point (`+0x24`, `+0x28`), extends the selection by that index less the cursor `+0x36c` (`0x77cd10`), sets the cursor to the index (`0x77e360`) and returns 1.
 
@@ -98,7 +113,7 @@ with another button still down keeps it. The clear is a plain store, so a captur
 
 Addresses: `0x766420`, `0x766f70`, `0xcf0bc8`, `0x765640`, `0x764dc0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76642b` snapshots `+0x80` into `ebx`. `0x766467` loads the drag mode and `0x766477` and `0x76647c` send modes 1 and 2 to
@@ -142,7 +157,7 @@ constructor stores. Their three mouse slots divide as follows; the probe's six o
 
 Addresses: `0x76ab10`, `0x76b320`, `0x482aa0`, `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80`, `0x7cba30`, `0x76bf70`, `0x779210`, `0x77b800`, `0x789ca0`, `0x78bf10`, `0x483c40`, `0x76c040`, `0x7792d0`, `0x77b890`, `0x789cd0`, `0x78bf90`, `0x483cb0`, `0x76b388`, `0x7661ca`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 The vtables are found by the dword `0x76ab10` at offset 0x14: 27 hits in `.rdata`, each at the table's slot 5.
@@ -163,7 +178,7 @@ stratum. A child sits above its parent only because it takes the parent's level 
 
 Addresses: `0x7660d0`, `0x7661df`, `0x7661f2`, `0x764aa0`, `0x764b2d`, `0x764b30`, `0x76a4f0`, `0x76a523`, `0x76a54c`, `0x76a558`, `0x76a582`, `0x76ae10`, `0x76ae85`, `0x76aed5`, `0x764920`, `0x764780`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x764b30` is `ja`, taken only for a new level above the incumbent's, so equal levels keep scanning
@@ -180,7 +195,7 @@ the name of the lowest-numbered button held at that moment: `LeftButton`, `Middl
 
 Addresses: `0x76bf70`, `0x76bf7d`, `0x76bf82`, `0x76bf8c`, `0x76bf99`, `0x76bfa5`, `0x76b320`, `0x76b34c`, `0x76b368`, `0x76b37e`, `0x76b388`, `0x76c1e0`, `0x76c1e6`, `0x76c1f6`, `0x76c206`, `0x76c21e`, `0x76c22c`, `0x76c233`, `0x76c23a`, `0x76c241`, `0x76c248`, `0x76c24f`, `0x76c25c`, `0xcf0c14`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76bf70` ANDs the event's button (`+0x14`) with the drag mask at `+0xfc` (`0x76bf7d`); on a match it stores 1 at `+0x100`, 0 at `+0x104`, the button at `+0x108` and the press point at `+0x10c`
@@ -197,7 +212,7 @@ wheel-enabled frame with no script, or hidden, does not take the turn and the wa
 
 Addresses: `0x7664f0`, `0x76c180`, `0x7026f0`, `0x41ad80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x766524` to `0x76654b` convert the manager's saved cursor `+0x1118`, `+0x111c`, not the event's. `0x766586` calls
@@ -210,18 +225,18 @@ The base enter `0x76b6a0` shows the frame's highlight texture, sets a flag when 
 the `OnEnter` script (`+0x140`). The base leave `0x76b6f0(arg)` hides the highlight, clears the flag, clears the
 drag arm words `+0x100` and `+0x104` when `arg` is nonzero, and fires `OnLeave` (`+0x148`). The scripts get no
 arguments. A hover pick runs the old frame's leave with 0 and then the new frame's enter; the removal tail runs
-the leave with 1. The world frame's leave publishes a null mouseover, shows the base cursor and resets the
+the leave with 1. The world frame's leave publishes a null mouseover when it holds one, shows the base cursor and resets the
 reticle state; a nameplate's enter and leave publish and clear its unit as the mouseover; the minimap's leave
 hides the game tooltip first.
 
-Addresses: `0x76b6a0`, `0x76b6f0`, `0x483b10`, `0x7cb850`, `0x7cb8b0`, `0x4eb880`, `0x492890`
+Addresses: `0x76b6a0`, `0x76b6f0`, `0x483b10`, `0x483b32`, `0x7cb850`, `0x7cb8b0`, `0x4eb880`, `0x492890`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76b6af` shows and `0x76b70c` hides the highlight through slot 0x88 and 0x84; `0x76b6c9` and `0x76b71c` set and clear flag
 4 in `+0xf8`'s absence; `0x76b72c` clears the arm words; `0x76b6e5` and `0x76b751` fire the scripts. `0x483b1d` calls the
-base leave first, `0x483b46` the publish, `0x483b58` the base cursor and `0x483b5d` stores 3 in `0x83dc2c`.
+base leave first, `0x483b46` the publish, taken only when `+0x340` or `+0x344` is nonzero (`0x483b32`), `0x483b58` the base cursor and `0x483b5d` stores 3 in `0x83dc2c`.
 `0x7cb869` publishes the plate's GUID (`+0x4e8`) with a null previous and `0x7cb8bf` publishes null. `0x4eb88e`
 hides the tooltip (`0xb4b3c4`).
 

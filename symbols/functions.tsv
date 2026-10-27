@@ -702,8 +702,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40d680	821	_memcpy	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40d9b5	317			crt	boundary		Runs its object file code that calls __lock, ___sbh_alloc_block, 0x40f1eb and 4 more; not read here	inferred	none		
 0x40daf2	23	_strtol	idb	crt	boundary		Runs its object file code that calls _strtoxl; not read here	inferred	none		
-0x40db09	517	_strtoxl	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base, int flags)	Parses an integer by C rules: skips white space, takes a sign and base prefix, flags overflow and negation	verified	one	ui/luabase#tonumber	
-0x40dd0e	23	_strtoul	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base)	Calls _strtoxl with the unsigned flag 1	verified	one	ui/luabase#tonumber	
+0x40db09	517	_strtoxl	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base, int flags)	Parses an integer by C rules: skips white space, takes a sign and base prefix, flags overflow and negation	verified	two	ui/luabase#tonumber	
+0x40dd0e	23	_strtoul	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base)	Calls _strtoxl with the unsigned flag 1	verified	two	ui/luabase#tonumber	
 0x40dd40	188	_strchr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40de00	128	_strstr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40de80	56	strncmp		crt	primitive		Compares at most n bytes of two strings, case-sensitive	verified	one	objectlayer/party#guild-events	
@@ -1563,7 +1563,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41a830	226			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x41a930	360			unassigned			Runs its object file code not read here	inferred	none		
 0x41aab0	256	sgetu8	idb	unassigned			Decodes the UTF-8 code point at a string, storing the bytes read; -1 at a NUL, 0x80000000 for a bad sequence	verified	one	net/who#who-filter-decoding	
-0x41abb0	234	EncodeUtf8		unassigned	primitive	char * __fastcall (uint32_t code, char *dst)	Writes a code below 0x80000000 as one to six UTF-8 bytes and a terminator, returning the terminator's address	verified	one	ui/keyscripts#key-names	
+0x41abb0	234	EncodeUtf8		unassigned	primitive	char * __fastcall (uint32_t code, char *dst)	Writes a code below 0x80000000 as one to six UTF-8 bytes and a terminator, returning the terminator's address	verified	two	ui/keyscripts#key-names	
 0x41aca0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41acb0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41acc0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -2174,8 +2174,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42a1a0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1b0	15			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1c0	337	RestrictProcessAccess		os			Sets the process access list: deny Everyone mask 250, allow the user mask 1050369, protected	verified	one	core/threads#process-access-list	
-0x42a320	86	CheckFunctionPointer		os			Stops the client with Invalid function pointer when an address lies outside the exe .text section	verified	one	ui/luastate#the-c-function-contract	
-0x42a380	133	FindTextSection		os			Stores the start and end of the exe .text section from its section table	verified	one	ui/luastate#the-c-function-contract	
+0x42a320	86	CheckFunctionPointer		os			Stops the client with Invalid function pointer when an address lies outside the exe .text section	verified	two	ui/luastate#the-c-function-contract	
+0x42a380	133	FindTextSection		os			Stores the start and end of the exe .text section from its section table	verified	two	ui/luastate#the-c-function-contract	
 0x42a410	5			os			Runs its object file code not read here	inferred	none		
 0x42a420	15			os			Runs its object file code not read here	inferred	none		
 0x42a430	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -6759,7 +6759,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration	int __fastcall (lua_State *L)	Asks the server to sit, or to stand when the player is not standing	verified	one	ui/groupverbs#small-sends	
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration	int __fastcall (lua_State *L)	Stops the cinematic narration	verified	one	ui/groupverbs#small-sends	
-0x48b980	119	Script::RunScript	idb	ui	primitive	int __fastcall (lua_State *L)	Runs argument 1 as a chunk with the context word set to the RunScript word	verified	one	ui/luastate#the-context-word	
+0x48b980	119	Script::RunScript	idb	ui	primitive	int __fastcall (lua_State *L)	Runs argument 1 as a chunk with the context word set to the RunScript word	verified	two	ui/luastate#the-context-word	
 0x48ba00	343	Script::CheckInteractDistance	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes 1 when the unit is within the range of the given index 1 to 4, else nil	verified	one	ui/distancegates#checkinteractdistance	ui::check_interact_dist2
 0x48bb60	10	InitResolutionListThunk		ui	orchestration	void __cdecl (void)	Calls 0x48bb70 and registers 0x48bba0 with _atexit; a static initializer	verified	one	ui/videoverbs#the-resolution-list	
 0x48bb70	23	InitResolutionList		ui	orchestration	void __cdecl (void)	Zeroes the four cells of the screen resolution list	verified	one	ui/videoverbs#the-resolution-list	
@@ -6972,7 +6972,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *this)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/mouseover#publishing-the-mouseover	
 0x492e90	218	OnDisplaySizeChanged		ui	primitive	uint32_t __thiscall (void *this)	Applies the interface scale for a new window size, then signals DISPLAY_SIZE_CHANGED or reloads the interface	verified	one	ui/videoverbs#after-a-size-change	
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	ui::glue_492_492f70_recip_unit
-0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	one	ui/keyscripts#deactivating-the-window	
+0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	two	ui/keyscripts#deactivating-the-window	
 0x493070	28	EnterWorldMouselook		ui	orchestration	void __cdecl (void)	Begins the world frame's mouselook and makes it the hovered frame	verified	one	ui/mouseover#mouselook	
 0x493090	27	LeaveWorldMouselook		ui	orchestration	void __cdecl (void)	Ends the world frame's mouselook and asks for a hover pick	verified	one	ui/mouseover#mouselook	
 0x4930b0	29	OnScreenshotDone		ui	orchestration	void __fastcall (uint32_t succeeded)	Signals SCREENSHOT_SUCCEEDED or SCREENSHOT_FAILED once the interface is up	verified	one	ui/cvarverbs#performance-display-and-screenshots	
@@ -7036,8 +7036,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495a30	70	CreateLootButton		ui	orchestration	void * __thiscall (CSimpleFrame *this)	Allocates a LootButton, a button of 0x4e0 bytes with one slot dword, and installs its vtables	verified	one	ui/loot#the-row-widget	
 0x495a80	34	CSimpleButton::SetHighlightLocked		ui	orchestration		Locks or releases a button's highlight, then refreshes its label font	verified	one	ui/button#button-state-from-lua	
 0x495ab0	53	LootButtonIsA		ui	orchestration		Answers 1 for the LootButton, Button, Frame and Region type ids	verified	one	ui/gameui#interface-state-helpers	
-0x495af0	110	LootButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is LootButton or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x495b60	6	LootButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name LootButton	verified	one	ui/widgettype#type-chains	
+0x495af0	110	LootButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is LootButton or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x495b60	6	LootButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name LootButton	verified	two	ui/widgettype#type-chains	
 0x495b70	43	DeletingDestructor495b70		ui	orchestration		Destroys the object through 0x778850 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x495ba0	40	CGTaxiRouteFrame::Create	idb	ui	orchestration	void * __thiscall (CGTaxiRouteFrame *this)	Allocates 0x314 bytes and constructs a route frame under the parent	verified	one	ui/taxiframe#class-and-size	
 0x495bd0	40	CGCharacterModelBase::Create	idb	ui	orchestration		Allocates 0x3f8 bytes under CharacterModelBase.h and constructs a PlayerModel under the parent	verified	one	ui/gameui#frame-factories	
@@ -10607,7 +10607,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eaf00	319	MinimapClipBlipToTile		ui	primitive		Computes four edge values of a bounding box clamp from a base and a width	inferred	none	ui/minimap#two-small-helpers	ui::glue_4ea_4eaf00_bbox_edges
 0x4eb040	123	CGMinimapFrame::OnFrameUpdate		ui	orchestration	void __thiscall (CGMinimapFrame *this, float elapsed)	Runs the base update, places the loaded player arrow, and feeds it the camera target's facing	verified	one	ui/minimap#the-player-arrow-each-frame	
 0x4eb0c0	1983	CGMinimapFrame::OnMouseMove		ui	primitive		Finds the minimap icons, dots, arrows and party markers under the cursor and rebuilds the tooltip when they change	verified	one	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4eb0c0_range_and_light
-0x4eb880	46	CGMinimapFrame::OnLeave		ui	orchestration	void __thiscall (CGMinimapFrame *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	one	ui/mouse#enter-and-leave	
+0x4eb880	46	CGMinimapFrame::OnLeave		ui	orchestration	void __thiscall (CGMinimapFrame *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	two	ui/mouse#enter-and-leave	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34	CGMinimapFrame::SetPlayerFacing		ui	orchestration	void __thiscall (CGMinimapFrame *this, float facing)	Stores a facing in the minimap and in its player arrow's facing	verified	one	ui/minimap#the-player-arrow-each-frame	
 0x4eb910	639	MinimapBuildBlipQuad		ui	primitive		Builds the minimap quad from a four-float rectangle through 0x4ead90	inferred	none	ui/minimap#two-small-helpers	ui::geo_4eb910
@@ -10631,8 +10631,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4edb70	68	ReleaseMinimapTextures		ui	host	void __cdecl ()	Releases the three texture handles and zeroes them	verified	one	ui/minimap#minimap-textures	
 0x4edbc0	1085	CGMinimapFrame::CGMinimapFrame	idb	ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent and 5 more; not read here	inferred	none	ui/minimapblips#blip-sizes	ui::glue_4edbc0_unit_scale_spread
 0x4ee000	45	IsTypeId4ee000		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x4ee030	89	MinimapIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Minimap or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x4ee090	6	MinimapGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Minimap	verified	one	ui/widgettype#type-chains	
+0x4ee030	89	MinimapIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Minimap or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x4ee090	6	MinimapGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Minimap	verified	two	ui/widgettype#type-chains	
 0x4ee0a0	43	DeletingDestructor4ee0a0		ui	orchestration		Destroys the object through 0x4ee0d0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4ee0d0	36			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ee100	104	CGMinimapFrame::PlacePlayerModel		ui	primitive	void __thiscall (CGMinimapFrame *this)	Sets the player arrow's position to half its width and height	verified	one	ui/minimap#the-player-arrow-each-frame	ui::glue_4dc_4ee100_half_pair, ui::minimap_arrow_centre
@@ -11645,8 +11645,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x502770	11	InitInfinity502770		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x502780	35	CGTabardModelFrame::CGTabardModelFrame	idb	ui	orchestration		Constructs a TabardModel frame: runs the base constructor, then stores the TabardModel tables	verified	one	ui/playermodel#pane-classes	
 0x5027b0	61			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5027f0	132	TabardModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is TabardModel or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x502880	6	TabardModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name TabardModel	verified	one	ui/widgettype#type-chains	
+0x5027f0	132	TabardModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is TabardModel or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x502880	6	TabardModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name TabardModel	verified	two	ui/widgettype#type-chains	
 0x502890	43	DeletingDestructor502890		ui	orchestration		Destroys the object through 0x5028c0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x5028c0	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5028e0	285	TabardModel::SeedFromGuild		ui	primitive	void __thiscall (TabardModel *this, void *player)	Sets the five design values from the player's guild record, or at random, and repaints	verified	one	ui/tabard#starting-values	
@@ -11728,8 +11728,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5041c0	11	InitInfinity5041c0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x5041d0	45	CGDressUpModelFrame::CGDressUpModelFrame	idb	ui	orchestration		Constructs a DressUpModel frame: runs the base constructor, zeroes +0x3f8, stores the DressUpModel tables	verified	one	ui/playermodel#pane-classes	
 0x504200	61			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x504240	132	DressUpModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is DressUpModel or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x5042d0	6	DressUpModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name DressUpModel	verified	one	ui/widgettype#type-chains	
+0x504240	132	DressUpModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is DressUpModel or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x5042d0	6	DressUpModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name DressUpModel	verified	two	ui/widgettype#type-chains	
 0x5042e0	43	DeletingDestructor5042e0		ui	orchestration		Destroys the object through 0x504310 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x504310	49			ui	orchestration		Runs its object file code that calls DeleteCharacterComponent; not read here	inferred	none		
 0x504350	274	DressUpModel::SetModelInstance		ui	primitive	void __thiscall (DressUpModel *this, CM2Model *model)	Takes the copied model, clones the unit's character component and records the unit's held item lanes	verified	one	ui/dressup#pane-setup	
@@ -11811,8 +11811,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x505660	19	InitQuotient505660		ui	primitive	void __cdecl (void)	Stores 1 / 4.1666665 = 0.24000001 as a float in a global	verified	one	ui/initfloats#quotients	
 0x505680	249	CGCharacterModelBase::CGCharacterModelBase	idb	ui	orchestration		Constructs the model frame base: zeroes the pane fields, stores the PlayerModel tables, enables a directional light	verified	one	ui/playermodel#pane-classes	
 0x505780	53			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5057c0	110	PlayerModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is PlayerModel or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x505830	6	PlayerModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name PlayerModel	verified	one	ui/widgettype#type-chains	
+0x5057c0	110	PlayerModelIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is PlayerModel or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x505830	6	PlayerModelGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name PlayerModel	verified	two	ui/widgettype#type-chains	
 0x505840	43	DeletingDestructor505840		ui	orchestration		Destroys the object through 0x505870 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x505870	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505890	266	CharacterModelBaseChooseCamera		ui	orchestration	void __thiscall (void *this)	Installs a frozen copy of camera 1, or a fixed camera aimed at the bounding box centre	verified	one	ui/modelview#the-character-pane-camera	
@@ -13174,8 +13174,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529230	1	InitTable5291d0Exit		ui	orchestration	void __cdecl (void)	Returns at once	verified	one	ui/initexits#exits-that-return	
 0x529240	357	CGTooltip::CGTooltip	idb	ui	orchestration		Constructs a tooltip object: its frame base, line arrays and virtual table	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild	
 0x5293b0	45	IsTypeId5293b0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x5293e0	89	GameTooltipIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is GameTooltip or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x529440	6	GameTooltipGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name GameTooltip	verified	one	ui/widgettype#type-chains	
+0x5293e0	89	GameTooltipIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is GameTooltip or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x529440	6	GameTooltipGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name GameTooltip	verified	two	ui/widgettype#type-chains	
 0x529450	43	DeletingDestructor529450		ui	orchestration		Destroys the object through 0x529480 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x529480	215			ui	primitive		Runs its object file code that calls 0x467d00, ClntObjMgrClearObjectMirrorHandler and 2 more; not read here	inferred	none		
 0x529560	98	CGTooltip::OnUnitHealthChanged		ui	orchestration	uint32_t __stdcall (uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *statusBar)	Sets the tooltip health bar's range and value from the unit and returns 1	verified	one	ui/tooltipunit#the-health-bar	
@@ -29645,27 +29645,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2e90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ea0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ec0	106	luaA_pushobject		lua	unreached		Copies a value to the stack top and grows the stack when one slot is left	verified	one	lua/api#stack-moves	
-0x6f2f30	80	lua_checkstack		lua	boundary	int __fastcall (lua_State *L, int32_t size)	Makes room for size more stack slots, returning 0 when that passes 2048 in use	verified	one	ui/luastate#stack-room-and-run-errors	
+0x6f2f30	80	lua_checkstack		lua	boundary	int __fastcall (lua_State *L, int32_t size)	Makes room for size more stack slots, returning 0 when that passes 2048 in use	verified	two	ui/luastate#stack-room-and-run-errors	
 0x6f2f80	155	lua_xmove		lua	unreached		Moves the top n values of one state onto the top of another	verified	two	lua/api#stack-moves	
 0x6f3020	10	lua_atpanic		lua	unreached		Replaces the panic function of the global state and returns the old one	verified	two	lua/api#state-and-upvalues	
 0x6f3030	55	lua_newthread		lua	unreached		Pushes a new thread sharing the global state of the first	verified	one	lua/api#pushing-values	
-0x6f3070	10	lua_gettop	idb	lua	boundary		Returns the number of values on the stack	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f3070	10	lua_gettop	idb	lua	boundary		Returns the number of values on the stack	verified	two	ui/luastate#reading-numeric-arguments	
 0x6f3080	73	lua_settop	idb	lua	boundary		Sets the stack top to an index, filling new slots with nil or lowering it for a negative index	verified	two	lua/api#stack-moves	
 0x6f30d0	193	lua_remove		lua	boundary		Removes the value at an index and shifts the values above it down one slot	verified	two	lua/api#stack-moves	
 0x6f31a0	265	lua_insert	idb	lua	boundary		Moves the top value to an index, shifting the values from there up one slot	verified	two	lua/api#stack-moves	
 0x6f32b0	156	lua_replace		lua	boundary		Pops the top value into an index	verified	two	lua/api#stack-moves	
 0x6f3350	173	lua_pushvalue		lua	boundary		Pushes a copy of the value at an index	verified	two	lua/api#stack-moves	
-0x6f3400	16	lua_type		lua	boundary		Returns the type tag of a stack index, or -1 for an absent one	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f3400	16	lua_type		lua	boundary		Returns the type tag of a stack index, or -1 for an absent one	verified	two	ui/luastate#reading-numeric-arguments	
 0x6f3410	101	luaA_indexAcceptable		lua	boundary		Resolves a stack or pseudo index to its slot, null for an index past the top	verified	two	lua/api#index-lookup-and-tests	
 0x6f3480	18	lua_typename		lua	boundary		Returns the name of a type tag, or no value for -1	verified	two	lua/api#index-lookup-and-tests	
 0x6f34a0	33	lua_iscfunction		lua	unreached		Tests whether the value at an index is a function with a C body	verified	two	lua/api#index-lookup-and-tests	
-0x6f34d0	49	lua_isnumber		lua	boundary		Returns whether a stack value is a number or a string that converts to one	verified	one	ui/luastate#reading-numeric-arguments	
-0x6f3510	24	lua_isstring	idb	lua	boundary		Returns whether a stack value is a string or a number	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f34d0	49	lua_isnumber		lua	boundary		Returns whether a stack value is a number or a string that converts to one	verified	two	ui/luastate#reading-numeric-arguments	
+0x6f3510	24	lua_isstring	idb	lua	boundary		Returns whether a stack value is a string or a number	verified	two	ui/luastate#reading-numeric-arguments	
 0x6f3530	30	lua_isuserdata		lua	unreached		Tests whether the value at an index is a full or a light userdata	verified	two	lua/api#index-lookup-and-tests	
 0x6f3550	55	lua_rawequal		lua	boundary		Compares two stack values without metamethods, 0 when either index is invalid	verified	two	lua/api#index-lookup-and-tests	
 0x6f3590	71	lua_equal		lua	unreached		Compares two stack values with the equality metamethod, 0 when the tags differ	verified	two	lua/api#index-lookup-and-tests	
 0x6f35e0	56	lua_lessthan		lua	boundary		Compares two stack values with the order metamethod, 0 when either index is invalid	verified	two	lua/api#index-lookup-and-tests	
-0x6f3620	51	lua_tonumber		lua	boundary		Returns a stack value as a number, 0.0 for anything that does not convert	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f3620	51	lua_tonumber		lua	boundary		Returns a stack value as a number, 0.0 for anything that does not convert	verified	two	ui/luastate#reading-numeric-arguments	
 0x6f3660	36	lua_toboolean		lua	boundary		Returns 0 for nil and false and 1 for any other value	verified	two	lua/api#reading-values	
 0x6f3690	78	lua_tostring	idb	lua	boundary		Returns a stack value as text, converting a number in place, null for other types	verified	two	ui/script#creating-a-frame-from-lua	
 0x6f36e0	56	lua_strlen		lua	boundary		Returns the byte length of a string or a number converted to a string	verified	two	lua/api#reading-values	
@@ -29679,13 +29679,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f3890	37	lua_pushstring	idb	lua	boundary		Pushes a string, or nil for a null pointer	verified	two	ui/script#handler-arguments	
 0x6f38c0	46	lua_pushvfstring		lua	boundary		Pushes a string formatted from a format and an argument list	verified	two	lua/api#pushing-values	
 0x6f38f0	42	lua_pushfstring	idb	lua	boundary		Pushes a string formatted from a format and its arguments	verified	two	lua/api#pushing-values	
-0x6f3920	193	lua_pushcclosure		lua	boundary		Pushes a C closure of a function with upvalues	verified	one	ui/luastate#what-a-new-state-holds	
+0x6f3920	193	lua_pushcclosure		lua	boundary		Pushes a C closure of a function with upvalues	verified	two	ui/luastate#what-a-new-state-holds	
 0x6f39f0	37	lua_pushboolean		lua	boundary		Pushes a Lua boolean, called from seven places and no unit function	verified	one	ui/unittokens#what-the-functions-push	
 0x6f3a20	28	lua_pushlightuserdata		lua	boundary		Pushes a light userdata stamped with the current context word	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f3a40	187	lua_gettable	idb	lua	boundary		Replaces the key on top with the value at the table index, through metamethods	verified	two	lua/api#tables-and-metatables	
 0x6f3b00	182	lua_rawget		lua	boundary		Replaces the key on top with the raw value at the table index	verified	two	lua/api#tables-and-metatables	
 0x6f3bc0	196	lua_rawgeti		lua	boundary		Pushes the raw value at an integer key of the table at an index	verified	two	lua/api#tables-and-metatables	
-0x6f3c90	66	lua_newtable		lua	boundary		Pushes a new table stamped with the current context word	verified	one	ui/luastate#the-context-word	
+0x6f3c90	66	lua_newtable		lua	boundary		Pushes a new table stamped with the current context word	verified	two	ui/luastate#the-context-word	
 0x6f3ce0	5			lua	unreached		Runs its object file code not read here	inferred	none		
 0x6f3cf0	86	lua_getmetatable		lua	boundary		Pushes the metatable of a table or full userdata, returning 0 when it has none	verified	two	lua/api#tables-and-metatables	
 0x6f3d50	196	lua_getfenv		lua	boundary		Pushes the environment of a Lua function, the globals for any other value	verified	one	lua/api#tables-and-metatables	
@@ -29694,20 +29694,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f3f60	186	lua_rawseti		lua	boundary		Stores the top value at an integer key of the table at an index	verified	two	lua/api#tables-and-metatables	
 0x6f4020	171	lua_setmetatable		lua	boundary		Pops a table or nil into the metatable of the table or userdata at an index	verified	two	lua/api#tables-and-metatables	
 0x6f40d0	163	lua_setfenv		lua	boundary		Pops a table into the environment of the Lua function at an index, returning 0 for other values	verified	one	lua/api#tables-and-metatables	
-0x6f4180	27	lua_call		lua	boundary		Calls a function with arguments and results, unprotected	verified	one	ui/luastate#error-handlers	
+0x6f4180	27	lua_call		lua	boundary		Calls a function with arguments and results, unprotected	verified	two	ui/luastate#error-handlers	
 0x6f41a0	164	lua_pcall	idb	lua	boundary		Calls a function in protected mode with a handler index, returning the status	verified	two	lua/api#calls-and-chunks	
 0x6f4250	12	f_call		lua	boundary		Calls the function and result count of an argument record through luaD_call	verified	two	lua/api#calls-and-chunks	
 0x6f4260	44	lua_cpcall		lua	unreached		Calls a C function in protected mode with one light userdata argument	verified	one	lua/api#calls-and-chunks	
 0x6f4290	141	f_Ccall		lua	unreached		Pushes a C closure and a light userdata and calls the closure	verified	one	lua/api#calls-and-chunks	
-0x6f4320	74	lua_load		lua	boundary		Loads a chunk through a reader and the protected parser	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f4320	74	lua_load		lua	boundary		Loads a chunk through a reader and the protected parser	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f4370	65	lua_dump		lua	boundary		Writes a Lua function with no upvalues through a chunk writer, returning 0 for other values	verified	two	lua/api#calls-and-chunks	
-0x6f43c0	8	lua_enablegc		lua	boundary		Stores 1 in the state word +0x60 that lets the collector run	verified	one	ui/luastate#the-collector-switch	
-0x6f43d0	8	lua_disablegc		lua	boundary		Stores 0 in the state word +0x60, stopping the collector	verified	one	ui/luastate#the-collector-switch	
+0x6f43c0	8	lua_enablegc		lua	boundary		Stores 1 in the state word +0x60 that lets the collector run	verified	two	ui/luastate#the-collector-switch	
+0x6f43d0	8	lua_disablegc		lua	boundary		Stores 0 in the state word +0x60, stopping the collector	verified	two	ui/luastate#the-collector-switch	
 0x6f43e0	10	lua_getgcthreshold		lua	boundary		Returns the collector threshold in kilobytes	verified	two	lua/api#state-and-upvalues	
 0x6f43f0	10	lua_getgccount		lua	boundary		Returns the allocated memory in kilobytes	verified	two	lua/api#state-and-upvalues	
-0x6f4400	43	lua_setgcthreshold		lua	boundary		Sets the collection threshold in kilobytes and collects when the count reaches it	verified	one	ui/luastate#the-collector-switch	
+0x6f4400	43	lua_setgcthreshold		lua	boundary		Sets the collection threshold in kilobytes and collects when the count reaches it	verified	two	ui/luastate#the-collector-switch	
 0x6f4430	6	lua_version		lua	unreached		Returns the version text	verified	two	lua/api#state-and-upvalues	
-0x6f4440	8	lua_error	idb	lua	boundary		Raises the top value as a Lua error, never returning	verified	one	ui/luastate#the-c-function-contract	
+0x6f4440	8	lua_error	idb	lua	boundary		Raises the top value as a Lua error, never returning	verified	two	ui/luastate#the-c-function-contract	
 0x6f4450	141	lua_next		lua	boundary		Advances a table traversal from the key on top, returning 0 at the end	verified	two	lua/api#tables-and-metatables	
 0x6f44e0	113	lua_concat		lua	boundary		Concatenates the top n values into one string, an empty string for none	verified	two	lua/api#tables-and-metatables	
 0x6f4560	69	lua_newuserdata		lua	unreached		Pushes a new full userdata of a given size and returns its block	verified	two	lua/api#pushing-values	
@@ -29718,7 +29718,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f4810	143	luaL_argerror		lua	boundary		Raises a bad argument error naming the called function, or a bad self for a method	verified	one	lua/auxlib#argument-checks	
 0x6f48a0	58	luaL_typerror		lua	boundary		Raises an argument error saying which type was expected and which was found	verified	one	lua/auxlib#argument-checks	
 0x6f48e0	88	luaL_where		lua	boundary		Pushes the source name and current line of a call level, or an empty string	verified	one	lua/auxlib#argument-checks	
-0x6f4940	55	luaL_error	idb	lua	boundary		Raises a formatted message prefixed by the caller's position, never returning	verified	one	ui/luastate#the-c-function-contract	
+0x6f4940	55	luaL_error	idb	lua	boundary		Raises a formatted message prefixed by the caller's position, never returning	verified	two	ui/luastate#the-c-function-contract	
 0x6f4980	85	luaL_findstring		lua	unreached		Returns the index of a string in a null-ended list of strings, or -1	verified	one	lua/auxlib#metatables-and-fields	
 0x6f49e0	133	luaL_newmetatable		lua	unreached		Creates the metatable of a type name in the registry unless it exists	verified	one	lua/auxlib#metatables-and-fields	
 0x6f4a70	21	luaL_getmetatable		lua	unreached		Pushes the registry entry of a type name	verified	one	lua/auxlib#metatables-and-fields	
@@ -29751,7 +29751,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5490	383	luaL_loadfile		lua	unreached		Loads a file or standard input as a chunk, reopening a binary file in binary mode	verified	one	lua/auxlib#loading-chunks	
 0x6f5610	56	getF		lua	unreached		Reads up to 512 bytes of a file for the loader	verified	one	lua/auxlib#loading-chunks	
 0x6f5650	62	errfile		lua	unreached		Pushes a cannot read error for a file and removes the file name	verified	one	lua/auxlib#loading-chunks	
-0x6f5690	67	luaL_loadbuffer		lua	primitive		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f5690	67	luaL_loadbuffer		lua	primitive		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f56e0	32	getS		lua	boundary		Returns the block of a string loader once and then an empty size	verified	one	lua/auxlib#loading-chunks	
 0x6f5700	18	lua_dofile		lua	unreached		Loads a file and runs it in protected mode	verified	one	lua/auxlib#loading-chunks	
 0x6f5720	34	aux_do		lua	unreached		Runs a loaded chunk in protected mode and calls the alert function on failure	verified	one	lua/auxlib#loading-chunks	
@@ -29766,14 +29766,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5bc0	93	pushstr		lua	boundary		Pushes a null-ended string, the text (null) for a null pointer, which upstream does not	verified	two	lua/object#basic-object-functions	
 0x6f5c20	20	luaO_pushfstring		lua	boundary		Pushes a string formatted from a format and its arguments	verified	two	lua/object#basic-object-functions	
 0x6f5c40	311	luaO_chunkid		lua	primitive		Writes the short name of a chunk source for messages	verified	two	lua/object#basic-object-functions	
-0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	one	ui/luastate#the-c-function-contract	
-0x6f5db0	108	luaD_rawrunprotected		lua	boundary		Runs a function under setjmp, checking its address first	verified	one	ui/luastate#the-c-function-contract	
+0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	two	ui/luastate#the-c-function-contract	
+0x6f5db0	108	luaD_rawrunprotected		lua	boundary		Runs a function under setjmp, checking its address first	verified	two	ui/luastate#the-c-function-contract	
 0x6f5e20	71	luaD_reallocstack	idb	lua	boundary		Reallocates the stack to a new size and rebases every pointer into it	verified	two	lua/runtime#stack-and-call-records	
 0x6f5e70	122	correctstack		lua	boundary		Rebases the stack top, the open upvalues and the call records after the stack moved	verified	one	lua/runtime#stack-and-call-records	
 0x6f5ef0	105	luaD_reallocCI		lua	boundary		Reallocates the call-record vector and rebases the current and last records	verified	one	lua/runtime#stack-and-call-records	
 0x6f5f60	24	luaD_growstack	idb	lua	boundary		Grows the stack to twice its size, or by the needed size plus five when that is more	verified	two	lua/runtime#stack-and-call-records	
-0x6f5f80	200	luaD_callhook		lua	boundary		Calls the debug hook, checking its address first	verified	one	ui/luastate#the-c-function-contract	
-0x6f6050	363	luaD_precall		lua	boundary		Prepares a call, checking a C function address before calling it	verified	one	ui/luastate#the-c-function-contract	
+0x6f5f80	200	luaD_callhook		lua	boundary		Calls the debug hook, checking its address first	verified	two	ui/luastate#the-c-function-contract	
+0x6f6050	363	luaD_precall		lua	boundary		Prepares a call, checking a C function address before calling it	verified	two	ui/luastate#the-c-function-contract	
 0x6f61c0	60	luaD_growCI		lua	boundary		Doubles the call-record vector, raising stack overflow when the new size passes 4096	verified	two	lua/runtime#stack-and-call-records	
 0x6f6200	361	adjust_varargs		lua	boundary		Collects the extra arguments of a vararg function into an arg table with n	verified	one	lua/runtime#stack-and-call-records	
 0x6f6370	253	tryfuncTM		lua	boundary		Replaces a non-function by its __call metamethod and shifts it into the argument list	verified	one	lua/runtime#stack-and-call-records	
@@ -29786,7 +29786,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f67b0	170	resume		lua	unreached		Starts a coroutine or finishes the call it was suspended in, then runs the machine	verified	one	lua/runtime#errors-and-protected-calls	
 0x6f6860	251	lua_yield		lua	unreached		Marks the current call suspended, moving its results to the base, and returns -1	verified	two	lua/runtime#errors-and-protected-calls	
 0x6f6960	158	luaD_pcall		lua	boundary		Runs a function in protected mode and restores the state on an error	verified	two	lua/runtime#errors-and-protected-calls	
-0x6f6a00	115	luaD_protectedparser		lua	primitive		Parses a chunk under protection with the binary flag forced to 0	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f6a00	115	luaD_protectedparser		lua	primitive		Parses a chunk under protection with the binary flag forced to 0	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6a80	134	f_parser		lua	boundary		Compiles a chunk as source, the undump unreached, and pushes its closure	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6b10	101	luaE_newthread		lua	unreached		Creates a thread state that shares the global state and globals of another	verified	one	lua/runtime#state-open-and-close	
 0x6f6b80	19	mallocstate		lua	boundary		Allocates the 104-byte record of a state	verified	two	lua/runtime#state-open-and-close	
@@ -29795,11 +29795,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f6c90	36	luaE_freethread		lua	boundary		Closes the upvalues of a thread and frees its stack and its record	verified	one	lua/runtime#state-open-and-close	
 0x6f6cc0	17	freestate		lua	boundary		Frees the 104-byte record of a state	verified	two	lua/runtime#state-open-and-close	
 0x6f6ce0	63	freestack		lua	boundary		Frees the call records and the stack of a state	verified	two	lua/runtime#state-open-and-close	
-0x6f6d20	80	lua_open		lua	boundary		Creates a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x6f6d20	80	lua_open		lua	boundary		Creates a Lua state	verified	two	ui/luastate#opening-and-replacing-the-state	
 0x6f6d70	354	f_luaopen		lua	boundary		Builds the global state of a new Lua state: tables, string table, tag method names	verified	two	lua/runtime#state-open-and-close	
 0x6f6ee0	3	default_panic		lua	boundary		Returns 0, the panic function a new state starts with	verified	two	lua/runtime#state-open-and-close	
 0x6f6ef0	142	close_state		lua	boundary		Closes upvalues, sweeps every object, and frees the string table, the stacks and the global state	verified	one	lua/runtime#state-open-and-close	
-0x6f6f80	89	lua_close		lua	boundary		Destroys a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x6f6f80	89	lua_close		lua	boundary		Destroys a Lua state	verified	two	ui/luastate#opening-and-replacing-the-state	
 0x6f6fe0	5	callallgcTM		lua	boundary		Runs the pending finalizers; the protected function close_state uses	verified	one	lua/runtime#state-open-and-close	
 0x6f6ff0	140	luaC_separateudata	idb	lua	boundary		Runs its object file code that calls luaT_gettm; not read here	inferred	none		
 0x6f7080	145	luaC_callGCTM		lua	boundary		Calls the __gc metamethod of every userdata waiting to be finalized	verified	one	lua/runtime#sweeping-and-finalizers	
@@ -29808,7 +29808,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7210	66	sweeplist		lua	boundary		Frees the objects of a list whose mark byte is at most a limit, clears the mark of the rest, returns the count freed	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f7260	109	freeobj		lua	boundary		Frees an object according to its type tag	verified	two	lua/runtime#sweeping-and-finalizers	
 0x6f72f0	65	sweepstrings		lua	boundary		Sweeps every bucket of the string table and lowers the string count	verified	one	lua/runtime#sweeping-and-finalizers	
-0x6f7340	41	luaC_collectgarbage	idb	lua	primitive		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
+0x6f7340	41	luaC_collectgarbage	idb	lua	primitive		Collects garbage when the state word +0x60 is nonzero, else returns	verified	two	ui/luastate#the-collector-switch	
 0x6f7370	107	checkSizes		lua	boundary		Halves the string table and the work buffer when they are mostly unused	verified	one	lua/runtime#sweeping-and-finalizers	
 0x6f73e0	143	mark		lua	orchestration	void __fastcall (lua_State *L)	Marks what the roots reach, clears weak tables, separates and marks the userdata to finalize	verified	one	lua/gc#clearing-weak-keys	
 0x6f7470	38			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
@@ -29827,8 +29827,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7b20	31	luaC_link		lua	boundary		Puts a new object on the main list with its type tag and a clear mark	verified	two	lua/runtime#sweeping-and-finalizers	
 0x6f7b40	94	luaT_init		lua	boundary		Interns the tag method names and fixes them against collection	verified	one	lua/runtime#state-open-and-close	
 0x6f7ba0	39	luaT_gettm	idb	lua	boundary		Looks a metamethod name up in a metatable and records an absent one in its flags	verified	one	lua/runtime#metamethod-access	
-0x6f7bd0	69	luaT_gettmbyobj		lua	boundary		Returns a metamethod of a table or full userdata, nil for any other type	verified	one	ui/luastate#lua-50-behaviour-kept	
-0x6f7c20	81	luaV_tonumber		lua	boundary		Converts a number or a fully numeric string to a number, else null	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f7bd0	69	luaT_gettmbyobj		lua	boundary		Returns a metamethod of a table or full userdata, nil for any other type	verified	two	ui/luastate#lua-50-behaviour-kept	
+0x6f7c20	81	luaV_tonumber		lua	boundary		Converts a number or a fully numeric string to a number, else null	verified	two	ui/luastate#reading-numeric-arguments	
 0x6f7c80	106	luaV_tostring		lua	boundary		Converts a number value to a string in place, refusing other types	verified	two	ui/script#creating-a-frame-from-lua	
 0x6f7cf0	99	luaV_gettable		lua	boundary		Reads a key of a value through __index, following tables up to 100 times	verified	one	lua/runtime#metamethod-access	
 0x6f7d60	99	luaV_index		lua	boundary		Follows the __index of the metatable of a table, calling it or reading from it	verified	one	lua/runtime#metamethod-access	
@@ -29843,7 +29843,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f8440	144	get_compTM		lua	boundary		Returns the metamethod two metatables share for a comparison event, or null	verified	one	lua/runtime#order-equality-and-arithmetic	
 0x6f84d0	413	luaV_concat		lua	boundary		Concatenates the top values of the stack into one string, using __concat for others	verified	one	lua/runtime#order-equality-and-arithmetic	
 0x6f8670	161	call_binTM		lua	boundary		Calls the metamethod of an operator found on the first or second operand and stores its result	verified	one	lua/runtime#metamethod-access	
-0x6f8720	4432	luaV_execute		lua	boundary		Runs Lua bytecode, dispatching 35 opcodes through 0x6f9870	verified	one	ui/luastate#lua-50-behaviour-kept	
+0x6f8720	4432	luaV_execute		lua	boundary		Runs Lua bytecode, dispatching 35 opcodes through 0x6f9870	verified	two	ui/luastate#lua-50-behaviour-kept	
 0x6f9900	210	traceexec		lua	boundary		Calls the count hook and the line hook for the next instruction of a Lua function	verified	one	lua/runtime#order-equality-and-arithmetic	
 0x6f99e0	159	luaV_lessequal		lua	boundary		Compares two values with <=, through __le or the negated swapped __lt	verified	two	lua/runtime#order-equality-and-arithmetic	
 0x6f9a80	399	Arith		lua	boundary		Performs an arithmetic operator on two values, through the metamethod for non-numbers	verified	two	lua/runtime#order-equality-and-arithmetic	
@@ -29862,7 +29862,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fa150	69	luaF_getlocalname		lua	boundary		Returns the name of the nth local variable that is alive at an instruction, or null	verified	two	lua/object#closures-and-prototypes	
 0x6fa1a0	163	luaH_mainposition		lua	boundary		Returns the node where the hash of a key places it	verified	two	lua/object#table-access	
 0x6fa260	60	hashnum		lua	primitive		Hashes a number to a node by adding 1, summing the two words and taking a modulo	verified	two	lua/object#table-access	
-0x6fa2a0	379	luaH_next		lua	boundary		Answers the entry after a key: the array part by index, then the nodes by slot	verified	one	ui/luastate#lua-50-behaviour-kept	
+0x6fa2a0	379	luaH_next		lua	boundary		Answers the entry after a key: the array part by index, then the nodes by slot	verified	two	ui/luastate#lua-50-behaviour-kept	
 0x6fa420	117	luaH_index		lua	boundary		Returns the traversal position of a key for next, raising for a key that is not in the table	verified	two	lua/object#table-access	
 0x6fa4a0	70	arrayindex		lua	primitive		Returns the integer value of a number key when it is a valid array index, else -1	verified	two	lua/object#table-access	
 0x6fa4f0	103	luaH_new		lua	boundary		Allocates a table with given array and node sizes and the default metatable	verified	two	lua/object#table-creation-and-growth	
@@ -29922,10 +29922,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fbbb0	190	lua_setlocal		lua	unreached		Sets a local of a call level from the top value and returns its name, or null	verified	two	lua/runtime#hooks-and-locals	
 0x6fbc70	171	lua_getinfo		lua	boundary		Fills a debug record with the fields its option letters ask for	verified	one	ui/luastate#debugstack	
 0x6fbd20	79	info_tailcall		lua	boundary		Fills a debug record for a tail call that left no frame	verified	two	lua/runtime#hooks-and-locals	
-0x6fbd70	310	auxgetinfo		lua	primitive		Fills debug fields, naming an unnamed function by a global that holds it	verified	one	ui/luastate#function-names-from-globals	
+0x6fbd70	310	auxgetinfo		lua	primitive		Fills debug fields, naming an unnamed function by a global that holds it	verified	two	ui/luastate#function-names-from-globals	
 0x6fbef0	35	currentline		lua	boundary		Returns the source line of the current instruction, -1 for a C function	verified	one	lua/runtime#error-messages	
 0x6fbf20	99	funcinfo		lua	boundary		Fills the source name, line, kind and short source of a function for lua_getinfo	verified	one	lua/runtime#error-messages	
-0x6fbf90	103	travglobals		lua	primitive		Returns the last string key of the globals hash part whose value equals the given function, or null	verified	one	ui/luastate#function-names-from-globals	
+0x6fbf90	103	travglobals		lua	primitive		Returns the last string key of the globals hash part whose value equals the given function, or null	verified	two	ui/luastate#function-names-from-globals	
 0x6fc000	14	luaG_checkcode		lua	boundary		Answers whether a prototype's code passes the code checker	verified	one	lua/chunks#the-code-checker	
 0x6fc010	865	luaG_symbexec		lua	boundary		Checks a prototype's instructions up to a pc and returns the last one that set a register	verified	one	lua/chunks#the-code-checker	
 0x6fc3d0	43	precheck		lua	boundary		Checks a prototype's stack size, line count and final return	verified	one	lua/chunks#the-code-checker	
@@ -29939,12 +29939,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fc6d0	25	luaG_concaterror		lua	boundary		Raises a type error for the operand of a concatenation that is not a string	verified	one	lua/runtime#error-messages	
 0x6fc6f0	51	luaG_aritherror		lua	boundary		Raises a type error for the operand of an arithmetic operator that is not a number	verified	one	lua/runtime#error-messages	
 0x6fc730	80	luaG_ordererror		lua	boundary		Raises an order comparison error naming one or two types	verified	two	lua/runtime#error-messages	
-0x6fc780	225	luaG_errormsg	idb	lua	boundary		Calls the error function with the message when set and throws, never returning	verified	one	ui/luastate#the-c-function-contract	
-0x6fc870	40	luaG_runerror		lua	boundary	void __cdecl (lua_State *L, const char *fmt, ...)	Formats an error message, passes it to 0x6fc8a0 and throws it through luaG_errormsg	verified	one	ui/luastate#stack-room-and-run-errors	
+0x6fc780	225	luaG_errormsg	idb	lua	boundary		Calls the error function with the message when set and throws, never returning	verified	two	ui/luastate#the-c-function-contract	
+0x6fc870	40	luaG_runerror		lua	boundary	void __cdecl (lua_State *L, const char *fmt, ...)	Formats an error message, passes it to 0x6fc8a0 and throws it through luaG_errormsg	verified	two	ui/luastate#stack-room-and-run-errors	
 0x6fc8a0	85	addinfo		lua	boundary		Prefixes a message with the source and line of a Lua call record	verified	one	lua/runtime#error-messages	
 0x6fc900	114	luaM_growaux		lua	boundary		Doubles a vector's capacity, at least 4 and at most a limit, raising a message past it	verified	two	lua/object#allocation	
 0x6fc980	46	luaM_irealloc	idb	lua	boundary		Adds the size change to the block count and reallocates through luaM_reallocPool, ignoring the file and line	verified	two	lua/object#allocation	
-0x6fc9b0	139	luaY_parser		lua	boundary		Compiles a chunk from source	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6fc9b0	139	luaY_parser		lua	boundary		Compiles a chunk from source	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fca40	73	next		lua	boundary		Moves the lexer to the next token, taking the lookahead token when one is held	verified	one	lua/compiler#parser-tokens-and-checks	
 0x6fca90	100	open_func		lua	boundary		Starts the state of a function being compiled with a new prototype and constant table	verified	one	lua/compiler#function-states-and-blocks	
 0x6fcb00	325	close_func		lua	boundary		Ends a compiled function with a return and trims its prototype's vectors to their used sizes	verified	one	lua/compiler#function-states-and-blocks	
@@ -30014,7 +30014,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fea70	104	check_conflict		lua	boundary		Copies a local that an earlier table target of an assignment uses before it is overwritten	verified	one	lua/compiler#statements-and-assignments	
 0x6feae0	148	retstat		lua	boundary		Compiles a return statement, turning a lone call into a tail call	verified	one	lua/compiler#statements-and-assignments	
 0x6feb80	114	breakstat		lua	boundary		Compiles a break out of the innermost loop	verified	one	lua/compiler#statements-and-assignments	
-0x6fec00	68	luaU_undump		lua	boundary		Loads a precompiled chunk; its one caller never reaches it	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6fec00	68	luaU_undump		lua	boundary		Loads a precompiled chunk; its one caller never reaches it	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fec50	18	LoadChunk		lua	boundary		Loads a precompiled chunk's header and its main function	verified	one	lua/chunks#loading-a-precompiled-chunk	
 0x6fec70	165	LoadFunction		lua	boundary		Loads a function prototype and its nested prototypes, then checks its code	verified	one	lua/chunks#loading-a-precompiled-chunk	
 0x6fed20	60	ezgetc		lua	boundary		Reads a byte of a precompiled chunk, raising an error at the end of the stream	verified	one	lua/chunks#reading-the-stream	
@@ -30041,7 +30041,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ff4d0	88	luaX_syntaxerror		lua	boundary		Raises a syntax error near the current token	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ff530	20	luaX_error		lua	boundary		Throws a syntax error at the current line	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ff550	35	luaX_token2str		lua	boundary		Returns the text of a token: the character itself or the reserved word or symbol	verified	one	lua/compiler#lexer-errors-and-limits	
-0x6ff580	135	luaX_setinput		lua	boundary		Starts the lexer on a chunk, skipping a first line that begins with #	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6ff580	135	luaX_setinput		lua	boundary		Starts the lexer on a chunk, skipping a first line that begins with #	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6ff610	1366	luaX_lex		lua	boundary		Reads the next token, skipping blanks and comments, and fills its value	verified	one	lua/compiler#reading-tokens	
 0x6ffc20	65	inclinenumber		lua	boundary		Moves past a newline and counts the line	verified	one	lua/compiler#lexer-errors-and-limits	
 0x6ffc70	167	readname		lua	boundary		Reads a name into the buffer and returns its length	verified	one	lua/compiler#reading-tokens	
@@ -30117,7 +30117,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x701d80	409	FrameScriptRegisterMethods		ui	orchestration		Adds name and function pairs to a method hash table as registry references	inferred	none	ui/methods#method-tables-and-lookup	
 0x701f20	212	FrameScriptUnregisterMethods		ui	orchestration		Frees the function references and nodes of a method hash table	inferred	none	ui/methods#method-tables-and-lookup	
 0x702000	168	FrameScriptPushMethod		ui	orchestration		Pushes the function of a name from a method hash table and answers whether found	inferred	none	ui/methods#method-tables-and-lookup	
-0x7020b0	131	FrameScriptObjectIndex		ui	orchestration	int __thiscall (void *this)	Serves as __index of __framescript_meta: looks a string key up through the object's slot 8, else nil	verified	one	ui/luastate#what-a-new-state-holds	
+0x7020b0	131	FrameScriptObjectIndex		ui	orchestration	int __thiscall (void *this)	Serves as __index of __framescript_meta: looks a string key up through the object's slot 8, else nil	verified	two	ui/luastate#what-a-new-state-holds	
 0x702140	306	FrameScriptRegisterEvent		ui	orchestration		Adds an object to the listeners of an event name and records the event index	verified	two	ui/script#registering-for-an-event	
 0x702280	338	FrameScriptUnregisterEvent		ui	orchestration		Removes an object from the listeners of an event name and its index	verified	two	ui/script#registering-for-an-event	
 0x7023e0	262	FrameScriptRegisterAllEvents		ui	orchestration		Adds an object to the listeners of every event it is not on	verified	two	ui/script#registering-for-an-event	
@@ -30128,63 +30128,63 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x702690	84	FrameScriptExecute		ui	orchestration		Runs a script slot with the slot's context word as the current context	verified	two	ui/script#running-a-handler	
 0x7026f0	29	FrameScriptExecuteVarArgs		ui	orchestration		Runs a script slot with a format and its variable arguments	verified	two	ui/script#running-a-handler	
 0x702710	96	FrameScriptExecuteV		ui	orchestration		Runs a script slot with a format and an argument list under the slot's context word	verified	two	ui/script#running-a-handler	
-0x702770	50	ScriptSetGlobal		ui	orchestration	int __fastcall (lua_State *L)	Serves setglobal: sets the global named by argument 1 to the top value, returning nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x7027b0	41	ScriptGetGlobal		ui	orchestration	int __fastcall (lua_State *L)	Serves getglobal: returns the global named by argument 1, read with lua_gettable	verified	one	ui/luastate#the-library-scripts-see	
-0x7027e0	3	ScriptDebugLoad		ui	orchestration	int __fastcall (lua_State *L)	Serves debugload: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x7027f0	3	ScriptDebugInfo		ui	orchestration	int __fastcall (lua_State *L)	Serves debuginfo: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x702800	3	ScriptDebugPrint		ui	orchestration	int __fastcall (lua_State *L)	Serves debugprint: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x702810	3	ScriptDebugDump		ui	orchestration	int __fastcall (lua_State *L)	Serves debugdump: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x702820	3	ScriptDebugBreak		ui	orchestration	int __fastcall (lua_State *L)	Serves debugbreak: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
-0x702830	3	ScriptDebugTimestamp		ui	orchestration	int __fastcall (lua_State *L)	Serves debugtimestamp: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x702770	50	ScriptSetGlobal		ui	orchestration	int __fastcall (lua_State *L)	Serves setglobal: sets the global named by argument 1 to the top value, returning nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x7027b0	41	ScriptGetGlobal		ui	orchestration	int __fastcall (lua_State *L)	Serves getglobal: returns the global named by argument 1, read with lua_gettable	verified	two	ui/luastate#the-library-scripts-see	
+0x7027e0	3	ScriptDebugLoad		ui	orchestration	int __fastcall (lua_State *L)	Serves debugload: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x7027f0	3	ScriptDebugInfo		ui	orchestration	int __fastcall (lua_State *L)	Serves debuginfo: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x702800	3	ScriptDebugPrint		ui	orchestration	int __fastcall (lua_State *L)	Serves debugprint: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x702810	3	ScriptDebugDump		ui	orchestration	int __fastcall (lua_State *L)	Serves debugdump: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x702820	3	ScriptDebugBreak		ui	orchestration	int __fastcall (lua_State *L)	Serves debugbreak: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
+0x702830	3	ScriptDebugTimestamp		ui	orchestration	int __fastcall (lua_State *L)	Serves debugtimestamp: returns nothing and does nothing	verified	two	ui/luastate#the-library-scripts-see	
 0x702840	19	ScriptDebugProfileStart		ui	host	int __fastcall (lua_State *L)	Latches the time-stamp counter for 0x702860	verified	one	core/time#counter-rate	
 0x702860	153	ScriptDebugProfileStop		ui	primitive	int __fastcall (lua_State *L)	Returns the time-stamp counter's advance divided by a thousandth of 0x42c020	verified	one	core/time#counter-rate	
-0x702900	80	ScriptSetErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Serves seterrorhandler: keeps a reference to a function argument as the error handler, raising its usage otherwise	verified	one	ui/luastate#error-handlers	
-0x702950	22	ScriptGetErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Serves geterrorhandler: returns the function seterrorhandler set, or nil	verified	one	ui/luastate#error-handlers	
-0x702970	123	ScriptError		ui	primitive	int __fastcall (lua_State *L)	Serves error: raises argument 1, with the caller's position prepended for a string at a nonzero level	verified	one	ui/luabase#error-and-assert	
-0x7029f0	65	ScriptGetMetatable		ui	orchestration	int __fastcall (lua_State *L)	Serves getmetatable: answers nil, the __metatable entry, or the metatable	verified	one	ui/luabase#metatables	
-0x702a40	123	ScriptSetMetatable		ui	orchestration	int __fastcall (lua_State *L)	Serves setmetatable: sets the metatable of a table unless it has a __metatable entry	verified	one	ui/luabase#metatables	
-0x702ac0	38	ScriptGetFenv		ui	orchestration	int __fastcall (lua_State *L)	Serves getfenv: answers the environment of a function or level, or its __fenv entry	verified	one	ui/luabase#function-environments	
-0x702af0	168	ScriptPushFunction		ui	primitive	void __thiscall (void *this)	Pushes the function that argument 1 names, a function or a call level, raising on a bad level	verified	one	ui/luabase#function-environments	
-0x702ba0	55	ScriptPushFenvOverride		ui	primitive	int __thiscall (void *this)	Pushes the environment of the top function and its __fenv entry, answering whether that entry is set	verified	one	ui/luabase#function-environments	
-0x702be0	164	ScriptSetFenv		ui	primitive	int __fastcall (lua_State *L)	Serves setfenv: sets a function's environment or, for level 0, the global table, refusing a protected one	verified	one	ui/luabase#function-environments	
-0x702c90	64	ScriptNext		ui	orchestration	int __fastcall (lua_State *L)	Serves next: answers the key and value after a key of a table, or nil	verified	one	ui/luabase#iteration	
-0x702cd0	198	ScriptIpairs		ui	primitive	int __fastcall (lua_State *L)	Serves ipairs: answers the iterator triple for one argument, else the next index and element	verified	one	ui/luabase#iteration	
-0x702da0	67	ScriptPairs		ui	orchestration	int __fastcall (lua_State *L)	Serves pairs: answers the global next, the table and nil	verified	one	ui/luabase#iteration	
-0x702df0	50	ScriptType		ui	orchestration	int __fastcall (lua_State *L)	Serves type: answers the type name of argument 1	verified	one	ui/luabase#type-and-tostring	
-0x702e30	270	ScriptToNumber		ui	primitive	int __fastcall (lua_State *L)	Serves tonumber: converts argument 1 in base 10 or by strtoul in a base from 2 to 36	verified	one	ui/luabase#tonumber	
-0x702f40	310	ScriptToString		ui	orchestration	int __fastcall (lua_State *L)	Serves tostring: answers the __tostring result or a text of argument 1	verified	one	ui/luabase#type-and-tostring	
-0x7030a0	78	ScriptUnpack		ui	primitive	int __fastcall (lua_State *L)	Serves unpack: pushes the elements 1 to n of a table and returns n	verified	one	ui/luabase#iteration	
-0x7030f0	55	ScriptRawEqual		ui	orchestration	int __fastcall (lua_State *L)	Serves rawequal: pushes whether arguments 1 and 2 are primitively equal	verified	one	ui/luabase#raw-access	
-0x703130	46	ScriptRawGet		ui	orchestration	int __fastcall (lua_State *L)	Serves rawget: pushes the element of a table without metamethods	verified	one	ui/luabase#raw-access	
-0x703160	58	ScriptRawSet		ui	orchestration	int __fastcall (lua_State *L)	Serves rawset: sets an element of a table without metamethods and returns the table	verified	one	ui/luabase#raw-access	
-0x7031a0	81	ScriptAssert		ui	orchestration	int __fastcall (lua_State *L)	Serves assert: raises its message when argument 1 is false or nil, else keeps argument 1	verified	one	ui/luabase#error-and-assert	
-0x703200	67	ScriptGcInfo		ui	primitive	int __fastcall (lua_State *L)	Serves gcinfo: pushes the collector's two counters shifted right by 10	verified	one	ui/luabase#the-collector-pair	
-0x703250	35	ScriptCollectGarbage		ui	primitive	int __fastcall (lua_State *L)	Serves collectgarbage: sets the collection threshold to the optional argument in kilobytes	verified	one	ui/luabase#the-collector-pair	
-0x703280	98	ScriptLoadString		ui	orchestration	int __fastcall (lua_State *L)	Serves loadstring: compiles argument 1 named by argument 2 or itself, returning the function or nil and the message	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x7032f0	68	ScriptPcall		ui	orchestration	int __fastcall (lua_State *L)	Serves pcall: calls argument 1 with the rest, answers a success boolean before its results	verified	one	ui/luabase#protected-calls	
-0x703340	84	ScriptXpcall		ui	orchestration	int __fastcall (lua_State *L)	Serves xpcall: calls argument 1 under argument 2 as handler, answers a success boolean before its results	verified	one	ui/luabase#protected-calls	
-0x7033a0	411	ScriptDate		ui	primitive	int __fastcall (lua_State *L)	Serves date: formats a time as text or as a table, UTC when the format starts with !	verified	one	ui/luabase#date	
-0x703540	44	ScriptSetNumberField		ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a number field of the table at the top, the value taken from the stack	verified	one	ui/luabase#date	
-0x703570	38	ScriptSetBoolField		ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a boolean field of the table at the top, the value taken from the stack	verified	one	ui/luabase#date	
-0x7035a0	269	ScriptTime		ui	primitive	int __fastcall (lua_State *L)	Serves time: answers the current time, or mktime of a table of date fields	verified	one	ui/luabase#time-from-a-table	
-0x7036b0	50	ScriptGetBoolField		ui	orchestration	int __fastcall (lua_State *L, const char *name)	Reads the field of the table at the top as a boolean	verified	one	ui/luabase#time-from-a-table	
-0x7036f0	106	ScriptGetNumberField		ui	primitive	int __fastcall (lua_State *L, const char *name, int default)	Reads a number field of the table at the top as an int, or the default, or raises when the default is -2	verified	one	ui/luabase#time-from-a-table	
-0x703760	609	ScriptDebugStack		ui	primitive	int __fastcall (lua_State *L)	Serves debugstack: returns the call stack from a level as text, one line per level with head and tail windows	verified	one	ui/luastate#debugstack	
-0x7039e0	338	FrameScriptInitialize		ui	orchestration		Creates the Lua state in 0xceef74 and installs the metatable, handlers, libraries and compat.lua	verified	one	ui/luastate#what-a-new-state-holds	
-0x703b40	57	FrameScriptCallErrorHandler		ui	orchestration	int __thiscall (void *this)	Calls the function seterrorhandler set with the message and returns its result, or the message	verified	one	ui/luastate#error-handlers	
-0x703b80	20	ResetFrameScript		ui	orchestration		Closes the Lua state when one exists and tail-jumps to 0x7039e0 to open a new one	verified	one	ui/luastate#opening-and-replacing-the-state	
-0x703ba0	22	FrameScriptDestroy		ui	orchestration		Destroys the Lua state and stores 0 in 0xceef74	verified	one	ui/luastate#opening-and-replacing-the-state	
-0x703bc0	42	FrameScriptCollectGarbage		ui	orchestration		Forces a full collection with the collector switch on, leaving it on when its argument is nonzero	verified	one	ui/luastate#the-collector-switch	
+0x702900	80	ScriptSetErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Serves seterrorhandler: keeps a reference to a function argument as the error handler, raising its usage otherwise	verified	two	ui/luastate#error-handlers	
+0x702950	22	ScriptGetErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Serves geterrorhandler: returns the function seterrorhandler set, or nil	verified	two	ui/luastate#error-handlers	
+0x702970	123	ScriptError		ui	primitive	int __fastcall (lua_State *L)	Serves error: raises argument 1, with the caller's position prepended for a string at a nonzero level	verified	two	ui/luabase#error-and-assert	
+0x7029f0	65	ScriptGetMetatable		ui	orchestration	int __fastcall (lua_State *L)	Serves getmetatable: answers nil, the __metatable entry, or the metatable	verified	two	ui/luabase#metatables	
+0x702a40	123	ScriptSetMetatable		ui	orchestration	int __fastcall (lua_State *L)	Serves setmetatable: sets the metatable of a table unless it has a __metatable entry	verified	two	ui/luabase#metatables	
+0x702ac0	38	ScriptGetFenv		ui	orchestration	int __fastcall (lua_State *L)	Serves getfenv: answers the environment of a function or level, or its __fenv entry	verified	two	ui/luabase#function-environments	
+0x702af0	168	ScriptPushFunction		ui	primitive	void __thiscall (void *this)	Pushes the function that argument 1 names, a function or a call level, raising on a bad level	verified	two	ui/luabase#function-environments	
+0x702ba0	55	ScriptPushFenvOverride		ui	primitive	int __thiscall (void *this)	Pushes the environment of the top function and its __fenv entry, answering whether that entry is set	verified	two	ui/luabase#function-environments	
+0x702be0	164	ScriptSetFenv		ui	primitive	int __fastcall (lua_State *L)	Serves setfenv: sets a function's environment or, for level 0, the global table, refusing a protected one	verified	two	ui/luabase#function-environments	
+0x702c90	64	ScriptNext		ui	orchestration	int __fastcall (lua_State *L)	Serves next: answers the key and value after a key of a table, or nil	verified	two	ui/luabase#iteration	
+0x702cd0	198	ScriptIpairs		ui	primitive	int __fastcall (lua_State *L)	Serves ipairs: answers the iterator triple for one argument, else the next index and element	verified	two	ui/luabase#iteration	
+0x702da0	67	ScriptPairs		ui	orchestration	int __fastcall (lua_State *L)	Serves pairs: answers the global next, the table and nil	verified	two	ui/luabase#iteration	
+0x702df0	50	ScriptType		ui	orchestration	int __fastcall (lua_State *L)	Serves type: answers the type name of argument 1	verified	two	ui/luabase#type-and-tostring	
+0x702e30	270	ScriptToNumber		ui	primitive	int __fastcall (lua_State *L)	Serves tonumber: converts argument 1 in base 10 or by strtoul in a base from 2 to 36	verified	two	ui/luabase#tonumber	
+0x702f40	310	ScriptToString		ui	orchestration	int __fastcall (lua_State *L)	Serves tostring: answers the __tostring result or a text of argument 1	verified	two	ui/luabase#type-and-tostring	
+0x7030a0	78	ScriptUnpack		ui	primitive	int __fastcall (lua_State *L)	Serves unpack: pushes the elements 1 to n of a table and returns n	verified	two	ui/luabase#iteration	
+0x7030f0	55	ScriptRawEqual		ui	orchestration	int __fastcall (lua_State *L)	Serves rawequal: pushes whether arguments 1 and 2 are primitively equal	verified	two	ui/luabase#raw-access	
+0x703130	46	ScriptRawGet		ui	orchestration	int __fastcall (lua_State *L)	Serves rawget: pushes the element of a table without metamethods	verified	two	ui/luabase#raw-access	
+0x703160	58	ScriptRawSet		ui	orchestration	int __fastcall (lua_State *L)	Serves rawset: sets an element of a table without metamethods and returns the table	verified	two	ui/luabase#raw-access	
+0x7031a0	81	ScriptAssert		ui	orchestration	int __fastcall (lua_State *L)	Serves assert: raises its message when argument 1 is false or nil, else keeps argument 1	verified	two	ui/luabase#error-and-assert	
+0x703200	67	ScriptGcInfo		ui	primitive	int __fastcall (lua_State *L)	Serves gcinfo: pushes the collector's two counters shifted right by 10	verified	two	ui/luabase#the-collector-pair	
+0x703250	35	ScriptCollectGarbage		ui	primitive	int __fastcall (lua_State *L)	Serves collectgarbage: sets the collection threshold to the optional argument in kilobytes	verified	two	ui/luabase#the-collector-pair	
+0x703280	98	ScriptLoadString		ui	orchestration	int __fastcall (lua_State *L)	Serves loadstring: compiles argument 1 named by argument 2 or itself, returning the function or nil and the message	verified	two	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x7032f0	68	ScriptPcall		ui	orchestration	int __fastcall (lua_State *L)	Serves pcall: calls argument 1 with the rest, answers a success boolean before its results	verified	two	ui/luabase#protected-calls	
+0x703340	84	ScriptXpcall		ui	orchestration	int __fastcall (lua_State *L)	Serves xpcall: calls argument 1 under argument 2 as handler, answers a success boolean before its results	verified	two	ui/luabase#protected-calls	
+0x7033a0	411	ScriptDate		ui	primitive	int __fastcall (lua_State *L)	Serves date: formats a time as text or as a table, UTC when the format starts with !	verified	two	ui/luabase#date	
+0x703540	44	ScriptSetNumberField		ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a number field of the table at the top, the value taken from the stack	verified	two	ui/luabase#date	
+0x703570	38	ScriptSetBoolField		ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a boolean field of the table at the top, the value taken from the stack	verified	two	ui/luabase#date	
+0x7035a0	269	ScriptTime		ui	primitive	int __fastcall (lua_State *L)	Serves time: answers the current time, or mktime of a table of date fields	verified	two	ui/luabase#time-from-a-table	
+0x7036b0	50	ScriptGetBoolField		ui	orchestration	int __fastcall (lua_State *L, const char *name)	Reads the field of the table at the top as a boolean	verified	two	ui/luabase#time-from-a-table	
+0x7036f0	106	ScriptGetNumberField		ui	primitive	int __fastcall (lua_State *L, const char *name, int default)	Reads a number field of the table at the top as an int, or the default, or raises when the default is -2	verified	two	ui/luabase#time-from-a-table	
+0x703760	609	ScriptDebugStack		ui	primitive	int __fastcall (lua_State *L)	Serves debugstack: returns the call stack from a level as text, one line per level with head and tail windows	verified	two	ui/luastate#debugstack	
+0x7039e0	338	FrameScriptInitialize		ui	orchestration		Creates the Lua state in 0xceef74 and installs the metatable, handlers, libraries and compat.lua	verified	two	ui/luastate#what-a-new-state-holds	
+0x703b40	57	FrameScriptCallErrorHandler		ui	orchestration	int __thiscall (void *this)	Calls the function seterrorhandler set with the message and returns its result, or the message	verified	two	ui/luastate#error-handlers	
+0x703b80	20	ResetFrameScript		ui	orchestration		Closes the Lua state when one exists and tail-jumps to 0x7039e0 to open a new one	verified	two	ui/luastate#opening-and-replacing-the-state	
+0x703ba0	22	FrameScriptDestroy		ui	orchestration		Destroys the Lua state and stores 0 in 0xceef74	verified	two	ui/luastate#opening-and-replacing-the-state	
+0x703bc0	42	FrameScriptCollectGarbage		ui	orchestration		Forces a full collection with the collector switch on, leaving it on when its argument is nonzero	verified	two	ui/luastate#the-collector-switch	
 0x703bf0	245	FrameScript_GetText	idb	ui	orchestration		Returns the global string of a key, or the empty string when it is missing	verified	one	ui/chatserver#the-text-lookup	
 0x703cf0	148	FrameScriptGetPluralIndex		ui	orchestration	int __fastcall (int count)	Calls the Lua GetPluralIndex with a count and returns its truncated result minus one, or 0	verified	two	ui/script#text-counts-and-running-code	
 0x703d90	178	SetScriptEventTable		ui	orchestration		Replaces the event table with copies of a list of names	verified	two	ui/script#the-event-table	
 0x703e50	246	FrameScript_SignalEvent	idb	ui	orchestration		Runs OnEvent of every listener of an event with the global event set to its name	verified	two	ui/script#signalling-an-event	
 0x703f50	257	FrameScript_SignalEvent2	idb	ui	orchestration		Runs OnEvent of every listener of an event with event and formatted arguments set	verified	two	ui/script#signalling-an-event	
 0x704060	99	FrameScriptDestroyEventTable		ui	unreached		Destroys every event record and frees the array; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x7040d0	6	FrameScript::GetContext	idb	ui	orchestration	lua_State * __cdecl (void)	Returns the Lua state 0xceef74	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x7040d0	6	FrameScript::GetContext	idb	ui	orchestration	lua_State * __cdecl (void)	Returns the Lua state 0xceef74	verified	two	ui/luastate#opening-and-replacing-the-state	
 0x7040e0	59	FrameScriptError		ui	orchestration		Raises a Lua error with a formatted message prefixed by the caller's position	verified	one	ui/script#reading-and-writing-globals	
-0x704120	55	FrameScriptRegisterFunction		ui	orchestration	void __fastcall (const char *name, int (*fn)(lua_State *))	Sets the global of a name to a C closure of a function with no upvalues	verified	one	ui/luastate#the-c-function-contract	
-0x704160	53	FrameScript_UnregisterFunction	idb	ui	orchestration	void __fastcall (const char *name)	Sets the global of a name to nil	verified	one	ui/luastate#the-c-function-contract	
+0x704120	55	FrameScriptRegisterFunction		ui	orchestration	void __fastcall (const char *name, int (*fn)(lua_State *))	Sets the global of a name to a C closure of a function with no upvalues	verified	two	ui/luastate#the-c-function-contract	
+0x704160	53	FrameScript_UnregisterFunction	idb	ui	orchestration	void __fastcall (const char *name)	Sets the global of a name to nil	verified	two	ui/luastate#the-c-function-contract	
 0x7041a0	73	FrameScriptSetNumberGlobalInt		ui	unreached		Sets a global to an integer; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x7041f0	89	FrameScriptGetNumberGlobalInt		ui	unreached		Reads a global as an integer; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x704250	69	FrameScriptSetNumberGlobal		ui	orchestration	void __fastcall (const char *name, float value)	Sets a global to a single-precision float	verified	one	ui/script#reading-and-writing-globals	
@@ -33190,7 +33190,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x766420	208	CSimpleTop::OnMouseUp		ui	orchestration		Handles category 0xe: ends a move or size, or releases the pressed frame	verified	one	ui/input#the-handlers	
 0x7664f0	195	CSimpleTop::OnMouseWheel		ui	orchestration		Handles category 0x10: offers the wheel to hit frames of the wheel lists from stratum 8 down	verified	one	ui/input#the-handlers	
 0x7665c0	134	CSimpleTop::OnWindowSize		ui	orchestration		Handles category 0x1c: refreshes the fonts and every frame's regions, then the host's size callback	inferred	none	ui/input#the-handlers	
-0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	verified	one	ui/keyscripts#deactivating-the-window	
+0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	verified	two	ui/keyscripts#deactivating-the-window	
 0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal length up to whole device pixels	verified	two	ui/regions#pixel-alignment	ui::glue_765_7666a0_ratio_round_x
 0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical length up to whole device pixels	verified	two	ui/regions#pixel-alignment	ui::glue_765_766750_ratio_round_y
 0x766800	5	TopInitTwoPiThunk		ui	orchestration		Jumps to 0x766810; a static initializer	verified	one	ui/README#static-initializers	
@@ -33347,7 +33347,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b2c0	47	CSimpleFrame::OnFrameUpdate		ui	orchestration		Runs the OnUpdate script with the elapsed time	verified	one	ui/tooltip#following-the-cursor	
 0x76b2f0	5	FrameInitDragThresholdThunk		ui	orchestration		Jumps to 0x76b300; a static initializer	verified	one	ui/README#static-initializers	
 0x76b300	19	FrameInitDragThreshold		ui	primitive		Stores 0.01 squared in 0xcf0c14, the squared drag-start distance	verified	one	ui/README#static-initializers	ui::dist2_76b320
-0x76b320	125	CSimpleFrame::OnMouseMove		ui	primitive		Starts a drag past the threshold and answers the hit test; slot 0x3c	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::dist2_76b320
+0x76b320	125	CSimpleFrame::OnMouseMove		ui	primitive		Starts a drag past the threshold and answers the hit test; slot 0x3c	verified	two	ui/mouse#what-the-pointer-is-tested-against	ui::dist2_76b320
 0x76b3a0	79	CSimpleFrame::EmitLayer		ui	orchestration		Walks the regions of one enabled draw layer from the last link and calls each one to emit into a batch	verified	two	ui/draworder#regions-within-a-frame	
 0x76b3f0	306	CSimpleFrame::OnFrameRender		ui	orchestration		Rebuilds a self-drawing frame's own five batches, submits them and draws its children that do not hold 0x4000	verified	two	ui/draworder#frames-that-draw-themselves	
 0x76b530	25	CSimpleFrame::MarkLayerDirty		ui	orchestration		Sets a bit of the frame's own dirty-layer mask +0x1f8	verified	two	ui/visibility#parent-change	
@@ -33356,17 +33356,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b660	54	CSimpleFrame::OnSizeChanged		ui	orchestration	void __thiscall (CSimpleFrame *this, float width, float height)	Runs the OnSizeChanged script with the width and height as arg1 and arg2 when it is set	verified	two	ui/frames#the-onsizechanged-script	
 0x76b6a0	76	CSimpleFrame::OnEnter		ui	orchestration		Shows the +0xa4 frame, switches layer 4 on and runs OnEnter	verified	one	ui/hover#entering-and-leaving	
 0x76b6f0	109	CSimpleFrame::OnLeave		ui	orchestration		Hides the +0xa4 frame, switches layer 4 off, may end a drag and runs OnLeave	verified	one	ui/hover#entering-and-leaving	
-0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as UTF-8 text when visible and the script is set	verified	one	ui/keyscripts#the-test-a-frame-makes	
-0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Takes a key down when visible and OnKeyDown or OnKeyUp is set, running OnKeyDown with the key name	verified	one	ui/keyscripts#the-test-a-frame-makes	
-0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Takes a key up when visible and OnKeyUp is set, running it with the key name	verified	one	ui/keyscripts#the-test-a-frame-makes	
+0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as UTF-8 text when visible and the script is set	verified	two	ui/keyscripts#the-test-a-frame-makes	
+0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Takes a key down when visible and OnKeyDown or OnKeyUp is set, running OnKeyDown with the key name	verified	two	ui/keyscripts#the-test-a-frame-makes	
+0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Takes a key up when visible and OnKeyUp is set, running it with the key name	verified	two	ui/keyscripts#the-test-a-frame-makes	
 0x76bf70	167	CSimpleFrame::OnMouseDown		ui	orchestration		Arms a drag for a registered button and runs OnMouseDown with the button name	inferred	none	ui/README#starts-the-listing-hides	
 0x76c040	194	CSimpleFrame::OnMouseUp		ui	orchestration		Ends a drag with the drag-stop and receive slots, else runs OnMouseUp with the button name	verified	one	ui/button#mouse-presses-and-clicks	
 0x76c130	5	FrameInitTwoPiThunk		ui	orchestration		Jumps to 0x76c140; a static initializer	verified	one	ui/README#static-initializers	
 0x76c140	15	FrameInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x76c150	5	FrameInitInvTwoPiThunk		ui	orchestration		Jumps to 0x76c160; a static initializer	verified	one	ui/README#static-initializers	
 0x76c160	19	FrameInitInvTwoPi		ui	primitive		Stores 1 divided by a global set just before as a float in a global	verified	one	ui/README#static-initializers	
-0x76c180	81	CSimpleFrame::OnMouseWheel		ui	orchestration		Runs OnMouseWheel with 1 or -1 when visible	verified	one	ui/mouse#the-wheel	
-0x76c1e0	138	CSimpleFrame::OnDragStart		ui	orchestration		Runs OnDragStart with the name of the lowest held button	verified	one	ui/mouse#starting-a-drag	
+0x76c180	81	CSimpleFrame::OnMouseWheel		ui	orchestration		Runs OnMouseWheel with 1 or -1 when visible	verified	two	ui/mouse#the-wheel	
+0x76c1e0	138	CSimpleFrame::OnDragStart		ui	orchestration		Runs OnDragStart with the name of the lowest held button	verified	two	ui/mouse#starting-a-drag	
 0x76c2a0	25	CSimpleFrame::OnDragStop		ui	orchestration		Runs the OnDragStop script	inferred	none		
 0x76c2c0	25	CSimpleFrame::OnReceiveDrag		ui	orchestration		Runs the OnReceiveDrag script	inferred	none		
 0x76c2e0	57	CSimpleFrame::SetHighlightLocked		ui	orchestration		Stores +0xf8 and switches layer 4 on, or off unless hovered	inferred	none	ui/frames#frame-fields	
@@ -33388,11 +33388,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c4f0	50	CScriptRegion::CScriptRegion		ui	orchestration		Builds the script object and layout parts and stores the region vtables	verified	one	ui/frames#vtables-and-the-two-parts	
 0x76c530	43	CScriptRegion::DeletingDestructor		ui	orchestration		Destroys a region and frees it when bit 0 of the argument is set	verified	two	ui/frames#destruction	
 0x76c560	67	CScriptRegion::~CScriptRegion		ui	orchestration		Releases the region's table and name and destroys its layout and script parts	verified	two	ui/frames#destruction	
-0x76c5b0	153	CScriptRegion::ExpandName		ui	orchestration		Writes a name with a leading $parent replaced by the nearest named ancestor's name	verified	one	ui/widgettype#finding-a-widget-by-name	
+0x76c5b0	153	CScriptRegion::ExpandName		ui	orchestration		Writes a name with a leading $parent replaced by the nearest named ancestor's name	verified	two	ui/widgettype#finding-a-widget-by-name	
 0x76c650	132	CScriptRegion::SetName		ui	orchestration		Stores the expanded name and makes it a Lua global for the region's table when unset	verified	two	ui/frames#names-and-lookup-by-name	
 0x76c6e0	20	CScriptRegion::GetLayoutParent		ui	orchestration		Returns the parent's layout part, or 0	inferred	none	ui/frames#vtables-and-the-two-parts	
-0x76c700	94	CScriptRegion::GetLayoutFrameByName		ui	orchestration		Finds a region by a name with $parent expanded against the frame, returning its layout part	verified	one	ui/widgettype#finding-a-widget-by-name	
-0x76c760	124	FindFrameOfType		ui	orchestration		Returns the object a global of a name holds when it is a table passing a type test	verified	one	ui/widgettype#finding-a-widget-by-name	
+0x76c700	94	CScriptRegion::GetLayoutFrameByName		ui	orchestration		Finds a region by a name with $parent expanded against the frame, returning its layout part	verified	two	ui/widgettype#finding-a-widget-by-name	
+0x76c760	124	FindFrameOfType		ui	orchestration		Returns the object a global of a name holds when it is a table passing a type test	verified	two	ui/widgettype#finding-a-widget-by-name	
 0x76c7e0	5	RegionInitInfinityThunk		ui	orchestration		Jumps to 0x76c7f0; a static initializer	verified	one	ui/README#static-initializers	
 0x76c7f0	11	RegionInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x76c800	5	RegionInitTwoPiThunk		ui	orchestration		Jumps to 0x76c810; a static initializer	verified	one	ui/README#static-initializers	
@@ -33406,11 +33406,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c8a0	19	RegionInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x76c8c0	5	InitInfinity76c8d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x76c8d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x76c8d0	11	InitInfinity76c8d0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x76c8e0	311	CSimpleModel::CSimpleModel		ui	orchestration		Constructs a Model frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x76c8e0	311	CSimpleModel::CSimpleModel		ui	orchestration		Constructs a Model frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x76ca20	43	DeletingDestructor76ca20		ui	orchestration		Destroys the object through 0x76ca50 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x76ca50	108	DestroyModelFrame		ui	orchestration		Destroys a model frame's members; the ModelFFX destructor calls it	inferred	none		
-0x76cac0	440	CSimpleModel::LoadXML		ui	primitive		Loads a Model's frame node, then its file, scale, fog distances and fog colour	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x76cc80	92	CSimpleModel::GetScriptByName		ui	orchestration		Returns a Model's handler slot by name, adding OnUpdateModel and OnAnimFinished	verified	one	ui/xmltypes#handler-names-by-type	
+0x76cac0	440	CSimpleModel::LoadXML		ui	primitive		Loads a Model's frame node, then its file, scale, fog distances and fog colour	verified	two	ui/xmltypes#elements-and-attributes-by-type	
+0x76cc80	92	CSimpleModel::GetScriptByName		ui	orchestration		Returns a Model's handler slot by name, adding OnUpdateModel and OnAnimFinished	verified	two	ui/xmltypes#handler-names-by-type	
 0x76cce0	68	SimpleModelLoadFile		ui	orchestration	void __thiscall (void *this, const char *path)	Creates a model of a file in the frame's scene, hands it to slot 36 and drops its own reference	verified	one	ui/modelview#stale-camera-after-setmodel	
 0x76cd30	144	SimpleModelSetModel		ui	orchestration	void __thiscall (void *this, CM2Model *model)	Stores a model frame's scene model at +0x318 and installs its callbacks	verified	one	ui/modelview#stale-camera-after-setmodel	ui::glue_76cd30_byte_to_unit
 0x76cdc0	39	SimpleModelDoneCallback		ui	orchestration	void __fastcall (CM2Model *model, uint32_t key_bone, uint32_t anim_id, uint32_t mode, uint32_t overshoot, CSimpleModel *frame, uint32_t guid_hi)	Runs the frame's OnAnimFinished handler when a track completes with mode 0	verified	one	ui/modelanim#completion-and-onanimfinished	
@@ -33503,7 +33503,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fda0	40	LoadUiPixelShaders		ui	primitive		Loads the interface pixel shaders from a name list into the two-slot table	verified	one	ui/texture#desaturating	
 0x76fdd0	32			ui	primitive		Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x76fdf0	41	CSimpleTexture::PreLoadXML		ui	orchestration	void __thiscall (CSimpleTexture *this, XMLNode *node, CStatus *status)	Names a texture from its XML node's name attribute when it is not empty	verified	two	ui/frames#a-textures-name-from-xml	
-0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
+0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	two	ui/xmltypes#regions-and-fonts	
 0x7701c0	54	CSimpleTexture::AnchorToParent		ui	primitive	void __thiscall (CSimpleTexture *this, void *node, void *status)	Pins a parented texture with no anchor point to its parent with SetAllPoints	verified	two	ui/regions#the-implicit-anchor	
 0x770200	245	CSimpleTexture::SetTexture		ui	primitive		Loads a texture file with wrap, filter and shader index, or answers 1 for the file already held	verified	one	ui/texture#settexture	
 0x770300	91	CSimpleTexture::SetImage		ui	orchestration		Replaces the image handle with a referenced one, closes the old and marks the texture dirty	verified	one	ui/texture#two-colour-stores	
@@ -33529,7 +33529,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x770e20	43	CSimpleFontString::DeletingDestructor		ui	orchestration	void * __thiscall (CSimpleFontString *this, uint32_t free_flag)	Runs the font string destructor body and returns the object to its pool when bit 0 is set	verified	one	ui/fonttext#creating-and-freeing-a-string	
 0x770e50	177	CSimpleFontString::~CSimpleFontString		ui	orchestration	void __thiscall (CSimpleFontString *this)	Frees the text, drops the font, unlinks the font part and ends in the region destructor	verified	one	ui/fonttext#creating-and-freeing-a-string	
 0x770f10	41	ReadRegionNameAttribute		ui	orchestration	void __thiscall (void *this, XMLNode *node, CScriptRegion *region)	Sets the region's name to the node's name attribute when it is nonempty	verified	one	ui/fonttext#creating-and-freeing-a-string	
-0x770f40	1329	CSimpleFontString::LoadXML		ui	primitive		Loads a font string's layout node, template, hidden, text, limits, font, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	ui::glue_unit_convert_1024
+0x770f40	1329	CSimpleFontString::LoadXML		ui	primitive		Loads a font string's layout node, template, hidden, text, limits, font, justification, colour and shadow	verified	two	ui/xmltypes#regions-and-fonts	ui::glue_unit_convert_1024
 0x771480	110	CSimpleFontString::AnchorToParent		ui	orchestration	void __thiscall (CSimpleFontString *this, void *node, void *status)	Pins a parented font string with no anchor point to its parent by its horizontal justification	verified	two	ui/regions#the-implicit-anchor	
 0x7714f0	266	CSimpleFontString::SetFont		ui	orchestration	uint32_t __thiscall (CSimpleFontString *this, const char *name, float height, uint32_t flags, uint8_t force)	Builds and installs the font of a name, height and flags unless unchanged, and relays the text out	verified	one	ui/fonttext#font-string-members	ui::glue_7714f0_scale_mul, ui::glue_settled_eps
 0x771600	121	CSimpleFontString::SetTextHeight		ui	orchestration		Sets a different text height and clears the one-to-one size bit	verified	one	ui/fontstring#size-and-fitting	ui::glue_settled_eps
@@ -33592,14 +33592,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7733d0	30	ScriptRegionSetParentKeepLayer		ui	orchestration	void __thiscall (void *this, CSimpleFrame *parent)	Moves the region to a new parent with its own layer and sublevel	verified	one	ui/fonttext#font-part-and-region-slots	
 0x7733f0	1	RegionNoOp		ui	orchestration	void __thiscall (void *this)	Returns without doing anything	verified	one	ui/fonttext#font-part-and-region-slots	
 0x773400	37	IsTypeId2773400		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x773430	67	TextureIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Texture or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x773480	6	TextureGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Texture	verified	one	ui/widgettype#type-chains	
+0x773430	67	TextureIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Texture or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x773480	6	TextureGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Texture	verified	two	ui/widgettype#type-chains	
 0x773490	110	CSimpleFont::DeletingDestructor		ui	orchestration	void * __thiscall (CSimpleFont *this, uint32_t free_flag)	Detaches a Font object from its font, unlinks its node and frees it when bit 0 of the flag is set	verified	one	ui/fonttext#font-part-and-region-slots	
 0x773500	39	CSimpleFontString::SetJustifyWord		ui	orchestration	void __thiscall (CSimpleFontString *this, uint32_t word)	Stores a changed justify word at +0x120 and rebuilds the built string	verified	one	ui/fonttext#text-offset-and-spacing	
 0x773530	26	CSimpleFontString::OnFontChanged		ui	orchestration	void __thiscall (CSimpleFontString *this, FontBlock *block)	Applies a font block to the string under the string's inherit mask	verified	one	ui/fonttext#font-part-and-region-slots	
 0x773550	37	IsTypeId2773550		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x773580	67	FontStringIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is FontString or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x7735d0	6	FontStringGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name FontString	verified	one	ui/widgettype#type-chains	
+0x773580	67	FontStringIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is FontString or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x7735d0	6	FontStringGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name FontString	verified	two	ui/widgettype#type-chains	
 0x7735e0	5	InitSquare7735f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7735f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7735f0	19	InitSquare7735f0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x773610	5	InitQuotient773620Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x773620, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -33665,9 +33665,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x776ec0	201	Frame::EnableKeyboard	idb	ui	orchestration	int __fastcall (lua_State *L)	Enables or disables key and character input for the frame	verified	two	ui/framemethods#drag-buttons-and-keyboard-input	
 0x776f90	218	Frame::IsKeyboardEnabled	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns 1 when key or character input is enabled, else nil	verified	two	ui/framemethods#drag-buttons-and-keyboard-input	
 0x777070	181	Frame::EnableMouse	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method EnableMouse, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
-0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
+0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	two	ui/mouse#switching-input-kinds	
 0x7771f0	181	Frame::EnableMouseWheel	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method EnableMouseWheel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
-0x7772b0	182	Frame::IsMouseWheelEnabled	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method IsMouseWheelEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
+0x7772b0	182	Frame::IsMouseWheelEnabled	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Frame method IsMouseWheelEnabled, its pair in the table 0x878ec0	verified	two	ui/mouse#switching-input-kinds	
 0x777370	870	Frame::GetBackdrop	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Frame method GetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	ui::luabind_777_get_backdrop
 0x7776e0	1243	Frame::SetBackdrop	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Frame method SetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#setbackdrop-from-a-script	ui::luabind_777_set_backdrop
 0x777bc0	358	Frame::GetBackdropColor	idb	ui	primitive	int __fastcall (lua_State *L)	Implements the Frame method GetBackdropColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	ui::luabind_777_get_backdrop_color, ui::luabind_777_normalize_full_domain
@@ -33691,14 +33691,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x778660	19	FrameMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x778680	5	InitInfinity778690Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x778690, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x778690	11	InitInfinity778690		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x7786a0	222	CSimpleButton::CSimpleButton	idb	ui	orchestration		Constructs a Button frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x7786a0	222	CSimpleButton::CSimpleButton	idb	ui	orchestration		Constructs a Button frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x778780	45	CSimpleButton::IsA		ui	orchestration		Answers 1 for the Button, Frame and Region type ids	verified	one	ui/button#construction-and-the-type	
-0x7787b0	89	ButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Button or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x778810	6	ButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Button	verified	one	ui/widgettype#type-chains	
+0x7787b0	89	ButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Button or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x778810	6	ButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Button	verified	two	ui/widgettype#type-chains	
 0x778820	43	DeletingDestructor778820		ui	orchestration		Destroys the object through 0x778850 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x778850	105	CSimpleButton::~CSimpleButton		ui	orchestration	void __thiscall (CSimpleButton *this)	Clears the state textures, releases the script slots, destroys the three label fonts and runs the frame destructor	verified	one	ui/button#button-teardown-and-text-colour-slots	
-0x7788c0	901	CSimpleButton::LoadXML		ui	primitive		Loads a Button's frame node, then its state textures, fonts, colours, texts and text attribute	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x778c50	92	CSimpleButton::GetScriptByName		ui	orchestration		Returns a Button's handler slot by name, adding OnClick and OnDoubleClick to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
+0x7788c0	901	CSimpleButton::LoadXML		ui	primitive		Loads a Button's frame node, then its state textures, fonts, colours, texts and text attribute	verified	two	ui/xmltypes#elements-and-attributes-by-type	
+0x778c50	92	CSimpleButton::GetScriptByName		ui	orchestration		Returns a Button's handler slot by name, adding OnClick and OnDoubleClick to the frame's	verified	two	ui/xmltypes#handler-names-by-type	
 0x778cb0	101	CSimpleButton::RemoveRegion		ui	orchestration		Clears every button slot that holds a region being removed, then removes it from the frame	verified	one	ui/button#state-and-highlight-textures	
 0x778d20	149	CSimpleButton::SetFontString		ui	orchestration		Installs a label, deleting the old, and anchors an unanchored one by the normal font's justify	verified	one	ui/button#the-label-and-its-fonts	
 0x778dc0	91	CSimpleButton::SetText		ui	orchestration		Sets the label's text, creating a label when there is none	verified	one	ui/button#the-label-and-its-fonts	
@@ -33741,15 +33741,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779970	19	InitQuotient779970		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x779990	5	InitInfinity7799a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7799a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7799a0	11	InitInfinity7799a0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x7799b0	865	CSimpleEditBox::CSimpleEditBox	idb	ui	primitive		Constructs an EditBox frame, its two vtables and its default flags	verified	one	ui/xmltypes#editbox-flags	
+0x7799b0	865	CSimpleEditBox::CSimpleEditBox	idb	ui	primitive		Constructs an EditBox frame, its two vtables and its default flags	verified	two	ui/xmltypes#editbox-flags	
 0x779d20	45	IsTypeId779d20		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x779d50	89	EditBoxIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is EditBox or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x779db0	6	EditBoxGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name EditBox	verified	one	ui/widgettype#type-chains	
+0x779d50	89	EditBoxIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is EditBox or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x779db0	6	EditBoxGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name EditBox	verified	two	ui/widgettype#type-chains	
 0x779dc0	43	DeletingDestructor779dc0		ui	orchestration		Destroys the object through 0x779df0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x779df0	439	CSimpleEditBox::~CSimpleEditBox		ui	orchestration	void __thiscall (CSimpleEditBox *this)	Clears focus and history, deletes its font, label, caret and candidate frame, frees buffers, runs the frame destructor	verified	one	ui/editboxmembers#destruction	
-0x779fb0	863	CSimpleEditBox::LoadXML		ui	primitive		Loads an EditBox's frame node, then its font, limits, flags, history and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x77a310	352	CSimpleEditBox::GetScriptByName		ui	orchestration		Returns an EditBox's handler slot by name, adding its ten text handlers to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
-0x77a470	42	CSimpleEditBox::SetAutoFocus		ui	primitive	void __thiscall (CSimpleEditBox *this, int on)	Sets or clears bit 0 of an EditBox's flag word	verified	one	ui/xmltypes#editbox-flags	
+0x779fb0	863	CSimpleEditBox::LoadXML		ui	primitive		Loads an EditBox's frame node, then its font, limits, flags, history and text elements	verified	two	ui/xmltypes#elements-and-attributes-by-type	
+0x77a310	352	CSimpleEditBox::GetScriptByName		ui	orchestration		Returns an EditBox's handler slot by name, adding its ten text handlers to the frame's	verified	two	ui/xmltypes#handler-names-by-type	
+0x77a470	42	CSimpleEditBox::SetAutoFocus		ui	primitive	void __thiscall (CSimpleEditBox *this, int on)	Sets or clears bit 0 of an EditBox's flag word	verified	two	ui/xmltypes#editbox-flags	
 0x77a4a0	425	CSimpleEditBox::SetMultiLine		ui	orchestration		Sets multi-line and fixes the label's vertical justify and line flags	verified	one	ui/editbox#multi-line-and-the-labels-justify	
 0x77a650	42	CSimpleEditBox::SetNumeric		ui	orchestration		Sets or clears the numeric flag	verified	one	ui/editbox#lua-methods	
 0x77a680	42	CSimpleEditBox::SetPassword		ui	orchestration		Sets or clears the password flag	verified	one	ui/editbox#lua-methods	
@@ -33759,7 +33759,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a750	36	CSimpleEditBox::OnFrameShow		ui	orchestration		Runs the frame's show, then focuses an autoFocus box when nothing holds the focus	verified	one	ui/editbox#keyboard-focus	
 0x77a780	16	CSimpleEditBox::OnFrameHide		ui	orchestration		Runs the frame's hide, then clears the box's focus	verified	one	ui/editbox#keyboard-focus	
 0x77a790	193	CSimpleEditBox::OnFrameUpdate		ui	primitive		Flushes the box's changes and blinks the caret of the focused box	verified	one	ui/editbox#text-changes-and-their-scripts	ui::glue_77a_77a790_fill_accumulate
-0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	uint32_t __thiscall (CSimpleEditBox *this, void *event)	Answers the base hit test and, under a drag, moves the selection and cursor to the glyph at the point	verified	one	ui/mouse#what-the-pointer-is-tested-against	
+0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	uint32_t __thiscall (CSimpleEditBox *this, void *event)	Answers the base hit test and, under a drag, moves the selection and cursor to the glyph at the point	verified	two	ui/mouse#what-the-pointer-is-tested-against	
 0x77a8d0	33	CSimpleEditBox::OnSizeChanged		ui	orchestration	void __thiscall (CSimpleEditBox *this, float *rect, uint32_t flags)	Runs the frame's size callback and lays the label and caret out again	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
 0x77a960	138	CSimpleEditBox::CreateCompositionTexture		ui	orchestration	void __thiscall (CSimpleEditBox *this)	Creates once the composition texture in colour 0xff202010 and sizes it to the label's line height	verified	one	ui/editboxmembers#candidate-window	
@@ -33846,8 +33846,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77e4a0	4	CSimpleFont::GetMember68		ui	orchestration	uint32_t __thiscall (CSimpleFont *this)	Returns the dword at +0x68 of the object	verified	one	ui/editboxmembers#font-follower-slots	
 0x77e4b0	47	FontFollowerApplyBlock		ui	orchestration	void __thiscall (void *this, FontBlock *block)	Merges a font block into the block at +0x14 under the mask at +8, then runs slot 5 of the object at -0x24	verified	one	ui/editboxmembers#font-follower-slots	
 0x77e4e0	23	FontFollowerIsTypeId		ui	orchestration	uint32_t __stdcall (void *p)	Answers whether its argument equals the dword at 0xcf4ea8	verified	one	ui/editboxmembers#font-follower-slots	
-0x77e500	32	FontIsTypeName		ui	primitive	bool __thiscall (void *this, const char *name)	Answers whether a name is Font or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x77e520	6	FontGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Font	verified	one	ui/widgettype#type-chains	
+0x77e500	32	FontIsTypeName		ui	primitive	bool __thiscall (void *this, const char *name)	Answers whether a name is Font or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x77e520	6	FontGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Font	verified	two	ui/widgettype#type-chains	
 0x77e530	24	FontFollowerPushChanges		ui	orchestration	void __thiscall (void *this)	Pushes the font's changes to its followers, then runs slot 0 of the object at +0x7c with the changed word	verified	one	ui/editboxmembers#font-follower-slots	
 0x77e550	43	DeletingDestructor77e550		ui	orchestration		Destroys the object through 0x783b20 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x77e580	5	InitSquare77e590Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77e590, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -33956,17 +33956,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x782d30	19	InitSquare782d30		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x782d50	5	InitQuotient782d60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x782d60, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x782d60	19	InitQuotient782d60		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x782d80	68	CSimpleStatusBar::CSimpleStatusBar	idb	ui	primitive		Constructs a StatusBar frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x782d80	68	CSimpleStatusBar::CSimpleStatusBar	idb	ui	primitive		Constructs a StatusBar frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x782dd0	26	CSimpleStatusBar::SetBarColour		ui	orchestration	void __thiscall (CSimpleStatusBar *this, const void *colour)	Sets the bar texture's vertex colour when the bar has a texture	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x782df0	45	IsTypeId782df0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x782e20	89	StatusBarIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is StatusBar or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x782e80	6	StatusBarGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name StatusBar	verified	one	ui/widgettype#type-chains	
+0x782e20	89	StatusBarIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is StatusBar or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x782e80	6	StatusBarGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name StatusBar	verified	two	ui/widgettype#type-chains	
 0x782e90	43	DeletingDestructor782e90		ui	orchestration		Destroys the object through 0x782ec0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x782ec0	47	CSimpleStatusBar::~CSimpleStatusBar		ui	orchestration	void __thiscall (CSimpleStatusBar *this)	Clears the bar texture, releases the script slot and runs the frame destructor	verified	one	ui/slider#a-status-bars-texture-and-teardown	
-0x782ef0	441	CSimpleStatusBar::LoadXML		ui	primitive		Loads a StatusBar's frame node, then its bar texture and colour, range, value and orientation	verified	one	ui/xmltypes#slider-and-statusbar-values	
+0x782ef0	441	CSimpleStatusBar::LoadXML		ui	primitive		Loads a StatusBar's frame node, then its bar texture and colour, range, value and orientation	verified	two	ui/xmltypes#slider-and-statusbar-values	
 0x7830b0	5	InitInfinity7830c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7830c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7830c0	11	InitInfinity7830c0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x7830d0	60	CSimpleStatusBar::GetScriptByName		ui	orchestration		Returns a StatusBar's handler slot by name, adding OnValueChanged	verified	one	ui/xmltypes#handler-names-by-type	
+0x7830d0	60	CSimpleStatusBar::GetScriptByName		ui	orchestration		Returns a StatusBar's handler slot by name, adding OnValueChanged	verified	two	ui/xmltypes#handler-names-by-type	
 0x783110	34	CSimpleStatusBar::RemoveRegion		ui	orchestration	void __thiscall (CSimpleStatusBar *this, CScriptRegion *region)	Forgets the bar texture when it is the removed region, then removes the region	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x783140	174	CSimpleStatusBar::SetBarTexture		ui	orchestration	uint32_t __thiscall (CSimpleStatusBar *this, const char *path, uint32_t layer)	Loads the path into the bar texture, creating and installing one, answering 0 when the file fails	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x7831f0	85	CSimpleStatusBar::InstallBarTexture		ui	orchestration		Installs a status bar texture that changes its rectangle with its coordinates	verified	one	ui/slider#a-status-bars-fill	
@@ -33995,10 +33995,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x783a40	171	CSimpleFont::CSimpleFont		ui	orchestration	void * __thiscall (CSimpleFont *this)	Builds a Font object: script part, empty block, 0x212 justify word, empty follower list and the vtables	verified	one	ui/fonttext#the-font-object	
 0x783af0	43	DeletingDestructor783af0		ui	orchestration		Destroys the object through 0x783b20 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x783b20	270	CSimpleFont::~CSimpleFont		ui	orchestration	void __thiscall (CSimpleFont *this)	Clears the name, detaches every follower and the font's own link and ends in the script object destructor	verified	one	ui/fonttext#the-font-object	
-0x783c30	1265	CFontObject::LoadXML		ui	primitive		Loads a named font's template, file, height, outline, spacing, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	ui::glue_geom_783c30_fontheight_spacing
+0x783c30	1265	CFontObject::LoadXML		ui	primitive		Loads a named font's template, file, height, outline, spacing, justification, colour and shadow	verified	two	ui/xmltypes#regions-and-fonts	ui::glue_geom_783c30_fontheight_spacing
 0x784130	5	InitInfinity784140Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x784140, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x784140	11	InitInfinity784140		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x784150	42	FontSetName		ui	orchestration		Clears the font name global, stores the new name and publishes it as a global	verified	one	ui/widgettype#naming-a-widget	
+0x784150	42	FontSetName		ui	orchestration		Clears the font name global, stores the new name and publishes it as a global	verified	two	ui/widgettype#naming-a-widget	
 0x784180	66	CSimpleFont::PushChanges		ui	orchestration		Pushes a font's changed groups to each follower, then clears the change bits	verified	one	ui/fontstring#following-a-font	
 0x7841d0	268	CSimpleFont::SetFontObject		ui	orchestration	CSimpleFont * __thiscall (CSimpleFont *this, CSimpleFont *source)	Takes the source's mask and block and the font it follows, then runs slot 5	verified	one	ui/fonttext#font-object-setfontobject	
 0x7842e0	34	FreeRecord7842e0		ui	orchestration		Clears the record its argument points at through 0x783560 and frees it	verified	one	ui/containers#block-frees	
@@ -34033,13 +34033,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x784fd0	19	InitQuotient784fd0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x784ff0	5	InitInfinity785000Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x785000, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x785000	11	InitInfinity785000		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x785010	55	CSimpleCheckbox::CSimpleCheckbox	idb	ui	orchestration		Constructs a CheckButton on a Button and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x785010	55	CSimpleCheckbox::CSimpleCheckbox	idb	ui	orchestration		Constructs a CheckButton on a Button and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x785050	53	IsTypeId785050		ui	orchestration	uint32_t __stdcall (uint32_t id)	Answers 1 for the CheckButton, Button, Frame and Region type ids and 0 for any other	verified	one	ui/button#button-method-helper-and-type-test	
-0x785090	110	CheckButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is CheckButton or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x785100	6	CheckButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name CheckButton	verified	one	ui/widgettype#type-chains	
+0x785090	110	CheckButtonIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is CheckButton or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x785100	6	CheckButtonGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name CheckButton	verified	two	ui/widgettype#type-chains	
 0x785110	43	DeletingDestructor785110		ui	orchestration		Destroys the object through 0x785140 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x785140	40	CSimpleCheckbox::~CSimpleCheckbox		ui	orchestration	void __thiscall (CSimpleCheckbox *this)	Clears the two checked textures and runs the button destructor body	verified	one	ui/button#button-teardown-and-text-colour-slots	
-0x785170	177	CSimpleCheckbox::LoadXML		ui	orchestration		Loads a CheckButton's Button node, then checked and its two checked textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x785170	177	CSimpleCheckbox::LoadXML		ui	orchestration		Loads a CheckButton's Button node, then checked and its two checked textures	verified	two	ui/xmltypes#elements-and-attributes-by-type	
 0x785230	50	CSimpleCheckbox::RemoveRegion		ui	orchestration		Clears the checked slots that hold a removed region, then the button's	verified	one	ui/button#checkbutton	
 0x785270	179	CSimpleCheckbox::SetCheckedTexturePath		ui	orchestration		Reloads the checked texture from a path, or creates one with blend mode ADD	verified	one	ui/button#checked-textures	
 0x785330	74	CSimpleCheckbox::SetCheckedTexture		ui	orchestration		Replaces the checked texture in the OVERLAY layer and refreshes the check	verified	one	ui/button#checked-textures	
@@ -34057,15 +34057,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7855f0	19	InitSquare7855f0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x785610	5	InitQuotient785620Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x785620, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x785620	19	InitQuotient785620		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x785640	279	CSimpleMessageFrame::CSimpleMessageFrame	idb	ui	orchestration		Constructs a MessageFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x785640	279	CSimpleMessageFrame::CSimpleMessageFrame	idb	ui	orchestration		Constructs a MessageFrame frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x785760	45	IsTypeId785760		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x785790	89	MessageFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is MessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x7857f0	6	MessageFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name MessageFrame	verified	one	ui/widgettype#type-chains	
+0x785790	89	MessageFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is MessageFrame or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x7857f0	6	MessageFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name MessageFrame	verified	two	ui/widgettype#type-chains	
 0x785800	43	DeletingDestructor785800		ui	orchestration		Destroys the object through 0x785830 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x785830	180	CSimpleMessageFrame::~CSimpleMessageFrame		ui	orchestration	void __thiscall (CSimpleMessageFrame *this)	Releases the line holders and the queued messages, deletes the font and runs the frame destructor	verified	one	ui/messagemembers#message-frame-teardown	
 0x7858f0	5	InitInfinity785900Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x785900, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x785900	11	InitInfinity785900		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x785910	622	CSimpleMessageFrame::LoadXML		ui	primitive		Loads a MessageFrame's frame node, then its font, fading, insert mode and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x785910	622	CSimpleMessageFrame::LoadXML		ui	primitive		Loads a MessageFrame's frame node, then its font, fading, insert mode and text elements	verified	two	ui/xmltypes#elements-and-attributes-by-type	
 0x785b80	48	CSimpleMessageFrame::SetInsets		ui	orchestration	void __thiscall (CSimpleMessageFrame *this, float a, float b, float c, float d)	Stores the four insets at +0x330 to +0x33c and lays the lines out	verified	one	ui/messagemembers#message-frame-setters	
 0x785bb0	75	CSimpleMessageFrame::SetFixedLength		ui	unreached	void __thiscall (CSimpleMessageFrame *this, uint32_t length)	Stores a length at +0x340 and sets it on each line's FontString; nothing reaches it	verified	one	ui/messagemembers#message-frame-setters	
 0x785c00	24	CSimpleMessageFrame::RelayoutOnFlags		ui	orchestration	void __thiscall (CSimpleMessageFrame *this, uint32_t a, uint32_t flags)	Lays the lines out when bit 0 or 4 of the flags is set	verified	one	ui/messagemembers#message-frame-setters	
@@ -34103,14 +34103,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7869f0	19	InitSquare7869f0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x786a10	5	InitQuotient786a20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x786a20, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x786a20	19	InitQuotient786a20		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x786a40	109	CSimpleScrollFrame::CSimpleScrollFrame	idb	ui	orchestration		Constructs a ScrollFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x786a40	109	CSimpleScrollFrame::CSimpleScrollFrame	idb	ui	orchestration		Constructs a ScrollFrame frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x786ab0	45	IsTypeId786ab0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x786ae0	89	ScrollFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ScrollFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x786b40	6	ScrollFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ScrollFrame	verified	one	ui/widgettype#type-chains	
+0x786ae0	89	ScrollFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ScrollFrame or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x786b40	6	ScrollFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ScrollFrame	verified	two	ui/widgettype#type-chains	
 0x786b50	43	DeletingDestructor786b50		ui	orchestration		Destroys the object through 0x786b80 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x786b80	64	CSimpleScrollFrame::~CSimpleScrollFrame		ui	orchestration	void __thiscall (CSimpleScrollFrame *this)	Releases the script slots at +0x32c, +0x334 and +0x33c and runs the frame destructor	verified	one	ui/scrollframe#teardown	
-0x786bc0	125	CSimpleScrollFrame::LoadXML		ui	primitive		Loads a ScrollFrame's frame node, then creates its scroll child from XML	verified	one	ui/xmltypes#scroll-child	
-0x786c40	124	CSimpleScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollFrame's handler slot by name, adding its three scroll handlers	verified	one	ui/xmltypes#handler-names-by-type	
+0x786bc0	125	CSimpleScrollFrame::LoadXML		ui	primitive		Loads a ScrollFrame's frame node, then creates its scroll child from XML	verified	two	ui/xmltypes#scroll-child	
+0x786c40	124	CSimpleScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollFrame's handler slot by name, adding its three scroll handlers	verified	two	ui/xmltypes#handler-names-by-type	
 0x786cc0	5	InitInfinity786cd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x786cd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x786cd0	11	InitInfinity786cd0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x786ce0	69	CSimpleScrollFrame::SetScrollChild		ui	orchestration		Sets a scroll frame's scroll child, detaching the old one and attaching the new	verified	one	ui/xmltypes#scroll-child	
@@ -34134,15 +34134,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x787630	19	InitQuotient787630		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x787650	5	InitInfinity787660Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x787660, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x787660	11	InitInfinity787660		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x787670	635	CSimpleMessageScrollFrame::Construct		ui	primitive		Constructs a message scroll frame: runs the base constructor, then stores three tables, at +0, +0x24 and +0x338	verified	one	ui/xmltypes#handler-names-by-type	
+0x787670	635	CSimpleMessageScrollFrame::Construct		ui	primitive		Constructs a message scroll frame: runs the base constructor, then stores three tables, at +0, +0x24 and +0x338	verified	two	ui/xmltypes#handler-names-by-type	
 0x7878f0	22	FreeLineRecordText		ui	orchestration	void __thiscall (void *this)	Frees the text of a scroll frame line record when set	verified	one	ui/messagemembers#scroll-frame-teardown	
 0x787910	45	IsTypeId787910		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x787940	89	ScrollingMessageFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ScrollingMessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x7879a0	6	ScrollingMessageFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ScrollingMessageFrame	verified	one	ui/widgettype#type-chains	
+0x787940	89	ScrollingMessageFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ScrollingMessageFrame or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x7879a0	6	ScrollingMessageFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ScrollingMessageFrame	verified	two	ui/widgettype#type-chains	
 0x7879b0	43	DeletingDestructor7879b0		ui	orchestration		Destroys the object through 0x7879e0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x7879e0	311	CSimpleMessageScrollFrame::Destruct		ui	orchestration	void __thiscall (CSimpleMessageScrollFrame *this)	Frees the arrays and link buttons, releases the script slot and runs the hyperlink frame destructor	verified	one	ui/messagemembers#scroll-frame-teardown	
-0x787b20	615	CSimpleMessageScrollFrame::LoadXML		ui	primitive		Loads a ScrollingMessageFrame's frame node, then its font, fading, line count and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x787d90	60	CSimpleMessageScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollingMessageFrame handler slot by name, adding OnMessageScrollChanged	verified	one	ui/xmltypes#handler-names-by-type	
+0x787b20	615	CSimpleMessageScrollFrame::LoadXML		ui	primitive		Loads a ScrollingMessageFrame's frame node, then its font, fading, line count and text elements	verified	two	ui/xmltypes#elements-and-attributes-by-type	
+0x787d90	60	CSimpleMessageScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollingMessageFrame handler slot by name, adding OnMessageScrollChanged	verified	two	ui/xmltypes#handler-names-by-type	
 0x787dd0	478	CSimpleMessageScrollFrame::SetMaxLines		ui	orchestration		Empties a scrolling message frame and sets its line limit	verified	one	ui/messageframe#the-ring-of-lines	
 0x787fb0	48	CSimpleMessageScrollFrame::SetInsets		ui	orchestration	void __thiscall (CSimpleMessageScrollFrame *this, float a, float b, float c, float d)	Stores the four insets at +0x37c to +0x388 and runs the rectangle change callback	verified	one	ui/messagemembers#scroll-frame-setters	
 0x787fe0	64	CSimpleMessageScrollFrame::SetFixedLength		ui	unreached	void __thiscall (CSimpleMessageScrollFrame *this, uint32_t length)	Stores a length at +0x358 and sets it on each display node's FontString; nothing reaches it	verified	one	ui/messagemembers#unreached-scroll-frame-code	
@@ -34194,16 +34194,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7893d0	8	LayoutThunk7893d0		ui	primitive		Moves this back by 0x24 to the object and jumps to its deleting destructor 0x789320	verified	one	ui/containers#layout-thunks	
 0x7893e0	11			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7893f0	11			ui	primitive		Runs its object file code not read here	inferred	none		
-0x789400	115	CSimpleSlider::CSimpleSlider	idb	ui	primitive		Constructs a Slider frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x789400	115	CSimpleSlider::CSimpleSlider	idb	ui	primitive		Constructs a Slider frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x789480	45	IsTypeId789480		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x7894b0	89	SliderIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Slider or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x789510	6	SliderGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Slider	verified	one	ui/widgettype#type-chains	
+0x7894b0	89	SliderIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is Slider or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x789510	6	SliderGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name Slider	verified	two	ui/widgettype#type-chains	
 0x789520	43	DeletingDestructor789520		ui	orchestration		Destroys the object through 0x789550 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x789550	47			ui	orchestration		Runs its object file code that calls 0x789860, FrameScriptReleaseScript; not read here	inferred	none		
-0x789580	420	CSimpleSlider::LoadXML		ui	primitive		Loads a Slider's frame node, then its thumb, range, step, value and orientation	verified	one	ui/xmltypes#slider-and-statusbar-values	
+0x789580	420	CSimpleSlider::LoadXML		ui	primitive		Loads a Slider's frame node, then its thumb, range, step, value and orientation	verified	two	ui/xmltypes#slider-and-statusbar-values	
 0x789730	5	InitInfinity789740Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x789740, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x789740	11	InitInfinity789740		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x789750	60	CSimpleSlider::GetScriptByName		ui	orchestration		Returns a Slider's handler slot by name, adding OnValueChanged	verified	one	ui/xmltypes#handler-names-by-type	
+0x789750	60	CSimpleSlider::GetScriptByName		ui	orchestration		Returns a Slider's handler slot by name, adding OnValueChanged	verified	two	ui/xmltypes#handler-names-by-type	
 0x789790	34	CSimpleSlider::RemoveRegion		ui	orchestration	void __thiscall (CSimpleSlider *this, CScriptRegion *region)	Forgets the thumb texture when it is the removed region, then removes the region	verified	one	ui/slider#the-thumb-texture	
 0x7897c0	158	CSimpleSlider::SetThumbTexture		ui	orchestration	uint32_t __thiscall (CSimpleSlider *this, const char *path)	Loads a path into the thumb, or builds one and installs it on OVERLAY, answering 0 when a new one fails	verified	one	ui/slider#the-thumb-texture	
 0x789860	83	CSimpleSlider::InstallThumbTexture		ui	primitive	void __thiscall (CSimpleSlider *this, CSimpleTexture *texture, uint32_t layer)	Replaces the thumb, deleting the old one and linking the new one on a layer without anchors	verified	one	ui/slider#the-thumb-texture	ui::slider_install_thumb_difftest
@@ -34228,13 +34228,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x789d90	19	InitQuotient789d90		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x789db0	5	InitInfinity789dc0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x789dc0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x789dc0	11	InitInfinity789dc0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x789dd0	250	CSimpleHTML::CSimpleHTML	idb	ui	primitive		Constructs a SimpleHTML frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x789dd0	250	CSimpleHTML::CSimpleHTML	idb	ui	primitive		Constructs a SimpleHTML frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x789ed0	45	IsTypeId789ed0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x789f00	89	SimpleHTMLIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is SimpleHTML or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x789f60	6	SimpleHTMLGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name SimpleHTML	verified	one	ui/widgettype#type-chains	
+0x789f00	89	SimpleHTMLIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is SimpleHTML or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x789f60	6	SimpleHTMLGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name SimpleHTML	verified	two	ui/widgettype#type-chains	
 0x789f70	43	DeletingDestructor789f70		ui	orchestration		Destroys the object through 0x789fa0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x789fa0	391			ui	primitive		Runs CSimpleHTML.cpp code that calls 0x78a580, SMemFree, 0x7a35e0; not read here	inferred	none		
-0x78a130	434	CSimpleHTML::LoadXML		ui	primitive		Loads a SimpleHTML's frame node, then its fonts, file and hyperlink format	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x78a130	434	CSimpleHTML::LoadXML		ui	primitive		Loads a SimpleHTML's frame node, then its fonts, file and hyperlink format	verified	two	ui/xmltypes#elements-and-attributes-by-type	
 0x78a2f0	47	CSimpleHTML::OnFrameUpdate		ui	orchestration	void __thiscall (CSimpleHTML *this, float elapsed)	Runs the frame update, then rebuilds the link buttons and clears the request when one is set	verified	one	ui/simplehtml#rebuilding-the-link-buttons	
 0x78a320	89	HtmlLayoutRectChanged		ui	primitive	void __thiscall (CLayoutFrame *this, float *oldRect)	Runs the frame's rectangle callback and asks for a link rebuild when the width or height changed	verified	one	ui/simplehtml#rebuilding-the-link-buttons	ui::glue_788_78a320_rect_changed
 0x78a380	20	OnHtmlElementFontChanged		ui	orchestration	void __thiscall (void *this, void *font, uint32_t changed)	Asks for a link rebuild when an element font pushes a font or spacing change	verified	one	ui/simplehtml#rebuilding-the-link-buttons	
@@ -34258,16 +34258,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b1d0	19	InitSquare78b1d0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x78b1f0	5	InitQuotient78b200Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78b200, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78b200	19	InitQuotient78b200		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x78b220	163	CSimpleColorSelect::CSimpleColorSelect	idb	ui	orchestration		Constructs a ColorSelect frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x78b220	163	CSimpleColorSelect::CSimpleColorSelect	idb	ui	orchestration		Constructs a ColorSelect frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x78b2d0	45	IsTypeId78b2d0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x78b300	89	ColorSelectIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ColorSelect or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x78b360	6	ColorSelectGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ColorSelect	verified	one	ui/widgettype#type-chains	
+0x78b300	89	ColorSelectIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is ColorSelect or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x78b360	6	ColorSelectGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name ColorSelect	verified	two	ui/widgettype#type-chains	
 0x78b370	5	InitInfinity78b380Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78b380, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78b380	11	InitInfinity78b380		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x78b390	43	DeletingDestructor78b390		ui	orchestration		Destroys the object through 0x78b3c0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x78b3c0	36			ui	orchestration		Runs its object file code that calls FrameScriptReleaseScript; not read here	inferred	none		
-0x78b3f0	247	CSimpleColorSelect::LoadXML		ui	orchestration		Loads a ColorSelect's frame node, then its four wheel and value textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x78b4f0	60	CSimpleColorSelect::GetScriptByName		ui	orchestration		Returns a ColorSelect's handler slot by name, adding OnColorSelect	verified	one	ui/xmltypes#handler-names-by-type	
+0x78b3f0	247	CSimpleColorSelect::LoadXML		ui	orchestration		Loads a ColorSelect's frame node, then its four wheel and value textures	verified	two	ui/xmltypes#elements-and-attributes-by-type	
+0x78b4f0	60	CSimpleColorSelect::GetScriptByName		ui	orchestration		Returns a ColorSelect's handler slot by name, adding OnColorSelect	verified	two	ui/xmltypes#handler-names-by-type	
 0x78b530	78	CSimpleColorSelect::RemoveRegion		ui	orchestration	void __thiscall (CSimpleColorSelect *this, CScriptRegion *region)	Clears each of the four texture fields holding the removed region, then removes the region	verified	one	ui/colorselect#the-wheel-thumb-texture	
 0x78b580	478	CSimpleColorSelect::SetWheelTexture		ui	primitive		Replaces the colour wheel texture, deleting the old; a texture gets the wheel image, built once, nil leaves none	verified	one	ui/colorselect#a-missing-wheel-faults	ui::geo_78b580
 0x78b760	35	TextureWheelUpdate		ui	orchestration	void __fastcall (uint32_t mode, uint32_t width, uint32_t arg3, uint32_t arg4, uint32_t arg5, void *owner, uint32_t *pitch, void **bits)	Answers a colour wheel texture's level request with the width times 4 and the owner's pixel array	verified	one	ui/colorselect#the-value-strip-texture	
@@ -34298,15 +34298,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c050	19	InitQuotient78c050		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x78c070	39	MovieAudioEndedCallback		ui	primitive		Marks the movie finished when its audio stream ends	verified	one	ui/movieframe#audio	
 0x78c0a0	36			ui	primitive		Runs its object file code not read here	inferred	none		
-0x78c0d0	179	CSimpleMovieFrame::CSimpleMovieFrame	idb	ui	orchestration		Constructs a MovieFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x78c0d0	179	CSimpleMovieFrame::CSimpleMovieFrame	idb	ui	orchestration		Constructs a MovieFrame frame and stores its two vtables	verified	two	ui/xmltypes#handler-names-by-type	
 0x78c190	45	IsTypeId78c190		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
-0x78c1c0	89	MovieFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is MovieFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x78c220	6	MovieFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name MovieFrame	verified	one	ui/widgettype#type-chains	
+0x78c1c0	89	MovieFrameIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is MovieFrame or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
+0x78c220	6	MovieFrameGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name MovieFrame	verified	two	ui/widgettype#type-chains	
 0x78c230	43	DeletingDestructor78c230		ui	orchestration		Destroys the object through 0x78c280 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x78c260	5	InitInfinity78c270Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78c270, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78c270	11	InitInfinity78c270		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x78c280	96	CSimpleMovieFrame::~CSimpleMovieFrame		ui	orchestration	void __thiscall (CSimpleMovieFrame *this)	Stops a playing movie, running OnMovieFinished, releases the three scripts and the captions, then destroys the frame	verified	one	ui/movieframe#destroying-a-movie-frame	
-0x78c2e0	124	CSimpleMovieFrame::GetScriptByName		ui	orchestration		Returns a MovieFrame's handler slot by name, adding its three movie handlers	verified	one	ui/xmltypes#handler-names-by-type	
+0x78c2e0	124	CSimpleMovieFrame::GetScriptByName		ui	orchestration		Returns a MovieFrame's handler slot by name, adding its three movie handlers	verified	two	ui/xmltypes#handler-names-by-type	
 0x78c360	1080	ReadMovieAvi		ui	primitive		Reads the movie AVI file into the video and audio buffers	verified	one	ui/movieframe#the-file	ui::movie_avi_read_whole
 0x78c7a0	495	StartMovieDecoder		ui	host		Creates the DivX decoder instance and the tile textures for a movie	verified	one	ui/movieframe#the-decoder	
 0x78c990	158	StopMovieDecoder		ui	primitive		Destroys the decoder instance, the output bitmap and the tile textures	verified	one	ui/movieframe#the-decoder	
@@ -34813,7 +34813,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a0f50	375	InitHashTable7a0e80Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x7a0e80 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x7a10d0	21	RegisterFontMethods		ui	orchestration		Adds the 22 Font methods of 0x87c7c8 to the Font method hash	verified	one	ui/fontstring#lua-methods	
 0x7a10f0	10	UnregisterFontMethods		ui	orchestration	void __cdecl ()	Unregisters the 22 Font methods that 0x7a10d0 registers	verified	two	ui/scriptapi#method-table-unregistrars	
-0x7a1100	23	CSimpleFont::GetScriptMethod		ui	orchestration	void __thiscall (CSimpleFont *this, const char *name, void *object)	Looks a method of the Font type up through FrameScriptPushMethod with the Font method table	verified	one	ui/widgettype#asking-for-a-type	
+0x7a1100	23	CSimpleFont::GetScriptMethod		ui	orchestration	void __thiscall (CSimpleFont *this, const char *name, void *object)	Looks a method of the Font type up through FrameScriptPushMethod with the Font method table	verified	two	ui/widgettype#asking-for-a-type	
 0x7a1120	5	InitDouble7a1130Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a1130, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7a1130	15	InitDouble7a1130		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x7a1140	5	InitQuotient7a1150Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a1150, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -34822,8 +34822,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a1180	19	InitSquare7a1180		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x7a11a0	5	InitQuotient7a11b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a11b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7a11b0	19	InitQuotient7a11b0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x7a11d0	182	Region::GetObjectType	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetObjectType, its pair in the table 0x87c9b8	verified	one	ui/widgettype#asking-for-a-type	
-0x7a1290	256	Region::IsObjectType	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method IsObjectType: 1 for a name in the chain, else nil	verified	one	ui/widgettype#asking-for-a-type	
+0x7a11d0	182	Region::GetObjectType	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetObjectType, its pair in the table 0x87c9b8	verified	two	ui/widgettype#asking-for-a-type	
+0x7a1290	256	Region::IsObjectType	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method IsObjectType: 1 for a name in the chain, else nil	verified	two	ui/widgettype#asking-for-a-type	
 0x7a1390	205	Region::GetName	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetName, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a1460	225	Region::GetParent	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetParent, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a1550	669	Region::SetParent	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method SetParent: nil, a frame name or a frame table, refusing a loop, through slot 0x14	verified	two	ui/visibility#reparenting-by-script	
@@ -34841,7 +34841,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a2260	219	Region::GetNumPoints	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetNumPoints, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a2340	507	Region::GetPoint	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method GetPoint, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	ui::luabind_7a1_get_point
 0x7a2540	1022	Region::SetPoint	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method SetPoint, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	ui::luabind_7a1_setters
-0x7a2940	553	Region::SetAllPoints	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method SetAllPoints: names a frame, defaulting to the parent, then pins both corners	verified	one	ui/widgettype#setpoint-and-setallpoints-arguments	
+0x7a2940	553	Region::SetAllPoints	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method SetAllPoints: names a frame, defaulting to the parent, then pins both corners	verified	two	ui/widgettype#setpoint-and-setallpoints-arguments	
 0x7a2b70	147	Region::ClearAllPoints	idb	ui	orchestration	int __fastcall (lua_State *L)	Implements the Region method ClearAllPoints, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a2c10	10	InitRegionMethodHashThunk		ui	orchestration		Builds the Region method hash table, then registers its exit handler; a static initializer	verified	one	ui/README#static-initializers	
 0x7a2c20	190	InitRegionMethodHash		ui	orchestration		Builds the empty Region method hash table at 0xcf54b4	verified	one	ui/README#static-initializers	
@@ -34884,7 +34884,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a3540	112	CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame		ui	primitive		Builds the hyperlinked frame base: a frame with the pool fields and three empty hyperlink script slots	verified	one	ui/hyperlinks#the-two-classes	
 0x7a35b0	43	DeletingDestructor7a35b0		ui	orchestration		Destroys the object through 0x7a35e0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x7a35e0	284			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemFree, FrameScriptReleaseScript; not read here	inferred	none		
-0x7a3700	124	CSimpleHyperlinkedFrame::GetScriptByName		ui	orchestration		Returns a handler slot by name, adding the three hyperlink handlers	verified	one	ui/xmltypes#handler-names-by-type	
+0x7a3700	124	CSimpleHyperlinkedFrame::GetScriptByName		ui	orchestration		Returns a handler slot by name, adding the three hyperlink handlers	verified	two	ui/xmltypes#handler-names-by-type	
 0x7a3780	46	CSimpleHyperlinkedFrame::FireOnHyperlinkEnter		ui	orchestration		Runs OnHyperlinkEnter with the link as its only argument	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
 0x7a37b0	46	CSimpleHyperlinkedFrame::FireOnHyperlinkLeave		ui	orchestration		Runs OnHyperlinkLeave with the link as its only argument	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
 0x7a37e0	110	CSimpleHyperlinkedFrame::FireOnHyperlinkClick		ui	primitive		Runs OnHyperlinkClick with the link, text and button name	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
@@ -37635,7 +37635,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7facd0	76	bit_arshift		lua	primitive	int __fastcall (lua_State *L)	Pushes argument 1 shifted right arithmetically by argument 2, as a signed number	verified	one	lua/libs#bit-library	
 0x7fad20	66	bit_mod		lua	primitive	int __fastcall (lua_State *L)	Pushes the remainder of two integers, or 1 over the divisor for a divisor of 0	verified	one	lua/libs#bit-library	
 0x7fad70	75	bit_mod_remainder		lua	primitive		Pushes the signed integer remainder of two arguments, the tail of bit_mod	verified	one	lua/libs#bit-library	
-0x7fadc0	23	luaopen_bit		lua	orchestration		Opens the bit library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
+0x7fadc0	23	luaopen_bit		lua	orchestration		Opens the bit library of 8 functions	verified	two	ui/luastate#what-a-new-state-holds	
 0x7fade0	35	math_abs		lua	boundary	int __fastcall (lua_State *L)	Pushes the absolute value of its argument	verified	one	lua/libs#math-functions	
 0x7fae10	35	math_sin		lua	boundary	int __fastcall (lua_State *L)	Pushes the sine of an angle in radians	verified	one	lua/libs#math-functions	
 0x7fae40	35	math_cos		lua	boundary	int __fastcall (lua_State *L)	Pushes the cosine of an angle in radians	verified	one	lua/libs#math-functions	
@@ -37644,7 +37644,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7faed0	38	math_acos		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc cosine of its argument	verified	one	lua/libs#math-functions	
 0x7faf00	37	math_atan		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc tangent of its argument	verified	one	lua/libs#math-functions	
 0x7faf30	64	math_atan2		lua	boundary	int __fastcall (lua_State *L)	Pushes the arc tangent of the quotient of two arguments	verified	one	lua/libs#math-functions	
-0x7faf70	41	math_ceil		lua	boundary	int __fastcall (lua_State *L)	Pushes the ceiling of argument 1, as math.ceil	verified	one	ui/luastate#mathceil	
+0x7faf70	41	math_ceil		lua	boundary	int __fastcall (lua_State *L)	Pushes the ceiling of argument 1, as math.ceil	verified	two	ui/luastate#mathceil	
 0x7fafa0	41	math_floor		lua	boundary	int __fastcall (lua_State *L)	Pushes the largest integer value not above its argument	verified	one	lua/libs#math-functions	
 0x7fafd0	67	math_mod		lua	boundary	int __fastcall (lua_State *L)	Pushes the floating remainder of two arguments	verified	one	lua/libs#math-functions	
 0x7fb020	35	math_sqrt		lua	boundary	int __fastcall (lua_State *L)	Pushes the square root of its argument	verified	one	lua/libs#math-functions	
@@ -37660,7 +37660,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fb2a0	106	math_max		lua	boundary	int __fastcall (lua_State *L)	Pushes the largest of its arguments	verified	one	lua/libs#more-math-functions	
 0x7fb310	317	math_random		lua	primitive	int __fastcall (lua_State *L)	Returns a Lua random number drawn from rand	inferred	none	random#the-c-runtime-rand	
 0x7fb450	27	math_randomseed		lua	orchestration	int __fastcall (lua_State *L)	Seeds rand from its first Lua argument, truncated	verified	one	random#the-c-runtime-rand	
-0x7fb470	110	luaopen_math		lua	orchestration		Opens the math library of 24 functions, math.pi and the global __pow	verified	one	ui/luastate#the-library-scripts-see	
+0x7fb470	110	luaopen_math		lua	orchestration		Opens the math library of 24 functions, math.pi and the global __pow	verified	two	ui/luastate#the-library-scripts-see	
 0x7fb4e0	174	luaB_foreachi		lua	boundary	int __fastcall (lua_State *L)	Calls a function on each index of a table up to its length, stopping at a non-nil result	verified	one	lua/libs#table-library	
 0x7fb590	155	luaB_foreach		lua	boundary	int __fastcall (lua_State *L)	Calls a function on each key and value of a table, stopping at a non-nil result	verified	one	lua/libs#table-library	
 0x7fb630	60	luaB_getn		lua	boundary	int __fastcall (lua_State *L)	Pushes the length of a table	verified	one	lua/libs#table-library	
@@ -37672,7 +37672,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fb990	648	auxsort		lua	boundary		Sorts a range of a table by quicksort with median of three	verified	one	lua/libs#table-library	
 0x7fbc20	38	set2		lua	boundary		Stores the top two values into two indices of the table	verified	one	lua/libs#table-library	
 0x7fbc50	123	sort_comp		lua	boundary		Compares two values with the order function or lua_lessthan	verified	one	lua/libs#table-library	
-0x7fbcd0	23	luaopen_table		lua	orchestration		Opens the table library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
+0x7fbcd0	23	luaopen_table		lua	orchestration		Opens the table library of 8 functions	verified	two	ui/luastate#what-a-new-state-holds	
 0x7fbcf0	62	str_len		lua	boundary	int __fastcall (lua_State *L)	Pushes the length of a string	verified	one	lua/libs#string-basics	
 0x7fbd30	162	str_sub		lua	boundary	int __fastcall (lua_State *L)	Pushes the substring between two positions, counted from either end	verified	one	lua/libs#string-basics	
 0x7fbde0	11	posrelat		lua	boundary		Turns a negative string position into one counted from the end	verified	one	lua/libs#string-basics	
@@ -37710,7 +37710,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fd2a0	293	add_s		lua	boundary		Adds the replacement for a match to the buffer, from a string with %n or a function result	verified	one	lua/libs#search-and-replace	
 0x7fd3d0	691	str_format		lua	boundary	int __fastcall (lua_State *L)	Pushes a string formatted from a format and arguments, as C sprintf with the Lua conversions	verified	one	lua/libs#formatting	
 0x7fd6d0	211	luaI_addquoted		lua	boundary		Adds a string to the buffer in double quotes, escaping quote, backslash, newline and NUL	verified	one	lua/libs#formatting	
-0x7fd810	23	luaopen_string		lua	orchestration		Opens the string library of 12 functions	verified	one	ui/luastate#what-a-new-state-holds	
+0x7fd810	23	luaopen_string		lua	orchestration		Opens the string library of 12 functions	verified	two	ui/luastate#what-a-new-state-holds	
 0x7fd830	31	__EH_prolog	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd84f	140	_bsearch	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd8db	176	_frexp	idb	crt	primitive	double __cdecl (double x, int32_t *e)	Splits a double into a mantissa in [0.5, 1) and a power of two stored through e; an infinity gives the indefinite and -1	verified	one	crt/math#splitting-a-double	crt::crt_frexp_difftest

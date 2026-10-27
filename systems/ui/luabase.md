@@ -25,7 +25,7 @@ through `luaL_error("%s", message)`. Otherwise the stack is cut to the first arg
 
 Addresses: `0x702970`, `0x702985`, `0x7029a8`, `0x7029b0`, `0x7029c8`, `0x7029d1`, `0x7031a0`, `0x7031d6`, `0x7031e5`, `0x6f4440`, `0x6f48e0`, `0x6f44e0`, `0x6f4c20`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702970` reads argument 2 with the optional-number helper `0x6f4cd0` (default bits `0x3ff00000`, 1.0) and `__ftol`
@@ -44,7 +44,7 @@ function, pushes the boolean, replaces index 1 with it and returns the stack. Af
 
 Addresses: `0x7032f0`, `0x703303`, `0x70330d`, `0x703316`, `0x703327`, `0x70332f`, `0x703340`, `0x703360`, `0x70336d`, `0x703376`, `0x703387`, `0x70338f`, `0x6f41a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7032f0` calls `lua_gettop` (`0x703303`) and `lua_pcall(n − 1, −1, 0)` (`0x70330d`; the pushes before it are `0`, the
@@ -62,7 +62,7 @@ metatable` when the table's metatable has a `__metatable` entry, then sets the m
 
 Addresses: `0x7029f0`, `0x702a04`, `0x702a0f`, `0x702a25`, `0x702a40`, `0x702a62`, `0x702a73`, `0x702a82`, `0x702a93`, `0x702aae`, `0x6f4d00`, `0x6f3cf0`, `0x6f4020`, `0x872a50`, `0x872a5c`, `0x872a80`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f4d00(L, 1, name)` is the metatable-field lookup: it answers 0 with nothing pushed when the object has no metatable
@@ -84,7 +84,7 @@ environment for tail call at level %d`.
 
 Addresses: `0x702ac0`, `0x702af0`, `0x702ba0`, `0x702be0`, `0x702b04`, `0x702b27`, `0x702b4b`, `0x702b70`, `0x702b8a`, `0x702bc0`, `0x702c45`, `0x702c59`, `0x702c69`, `0x6fbaa0`, `0x6fbc70`, `0x6f3d50`, `0x6f40d0`, `0x6f32b0`, `0x872acc`, `0x872afc`, `0x802970`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702af0` is the function lookup: a function at 1 (`lua_type == 6`, `0x702b04`) is pushed; otherwise the level is `__ftol` of the
@@ -104,7 +104,7 @@ cannot grow by that count and pushes `t[1]` to `t[n]`.
 
 Addresses: `0x702c90`, `0x702cb2`, `0x702cd0`, `0x702cf7`, `0x702d10`, `0x702d7b`, `0x702d8a`, `0x702da0`, `0x7030a0`, `0x7030b8`, `0x7030c8`, `0x7030d6`, `0x6f4450`, `0x6fa2a0`, `0x6f5050`, `0x6f4b20`, `0x8719b0`, `0x8728a4`, `0x872bc4`, `0x8015b8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702c90` sets the top to 2 and calls `0x6f4450` (which calls `0x6fa2a0`): 2 results, else nil and 1. `0x702da0` pushes the
@@ -124,7 +124,7 @@ with the object's address.
 
 Addresses: `0x702df0`, `0x702f40`, `0x702f5f`, `0x702f81`, `0x703078`, `0x6f3480`, `0x6f4d60`, `0x811cd0`, `0x872bb8`, `0x871624`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702df0` takes `lua_type` through `0x6f3480`, which indexes the name table `0x811cd0` and answers the string at `0x871624` for
@@ -140,7 +140,7 @@ nil. A string with no digits answers nil.
 
 Addresses: `0x702e30`, `0x702e52`, `0x702ead`, `0x702ec6`, `0x702ed3`, `0x702f02`, `0x702f11`, `0x40dd0e`, `0x40db09`, `0x40db59`, `0x40dbc6`, `0x40dccc`, `0x40dcf4`, `0x73fc64`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x702e30` compares the base with 10 (`0x702e52`), range-checks 2 to 0x24 (`0x702ea3`, `0x702ead`), calls `0x40dd0e` with the
@@ -156,7 +156,7 @@ metamethods and returns the table.
 
 Addresses: `0x7030f0`, `0x703112`, `0x703130`, `0x703152`, `0x703160`, `0x70318e`, `0x6f3550`, `0x6f3b00`, `0x6f3ea0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7030f0` calls `0x6f3550(1, 2)` and `lua_pushboolean`. `0x703130` is `luaL_checktype(1, 5)`, `luaL_checkany(2)` and `0x6f3b00(1)`;
@@ -170,7 +170,7 @@ shifted right by 10. `collectgarbage([limit])` passes `__ftol` of the optional n
 
 Addresses: `0x703200`, `0x703207`, `0x703221`, `0x703250`, `0x703261`, `0x70326a`, `0x6f43f0`, `0x6f43e0`, `0x6f4400`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6f43f0` reads `[[L+0x10]+0x28] >> 10` and `0x6f43e0` reads `[[L+0x10]+0x24] >> 10`; `0x703200` pushes each through `fild`
@@ -184,7 +184,7 @@ reduced by 1 and `year` by 1900, `mktime` runs on them, and the answer is the nu
 
 Addresses: `0x7035a0`, `0x7035b9`, `0x7035fc`, `0x703672`, `0x7036b0`, `0x7036f0`, `0x70370f`, `0x6f3a40`, `0x73f049`, `0x74066b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7035a0` calls `time(0)` (`0x73f049`) when `lua_type(1)` is not above 0, otherwise fills the nine-int `tm` at `[ebp-0x28]`
@@ -200,7 +200,7 @@ result raises ``` `date' format too long```. An empty result is also 0, so `date
 
 Addresses: `0x7033a0`, `0x7033d6`, `0x7033db`, `0x7033f0`, `0x7033f9`, `0x70340e`, `0x70343c`, `0x703503`, `0x70352c`, `0x703540`, `0x703570`, `0x73f125`, `0x7421da`, `0x4134e3`, `0x872c44`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x7033a0` reads the time as `__ftol` of the optional number with default −1.0 (`0xbff00000`, `0x7033d6`) and calls `time(0)` for −1
