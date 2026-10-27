@@ -16,7 +16,9 @@ between (note `via-register`). Where neither holds the opcode is `?` (note `opco
 or the store is not built in the function (note `store-not-built-here`). The scan follows the
 listing, not the branches: a send reached from several writes lists each opcode, and a payload
 dword equal to an opcode that comes first on a path would be listed too, so a row is a lead to the
-opcode's send site, which the finding it links reads. Rows are sorted by opcode, then site;
+opcode's send site, which the finding it links reads. A send reads the writes made since the
+previous send of the same store, since a store sent once starts its next message at its next
+write; with no new write it reads all of them, for a send that a jump reaches from an earlier one. Rows are sorted by opcode, then site;
 the unresolved `?` rows come last.
 
 Four kinds of send are resolved beyond the straight scan. A function that takes the opcode as an
@@ -172,12 +174,14 @@ def main():
         end = row['address'] + row['size']
         initial = {}     # store -> [(put address, push operand, instruction index)]
         fresh = set()    # stores whose next put starts a path
+        sent = {}        # store -> how many of its puts the last send of it has read
         j = k
         while j < len(ins) and ins[j][0] < end:
             a, _, mn, ops = ins[j]
             if mn == 'mov' and ops.endswith(',' + VTABLE) and ops.startswith('DWORD PTR [ebp'):
                 slot = ops[len('DWORD PTR '):ops.index(',')]
                 initial[slot] = []
+                sent[slot] = 0
                 fresh.add(slot)
             elif mn in ('jmp', 'ret'):
                 fresh = set(initial)
@@ -205,6 +209,13 @@ def main():
                         store = bo.split(',', 1)[1]
                         break
                 puts = initial.get(key_of(store))
+                if puts:
+                    # A send reads the puts made since the store's last send: those are the
+                    # messages it can carry. With none new (a jump to a send that an earlier
+                    # put reaches), it reads them all.
+                    seen_to = sent.get(key_of(store), 0)
+                    sent[key_of(store)] = len(puts)
+                    puts = puts[seen_to:] or puts
                 found = []
                 for pa, push, pj in puts or []:
                     if push is not None and IMM.fullmatch(push):
