@@ -317,18 +317,18 @@ CInputControl	0x000c	4	float	m_travelY	input	Holds the sum of scaled |dy| since 
 CInputControl	0x0010	4	uint32_t	m_motionStamp	input	Holds a graphics device counter read at the last mouse motion while a command was held	inferred	none	input#click-versus-drag
 CInputControl	0x0014	4	uint32_t	m_pressTime	input	Holds the clock time of the first primary press	verified	two	input#click-versus-drag
 CInputControl	0x0018	4	uint32_t	m_clickMode	input	Holds the armed click action, 1 or 2, set to 0 when a release is a drag	verified	one	input#click-versus-drag
-CLayoutFrame	0x0000	4	void **	__vfptr	ui	Holds the vtable 0x81c400 or a derived class's layout vtable	verified	one	ui/anchors#construction-and-the-xml-anchors
-CLayoutFrame	0x0004	36	void *[9]	m_points	ui	Holds the anchor point of each index 0 to 8, or null	verified	one	ui/anchors#point-slots-and-point-names
-CLayoutFrame	0x0028	4	uint32_t	m_resolving	ui	Holds a bit per edge resolver while it runs: 1 left, 2 top, 4 right, 8 bottom, 0x10 and 0x20 centres	verified	one	ui/anchors#edge-resolution-from-points
+CLayoutFrame	0x0000	4	void **	__vfptr	ui	Holds the vtable 0x81c400 or a derived class's layout vtable	verified	two	ui/anchors#construction-and-the-xml-anchors
+CLayoutFrame	0x0004	36	void *[9]	m_points	ui	Holds the anchor point of each index 0 to 8, or null	verified	two	ui/anchors#point-slots-and-point-names
+CLayoutFrame	0x0028	4	uint32_t	m_resolving	ui	Holds a bit per edge resolver while it runs: 1 left, 2 top, 4 right, 8 bottom, 0x10 and 0x20 centres	verified	two	ui/anchors#edge-resolution-from-points
 CLayoutFrame	0x002c	12	uint32_t[3]	m_dependents	ui	Holds the list of frames anchored to this one: link offset and terminator	verified	one	ui/anchors#dependents
-CLayoutFrame	0x0038	1	uint8_t	m_retries	ui	Holds the passes a queued frame may still fail, 6 when queued	verified	one	ui/anchors#invalidation-and-the-layout-queue
-CLayoutFrame	0x003c	4	uint32_t	m_flags	ui	Holds 1 valid, 2 deferred, 4 pending, 8 failed and 0x10 clamped to screen	verified	one	ui/anchors#resolving-and-the-changed-callback
-CLayoutFrame	0x0040	16	float[4]	m_rect	ui	Holds the resolved bottom, left, top and right	verified	one	ui/anchors#rectangle-calculation-and-screen-clamp
-CLayoutFrame	0x0050	4	float	m_width	ui	Holds the width before scaling	verified	one	ui/anchors#size-scale-and-stored-rectangle
-CLayoutFrame	0x0054	4	float	m_height	ui	Holds the height before scaling	verified	one	ui/anchors#size-scale-and-stored-rectangle
-CLayoutFrame	0x0058	4	float	m_layoutScale	ui	Holds the scale sizes and point offsets are multiplied by, 1.0 at construction	verified	one	ui/anchors#size-scale-and-stored-rectangle
+CLayoutFrame	0x0038	1	uint8_t	m_retries	ui	Holds the passes a queued frame may still fail, 6 when queued	verified	two	ui/anchors#invalidation-and-the-layout-queue
+CLayoutFrame	0x003c	4	uint32_t	m_flags	ui	Holds 1 valid, 2 deferred, 4 pending, 8 failed and 0x10 clamped to screen	verified	two	ui/anchors#resolving-and-the-changed-callback
+CLayoutFrame	0x0040	16	float[4]	m_rect	ui	Holds the resolved bottom, left, top and right	verified	two	ui/anchors#rectangle-calculation-and-screen-clamp
+CLayoutFrame	0x0050	4	float	m_width	ui	Holds the width before scaling	verified	two	ui/anchors#size-scale-and-stored-rectangle
+CLayoutFrame	0x0054	4	float	m_height	ui	Holds the height before scaling	verified	two	ui/anchors#size-scale-and-stored-rectangle
+CLayoutFrame	0x0058	4	float	m_layoutScale	ui	Holds the scale sizes and point offsets are multiplied by, 1.0 at construction	verified	two	ui/anchors#size-scale-and-stored-rectangle
 CLayoutFrame	0x005c	16	float[4]	m_resizeBounds	ui	Holds the minimum and maximum size a user resize may reach	verified	one	ui/frames#loading-from-xml
-CLayoutFrame	0x006c	8	uint32_t[2]	m_queueLink	ui	Holds the frame's link in the layout queue	verified	one	ui/anchors#invalidation-and-the-layout-queue
+CLayoutFrame	0x006c	8	uint32_t[2]	m_queueLink	ui	Holds the frame's link in the layout queue	verified	two	ui/anchors#invalidation-and-the-layout-queue
 CM2Model	0x0000	4	uint32_t	m_refCount	models	Holds the instance's reference count	verified	one	models/model#instance-object
 CM2Model	0x0010	4	uint32_t	m_loaded	models	Holds 1 once the instance's state is built	verified	one	models/model#instance-object
 CM2Model	0x0014	4	uint32_t	m_texturesLoaded	models	Holds 1 once the instance's textures are loaded	verified	one	models/model#instance-object
@@ -602,13 +602,13 @@ CScriptRegion	0x0014	4	uint32_t	m_eventCapacity	ui	Holds the capacity of the eve
 CScriptRegion	0x0018	4	uint32_t	m_eventCount	ui	Holds the number of events the object listens to	verified	one	ui/script#registering-for-an-event
 CScriptRegion	0x001c	4	uint32_t *	m_events	ui	Points to the indices of the events the object listens to	verified	one	ui/script#registering-for-an-event
 CScriptRegion	0x0024	116	CLayoutFrame	m_layout	ui	Holds the region's layout part	verified	one	ui/frames#vtables-and-the-two-parts
-CScriptRegion	0x0098	4	char *	m_name	ui	Holds the region's expanded name, or null	verified	one	ui/frames#names-and-lookup-by-name
+CScriptRegion	0x0098	4	char *	m_name	ui	Holds the region's expanded name, or null	verified	two	ui/frames#names-and-lookup-by-name
 CScriptRegion	0x009c	4	CSimpleFrame *	m_parent	ui	Holds the parent frame, or null	verified	one	ui/frames#vtables-and-the-two-parts
 CSimpleFrame	0x0000	160	CScriptRegion	m_region	ui	Holds the frame's CScriptRegion	verified	one	ui/frames#vtables-and-the-two-parts
-CSimpleFrame	0x00a0	4	CSimpleTop *	m_top	ui	Holds the top the frame joined at construction	verified	one	ui/frames#construction
+CSimpleFrame	0x00a0	4	CSimpleTop *	m_top	ui	Holds the top the frame joined at construction	verified	two	ui/frames#construction
 CSimpleFrame	0x00a4	4	CSimpleFrame *	m_highlightFrame	ui	Holds a frame the enter handler shows and the leave handler hides	verified	one	ui/frames#frame-fields
 CSimpleFrame	0x00a8	4	CScriptRegion *	m_titleRegion	ui	Holds the title region, whose area starts a move on a press	verified	one	ui/input#mouse-buttons
-CSimpleFrame	0x00ac	4	uint32_t	m_state	ui	Holds 1 after construction and 3 while being destroyed	verified	one	ui/frames#destruction
+CSimpleFrame	0x00ac	4	uint32_t	m_state	ui	Holds 1 after construction and 3 while being destroyed	verified	two	ui/frames#destruction
 CSimpleFrame	0x00b0	4	uint32_t	m_id	ui	Holds the id the XML id attribute and SetID store	verified	one	ui/frames#loading-from-xml
 CSimpleFrame	0x00b4	4	uint32_t	m_frameFlags	ui	Holds 1 toplevel, 0x10 overlapped, 0x100 movable, 0x200 resizable, 0x1000 moving, 0x2000 and 0x4000	verified	one	ui/frames#frame-fields
 CSimpleFrame	0x00b8	4	float	m_scale	ui	Holds the frame's own scale	verified	one	ui/visibility#scale
@@ -622,12 +622,12 @@ CSimpleFrame	0x00d4	4	uint32_t	m_visible	ui	Holds whether the frame and every an
 CSimpleFrame	0x00d8	16	float[4]	m_hitRect	ui	Holds the hit rectangle: bottom, left, top, right	verified	one	ui/input#hit-test
 CSimpleFrame	0x00e8	16	float[4]	m_hitInsets	ui	Holds the hit insets: bottom, left, top, right	verified	one	ui/input#hit-test
 CSimpleFrame	0x0114	4	uint32_t	m_loading	ui	Holds 1 while the frame loads from XML	verified	one	ui/visibility#show-and-hide-scripts
-CSimpleFrame	0x0118	128	uint32_t[32]	m_scripts	ui	Holds the sixteen script slots OnLoad to OnKeyUp, 8 bytes each	verified	one	ui/frames#script-slots-by-name
-CSimpleFrame	0x0198	20	uint32_t[5]	m_layerEnabled	ui	Holds whether each draw layer is switched on	verified	one	ui/frames#construction
+CSimpleFrame	0x0118	128	uint32_t[32]	m_scripts	ui	Holds the sixteen script slots OnLoad to OnKeyUp, 8 bytes each	verified	two	ui/frames#script-slots-by-name
+CSimpleFrame	0x0198	20	uint32_t[5]	m_layerEnabled	ui	Holds whether each draw layer is switched on	verified	two	ui/frames#construction
 CSimpleFrame	0x01ac	4	void *	m_backdrop	ui	Holds the backdrop object, or null	verified	one	ui/frames#destruction
 CSimpleFrame	0x01f8	4	uint32_t	m_dirtyLayers	ui	Holds a bit per own draw layer to rebuild	verified	one	ui/visibility#parent-change
 CSimpleFrame	0x02f8	12	uint32_t[3]	m_children	ui	Holds the list of child frame nodes	verified	one	ui/visibility#parent-change
-CSimpleFrame	0x0304	8	uint32_t[2]	m_frameLink	ui	Holds the frame's link in the top's frame list	verified	one	ui/frames#construction
+CSimpleFrame	0x0304	8	uint32_t[2]	m_frameLink	ui	Holds the frame's link in the top's frame list	verified	two	ui/frames#construction
 CSimpleFrame	0x030c	8	uint32_t[2]	m_strataLink	ui	Holds the frame's link in a level node's list	verified	one	ui/strata#joining-and-leaving-a-level
 CSimpleModel	0x0314	4	M2Scene *	m_scene	ui	Points to the frame's own scene, created on first use	verified	one	ui/modelview#model-frame-fields
 CSimpleModel	0x0318	4	CM2Model *	m_model	ui	Points to the model the frame shows, or null	verified	one	ui/modelview#model-frame-fields

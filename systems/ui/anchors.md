@@ -30,7 +30,7 @@ Name lookup ignores case.
 
 Addresses: `0x811a38`, `0x6f1840`, `0x6f1890`, `0x767620`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x811a38` is nine pairs of an index and a name pointer: 7 `BOTTOM`, 6 `BOTTOMLEFT`, 8
@@ -43,19 +43,19 @@ stores the pair's index; `0x6f1890` maps an index back to its name, else `"UNKNO
 
 `SetPoint` (`0x767c70`; point, relative frame, relative point, x, y, resize flag) refuses a null
 relative frame or the frame itself with error 0x57, and changes nothing when the slot holds a point
-to the same frame and point with both offsets within 2⁻²² of the new ones. Otherwise it frees the
+to the same frame and point with both offsets less than 2⁻²² from the new ones. Otherwise it frees the
 old point, telling its relative frame (`Dependents`), allocates a 0x14-byte relative point {vtable
 `0x81c44c`, x, y, frame, point}, clears flag 8, records itself as a dependent of the relative frame
 with mask `1 << point`, and lays itself out when the flag is set. The unreached `0x767b50` stores a
 12-byte absolute point {vtable `0x81c42c`, x, y}, that vtable's one store (`0x767bab`).
 
-Addresses: `0x767c70`, `0x767c7f`, `0x767cb6`, `0x767ccb`, `0x767d29`, `0x767d49`, `0x767b50`, `0x767bab`, `0x81c42c`, `0x81c43c`, `0x81c44c`, `0x767be0`, `0x767bf0`, `0x767c00`, `0x767d70`, `0x767c10`, `0x767c40`, `0x767d80`, `0x8029d4`
+Addresses: `0x767c70`, `0x767c7f`, `0x767cb6`, `0x767cc6`, `0x767ccb`, `0x767cdb`, `0x767d29`, `0x767d49`, `0x767b50`, `0x767bab`, `0x81c42c`, `0x81c43c`, `0x81c44c`, `0x767be0`, `0x767bf0`, `0x767c00`, `0x767d70`, `0x767c10`, `0x767c40`, `0x767d80`, `0x8029d4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_767_767c70_anchor_change_detect`
 
-The equality test is `fld [edi+0x4]; fsub [ebp+0x14]; fabs; fcomp [0x8029d4]` with `test ah,0x5;
-jp` at `0x767cb6` and again for y at `0x767ccb`; `0x8029d4` holds 0x34800000, 2⁻²². The vtables:
+The equality test is `fld [edi+0x4]; fsub [ebp+0x14]; fabs; fcomp [0x8029d4]` (`0x767cb6`), then `test ah,0x5; jp` (`0x767cc6`), which
+branches to the change path when the difference is at least 2⁻²² or a NaN, and the same for y (`0x767ccb`, `test ah,0x5; jnp` at `0x767cdb`, which leaves the point unchanged only when both differences are below 2⁻²²); `0x8029d4` holds 0x34800000, 2⁻²². The vtables:
 `0x81c43c` is the base with two `__purecall` getters; `0x81c42c` returns `+0x4` and `+0x8`
 (`0x767bf0`, `0x767c00`) and no frame (`0x767be0`); `0x81c44c` uses the getters below and returns
 `+0xc` as its frame (`0x767d70`). Slot 0 of each is a deleting destructor that restores
@@ -72,7 +72,7 @@ so that its left (for x) or bottom (for y) is 0.
 
 Addresses: `0x7a2f90`, `0x7a3070`, `0x7a2fb8`, `0x7a2fc0`, `0x768060`, `0x7680bf`, `0x7a2fcc`, `0x7a2fda`, `0x7a2ffc`, `0x7a3003`, `0x7a300a`, `0x7a301a`, `0x7a3035`, `0x7a3045`, `0x7a3054`, `0x7a3060`, `0x7a3134`, `0x7a3140`, `0xcf550c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::anchor_resolve_x`, `ui::anchor_resolve_y`
 
 `0x7a2f90` tests flag 2 of the relative frame's `+0x3c` and calls `0x768060(0)` (`0x7a2fb8`,
@@ -96,7 +96,7 @@ vertical centre 3, 4, 5. A NaN from a point counts as found. Each resolver sets 
 
 Addresses: `0x7671a0`, `0x7671f0`, `0x7673d0`, `0x767540`, `0x7674d0`, `0x7675b0`, `0x767260`, `0x767360`, `0x81c3b8`, `0x81c3c4`, `0x81c3d0`, `0x81c3dc`, `0x81c3e8`, `0x81c3f4`, `0x7671ca`, `0x7671d5`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::layout_767_span`, `ui::layout_composed_resolve`
 
 `0x7671a0` loops over a list of point indices, calls slot 4 (x) of each present point with
@@ -148,7 +148,7 @@ screen height (`0x41ae70(1.0)`) shifts both y edges down.
 
 Addresses: `0x767a20`, `0x767a28`, `0x767a46`, `0x767a60`, `0x767a7b`, `0x767a99`, `0x767aa8`, `0x767ac8`, `0x767ae5`, `0x767aef`, `0x767b14`, `0x767b1e`, `0x41ae60`, `0x41ae70`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::layout_assemble_rect`, `ui::layout_composed_resolve`
 
 `0x767a20` stores each edge with `fst` into the output (`+0x4`, `+0x0`, `+0xc`, `+0x8`) and
@@ -170,7 +170,7 @@ clear. `CLayoutFrame`'s own slot 0 lays out every dependent.
 
 Addresses: `0x768d20`, `0x768d49`, `0x768d55`, `0x768d63`, `0x768d6e`, `0x768dc2`, `0x768df4`, `0x768e0e`, `0x768e14`, `0x80c5c8`, `0x768cf0`, `0x81c400`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::layout_recompute`
 
 `0x768d20` calls `0x767a20` on a zeroed local (`0x768d49`); `and ecx,0xfffffffe; or ecx,0x8`
@@ -193,7 +193,7 @@ of relative points.
 
 Addresses: `0x767ee0`, `0x767fa0`, `0x767e70`, `0x768e20`, `0x768010`, `0x767620`, `0x767db0`, `0x767f1e`, `0x767f90`, `0x767f93`, `0x767fd7`, `0x767e3f`, `0x768fc0`, `0x768ff0`, `0x878540`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x767ee0` (`ecx` the relative frame, arguments frame and mask) ORs into an existing node
@@ -211,19 +211,20 @@ Laying a frame out (`0x7680e0`) with the force flag resolves at once unless flag
 removes it from the queue. Otherwise, if it is already pending (flag 4) and deferred (flag 2) or
 queued, the retry count `+0x38` is reset to 6. Else it sets flag 4 and either, when deferred, lays
 out each dependent, or joins the queue: just before the first queued frame with a point relative
-to it, else at the tail, with the retry count 6. A frame already queued is not moved.
+to it, else at the head, with the retry count 6. A frame already queued is not moved.
 
 Addresses: `0x7680e0`, `0x7680f4`, `0x768142`, `0x76815f`, `0x76816c`, `0x768194`, `0x7681a0`, `0x7681b0`, `0x7681d1`, `0x768218`, `0x768220`, `0x76825f`, `0x768294`, `0x7682ed`, `0x7682a8`, `0x768310`, `0xcf0bec`, `0xcf0bf0`, `0xcf0bf4`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x768310` is `mov eax,[ecx+0x3c]; and eax,0x4`. The queue is a list with its link at `+0x6c` of
-each frame (`0xcf0bec`, the offset 0x6c), terminator `0xcf0bf0` and first link `0xcf0bf4`.
-`0x7681b0` exits when the frame's next link is set (`0x7681d1`), walks the queue calling slot 0xc
-of each queued frame's nine points (`0x768218`) and keeps the last match per frame, stopping at the
-first frame that has one (`0x76822e`); it then links the frame before that frame's link
-(`0x768294` to `0x7682a5`) or after the terminator's previous, the tail (`0x7682e5` to
+each frame (`0xcf0bec`, the offset 0x6c), terminator `0xcf0bf0`, whose next pointer is the head, and
+`0xcf0bf4`, its previous pointer, the tail (head and tail as in `draworder`).
+`0x7681b0` exits when the frame's previous link `[link+4]` is set (`0x7681d1`), walks the queue from
+the tail by previous links, calling slot 0xc of each queued frame's nine points (`0x768218`) and keeping the last match per frame, stopping at the
+first frame that has one (`0x76822e`); it then links the frame just before that frame in the walk
+(`0x768294` to `0x7682a5`), or with no match at the head (`0x7682e5` to
 `0x7682f9`), and stores 6 at `+0x38`.
 
 ## Deferred layout
@@ -234,7 +235,7 @@ pending. `CSimpleFrame` defers a frame while it is hidden (`visibility`).
 
 Addresses: `0x768060`, `0x76806e`, `0x768074`, `0x7680bf`, `0x7680c4`, `0x7680cd`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x768060(1)` ORs 2 into `+0x3c` (`0x76806e`) and unlinks the frame's queue link when it is linked
@@ -250,12 +251,14 @@ its failed resolve set.
 
 Addresses: `0x768ed0`, `0x768eed`, `0x768ef7`, `0x768efc`, `0x768f12`, `0x768f17`, `0x768f55`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
-`0x768ed0` loops while `[0xcf0bf4]` is a frame and the pass count is below 0x20 (`0x768eed`). Per
-frame it reads the next link `[esi+0x70]` before resolving (`0x768efc`), so a frame queued during
-the pass at the tail is reached in the same pass. `dec byte [esi+0x38]; jne` (`0x768f12`) keeps an
+`0x768ed0` loops while `[0xcf0bf4]`, the tail, is a frame and the pass count is below 0x20 (`0x768eed`). Per
+frame it resolves first (`0x768ef7`) and then reads the previous link `[esi+0x70]` (`0x768efc`), so the walk
+continues from the queue as the resolve left it: a frame the resolve links at the head, or just before a
+frame not yet visited, is reached in the same pass, and one linked just before a frame already visited
+waits for the next. `dec byte [esi+0x38]; jne` (`0x768f12`) keeps an
 unresolved frame; a resolved frame, and an unresolved one whose count reaches 0, fall into
 `and [esi+0x3c],0xfffffffb` and the unlink (`0x768f17` to `0x768f4c`). Callers include the top's
 update (`0x7656ba`, `0x765799`) and the glue and game interface builds (`0x46ac56`, 0x49457f).
@@ -271,7 +274,7 @@ out.
 
 Addresses: `0x7683d0`, `0x7683f0`, `0x768360`, `0x768366`, `0x768373`, `0x76838f`, `0x7683a5`, `0x7683c3`, `0x768410`, `0x768420`, `0x768320`, `0x768c70`, `0x768c8f`, `0x768ca9`, `0x768cc0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::glue_767_768360_rsub_change_detect`
 
 `0x7683d0` and `0x7683f0` store the argument, `and edx,0xfffffff7` and call `0x7680e0(0)`.
@@ -292,7 +295,7 @@ the end.
 
 Addresses: `0x767680`, `0x7676ae`, `0x7676ca`, `0x7676f0`, `0x767720`, `0x767800`, `0x767964`, `0x767970`, `0x7679f8`, `0x7670a0`, `0x7670b0`, `0x7670e0`, `0x7670f0`, `0x878440`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x767680` stores 1.0 at `+0x58` (`0x7676ae`) and the vtable `0x81c400` (`0x7676ca`); the destructor

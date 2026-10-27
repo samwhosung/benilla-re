@@ -15,14 +15,14 @@ Roots: `0x7657d0`, `0x765920`, `0x76fb00`, `0x7731a0`, `0x7731d0`, `0x76b3a0`, `
 ## Level lists
 
 A list is a header of three dwords: the link offset, the terminator's next pointer (the head, header+4)
-and its previous pointer (the tail, header+8, tagged). A member's link is the next link and the previous link.
-A low bit of 1 marks the terminator. A walk starts at the tail and follows previous links, `[link+4]`. The insert takes
+and its previous pointer (the tail, header+8). A member's link is the next link and the previous link.
+A low bit of 1 marks the terminator, so an empty list holds the terminator's tagged address in header+8. A walk starts at the tail and follows previous links, `[link+4]`. The insert takes
 a mode and a reference; a null reference means the terminator, so mode 2 puts a member at the head and mode 1 at the
 tail. A frame is linked at the head of its level. Every list in these docs uses these names.
 
 Addresses: `0x7668c0`, `0x7668d3`, `0x76691e`, `0x76691f`, `0x766921`, `0x766937`, `0x766880`, `0x7669a0`, `0x766aa0`, `0x764780`, `0x7648b3`, `0x7648c9`, `0x76a4b6`, `0x76a54c`, `0x76ae85`, `0x76ae10`, `0x76a470`, `0x76a4f0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::set_frame_strata`, `ui::set_frame_level`
 
 `0x7668c0(list, object, mode, reference)` first unlinks the object, then loads the reference's link
@@ -43,7 +43,7 @@ of list B after the level.
 
 Addresses: `0x765650`, `0x7656e5`, `0x7656eb`, `0x7656f7`, `0x765707`, `0x765710`, `0x76572d`, `0x76573e`, `0x765920`, `0x7659bb`, `0x7659d9`, `0x7659ed`, `0x7659f5`, `0x764920`, `0x76498f`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `ui::render_traverse_order`
 
 `0x765650` loads `[node+0x14]`, list B's last link, reads the next frame from `[frame+0x310]` into
@@ -85,13 +85,13 @@ head points at itself, `+0x24` holds that address tagged with bit 0) and stores 
 array is four dwords at `+0x8`: capacity, count `+0xc`, records `+0x10` and a growth step `+0x14`. `0x773280(extra, round)` grows it to hold
 `extra` more records, and `0x772ef0` destroys a batch: it empties it with `0x7731d0`, unlinks the callback list head and frees the records.
 
-Addresses: `0x772e80`, `0x772eaa`, `0x772ea1`, `0x772ec0`, `0x772ef0`, `0x772efb`, `0x772fbf`, `0x772fd0`, `0x773002`, `0x773280`, `0x7732a8`, `0x7732ec`, `0x7732ff`, `0x773314`, `0x773346`, `0x77335b`, `0x7731d0`, `0x81c7ac`, `0x878e7c`
+Addresses: `0x772e80`, `0x772eaa`, `0x772ea1`, `0x772ec0`, `0x772ef0`, `0x772efb`, `0x772fbf`, `0x772fd0`, `0x773002`, `0x773280`, `0x7732a8`, `0x7732db`, `0x7732dd`, `0x7732ec`, `0x7732ff`, `0x773314`, `0x773346`, `0x77335b`, `0x7731d0`, `0x81c7ac`, `0x878e7c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x772fd0` calls `0x773280(extra, 1)` when the count plus one passes the capacity (`0x773002`). `0x773280` returns at once when the new size does not exceed `[this]` (`0x773294`); with a nonzero second argument it rounds the size up to a multiple of the step, which is 9 once the size is 9 or more, else the largest power of two not above it. The step test is `cmp esi,9` (`0x7732a8`); `0x7732b2` to
-`0x7732bd` clear the lowest set bit until one remains; the division by the step is `0x7732db` and the size is raised by `step − remainder`. The record size is `imul 0x1c` (`0x7732ec`); the realloc is `0x7732ff`, the fallback
+`0x7732bd` clear the lowest set bit until one remains; the division by the step is `0x7732db`, and when the remainder is nonzero (`0x7732dd`) the size is raised by `step − remainder`, so a size already a multiple of the step is unchanged. The record size is `imul 0x1c` (`0x7732ec`); the realloc is `0x7732ff`, the fallback
 allocation `0x773314`, the copy `rep movs` of 7 dwords per record (`0x773346`) and the old block freed at `0x77335b`.
 
 ## What a batch drains
@@ -126,7 +126,7 @@ HIGHLIGHT; a region on a disabled layer is not drawn.
 
 Addresses: `0x77fc60`, `0x77fc95`, `0x77fcb0`, `0x76a910`, `0x76feab`, `0x76febc`, `0x770ff0`, `0x771001`, `0x76b3a0`, `0x76b3a6`, `0x76b3ad`, `0x76b3b6`, `0x76b3db`, `0x76b3e1`, `0x76b3e4`, `0x76a860`, `0x76a88a`, `0x76a8f3`, `0x77fcf9`, `0x769322`, `0x76932e`, `0x76933e`, `0x811a80`, `0x811a84`, `0x6f18b0`, `0x6f1900`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76b3a0(batch, layer)` reads the switch at `+0x198 + 4·layer` (`0x76b3a6`), returns for zero, and walks
@@ -147,7 +147,7 @@ through slot 0x40 on each visible child in link order that does not hold `0x4000
 
 Addresses: `0x76b3f0`, `0x76b3f8`, `0x76b459`, `0x76b4d2`, `0x76b4dd`, `0x76b4ee`, `0x76b509`, `0x76b513`, `0x76a400`, `0x76a410`, `0x76a422`, `0x786ce0`, `0x786cf4`, `0x786d0a`, `0x78754c`, `0x76ab10`, `0x7659d9`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x76a400(a, b)` sets the bit `0x2000` to `a` (`0x76a410`) and, for `b ≥ 0`, `0x4000` to `b` (`0x76a422`), marks the
