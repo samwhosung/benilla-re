@@ -291,7 +291,7 @@ when `+0xdc` or `+0xd8` holds a model (`0x5f7ce2` to `0x5f7cf4`). The callers of
 The rest of the file is container template code, instantiated for `CGObject_C` and the GUID
 tables. A list is a link offset, a first link and an end link marked by bit 0.
 
-Addresses: `0x468640`, `0x468680`, `0x468b20`, `0x468b90`, `0x468b60`, `0x468bd0`, `0x468940`, `0x468a00`, `0x468a30`, `0x468e90`, `0x468ee0`, `0x468f10`, `0x468f80`, `0x469070`, `0x4694b0`, `0x468ec0`, `0x4688b0`, `0x467430`, `0x464ec0`
+Addresses: `0x468640`, `0x468680`, `0x468b20`, `0x468b90`, `0x468b60`, `0x468bd0`, `0x468940`, `0x468a00`, `0x468a30`, `0x468e90`, `0x468ee0`, `0x468f10`, `0x468f80`, `0x469070`, `0x4694b0`, `0x468ec0`, `0x4688b0`
 Confidence: verified
 Proof: two
 Test: none
@@ -302,8 +302,16 @@ returns the address a link names, negative offsets resolving through the list's 
 (offset `0x38`), `0x468a30` (`0x40`), `0x468e90` (−0x22222223), `0x468ee0` (0) make an empty list;
 `0x468f10` sets a list's offset and empties it first when the offset changes, `0x468f80` and
 `0x4688b0` empty one, and `0x469070` and `0x4694b0` make a bare node. `0x468ec0` returns a node's
-link address, and `0x468940` unlinks a node and links it again by a placement argument. `0x467430`
-and `0x464ec0` are destructors that unlink and free.
+link address, and `0x468940` unlinks a node and links it again by a placement argument.
+
+## List destructors
+
+`0x467430` and `0x464ec0` are destructors that unlink a node and free it.
+
+Addresses: `0x467430`, `0x464ec0`
+Confidence: verified
+Proof: one
+Test: none
 
 ## Table slots and sizing
 
