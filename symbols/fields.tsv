@@ -79,12 +79,12 @@ CEffect	0x0080	4	void *	m_worldObject	objectlayer	Points at the world object of 
 CEffect	0x0084	4	uint32_t	m_refCount	objectlayer	Holds the reference count, 1 at construction	verified	one	objectlayer/effects#the-effect-object
 CEffect	0x0088	4	CEffect **	m_prevLink	objectlayer	Points at the slot that points at the effect	verified	one	objectlayer/effects#the-effect-object
 CEffect	0x008c	4	CEffect *	m_next	objectlayer	Points at the next effect on its list	verified	one	objectlayer/effects#the-effect-object
-CFrameStrataNode	0x0000	12	uint32_t[3]	m_pending	ui	Holds the frames that joined while the update walked the level	verified	one	ui/strata#strata-records-and-level-nodes
-CFrameStrataNode	0x000c	12	uint32_t[3]	m_frames	ui	Holds the level's frames in update and draw order	verified	one	ui/strata#strata-records-and-level-nodes
-CFrameStrataNode	0x0018	4	CSimpleFrame *	m_cursor	ui	Holds the next frame the update pass visits	verified	one	ui/strata#the-update-pass
-CFrameStrataNode	0x001c	240	uint8_t[240]	m_batches	ui	Holds five draw batches of 0x30 bytes, one per layer	verified	one	ui/strata#the-draw-pass
-CFrameStrataNode	0x010c	4	uint32_t	m_dirtyLayers	ui	Holds a bit per draw layer to rebuild	verified	one	ui/strata#dirty-marks
-CFrameStrataNode	0x0110	12	uint32_t[3]	m_drawBatches	ui	Holds the list of batches the draw pass draws	verified	one	ui/strata#the-draw-pass
+CFrameStrataNode	0x0000	12	uint32_t[3]	m_pending	ui	Holds the frames that joined while the update walked the level	verified	two	ui/strata#strata-records-and-level-nodes
+CFrameStrataNode	0x000c	12	uint32_t[3]	m_frames	ui	Holds the level's frames in update and draw order	verified	two	ui/strata#strata-records-and-level-nodes
+CFrameStrataNode	0x0018	4	CSimpleFrame *	m_cursor	ui	Holds the next frame the update pass visits	verified	two	ui/strata#the-update-pass
+CFrameStrataNode	0x001c	240	uint8_t[240]	m_batches	ui	Holds five draw batches of 0x30 bytes, one per layer	verified	two	ui/strata#the-draw-pass
+CFrameStrataNode	0x010c	4	uint32_t	m_dirtyLayers	ui	Holds a bit per draw layer to rebuild	verified	two	ui/strata#dirty-marks
+CFrameStrataNode	0x0110	12	uint32_t[3]	m_drawBatches	ui	Holds the list of batches the draw pass draws	verified	two	ui/strata#the-draw-pass
 CGCharacterModelBase	0x03e0	8	uint32_t[2]	m_unitGuid	ui	Holds the GUID of the unit the pane shows, low then high	verified	one	ui/playermodel#pane-fields
 CGCharacterModelBase	0x03e8	4	uint32_t	m_turning	ui	Holds 1 from a rotation until the next paint clears it	verified	one	ui/playermodel#pane-fields
 CGCharacterModelBase	0x03ec	4	uint32_t	m_turnDeadline	ui	Holds the millisecond tick after which Stand is armed, or 0	verified	one	ui/playermodel#pane-fields
@@ -595,12 +595,12 @@ CRibbonEmitter	0x015c	4	float	m_above	models	Holds the height above the bone, 10
 CRibbonEmitter	0x0160	4	float	m_below	models	Holds the depth below the bone, 10 by default	verified	one	models/ribbons#node-frame
 CRibbonEmitter	0x0164	4	float	m_gravity	models	Holds the gravity	verified	one	models/ribbons#ribbon-update
 CScriptRegion	0x0000	4	void **	__vfptr	ui	Holds the region's main vtable	verified	one	ui/frames#vtables-and-the-two-parts
-CScriptRegion	0x0004	4	uint32_t	m_tableHolders	ui	Counts the holders of the object's Lua table	verified	one	ui/script#the-script-object
-CScriptRegion	0x0008	4	int32_t	m_tableRef	ui	Holds the registry reference of the Lua table, -2 for none	verified	one	ui/script#the-script-object
-CScriptRegion	0x000c	8	uint32_t[2]	m_onEvent	ui	Holds the OnEvent script slot: function reference and context word	verified	one	ui/script#the-script-object
-CScriptRegion	0x0014	4	uint32_t	m_eventCapacity	ui	Holds the capacity of the event index array	verified	one	ui/script#the-script-object
-CScriptRegion	0x0018	4	uint32_t	m_eventCount	ui	Holds the number of events the object listens to	verified	one	ui/script#registering-for-an-event
-CScriptRegion	0x001c	4	uint32_t *	m_events	ui	Points to the indices of the events the object listens to	verified	one	ui/script#registering-for-an-event
+CScriptRegion	0x0004	4	uint32_t	m_tableHolders	ui	Counts the holders of the object's Lua table	verified	two	ui/script#the-script-object
+CScriptRegion	0x0008	4	int32_t	m_tableRef	ui	Holds the registry reference of the Lua table, -2 for none	verified	two	ui/script#the-script-object
+CScriptRegion	0x000c	8	uint32_t[2]	m_onEvent	ui	Holds the OnEvent script slot: function reference and context word	verified	two	ui/script#the-script-object
+CScriptRegion	0x0014	4	uint32_t	m_eventCapacity	ui	Holds the capacity of the event index array	verified	two	ui/script#the-script-object
+CScriptRegion	0x0018	4	uint32_t	m_eventCount	ui	Holds the number of events the object listens to	verified	two	ui/script#registering-for-an-event
+CScriptRegion	0x001c	4	uint32_t *	m_events	ui	Points to the indices of the events the object listens to	verified	two	ui/script#registering-for-an-event
 CScriptRegion	0x0024	116	CLayoutFrame	m_layout	ui	Holds the region's layout part	verified	one	ui/frames#vtables-and-the-two-parts
 CScriptRegion	0x0098	4	char *	m_name	ui	Holds the region's expanded name, or null	verified	two	ui/frames#names-and-lookup-by-name
 CScriptRegion	0x009c	4	CSimpleFrame *	m_parent	ui	Holds the parent frame, or null	verified	one	ui/frames#vtables-and-the-two-parts
@@ -611,24 +611,24 @@ CSimpleFrame	0x00a8	4	CScriptRegion *	m_titleRegion	ui	Holds the title region, w
 CSimpleFrame	0x00ac	4	uint32_t	m_state	ui	Holds 1 after construction and 3 while being destroyed	verified	two	ui/frames#destruction
 CSimpleFrame	0x00b0	4	uint32_t	m_id	ui	Holds the id the XML id attribute and SetID store	verified	one	ui/frames#loading-from-xml
 CSimpleFrame	0x00b4	4	uint32_t	m_frameFlags	ui	Holds 1 toplevel, 0x10 overlapped, 0x100 movable, 0x200 resizable, 0x1000 moving, 0x2000 and 0x4000	verified	one	ui/frames#frame-fields
-CSimpleFrame	0x00b8	4	float	m_scale	ui	Holds the frame's own scale	verified	one	ui/visibility#scale
-CSimpleFrame	0x00bc	4	float	m_parentScale	ui	Holds the parent's effective scale	verified	one	ui/visibility#scale
-CSimpleFrame	0x00c0	4	uint32_t	m_strata	ui	Holds the stratum, 3 at construction	verified	one	ui/strata#strata-and-their-names
-CSimpleFrame	0x00c4	4	uint32_t	m_level	ui	Holds the level within the stratum	verified	one	ui/strata#strata-and-their-names
-CSimpleFrame	0x00c8	1	uint8_t	m_alpha	ui	Holds the alpha, 255 at construction	verified	one	ui/visibility#alpha
+CSimpleFrame	0x00b8	4	float	m_scale	ui	Holds the frame's own scale	verified	two	ui/visibility#scale
+CSimpleFrame	0x00bc	4	float	m_parentScale	ui	Holds the parent's effective scale	verified	two	ui/visibility#scale
+CSimpleFrame	0x00c0	4	uint32_t	m_strata	ui	Holds the stratum, 3 at construction	verified	two	ui/strata#strata-and-their-names
+CSimpleFrame	0x00c4	4	uint32_t	m_level	ui	Holds the level within the stratum	verified	two	ui/strata#strata-and-their-names
+CSimpleFrame	0x00c8	1	uint8_t	m_alpha	ui	Holds the alpha, 255 at construction	verified	two	ui/visibility#alpha
 CSimpleFrame	0x00cc	4	uint32_t	m_inputKinds	ui	Holds a bit per enabled input kind: 0 characters, 1 keys, 2 mouse, 3 wheel	verified	one	ui/input#input-lists
-CSimpleFrame	0x00d0	4	uint32_t	m_shown	ui	Holds whether the frame asks to be shown	verified	one	ui/visibility#showing-a-frame
-CSimpleFrame	0x00d4	4	uint32_t	m_visible	ui	Holds whether the frame and every ancestor are shown	verified	one	ui/visibility#showing-a-frame
+CSimpleFrame	0x00d0	4	uint32_t	m_shown	ui	Holds whether the frame asks to be shown	verified	two	ui/visibility#showing-a-frame
+CSimpleFrame	0x00d4	4	uint32_t	m_visible	ui	Holds whether the frame and every ancestor are shown	verified	two	ui/visibility#showing-a-frame
 CSimpleFrame	0x00d8	16	float[4]	m_hitRect	ui	Holds the hit rectangle: bottom, left, top, right	verified	one	ui/input#hit-test
 CSimpleFrame	0x00e8	16	float[4]	m_hitInsets	ui	Holds the hit insets: bottom, left, top, right	verified	one	ui/input#hit-test
-CSimpleFrame	0x0114	4	uint32_t	m_loading	ui	Holds 1 while the frame loads from XML	verified	one	ui/visibility#show-and-hide-scripts
+CSimpleFrame	0x0114	4	uint32_t	m_loading	ui	Holds 1 while the frame loads from XML	verified	two	ui/visibility#show-and-hide-scripts
 CSimpleFrame	0x0118	128	uint32_t[32]	m_scripts	ui	Holds the sixteen script slots OnLoad to OnKeyUp, 8 bytes each	verified	two	ui/frames#script-slots-by-name
 CSimpleFrame	0x0198	20	uint32_t[5]	m_layerEnabled	ui	Holds whether each draw layer is switched on	verified	two	ui/frames#construction
 CSimpleFrame	0x01ac	4	void *	m_backdrop	ui	Holds the backdrop object, or null	verified	one	ui/frames#destruction
-CSimpleFrame	0x01f8	4	uint32_t	m_dirtyLayers	ui	Holds a bit per own draw layer to rebuild	verified	one	ui/visibility#parent-change
-CSimpleFrame	0x02f8	12	uint32_t[3]	m_children	ui	Holds the list of child frame nodes	verified	one	ui/visibility#parent-change
+CSimpleFrame	0x01f8	4	uint32_t	m_dirtyLayers	ui	Holds a bit per own draw layer to rebuild	verified	two	ui/visibility#parent-change
+CSimpleFrame	0x02f8	12	uint32_t[3]	m_children	ui	Holds the list of child frame nodes	verified	two	ui/visibility#parent-change
 CSimpleFrame	0x0304	8	uint32_t[2]	m_frameLink	ui	Holds the frame's link in the top's frame list	verified	two	ui/frames#construction
-CSimpleFrame	0x030c	8	uint32_t[2]	m_strataLink	ui	Holds the frame's link in a level node's list	verified	one	ui/strata#joining-and-leaving-a-level
+CSimpleFrame	0x030c	8	uint32_t[2]	m_strataLink	ui	Holds the frame's link in a level node's list	verified	two	ui/strata#joining-and-leaving-a-level
 CSimpleModel	0x0314	4	M2Scene *	m_scene	ui	Points to the frame's own scene, created on first use	verified	one	ui/modelview#model-frame-fields
 CSimpleModel	0x0318	4	CM2Model *	m_model	ui	Points to the model the frame shows, or null	verified	one	ui/modelview#model-frame-fields
 CSimpleModel	0x031c	4	CCamera *	m_camera	ui	Points to the referenced camera the paint uses, or null for the orthographic leg	verified	one	ui/modelview#model-frame-fields
@@ -646,20 +646,20 @@ CSimpleModel	0x03cc	8	uint32_t[2]	m_onUpdateModel	ui	Holds the OnUpdateModel scr
 CSimpleModel	0x03d4	8	uint32_t[2]	m_onAnimFinished	ui	Holds the OnAnimFinished script slot	verified	one	ui/modelview#model-frame-fields
 CSimpleModelFFX	0x0000	4	void **	__vfptr	glue	Holds the vtable 0x803960	verified	one	glue/select#the-modelffx-frame
 CSimpleModelFFX	0x0024	4	void **	m_innerVfptr	glue	Holds the second vtable 0x803934	verified	one	glue/select#the-modelffx-frame
-CSimpleTop	0x0000	116	CLayoutFrame	m_layout	ui	Holds the top's own layout frame	verified	one	ui/strata#construction-and-teardown
-CSimpleTop	0x0074	4	void *	m_paintHandle	ui	Holds the handle of the pass registration, closed by the destructor	verified	one	ui/strata#construction-and-teardown
+CSimpleTop	0x0000	116	CLayoutFrame	m_layout	ui	Holds the top's own layout frame	verified	two	ui/strata#construction-and-teardown
+CSimpleTop	0x0074	4	void *	m_paintHandle	ui	Holds the handle of the pass registration, closed by the destructor	verified	two	ui/strata#construction-and-teardown
 CSimpleTop	0x0078	4	void *	m_cursor	ui	Holds the cursor texture handle	verified	one	ui/strata#construction-and-teardown
 CSimpleTop	0x007c	4	CSimpleFrame *	m_mouseFocus	ui	Holds the hovered frame	verified	one	ui/input#mouse-move-and-the-hover-pick
 CSimpleTop	0x0080	4	CSimpleFrame *	m_pressedFrame	ui	Holds the frame a button press went to until release	verified	one	ui/input#mouse-buttons
 CSimpleTop	0x0084	3128	void *[782]	m_keyFocus	ui	Holds the frame that took each key code	verified	one	ui/input#wheel-keys-and-characters
-CSimpleTop	0x0cbc	12	uint32_t[3]	m_frames	ui	Holds the list of every frame, linked through +0x304	verified	one	ui/strata#construction-and-teardown
-CSimpleTop	0x0cc8	12	uint32_t[3]	m_deletions	ui	Holds the list of objects the update deletes	verified	one	ui/strata#construction-and-teardown
-CSimpleTop	0x0cd4	36	void *[9]	m_strata	ui	Holds the record of each stratum 0 to 8	verified	one	ui/strata#strata-records-and-level-nodes
+CSimpleTop	0x0cbc	12	uint32_t[3]	m_frames	ui	Holds the list of every frame, linked through +0x304	verified	two	ui/strata#construction-and-teardown
+CSimpleTop	0x0cc8	12	uint32_t[3]	m_deletions	ui	Holds the list of objects the update deletes	verified	two	ui/strata#construction-and-teardown
+CSimpleTop	0x0cd4	36	void *[9]	m_strata	ui	Holds the record of each stratum 0 to 8	verified	two	ui/strata#strata-records-and-level-nodes
 CSimpleTop	0x0cf8	4	uint32_t	m_modifierDrag	ui	Holds whether a modifier press may move or size any movable frame	verified	one	ui/input#moving-and-sizing
 CSimpleTop	0x0cfc	4	CSimpleFrame *	m_movingFrame	ui	Holds the frame being moved or sized	verified	one	ui/input#moving-and-sizing
 CSimpleTop	0x0d00	4	uint32_t	m_movingKind	ui	Holds the move kind: 1 a modifier drag, 2 a title-region press, 3 a script's StartMoving or StartSizing	verified	one	ui/input#moving-and-sizing
 CSimpleTop	0x0d10	1008	uint8_t[1008]	m_inputLists	ui	Holds 36 input lists of 0x1c bytes, stratum plus 9 times kind	verified	one	ui/input#input-lists
-CSimpleTop	0x1100	4	uint32_t	m_hoverPickPending	ui	Holds 1 when the next update must pick the hovered frame again	verified	one	ui/strata#the-update-pass
+CSimpleTop	0x1100	4	uint32_t	m_hoverPickPending	ui	Holds 1 when the next update must pick the hovered frame again	verified	two	ui/strata#the-update-pass
 CSimpleTop	0x1104	36	uint32_t[9]	m_lastMouseEvent	ui	Holds the last mouse event, its position at +0x14 and +0x18	verified	one	ui/input#mouse-move-and-the-hover-pick
 CSimpleTop	0x1128	4	void *	m_mouseDownCallback	ui	Holds the host function offered a press no frame holds	verified	one	ui/input#mouse-buttons
 CSimpleTop	0x112c	4	void *	m_mouseMoveCallback	ui	Holds the host function offered each mouse move	verified	one	ui/input#mouse-move-and-the-hover-pick
