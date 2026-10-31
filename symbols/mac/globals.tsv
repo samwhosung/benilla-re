@@ -1,0 +1,13 @@
+address	type	name	name_from	system	meaning	confidence	proof	finding
+mac:5bf320	int32_t[128]	s_fixedKeyCodes		core	Holds the client key code of each Carbon keycode, -1 where the layout fills it	verified	one	core/mackeys#the-fixed-key-table
+mac:693d60	uint32_t[10]	s_editCommandKeys		unassigned	Holds the five Edit menu command IDs, each with the key code of its letter	verified	one	core/mackeys#edit-menu-commands
+mac:699fc8	uint32_t[6]	s_chordPrefixes		ui	Holds the modifier codes 0 to 2 with their chord prefixes SHIFT-, CTRL- and ALT-	verified	one	core/mackeys#key-names-on-the-mac
+mac:6e10c0	uint32_t	s_textInputActive		unassigned	Holds whether text input is active; mac:03337e stores it and mac:0334bc clears it	verified	one	core/mackeys#raw-key-events
+mac:991a00	void *	s_carbonHandler		core	Holds the event handler UPP made from mac:089e3e	verified	one	core/mackeys#carbon-keyboard-events
+mac:991a80	uint32_t[160]	s_inputRing		core	Holds the input ring's 32 five-dword records	verified	one	core/mackeys#the-input-ring
+mac:991d00	uint32_t	s_inputRingRead		core	Holds the ring index of the oldest input record	verified	one	core/mackeys#the-input-ring
+mac:991d04	uint32_t	s_inputRingWrite		core	Holds the ring index the next input record is written at	verified	one	core/mackeys#the-input-ring
+mac:991d08	uint32_t	s_carbonModifiers		core	Holds the Carbon modifier word of the last modifiers-changed event	verified	one	core/mackeys#modifier-keys
+mac:991d20	int32_t[128]	s_keyCodes		core	Holds the live key code of each Carbon keycode, the fixed table filled from the layout	verified	one	core/mackeys#filling-the-table-from-the-layout
+mac:991f20	void *	s_keyLayout		core	Holds the KCHR the live key codes were filled from, null at load	verified	one	core/mackeys#filling-the-table-from-the-layout
+mac:9a364c	uint32_t	s_modifierKeys		core	Holds the held modifier bits, 1 << code for SHIFT, CTRL and ALT	verified	one	core/mackeys#records-to-key-events

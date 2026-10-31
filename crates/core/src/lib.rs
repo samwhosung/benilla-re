@@ -1,7 +1,7 @@
 //! The computations of the main loop, the event queue and the window input
 //! (`systems/core/`): the scheduler heap, the frame time, the order handlers run in, the input
 //! routing, the cursor fractions and the timer delay, and the frame pass's elapsed time and layer
-//! walk (`framepass`).
+//! walk (`framepass`); and the Mac client's key tables (`mac`).
 //!
 //! The x87 runs at 53-bit precision: `WinMain` (`0x404100`) sets the control word `0x023F`
 //! (`docs/METHOD.md#the-harness`), so each operation rounds to `f64` and an `fstp dword` to `f32`.
@@ -9,6 +9,7 @@
 #![forbid(unsafe_code)]
 
 pub mod framepass;
+pub mod mac;
 
 /// `HeapNodeIsNotLater` (`0x422970`), the scheduler heap's comparator
 /// (`systems/core/loop.md#scheduler-heap`): true when key `a` is not later than `b`, as
