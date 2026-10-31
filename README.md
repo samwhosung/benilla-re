@@ -15,6 +15,11 @@ tables, the site and the exports are plain files that need no exe; only the test
 generators and the listing read `WoW/WoW.exe` from your own copy of 1.12.1.5875, and they refuse
 any other build.
 
+The Mac client's key input, which only the Mac client has, is read from the i386 slice of the
+1.12.1 `World of Warcraft.app` and cited as `mac:5bf320` (`systems/core/mackeys.md`); its tests
+and `cargo xtask check --exe` read the slice from `WoW/WoW-mac-i386`, which `lipo -thin i386`
+writes from the application, and skip it when absent (`symbols/README.md`, The Mac client).
+
 ## Start here
 
 - **Patching or injecting into the client** (a DLL, a loader, a fix): `cargo xtask export` writes

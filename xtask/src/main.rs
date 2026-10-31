@@ -9,6 +9,7 @@ mod export;
 mod fill;
 mod globals;
 mod listing;
+mod mac;
 mod matcher;
 mod objfiles;
 mod sig;
@@ -36,7 +37,8 @@ check         the symbol table and the system docs against their formats; runs a
 check --exe   also identifies WoW/WoW.exe (or $BENILLA_RE_WOW_EXE), checks every function
               row's body against dumps/disasm.txt (written when missing), regenerates the
               tables, runs every test with BENILLA_RE_REQUIRE_EXE=1, and requires each test
-              the table and the docs name to pass
+              the table and the docs name to pass; checks the Mac rows against the Mac slice,
+              WoW/WoW-mac-i386 (or $BENILLA_RE_MAC_SLICE), when it is there
 census        finds every function start in .text by docs/METHOD.md, Completeness, against
               dumps/disasm.txt; prints each start with no row (its size, how it was found,
               whether live code reaches it, its class), what it turned down, and its controls;
@@ -161,6 +163,11 @@ fn check(root: &Path, with_exe: bool) -> std::io::Result<bool> {
         let outcome = exe::run(root, &checked)?;
         problems.extend(outcome.problems);
         summary = format!("{summary}; {}", outcome.summary);
+        let (found, mac) = mac::run(root, &checked)?;
+        problems.extend(found);
+        if !mac.is_empty() {
+            summary = format!("{summary}; {mac}");
+        }
     }
     for problem in &problems {
         println!("{problem}");
@@ -304,7 +311,7 @@ fn cited(root: &Path, benilla: &Path, write: bool, strict: bool) -> std::io::Res
         }
         let listing = bodies::Listing::read(&root.join("dumps").join("disasm.txt"))?;
         let bytes = std::fs::read(&exe)?;
-        let addresses: Vec<u32> = missing.iter().map(|&a| a as u32).collect();
+        let addresses: Vec<u32> = missing.exe.iter().map(|&a| a as u32).collect();
         let added = globals::write(root, &checked, &listing, &bytes, &addresses)?;
         println!("added {added} rows to symbols/globals.tsv");
     }

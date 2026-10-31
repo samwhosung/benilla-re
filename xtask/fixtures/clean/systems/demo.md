@@ -49,3 +49,14 @@ Proof: none
 Test: none
 
 A census of calls and stored addresses finds none; the control finds the calls to `0x402000`.
+
+## The Mac advance
+
+The Mac client's `mac:401000` adds the step `mac:600000` to the counter, as `0x402000` does.
+
+Addresses: `mac:401000`, `mac:600000`
+Confidence: verified
+Proof: one
+Test: none
+
+The add is at `mac:401008`.

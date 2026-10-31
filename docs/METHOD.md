@@ -14,6 +14,13 @@ string's), a wiki, a server emulator, another client. A capture of the running c
 observation: it can refute a reading or choose between two, but the bytes still supply the
 mechanism.
 
+For behaviour only the Mac client has, the authority is the Mac client's own code: the i386 slice
+of the 1.12.1 (5875) `World of Warcraft.app`, 7,242,424 bytes, SHA-256
+`b7ec91bccd382293af6014525f2b6e0fda12d5ec13e9c3ab90395da89f6e543a`, whose build string is
+`WoW [Release Assertions Enabled] Build 5875 (Sep 19 2006)` (`mac:4ca6c8`). Its addresses are
+written `mac:` and six hex digits (`symbols/README.md`, The Mac client). For everything else
+`WoW.exe` decides, and the slice is a lead about it, never a derivation.
+
 Some instructions have no single exact answer: `rsqrtss` and `rcpss` approximate, and the x87
 transcendentals (`fsin`, `fcos`, `fsincos`, `fptan`, `f2xm1`) differ by CPU. For these a
 finding gives the full-precision value the instruction approximates, and a test compares them

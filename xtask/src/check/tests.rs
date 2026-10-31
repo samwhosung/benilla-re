@@ -71,6 +71,8 @@ const G: &str = "symbols/globals.tsv";
 const S: &str = "symbols/structs.tsv";
 const D: &str = "symbols/fields.tsv";
 const DOC: &str = "systems/demo.md";
+const MF: &str = "symbols/mac/functions.tsv";
+const MG: &str = "symbols/mac/globals.tsv";
 
 const STEP: &str = "0x500030\tfloat\ts_step\t\tdemo\tHolds 8.0, the step\tinferred\tnone\t\n";
 const HELPER: &str =
@@ -480,7 +482,7 @@ fn plants() -> Vec<Plant> {
                 let row = format!("| counter |{} |\n", " word".repeat(340));
                 swap(f, DOC, "| counter | 4 |\n", &row.repeat(12));
             },
-            &["systems/demo.md:1: 4271 words, over 4000; split by topic"],
+            &["systems/demo.md:1: 4303 words, over 4000; split by topic"],
         ),
         plant(
             "a doc's title line",
@@ -549,7 +551,7 @@ fn plants() -> Vec<Plant> {
         plant(
             "an entry's Addresses line",
             edit(DOC, CTOR_SHAPE, "Addresses: 0x402040\nConfidence: verified\nProof: two\nTest: none\n"),
-            &["systems/demo.md:35: Addresses is a comma-separated list of `0x……` addresses"],
+            &["systems/demo.md:35: Addresses is a comma-separated list of `0x……` or `mac:……` addresses"],
         ),
         plant(
             "an entry's Confidence line",
@@ -621,6 +623,42 @@ fn plants() -> Vec<Plant> {
             "a spec doc's address outside the image",
             edit("README.md", "`0x500018`", "`0xe00000`"),
             &["README.md:4: 0xe00000 is not an address inside the image"],
+        ),
+        // The Mac client's addresses, which resolve only to its own rows.
+        plant(
+            "a Mac address resolves only to a Mac row",
+            edit(DOC, "The add is at `mac:401008`.", "The add is at `mac:401008`, not `mac:402000`."),
+            &["systems/demo.md:62: mac:402000 resolves to no Mac row"],
+        ),
+        plant(
+            "a 0x address resolves only to a WoW.exe row",
+            edit(DOC, "The add is at `mac:401008`.", "The add is at `mac:401008`, its step `0x600000`."),
+            &["systems/demo.md:62: 0x600000 resolves to no row"],
+        ),
+        plant(
+            "a Mac row's address is mac: and six digits",
+            edit(MF, "mac:401000\t16", "0x401000\t16"),
+            &[
+                "symbols/mac/functions.tsv:2: address '0x401000' is not mac: and six lowercase hex digits",
+                "systems/demo.md:55: mac:401000 resolves to no Mac row",
+                "systems/demo.md:57: mac:401000 resolves to no Mac row",
+                "systems/demo.md:62: mac:401008 resolves to no Mac row",
+            ],
+        ),
+        plant(
+            "a Mac meaning's address without a Mac row",
+            edit(MG, "Holds 8.0, the Mac step", "Holds 8.0, the Mac step mac:700000 reads"),
+            &["symbols/mac/globals.tsv:2: meaning cites mac:700000, which resolves to no Mac row"],
+        ),
+        plant(
+            "a Mac root that is no Mac function row",
+            edit(DOC, "Roots: `0x402000`,", "Roots: `mac:401000`, `mac:600000`, `0x402000`,"),
+            &["systems/demo.md:7: root mac:600000 is not a function row of demo"],
+        ),
+        plant(
+            "a spec doc's Mac address outside the slice",
+            edit("README.md", "`mac:401000`", "`mac:f00000`"),
+            &["README.md:5: mac:f00000 is not an address inside the Mac slice"],
         ),
         plant(
             "a link to a file that is not there",
@@ -795,6 +833,6 @@ fn the_summary_counts_what_was_read() {
     let checked = run(&Memory(clean())).expect("reads");
     assert_eq!(
         checked.summary(),
-        "5 functions, 3 globals, 3 structs, 4 fields, 1 system docs"
+        "5 functions, 3 globals, 3 structs, 4 fields, 1 system docs, 1 Mac functions, 1 Mac globals"
     );
 }

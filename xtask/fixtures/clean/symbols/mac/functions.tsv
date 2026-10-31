@@ -1,0 +1,2 @@
+address	size	name	name_from	system	class	signature	meaning	confidence	proof	finding	test
+mac:401000	16	CDemo::Advance		demo	primitive	uint32_t __cdecl (CDemo *this)	Adds the Mac step mac:600000 to the counter and returns the sum	verified	one	demo#the-mac-advance	

@@ -39,6 +39,31 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   file calls, `OsIME.cpp` and the IME initializer file after it, `OsGui.cpp`, `OsCall.cpp` (engine
   threads), `OsTcp.cpp`, `OsURLDownload.cpp`, `OsClipboard.cpp` and `OsISoundCache.cpp`
 
+## The Mac client
+
+The 1.12.1 Mac client is a second binary, read only where it does what `WoW.exe` does not
+(`../docs/METHOD.md`, The binary decides): key input, in `../systems/core/mackeys.md`.
+
+- **Notation.** A Mac address is `mac:` and six lowercase hex digits, `mac:5bf320`, in a row, a
+  doc and a citation from another project alike. It carries no `0x`, so nothing that reads `0x`
+  and six digits as a `WoW.exe` address can read it as one; the two images overlap, and `0x5bf320`
+  is `WoW.exe` code. A `0x` address is always `WoW.exe`'s.
+- **Rows.** `mac/functions.tsv` and `mac/globals.tsv`, with the columns, sorting and rules of
+  `functions.tsv` and `globals.tsv` and the address in that notation. Their names and extents are
+  their own: a `mac:` address resolves only to a Mac row and a `0x` one only to a `WoW.exe` row. A
+  Mac row's system is its object file's, by the rules of `../systems/README.md`.
+- **The check.** `cargo xtask check` holds the Mac tables to their formats without the slice.
+  `cargo xtask check --exe` also reads the slice at `WoW/WoW-mac-i386`, or at
+  `BENILLA_RE_MAC_SLICE`, refuses any other by its hash, and checks that each function row lies in
+  `__TEXT,__text`, opens with the frame prologue `55 89 e5`, and has the length of the slice's own
+  unwind entry for that start (`__TEXT,__eh_frame`), or, with none, ends where padding (`00` or
+  `90`) meets the next prologue; and that each global lies in one section other than `__text`.
+  Without the slice it says how many Mac rows it left unchecked, and the tests that read the slice
+  skip and are counted, as for the install's `Data` folder; `BENILLA_RE_REQUIRE_MAC=1` makes a
+  missing slice fail. Nothing checks a Mac row against `WoW.exe`.
+- **The slice.** `lipo -thin i386 -output WoW/WoW-mac-i386 "World of Warcraft.app/Contents/MacOS/World of Warcraft"`
+  writes it from the application (`llvm-lipo` off macOS).
+
 ## Names
 
 One convention, the client's own C++ style:
