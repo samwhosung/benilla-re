@@ -247,3 +247,73 @@ pub fn cmapobj_vert_offsets(z: f32) -> (f32, f32) {
 pub fn cmapobj_skyocc_offsets(z: f32) -> (f32, f32) {
     (z + 1.5, z - 1760.0)
 }
+
+/// 1.0e7 (`0x4b189680`): the position `+0x24` and probe point `+0xa8` a new node starts at, so its
+/// first sync always moves it.
+pub const NODE_FAR: f32 = 1.0e7;
+/// The callback `0x670db0` installs on a nonzero model: `ApplyEntityLighting` (`0x672a20`).
+pub const ENTITY_LIGHT_CALLBACK: u32 = 0x0067_2a20;
+
+/// The arguments of `CreateWorldCallbackObject` (`0x670db0`): the model in `ecx`, the draw
+/// callback in `edx`, then five stack dwords.
+#[derive(Clone, Copy, Debug)]
+pub struct EntityNodeArgs {
+    /// `ecx`: the model, 0 for none.
+    pub model: u32,
+    /// `edx`: the draw callback, stored at `+0xb4`.
+    pub callback: u32,
+    /// `[ebp+8]`: the callback's argument, stored at `+0xb8`.
+    pub callback_arg: u32,
+    /// `[ebp+0xc]` and `[ebp+0x10]`: the GUID, stored at `+0xc0` and `+0xc4`.
+    pub guid: [u32; 2],
+    /// `[ebp+0x14]`: stored at `+0xc8`.
+    pub extra: u32,
+    /// `[ebp+0x18]`: the kind flags.
+    pub flags: u32,
+}
+
+/// What `0x670db0` leaves in the node `AllocMapEntity` (`0x6a0930`) hands it. Besides these it
+/// stores [`NODE_FAR`] in `+0x24`, `+0x28`, `+0x2c`, `+0xa8`, `+0xac` and `+0xb0`, 1.0 in the
+/// intensity `+0xa4` and its target `+0xf8`, 0 in the word `+0xc` and 0 in `+0xd8`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct EntityNodeInit {
+    /// `ecx` to `0x6a0930`: bit 3 of the flags.
+    pub pool_arg: u32,
+    /// `+0x8`: the node's word with 0x8000 set.
+    pub type_word: u32,
+    /// `+0x90`: [`entity_node_state`].
+    pub state: u32,
+    /// `+0x9c` and `+0xf4`: the light block's ambient packed by [`clamp01_to_color`].
+    pub ambient: u32,
+    /// Whether the model takes `SetLightingCallback(0x672a20, node)` (`0x7134b0`) and a
+    /// reference (`0x710390`): a nonzero model.
+    pub registers: bool,
+}
+
+/// `0x670db0` from `0x670e69` to `0x670eb6`: the node's `+0x90` from its old value and the kind
+/// flags. Bits 0x4 and 0x400 are cleared, 0x4 set from flag bit 0 and 0x400 from a clear flag
+/// bit 1, then bit 0x2000 is replaced by flag bit 3 and bit 0x200 by flag bit 2.
+pub fn entity_node_state(old: u32, flags: u32) -> u32 {
+    let mut s = (old & 0xffff_fbfb) ^ ((flags & 1) << 2);
+    s |= (!flags & 2) << 9;
+    s = (s & !0x2000) | ((flags >> 3) << 13 & 0x2000);
+    (s & !0x200) | ((flags << 7) & 0x200)
+}
+
+/// `CreateWorldCallbackObject` (`0x670db0`) whole: the fields it sets on a node whose old `+0x8`
+/// and `+0x90` are `old_type` and `old_state`, with `ambient` the three floats at
+/// `[0xc89ef0] + 0xac`.
+pub fn create_entity_node(
+    args: &EntityNodeArgs,
+    old_type: u32,
+    old_state: u32,
+    ambient: [f32; 3],
+) -> EntityNodeInit {
+    EntityNodeInit {
+        pool_arg: (args.flags >> 3) & 1,
+        type_word: old_type | 0x8000,
+        state: entity_node_state(old_state, args.flags),
+        ambient: clamp01_to_color(ambient),
+        registers: args.model != 0,
+    }
+}
