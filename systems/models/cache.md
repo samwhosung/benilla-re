@@ -44,8 +44,8 @@ their writers in `0x706510`, `0x706a50` and `0x706d10`.
 
 `M2Initialize` grants each requested feature bit the device supports and stores the result at
 `+0x4`. Bit 4 (the helper thread) needs more than one processor; bit 8 (vertex shaders) a device
-shader version of 1 or 2; bit 0x10 (pixel shaders) pixel shader version 4 and bit 8 granted; bit 1
-a nonzero device field `+0xbc`; bit 2 a positive `+0xc0`, unless the vertex shader version is 2 and
+vertex-program level of 1 (Direct3D vertex shader 2.0 or later) or 2 (OpenGL ARB); bit 0x10 (pixel shaders) pixel shader version 4 and bit 8 granted; bit 1
+a nonzero device field `+0xbc`; bit 2 a positive `+0xc0`, unless the vertex-program level is 2 and
 bit 8 is granted; bit 0x20 is granted as requested. A second call logs
 `Model2: M2Initialize called mode than once` and returns 1.
 

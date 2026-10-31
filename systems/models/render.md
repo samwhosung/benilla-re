@@ -180,14 +180,15 @@ bytes, with state 4 set to 0.0. A kind 0 to 2 element whose kind, shared model, 
 flag, blend, texture unit colour index, alpha and instance colours `+0x1a0` to `+0x1b4` equal the
 previous element's commits nothing.
 
-Addresses: `0x70c3b7`, `0x70c4d3`, `0x70c60a`, `0x70c657`, `0x70c696`, `0x70c712`, `0x70c8ad`, `0x70c997`, `0x70c9ae`, `0x70ca20`
+Addresses: `0x70c3b7`, `0x70c4d3`, `0x70c60a`, `0x70c625`, `0x70c657`, `0x70c696`, `0x70c712`, `0x70c8ad`, `0x70c997`, `0x70c9ae`, `0x70ca20`
 Confidence: verified
 Proof: one
 Test: `models::scale_add_difftest`
 
 `0x70c3b7` compares the kind with 2 and `jg 0x70c9ae`. `D` starts as instance `+0x1a0` and `E` as
-`+0x1ac` (`0x70c4d3`); blend 5 sets `D` = 0 and `E` = 1, blend 6 `E` = 0.5; others multiply `D` by
-the colour state at unit `+0x8` when it is below header `+0x54` (`0x70c60a`); a clear lit flag
+`+0x1ac` (`0x70c4d3`); blend 5 sets `D` = 0 and `E` = 1, blend 6 `D` = 0 and `E` = 0.5; others multiply `D` by
+the colour state at unit `+0x8` when it is below header `+0x54` (`0x70c60a`): the entry is at 0x50
+times the index in the instance's table `+0xa0`, its rgb at `+0xc` (`0x70c625` to `0x70c64b`); a clear lit flag
 `+0x3328` adds `D` into `E` and zeroes `D` (`0x70c657`). The pixel lane writes `+0x32c8` and
 `+0x32d8` (`0x70c696`), the vertex lane `+0x210` and `+0x220` (`0x70c712`). The fixed lane clamps
 each channel and the alpha to [0, 1], packs `ftol(x·255 + 0.5)`, and sets state 1 (`0x70c8ad`) and
