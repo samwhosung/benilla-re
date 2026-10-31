@@ -14342,7 +14342,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5565f0	71			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x556640	41			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x556670	25			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x556690	60			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x556690	60	UnlinkDbCacheLink		dbcache	primitive	void __thiscall (void *this)	Unlinks a link from its list, joins its neighbours and zeroes the link	verified	one	dbcache/callbacks#quest-cache-cancel	dbcache::quest_cancel_difftest
 0x5566d0	633	CreatureCacheSave		dbcache	primitive	void __thiscall (void *this)	Writes the Creature cache to its file as header, entries and a zero pair, then empties the cache; runs at exit	verified	two	dbcache/overview#the-wdb-file	
 0x556950	256			dbcache	primitive		Runs its object file code that calls 0x556640; not read here	inferred	none		
 0x556a50	77			dbcache	primitive		Runs its object file code not read here	inferred	none		
@@ -14526,7 +14526,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x562470	136			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x562500	135			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, 0x555ee0, SMemFree; not read here	inferred	none		
 0x562590	120			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x562610	25			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
+0x562610	25	DbCacheLinkAddress		dbcache	primitive	void * __thiscall (void *this, uint32_t link)	Returns the node a chain link names: the bucket terminator for 0, else the bucket base plus the link	verified	one	dbcache/callbacks#quest-cache-cancel	dbcache::quest_cancel_difftest
 0x562630	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x5628c0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x562a10; not read here	inferred	none		
 0x5629c0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
@@ -14538,7 +14538,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x562f10	92			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x562f70	471			dbcache	unreached		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x562610 and 5 more; not read here	inferred	none		
 0x563150	293	QuestCacheRefuse		dbcache	orchestration	void __thiscall (void *this, uint32_t key)	Runs a quest's callbacks with status 0, then unlinks and frees its node	verified	two	dbcache/clones#quest-records-stored-and-refused	
-0x563280	236			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
+0x563280	236	QuestCacheCancelCallback		dbcache	primitive	void __thiscall (void *this, uint32_t key, void *callback, void *data)	Removes every callback with a function and data from the pending quest record with that id	verified	one	dbcache/callbacks#quest-cache-cancel	dbcache::quest_cancel_difftest
 0x563370	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x563430	1061	QuestCacheLoad		dbcache	orchestration	void __thiscall (void *this)	Loads the Quest cache from its file, or returns at once for a cache that is not saved	inferred	none		
 0x563860	637			dbcache	unreached		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 8 more; not read here	inferred	none		

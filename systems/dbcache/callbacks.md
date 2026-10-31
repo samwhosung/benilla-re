@@ -52,6 +52,35 @@ Test: `dbcache::callback_order_difftest`
 
 `0x55c11d` tests `[node+0x201]`; set goes to the message (`0x55c126` pushes the format at `0x855b3c`, `0x55c12b` calls `0x63cd50`) and returns. Otherwise the loop at `0x55c150` compares `[cb+8]` with the function (`0x55c15c`) and `[cb+0x18]` with the data (`0x55c167`), unlinks and frees a match (`0x55c1a3`) and continues with the next link read at `0x55c15f` (`0x55c1a8`, `0x55c1aa`) until the terminator. The test cancels pending callbacks, empties lists, and cancels while the byte is set; it does not run the relink at `0x55c179` to `0x55c192`, which follows an unlink that already cleared the link.
 
+## Quest cache cancel
+
+`0x563280(key, function, data)` on the quest cache (`0xc0e1b0`) is the cancel of `Cancelling a
+callback` for a 32-bit key: it removes from the key's pending list every callback with that function
+and data, and frees each. A key with no node, or an empty cache (mask −1), does nothing. While the
+key's list is being run, marked by the node's byte `+0x1909`, it removes nothing and prints the
+line of `0x855b3c` with the key sign-extended to 64 bits. The LFG reply handler is its one caller:
+for each type 3 slot of the old results it passes the slot's quest id (the low 24 bits), the title
+callback `0x4e8f60` and data 0 (`0x4e8e17`).
+
+Addresses: `0x563280`, `0x562610`, `0x556690`, `0x56328a`, `0x5632b8`, `0x5632d7`, `0x5632e6`, `0x5632eb`, `0x56331c`, `0x563327`, `0x56332e`, `0x56335d`, `0x4e8e17`, `0x855b3c`, `0xc0e1b0`
+Confidence: verified
+Proof: one
+Test: `dbcache::quest_cancel_difftest`
+
+The bucket is `[this+0x1c] + 12·(key & [this+0x24])` (`0x563296` to `0x56329b`); `0x562610` turns a
+chain link into the next node's address (the bucket's terminator for 0, else the bucket's base plus
+the link), and the walk stops at a node whose `[node]` equals the key (`0x5632b8`). `0x5632d7`
+tests `[node+0x1909]`; set goes to `0x5632e6`, which pushes the format, `cdq` extending the key, and
+calls `0x63cd50`. Otherwise `[node+0x1904]` is the list's tail and the loop (`0x563310`) reads the
+previous link `[cb+4]` first (`0x56331f`), compares `[cb+8]` with the function (`0x56331c`) and
+`[cb+0x18]` with the data (`0x563327`), unlinks a match with `0x556690` (`0x56332e`), frees it with
+`0x646430(cb, tag, −2, 0)` (`0x56335d`) and goes on from the saved link until the terminator. The
+branch at `0x563335` runs only when `[cb]` is non-zero after the unlink, which `0x556690` has just
+cleared, so the second unlink at `0x563339` to `0x563352` does not run.
+
+`quest_cancel_difftest` runs `0x563280` whole against `callbacks::keep` and `callbacks::cancel`
+on 48 cases, with the running-list branch and keys with and without a node.
+
 ## Unreached item cache methods
 
 Three methods of the item cache have no caller, and a fourth has only one of them. `0x55bc70(record, key)` copies a record into the key's node, creating it, sets the valid byte and runs the key's callbacks with status 1. `0x55bf90(key)` runs them with status 0 and destroys the node through the cache's slot 0. `0x55c920(key)` destroys a node that has a record, and runs a pending node's callbacks with status 0 before `0x56caa0` removes it, the one call of `0x56caa0` (`0x55ca4b`). The receive `0x55bdb0` (called by the handlers `0x555140` and `0x555160`) holds the only item-cache callback sites that run, `0x55bea8` with status 0 and `0x55bf39` with 1.

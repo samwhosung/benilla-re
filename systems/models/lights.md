@@ -119,6 +119,27 @@ sets C0 (smaller, or NaN). The other branch calls `0x71bc70(+0x30)`,
 
 Of `0x71bf90`, `m2_light_aggregate_dist_difftest` runs `0x71bfb0`–`0x71bff5`.
 
+## Lights per draw
+
+A draw binds at most four point lights on the vertex program path and three on the fixed-function
+path, the nearest of the same candidates by squared distance. The candidates are the enabled
+point lights of the grid cells the record's radius covers, with no test against a light's own
+range or attenuation. The record's count `+0x180`, at most 4, is what the vertex programs read; the
+fixed-function path seats slots 1 to 3 from the heap's end, so with four lights the farthest is
+left out. The vertex path runs on a device whose vertex-program level is 1 or 2.
+
+Addresses: `0x70a0f0`, `0x71bf90`, `0x71bf9d`, `0x71bfa6`, `0x71bff5`, `0x71c730`, `0x707cf6`, `0x70bcf3`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x70a0f0` adds the global list through `0x71bf90`, then each cell's lights, passing a light whose
+frame stamp is not the scene's to `0x71b780` (which disables it) instead. The cell window comes from the record's
+`+0x10` (`0x70a122` to `0x70a1af`) and no instruction compares a light's range with a distance.
+The global list holds the other light types, which go to the sums. Vertex shaders are granted by
+`cache#feature-mask` and the level is in `shared#program-fog`. `0x71bf90` returns at once for a null `+0x60` (`0x71bf9d`), sends a light whose type `+0x8` is not 1
+to the sums (`0x71bfa6`) and otherwise inserts into the heap, which stops growing at count 4 (`0x71bff5`).
+
 ## Spherical harmonic terms
 
 An ambient colour `c` adds `c` to the ambient sum and `3.5449078·c` (2√π) to each channel's

@@ -136,7 +136,7 @@ constants with `(u, v, 0, 1)`.
 Addresses: `0x706510`, `0x71de50`, `0x595130`, `0x5951e6`, `0x595211`, `0x598320`, `0x5990a7`, `0x5990ae`, `0x5990b6`, `0x58e6b1`, `0x58e6c7`, `0x70b8d0`, `0x70cd16`, `0x70cd34`, `0x58b330`
 Confidence: verified
 Proof: two
-Test: none
+Test: `models::model2_program_constants`
 
 `0x595211` calls slot 0 of the shaders in array order, so record `i` of the level's set is slot `i`
 of the 1800 that `0x706510` loads. Level 1 is set at `0x5990a7` and level 2 at `0x58e6b1` (`gx`,
@@ -149,6 +149,94 @@ first. The generated stage: Direct3D takes `dp3` of position and normal, `mad` w
 `PARAM` literal, and writes (0, 1) to z and w. `0x70b8d0` also writes (0.5, 0, 0, 0.5) and (0, 0.5,
 0, 0.5) to c(6 + 2k), c(7 + 2k), and `0x70cd16` to `0x70cd34` sends them. The census is made over
 the install's file.
+
+## Lit program colour
+
+A program without the pixel digit (`P` = 0) writes the front colour `c28 · (E, 1) + c29` with alpha
+`c28.w` when its material is lit (`L` = 1), and `c28 + c29` when it is not. The point light count
+`d` is the id's last digit, 0 to 4, which the draw adds from the lighting record when material
+flag 1 is clear and vertex shaders are granted. With `d` = 0, `E` is the harmonic sum with no
+clamp; with `d` of 1 to 4 `E` is clamped to [0, 1] per channel before the multiply. The unlit
+colour ignores `d`.
+
+Addresses: `0x707b6f`, `0x707b7a`, `0x707b87`, `0x707c01`, `0x707c8f`, `0x707c98`, `0x707ca7`, `0x707ceb`, `0x707cf6`, `0x707cfe`, `0x70b040`, `0x71bff5`, `0x70c625`, `0x70c712`, `0x70a239`
+Confidence: verified
+Proof: one
+Test: `models::model2_lit_programs_d3d`, `models::model2_lit_programs_arb`
+
+`0x707c98` tests bit 8 of the cache's features `[[this+4]+4]`. `0x707ca7` skips the rest when the
+local `[ebp-0x3c]` is not 0; that local is set when batch flag 4 is set (`0x707b6f`) and the
+scene's special callback `[scene+0x11c]`, stored by `0x70a239`, is non-null (`0x707b7a`), else 0
+(`0x707b87`), and such a special batch becomes element kind 1 (`0x707c01`) and keeps id −1
+(`0x707c8f`). `0x707ceb` tests material flag 1; clear, `0x707cf6` loads `[[ebp-0x14]+0x3b8]+0x180`,
+the lighting record's count (`[ebp-0x14]` is the model instance), adds it to the id and stores it at
+`+0x38` before `0x70b040`. `0x71bff5` is `jae` on count 4. Direct3D clamps `E` with `max` 0 and
+then `min` 1; ARB with `MIN` 1 and then `MAX` 0. `c28` and `c29` are
+stored at `0x70c712` (`render#material-colours`): the instance colour `[model+0x1a0]` times the
+unit's colour entry (`0x70c625`), with the element alpha, and `[model+0x1ac]` with w 0. Saturation of
+the colour output after the multiply is the interface's rule, not a byte of the file. The tests
+read the 1800 programs of each level: the clamp pair and its order, no clamp at `d` = 0, `E.w` =
+1, the copy of `c28`, and the unlit program the same for every `d`.
+
+## Pixel program outputs
+
+A program with the pixel digit (`P` = 1) writes no front colour and reads no c10 to c16, c28 or
+c29. It writes the light term to texture output 0 (xyz): 1 when unlit, 0 when lit at `d` = 0, and for
+`d` of 1 to 4 the sum of the lights clamped to [0, 1], with no harmonic terms. Texture output 1
+takes the normalized normal, and the stage coordinates move to outputs 2 and 3. Its lights, fog
+and normal are those of `P` = 0.
+
+Addresses: `0x70c696`, `0x70c6d5`, `0x70baf0`
+Confidence: verified
+Proof: one
+Test: `models::model2_lit_programs_d3d`, `models::model2_lit_programs_arb`
+
+The pixel stage takes the model colours as pixel constants c8 and c9 (`0x70c696`, `0x70c6d5`) and
+the harmonic vectors as c1 to c7 (`render#lighting-lanes`). The tests assert, over the 450 `P` = 1
+programs of each level, the output each case writes, its clamp pair for `d` of 1 to 4, the lights
+read, and that no colour output, c10 to c16, c28 or c29 is touched.
+
+## Light constants
+
+A lit program with `d` lights reads c17 to c(16 + d), the light colours, c21 to c(20 + d), their
+view positions, and c25, c26, c27, the constant, linear and quadratic attenuation with component
+`k` for light `k`. With `P` = 0 it also reads c10 to c16, the harmonic vectors, and c28, c29. Each
+light adds `colour · max(0, N·v/|v|) / (c25 + c26·|v| + c27·|v|²)` to `E` with `v` the light position
+minus the vertex, in the space `c2` to `c5` project from, and `N` the bone-transformed normal,
+normalized. Direct3D reads c30 when fog is on.
+
+Addresses: `0x70bcf3`, `0x70baf0`, `0x71c4e0`
+Confidence: verified
+Proof: one
+Test: `models::model2_lit_programs_d3d`, `models::model2_lit_programs_arb`
+
+The harmonic vectors are `lights#harmonic-constants`; `render#lighting-lanes` has the light
+constants' stores. The set of c10 to c30 each program reads is exactly this over all 1800 programs
+per level, and none of c17 to c27 at `d` = 0. The ARB program reads them as `c10[0..6]`,
+`c17[0..d-1]`, `c17[4..3+d]` and `c17[8..10]`, whose swizzles name the first `d` components.
+
+## Program fog
+
+When the material allows fog (`G` = 1) the Direct3D program writes `oFog = min(max(z·c30.x + c30.y,
+0), 1)` per vertex, `z` the view-space depth, and the ARB program writes `z` to the fog
+coordinate; with `G` = 0 both write 0. `c30` is (−r, end·r) with `r` = 1/(end − start), or (0, 0)
+with fog off. Vertex programs run at the Direct3D level only on a device with vertex shader 2.0,
+and the default `gxApi` is `direct3d`.
+
+Addresses: `0x70bdc7`, `0x70bdd9`, `0x70c00a`, `0x71c128`, `0x599098`, `0x5990ae`, `0x58e6b1`
+Confidence: verified
+Proof: one
+Test: `models::model2_lit_programs_d3d`, `models::model2_lit_programs_arb`
+
+`z` is the dot of the third bone matrix row with the position (`dp4 r.z, c33` at the Direct3D level,
+a `DP4` with `c31[2]` at ARB; a skinned program blends the row first). `0x70bdc7` and `0x70bdd9`
+store `−(+0x18c)` and `+0x188 · +0x18c`, where `+0x18c` is `r` stored as a float (`fdivr` at
+`0x71c128`), so c30.y is the float-rounded product; `0x70c00a` zeroes both without fog
+(`render#lighting-and-fog`). No ARB program reads c30 (`program.local[30]` is in none of the 1800),
+so the factor comes from the device's fog state. The device's vertex-program level is 1 for
+Direct3D vertex shader 2.0 or later (`0x599098`), 0 for 1.1 (`0x5990ae`), which runs fixed-function,
+and 2 for OpenGL (`0x58e6b1`); the model cache grants vertex shaders for 1 or 2 (`cache#feature-mask`).
+The choice of API is `gx/device#backend-selection-and-creation`.
 
 ## Device buffers
 
