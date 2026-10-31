@@ -1006,7 +1006,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8105b0	float	s_negChunkSize		terrain	Holds -33.333332 (0xc2055555)	verified	one	terrain/files#wdl
 0x8105b8	const float	s_infinity7		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810614	const float	s_infinity8		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
-0x810678	float	s_yardsPerCell		terrain	Holds 4.1666665	inferred	none	
+0x810678	float	s_yardsPerCell		terrain	Holds 4.1666665, the width of a grid cell: read by the placement snap, the segment trace and map light placement	verified	one	terrain/doodads#placement-anchor-snap
 0x81067c	const float	s_infinity9		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x8106d8	float	s_footprintBiasScale		terrain	Holds 1/2048, the factor of the depth bias option for footprints	verified	one	terrain/footprints#fade-and-draw
 0x8106dc	float	s_footprintFadePerMs		terrain	Holds 1/6000, a footprint's fade per millisecond	verified	one	terrain/footprints#fade-and-draw
