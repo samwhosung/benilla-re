@@ -156,6 +156,67 @@ empty print; `0x443cf4` calls `0x443e70(0, 0)` and `0x443d07` `OsSleep(1)`. In `
 compares a finished read with `0x885684` and `0x443ee2` clears it. The callers are `0x44ad50`, `0x6985d0`,
 `0x6a4a50`, `0x6a4a90`, `0x706900` and `0x710520`.
 
+## Starting the reader
+
+`0x443300` starts the asynchronous reader: it registers the drain `0x443e70`, clears the progress state, stores the
+starting thread's property context (`0x41db60`) in `0x885680`, resets the stop event `0x8856dc` and creates the thread
+`AsyncFileLoader` running `0x443360`, its handle in `0x885694`. The work event `0x885698` is auto-reset, so one wait
+consumes one set; each queued read sets it (`0x443ae0`) and so does the drain at its entry (`0x443e77`). The stop
+event is manual-reset and is set by the shutdown `0x443520`, which also sets the work event and waits without a limit
+for the thread's handle.
+
+Addresses: `0x443300`, `0x443351`, `0x443520`, `0x443ae0`, `0x443bc5`, `0x443e70`, `0x443e77`, `0x4431b0`, `0x4431f0`, `0x41db60`, `0x659a70`, `0x659ac0`, `0x885680`, `0x885694`, `0x885698`, `0x8856dc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4431f0` constructs the work event with both flags 0 and `0x4431b0` the stop event with manual-reset 1 and initial 0
+(`SEvent::SEvent` passes them to `CreateEventA`, `0x659a81` to `0x659a87`). `0x443331` calls `0x41db60`, `0x443340`
+`SEvent::Reset`, and `0x443351` passes `0x443360` to `SThread::Create` (`0x659ac0`) with the handle address
+`0x885694` and the name `AsyncFileLoader`. `0x443bc5` is the tail jump of the queueing function to `SEvent::Set`.
+`0x443527` and `0x44352c` set the stop and work events and `0x443538` waits on the thread with the timeout −1. The one
+reference to `0x443360` is `0x443351` (`tools/callers.py`, control `0x4baee0`).
+
+## The reader loop
+
+The thread `0x443360` adopts the starting thread's property context, then loops. It polls the stop event with a 0
+timeout and returns 0, after setting the work event, when it is set. It waits 500 ms on the work event: a timeout goes
+back to the poll, a signal to the queue. Under the lock `0x88569c` it takes the first read of the queue `0x885688`,
+unlinks it and stores it in `0x8856d0`. An empty queue goes back to the poll. After each read it sleeps 1 ms and takes
+the next without waiting, so the stop event is looked at only when the queue is empty or a wait times out.
+
+Addresses: `0x443360`, `0x443370`, `0x443384`, `0x443390`, `0x44339f`, `0x4433b0`, `0x4433ba`, `0x4433bf`, `0x4433c7`, `0x443407`, `0x4434d7`, `0x4434dc`, `0x4434eb`, `0x443500`, `0x41db50`, `0x6599c0`, `0x6579b0`, `0x885680`, `0x885688`, `0x88569c`, `0x8856d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`SEventWait` is `WaitForSingleObject(handle, timeout)`. `0x443369` loads `0x885680` for `SetThreadPropContext`
+(`0x443370`). The poll `0x443377` to `0x443384` pushes 0 and leaves to `0x443500` on a result of 0. `0x443390` pushes
+`0x1f4` and waits on `0x885698`; `0x44339f cmp eax,0x102` goes to the poll again at `0x4434eb`. `0x4433b0` enters the
+lock, `0x4433ba` loads the queue's first link and `0x4433bf`, `0x4433c7` test the end bit and null. The unlink is
+`0x4433cf` to `0x4433ff` and the in-progress store `0x443407`. `0x4434d7` is `OsSleep(1)` and `0x4434dc` jumps back
+to `0x4433b0`.
+
+## Reading a file
+
+For each read the thread calls `SFile::Read(file +0, buffer +4, size +8)` up to 10 times, with `OsSleep(1)` after each
+failure; after the tenth failure it copies the file name into a local buffer that nothing reads. It enters the read's own
+lock (`+0x18`) around the tries when that is set. The read is queued as finished either way: under the queue lock it is
+unlinked, appended to the finished queue `0x8856c4`, cleared from `0x8856d0`, and its byte `+0x28` is set. A file that
+cannot be read is therefore delivered unread, as done.
+
+Addresses: `0x443360`, `0x443419`, `0x443423`, `0x44342b`, `0x443431`, `0x443436`, `0x44343f`, `0x443444`, `0x443445`, `0x443456`, `0x443462`, `0x44346c`, `0x443471`, `0x4434a8`, `0x4434be`, `0x4434c9`, `0x429d50`, `0x648460`, `0x6487b0`, `0x8856c4`, `0x8856d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x443419` enters the read's lock and `0x443462` leaves it. `0x44342b` to `0x443431` push the six arguments of
+`SFile::Read` (three zeros last), `0x443436` tests the result, `0x44343f` is `OsSleep(1)` and `0x443444`, `0x443445`
+count `edi` down from 10. `0x443456` calls `SFileGetFileName` into `[ebp-0x200]`, never read again. `0x44346c`
+re-enters the queue lock; `0x443471` to `0x4434b9` move the read to the finished queue by its link offset
+(`0x8856c4`), `0x4434be` clears the in-progress word and `0x4434c9` sets `+0x28`. A read is a `CAsyncObject` of 0x2c bytes,
+allocated by `0x4438b0`.
+
 ## Waiting for every read
 
 `0x443d30` blocks until the asynchronous reader is idle. It first adds up the pending counts the

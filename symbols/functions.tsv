@@ -83,9 +83,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402ec0	30	MouseSpeedCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies a new mouseSpeed value to the host pointer speed and returns 1	verified	one	core/input#mouse-speed-and-num-lock	
 0x402ee0	62	ErrorsCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies the Errors setting: enables or disables the error display and prints which	verified	one	sysmsg#error-display-settings	
 0x402f20	62	ShowErrorsCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies the ShowErrors setting: shows or hides the error display and prints which	verified	one	sysmsg#error-display-settings	
-0x402f60	63	ErrorDisplayMinLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMinDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
-0x402fa0	243	DisplayErrorLevelStatus	idb	client			Runs Client.cpp code that calls 0x44cc60, 0x44cc70, ConsoleWrite and 2 more; not read here	inferred	none		
-0x4030b0	63	ErrorDisplayMaxLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMaxDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
+0x402f60	63	ErrorDisplayMinLevelCallback	idb	client	orchestration	bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies ErrorLevelMin: refuses a value outside 0 to 3 with a message, else sets the low level and prints the status	verified	one	sysmsg#error-level-settings	
+0x402fa0	243	DisplayErrorLevelStatus	idb	client	orchestration	void __cdecl (void)	Prints which message levels the console shows: all, one level only, or a low level through a high one	verified	one	sysmsg#error-level-status-line	
+0x4030b0	63	ErrorDisplayMaxLevelCallback	idb	client	orchestration	bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies ErrorLevelMax: refuses a value outside 0 to 3 with a message, else sets the high level and prints the status	verified	one	sysmsg#error-level-settings	
 0x4030f0	32	ErrorFilterCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies a new ErrorFilter list and prints the filter, or returns 0 to refuse a list with an unknown name	verified	one	sysmsg#error-filter-setting	
 0x403110	229	PrintSysMsgFilter		client		void __cdecl (void)	Prints the error display's filter: all messages, or the category names of the selector's bits	verified	one	sysmsg#error-display-settings	
 0x403200	624	SetErrorFilter		client		uint32_t __fastcall (const char *text)	Parses an error filter list into the selected message mask, or prints help and returns 0 for an unknown name	verified	one	sysmsg#error-filter-setting	
@@ -3295,7 +3295,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4432e0	5			client			Runs its object file code not read here	inferred	none		
 0x4432f0	11			client			Runs its object file code not read here	inferred	none		
 0x443300	93			client	orchestration		Registers the asynchronous-read drain 0x443e70 on event category 6 at priority 0.0 and clears its state	inferred	none	core/loop#what-one-tick-runs	
-0x443360	435			client			Runs its object file code that calls SetThreadPropContext, SEventWait, SCritSect::Enter and 5 more; not read here	inferred	none		
+0x443360	435	AsyncFileReadThread		client	host	uint32_t __stdcall (void *arg)	Reads each queued file, ten tries each, and queues it as finished, waiting on the work event until stop	verified	one	glue/enterworld#the-reader-loop	
 0x443520	132			client			Runs its object file code that calls SEvent::Set, SEventWait, 0x4435b0 and 3 more; not read here	inferred	none		
 0x4435b0	99			client			Runs its object file code not read here	inferred	none		
 0x443620	13			client			Runs its object file code not read here	inferred	none		
@@ -7934,8 +7934,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action bar flags, retests the reactive spells raising SPELL_ACTIVE, then signals SPELL_UPDATE_USABLE	verified	one	ui/reactivespells#usable-refresh	
 0x4b3250	15	SignalCurrentSpellCastChanged		ui	orchestration		Fires ACTIONBAR_UPDATE_STATE through 0x4e5bf0, then CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	verified	one	ui/spellbook#picking-up-a-book-spell	
-0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b32f0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
+0x4b32e0	10	PlaySpellBookDropSound		ui	orchestration	void __cdecl (void)	Plays the interface sound igSpellBookSpellIconDrop	verified	one	ui/spellbook#picking-up-a-book-spell	
+0x4b32f0	10	PlaySpellBookPickupSound		ui	orchestration	void __cdecl (void)	Plays the interface sound igSpellBookSpellIconPickup	verified	one	ui/spellbook#picking-up-a-book-spell	
 0x4b3300	764	CastBookSpell		ui	primitive	void __fastcall (uint32_t index, bool pet, uint64_t target)	Casts a book spell, toggles it off, stops targeting for it or swaps the held spell	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b3600	235	IsBookSpellCurrent		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's trade skill or form is the current one	verified	one	ui/spellbook#checked-spells	
 0x4b36f0	373	BookSpellAuraActive		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's active icon is nonzero and its aura is on the player or pet	verified	one	ui/spellbook#casting-a-book-spell	
@@ -8111,9 +8111,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b6000	12	InitListHead4b5f80Register		ui	orchestration	void __cdecl (void)	Registers 0x4b6010 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4b6010	10	InitListHead4b5f80Exit		ui	orchestration	void __cdecl (void)	Runs 0x419e30 (CStatus::~CStatus) on a global object	verified	one	ui/initexits#exit-calls	
 0x4b6020	43	DeletingDestructor4b6020		ui	orchestration		Destroys the object through 0x419e30 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x4b6050	85			ui	orchestration		Runs UIBindings.cpp code that calls SMemAlloc, 0x4b6c50, ConsoleCommandRegister; not read here	inferred	none		
+0x4b6050	85	BindingsCreate		ui	orchestration	void __cdecl (void)	Allocates and builds the binding object, stores it in s_bindings and registers the bind command	verified	one	ui/keybindings#the-binding-object	
 0x4b60b0	76			ui	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs UIBindings.cpp code that calls SStrTokenize, 0x4b7490; not read here	inferred	none		
-0x4b6100	55			ui	orchestration		Runs UIBindings.cpp code that calls 0x63fb40, 0x4b6d90, SMemFree; not read here	inferred	none		
+0x4b6100	55	BindingsDestroy		ui	orchestration	void __cdecl (void)	Unregisters the bind command, destroys and frees the binding object and zeroes s_bindings	verified	one	ui/keybindings#the-binding-object	
 0x4b6140	246	ParseBindingSet		ui	primitive		Empties a binding set and fills it from binding file text	verified	one	ui/keybindings#binding-files	
 0x4b6240	107	ReadBindingCache		ui	primitive		Reads a binding cache file into a stack buffer and parses it into the set of its kind	verified	one	ui/keybindings#binding-files	
 0x4b62b0	89	LoadBindingFiles		ui	orchestration		Loads the default binding file into set 0 and registers the reader 0x4b6240 for the two cache kinds	verified	one	ui/keybindings#binding-files	
@@ -8252,9 +8252,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bad30	91	OnRaidMemberNameRemoved		ui	orchestration		Shows ERR_RAID_MEMBER_REMOVED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
 0x4bad90	38	OnRaidRosterName		ui	primitive	void __cdecl (void)	Lowers the pending roster name count and at 0 signals RAID_ROSTER_UPDATE, then PARTY_MEMBERS_CHANGED	verified	one	ui/raid#pending-roster-names	ui::raid_pending_names_difftest
 0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
-0x4bae90	65			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
+0x4bae90	65	FindRaidSelectionRow		ui	primitive	int32_t __cdecl (void)	Returns the 0-based roster index of the selected member's GUID, or -1	verified	one	ui/groupverbs#selected-roster-row	
 0x4baee0	72	IsRaidMember		ui	primitive	int32_t __thiscall (void *this)	Returns 1 when a GUID is on the raid roster, 0 for a zero GUID	verified	one	ui/raid#group-leader-and-membership	
-0x4baf30	151			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4baf30	151	IsRaidMemberPet		ui	primitive	int32_t __thiscall (const uint64_t *this)	Returns 1 when a GUID is the pet of a roster member, else 0	verified	one	ui/groupverbs#pet-of-a-roster-member	
 0x4bafd0	164	CGRaidInfo::IsMemberOrPet	idb	ui	primitive		Answers 1 when a GUID is a raid member or the pet of one, 0 for a null GUID or no match	verified	one	ui/raid#setting-a-raid-target	
 0x4bb080	106	IsRaidLeaderOrAssistant		ui	primitive		Returns whether a GUID is a raid member of rank above 0 or the group leader	verified	one	ui/chatsend#group-and-channel-checks	
 0x4bb0f0	60	GetRaidMemberByGuid		ui	orchestration	void * __thiscall (uint64_t *this)	Returns the member block of the first of all 40 raid rows holding a GUID, past the count too, or 0	verified	one	ui/raid#rows-past-the-count	
@@ -10439,7 +10439,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7c30	63	InitZero4e7c00Exit		ui	primitive	void __cdecl (void)	Releases the storage behind what 0x4e7c00 set up, through SMemFree, at most once	verified	one	ui/initexits#exit-releases	
 0x4e7c70	494	CGPartyInfo::InitializeGame	idb	ui	primitive		Clears party and looking-for-group state, groups LfgDungeons ids by type and registers opcodes 0x1ff, 0x329, 0x2cb	verified	one	ui/lfg#the-type-lists	
 0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows INSTANCE_SAVED, its debug wrapper, or an unwritten buffer, by flag	verified	one	ui/instances#the-save-notice	
-0x4e7f00	10			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e89c0; not read here	inferred	none		
+0x4e7f00	10	RecountLfgLists		ui	orchestration	void __cdecl (void)	Recounts the five looking-for-group type lists, then rebuilds the quest list, signalling UPDATE_LFG_TYPES after each	verified	one	ui/lfg#world-entry-recount	
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
@@ -12565,7 +12565,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516f60	82	Script::GetBlockChance	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the block chance of the player	verified	one	ui/unitverbs#player-numbers	
 0x516fc0	82	Script::GetParryChance	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the parry chance of the player	verified	one	ui/unitverbs#player-numbers	
 0x517020	618	Script::UnitName	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes a unit's name and realm; for the string player it pushes the selected character's name and nil	verified	one	ui/unitplayer#the-four-readers	
-0x517290	21			ui	orchestration		Runs ScriptEvents.cpp code that calls 0x491a00; not read here	inferred	none		
+0x517290	21	UnitNameFoundCallback		ui	orchestration	void __fastcall (uint32_t key, const uint64_t *guid, uint32_t data, uint8_t found)	Signals UNIT_NAME_UPDATE for the tokens of a GUID when its name arrived	verified	one	objectlayer/unitnames#unitnames-name-callback	
 0x5172b0	157	Script::UnitPVPName	idb	ui	primitive	int __fastcall (lua_State *L)	Returns a unit's name with its honor title, or nil for a missing object	verified	one	ui/honor#pvp-name	
 0x517350	181	Script::UnitXP	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the experience of the active player	verified	one	ui/unitverbs#player-numbers	
 0x517410	181	Script::UnitXPMax	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the experience the active player needs for the next level	verified	one	ui/unitverbs#player-numbers	
@@ -13177,7 +13177,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5293e0	89	GameTooltipIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is GameTooltip or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
 0x529440	6	GameTooltipGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name GameTooltip	verified	two	ui/widgettype#type-chains	
 0x529450	43	DeletingDestructor529450		ui	orchestration		Destroys the object through 0x529480 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x529480	215			ui	primitive		Runs its object file code that calls 0x467d00, ClntObjMgrClearObjectMirrorHandler and 2 more; not read here	inferred	none		
+0x529480	215	CGTooltip::~CGTooltip		ui	orchestration	void __thiscall (CGTooltip *this)	Removes the health bar's watcher, releases the script slots and line arrays and ends in the frame destructor	verified	one	ui/tooltip#destroying-a-tooltip	
 0x529560	98	CGTooltip::OnUnitHealthChanged		ui	orchestration	uint32_t __stdcall (uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *statusBar)	Sets the tooltip health bar's range and value from the unit and returns 1	verified	one	ui/tooltipunit#the-health-bar	
 0x5295d0	124	CGTooltip::GetScriptSlot		ui	orchestration	uint32_t * __thiscall (CGTooltip *this, const char *name)	Returns the address of the tooltip script slot of a name, else the frame's own lookup	verified	one	ui/tooltipobject#the-script-slots	
 0x529650	737	CGTooltip::PostLoadXML		ui	orchestration	void __thiscall (CGTooltip *this, XMLNode *node, uint32_t flags)	Ends the frame load, then finds the template's left and right texts, three textures and status bar by name	verified	one	ui/tooltip#loading-the-template	
@@ -23239,36 +23239,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x645040	7			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645050	49			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645090	47			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6450c0	58			storm	boundary		Runs its object file code not read here	inferred	none		
+0x6450c0	58	StormHeapOnGrid		storm	boundary	uint32_t __thiscall (void *this, void *header)	Returns 1 when a header lies in the segment at this slot at a multiple of its class size	verified	one	storm/heap#checking-a-freed-block	
 0x645100	23			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645120	64			storm	boundary		Runs its object file code not read here	inferred	none		
-0x645160	15			storm	boundary		Runs its object file code not read here	inferred	none		
-0x645170	295			storm	boundary		Runs SMem3.cpp code that calls 0x6452a0, 0x645450; not read here	inferred	none		
+0x645160	15	StormHeapArrayTop		storm	boundary	void * __thiscall (void *this)	Returns the first entry of a block array, the lowest address, or 0 when empty	verified	one	storm/heap#taking-a-block	
+0x645170	295	StormHeapArrayPush		storm	boundary	void __thiscall (void *this, void *header, void *counters)	Appends a block to a block array, growing it when full, records its index in the header and sifts it up by address	verified	one	storm/heap#taking-a-block	
 0x6452a0	46			storm	boundary		Runs its object file code that calls 0x6452d0, 0x64d100, 0x64cc80; not read here	inferred	none		
 0x6452d0	57			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6453b0	159			storm	boundary		Runs its object file code that calls 0x645450; not read here	inferred	none		
-0x645450	71			storm	boundary		Runs its object file code not read here	inferred	none		
+0x6453b0	159	StormHeapArrayRemove		storm	boundary	void __thiscall (void *this, void *header)	Removes a block from its array by the index in its header, moving the last entry in and sifting it	verified	one	storm/heap#taking-a-block	
+0x645450	71	StormHeapArraySwap		storm	boundary	void __thiscall (void *this, uint32_t first, uint32_t second)	Swaps two entries of a block array and rewrites the indexes in both headers	verified	one	storm/heap#taking-a-block	
 0x6454a0	44			storm	unreached		Runs its object file code not read here	inferred	none		
 0x6454d0	1			storm	unreached		Runs its object file code not read here	inferred	none		
 0x6454e0	208			storm	boundary		Runs its object file code that calls 0x645100, 0x645040; not read here	inferred	none		
 0x6455b0	134			storm	boundary		Runs its object file code that calls 0x645120, 0x645090; not read here	inferred	none		
 0x645640	141	StormHeapAlloc		storm	boundary	void * __thiscall (void *this, uint32_t size, const char *name, uint32_t line)	Takes a block of the power-of-two class that holds size + 8 from the allocator and returns it past its header	verified	one	core/threads#allocator-and-error-calls	
 0x6456d0	177			storm	boundary		Runs its object file code that calls 0x6452a0, 0x6461c0, 0x645c10; not read here	inferred	none		
-0x645790	83			storm	boundary		Runs its object file code that calls 0x6461c0, 0x645eb0; not read here	inferred	none		
+0x645790	83	StormHeapFreeChecked		storm	boundary	void __thiscall (void *this, void *block, const char *name, uint32_t line)	Frees a block under the heap lock when its header passes the check; a null block does nothing	verified	one	storm/heap#checking-a-freed-block	
 0x6457f0	138			storm	boundary		Runs its object file code that calls 0x6461c0; not read here	inferred	none		
 0x645880	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645890	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x6458a0	7			storm	unreached		Runs its object file code not read here	inferred	none		
-0x6458b0	45			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6458e0	42			storm	boundary		Runs its object file code not read here	inferred	none		
-0x645910	757			storm	boundary		Runs its object file code that calls 0x645160, 0x6453b0, 0x645910 and 5 more; not read here	inferred	none		
+0x6458b0	45	StormHeapParent		storm	boundary	void * __thiscall (void *this, void *header, uint32_t sizeClass)	Returns the parent block header: the segment offset rounded down to twice the class size	verified	one	storm/heap#merging-a-freed-block	
+0x6458e0	42	StormHeapBuddy		storm	boundary	void * __thiscall (void *this, void *header, uint32_t sizeClass)	Returns the header of a block's buddy: its segment offset exclusive-ored with the class size	verified	one	storm/heap#merging-a-freed-block	
+0x645910	757	StormHeapTakeBlock		storm	boundary	void * __thiscall (void *this, uint32_t sizeClass, uint32_t size, uint32_t commit)	Takes the lowest free block of a class, splitting the next class or reserving a segment when none is free	verified	one	storm/heap#taking-a-block	
 0x645c10	662			storm	boundary		Runs its object file code that calls 0x6458e0, 0x646070, 0x645170 and 2 more; not read here	inferred	none		
-0x645eb0	442			storm	boundary		Runs its object file code that calls 0x6458e0, 0x6453b0, 0x6458b0 and 4 more; not read here	inferred	none		
-0x646070	69			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6460c0	53			storm	boundary		Runs its object file code not read here	inferred	none		
+0x645eb0	442	StormHeapFree		storm	boundary	void __thiscall (void *this, void *header)	Returns a block to its class: merges free buddies upward, queues it by address and decommits freed pages	verified	one	storm/heap#merging-a-freed-block	
+0x646070	69	StormHeapCommit		storm	boundary	uint32_t __thiscall (void *this, void *address, uint32_t sizeClass)	Commits the page at an address when the class is 12 or more; returns 0 when the commit fails	verified	one	storm/heap#taking-a-block	
+0x6460c0	53	StormHeapDecommitPage		storm	boundary	void __thiscall (void *this, void *address, uint32_t sizeClass)	Decommits the page at an address when the class is 12 or more	verified	one	storm/heap#merging-a-freed-block	
 0x646100	97			storm	boundary		Runs its object file code not read here	inferred	none		
-0x646170	79			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6461c0	130			storm	boundary		Runs its object file code that calls 0x6450c0, 0x6452a0; not read here	inferred	none		
+0x646170	79	StormHeapDecommitTail		storm	boundary	void __thiscall (void *this, void *header, uint32_t sizeClass, uint32_t size)	Decommits the pages after a block's first page, up to the end of its old allocation, when the class is above 12	verified	one	storm/heap#what-a-free-leaves	
+0x6461c0	130	StormHeapCheckBlock		storm	boundary	uint32_t __thiscall (void *this, void *header, const char *name, uint32_t line)	Returns 1 for a readable, in-use header on its class grid, else reports error 0x8510007c and returns 0	verified	one	storm/heap#checking-a-freed-block	
 0x646250	20			storm	unreached		Runs its object file code that calls 0x6454d0; not read here	inferred	none		
 0x646270	8			storm	boundary		Runs its object file code not read here	inferred	none		
 0x646280	43	SMemInitialize		storm	boundary		Initializes the Storm allocator once, guarded by a flag dword	verified	one	core/threads#process-entry	
@@ -23833,10 +23833,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x659e90	12			storm	boundary		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x659ea0	1			storm	boundary		Runs its object file code not read here	inferred	none		
 0x659eb0	1			storm	boundary		Runs its object file code not read here	inferred	none		
-0x659ec0	76	SLogClose		storm	host		Closes a log handle	inferred	none		
-0x659f10	82	FlushLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
+0x659ec0	76	SLogClose		storm	host	void __stdcall (uint32_t log)	Flushes and closes a log's file, unlinks its record and releases it	verified	one	storm/log#closing-a-log	
+0x659f10	82	FlushLog	idb	storm	host	void __thiscall (void *this)	Writes a log's buffered text to its file, flushes the file and empties the buffer	verified	one	storm/log#closing-a-log	
 0x659f70	226	LockLog	idb	storm	orchestration	void * __fastcall (uint32_t log, uint32_t *lock, int create)	Finds a log record by id under its lock, or makes a 0x10124-byte one when create is set	verified	one	storm/log#opening-a-log-file	
-0x65a060	91			storm	boundary		Runs its object file code not read here	inferred	none		
+0x65a060	91	ReleaseLogRecord		storm	host	void __fastcall (void *log, uint32_t bucket)	Unlinks a log record from its bucket chain, releases its memory and leaves the bucket's lock	verified	one	storm/log#closing-a-log	
 0x65a0c0	217	SLogCreate	idb	storm	orchestration	bool __stdcall (const char *name, uint32_t flags, uint32_t *log)	Makes a log record for a path and flags, opening the file at once only with flag 1	verified	one	storm/log#opening-a-log-file	
 0x65a1a0	18	UnlockLog	idb	storm	boundary		Runs its object file code not read here	inferred	none		
 0x65a1c0	152	CreateLogFile		storm	host	bool __fastcall (const char *path, void **handle, uint32_t flags)	Opens a log's file for writing, appended to with flag 4 and emptied without; -1 and 0 for no path or a failure	verified	one	storm/log#opening-a-log-file	

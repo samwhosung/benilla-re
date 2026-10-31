@@ -284,3 +284,30 @@ to `0x77b1ac` select the arrows; `0x77b1b3` passes 2 to `0x41f8f0`, a test wheth
 else `0x77b1c4` returns 0. The frame walk treats 0 as not consumed and goes on (`0x765f96`). The attribute is read
 through the first-letter bool parse and written by `0x77a6b0` (`0x77a159`); the Lua function writes through the
 same setter with the default 1 (`0x79976e`). The getter test is `0x799815`.
+
+## The binding object
+
+`CGGameUI::Initialize` (`0x48fbf0`) builds the binding object with `0x4b6050` (`0x48feb0`) and `CGGameUI::Shutdown`
+(`0x490bd0`) destroys it with `0x4b6100` (`0x490cb5`). `0x4b6050` allocates 0xdc bytes with `SMemAlloc`, builds the
+object with `0x4b6c50`, stores it in `s_bindings` (`0xb71290`), 0 if the allocation failed, and registers the console
+command `bind` (handler `0x4b60b0`, category 5), object or not. `0x4b6100` unregisters `bind`, then destroys the
+object with `0x4b6d90`, frees it and zeroes `s_bindings`. `0x4b6050` does not test the old pointer; `0x4b6100` skips a null one.
+
+Addresses: `0x4b6050`, `0x4b6100`, `0x4b6c50`, `0x4b6d90`, `0x4b8350`, `0x4b8550`, `0x4b60b0`, `0x48feb0`, `0x490cb5`, `0xb71290`, `0x6462e0`, `0x646430`, `0x63f9e0`, `0x63fb40`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4b6050` pushes 0, 0x30, the path of `UIBindings.cpp` and 0xdc and calls `0x6462e0` (`0x4b605e`), tests
+the result (`0x4b6063`), calls `0x4b6c50` with it in `ecx` (`0x4b6069`) and stores the return value
+(`0x4b607c`); the null leg stores 0 (`0x4b6095`). Both legs push 0 and 5 and call `0x63f9e0` with `ecx` the
+string `bind` and `edx` `0x4b60b0` (`0x4b6081`, `0x4b609f`). `0x4b6c50` makes the object's lists empty
+(`0x4b98a0`, `0x4b9b20`), stores the table vtable `0x80692c` at `+8` and `0x80691c` in each of four
+0x28-byte set records from `+0x30`, each with the index −1, and clears `+0x1c` to `+0x28`, `+0xd4` and the
+running flag `+0xd8` (`0x4b6d7c`). `0x4b6d90` empties those lists and tables, unlinking and freeing their
+nodes (`0x4b8900`, `0x4b88c0`, `0x4b8f70`, `0x4b9170`) and calling each table's slot 0 (`0x4b8350`,
+`0x4b8550`) on the nodes it drains; those two are not read here. `0x4b6100`
+calls `0x63fb40` first (`0x4b6106`), loads `s_bindings` (`0x4b610b`), skips a null (`0x4b6113`), passes the
+object to `0x4b6d90` (`0x4b6117`), then calls `0x646430` with the tag `delete`, line −1 and flags 0
+(`0x4b6126`). A census of each (`tools/callers.py`, control `0x4baee0`) finds the one `call` named and no
+stored address. Both bodies only call and store, so neither owes a test.

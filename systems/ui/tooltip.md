@@ -161,6 +161,45 @@ Test: none
 `0x52ae4a` calls the item cache `0xc0e2a0` through `0x55ba30` with the entry; `0x52ae66` to `0x52ae6c` extract bit 3 of `[[item+0x114]+0x3c]`. The three numbers go to `0x52adb0` as its stack arguments in the order `+0x40` block dword, `[+0x98]`, `[+0x94]` (`0x52aed6` to `0x52aedf`), the name last.
 `0x52aeaa` tests bit 0x2000 of the slot 0 answer of the object at `+0x110`. Where the three numbers land in the link is `0x52adb0`'s format, `ui/auctionlists#item-links-and-time-left`.
 
+## Destroying a tooltip
+
+The deleting destructor `0x529450` (slot 0 of the vtable `0x808f60`) calls `0x529480`. It stores the tooltip's two
+vtables. When the unit GUID at `+0x368` is nonzero, the status bar at `+0x348` is set and the object manager exists, it
+removes the bar's health watcher with `0x467fb0(3, 0x40, GUID, 0x529560, bar)`; that unlinks the record only from the
+field list of a unit the GUID finds, and only flags (`+0x2d`) a matching record whose callback is running (`+0x2c`),
+without unlinking it (`0x468023` to `0x468057`). It then releases the three script slots at `+0x444`, `+0x44c` and `+0x454`, frees
+the line arrays at `+0x344`, `+0x338` and `+0x32c` when set, and tail-jumps to `CSimpleFrame::~CSimpleFrame`
+(`0x7693b0`).
+
+Addresses: `0x529450`, `0x529480`, `0x52948f`, `0x5294a8`, `0x5294d5`, `0x5294e3`, `0x5294f1`, `0x5294ff`, `0x529518`, `0x529531`, `0x52954a`, `0x529552`, `0x467d00`, `0x467fb0`, `0x529560`, `0x702670`, `0x7693b0`, `0x808f60`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x529483` and `0x529489` load the GUID; `0x52948f` and `0x529495` store the vtables (the layout vtable 0x808f30 at `+0x24`).
+The guards are `0x52949c` (GUID zero), `0x5294a6` (bar null) and `0x5294af` (no object manager), each jumping to
+`0x5294da`. The removal pushes the bar, `0x529560` and the GUID's two words and calls `0x467fb0` with `ecx` 3 and `edx`
+0x40 (`0x5294cb` to `0x5294d5`); it is the watcher that `0x52a08d` to `0x52a0a8` link (`tooltipunit#the-health-bar`).
+`0x5294e3`, `0x5294f1` and `0x5294ff` call `0x702670`; `0x529518`, `0x529531` and `0x52954a` call `SMemFree`; `0x529552`
+jumps to `0x7693b0`. The census of `0x529480` (`tools/callers.py`, control `0x4baee0`) finds one call, in `0x529450`.
+
+## Tooltips at interface shutdown
+
+The frame top's destructor `0x764390` deletes its queued objects and then every frame of its list through slot 0 of
+the object's vtable (`0x7643ea`, `0x764436`), and `CGGameUI::Shutdown` (`0x490bd0`) runs it through slot 1 of the top's vtable, `0x764360` (`0x490c9b`).
+So an interface shutdown with the world still loaded, as a reload is, destroys each tooltip frame and takes the health
+watcher of each tooltip that still shows a held unit off that unit.
+
+Addresses: `0x490bd0`, `0x490c9b`, `0x764360`, `0x764390`, `0x7643ea`, `0x764436`, `0x529450`, `0x808f60`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x490c8d` loads the top from `0xb4e240`, `0x490c97` its vtable and `0x490c9b` calls slot 1 with the argument 1. The vtable
+of the top, `0x81c380`, holds `0x764360` in slot 1 (read from the image). `0x764360` is the top's deleting destructor and
+calls `0x764390`, whose two loops (`0x7643a4` for the queued objects, `0x7643f0` for the frames) call `[edx]` of each, argument 1. The vtable `0x808f60`
+holds `0x529450` in slot 0.
+
 ## Unreached tooltip code
 
 `0x5303d0(path)` would add a texture beside the last line: with fewer than three textures used (`+0x364`) and at least two lines, it takes the next texture of `+0x34c`, pins it to the last line and the line above with three `SetPoint` calls,
