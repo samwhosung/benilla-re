@@ -170,23 +170,47 @@ getting 0.1 added to the end. `0x695d03`, `0x695d0a` and `0x695d11` store 0, `0x
 
 ## Group re-pose
 
-`0x698f50(position, heading)` poses a placed map object again. It rebuilds the matrices `+0x24`, `+0x94` and
-`+0xd4`, moves each group's sphere and box and each map light of the object to the new place, and calls
-`0x6a2070` for each group def. That poses every doodad def of the group's list (`+0xb0`, link offset `+0xa8`)
-with `0x6a81d0`: a def with a loaded model gets the position `+0x24` as its local translation
-(`+0x13c`) times the object matrix, the matrix `+0xcc` as its preserved local matrix `+0x10c` times it, and new
-bounds. The sun scale `+0xa4` is not touched.
+`0x698f50(def, position, facing)` places a map object def. It stores the position at `+0x24`, writes a rotation about z by the facing and then a translation to the position into `+0x94`, and the inverse (`0x7bd820`, scale 1.0) into `+0xd4`; the facing is not stored. With the root loaded (`+0x118`, byte `+0x1d4`), the object's box `+0x44` and sphere `+0x5c`, `+0x68` are the root's moved by `+0x94`; otherwise the sphere is the position with radius 0 and the box is that point. For each group def whose group is loaded it moves the map lights and rebuilds the group's sphere and box, then calls `0x6a2070`.
 
-Addresses: `0x698f50`, `0x699146`, `0x6991a9`, `0x6991b8`, `0x6991ca`, `0x6991db`, `0x6991e4`, `0x6a2070`, `0x6a207b`, `0x6a209d`, `0x6a81d0`, `0x6a81dc`, `0x6a81f2`, `0x6a8215`, `0x6a8227`, `0x6a822c`, `0x6709a0`, `0x5f50a0`, `0x7bcc60`, `0x7bc6a0`
+Addresses: `0x698f50`, `0x6a86d0`, `0x698f5e`, `0x698fb6`, `0x698fd8`, `0x698fe7`, `0x69901b`, `0x69909e`, `0x6990b7`, `0x6990ed`, `0x699120`, `0x699146`, `0x69914e`, `0x6991a9`, `0x6991db`, `0x6991e4`, `0x6a4310`, `0x6a4420`, `0x6a4a00`, `0x6a44b0`, `0x6a45b0`, `0x6c0ae0`, `0x71b650`, `0x7bd820`, `0x7bdc40`, `0x7bdd60`, `0x7bcc60`, `0x6dc540`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6a81d0` returns at once for a def without a model (`0x6a81dc`, `0x6a81e4`). `0x7bcc60` writes the transformed
-vector back through its input pointer, so `0x6a8215` leaves the world position in `+0x24`. `0x694e90` saved
-the local matrix at `+0x10c` before it multiplied by the object matrix, which is what `0x6a8227` reuses. The
-transport tick `0x5f50a0` reaches `0x698f50` through `0x6709a0` when the object's class bits `+0x8` hold 8.
-The sun scale stays what the pending drain set, so a moving map object keeps the verdict of its first frame.
+`0x698f5e` ORs 4 into the byte `+0xd`. `0x698f77` to `0x698fb3` write the identity into `+0x94`; `0x698fb6` calls `0x7bdc40` with the position, `0x698fd8` `0x7bdd60` with the facing, the axis (0, 0, 1) and the unit flag (M = R·M), and `0x698fe7` `0x7bd820` into `+0xd4`. A zero loaded byte takes the point form (`0x69901b`). Else the root's sphere and box (`0x6a4310`, `0x6a4420`) are moved by `0x7bcc60` and `0x6dc540` (`0x69909e`, `0x6990b7`). The walk takes the head `[def+0x138]` and the group def `[node+4]`; `0x6a4a00(root, [group def+0x7c], 0)` (`0x6990ed`) returns null for an unloaded group, which skips the node. Each reference (a u16 at `[group+0xe4]`, count `[group+0x140]`) addresses a 0x30-byte record from `[root+0x148]` (`0x699120`). A nonzero entry of the light table `[def+0x144]` takes the record's position `+8` moved by `+0x94` through `0x71b650` (`0x699146`), and `0x6c0ae0` runs unless the group def's flags have bit 1 (`0x69914e`). `0x6991a9` to `0x6991db` set the group def's sphere and box as for the object; `0x6991e4` calls `0x6a2070` with `+0x94`. It does not call `0x6a86d0`.
+
+## Group doodad re-pose
+
+`0x6a2070(group def, matrix)` sets bit 0 of the group def's flags `+0xc`, calls `0x6a81d0` with the matrix for each doodad def in its list `+0xb0`, then sets bit 0 of the flags word of each member of its second list `+0xbc`, the game object defs that `0x69ce90` walks. Its one caller is `0x698f50`, which passes the object matrix `+0x94`. The group def's own sphere and box are set by the caller.
+
+Addresses: `0x6a2070`, `0x6a2077`, `0x6a207b`, `0x6a209d`, `0x6a20af`, `0x6a20cf`, `0x6a81d0`, `0x6a1cff`, `0x6a1d29`, `0x69ce90`, `0x6991e4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6a2077` ORs 1 into the byte `+0xc`. The first walk (`0x6a207b` to `0x6a20aa`) calls `0x6a81d0` with ecx = `[node+4]` (`0x6a209d`) and steps by the link offset `[this+0xa8]`; the second (`0x6a20af` to `0x6a20de`) ORs the word 1 into `[member+0xc]` (`0x6a20cf`) and steps by `[this+0xb4]`. The constructor sets both offsets to 0xc (`0x6a1cff`, `0x6a1d29`). `0x69c23b` passes the second list to `0x69ce90`. The scan of `e8` and `e9` for `0x6a2070` finds `0x6991e4` only, and for `0x6a2150` `0x6a2535` only. A scan for each address as a data dword finds none; its control, `0x5f49b0`, finds its three `push imm32`.
+
+## Doodad re-pose
+
+`0x6a81d0(def, matrix)` leaves a def without a model (`+0x88`) alone. Otherwise it sets bit 0 of `+0xc`, sets the position `+0x24` to the local position `+0x13c` moved by the matrix, and `+0xcc` to the saved local matrix `+0x10c` times the matrix. A loaded model gives the sphere centre moved by `+0xcc` (into `+0x5c`), its radius times the scale `+0x30` (into `+0x68`), and its bounding and collision boxes moved by `+0xcc` into `+0x44` and `+0x14c`; an unloaded model gives zeros, so the sphere is `+0xcc`'s translation with radius 0. A sound handle `+0x168` moves to `+0x24`.
+
+Addresses: `0x6a81d0`, `0x6a81dc`, `0x6a81ea`, `0x6a81f2`, `0x6a8215`, `0x6a8227`, `0x6a82c0`, `0x6a8309`, `0x6a83af`, `0x6a83b4`, `0x6a83ca`, `0x6a83d9`, `0x6a83ea`, `0x6a8400`, `0x7bc6a0`, `0x7bcc60`, `0x7bca80`, `0x6dc540`, `0x7103d0`, `0x713640`, `0x713680`, `0x713700`, `0x462000`, `0x694e90`, `0x69508e`, `0x6950a2`, `0x695b1e`, `0x6950be`, `0x6a7e6e`, `0x694b62`, `0x694e3d`, `0x683700`, `0x6838f0`
+Confidence: verified
+Proof: one
+Test: `terrain::chunk_fade_scale_twin_difftest`
+
+`0x6a81dc` returns for a null model. `0x6a81f2` copies `+0x13c` to `+0x24` and `0x6a8215` moves it in place with `0x7bcc60`; `0x7bc6a0` multiplies `+0x10c` by the matrix and `0x6a8227` copies the product to `+0xcc`. `0x7103d0(model, 0, 0)` (`0x6a82c0`) picks the loaded form, which reads `0x713640`, `0x713700` and `0x713680` (centre, then radius); the other form zeroes all three. `0x6a83af` moves the centre by `+0xcc`; `0x6a83b4` to `0x6a83ca` multiply the radius by `[+0x30]`; `0x6a83d9` and `0x6a83ea` move the boxes; `0x6a8400` passes `+0x24` to `0x462000`. The test runs `0x6a83b4` to `0x6a83cd`. `0x694e90` builds the local matrix in `+0xcc`, and the loop `0x69508a` to `0x6950b6` (`add ecx,0x10c` at `0x69508e`, store at `0x6950a2`) copies all 16 dwords to `+0x10c`, so `+0x13c` is its row 3, the record's local position, before the group matrix multiplies `+0xcc` (`0x6950be`). The stores to `[reg+0x13c]` that reach a group doodad are `0x6a7e6e` (zero, at construction) and `0x6950a2`, from the creator `0x695aa0` through `0x694e90` (`0x695b1e`); `0x694b62` and `0x694e3d` belong to the entity and ADT creators. The reads are `0x6a81f2` and `0x7bc6a0` (`0x6a821b`). The sun scale `+0xa4` is not written. The def cull reads `+0x5c` and `+0x68` (`0x683700`, `0x6838f0`).
+
+## Placement anchor snap
+
+`0x698110(entity, position, facing)` moves a position in x and y so that the turned box's maximum corner sits on a grid line of 4.1666665-unit cells. It takes the entity's box (a map object def's root box, else the model's bounding box), centres it on its own middle, turns it about z by the facing and adds the turned box's maximum corner `m` to the position, giving `v`. For x and y it takes `n = round((v + 4.1666665)·0.24 − 0.5)` and stores `position − (v − n·4.1666665)`. z is unchanged.
+
+Addresses: `0x698110`, `0x6981eb`, `0x69821f`, `0x698247`, `0x698278`, `0x6982d4`, `0x6982fb`, `0x698337`, `0x810678`, `0x69c64d`, `0x6c0019`, `0x6a4420`, `0x713640`, `0x7bdd60`, `0x6dc540`, `0x4549a0`
+Confidence: verified
+Proof: one
+Test: `terrain::ground_anchor_difftest`
+
+`0x6981eb test [esi+8],8` picks `0x6a4420` on the root or `0x713640` on the model. `0x69821f` stores the corner sums, `0x698247` times 0.5, `0x698278` subtracts the centre from each corner, each result stored as a float. `0x7bdd60` turns an identity by the facing about (0, 0, 1) and `0x6dc540` moves the box through it. `0x6982d4` adds the position to the maximum corner. At `0x6982fb` the sum plus 4.1666665 times 0.24 is stored as a float, reloaded, less 0.5 and rounded to nearest by `fistp`. `0x698337` computes `fild n`, times 4.1666665, `fsubr` of `v` (the register holds `v − n·4.1666665`), `fsubr` of the position (`d8 2b`), stored to the position. The test runs `0x69821f` to `0x698242`, `0x698247` to `0x698273`, `0x698278` to `0x6982b3`, `0x6982d4` to `0x6982f6` and `0x6982fb` to `0x69835a`.
 
 ## Pending doodads
 

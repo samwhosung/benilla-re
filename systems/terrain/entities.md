@@ -118,6 +118,50 @@ The callers by scan: `0x6707c0` has three (`0x5f8076`, `0x6e518f` and `0x6e5a6e`
 in `0x698d20`, which has no caller, `0x698f2e` in `0x698e20`, the two light creators `0x671334` and `0x6716a2`, and `0x69e2af`). `0x6707d3 call 0x64b4a0` compares the model name with the string `.wmo`. A `.wmo` game object of type 11 or 15 is also an ordinary
 map object placement: `0x6953e0` links the definition into `0xca7d98` (`0x69545c`), the list `0x6aaab0` walks (`0x6aab3c`).
 
+## Entity transform
+
+`0x6709a0(entity, position, facing, anchor)` places a world entity, which is the def itself. A nonzero anchor first runs `0x698110`, which can move the position's x and y in place (`terrain/doodads#placement-anchor-snap`). The type word `+0x8` then picks the branch: bit 0x8, a map object def, calls `0x698f50`; else bit 0x40, a doodad def, calls `0x698e20`; any other entity is left alone. No branch stores the facing. The doodad branch sets the scale `+0x30` to 1.0, builds `+0xcc` as a rotation about z by the facing and then a translation to the position, bounds the def, relinks it and propagates its bounds.
+
+Addresses: `0x6709a0`, `0x6709a6`, `0x6709b2`, `0x6709b5`, `0x6709bd`, `0x6709c6`, `0x6709d2`, `0x6709db`, `0x698110`, `0x698e20`, `0x698ec1`, `0x698f2e`, `0x698f35`, `0x6a2368`, `0x6a7eb9`, `0x5f52b8`, `0x5f603c`, `0x5f619e`, `0x4821d5`, `0x6e69d0`, `0x6952a0`, `0x6a86d0`, `0x698b30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6709a6` tests the anchor, `0x6709b2` skips on zero and `0x6709b5` calls `0x698110` with the facing. `0x6709bd test al,8` takes `0x6709c6`, `0x6709d2 test al,0x40` takes `0x6709db`. The constructors OR the bits into `+0x8`: `0x6a2368` the 8, `0x6a7eb9` the 0x40. `0x698e20` stores the position at `+0x24` and 1.0 at `+0x30`, writes an identity at `+0xcc`, translates it (`0x7bdc40`) and rotates it (`0x7bdd60`, axis (0, 0, 1), unit flag 1). A model that `0x7103d0` reports loaded gets `0x6952a0` and flag 0x80 (`0x698ec1`); otherwise the centre `+0x5c` and the box `+0x44`, `+0x50` are the position and the radius `+0x68` is 0. It then clears bit 0 of `+0x90` and bits 1 and 2 of the word `+0xc`, sets bit 0, and calls `0x6a86d0` (`0x698f2e`) and `0x698b30`. Of the four callers, `0x5f52b8`, `0x5f603c` and `0x5f619e` push anchor 0, and `0x4821d5` pushes the byte `0x6e69d0` returns.
+
+## Entity animation
+
+`0x6709f0(entity, animation, unused)` plays an animation on an entity by type. A map object def (bit 0x8) passes it to `0x6a24b0`, which calls `0x6a20f0` for each group def in its list `+0x138`; that calls `PlayAnimation(-1, animation, -1, 0, 1.0, 1, 1)` on the model of each doodad def in the group's list. A doodad def (bit 0x40) with a model plays it on that model the same way. Without a model, or for any other entity, nothing is played. Nothing uses the third argument. The entity chain tests only that a model exists: a model not yet loaded queues the play, and a map object with no doodad defs has nothing to play on.
+
+Addresses: `0x6709f0`, `0x6709f6`, `0x6709ff`, `0x670a08`, `0x670a0c`, `0x670a16`, `0x670a26`, `0x6a24b0`, `0x6a20f0`, `0x6a2122`, `0x6a24c9`, `0x6a24df`, `0x6a22f3`, `0x7121a0`, `0x7121b3`, `0x698a30`, `0x698b1d`, `0x695960`, `0x695aa0`, `0x5f52f9`, `0x5f631f`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6709f6 test al,8` takes `0x6709ff call 0x6a24b0`. `0x670a08 test al,0x40`, the model `+0x88` (`0x670a0c`) and the pushes 1, 1, 1.0, 0, −1, animation, −1 (`0x670a16` to `0x670a24`) lead to `0x670a26 call 0x7121a0`. `0x6a24b0` walks the head `[this+0x138]` by the link offset `[this+0x130]` (0xc, `0x6a22f3`), taking the group def from `[node+4]`; `0x6a20f0` does the same over `+0xb0` and `+0xa8` and tests `+0x88` (`0x6a2122`). `0x6a24b0` forwards its second stack argument (`0x6a24c9`, `0x6a24df`) and `0x6a20f0` does not read it. `0x7121b3` queues a play on an unloaded model. `0x698a30` makes the group defs when the root has loaded (`0x698b1d` calls `0x695960`), and `0x695aa0` a group's doodad defs when the group loads. The tick `0x5f52f9` plays a changed animation only once its byte `+0x5c` is set (`#entity-readiness-gate`); `0x5f631f` plays a transport object's path animation whenever the entity exists and the animation differs from the stored one, with no readiness test. Both push 0 for the third argument.
+
+## Entity done callback
+
+`0x670a30(entity, callback, arg1, arg2)` sets the done callback of an entity's doodad models. A map object def (bit 0x8) passes the three to `0x6a2500`, which passes them through `0x6a2150` to every doodad def with a model in every group def's list; a doodad def (bit 0x40) with a model takes them directly. `0x711bb0` stores the callback at the model's `+0x70` and the arguments at `+0x78` and `+0x7c`, replacing the doodad's own `0x6951b0` and its arguments 0, 0 (`0x695137`, `0x695139`); nothing keeps the old pair. The def goes only to `0x7133a0` and `0x7134b0`. Any other entity does nothing. Its three callers pass `0x5f49b0` with 0 and 0.
+
+Addresses: `0x670a30`, `0x670a36`, `0x670a43`, `0x670a4e`, `0x670a56`, `0x670a63`, `0x6a2500`, `0x6a2150`, `0x6a217c`, `0x6a218f`, `0x711bb0`, `0x711bb9`, `0x711bc2`, `0x6951b0`, `0x695137`, `0x695139`, `0x7133a0`, `0x7134b0`, `0x695140`, `0x5f49b0`, `0x5f52dc`, `0x5f5d84`, `0x5f5dbb`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x670a36 test al,8` pushes `[ebp+0xc]`, `[ebp+8]` and `edx` for `0x6a2500` (`0x670a43`); `0x670a4e` and `0x670a56` guard the doodad branch, and `0x670a63` calls `0x711bb0` with the same three. `0x6a2500` walks `+0x138` as the animation does and calls `0x6a2150` per group def; `0x6a2150` walks `+0xb0`, tests the model `+0x88` (`0x6a217c`) and calls `0x711bb0` (`0x6a218f`). `0x711bb0` stores `[ebp+8]` at `+0x70`, `[ebp+0xc]` at `+0x78` and `[ebp+0x10]` at `+0x7c` (`0x711bb9` to `0x711bc2`). `0x695140` installs `0x6951b0` when a doodad model is made, so a doodad made after the call keeps it. Each caller loads `edx` with `0x5f49b0` and pushes 0, 0: `0x5f52dc` once, when the entity is first ready, and `0x5f5d84` and `0x5f5dbb` on the transport's record arrival and reactivation.
+
+## Entity readiness gate
+
+`0x670950` says whether an entity is ready for the transport tick's animation and callback. A map object def (bit 0x8) is ready when `0x6a25b0` and `0x6a4270` both hold: bit 7 of the def's flags `+0xc` is set and every group def has bit 3 set, and the root `+0x118` is loaded with each of its groups loaded. A doodad def (bit 0x40) is ready with no model, else when `0x7103d0(model, 0, 0)` returns true. Any other entity is never ready.
+
+Addresses: `0x670950`, `0x67095a`, `0x670969`, `0x67098c`, `0x6a25b0`, `0x6a4270`, `0x7103d0`, `0x698a3a`, `0x695bea`, `0x5f52c7`, `0x5f559c`, `0x5f5fc7`, `0x5f61c2`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x670956 test al,8` calls `0x6a25b0` (`0x67095a`) and, when it returns true, `0x6a4270` on `[this+0x118]` (`0x670969`). `0x6a25b0` returns 0 unless the byte `+0xc` has its sign bit set, which `0x698a3a` sets in `0x698a30`, then returns 0 at the first group def in `+0x138` whose `+0xc` lacks bit 3, which `0x695bea` sets after `0x695aa0` made its doodads. `0x6a4270` returns 0 on a zero loaded byte `+0x1d4` or when `0x6a4a00` returns null for a group below the count `+0x168`. `0x67098c` calls `0x7103d0` with two zeros. The four callers of `0x670950` are `0x5f52c7`, `0x5f559c`, `0x5f5fc7` and `0x5f61c2`; `0x5f52c7` runs only while the tick's byte `+0x5c` is 0, and sets it once the entity is ready.
+
 ## World query class words
 
 Each caller of the world query `0x6721b0` pushes its own class word. The movement code pushes the mask of `0x6315f0` for the obstruction test (`0x63172f`), the facet gather
