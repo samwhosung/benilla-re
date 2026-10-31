@@ -74,7 +74,7 @@ the active player targets an attacker that hits it while it has no target. The v
 the swing when the attacker's model fires `$CAH` or `$AH0` to `$AH3`, or at once when the attacker
 is not in sight. The combat log line is written on receipt.
 
-Addresses: `0x62578d`, `0x625829`, `0x62583f`, `0x625898`, `0x6259b6`, `0x6259c4`, `0x6259e6`, `0x625a03`, `0x625a3e`, `0x625a78`, `0x6246a0`
+Addresses: `0x62578d`, `0x625829`, `0x62583f`, `0x625898`, `0x6259b6`, `0x6259c4`, `0x6259e6`, `0x625a03`, `0x625a0e`, `0x625a1b`, `0x625a3e`, `0x625a78`, `0x6246a0`
 Confidence: verified
 Proof: one
 Test: none
@@ -83,7 +83,7 @@ Test: none
 pending record with both GUIDs through `0x6243e0` on its victim, then copies 0xec bytes to
 `+0xd70`. `0x6259b6` runs `CGPlayer_C::OnAttackStart` for the active player with a victim.
 `0x6259e6` selects the attacker when the victim is the active player and `s_targetGuid` is empty.
-`0x625a03`: an auto-move in no mode 4 stops through `CGUnit_C::StopAutoMove(1, 1)`. With no attacker
+`0x625a03`: when `0x6103a0` finds the unit the active mover in an auto-move, `0x625a0e` pushes the mask 4 to `CGUnit_C::IsAutoMovingInModes` (`0x611590`), which tests `1 << mode` against it, so the mask spares mode 2 (face a direction); an auto-move in any other mode, mode 4 (walk to a point) included, stops through `CGUnit_C::StopAutoMove(1, 1)` (`0x625a1b` to `0x625a21`). With no attacker
 `0x625a3e` runs `0x624530` on the victim. `0x625a78` calls `0x629b10`. `0x6246a0` skips a dead
 attacker and hit info 0x10000; a swing record `+0xac` of 0 plays the animation, and a victim
 state other than 0 plays the attacker's exertion, slot 34 with kind `(hit info >> 7) & 1`.

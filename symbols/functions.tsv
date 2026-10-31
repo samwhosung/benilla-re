@@ -10443,7 +10443,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
-0x4e7fc0	210			ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4e7fc0	210	IsPartyPet		ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 when a GUID is the charm, else summon, of the active player or a party member, or a record pet	verified	one	objectlayer/units#reactions-tokens-and-groups	
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	orchestration	int32_t __thiscall (uint64_t *this)	Returns 1 when a GUID is the active player, a party member or the pet of either, 0 for a zero GUID	verified	one	ui/party#member-or-pet	
 0x4e81a0	43	GetPartyMemberGuid		ui	orchestration		Returns the GUID of party slot 0 to 3, 0 with no object manager or out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4e81d0	116	GetPartyMemberPetGuid		ui	primitive		Returns the pet GUID of a party slot from its member or its record, with no index bound	verified	one	ui/unittokens#indexed-tokens	
@@ -11116,7 +11116,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by visibility, group position (a header row is position 0), bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
 0x4f6ac0	105	CompareCraftGroups		ui	orchestration	int __cdecl (void **a, void **b)	Orders craft group headers by the skill line's display name	verified	one	ui/craft#craft-order	
 0x4f6b30	66	GetCraftGroupOfRow		ui	primitive		Returns the group ordinal of a craft header row, or -1	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f6b80	88	IsCraftGroupExpanded		ui	primitive		Returns whether the group of a craft header row is expanded	verified	one	tradeskill/craft#craft-rows	
+0x4f6b80	88	IsCraftGroupCollapsed		ui	primitive		Returns 1 when the group bit of a craft header row is clear in the expanded mask (0x4f6bcf to 0x4f6bd6), else 0	verified	one	tradeskill/craft#craft-rows	
 0x4f6be0	21	SetCraftExpandedMask		ui	orchestration		Stores the expanded mask of the craft groups, re-sorts and signals CRAFT_UPDATE	verified	one	tradeskill/craft#collapse-and-cast	
 0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	int __fastcall (lua_State *L)	Closes the craft window	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the name of the spell in the effect slot of the craft type	verified	one	tradeskill/craft#name-and-skill-line	
@@ -12630,7 +12630,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51bd50	25	OnUnitFieldChanged		ui	primitive		Signals the event numbered offset / 4 for every token of the changed unit	verified	one	ui/unittokens#unit-field-events	
 0x51bd70	25	OnPlayerBlockChangedA		ui	orchestration		Signals event 0xba for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
 0x51bd90	25	OnPlayerBlockChangedB		ui	orchestration		Signals event 0x20a for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
-0x51bdb0	134	RegisterUnitFieldEvents		ui	primitive	void __thiscall (void *this)	Registers the field watcher 0x51bd50 for every named event id below 0xb6	verified	one	ui/paperdoll#portrait-events	
+0x51bdb0	134	UnwatchUnitFields		ui	primitive	void __thiscall (void *this)	Removes the field watcher 0x51bd50 from every named unit field, and the two player watchers 0x51bd70 and 0x51bd90	verified	one	ui/unittokens#unit-field-events	
 0x51be40	5	InitSquare51be50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x51be50, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x51be50	19	InitSquare51be50		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x51be70	5	InitSquare51be80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x51be80, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -20458,7 +20458,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60ab20	123	DrunkSway		objectlayer	primitive		Returns a drunk sway angle: drunkenness times 0.75° times the mean of three slow cosines of the time	verified	one	objectlayer/unitbody#drunk-sway	objectlayer::cosine_pulse_difftest
 0x60aba0	62	ClampToHalfPi		objectlayer	primitive		Clamps an angle to -π/2 to π/2	verified	one	objectlayer/unitbody#drunk-sway	
 0x60abe0	558	CGUnit_C::OnDisplayChanged		objectlayer	primitive		Rebuilds the body model, textures, name, auras and mount when the display records change	verified	one	objectlayer/unitdisplay#changing-the-display	
-0x60ae10	200	CGUnit_C::DisplayRecordsChanged		objectlayer	orchestration		Returns 1 when DISPLAYID names other display, extra, model or sound records than the unit holds	verified	one	objectlayer/unitdisplay#display-records	
+0x60ae10	200	CGUnit_C::DisplayNeedsRebuild		objectlayer	primitive		Returns 1 when a new display's extra id, model row or sound row differs from the held ones, else 0	verified	one	objectlayer/unitdisplay#when-a-display-rebuilds-a-unit	
 0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	objectlayer::camera_model_scale_difftest
 0x60afb0	540	CGUnit_C::ResolveDisplayRecords		objectlayer	primitive		Resolves the display, extra, model, sound and blood records into +0xb34 to +0xb48, falling back to first rows	verified	one	objectlayer/unitdisplay#display-records	
 0x60b1d0	147	CGUnit_C::OnScaleChanged		objectlayer	orchestration		Resizes the mover for a new scale, sends opcode 0x29b when that fails, rescales the quest marker	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
@@ -29236,7 +29236,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6e8bf0	177	PlaySpellImpactsOnHits		spell	orchestration	void __fastcall (void *record, void *visual, void *hits)	Plays the impact kit on each hit unit and a wound for a harmful spell	verified	one	spell/go#missile-and-impact-legs	
 0x6e8cb0	90	PlaySpellImpactOnUnit		spell	orchestration	void __fastcall (void *record, void *visual, void *unit)	Plays the impact kit on one unit and a wound for a harmful spell	verified	one	spell/go#missile-and-impact-legs	
 0x6e8d10	104	RewriteMissReasons		spell	orchestration	void __fastcall (void *record, void *visual, void *list, void *reasons)	Stores 0x624f20 of each missed unit and its reason over the reason, which leaves it unchanged	verified	one	spell/go#missile-and-impact-legs	
-0x6e8d80	189	SpellFailedHandler	idb	spell	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcode 0x133: runs the unit's failure calls and the school sound, and stops auto-repeat on ammo reasons	verified	one	spell/failures#spell-failure-packets	
+0x6e8d80	189	SpellFailedHandler	idb	spell	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcode 0x133: runs the unit's failure calls and the school sound, and fires STOP_AUTOREPEAT_SPELL on ammo	verified	one	spell/failures#spell-failure-packets	
 0x6e8e40	106	HandleSpellFailedOtherPacket	idb	spell	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcode 0x2a6: calls 0x60d040 and 0x614150 on the unit with the spell id	verified	one	spell/failures#spell-failure-packets	
 0x6e8eb0	1251	PetSpellFailedHandler	idb	spell	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles opcode 0x138: shows the pet's failure message by its own reason table, with no log line or event	verified	one	spell/failures#pet-cast-failure-packet	
 0x6e9460	363	SpellCooldownHandler	idb	spell	primitive	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles SMSG_SPELL_COOLDOWN: adds a record per spell and time pair to the player's or pet's list	verified	one	spell/cooldowns#spell-cooldown-packet	

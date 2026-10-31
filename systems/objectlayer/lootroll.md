@@ -36,16 +36,20 @@ cache record, requested with the callback `0x61b460`; once the record is there `
 `START_LOOT_ROLL(id, countdown)` if fewer than four rolls are open, else marks the roll queued.
 When a roll closes, `0x61b760` signals the first queued roll that fits.
 
-Addresses: `0x61b310`, `0x61b38c`, `0x61b394`, `0x61b430`, `0x61b460`, `0x61b45b`, `0x61b760`, `0x61b7be`, `0x55ba30`, `0xc0e2a0`, `0x703f50`
+Addresses: `0x61b310`, `0x61b1a2`, `0x61b244`, `0x61b376`, `0x61b387`, `0x61b38c`, `0x61b394`, `0x61b430`, `0x61b460`, `0x61b45b`, `0x61b760`, `0x61b7be`, `0x55ba30`, `0xc0e2a0`, `0x703f50`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x61b310` allocates the record (`SMemAlloc` 0x48), links it at the head of the list, clears
-`+0x2c`, `+0x39` and `+0x3a`, and asks `0x55ba30` on the item cache `0xc0e2a0` for the item
-`+0x1c` with the callback `0x61b460`; a record in hand goes straight to `0x61b430`. `0x61b430`
-tests the count against 4, increments it, and signals event 0x1f9 with the format `%d%d`
-(`0x61b452`); `0x61b45b` marks the roll queued. `0x61b7be` walks the list for queued rolls.
+`0x61b310` allocates the record (`SMemAlloc` 0x48), links it at the tail of the list (`0x61b376` to
+`0x61b387`: with `ecx` the sentinel's last link `[0xc4dc00]`, the new link's predecessor `[eax]` is
+`ecx`, its successor `[eax+4]` is `[ecx+4]`, `[ecx+4]` becomes the record, and `[0xc4dc00]` becomes
+the new link), so each of the seven walks (`0x61b1a2`, `0x61b244`, `0x61b290`, `0x61b2e0`,
+`0x61b5f3`, `0x61b76a`, `0x61be06`) visits them oldest first, clears `+0x2c`, `+0x39` and `+0x3a`,
+and asks `0x55ba30` on the item cache `0xc0e2a0` for the item `+0x1c` with the callback `0x61b460`;
+a record in hand goes straight to `0x61b430`. `0x61b430` tests the count against 4, increments it,
+and signals event 0x1f9 with the format `%d%d` (`0x61b452`); `0x61b45b` marks the roll queued.
+`0x61b7be` walks the list for queued rolls.
 
 ## Voting
 

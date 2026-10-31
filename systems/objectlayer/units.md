@@ -187,14 +187,14 @@ keeps the unit's token flags `+0xc90`, which register it for unit events while n
 `0x606c20` and `0x606d20` tell whether two player-controlled units share the active player's
 party or raid.
 
-Addresses: `0x606e20`, `0x606f20`, `0x60c520`, `0x60c4a0`, `0x60c4f0`, `0x606c20`, `0x606d20`, `0x6116e0`, `0x60be60`
+Addresses: `0x606e20`, `0x606f20`, `0x60c520`, `0x60c5db`, `0x4e7fc0`, `0x4e7fef`, `0x4e8020`, `0xbc6f48`, `0x60c4a0`, `0x60c4f0`, `0x606c20`, `0x606d20`, `0x6116e0`, `0x60be60`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x606f20` skips the active player and units its charmer, else summoner, is the player; others
 call `0x607380`. Token bits: 0x1 the active player, 0x2 its charm (or summon), 0x10 a party
-member (0x4e7f70), 0x20 raid (0x4e7fc0), 0x100 0x4baee0, 0x200 0x4baf30, 0x1000 the target;
+member (0x4e7f70), 0x20 a party member's pet (0x4e7fc0, called at `0x60c5db` only while bit 0x2 is clear, so its own-pet leg `0x4e7fef` never matches: `0x60c549` to `0x60c59d` is that test; each party slot `0xbc6f48` is tested for that member's charm, else summon, else, when not in view and bit 0x1 of the record byte at -0x78 is set (`0x4e806a`), the record's pet guid; no raid state), 0x100 0x4baee0, 0x200 0x4baf30, 0x1000 the target;
 0x51bbb0 registers on the first bit, 0x51bdb0 unregisters at none (`0x60c4a0`, `0x60c4f0`).
 `0x606c20` is true for the same unit, else needs `UNIT_FIELD_FLAGS` bit 3 on both and one
 controlling player (0x606170) to be the active player and the other in its party (0x4918d0);

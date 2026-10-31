@@ -109,7 +109,7 @@ alone; other reasons call neither. When the spell is the auto-repeat spell, reas
 `DONT_REPORT` returns at once and every other reason calls `0x6ea080` (`cast`). After this,
 reason 0x17 returns in every case: no text, message, log line or event.
 
-Addresses: `0x6e1c67`, `0x6e1c7f`, `0x6e1c8e`, `0x6e1c98`, `0x6e1ca1`, `0x6e1cb5`, `0x6e1cbc`, `0x6e1cca`, `0x6e1cd1`, `0x6e1cd9`, `0x6e1ce4`, `0x6e1cea`, `0x6e1cfa`, `0x6e225c`, `0x6e2268`, `0x60d040`, `0x614150`, `0x5fd9e0`, `0x4b5390`, `0x60f530`, `0x6ea080`, `0xceac30`
+Addresses: `0x6e1c67`, `0x6e1c7f`, `0x6e1c8e`, `0x6e1c98`, `0x6e1ca1`, `0x6e1cb5`, `0x6e1cbc`, `0x6e1cca`, `0x6e1cd1`, `0x6e1cd9`, `0x6e1ce4`, `0x6e1cea`, `0x6e1cfa`, `0x6e225c`, `0x6e2268`, `0x614150`, `0x5fd9e0`, `0x4b5390`, `0x60f530`, `0x6ea080`, `0xceac30`
 Confidence: verified
 Proof: one
 Test: none
@@ -120,7 +120,7 @@ switch and the auto-repeat test follow on both paths. The switch subtracts 0x2f,
 by 0x4d and indexes the byte table `0x6e2268` (78 bytes) into the three-entry table `0x6e225c`:
 0x2f → `0x6e1cc3`, the five reasons above → `0x6e1ccf`, every other byte → `0x6e1cd9`.
 `0x4b5390` tests and sets bit 0x2c of a bit set (`0x4b53c5`, `0x4b53de`). `0x6e1cd9` compares
-`0xceac30`, which the auto-repeat start writes before `START_AUTOREPEAT_SPELL` (`0x6e594c`) and
+which the auto-repeat start writes before `START_AUTOREPEAT_SPELL` (`0x6e594c`) and
 its stop clears before `STOP_AUTOREPEAT_SPELL` (`0x6ea16a`); `0x6e1ce4` and `0x6e1cfa` jump to the
 epilogue `0x6e224f` on 0x17.
 
@@ -281,10 +281,10 @@ at `0x6e23b2`, `shl edx,cl` with `cl` the row's `+0x04` (`0x6e23be`) and `test e
 a known unit, `0x6e8d80` calls `0x60d040(spell, 1, 1)` and `0x614150(spell, 0)`, passes the spell and
 the unit to `0x458a50`, calls `0x6ea080` (`cast`) when the unit is the active player and the
 reason is 0x2f, 0x30 or 0x31, then `0x60fc50` and, when `0x611590(1)` holds, `0x60fb60(0, 1)`. It
-shows no message and fires no event. `SMSG_SPELL_FAILED_OTHER` (0x2a6), a `u64` GUID and a `u32`
+shows no message and fires `STOP_AUTOREPEAT_SPELL` on the `0x6ea080` leg, and other events and sends through its callees (`What the failure handler signals`). `SMSG_SPELL_FAILED_OTHER` (0x2a6), a `u64` GUID and a `u32`
 spell id, makes `0x6e8e40` call only the first two. Both return 1. The names are the server's.
 
-Addresses: `0x6e8d80`, `0x6e8d90`, `0x6e8d9b`, `0x6e8da6`, `0x6e8dc2`, `0x6e8dd7`, `0x6e8de4`, `0x6e8dee`, `0x6e8df5`, `0x6e8e01`, `0x6e8e0d`, `0x6e8e14`, `0x6e8e1d`, `0x6e8e2c`, `0x6e8e40`, `0x6e8e50`, `0x6e8e5b`, `0x6e8e8c`, `0x6e8e99`, `0x6e718f`, `0x6e727f`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x5fa6d0`, `0x60fc50`, `0x611590`, `0x60fb60`
+Addresses: `0x6e8d80`, `0x6e8d90`, `0x6e8d9b`, `0x6e8da6`, `0x6e8dc2`, `0x6e8dd7`, `0x6e8de4`, `0x6e8dee`, `0x6e8df5`, `0x6e8e01`, `0x6e8e0d`, `0x6e8e14`, `0x6e8e1d`, `0x6e8e2c`, `0xceac30`, `0x6e8e40`, `0x6e8e50`, `0x6e8e5b`, `0x6e8e8c`, `0x6e8e99`, `0x6e718f`, `0x6e727f`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x5fa6d0`, `0x60fc50`, `0x611590`, `0x60fb60`
 Confidence: verified
 Proof: one
 Test: none
@@ -294,6 +294,32 @@ Test: none
 `0x6e8e50`, `0x6e8e5b`). `0x6e8dc2` looks the GUID up as a type 8 object. `0x6e8df5` calls
 `0x5fa6d0`, which compares the unit's GUID with the active player's; `0x6e8e01` to `0x6e8e0b` test
 the reason. Each ends `mov eax,1; ret 8`. A short packet leaves the read's local unwritten.
+
+## What the failure handler signals
+
+The ammo leg of `SMSG_SPELL_FAILURE` sends CMSG_CANCEL_AUTO_REPEAT_SPELL and fires `CURRENT_SPELL_CAST_CHANGED` then `STOP_AUTOREPEAT_SPELL`. For the active player the precast clear can also close a loot window: it fires `LOOT_CLOSED`, sends CMSG_LOOT_RELEASE and, by what is open, `ITEM_LOCK_CHANGED`, `PLAYER_TARGET_CHANGED`, a chat line or a loot-open event.
+
+Addresses: `0x6ea080`, `0x6ea086`, `0x6ea0c6`, `0x6ea140`, `0x6ea160`, `0x6ea170`, `0x6e4b4e`, `0x4b3250`, `0x4b3255`, `0x60d040`, `0x60f530`, `0x60f53d`, `0x60fb60`, `0x60fb76`, `0x60fc72`, `0x6e8e1d`, `0x60d083`, `0x60d0c3`, `0x860adc`, `0x6204aa`, `0xceac30`
+Confidence: verified
+Proof: one
+Test: none
+
+With an auto-repeat spell set (`0xceac30`, `0x6ea086`), `0x6ea080` sends CMSG_CANCEL_AUTO_REPEAT_SPELL (`0x6ea0c6`, opcode 0x26d). When that spell is also the current cast (`0x6ea154`), `0x6ea160` calls `0x6e4ad0(0, 0)`, which restores the previous current spell and jumps to `0x4b3250` (`0x6e4b4e`): `ACTIONBAR_UPDATE_STATE`, then `CURRENT_SPELL_CAST_CHANGED` (`0x4b3255`). `STOP_AUTOREPEAT_SPELL` (event 436, `0x6ea170`) follows.
+
+`0x60fb60` fires `AUTOFOLLOW_END` only in mode 3 (`0x60fb76`). Its calls here run in mode 0 or 1: `0x6e8e1d`, `0x60d083`, `0x60d0c3`, the mask 1 at `0x860adc` that `0x60fc50` tests, and `0x60f530`, which calls `0x60f8f0` at `0x60f53d` for mode 0 (reached from `0x60fc72` and `0x6ea140`). The effect stop `0x614150` runs `0x6203e0`, which can refresh the unit's animation through `0x5fd9e0` (`0x6204aa`); that refresh's callees are not read for signals.
+
+## A failure closes the loot window
+
+For the active player, the precast clear of `SMSG_SPELL_FAILURE` closes an open loot window: it fires `LOOT_CLOSED` and sends CMSG_LOOT_RELEASE, or while moving does nothing for a corpse's loot or an item.
+
+Addresses: `0x60d040`, `0x60d049`, `0x60d0fd`, `0x60d10b`, `0x48f200`, `0x48f24a`, `0x48f25a`, `0x48f264`, `0x48f2b5`, `0x48f2bd`, `0x48f311`, `0x48f33d`, `0x48f369`, `0x4c1d36`, `0x4c1d9b`, `0x4c1fa0`, `0x4c2170`, `0x4c21d4`, `0x4c2240`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60d040` reaches `0x48f200` for the active player when the spell is the unit's precast spell (`0x60d049`, `0x60d10b`), with the moving flag `[unit+0x118]+0x40 & 0x200f` (`0x60d0fd`) in `dl` and 0 pushed. With no loot source held (`0xb71b48`) it returns. Otherwise, in order:
+- A type 4 loot window with contents (`0x48f24a`, `0x4c2a70`): while moving nothing happens (`0x48f25a`); else it auto-loots through `0x4c1fa0` (`0x48f264`) and returns. That can show a chat line (`0x4c2170`), fire `LOOT_BIND_CONFIRM` (`0x4c21d4`) and, with rows left, `LOOT_OPENED` (`0x4c2240`).
+- Any other window: an item source while moving returns (`0x48f2b5`); an item source otherwise is unlocked, `ITEM_LOCK_CHANGED` (`0x48f2bd`). CMSG_LOOT_RELEASE (0x15f) is sent (`0x48f311`). `0x4c1cb0` (`0x48f33d`) unlocks an item source again (`0x4c1d36`), clears the guid and fires `LOOT_CLOSED` (`0x4c1d9b` loads 0x10d, the call is `0x4c1dac`). A dead unit source then goes through `0x493910` (`0x48f369`): `PLAYER_TARGET_CHANGED` and CMSG_SET_SELECTION when it is the target.
 
 ## Pet cast failure packet
 
