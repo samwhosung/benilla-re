@@ -308,38 +308,30 @@ light pointer of a game object, unit, missile, effect or the zone record. A def'
 
 ## Unit light node lifecycle
 
-A unit's or player's model is lit through its light node from its first drawn frame; the node's
-sun factor `+0xa4` ramps in. `0x613e10` hands `0x670db0` the model in `ecx`; `0x670db0`
-stores it at `+0x88`, sets `+0xa4` and its target `+0xf8` to 1.0 and installs `0x672a20` with the
-node on a nonzero model. The creating call's node sync relights it: target 2.5 lit, 0.5 shadowed.
-Each unit tick with its model loaded steps `+0xa4` toward the target by 3.3333333 ×
-`0xc62510`, the frame time the previous frame stored, before the draw. A lit unit's first loaded
-frame commits the sun × min(2.5, 1.0 + 3.3333333·dt), and ×2.5 once the steps sum to 1.5. The
-callback on a unit's model:
+`0x613e10` creates a unit's or player's node through `0x670db0`, which sets the intensity `+0xa4`
+and its target `+0xf8` to 1.0 and the position `+0x24` to 1.0e7. The same call's sync moves the
+node off 1.0e7 and so recomputes the target (Entity environment): 1.0 as an interior, else 2.5, or
+0.5 in the chunk's shadow, unsampled on a map object. Each unit tick with its model loaded, before
+the draw, steps `+0xa4` toward the target by 3.3333333 × `0xc62510`, the previous frame's time, and
+stops at it; step and sum stay in the 53-bit register, the store rounds to f32 and the clamp
+compares the register. From 1.0 toward 2.5 the first loaded tick gives min(2.5, 1.0 +
+3.3333333·dt).
 
-| event | callback |
-|---|---|
-| create or reactivate (`0x613e10`) with a model | installed (`0x670fda`) |
-| body set without an override model (`0x613cf0`), override set or cleared (`0x613d80`), with a node | old model cleared (`0x671704`), new installed (`0x671726`) |
-| each frame in the entity draw list | installed again (`0x683e74`) |
-| node destroyed | cleared (`0x69d78c`, `0x69f13a`) |
-| mounted | body cleared; it draws with the mount's record (`0x7192c4`) |
-
-Addresses: `0x613e10`, `0x613eb1`, `0x613ec0`, `0x613e4d`, `0x613ecb`, `0x613ed2`, `0x613ee1`, `0x600320`, `0x707350`, `0x670db0`, `0x670dbe`, `0x670e18`, `0x670e75`, `0x670e7b`, `0x670fd2`, `0x670fda`, `0x70dd70`, `0x70e0be`, `0x7192b0`, `0x719313`, `0x7192c4`, `0x672a20`, `0x672a2a`, `0x6716f0`, `0x671704`, `0x671726`, `0x613cf0`, `0x613d44`, `0x613d80`, `0x683dd0`, `0x683e74`, `0x69d78c`, `0x69f13a`, `0x6717d0`, `0x671a73`, `0x6a92ae`, `0x6a7316`, `0x69e4b3`, `0x482d70`, `0x482ea0`, `0x48322f`, `0x48323f`, `0x483460`, `0x48361d`, `0x48368a`, `0x60a7f0`, `0x60a843`, `0x60a92b`, `0x60a97f`, `0x671a90`, `0x69e770`, `0x607a78`, `0x607acb`, `0x607b28`, `0xc62510`, `0x810808`
+Addresses: `0x613e10`, `0x613ee1`, `0x670db0`, `0x670dfd`, `0x670e75`, `0x670e7b`, `0x614092`, `0x6717d0`, `0x67183f`, `0x671a73`, `0x69e280`, `0x69e365`, `0x69e36b`, `0x69e483`, `0x69e496`, `0x69e4ad`, `0x810a64`, `0x810a68`, `0x482d70`, `0x482e6e`, `0x482e75`, `0x48322f`, `0x48323f`, `0x66fd0b`, `0x60a843`, `0x60a92b`, `0x60a97f`, `0x671a90`, `0x69e770`, `0x69e880`, `0x69e894`, `0x69e8ba`, `0x69e8c0`, `0x69e8db`, `0x69e8ef`, `0xc62510`, `0x810808`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `terrain::create_entity_node_difftest`, `terrain::intensity_ramp_difftest`
 
-`0x613eb1` to `0x613ec0` load `ecx` with `+0xdc`, else `+0xd8`, which `0x613e4d` fills; the path
-`0x600320` falls back to `Spells\ErrorCube.mdx`, so `ecx` is 0 only when `0x707350` fails. The zero
-at `0x613ecb` is the callback argument, stored at `+0xb8`. `0x670dbe` keeps `ecx` and `0x670e18` stores it;
-`0x670fd2` skips the install for 0. `0x613e4d` runs before the node exists, so `0x6716f0` waits for a
-later model (`0x613d44`). A new instance's callback is 0 (`0x70e0be`), and `0x719313` calls none;
-`0x672a20`'s null arm tests the argument (`0x672a2a`), and all seven installers push a node they
-dereference, so it does not run. `0x613ee1` moves the node from 1.0e7, which relights it
-(`0x671a73`): the terrain arm sets `+0xc` bit 4 (`0x6a92ae`), the sun gate at `0x6a7316`, and
-`0x69e4b3` stores 2.5. `0x482d70` runs `0x482ea0`, ticking at `0x48322f` before the frame time is
-stored (`0x48323f`), then `0x483460`: entities `0x48361d`, lighting `0x48368a`. The tick ramps at
-`0x60a97f` (`0x671a90`) behind `0x60a843` (loaded) and `0x60a92b` (node). The mount is created with
-flags 0 (`0x607a78`) and is the body's parent (`0x607b28`). `create_entity_node_difftest` runs
-`0x670db0` whole; `intensity_ramp_difftest` runs `0x69e880` to `0x69e906`.
+`0x670dfd` onward store 1.0e7 (`0x4b189680`) at `+0x24` to `+0x2c` and `+0xa8` to `+0xb0`;
+`0x670e75` and `0x670e7b` store `0x3f800000`. `0x613ee1` reaches `0x6717d0` (`0x614092`), whose
+squared move against 0.001 sets the moved flag (`0x67183f`, NaN moves), and moved, `0x671a73`
+calls `0x69e280`. There `0x69e365` takes 1.0 for `+0xc` bit 0x2 (`0x69e36b`); `0x69e483` skips
+the shadow sample for `+0xd` bit 1; `0x69e496` stores `[0x810a64]` = 0.5 and `0x69e4ad`
+`[0x810a68]` = 2.5, both in .rdata. `0x482d70` runs `0x482ea0` (`0x482e6e`), which ticks at
+`0x48322f` and then stores the frame time (`0x48323f`; `0x66fd0b` is the one writer of
+`0xc62510`), then the draw `0x483460` (`0x482e75`). The tick ramps at `0x60a97f` through
+`0x671a90` behind `0x60a843` (loaded) and `0x60a92b` (node). `0x69e880` loads 0x40555555;
+`0x69e894` is `d8 a6`, FSUB, `+0xa4` − `+0xf8`; below, the sum is stored by `fst` at `0x69e8ba`
+and `0x69e8c0` compares the register; above or NaN, `0x69e8db` is `d8 ae`, FSUBR, `+0xa4` − step,
+clamped at `0x69e8ef`. `create_entity_node_difftest` runs `0x670db0` whole with `0x6a0930`
+stubbed; `intensity_ramp_difftest` runs `0x69e880` to `0x69e906`.

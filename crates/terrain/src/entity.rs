@@ -272,22 +272,69 @@ pub struct EntityNodeArgs {
     pub flags: u32,
 }
 
-/// What `0x670db0` leaves in the node `AllocMapEntity` (`0x6a0930`) hands it. Besides these it
-/// stores [`NODE_FAR`] in `+0x24`, `+0x28`, `+0x2c`, `+0xa8`, `+0xac` and `+0xb0`, 1.0 in the
-/// intensity `+0xa4` and its target `+0xf8`, 0 in the word `+0xc` and 0 in `+0xd8`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+/// Everything `0x670db0` leaves in the node `AllocMapEntity` (`0x6a0930`) hands it; the node's
+/// other bytes keep their old values.
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct EntityNodeInit {
     /// `ecx` to `0x6a0930`: bit 3 of the flags.
     pub pool_arg: u32,
     /// `+0x8`: the node's word with 0x8000 set.
     pub type_word: u32,
+    /// `+0xc`: the light word, cleared (`0x670e4b`).
+    pub light_flags: u16,
+    /// `+0x24`: the position, [`NODE_FAR`] on each axis.
+    pub position: [f32; 3],
+    /// `+0x88`: the model from `ecx`.
+    pub model: u32,
     /// `+0x90`: [`entity_node_state`].
     pub state: u32,
     /// `+0x9c` and `+0xf4`: the light block's ambient packed by [`clamp01_to_color`].
     pub ambient: u32,
+    /// `+0xa4`: the intensity, 1.0 (`0x670e75`).
+    pub intensity: f32,
+    /// `+0xa8`: the probe point, [`NODE_FAR`] on each axis.
+    pub probe: [f32; 3],
+    /// `+0xb4`: the draw callback from `edx`.
+    pub callback: u32,
+    /// `+0xb8`: the callback's argument.
+    pub callback_arg: u32,
+    /// `+0xc0` and `+0xc4`: the GUID.
+    pub guid: [u32; 2],
+    /// `+0xc8`: the fourth stack argument.
+    pub extra: u32,
+    /// `+0xd8`: cleared (`0x670e45`).
+    pub d8: u32,
+    /// `+0xf8`: the intensity target, 1.0 (`0x670e7b`).
+    pub intensity_target: f32,
     /// Whether the model takes `SetLightingCallback(0x672a20, node)` (`0x7134b0`) and a
     /// reference (`0x710390`): a nonzero model.
     pub registers: bool,
+}
+
+impl EntityNodeInit {
+    /// The node's dwords as (offset, value), every one `0x670db0` stores except the word `+0xc`.
+    pub fn dwords(&self) -> Vec<(usize, u32)> {
+        let mut out = vec![
+            (0x8, self.type_word),
+            (0x88, self.model),
+            (0x90, self.state),
+            (0x9c, self.ambient),
+            (0xa4, self.intensity.to_bits()),
+            (0xb4, self.callback),
+            (0xb8, self.callback_arg),
+            (0xc0, self.guid[0]),
+            (0xc4, self.guid[1]),
+            (0xc8, self.extra),
+            (0xd8, self.d8),
+            (0xf4, self.ambient),
+            (0xf8, self.intensity_target.to_bits()),
+        ];
+        for k in 0..3 {
+            out.push((0x24 + 4 * k, self.position[k].to_bits()));
+            out.push((0xa8 + 4 * k, self.probe[k].to_bits()));
+        }
+        out
+    }
 }
 
 /// `0x670db0` from `0x670e69` to `0x670eb6`: the node's `+0x90` from its old value and the kind
@@ -312,8 +359,19 @@ pub fn create_entity_node(
     EntityNodeInit {
         pool_arg: (args.flags >> 3) & 1,
         type_word: old_type | 0x8000,
+        light_flags: 0,
+        position: [NODE_FAR; 3],
+        model: args.model,
         state: entity_node_state(old_state, args.flags),
         ambient: clamp01_to_color(ambient),
+        intensity: 1.0,
+        probe: [NODE_FAR; 3],
+        callback: args.callback,
+        callback_arg: args.callback_arg,
+        guid: args.guid,
+        extra: args.extra,
+        d8: 0,
+        intensity_target: 1.0,
         registers: args.model != 0,
     }
 }

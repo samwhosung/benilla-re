@@ -15,7 +15,7 @@ use benilla_re_terrain::entity::{
     clamp01_to_color, cmapdoodaddef_ground_down, cmapdoodaddef_ground_up, cmapobj_skyocc_offsets,
     cmapobj_vert_offsets, create_entity_node, def_chunk_window, defvol_classify, defvol_neg_offset,
     doodad_despawn_fade, floordrop_down_probe, floordrop_lerp, floordrop_offset, mddf_create_xform,
-    EntityNodeArgs, MddfRecord, MddfXform, ENTITY_LIGHT_CALLBACK, NODE_FAR,
+    EntityNodeArgs, MddfRecord, MddfXform, ENTITY_LIGHT_CALLBACK,
 };
 use common::{assert_f32, frand, fuzz_f32, fuzz_wide, next, SLICE_ESP};
 use std::cell::Cell;
@@ -893,24 +893,10 @@ fn create_entity_node_difftest() {
         assert_eq!(pool_ecx.get(), ours.pool_arg, "{ctx}: ecx to 0x6a0930");
 
         let mut want = node_old.clone();
-        let mut put = |off: usize, v: u32| want[off..off + 4].copy_from_slice(&v.to_le_bytes());
-        put(0x8, ours.type_word);
-        for off in [0x24, 0x28, 0x2c, 0xa8, 0xac, 0xb0] {
-            put(off, NODE_FAR.to_bits());
+        for (off, v) in ours.dwords() {
+            want[off..off + 4].copy_from_slice(&v.to_le_bytes());
         }
-        put(0x88, ecx);
-        put(0x90, ours.state);
-        put(0x9c, ours.ambient);
-        put(0xf4, ours.ambient);
-        put(0xa4, 1.0f32.to_bits());
-        put(0xf8, 1.0f32.to_bits());
-        put(0xb4, args.callback);
-        put(0xb8, args.callback_arg);
-        put(0xc0, args.guid[0]);
-        put(0xc4, args.guid[1]);
-        put(0xc8, args.extra);
-        put(0xd8, 0);
-        want[0xc..0xe].copy_from_slice(&[0, 0]);
+        want[0xc..0xe].copy_from_slice(&ours.light_flags.to_le_bytes());
         let got = e.read(node, NODE_LEN);
         for (off, (g, w)) in got.iter().zip(&want).enumerate() {
             assert_eq!(
