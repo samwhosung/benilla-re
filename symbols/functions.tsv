@@ -12630,7 +12630,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51bd50	25	OnUnitFieldChanged		ui	primitive		Signals the event numbered offset / 4 for every token of the changed unit	verified	one	ui/unittokens#unit-field-events	
 0x51bd70	25	OnPlayerBlockChangedA		ui	orchestration		Signals event 0xba for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
 0x51bd90	25	OnPlayerBlockChangedB		ui	orchestration		Signals event 0x20a for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
-0x51bdb0	134	RegisterUnitFieldEvents		ui	primitive	void __thiscall (void *this)	Registers the field watcher 0x51bd50 for every named event id below 0xb6	verified	one	ui/paperdoll#portrait-events	
+0x51bdb0	134	UnwatchUnitFields		ui	primitive	void __thiscall (void *this)	Removes the field watcher 0x51bd50 from every named unit field, and the two player watchers 0x51bd70 and 0x51bd90	verified	one	ui/unittokens#unit-field-events	
 0x51be40	5	InitSquare51be50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x51be50, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x51be50	19	InitSquare51be50		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x51be70	5	InitSquare51be80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x51be80, a static initializer	verified	one	ui/initthunks#jump-thunks	

@@ -5,16 +5,16 @@ pane copies the model when it is shown (`ui/playermodel#the-pane-model`) and nev
 event is the only way the doll follows a change while it stays open. This is the portrait list of `PortraitButton.cpp`
 (`0x524cd0` to `0x524f60`) and the code that marks a unit's portrait dirty.
 
-Roots: `0x524cd0`, `0x524e10`, `0x491a50`, `0x51bdb0`
+Roots: `0x524cd0`, `0x524e10`, `0x491a50`, `0x51bbb0`
 
 ## Portrait events
 
 `UNIT_PORTRAIT_UPDATE` (0xb8) and `UNIT_MODEL_CHANGED` (0xb9) are signalled together from one place, the drain of the
 pending-portrait list, once per drained unit, for every unit token that names it. Nothing else in the client signals
-0xb9. The generic field watchers `0x51bdb0` register `0x51bd50` for event ids up to 0xb5 only, so a unit field never
+0xb9. The generic field watching `0x51bbb0` registers `0x51bd50` for event ids up to 0xb5 only (its loop ends at `cmp esi,0xb6`, `0x51bc1d`; the registering call is `0x51bc05`), so a unit field never
 raises either event by itself.
 
-Addresses: `0x524cd0`, `0x524de4`, `0x524de9`, `0x524df1`, `0x515e50`, `0x51bdb0`, `0x51bdb6`, `0x51bde0`, `0x51bd50`, `0x483228`
+Addresses: `0x524cd0`, `0x524de4`, `0x524de9`, `0x524df1`, `0x515e50`, `0x51bbb0`, `0x51bc05`, `0x51bc1d`, `0x51bd50`, `0x483228`
 Confidence: verified
 Proof: one
 Test: none
