@@ -10443,7 +10443,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
-0x4e7fc0	210			ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4e7fc0	210	IsPartyPet		ui	primitive	int __thiscall (uint64_t *this)	Returns 1 when a GUID is the charm or summon of the active player or of a party member, or a party record's pet	verified	one	objectlayer/units#reactions-tokens-and-groups	
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	orchestration	int32_t __thiscall (uint64_t *this)	Returns 1 when a GUID is the active player, a party member or the pet of either, 0 for a zero GUID	verified	one	ui/party#member-or-pet	
 0x4e81a0	43	GetPartyMemberGuid		ui	orchestration		Returns the GUID of party slot 0 to 3, 0 with no object manager or out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4e81d0	116	GetPartyMemberPetGuid		ui	primitive		Returns the pet GUID of a party slot from its member or its record, with no index bound	verified	one	ui/unittokens#indexed-tokens	
