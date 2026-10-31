@@ -181,15 +181,20 @@ A line that names an item not yet in the item cache waits for the cache. `0x628f
 line's arguments in a list of 48-byte entries keyed by item, and when the record arrives the
 callback runs each waiting entry's formatter again, range test included.
 
-Addresses: `0x628f40`, `0x6293a0`, `0x6293f0`, `0x62947c`, `0x6294b0`, `0x6294cc`, `0x6295b0`, `0x629730`, `0x629870`, `0x629a30`, `0x62e580`
+Addresses: `0x628f40`, `0x6293a0`, `0x6293f0`, `0x62947c`, `0x6294b0`, `0x6294cc`, `0x6295b0`, `0x6295f0`, `0x629730`, `0x629870`, `0x629a30`, `0x62e580`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x6293f0` finds a free entry (`[entry] == 0`) or grows the list by 8 through `0x62e580`, which
 reallocates 48-byte `GENERICITEMCACHEDESC` entries keeping the old ones. `0x6293a0`, `0x629730`,
-`0x629870` and `0x629a30` fill an entry with the item and the kind 1 to 4 at `+0x4`; `0x6294b0`
-bounds the kind below 5 at `0x6294cc`, finds the entries `0x6295b0` matches, frees each, and calls
+`0x629870` and `0x629a30` fill the lowest free entry: the kind 1 to 4 at `+0` (`0x6293b4`, `0x62973b`,
+`0x62987b`, `0x629a3e`), the item at `+0x4` (`0x6293b1`, `0x629749`, `0x629889`, `0x629a52`) and the rest at
+`+0x8` and after. `0x6294b0` bounds the kind below 5 at `0x6294cc` and calls `0x6295b0`, which walks the
+list from its back (count `0xc4e20c`, base `0xc4e210`, `0x6295c3` to `0x6295d6`), stops at the first entry
+whose `+0` is the kind and whose `+0x4` is the item (`0x6295d7`, `0x6295db`), zeroes that entry's kind to free it
+(`0x6295f0`) and returns it. Each answer from the cache frees one entry, the matching one of highest index, so the waiting
+lines of one kind and item are written once per answer. `0x6294b0` then calls
 `0x628f40`, `0x629760`, `0x629610` or `0x6298a0` by kind. `0x629a90` frees the list at shutdown.
 
 ## Unreached log code
