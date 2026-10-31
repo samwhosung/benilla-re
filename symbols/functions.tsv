@@ -14526,7 +14526,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x562470	136			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
 0x562500	135			dbcache	primitive		Runs DBCache.cpp code that calls 0x562610, 0x555ee0, SMemFree; not read here	inferred	none		
 0x562590	120			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		
-0x562610	25	DbCacheLinkAddress		dbcache	primitive	void * __thiscall (void *this, uint32_t link)	Returns the node a chain link names: the bucket terminator for 0, else the bucket base plus the link	verified	one	dbcache/callbacks#quest-cache-cancel	dbcache::quest_cancel_difftest
+0x562610	25	DbCacheLinkAddress		dbcache	primitive	void * __thiscall (void *this, void *node)	Returns the node plus the list link offset, or the list terminator for a null node	verified	one	dbcache/callbacks#quest-cache-cancel	dbcache::quest_cancel_difftest
 0x562630	642			dbcache	primitive		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 14 more; not read here	inferred	none		
 0x5628c0	255			dbcache	primitive		Runs DBCache.cpp code that calls 0x562a10; not read here	inferred	none		
 0x5629c0	77			dbcache	primitive		Runs DBCache.cpp code not read here	inferred	none		

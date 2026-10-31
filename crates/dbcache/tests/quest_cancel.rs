@@ -121,6 +121,9 @@ fn quest_cancel_difftest() {
     let (mut cancelled, mut multi, mut emptied, mut ignored) = (0, 0, 0, 0);
     for case in 0..48u32 {
         let mut rig = Rig::new(&wow, 3);
+        // The empty cache: the mask is −1 and the cancel returns at once.
+        rig.cancel(5, 0, 0);
+        assert_eq!(rig.prints.get(), 0, "case {case}: empty cache");
         let keys = [
             0x1000 + next(&mut s) % 0x100,
             0x2000,
