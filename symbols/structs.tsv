@@ -81,6 +81,7 @@ M2SequenceInfo		60		models	Holds what GetSequenceInfo reports of a sequence: fla
 M2Submesh		32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
 M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
 M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
+MapEntity		264	0x810810	terrain	Holds a map light node: the light of a unit, player, game object, missile or effect, and its model	verified	one	terrain/mapentities#light-node-classes
 Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#matrices
 MovementGlobals		312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
 NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	two	net/dispatch#network-thread-handoff

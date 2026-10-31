@@ -305,3 +305,41 @@ def's matrix diagonal at `+0xcc`, `+0xe0`, `+0xf4` and `+0x108`, so `+0xf8` lies
 has two entries, `0x671a73` and `0x69e913`; `0x69e770` has one, the thunk `0x671a90`, called at `0x60a97f` and
 `0x5f8c9a` by the animators `0x482cd0` dispatches by object type. `0x6717d0` has six callers, each loading the
 light pointer of a game object, unit, missile, effect or the zone record. A def's own gate is `0x698c9c` (interior bit).
+
+## Unit light node lifecycle
+
+A unit's or player's model is lit through its light node from its first drawn frame; the node's
+sun factor `+0xa4` ramps in. `0x613e10` hands `0x670db0` the model in `ecx`; `0x670db0`
+stores it at `+0x88`, sets `+0xa4` and its target `+0xf8` to 1.0 and installs `0x672a20` with the
+node on a nonzero model. The creating call's node sync relights it: target 2.5 lit, 0.5 shadowed.
+Each unit tick with its model loaded steps `+0xa4` toward the target by 3.3333333 ×
+`0xc62510`, the frame time the previous frame stored, before the draw. A lit unit's first loaded
+frame commits the sun × min(2.5, 1.0 + 3.3333333·dt), and ×2.5 once the steps sum to 1.5. The
+callback on a unit's model:
+
+| event | callback |
+|---|---|
+| create or reactivate (`0x613e10`) with a model | installed (`0x670fda`) |
+| body set without an override model (`0x613cf0`), override set or cleared (`0x613d80`), with a node | old model cleared (`0x671704`), new installed (`0x671726`) |
+| each frame in the entity draw list | installed again (`0x683e74`) |
+| node destroyed | cleared (`0x69d78c`, `0x69f13a`) |
+| mounted | body cleared; it draws with the mount's record (`0x7192c4`) |
+
+Addresses: `0x613e10`, `0x613eb1`, `0x613ec0`, `0x613e4d`, `0x613ecb`, `0x613ed2`, `0x613ee1`, `0x600320`, `0x707350`, `0x670db0`, `0x670dbe`, `0x670e18`, `0x670e75`, `0x670e7b`, `0x670fd2`, `0x670fda`, `0x70dd70`, `0x70e0be`, `0x7192b0`, `0x719313`, `0x7192c4`, `0x672a20`, `0x672a2a`, `0x6716f0`, `0x671704`, `0x671726`, `0x613cf0`, `0x613d44`, `0x613d80`, `0x683dd0`, `0x683e74`, `0x69d78c`, `0x69f13a`, `0x6717d0`, `0x671a73`, `0x6a92ae`, `0x6a7316`, `0x69e4b3`, `0x482d70`, `0x482ea0`, `0x48322f`, `0x48323f`, `0x483460`, `0x48361d`, `0x48368a`, `0x60a7f0`, `0x60a843`, `0x60a92b`, `0x60a97f`, `0x671a90`, `0x69e770`, `0x607a78`, `0x607acb`, `0x607b28`, `0xc62510`, `0x810808`
+Confidence: verified
+Proof: one
+Test: `terrain::create_entity_node_difftest`, `terrain::intensity_ramp_difftest`
+
+`0x613eb1` to `0x613ec0` load `ecx` with `+0xdc`, else `+0xd8`, which `0x613e4d` fills; the path
+`0x600320` falls back to `Spells\ErrorCube.mdx`, so `ecx` is 0 only when `0x707350` fails. The zero
+at `0x613ecb` is the callback argument, stored at `+0xb8`. `0x670dbe` keeps `ecx` and `0x670e18` stores it;
+`0x670fd2` skips the install for 0. `0x613e4d` runs before the node exists, so `0x6716f0` waits for a
+later model (`0x613d44`). A new instance's callback is 0 (`0x70e0be`), and `0x719313` calls none;
+`0x672a20`'s null arm tests the argument (`0x672a2a`), and all seven installers push a node they
+dereference, so it does not run. `0x613ee1` moves the node from 1.0e7, which relights it
+(`0x671a73`): the terrain arm sets `+0xc` bit 4 (`0x6a92ae`), the sun gate at `0x6a7316`, and
+`0x69e4b3` stores 2.5. `0x482d70` runs `0x482ea0`, ticking at `0x48322f` before the frame time is
+stored (`0x48323f`), then `0x483460`: entities `0x48361d`, lighting `0x48368a`. The tick ramps at
+`0x60a97f` (`0x671a90`) behind `0x60a843` (loaded) and `0x60a92b` (node). The mount is created with
+flags 0 (`0x607a78`) and is the body's parent (`0x607b28`). `create_entity_node_difftest` runs
+`0x670db0` whole; `intensity_ramp_difftest` runs `0x69e880` to `0x69e906`.

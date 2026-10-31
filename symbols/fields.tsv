@@ -1126,6 +1126,13 @@ M2View	0x001c	4	M2Submesh *	m_submeshes	models	Holds the submeshes	verified	one	
 M2View	0x0020	4	uint32_t	m_unitCount	models	Holds the number of texture units	verified	one	models/records#view-record
 M2View	0x0024	4	M2TextureUnit *	m_units	models	Holds the texture units	verified	one	models/records#view-record
 M2View	0x0028	4	uint32_t	m_paletteBones	models	Holds the bones the view palette needs	verified	one	models/records#view-record
+MapEntity	0x000c	2	uint16_t	m_attachFlags	terrain	Holds the attach word: 1 gather map object lights, 2 lit as an interior, 4 lit by the sun	verified	one	terrain/mapentities#entity-environment
+MapEntity	0x0024	12	float[3]	m_position	terrain	Holds the node position, 1.0e7 on each axis from the creator until the first sync	verified	one	terrain/mapentities#unit-light-node-lifecycle
+MapEntity	0x0088	4	CM2Model *	m_model	terrain	Holds the model the node lights, with a reference	verified	one	terrain/mapentities#unit-light-node-lifecycle
+MapEntity	0x00a4	4	float	m_intensity	terrain	Holds the factor 0x6a7300 scales the sun by, 1.0 from the creator	verified	one	terrain/mapentities#unit-light-node-lifecycle
+MapEntity	0x00b4	4	void *	m_drawCallback	terrain	Holds the callback the entity draw calls each frame	verified	one	objectlayer/createpose#create-order
+MapEntity	0x00b8	4	void *	m_drawCallbackArg	terrain	Holds the draw callback's argument	verified	one	terrain/mapentities#unit-light-node-lifecycle
+MapEntity	0x00f8	4	float	m_intensityTarget	terrain	Holds the intensity target: 2.5 lit, 0.5 shadowed, 1.0 as an interior or from the creator	verified	one	terrain/mapentities#unit-light-node-lifecycle
 Matrix2x2	0x0000	8	float[2]	m_row0	cmath	Holds row 0	verified	one	cmath/types#matrices
 Matrix2x2	0x0008	8	float[2]	m_row1	cmath	Holds row 1	verified	one	cmath/types#matrices
 MovementGlobals	0x0000	260	char[260]	m_logPath	collision	Holds the movement log path copied by 0x616860	verified	one	collision/mover#initialisation-and-teardown

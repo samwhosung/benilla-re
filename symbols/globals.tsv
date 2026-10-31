@@ -1018,7 +1018,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8107a4	float	s_traceCellsPerYard		terrain	Holds 0.24 (0x3e75c28f), cells per yard, for the segment trace	verified	one	terrain/trace#terrain-walk
 0x8107a8	const float	s_infinity12		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810804	float	s_entityAmbientRate		terrain	Holds 2.0, the rate an entity's ambient word moves per second	inferred	none	
-0x810808	float	s_entityShadeRate		terrain	Holds 3.3333333, the rate an entity's shade moves per second	inferred	none	
+0x810808	float	s_entityShadeRate		terrain	Holds 3.3333333, the rate 0x69e770 steps an entity's intensity by, times the frame time	verified	one	terrain/mapentities#unit-light-node-lifecycle
 0x810810	void *	s_mapEntityVtable		terrain	Holds the map entity's virtual functions	verified	one	terrain/overview#map-pools
 0x810824	void *[6]	s_mapDefBaseVtable		terrain	Holds the base table of the map entity and doodad def, its fifth slot a runtime stub	verified	one	terrain/overview#map-pools
 0x810840	const float	s_infinity13		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
