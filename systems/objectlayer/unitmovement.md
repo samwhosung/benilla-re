@@ -289,8 +289,8 @@ adds its argument to each.
 `0x600cd0` picks the goal the display facing `+0xc98` turns to. The active mover takes its own raw
 facing `+0x9c4` at once. Any other unit takes the first of these that holds: the raw facing when it
 moves (movement flags 0xf), has a stand state, holds an emote state whose `Emotes` row lacks flag
-0x2000, is stunned (0x40000) or is a player-controlled player; the scripted facing `+0xcac` when
-`+0xc58` has bit 0x1; the bearing to its target; the bearing to the active player's target
+0x2000, or is stunned (0x40000); the scripted facing `+0xcac` when `+0xc58` has bit 0x1; the raw facing
+when the unit is a player-controlled player (unit flag 0x8 and the player type); the bearing to its target; the bearing to the active player's target
 when it is that player; the bearing to the active player when the unit is the interaction target;
 else the raw facing.
 
@@ -302,8 +302,8 @@ Test: none
 `0x600cee` and `0x600cf5` compare the unit's GUID with the active mover and `0x600d03` stores the
 raw facing in `+0xc98`. `0x600d6c` to `0x600d9d` read `UNIT_NPC_EMOTESTATE` (`+0x238`) and the
 row's flags `+0xc` into `bl`. `0x600da5` tests the movement flags, `0x600db5` calls the stand-state
-slot, `0x600dd7` the stunned flag, `0x600de2` and `0x600deb` the scripted facing, `0x600df6` the
-player-controlled flag and player type. `0x600e0e` reads `UNIT_FIELD_TARGET` (`+0x28`), `0x600e1c`
+slot, `0x600dd7` the stunned flag, `0x600de2` and `0x600deb` the scripted facing, `0x600df6` to `0x600e08` the
+player-controlled flag and player type, after the scripted facing. `0x600e0e` reads `UNIT_FIELD_TARGET` (`+0x28`), `0x600e1c`
 the active player's target `0x6126f0` (`+0x1d28`, 0 for any other unit) and `0x600e2a` the interaction
 GUID `0xb4e2d0`, with the player from `0x600e3f`. The bearing is `HeadingBetweenPoints` of the two
 positions (`0x600e9e`). A gap under 0.01 (`0x600eb0`) snaps; otherwise the turn averages the samples.
