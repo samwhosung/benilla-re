@@ -179,19 +179,22 @@ the running listener is the last. A signal raised inside a listener runs to its 
 `event`, `this` and arguments are restored after it. An error ends only its own listener: the error
 handler runs and the walk goes on.
 
-Addresses: `0x703ee8`, `0x703eeb`, `0x703efb`, `0x703f00`, `0x702318`, `0x70559d`, `0x7055a3`, `0x646430`, `0x645790`, `0x645eb0`, `0x645777`, `0x645fc5`, `0x645fda`, `0x6460c0`, `0x646170`, `0x704e79`, `0x704e80`, `0x704e8e`, `0x705199`
+Addresses: `0x703ee8`, `0x703eeb`, `0x703efb`, `0x703f00`, `0x702318`, `0x70559d`, `0x7055a3`, `0x646430`, `0x645790`, `0x645eb0`, `0x6456c4`, `0x645fc5`, `0x645fda`, `0x703eee`, `0x703ef1`, `0x6460c0`, `0x704e79`, `0x704e80`, `0x704e8e`, `0x705199`
 Confidence: verified
-Proof: two
+Proof: one
 Test: none
 
 `0x703ee8` loads `[node+0x4]` into `edi` before the call and `0x703f00` continues from it; the head
 node's successor is the tagged end, so a node linked after it is not seen. `0x702318` frees with
-no deferral, through `0x646430` and `0x645790` into `0x645eb0`. A node is a 12-byte block behind an
-8-byte header (`0x645777` answers block + 8). `0x645eb0` stores that header (`0x645fc5`, `0x645fda`),
+no deferral, through `0x646430` and `0x645790` into `0x645eb0`. A node is 12 bytes in a zero-filled 32-byte class-5 block behind an
+8-byte header (flag 8 at `0x7052d9`; `0x6456c4` answers block + 8). `0x645eb0` stores that header (`0x645fc5`, `0x645fda`),
 not the node, and the allocator's own free array; the unlink had zeroed `[node]` and `[node+4]` (`0x70559d`,
 `0x7055a3`), so the walk reads next 0 (`0x703ee8`), runs the object's handler (`0x703eeb` to
-`0x703efb`) and ends. That holds while the block stays committed and unreused: a free that coalesces to a block of 4096 bytes
-or more releases its pages (`0x6460c0`, `0x646170`). After `lua_pcall` (`0x704e79`, `0x705199`) a nonzero result pops the message
+`0x703efb`) and ends. That holds only while the node's block is untouched: the walk reads the node after
+the running listener returns, so an allocation by that listener that takes the block (or a free block
+containing it), or a join of class-12-or-larger halves whose upper half starts on the node's page, after which the walk's read
+faults, changes what the walk reads (`storm/heap#what-a-free-leaves`). A listener whose `OnEvent` slot at
+`[frame+0xc]` holds nothing is skipped (`0x703eee`, `0x703ef1`). After `lua_pcall` (`0x704e79`, `0x705199`) a nonzero result pops the message
 (`0x704e80`) and `0x704e8e` pops the handler; both runners return normally.
 
 ## Handler arguments

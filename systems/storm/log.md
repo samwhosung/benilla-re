@@ -56,3 +56,25 @@ stamp (`0x65a8dd`), 0 writes as many spaces (`0x65a8f4`). `OutputIndent` (`0x65a
 (`0x65a7bd`). `0x65ac73` calls `_vsprintf` at `+0x124 + position`, `0x65ac89` adds its `SStrLen`, and `OutputReturn`
 (`0x65a810`) copies `"\r\n"` and its NUL from `0x82edfc`. `0x65aca0` tests option 5 and `0x65acb2` calls
 `OutputDebugStringA`; `0x65acbe` compares with `0xc000` and `0x65accd` calls `FlushLog` (`0x659f10`).
+
+## Closing a log
+
+`SLogClose(id)` (`0x659ec0`) does nothing until Storm's locks exist (`s_stormLocksReady`, `0xc5a170`). It finds the
+record with `LockLog` (`0x659f70`, create 0), which on a hit returns it with its bucket's lock held. A record with an
+open file first runs `FlushLog` (`0x659f10`): buffered bytes go out with `WriteFile`, then `FlushFileBuffers`, and the
+buffer empties. The file is then closed with `CloseHandle`. `0x65a060` unlinks the record from its bucket chain,
+releases its 0x10124 bytes with `VirtualFree` and leaves the lock. The caller's own id word is not zeroed; the chat
+teardown zeroes its words itself.
+
+Addresses: `0x659ec0`, `0x659ec3`, `0x659ed5`, `0x659ede`, `0x659ee0`, `0x659eeb`, `0x659ef7`, `0x659efd`, `0x659f02`, `0x659f10`, `0x659f36`, `0x659f43`, `0x659f70`, `0x65a060`, `0x65a0a2`, `0x65a0b3`, `0x65aa20`, `0xc5a170`, `0x498700`, `0x49871b`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x659ec3` loads the flag and skips on 0. `0x659ed5` calls `LockLog` with `edx` the address of the argument, which `LockLog`
+overwrites with the bucket index `id & 3` (`0x659faa`), so `0x659efd` passes the bucket to `0x65a060`. A null result skips
+(`0x659ede`); `0x659ee0 cmp [esi+0x10c],-1` gates the flush and `CloseHandle` (`0x659ef7`). `FlushLog` calls
+`WriteFile(handle, record + 0x124, length, &written, 0)` (`0x659f36`) and `FlushFileBuffers` (`0x659f43`), then zeroes
+`+0x114` and `+0x118`. `0x65a060` walks the chain `0xc5a158 + 4·bucket` for the record, stores its link over the
+previous slot, calls `VirtualFree(record, 0, 0x8000)` (`0x65a0a2`) and `LeaveCriticalSection` (`0x65a0b3`). `0x49871b` calls
+`SLogClose` for each chat log word and `0x498720` zeroes it.

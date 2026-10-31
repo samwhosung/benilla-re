@@ -4250,6 +4250,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc53fbc	uint32_t *	s_cryptTable		storm	Holds the crypt table, 0x500 dwords built at first use	verified	two	storm/format#name-hash
 0xc53fe0	void *	s_archiveList		storm	Holds the head of the open archive list, in descending priority	verified	two	storm/mount#archive-list
 0xc5a100	char[64]	s_logStamp		storm	Holds the last log time stamp OutputTime formatted, shared by every log	verified	one	storm/log#writing-a-log-line
+0xc5a170	uint32_t	s_stormLocksReady		storm	Holds 1 once InitStormLocks has made Storm's critical sections, 0 before it and after the shutdown	verified	one	storm/log#closing-a-log
 0xc5a174	uint32_t	s_logStampTick		storm	Holds the GetTickCount value of the last log time stamp	verified	one	storm/log#writing-a-log-line
 0xc5a334	void *	s_zipEntryTable		storm	Holds the zip entry table, a Storm hash table of every open zip's entries whose vtable pointer starts it	verified	one	storm/files#zip-archive-listing
 0xc5a338	uint32_t	s_zipEntryListLinkOffset		storm	Holds the link offset of the zip entry list, 0xc after start-up	verified	two	storm/files#zip-archive-listing
