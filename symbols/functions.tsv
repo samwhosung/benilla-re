@@ -7934,8 +7934,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action bar flags, retests the reactive spells raising SPELL_ACTIVE, then signals SPELL_UPDATE_USABLE	verified	one	ui/reactivespells#usable-refresh	
 0x4b3250	15	SignalCurrentSpellCastChanged		ui	orchestration		Fires ACTIONBAR_UPDATE_STATE through 0x4e5bf0, then CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	verified	one	ui/spellbook#picking-up-a-book-spell	
-0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b32f0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
+0x4b32e0	10	PlaySpellBookDropSound		ui	orchestration	void __cdecl (void)	Plays the interface sound igSpellBookSpellIconDrop	verified	one	ui/spellbook#picking-up-a-book-spell	
+0x4b32f0	10	PlaySpellBookPickupSound		ui	orchestration	void __cdecl (void)	Plays the interface sound igSpellBookSpellIconPickup	verified	one	ui/spellbook#picking-up-a-book-spell	
 0x4b3300	764	CastBookSpell		ui	primitive	void __fastcall (uint32_t index, bool pet, uint64_t target)	Casts a book spell, toggles it off, stops targeting for it or swaps the held spell	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b3600	235	IsBookSpellCurrent		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's trade skill or form is the current one	verified	one	ui/spellbook#checked-spells	
 0x4b36f0	373	BookSpellAuraActive		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's active icon is nonzero and its aura is on the player or pet	verified	one	ui/spellbook#casting-a-book-spell	
@@ -8111,9 +8111,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b6000	12	InitListHead4b5f80Register		ui	orchestration	void __cdecl (void)	Registers 0x4b6010 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4b6010	10	InitListHead4b5f80Exit		ui	orchestration	void __cdecl (void)	Runs 0x419e30 (CStatus::~CStatus) on a global object	verified	one	ui/initexits#exit-calls	
 0x4b6020	43	DeletingDestructor4b6020		ui	orchestration		Destroys the object through 0x419e30 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x4b6050	85			ui	orchestration		Runs UIBindings.cpp code that calls SMemAlloc, 0x4b6c50, ConsoleCommandRegister; not read here	inferred	none		
+0x4b6050	85	BindingsCreate		ui	orchestration	void __cdecl (void)	Allocates and builds the binding object, stores it in s_bindings and registers the bind command	verified	one	ui/keybindings#the-binding-object	
 0x4b60b0	76			ui	orchestration	uint32_t __fastcall (const char *name, const char *args)	Runs UIBindings.cpp code that calls SStrTokenize, 0x4b7490; not read here	inferred	none		
-0x4b6100	55			ui	orchestration		Runs UIBindings.cpp code that calls 0x63fb40, 0x4b6d90, SMemFree; not read here	inferred	none		
+0x4b6100	55	BindingsDestroy		ui	orchestration	void __cdecl (void)	Unregisters the bind command, destroys and frees the binding object and zeroes s_bindings	verified	one	ui/keybindings#the-binding-object	
 0x4b6140	246	ParseBindingSet		ui	primitive		Empties a binding set and fills it from binding file text	verified	one	ui/keybindings#binding-files	
 0x4b6240	107	ReadBindingCache		ui	primitive		Reads a binding cache file into a stack buffer and parses it into the set of its kind	verified	one	ui/keybindings#binding-files	
 0x4b62b0	89	LoadBindingFiles		ui	orchestration		Loads the default binding file into set 0 and registers the reader 0x4b6240 for the two cache kinds	verified	one	ui/keybindings#binding-files	
@@ -8252,9 +8252,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bad30	91	OnRaidMemberNameRemoved		ui	orchestration		Shows ERR_RAID_MEMBER_REMOVED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
 0x4bad90	38	OnRaidRosterName		ui	primitive	void __cdecl (void)	Lowers the pending roster name count and at 0 signals RAID_ROSTER_UPDATE, then PARTY_MEMBERS_CHANGED	verified	one	ui/raid#pending-roster-names	ui::raid_pending_names_difftest
 0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
-0x4bae90	65			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
+0x4bae90	65	FindRaidSelectionRow		ui	primitive	int32_t __cdecl (void)	Returns the 0-based roster index of the selected member's GUID, or -1	verified	one	ui/groupverbs#selected-roster-row	
 0x4baee0	72	IsRaidMember		ui	primitive	int32_t __thiscall (void *this)	Returns 1 when a GUID is on the raid roster, 0 for a zero GUID	verified	one	ui/raid#group-leader-and-membership	
-0x4baf30	151			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4baf30	151	IsRaidMemberPet		ui	primitive	int32_t __thiscall (const uint64_t *this)	Returns 1 when a GUID is the pet of a roster member, else 0	verified	one	ui/groupverbs#pet-of-a-roster-member	
 0x4bafd0	164	CGRaidInfo::IsMemberOrPet	idb	ui	primitive		Answers 1 when a GUID is a raid member or the pet of one, 0 for a null GUID or no match	verified	one	ui/raid#setting-a-raid-target	
 0x4bb080	106	IsRaidLeaderOrAssistant		ui	primitive		Returns whether a GUID is a raid member of rank above 0 or the group leader	verified	one	ui/chatsend#group-and-channel-checks	
 0x4bb0f0	60	GetRaidMemberByGuid		ui	orchestration	void * __thiscall (uint64_t *this)	Returns the member block of the first of all 40 raid rows holding a GUID, past the count too, or 0	verified	one	ui/raid#rows-past-the-count	
@@ -10439,7 +10439,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7c30	63	InitZero4e7c00Exit		ui	primitive	void __cdecl (void)	Releases the storage behind what 0x4e7c00 set up, through SMemFree, at most once	verified	one	ui/initexits#exit-releases	
 0x4e7c70	494	CGPartyInfo::InitializeGame	idb	ui	primitive		Clears party and looking-for-group state, groups LfgDungeons ids by type and registers opcodes 0x1ff, 0x329, 0x2cb	verified	one	ui/lfg#the-type-lists	
 0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows INSTANCE_SAVED, its debug wrapper, or an unwritten buffer, by flag	verified	one	ui/instances#the-save-notice	
-0x4e7f00	10			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e89c0; not read here	inferred	none		
+0x4e7f00	10	RecountLfgLists		ui	orchestration	void __cdecl (void)	Recounts the five looking-for-group type lists, then rebuilds the quest list, signalling UPDATE_LFG_TYPES after each	verified	one	ui/lfg#world-entry-recount	
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
@@ -12565,7 +12565,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516f60	82	Script::GetBlockChance	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the block chance of the player	verified	one	ui/unitverbs#player-numbers	
 0x516fc0	82	Script::GetParryChance	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the parry chance of the player	verified	one	ui/unitverbs#player-numbers	
 0x517020	618	Script::UnitName	idb	ui	primitive	int __fastcall (lua_State *L)	Pushes a unit's name and realm; for the string player it pushes the selected character's name and nil	verified	one	ui/unitplayer#the-four-readers	
-0x517290	21			ui	orchestration		Runs ScriptEvents.cpp code that calls 0x491a00; not read here	inferred	none		
+0x517290	21	UnitNameFoundCallback		ui	orchestration	void __fastcall (uint32_t key, const uint64_t *guid, uint32_t data, uint8_t found)	Signals UNIT_NAME_UPDATE for the tokens of a GUID when its name arrived	verified	one	objectlayer/unitnames#unitnames-name-callback	
 0x5172b0	157	Script::UnitPVPName	idb	ui	primitive	int __fastcall (lua_State *L)	Returns a unit's name with its honor title, or nil for a missing object	verified	one	ui/honor#pvp-name	
 0x517350	181	Script::UnitXP	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the experience of the active player	verified	one	ui/unitverbs#player-numbers	
 0x517410	181	Script::UnitXPMax	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the experience the active player needs for the next level	verified	one	ui/unitverbs#player-numbers	
@@ -13177,7 +13177,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5293e0	89	GameTooltipIsTypeName		ui	orchestration	bool __thiscall (void *this, const char *name)	Answers whether a name is GameTooltip or one of its bases, ignoring case	verified	two	ui/widgettype#type-chains	
 0x529440	6	GameTooltipGetTypeName		ui	orchestration	const char * __thiscall (void *this)	Returns the type name GameTooltip	verified	two	ui/widgettype#type-chains	
 0x529450	43	DeletingDestructor529450		ui	orchestration		Destroys the object through 0x529480 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x529480	215			ui	primitive		Runs its object file code that calls 0x467d00, ClntObjMgrClearObjectMirrorHandler and 2 more; not read here	inferred	none		
+0x529480	215	CGTooltip::~CGTooltip		ui	orchestration	void __thiscall (CGTooltip *this)	Removes the health bar's watcher, releases the script slots and line arrays and ends in the frame destructor	verified	one	ui/tooltip#destroying-a-tooltip	
 0x529560	98	CGTooltip::OnUnitHealthChanged		ui	orchestration	uint32_t __stdcall (uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *statusBar)	Sets the tooltip health bar's range and value from the unit and returns 1	verified	one	ui/tooltipunit#the-health-bar	
 0x5295d0	124	CGTooltip::GetScriptSlot		ui	orchestration	uint32_t * __thiscall (CGTooltip *this, const char *name)	Returns the address of the tooltip script slot of a name, else the frame's own lookup	verified	one	ui/tooltipobject#the-script-slots	
 0x529650	737	CGTooltip::PostLoadXML		ui	orchestration	void __thiscall (CGTooltip *this, XMLNode *node, uint32_t flags)	Ends the frame load, then finds the template's left and right texts, three textures and status bar by name	verified	one	ui/tooltip#loading-the-template	

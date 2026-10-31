@@ -11,7 +11,7 @@ Roots: `0x4ba0b0`, `0x4ba140`, `0x4ba220`, `0x4ba360`, `0x4ba5f0`, `0x4bb1d0`, `
 
 The roster is 40 pointers at `0xb712a8` to records of 0x160 bytes, allocated at start-up, with the member count in `0xb713e0`. A record
 holds: `+0` the GUID, `+8` the 0-based subgroup (the member's flag dword AND 0x7f), `+0xc` the rank (2 for the group leader's GUID, 1 when the
-sign bit of the flag byte is set, else 0), `+0x10` a 0x148-byte member block of the party record kind, and `+0x158` the ready check word. In the block `+0x18` is
+sign bit of the flag byte is set, else 0), `+0x10` a 0x148-byte member block of the party record kind, and `+0x158` the ready check word. In the record, past the 0x10-byte header, `+0x18` is
 the status byte (bit 0 online, bit 2 dead), `+0x22` the level, `+0x24` the zone and `+0x90` the pet GUID. Bit 0 of `+0x18` comes from the group list's per-member
 online byte.
 

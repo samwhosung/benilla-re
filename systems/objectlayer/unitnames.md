@@ -33,6 +33,47 @@ cache 0xc0e354. `0x604aa0` drops the pet's cache entry, asks again, and signals
 `0x612bf0(key)` returns the script text `key` in variant 3 for a female unit (the active player's
 gender, else `UNIT_FIELD_BYTES_0` byte 2) or 2, falling back to variant 0.
 
+## UnitName's name asks
+
+`UnitName` (`0x517020`) keeps `0x517290` as the name cache's callback at two sites. The first is a held object of
+type bit 7 with bits 3, 5 and 1 clear, a corpse, whose owner's GUID is the first pair of its field block
+(`0x51719f`). The second is a token whose GUID names no held object and no party or raid pet record (`0x496420`)
+(`0x5171d7` to `0x5171f5`). Both ask `GetRecord(guid, &guid, 0x517290, data 0, dedupe 1)` on the name cache
+`0xc0e228` (`0x55f080`), so a repeated ask with the same function and data keeps no second callback.
+
+Addresses: `0x517020`, `0x51718c`, `0x51719c`, `0x51719e`, `0x51719f`, `0x5171d7`, `0x5171da`, `0x5171f1`, `0x5171f5`, `0x517205`, `0x496420`, `0x55f080`, `0xc0e228`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x517126` to `0x51718f` test the held object's type word bit by bit: 3 (`0x609210`), 5 (`0x5f8100`), 1 (cache
+`0xc0e2a0`), then 7 at `0x51718c`. The corpse leg loads the field block `[obj+0x110]` and its first pair
+(`0x517194` to `0x5171af`) and pushes dedupe 1 (`0x51719c`), data 0 (`0x51719e`) and the callback (`0x51719f`). The
+token leg calls `0x496420` (`0x5171da`) and, on a zero, pushes the same three (`0x5171f1` to `0x5171f5`) and calls
+`0x55f080` with `ecx` `0xc0e228` (`0x517205`). The census of `0x517290` (`tools/callers.py`, control `0x4baee0`)
+finds those two stored operands and no call.
+
+## UnitName's name callback
+
+The name cache calls `0x517290` when the asked name arrives: the key in `ecx`, a pointer to its kept copy of the asked
+GUID in `edx`, the data and the status on the stack (`ret 8`). Status 0, a refused name, does nothing. Status 1 calls
+`NotifyUnitNameUpdate` (`0x491a00`) with that pointer: it refreshes the tooltip and invalidates the name descriptor only
+when a unit object (mask 8) is held for the GUID, and always signals `UNIT_NAME_UPDATE` (event 183) once for each token
+that names the GUID, with the token as `arg1` (`SignalUnitEvent`, `0x515e50`). A name for a member out of view still
+reaches the frames that watch its token.
+
+Addresses: `0x517290`, `0x55f6f0`, `0x55f7a6`, `0x55f7ae`, `0x491a00`, `0x491a04`, `0x491a1a`, `0x491a23`, `0x491a36`, `0x491a3c`, `0x515e50`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x517290` loads the status byte at `[ebp+0xc]` (`0x517293`), moves `edx` to `ecx` (`0x517298`), skips the call on 0
+(`0x51729a`) and returns with `ret 8` (`0x5172a2`). The cache's refusal walk pushes 0 then the data and calls `[cb+8]`
+with `edx` the callback's own id `cb + 0x10` (`0x55f7a6` to `0x55f7ae`), so `[ebp+0xc]` is the status and the pointer is
+the kept copy. `0x491a00` reads the pair at `[ecx]` (`0x491a04`), looks the unit up with mask 8 (`0x491a1a`), skips
+`0x4919d0` and `0x607050` on a null result (`0x491a23`) and tail-jumps to `0x515e50` with `edx` 0xb7 (`0x491a36`,
+`0x491a3c`).
+
 ## The name block
 
 `0x608f50(flags, out, size)` builds what a name descriptor draws, as up to eight parts: three

@@ -30,6 +30,26 @@ by title (`+0x9c` of the cached record). `0x4e7e1e` zeroes the six counts.
 
 Bit-exact coverage: `ui::sortcmp_4e8b20` covers `0x4e8b20` to `0x4e8b40`, `0x4e8b44` to `0x4e8b54`, `0x4e8b58` to `0x4e8bd3` of `0x4e8b20`; `ui::sortcmp_4e8c80` covers the whole of `0x4e8c80`.
 
+## World entry recount
+
+`EnterWorldUI` (`0x4908c0`) calls `0x4e7f00` once (`0x4909e7`). It is `call 0x4e89c0` and a tail `jmp 0x4e8be0`:
+the type recount, then the quest list's rebuild. Each half returns at once, counting and signalling nothing, when the
+active player's object is not held. `0x4e89c0` skips type 3; for each other type it zeroes the count word
+(`0xbc6f18 + 4·type`), counts the passing rows, sorts the list and, after the last, signals `UPDATE_LFG_TYPES`
+(event 531). `0x4e8be0` rebuilds type 3 from the quest log, stores its count at `0xbc6f24` and signals the event
+again. A world entry signals it twice.
+
+Addresses: `0x4e7f00`, `0x4e7f05`, `0x4e89c0`, `0x4e89e1`, `0x4e8a17`, `0x4e8a27`, `0x4e8af7`, `0x4e8afa`, `0x4e8b09`, `0x4e8b0e`, `0x4e8be0`, `0x4e8c6a`, `0x4e8c70`, `0x4908c0`, `0x4909e7`, `0xbc6f18`, `0xbc6f24`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4e7f00` is 10 bytes: `call 0x4e89c0` and `jmp 0x4e8be0` (`0x4e7f05`). `0x4e89c0` takes the object test at
+`0x4e89e1` (`je 0x4e8b16`) and loops `esi` from 0 to 0x18 in steps of 4 (`0x4e8afa`); the lists are 12 bytes apart
+(`0x4e8af7`) and the counts 4. `0x4e8a17 cmp esi,0xc` skips type 3 and `0x4e8a27` zeroes a count. The signal is
+`ecx = 0x213` and a call to `0x703e50` (`0x4e8b09`, `0x4e8b0e`); `0x4e8be0` ends with the same pair
+(`0x4e8c6a`, `0x4e8c70`). The one caller of `0x4e7f00` is `0x4909e7` (`tools/callers.py`, control `0x4baee0`).
+
 ## SetLookingForGroup
 
 `SetLookingForGroup(type1, entry1, type2, entry2, type3, entry3, comment)` returns no value and never raises. For each of

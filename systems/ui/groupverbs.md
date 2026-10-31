@@ -103,6 +103,44 @@ Test: none
 push the opcodes; the name comes from `DBCache::NameCache::GetRecord`. `0x4bbca5` compares the stored leader GUID with the
 player's and requires a party. `0x4bbdf0` is the demotion twin of `0x4bbd20`, pushing 0 at its byte.
 
+## Selected roster row
+
+`GetRaidRosterSelection` (`0x4bb890`) calls `0x4bae90`, which takes no argument. It searches the first
+`s_raidMemberCount` (`0xb713e0`) roster rows for the selected GUID, `s_raidSelectionGuid` (`0xb713e8`), and
+returns the 0-based index of the first row that holds it. It returns −1 for a zero selection, for a count of 0 and
+when no row matches. The caller adds 1 (`0x4bb89c`), so each of those pushes 0 and a hit pushes the 1-based index.
+
+Addresses: `0x4bb890`, `0x4bb897`, `0x4bb89c`, `0x4bae90`, `0x4baea1`, `0x4baeaf`, `0x4baeca`, `0x4baecd`, `0xb713e0`, `0xb713e8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4bae90` loads the selection words (`0x4bae90`, `0x4bae99`), ORs them (`0x4baea1`, `je 0x4baeca`), loads the
+count (`0x4baea5`, `jbe 0x4baeca`) and counts `eax` up from 0, comparing `[row]` and `[row+4]` with the selection
+(`0x4baeb8` to `0x4baec3`). A hit leaves through `0x4baecd` with `eax` the index, and a miss runs `or eax,-1`
+(`0x4baeca`). Its one caller is `0x4bb897` (`tools/callers.py`, control `0x4baee0`, no stored address).
+
+## Pet of a roster member
+
+`0x4baf30(&guid)` answers whether a GUID is the pet of a raid roster member; `UpdateUnitTokenFlags` (`0x60c61a`)
+sets the pet flag 0x200 from it, beside the member flag 0x100 from `0x4baee0`. It returns 0 for a zero GUID, for
+a count of 0 and for no match, and 1 for a match. A row whose player object is held (`0x468460`, mask 0x10) answers by
+that object's `UNIT_FIELD_CHARM` GUID, or its `UNIT_FIELD_SUMMON` GUID when the first is zero, and its record is not
+read. A row whose object is not held matches by the record's pet GUID, only when its online bit is set.
+
+Addresses: `0x4baf30`, `0x4baf3a`, `0x4baf7d`, `0x4baf82`, `0x4baf93`, `0x4baf99`, `0x4bafa3`, `0x4bafba`, `0x4bafc0`, `0x4bafd0`, `0x4baffc`, `0x60c520`, `0x60c61a`, `0x468460`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4baf37` ORs the GUID's words (`je 0x4bafb8`) and `0x4baf3c` loads the count. For each row `0x4baf6c` calls
+`0x468460` with mask 0x10, the row's GUID and the line `0x1db`. With an object, `0x4baf75` loads its field block
+`+0x110`, `0x4baf7d` ORs the CHARM pair and `0x4baf82` adds 8 when it is zero, and the pair is compared with the
+argument. Without one, `0x4baf93` tests bit 0 of the record's `+0x18` and `0x4baf99`, `0x4bafa3` compare the pair at
+`+0x90`; these are the party record's status and pet GUID (`objectlayer/party#the-party-member-record`, `+0x08` and
+`+0x80`) behind the 0x10-byte roster header. The result is 1 at `0x4bafc0` and 0 at `0x4bafba`. `0x4bafd0` runs the
+same legs after testing the member's own GUID (`0x4baffc`). The one caller is `0x60c61a`.
+
 ## Instances
 
 `ResetInstances()` sends message 0x31d. `RequestRaidInfo()` sends 0x2cd. `GetNumSavedInstances()` returns the count at

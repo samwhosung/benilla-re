@@ -259,9 +259,12 @@ Bit-exact coverage: `ui::luabind_4b40a0_get_spell_cooldown` covers `0x4b411d` to
 same spell it plays `igSpellBookSpellIconDrop`; if it held another spell, or the slot holds no spell,
 it stops there. Otherwise the slot's spell goes onto the cursor, as a spell (`0x494d20`) or, for the
 pet book, as a pet action (`0x494e20` of the pet spell record from `0x4bd160`), with the sound
-`igSpellBookSpellIconPickup`.
+`igSpellBookSpellIconPickup`, after the setter returns, whether or not the cursor took the spell. The two kits are
+`0x4b32e0` (drop) and `0x4b32f0` (pickup): each loads its name into `ecx` and jumps to
+`SndInterfacePlayInterfaceSound` (`0x458030`), so what is heard is the interface sound row of that name
+(`sound/interface#interface-sounds-by-name`); the exe holds only the name.
 
-Addresses: `0x4b42a0`, `0x4b3260`, `0x4b3285`, `0x4b3293`, `0x4b3298`, `0x4b32aa`, `0x4b32b6`, `0x4b32bd`, `0x4b32ca`, `0x4b32e5`, `0x4b32f5`, `0x494d20`, `0x494e20`, `0x494e10`, `0x495190`, `0x4bd160`
+Addresses: `0x4b42a0`, `0x4b3260`, `0x4b3285`, `0x4b3293`, `0x4b3298`, `0x4b329e`, `0x4b32a3`, `0x4b32aa`, `0x4b32b6`, `0x4b32bd`, `0x4b32c5`, `0x4b32ca`, `0x4b32d2`, `0x4b32e0`, `0x4b32e5`, `0x4b32f0`, `0x4b32f5`, `0x458030`, `0x494d20`, `0x494e20`, `0x494e10`, `0x495190`, `0x4bd160`
 Confidence: verified
 Proof: one
 Test: none
@@ -269,7 +272,12 @@ Test: none
 `0x4b3285 call 0x494e10` reads the cursor spell and `0x4b3293 call 0x495190` clears the cursor with both
 flags 1. `0x4b3298 cmp esi,edi` is the same-spell test (the drop sound at `0x4b32e5`); `0x4b32aa jg`
 leaves when the cursor held another spell; `0x4b32b6` takes the pet-book branch; `0x4b32ca` and
-`0x4b32bd` are the two pickups; `0x4b32f5` plays the pickup sound.
+`0x4b32bd` are the two pickups; `0x4b32f5` plays the pickup sound. The same-spell leg leaves silently for
+spell 0 (`0x4b329e`) and otherwise pops its registers and jumps to the drop kit (`0x4b32a3`). Both
+pickups pop and jump to the pickup kit (`0x4b32c5`, `0x4b32d2`) with nothing tested after the setter's
+return. The drop kit's name is `igSpellBookSpellIconDrop` (`mov ecx` at `0x4b32e0`, jump at `0x4b32e5`) and
+the pickup kit's `igSpellBookSpellIconPickup` (`0x4b32f0`, `0x4b32f5`). A census of both kits
+(`tools/callers.py`, control `0x4baee0`) finds one `jmp` to the first and two to the second, none stored.
 
 ## Casting a book spell
 
