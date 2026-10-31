@@ -281,13 +281,15 @@ at `0x6e23b2`, `shl edx,cl` with `cl` the row's `+0x04` (`0x6e23be`) and `test e
 a known unit, `0x6e8d80` calls `0x60d040(spell, 1, 1)` and `0x614150(spell, 0)`, passes the spell and
 the unit to `0x458a50`, calls `0x6ea080` (`cast`) when the unit is the active player and the
 reason is 0x2f, 0x30 or 0x31, then `0x60fc50` and, when `0x611590(1)` holds, `0x60fb60(0, 1)`. It
-shows no message and fires no event. `SMSG_SPELL_FAILED_OTHER` (0x2a6), a `u64` GUID and a `u32`
+shows no message and fires `STOP_AUTOREPEAT_SPELL` on the `0x6ea080` leg, and `LOOT_CLOSED` through `0x60d040` while a loot source is held (below). `SMSG_SPELL_FAILED_OTHER` (0x2a6), a `u64` GUID and a `u32`
 spell id, makes `0x6e8e40` call only the first two. Both return 1. The names are the server's.
 
-Addresses: `0x6e8d80`, `0x6e8d90`, `0x6e8d9b`, `0x6e8da6`, `0x6e8dc2`, `0x6e8dd7`, `0x6e8de4`, `0x6e8dee`, `0x6e8df5`, `0x6e8e01`, `0x6e8e0d`, `0x6e8e14`, `0x6e8e1d`, `0x6e8e2c`, `0x6e8e40`, `0x6e8e50`, `0x6e8e5b`, `0x6e8e8c`, `0x6e8e99`, `0x6e718f`, `0x6e727f`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x5fa6d0`, `0x60fc50`, `0x611590`, `0x60fb60`
+Addresses: `0x6e8d80`, `0x6e8d90`, `0x6e8d9b`, `0x6e8da6`, `0x6e8dc2`, `0x6e8dd7`, `0x6e8de4`, `0x6e8dee`, `0x6e8df5`, `0x6e8e01`, `0x6e8e0d`, `0x6e8e14`, `0x6e8e1d`, `0x6e8e2c`, `0x6ea086`, `0x6ea0c6`, `0x6ea170`, `0xceac30`, `0x60d049`, `0x60d083`, `0x60d0c3`, `0x60d10b`, `0x4c1dac`, `0x60fb76`, `0x6204aa`, `0x860adc`, `0x6e8e40`, `0x6e8e50`, `0x6e8e5b`, `0x6e8e8c`, `0x6e8e99`, `0x6e718f`, `0x6e727f`, `0x4190b0`, `0x418e30`, `0x418cb0`, `0x5fa6d0`, `0x60fc50`, `0x611590`, `0x60fb60`
 Confidence: verified
 Proof: one
 Test: none
+
+With an auto-repeat spell set (`0xceac30`, `0x6ea086`), `0x6ea080` sends CMSG_CANCEL_AUTO_REPEAT_SPELL (`0x6ea0c6`, opcode 0x26d) and fires `STOP_AUTOREPEAT_SPELL` (event 436, `0x6ea170`). `0x60d040` calls `0x48f200` for the active player when the spell is the unit's precast spell (`0x60d049`, `0x60d10b`); with a loot source held, that ends the loot window and fires `LOOT_CLOSED` (event 269, `0x4c1da0`, `0x4c1dac`). `0x60fb60` fires `AUTOFOLLOW_END` only in mode 3 (`0x60fb76`), and each call here is gated to mode 0 or 1 (`0x6e8e1d`, `0x60d083`, `0x60d0c3`, and the mask 1 at `0x860adc` that `0x60fc50` tests), so it fires none. No other signal is derived: `0x614150` runs the effect stop `0x6203e0`, which can refresh the unit's animation through `0x5fd9e0` (`0x6204aa`); that refresh's callees are not read for signals.
 
 `Spell_C::SystemInitialize` registers them at `0x6e718f` and `0x6e727f`. The reads are
 `0x4190b0` (8 bytes), `0x418e30` (4) and `0x418cb0` (1), in that order (`0x6e8d90` to `0x6e8da6`;
