@@ -11116,7 +11116,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by visibility, group position (a header row is position 0), bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
 0x4f6ac0	105	CompareCraftGroups		ui	orchestration	int __cdecl (void **a, void **b)	Orders craft group headers by the skill line's display name	verified	one	ui/craft#craft-order	
 0x4f6b30	66	GetCraftGroupOfRow		ui	primitive		Returns the group ordinal of a craft header row, or -1	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f6b80	88	IsCraftGroupExpanded		ui	primitive		Returns whether the group of a craft header row is expanded	verified	one	tradeskill/craft#craft-rows	
+0x4f6b80	88	IsCraftGroupCollapsed		ui	primitive		Returns 1 when the group bit of a craft header row is clear in the expanded mask (0x4f6bcf to 0x4f6bd6), else 0	verified	one	tradeskill/craft#craft-rows	
 0x4f6be0	21	SetCraftExpandedMask		ui	orchestration		Stores the expanded mask of the craft groups, re-sorts and signals CRAFT_UPDATE	verified	one	tradeskill/craft#collapse-and-cast	
 0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	int __fastcall (lua_State *L)	Closes the craft window	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the name of the spell in the effect slot of the craft type	verified	one	tradeskill/craft#name-and-skill-line	
