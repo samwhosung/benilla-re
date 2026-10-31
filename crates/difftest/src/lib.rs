@@ -223,6 +223,110 @@ impl Wow {
     }
 }
 
+/// Names the Mac slice in place of `WoW/WoW-mac-i386`.
+pub const MAC_VARIABLE: &str = "BENILLA_RE_MAC_SLICE";
+/// Set (to `1`), a test that cannot find the Mac slice panics instead of skipping.
+pub const REQUIRE_MAC_VARIABLE: &str = "BENILLA_RE_REQUIRE_MAC";
+
+/// The slice's bytes once identified, or the path where none was found. Read once per process.
+static MAC: OnceLock<Result<Vec<u8>, PathBuf>> = OnceLock::new();
+
+fn read_mac() -> Result<Vec<u8>, PathBuf> {
+    let path = match std::env::var_os(MAC_VARIABLE) {
+        Some(path) if !path.is_empty() => PathBuf::from(path),
+        _ => repo_root().join("WoW").join("WoW-mac-i386"),
+    };
+    let Ok(bytes) = std::fs::read(&path) else {
+        return Err(path);
+    };
+    let digest: String = Sha256::digest(&bytes)
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect();
+    let size: u64 = identity("MAC_SIZE").parse().expect("MAC_SIZE is a decimal");
+    assert!(
+        bytes.len() as u64 == size && digest == identity("MAC_SHA256"),
+        "refused {}: {} bytes, SHA-256 {digest}; the Mac findings are read from the 1.12.1.5875 \
+         i386 slice, {size} bytes, SHA-256 {}",
+        path.display(),
+        bytes.len(),
+        identity("MAC_SHA256"),
+    );
+    Ok(bytes)
+}
+
+/// The i386 slice of the 1.12.1 (5875) Mac client, `World of Warcraft.app`
+/// (`symbols/README.md`, The Mac client). Optional as the install's `Data` folder is: without it a
+/// test skips, even under `BENILLA_RE_REQUIRE_EXE`, and appends `mac ` and its name to
+/// `BENILLA_RE_SKIP_LOG`; under `BENILLA_RE_REQUIRE_MAC` a missing slice panics.
+#[derive(Clone, Copy)]
+pub struct MacSlice {
+    bytes: &'static [u8],
+}
+
+impl MacSlice {
+    /// The reader's slice, identified by its hash, or `None` after one skip line.
+    pub fn load() -> Option<MacSlice> {
+        match MAC.get_or_init(read_mac) {
+            Ok(bytes) => Some(MacSlice { bytes }),
+            Err(path) => {
+                let thread = std::thread::current();
+                let test = thread.name().unwrap_or("test");
+                assert!(
+                    !set(REQUIRE_MAC_VARIABLE),
+                    "{test}: no Mac slice at {}, and {REQUIRE_MAC_VARIABLE} forbids skipping",
+                    path.display()
+                );
+                eprintln!(
+                    "skip {test}: no Mac slice at {}; set {MAC_VARIABLE} or write it to \
+                     WoW/WoW-mac-i386",
+                    path.display()
+                );
+                if let Some(log) = std::env::var_os(SKIP_LOG_VARIABLE).filter(|p| !p.is_empty()) {
+                    use std::io::Write;
+                    if let Ok(mut file) = std::fs::OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open(log)
+                    {
+                        // One write per line, so lines from parallel test processes do not
+                        // interleave.
+                        let _ = file.write_all(format!("mac {test}\n").as_bytes());
+                    }
+                }
+                None
+            }
+        }
+    }
+
+    /// `n` bytes of the image at the virtual address `va`, through the `LC_SEGMENT` that maps
+    /// it; a zero-filled tail reads as zeros. Panics when no segment maps the whole range.
+    pub fn read(&self, va: u64, n: usize) -> Vec<u8> {
+        let b = self.bytes;
+        let u32_at = |at: usize| u32::from_le_bytes(b[at..at + 4].try_into().expect("4 bytes"));
+        assert_eq!(u32_at(0), 0xfeed_face, "a 32-bit Mach-O");
+        let mut at = 28;
+        for _ in 0..u32_at(16) {
+            let (command, size) = (u32_at(at), u32_at(at + 4) as usize);
+            if command == 1 {
+                let (vmaddr, vmsize) = (u64::from(u32_at(at + 24)), u64::from(u32_at(at + 28)));
+                let (fileoff, filesize) = (u32_at(at + 32) as usize, u32_at(at + 36) as usize);
+                if vmaddr <= va && va + n as u64 <= vmaddr + vmsize {
+                    let start = (va - vmaddr) as usize;
+                    return (start..start + n)
+                        .map(|i| if i < filesize { b[fileoff + i] } else { 0 })
+                        .collect();
+                }
+            }
+            at += size;
+        }
+        panic!(
+            "no segment of the Mac slice maps {va:#x}..{:#x}",
+            va + n as u64
+        );
+    }
+}
+
 /// Where executed block addresses go when `BENILLA_RE_COVERAGE_OUT` is set.
 static COVERAGE: OnceLock<Option<std::sync::Mutex<CoverageSink>>> = OnceLock::new();
 

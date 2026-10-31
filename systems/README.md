@@ -127,7 +127,9 @@ matters. A constant that would read as an address, six hex digits after `0x`, is
 decimal or without backticks. A range is written by its first and last function, never by an end
 address that belongs to no row. A function's end, and the padding bytes after it, are written in
 backticks as any address is: the check accepts an address that lies less than 16 bytes past the
-end of the nearest row before it.
+end of the nearest row before it. A Mac client address is written `mac:` and six lowercase hex
+digits, in backticks, and resolves to a Mac row (`../symbols/README.md`, The Mac client); a Mac
+address is never written with `0x`, even inside a quoted instruction.
 
 ## Rules the check enforces
 

@@ -83,11 +83,18 @@ pattern!(
 pattern!(FIRST_PERSON, r"\b(?:[Ww]e|[Oo]ur|I)\b");
 pattern!(CITED, r"`(0x[0-9a-f]{6})`");
 pattern!(BARE_ADDRESS, r"\b0x[0-9a-f]{6}\b");
+// A Mac client address (`symbols/README.md`, The Mac client): no `0x`, so nothing that reads a
+// `WoW.exe` address can take it for one.
+pattern!(MAC_ADDRESS, r"^mac:[0-9a-f]{6}$");
+pattern!(MAC_CITED, r"`(mac:[0-9a-f]{6})`");
+pattern!(MAC_BARE_ADDRESS, r"\bmac:[0-9a-f]{6}\b");
 pattern!(ANY_HEADING, r"^#{1,6} (.+)$");
 pattern!(LISTED_SYSTEM, r"^- `([a-z][a-z0-9]*)`: \S");
 
 /// The image's virtual addresses: the base 0x400000 up to base plus `SizeOfImage` (0x906000).
 const IMAGE: std::ops::Range<u64> = 0x400000..0xd06000;
+/// The Mac slice's virtual addresses: `__TEXT` at 0x1000 up to the end of `__LINKEDIT`.
+pub const MAC_IMAGE: std::ops::Range<u64> = 0x1000..0xbbb2b8;
 pattern!(INLINE_CODE, r"`[^`]*`");
 pattern!(CITED_ANCHOR, r"`([A-Za-z][A-Za-z0-9_/]*)#([a-z0-9_-]+)`");
 pattern!(LINKED_ANCHOR, r"\]\(([^)#\s]*)#([a-z0-9_-]+)\)");
@@ -97,7 +104,10 @@ pattern!(
     SHAPE,
     r"(?m)^Addresses: (.+)\nConfidence: (.*)\nProof: (.*)\nTest: (.*)$"
 );
-pattern!(ADDRESS_LIST, r"^`0x[0-9a-f]{6}`(?:, `0x[0-9a-f]{6}`)*$");
+pattern!(
+    ADDRESS_LIST,
+    r"^`(?:0x|mac:)[0-9a-f]{6}`(?:, `(?:0x|mac:)[0-9a-f]{6}`)*$"
+);
 pattern!(TEST_CITED, r"^`[a-z][a-z0-9_]*::[a-z][a-z0-9_]*`$");
 pattern!(TABLE_RULE, r"^\|[-|: ]+\|$");
 pattern!(FUNCTION_POINTERS, r"^.+\(\*\[([0-9]+)\]\)\(.*\)$");
@@ -134,6 +144,9 @@ pub enum Kind {
     Globals,
     Structs,
     Fields,
+    /// The Mac client's functions and globals (`symbols/README.md`, The Mac client).
+    MacFunctions,
+    MacGlobals,
 }
 
 impl Kind {
@@ -143,12 +156,14 @@ impl Kind {
             Kind::Globals => "symbols/globals.tsv",
             Kind::Structs => "symbols/structs.tsv",
             Kind::Fields => "symbols/fields.tsv",
+            Kind::MacFunctions => "symbols/mac/functions.tsv",
+            Kind::MacGlobals => "symbols/mac/globals.tsv",
         }
     }
 
     fn header(self) -> &'static [&'static str] {
         match self {
-            Kind::Functions => &[
+            Kind::Functions | Kind::MacFunctions => &[
                 "address",
                 "size",
                 "name",
@@ -162,7 +177,7 @@ impl Kind {
                 "finding",
                 "test",
             ],
-            Kind::Globals => &[
+            Kind::Globals | Kind::MacGlobals => &[
                 "address",
                 "type",
                 "name",
@@ -202,7 +217,7 @@ impl Kind {
     /// The columns a table is sorted by, in byte order.
     fn sort_key(self) -> &'static [&'static str] {
         match self {
-            Kind::Functions | Kind::Globals => &["address"],
+            Kind::Functions | Kind::Globals | Kind::MacFunctions | Kind::MacGlobals => &["address"],
             Kind::Structs => &["name"],
             Kind::Fields => &["struct", "offset"],
         }
@@ -297,26 +312,38 @@ pub struct Checked {
     pub docs: Vec<Doc>,
     pub method: Option<String>,
     pub extents: Extents,
+    /// The Mac client's rows, and the ranges they cover; never mixed with `WoW.exe`'s.
+    pub mac_functions: Vec<Row>,
+    pub mac_globals: Vec<Row>,
+    pub mac_extents: Extents,
     /// Every well-formed test a doc entry's `Test` line names, with the line's place.
     pub doc_tests: Vec<(String, String)>,
 }
 
 impl Checked {
     pub fn summary(&self) -> String {
-        format!(
+        let mut summary = format!(
             "{} functions, {} globals, {} structs, {} fields, {} system docs",
             self.functions.len(),
             self.globals.len(),
             self.structs.len(),
             self.fields.len(),
             self.docs.len()
-        )
+        );
+        if !self.mac_functions.is_empty() || !self.mac_globals.is_empty() {
+            summary.push_str(&format!(
+                ", {} Mac functions, {} Mac globals",
+                self.mac_functions.len(),
+                self.mac_globals.len()
+            ));
+        }
+        summary
     }
 
     /// Every well-formed test the table and the docs name, with the place that names it.
     pub fn named_tests(&self) -> Vec<(String, String)> {
         let mut named = Vec::new();
-        for row in &self.functions {
+        for row in self.functions.iter().chain(&self.mac_functions) {
             let tests = row.get("test");
             if !tests.is_empty() && tests.split(", ").all(|t| TEST.is_match(t)) {
                 for test in tests.split(", ") {
@@ -392,6 +419,8 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
     let globals = read_table(tree, Kind::Globals, &mut p)?;
     let structs_rows = read_table(tree, Kind::Structs, &mut p)?;
     let fields = read_table(tree, Kind::Fields, &mut p)?;
+    let mac_functions = read_optional_table(tree, Kind::MacFunctions, &mut p)?;
+    let mac_globals = read_optional_table(tree, Kind::MacGlobals, &mut p)?;
     let mut structs: HashMap<&str, &Row> = HashMap::new();
     for row in &structs_rows {
         let name = row.get("name");
@@ -405,122 +434,147 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
         .iter()
         .filter_map(|r| Some((r.get("name"), r.get("size").parse().ok()?)))
         .collect();
-    let mut names: HashMap<&str, &str> = HashMap::new();
+    // `WoW.exe`'s rows and the Mac client's are checked alike, each table set against its own
+    // names, addresses and extents, so neither can resolve a citation of the other.
     let mut extents = Vec::new();
-    for (kind, rows) in [(Kind::Functions, &functions), (Kind::Globals, &globals)] {
-        let mut spans: Vec<(u64, u64, &Row)> = Vec::new();
-        for row in rows {
-            let place = row.place();
-            let address = row.get("address");
-            if !ADDRESS.is_match(address) {
-                p.add(
-                    place,
-                    format!("address '{address}' is not 0x and six lowercase hex digits"),
-                );
-                continue;
-            }
-            if !matches!(row.get("name_from"), "" | "idb") {
-                p.add(&place, "name_from is idb or empty");
-            }
-            let name = row.get("name");
-            if !name.is_empty() {
-                if let Some(other) = names.get(name) {
-                    p.add(&place, format!("name {name} is also used at {other}"));
-                }
-                names.insert(name, address);
-            }
-            check_common(row, &anchors, Some(address), &mut p);
-            let start = u64::from_str_radix(&address[2..], 16).expect("six hex digits");
-            let size = if kind == Kind::Functions {
-                check_name(
-                    row,
-                    |n| method_name(n) || FREE_NAME.is_match(n),
-                    "functions",
-                    &mut p,
-                );
-                let size = decimal(row.get("size"));
-                if size.is_none() {
+    let mut mac_extents = Vec::new();
+    for (mac, tables, found) in [
+        (
+            false,
+            [(Kind::Functions, &functions), (Kind::Globals, &globals)],
+            &mut extents,
+        ),
+        (
+            true,
+            [
+                (Kind::MacFunctions, &mac_functions),
+                (Kind::MacGlobals, &mac_globals),
+            ],
+            &mut mac_extents,
+        ),
+    ] {
+        let (rule, prefix) = if mac {
+            (&MAC_ADDRESS, "mac:")
+        } else {
+            (&ADDRESS, "0x")
+        };
+        let mut names: HashMap<&str, &str> = HashMap::new();
+        for (kind, rows) in tables {
+            let mut spans: Vec<(u64, u64, &Row)> = Vec::new();
+            for row in rows {
+                let place = row.place();
+                let address = row.get("address");
+                if !rule.is_match(address) {
                     p.add(
-                        &place,
-                        format!("size '{}' is not a positive decimal", row.get("size")),
+                        place,
+                        format!("address '{address}' is not {prefix} and six lowercase hex digits"),
                     );
+                    continue;
                 }
-                let class = row.get("class");
-                if !class.is_empty() && !CLASSES.contains(&class) {
-                    p.add(
-                        &place,
-                        format!("class '{class}' is not one of {}", CLASSES.join(", ")),
+                if !matches!(row.get("name_from"), "" | "idb") {
+                    p.add(&place, "name_from is idb or empty");
+                }
+                let name = row.get("name");
+                if !name.is_empty() {
+                    if let Some(other) = names.get(name) {
+                        p.add(&place, format!("name {name} is also used at {other}"));
+                    }
+                    names.insert(name, address);
+                }
+                check_common(row, &anchors, Some(address), &mut p);
+                let start =
+                    u64::from_str_radix(&address[prefix.len()..], 16).expect("six hex digits");
+                let size = if matches!(kind, Kind::Functions | Kind::MacFunctions) {
+                    check_name(
+                        row,
+                        |n| method_name(n) || FREE_NAME.is_match(n),
+                        "functions",
+                        &mut p,
                     );
+                    let size = decimal(row.get("size"));
+                    if size.is_none() {
+                        p.add(
+                            &place,
+                            format!("size '{}' is not a positive decimal", row.get("size")),
+                        );
+                    }
+                    let class = row.get("class");
+                    if !class.is_empty() && !CLASSES.contains(&class) {
+                        p.add(
+                            &place,
+                            format!("class '{class}' is not one of {}", CLASSES.join(", ")),
+                        );
+                    }
+                    let system = row.get("system");
+                    if class.is_empty() && written.contains(system) {
+                        p.add(&place, format!("class is required: {system} has a doc"));
+                    }
+                    let test = row.get("test");
+                    if class == "unreached" && !test.is_empty() {
+                        p.add(&place, "an unreached function has no test");
+                    }
+                    if !test.is_empty() && !test.split(", ").all(|t| TEST.is_match(t)) {
+                        p.add(&place, format!("test '{test}' is not crate::test_fn names, bare and separated by ', ' (no backticks)"));
+                    }
+                    let signature = row.get("signature");
+                    if signature.chars().count() > SIGNATURE {
+                        p.add(&place, format!("signature is over {SIGNATURE} characters"));
+                    }
+                    if !signature.is_empty() {
+                        if let Err(message) = sig::parse(signature, &struct_sizes) {
+                            p.add(&place, message);
+                        }
+                    }
+                    size
+                } else {
+                    check_name(row, |n| GLOBAL_NAME.is_match(n), "globals", &mut p);
+                    let size = type_size(row.get("type"), &structs);
+                    if size.is_none() {
+                        p.add(
+                            &place,
+                            format!("type '{}' has no known size", row.get("type")),
+                        );
+                    }
+                    size
+                };
+                if let Some(size) = size.filter(|&s| s > 0) {
+                    spans.push((start, start + size, row));
+                    found.push((start, start + size));
                 }
-                let system = row.get("system");
-                if class.is_empty() && written.contains(system) {
-                    p.add(&place, format!("class is required: {system} has a doc"));
-                }
-                let test = row.get("test");
-                if class == "unreached" && !test.is_empty() {
-                    p.add(&place, "an unreached function has no test");
-                }
-                if !test.is_empty() && !test.split(", ").all(|t| TEST.is_match(t)) {
-                    p.add(&place, format!("test '{test}' is not crate::test_fn names, bare and separated by ', ' (no backticks)"));
-                }
-                let signature = row.get("signature");
-                if signature.chars().count() > SIGNATURE {
-                    p.add(&place, format!("signature is over {SIGNATURE} characters"));
-                }
-                if !signature.is_empty() {
-                    if let Err(message) = sig::parse(signature, &struct_sizes) {
-                        p.add(&place, message);
+            }
+            // Each row is compared with the row reaching furthest before it, not only its
+            // neighbour, so a row inside a long one is caught after a short one between them.
+            spans.sort_by_key(|s| s.0);
+            let mut furthest: Option<(u64, &Row)> = None;
+            for &(start, end, row) in &spans {
+                if let Some((reach, outer)) = furthest {
+                    if start < reach {
+                        p.add(
+                            row.place(),
+                            format!(
+                                "{} lies inside {}",
+                                row.get("address"),
+                                outer.get("address")
+                            ),
+                        );
                     }
                 }
-                size
-            } else {
-                check_name(row, |n| GLOBAL_NAME.is_match(n), "globals", &mut p);
-                let size = type_size(row.get("type"), &structs);
-                if size.is_none() {
-                    p.add(
-                        &place,
-                        format!("type '{}' has no known size", row.get("type")),
-                    );
-                }
-                size
-            };
-            if let Some(size) = size.filter(|&s| s > 0) {
-                spans.push((start, start + size, row));
-                extents.push((start, start + size));
-            }
-        }
-        // Each row is compared with the row reaching furthest before it, not only its
-        // neighbour, so a row inside a long one is caught after a short one between them.
-        spans.sort_by_key(|s| s.0);
-        let mut furthest: Option<(u64, &Row)> = None;
-        for &(start, end, row) in &spans {
-            if let Some((reach, outer)) = furthest {
-                if start < reach {
-                    p.add(
-                        row.place(),
-                        format!(
-                            "{} lies inside {}",
-                            row.get("address"),
-                            outer.get("address")
-                        ),
-                    );
+                if furthest.is_none_or(|(reach, _)| end > reach) {
+                    furthest = Some((end, row));
                 }
             }
-            if furthest.is_none_or(|(reach, _)| end > reach) {
-                furthest = Some((end, row));
+        }
+        let mut seen: HashMap<&str, String> = HashMap::new();
+        for row in tables.iter().flat_map(|(_, rows)| rows.iter()) {
+            let address = row.get("address");
+            if let Some(other) = seen.get(address) {
+                p.add(
+                    row.place(),
+                    format!("address {address} also has a row at {other}"),
+                );
             }
+            seen.insert(address, row.place());
         }
-    }
-    let mut seen: HashMap<&str, String> = HashMap::new();
-    for row in functions.iter().chain(&globals) {
-        let address = row.get("address");
-        if let Some(other) = seen.get(address) {
-            p.add(
-                row.place(),
-                format!("address {address} also has a row at {other}"),
-            );
-        }
-        seen.insert(address, row.place());
     }
     let global_addresses: HashSet<&str> = globals.iter().map(|r| r.get("address")).collect();
 
@@ -621,25 +675,36 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
     check_systems(
         tree,
         &written,
-        [&functions, &globals, &structs_rows, &fields],
+        &[
+            &functions,
+            &globals,
+            &structs_rows,
+            &fields,
+            &mac_functions,
+            &mac_globals,
+        ],
         &mut p,
     )?;
 
     let extents = Extents::new(extents);
+    let mac_extents = Extents::new(mac_extents);
     let mut doc_tests = Vec::new();
     for doc in &docs {
-        check_doc(doc, &functions, &mut doc_tests, &mut p);
+        check_doc(doc, [&functions, &mac_functions], &mut doc_tests, &mut p);
         check_citations(doc, &anchors, &mut p);
     }
 
     // A system doc's addresses and a row's meaning cite the table: each has a row. Every other
     // Markdown file is a spec doc, whose addresses are examples and pointers: each lies inside
     // the image.
+    // A `mac:` address resolves to a Mac row, or in a spec doc lies inside the Mac slice.
     for row in functions
         .iter()
         .chain(&globals)
         .chain(&structs_rows)
         .chain(&fields)
+        .chain(&mac_functions)
+        .chain(&mac_globals)
     {
         for found in BARE_ADDRESS.find_iter(row.get("meaning")) {
             let value = u64::from_str_radix(&found.as_str()[2..], 16).expect("six hex digits");
@@ -647,6 +712,18 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
                 p.add(
                     row.place(),
                     format!("meaning cites {}, which resolves to no row", found.as_str()),
+                );
+            }
+        }
+        for found in MAC_BARE_ADDRESS.find_iter(row.get("meaning")) {
+            let value = u64::from_str_radix(&found.as_str()[4..], 16).expect("six hex digits");
+            if !mac_extents.contains(value) {
+                p.add(
+                    row.place(),
+                    format!(
+                        "meaning cites {}, which resolves to no Mac row",
+                        found.as_str()
+                    ),
                 );
             }
         }
@@ -685,6 +762,18 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
                     );
                 }
             }
+            for cited in MAC_CITED.captures_iter(line) {
+                let address = &cited[1];
+                let value = u64::from_str_radix(&address[4..], 16).expect("six hex digits");
+                if system_doc && !mac_extents.contains(value) && !mac_extents.pads(value) {
+                    p.add(&place, format!("{address} resolves to no Mac row"));
+                } else if !system_doc && !MAC_IMAGE.contains(&value) {
+                    p.add(
+                        &place,
+                        format!("{address} is not an address inside the Mac slice"),
+                    );
+                }
+            }
         }
     }
 
@@ -707,6 +796,9 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
         docs,
         method,
         extents,
+        mac_functions,
+        mac_globals,
+        mac_extents,
         doc_tests,
     })
 }
@@ -720,10 +812,22 @@ fn decimal(text: &str) -> Option<u64> {
 }
 
 fn read_table(tree: &dyn Tree, kind: Kind, p: &mut Problems) -> io::Result<Vec<Row>> {
-    let file = kind.file();
-    let Some(text) = read(tree, file, p)? else {
+    let Some(text) = read(tree, kind.file(), p)? else {
         return Ok(Vec::new());
     };
+    Ok(parse_table(kind, &text, p))
+}
+
+/// A table a checkout may lack, as the Mac client's are: absent, it has no rows.
+fn read_optional_table(tree: &dyn Tree, kind: Kind, p: &mut Problems) -> io::Result<Vec<Row>> {
+    if tree.read(kind.file())?.is_none() {
+        return Ok(Vec::new());
+    }
+    read_table(tree, kind, p)
+}
+
+fn parse_table(kind: Kind, text: &str, p: &mut Problems) -> Vec<Row> {
+    let file = kind.file();
     let mut lines: Vec<&str> = text.split('\n').collect();
     if lines.last() == Some(&"") {
         lines.pop();
@@ -739,7 +843,7 @@ fn read_table(tree: &dyn Tree, kind: Kind, p: &mut Problems) -> io::Result<Vec<R
             format!("{file}:1"),
             format!("header is not {}", header.join(" ")),
         );
-        return Ok(Vec::new());
+        return Vec::new();
     }
     let mut rows = Vec::new();
     for (index, line) in lines.iter().enumerate().skip(1) {
@@ -762,7 +866,7 @@ fn read_table(tree: &dyn Tree, kind: Kind, p: &mut Problems) -> io::Result<Vec<R
             p.add(pair[1].place(), "out of order or duplicate key");
         }
     }
-    Ok(rows)
+    rows
 }
 
 /// Every `## ` heading with the text up to the next one and the heading's line number.
@@ -829,7 +933,7 @@ pub(crate) fn type_size(ty: &str, structs: &HashMap<&str, &Row>) -> Option<u64> 
 fn check_systems(
     tree: &dyn Tree,
     written: &HashSet<&str>,
-    tables: [&Vec<Row>; 4],
+    tables: &[&Vec<Row>],
     p: &mut Problems,
 ) -> io::Result<()> {
     const README: &str = "symbols/README.md";
@@ -1083,9 +1187,10 @@ fn linked_key(folder: &str, file: &str) -> Option<String> {
         .map(str::to_string)
 }
 
+/// `functions` holds `WoW.exe`'s function rows, then the Mac client's.
 fn check_doc(
     doc: &Doc,
-    functions: &[Row],
+    functions: [&Vec<Row>; 2],
     doc_tests: &mut Vec<(String, String)>,
     p: &mut Problems,
 ) {
@@ -1153,16 +1258,18 @@ fn check_doc(
         Some(roots) => {
             let whole = roots.get(0).expect("the match");
             let line = head[..whole.start()].matches('\n').count() + 1;
-            for root in CITED.captures_iter(&roots[1]) {
-                let address = &root[1];
-                let owned = functions
-                    .iter()
-                    .any(|r| r.get("system") == system && r.get("address") == address);
-                if !owned {
-                    p.add(
-                        format!("{path}:{line}"),
-                        format!("root {address} is not a function row of {system}"),
-                    );
+            for (rows, cited) in [(functions[0], &CITED), (functions[1], &MAC_CITED)] {
+                for root in cited.captures_iter(&roots[1]) {
+                    let address = &root[1];
+                    let owned = rows
+                        .iter()
+                        .any(|r| r.get("system") == system && r.get("address") == address);
+                    if !owned {
+                        p.add(
+                            format!("{path}:{line}"),
+                            format!("root {address} is not a function row of {system}"),
+                        );
+                    }
                 }
             }
             &head[..whole.start()]
@@ -1204,7 +1311,7 @@ fn check_doc(
         if !ADDRESS_LIST.is_match(cited) {
             p.add(
                 place(0),
-                "Addresses is a comma-separated list of `0x……` addresses",
+                "Addresses is a comma-separated list of `0x……` or `mac:……` addresses",
             );
         }
         match proofs(confidence) {

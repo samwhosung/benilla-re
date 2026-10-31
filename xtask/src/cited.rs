@@ -15,8 +15,12 @@
 //!   is a value the code computes with (a flag word, a mask), never a citation.
 //!
 //! What it drops is counted by reason, so the filter can be audited on every run.
+//!
+//! A Mac client address, `mac:5bf320` (`symbols/README.md`, The Mac client), is a citation of
+//! the Mac slice, in prose and inside the slice's image, and is backed only by a Mac row or a
+//! doc's mention of it in the same form. No `0x` pattern above can match it.
 
-use crate::check::Checked;
+use crate::check::{Checked, MAC_IMAGE};
 use crate::tree;
 use regex::Regex;
 use std::collections::{BTreeMap, HashSet};
@@ -34,6 +38,8 @@ static CANDIDATE: LazyLock<Regex> = LazyLock::new(|| {
 });
 static DOC_ADDRESS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\b0x([0-9a-f]{6})\b").expect("a valid pattern"));
+static MAC_ADDRESS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\bmac:([0-9a-f]{6})\b").expect("a valid pattern"));
 
 /// Candidates dropped as not addresses, by reason.
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -43,13 +49,43 @@ pub struct Dropped {
     pub code: usize,
 }
 
+/// Whether a match at `start` is in prose: always outside Rust and WGSL, else in a comment or a
+/// string literal.
+fn in_prose(spans: Option<&[Range<usize>]>, start: usize) -> bool {
+    spans.is_none_or(|spans| {
+        let i = spans.partition_point(|s| s.end <= start);
+        spans.get(i).is_some_and(|s| s.start <= start)
+    })
+}
+
+fn prose_of(path: &str, text: &str) -> Option<Vec<Range<usize>>> {
+    (path.ends_with(".rs") || path.ends_with(".wgsl")).then(|| prose_spans(text.as_bytes()))
+}
+
+/// One file's Mac citations: each address with the line it is on. One in code or outside the
+/// slice's image is counted as dropped.
+pub fn scan_mac(path: &str, text: &str, dropped: &mut Dropped) -> Vec<(u64, usize)> {
+    let prose = prose_of(path, text);
+    let mut found = Vec::new();
+    for candidate in MAC_ADDRESS.captures_iter(text) {
+        let start = candidate.get(0).expect("the match").start();
+        if !in_prose(prose.as_deref(), start) {
+            dropped.code += 1;
+            continue;
+        }
+        let address = u64::from_str_radix(&candidate[1], 16).expect("hex digits");
+        if !MAC_IMAGE.contains(&address) {
+            dropped.outside += 1;
+            continue;
+        }
+        found.push((address, text[..start].matches('\n').count() + 1));
+    }
+    found
+}
+
 /// One file's citations: each address with the line it is on.
 pub fn scan(path: &str, text: &str, dropped: &mut Dropped) -> Vec<(u64, usize)> {
-    let prose = if path.ends_with(".rs") || path.ends_with(".wgsl") {
-        Some(prose_spans(text.as_bytes()))
-    } else {
-        None
-    };
+    let prose = prose_of(path, text);
     let mut found = Vec::new();
     for candidate in CANDIDATE.captures_iter(text) {
         let digits = candidate
@@ -58,12 +94,9 @@ pub fn scan(path: &str, text: &str, dropped: &mut Dropped) -> Vec<(u64, usize)> 
             .expect("one form matched")
             .as_str();
         let start = candidate.get(0).expect("the match").start();
-        if let Some(spans) = &prose {
-            let i = spans.partition_point(|s| s.end <= start);
-            if spans.get(i).is_none_or(|s| s.start > start) {
-                dropped.code += 1;
-                continue;
-            }
+        if !in_prose(prose.as_deref(), start) {
+            dropped.code += 1;
+            continue;
         }
         if digits.bytes().any(|b| b.is_ascii_uppercase()) {
             dropped.uppercase += 1;
@@ -186,16 +219,24 @@ fn char_literal_end(b: &[u8], i: usize) -> Option<usize> {
     }
 }
 
+/// The cited addresses with neither a row nor a doc mention: `WoW.exe`'s, then the Mac client's.
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct Missing {
+    pub exe: Vec<u64>,
+    pub mac: Vec<u64>,
+}
+
 /// Whether the run passes: always for a report, and with `strict` only when no address has
 /// neither a row nor a doc mention.
-pub fn passes(missing: &[u64], strict: bool) -> bool {
-    !strict || missing.is_empty()
+pub fn passes(missing: &Missing, strict: bool) -> bool {
+    !strict || (missing.exe.is_empty() && missing.mac.is_empty())
 }
 
 /// Prints the report for the benilla checkout at `benilla` and returns the addresses with neither
 /// a row nor a doc mention.
-pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
+pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Missing> {
     let mut mentioned = HashSet::new();
+    let mut mac_mentioned = HashSet::new();
     for text in checked
         .docs
         .iter()
@@ -205,12 +246,16 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
         for found in DOC_ADDRESS.captures_iter(text) {
             mentioned.insert(u64::from_str_radix(&found[1], 16).expect("hex digits"));
         }
+        for found in MAC_ADDRESS.captures_iter(text) {
+            mac_mentioned.insert(u64::from_str_radix(&found[1], 16).expect("hex digits"));
+        }
     }
 
     // Each address with its citation count and first place.
     let mut cited: BTreeMap<u64, (usize, String)> = BTreeMap::new();
+    let mut mac_cited: BTreeMap<u64, (usize, String)> = BTreeMap::new();
     let mut dropped = Dropped::default();
-    let (mut files, mut citations) = (0, 0);
+    let (mut files, mut citations, mut mac_citations) = (0, 0, 0);
     for top in ["crates", "assets"] {
         let dir = benilla.join(top);
         if !dir.is_dir() {
@@ -229,6 +274,13 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
                     .or_insert_with(|| (0, format!("{path}:{line}")))
                     .0 += 1;
             }
+            for (address, line) in scan_mac(&path, &text, &mut dropped) {
+                mac_citations += 1;
+                mac_cited
+                    .entry(address)
+                    .or_insert_with(|| (0, format!("{path}:{line}")))
+                    .0 += 1;
+            }
         }
     }
     if citations == 0 {
@@ -239,7 +291,7 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
     }
 
     let (mut rows, mut docs_only, mut neither) = (0, 0, 0);
-    let mut missing = Vec::new();
+    let mut missing = Missing::default();
     for (&address, (count, first)) in &cited {
         if checked.extents.contains(address) {
             rows += 1;
@@ -247,14 +299,31 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
             docs_only += 1;
         } else {
             neither += 1;
-            missing.push(address);
+            missing.exe.push(address);
             println!("{address:#08x}  {count:>5}  {first}");
+        }
+    }
+    let (mut mac_rows, mut mac_docs_only) = (0, 0);
+    for (&address, (count, first)) in &mac_cited {
+        if checked.mac_extents.contains(address) {
+            mac_rows += 1;
+        } else if mac_mentioned.contains(&address) {
+            mac_docs_only += 1;
+        } else {
+            missing.mac.push(address);
+            println!("mac:{address:06x}  {count:>5}  {first}");
         }
     }
     println!(
         "{} addresses cited {citations} times in {files} files; {rows} have a row, {docs_only} \
          more are mentioned in a doc, {neither} have neither",
         cited.len()
+    );
+    println!(
+        "{} Mac addresses cited {mac_citations} times; {mac_rows} have a Mac row, {mac_docs_only} \
+         more are mentioned in a doc, {} have neither",
+        mac_cited.len(),
+        missing.mac.len()
     );
     println!(
         "dropped as not addresses: {} outside the image, {} in uppercase hex, {} in code",
@@ -311,6 +380,30 @@ fn f() {
     }
 
     #[test]
+    fn a_mac_address_is_never_read_as_a_wow_exe_one() {
+        let rust = "// The Mac table `mac:5bf320`, the exe's `0x5bf320`.\n\
+                    const T: &str = \"mac:08a3c3\"; let x = 1; // mac:c00000 is past the slice\n\
+                    fn f() -> u32 { mac_table(0x5bf321) }\n";
+        let mut dropped = Dropped::default();
+        assert_eq!(
+            scan("crates/x/src/lib.rs", rust, &mut dropped),
+            [(0x5bf320, 1)]
+        );
+        assert_eq!(
+            scan_mac("crates/x/src/lib.rs", rust, &mut dropped),
+            [(0x5bf320, 1), (0x08a3c3, 2)]
+        );
+        assert_eq!(
+            dropped,
+            Dropped {
+                outside: 1,
+                uppercase: 0,
+                code: 1
+            }
+        );
+    }
+
+    #[test]
     fn other_files_are_prose_throughout() {
         let mut dropped = Dropped::default();
         let xml = "<!-- the broadcast 0x6d2914 -->\n<Flags value=\"0x410012\"/>\n";
@@ -338,8 +431,14 @@ fn f() {
         .expect("written");
         let unbacked = run(&checked, &benilla).expect("a report");
         std::fs::remove_dir_all(&benilla).expect("cleaned up");
-        assert_eq!(backed, Vec::<u64>::new());
-        assert_eq!(unbacked, vec![0x401f00]);
+        assert_eq!(backed, Missing::default());
+        assert_eq!(
+            unbacked,
+            Missing {
+                exe: vec![0x401f00],
+                mac: Vec::new()
+            }
+        );
         assert!(passes(&backed, true) && passes(&backed, false));
         assert!(passes(&unbacked, false));
         assert!(!passes(&unbacked, true));

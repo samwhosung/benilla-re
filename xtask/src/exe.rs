@@ -43,8 +43,9 @@ pub const EXE_VARIABLE: &str = "BENILLA_RE_WOW_EXE";
 pub const REQUIRE_VARIABLE: &str = "BENILLA_RE_REQUIRE_EXE";
 /// Set (to `1`), a test that needs the install's `Data` folder and cannot find it panics.
 const REQUIRE_DATA_VARIABLE: &str = "BENILLA_RE_REQUIRE_DATA";
-/// Names the file in which each test that skips for want of `Data` appends its name.
-const SKIP_LOG_VARIABLE: &str = "BENILLA_RE_SKIP_LOG";
+/// Names the file in which each test that skips for want of `Data` appends its name, and one that
+/// skips for want of the Mac slice appends `mac ` and its name.
+pub(crate) const SKIP_LOG_VARIABLE: &str = "BENILLA_RE_SKIP_LOG";
 
 /// Where the exe is: `$BENILLA_RE_WOW_EXE` when set, else `WoW/WoW.exe` in the repo.
 pub fn locate(root: &Path) -> PathBuf {
@@ -299,7 +300,16 @@ fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Prob
         "{ok} tests passed, {failed} failed, {ignored} ignored; {passed} of {} named tests passed",
         named.len()
     );
-    let skipped = fs::read_to_string(&skip_log)?.lines().count();
+    let log = fs::read_to_string(&skip_log)?;
+    let mac_skipped = log.lines().filter(|l| l.starts_with("mac ")).count();
+    let skipped = log.lines().count() - mac_skipped;
+    if mac_skipped > 0 {
+        summary.push_str(&format!(
+            "; {mac_skipped} tests skipped for want of the Mac slice (write it to \
+             WoW/WoW-mac-i386, or set BENILLA_RE_MAC_SLICE; BENILLA_RE_REQUIRE_MAC=1 forbids the \
+             skip)"
+        ));
+    }
     if skipped > 0 {
         summary.push_str(&format!(
             "; {skipped} tests skipped for want of the install's Data folder (copy it to \

@@ -1,0 +1,2 @@
+address	type	name	name_from	system	meaning	confidence	proof	finding
+mac:600000	float	s_step		demo	Holds 8.0, the Mac step	verified	one	demo#the-mac-advance
