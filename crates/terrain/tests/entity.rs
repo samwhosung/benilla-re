@@ -13,11 +13,13 @@ mod common;
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 use benilla_re_terrain::entity::{
     clamp01_to_color, cmapdoodaddef_ground_down, cmapdoodaddef_ground_up, cmapobj_skyocc_offsets,
-    cmapobj_vert_offsets, def_chunk_window, defvol_classify, defvol_neg_offset,
+    cmapobj_vert_offsets, create_entity_node, def_chunk_window, defvol_classify, defvol_neg_offset,
     doodad_despawn_fade, floordrop_down_probe, floordrop_lerp, floordrop_offset, mddf_create_xform,
-    MddfRecord, MddfXform,
+    EntityNodeArgs, MddfRecord, MddfXform, ENTITY_LIGHT_CALLBACK,
 };
 use common::{assert_f32, frand, fuzz_f32, fuzz_wide, next, SLICE_ESP};
+use std::cell::Cell;
+use std::rc::Rc;
 
 /// A random `f32` in `[-1000, 1000)`.
 fn fuzz_near_probe(s: &mut u32) -> f32 {
@@ -826,6 +828,160 @@ fn create_doodad_color_difftest() {
     };
     let mut e = Emu::new(&wow);
     color_block_difftest(&mut e, 0x670ec6, 0x670fc4, "create_doodad");
+}
+
+/// `CreateWorldCallbackObject` (`0x670db0`) whole. `AllocMapEntity` (`0x6a0930`) is stubbed: it
+/// only hands back a node, whose old `+0x8` and `+0x90` the cases fill with any bits.
+/// `CM2Model::SetLightingCallback` (`0x7134b0`), `CM2Model::AddRef` (`0x710390`) and `__ftol`
+/// (`0x40a2b0`) run as the exe's own. Every byte of the node and the model is compared, so a write
+/// the reimplementation misses, or one it adds, fails.
+#[test]
+fn create_entity_node_difftest() {
+    const ALLOC: u64 = 0x6a0930;
+    const NODE_LEN: usize = 0x120;
+    const MODEL_LEN: usize = 0x428;
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let node = e.alloc(NODE_LEN as u64);
+    let model = e.alloc(MODEL_LEN as u64);
+    let block = e.alloc(0x100);
+    e.write_u32(0xc89ef0, block as u32);
+    let pool_ecx = Rc::new(Cell::new(u32::MAX));
+    let seen = Rc::clone(&pool_ecx);
+    e.stub_fn(ALLOC, 0, move |io| {
+        seen.set(io.reg(RegisterX86::ECX) as u32);
+        node as u32
+    });
+
+    let mut s = 0x670d_b000u32;
+    let junk =
+        |s: &mut u32, n: usize| -> Vec<u8> { (0..n).map(|_| (next(s) >> 24) as u8).collect() };
+    let mut seen_reg = (false, false);
+    let mut case = |e: &mut Emu, s: &mut u32, args: EntityNodeArgs, light: [f32; 3], ctx: &str| {
+        let node_old = junk(s, NODE_LEN);
+        let model_old = junk(s, MODEL_LEN);
+        e.write(node, &node_old);
+        e.write(model, &model_old);
+        for (k, c) in light.iter().enumerate() {
+            e.write_u32(block + 0xac + 4 * k as u64, c.to_bits());
+        }
+        pool_ecx.set(u32::MAX);
+        let ecx = if args.model != 0 { model as u32 } else { 0 };
+        let ret = e.call(
+            0x670db0,
+            ecx,
+            args.callback,
+            &[
+                args.callback_arg,
+                args.guid[0],
+                args.guid[1],
+                args.extra,
+                args.flags,
+            ],
+        );
+        assert_eq!(ret, node as u32, "{ctx}: the node is returned");
+
+        let rd = |b: &[u8], off: usize| u32::from_le_bytes(b[off..off + 4].try_into().unwrap());
+        let ours = create_entity_node(
+            &EntityNodeArgs { model: ecx, ..args },
+            rd(&node_old, 0x8),
+            rd(&node_old, 0x90),
+            light,
+        );
+        assert_eq!(pool_ecx.get(), ours.pool_arg, "{ctx}: ecx to 0x6a0930");
+
+        let mut want = node_old.clone();
+        for (off, v) in ours.dwords() {
+            want[off..off + 4].copy_from_slice(&v.to_le_bytes());
+        }
+        want[0xc..0xe].copy_from_slice(&ours.light_flags.to_le_bytes());
+        let got = e.read(node, NODE_LEN);
+        for (off, (g, w)) in got.iter().zip(&want).enumerate() {
+            assert_eq!(
+                g, w,
+                "{ctx}: node byte +{off:#x}: binary={g:#04x} ours={w:#04x}"
+            );
+        }
+
+        let mut want_model = model_old.clone();
+        if ours.registers {
+            let mut putm =
+                |off: usize, v: u32| want_model[off..off + 4].copy_from_slice(&v.to_le_bytes());
+            putm(0x3bc, ENTITY_LIGHT_CALLBACK);
+            putm(0x3c0, node as u32);
+            putm(0x0, rd(&model_old, 0x0).wrapping_add(1));
+            seen_reg.0 = true;
+        } else {
+            seen_reg.1 = true;
+        }
+        let got_model = e.read(model, MODEL_LEN);
+        for (off, (g, w)) in got_model.iter().zip(&want_model).enumerate() {
+            assert_eq!(
+                g, w,
+                "{ctx}: model byte +{off:#x}: binary={g:#04x} ours={w:#04x}"
+            );
+        }
+    };
+
+    let base = EntityNodeArgs {
+        model: 1,
+        callback: 0x481540,
+        callback_arg: 0,
+        guid: [0x0000_1234, 0xf130_0000],
+        extra: 0,
+        flags: 0,
+    };
+    // The kinds `0x613e10` passes (0 unit, player or corpse, 2 dynamic object, 0xb game object),
+    // with and without a model, and every flag value below 0x20.
+    for flags in 0..0x20u32 {
+        for model in [1u32, 0] {
+            let a = EntityNodeArgs {
+                model,
+                flags,
+                ..base
+            };
+            case(
+                &mut e,
+                &mut s,
+                a,
+                [0.4, 0.5, 0.6],
+                &format!("flags {flags:#x} model {model}"),
+            );
+        }
+    }
+    // The colour clamps: 0, 1, each side of both, NaN and the infinities.
+    for light in [
+        [0.0, 1.0, 0.5],
+        [-0.0, f32::from_bits(0x3f7f_ffff), f32::from_bits(1)],
+        [f32::NAN, f32::INFINITY, f32::NEG_INFINITY],
+        [-1.0, 2.0, 1.0 / 255.0],
+    ] {
+        case(&mut e, &mut s, base, light, &format!("light {light:?}"));
+    }
+    for i in 0..3000u32 {
+        let a = EntityNodeArgs {
+            model: (next(&mut s) >> 31) & 1,
+            callback: next(&mut s),
+            callback_arg: next(&mut s),
+            guid: [next(&mut s), next(&mut s)],
+            extra: next(&mut s),
+            flags: next(&mut s),
+        };
+        let comp = |s: &mut u32| match (next(s) >> 8) % 3 {
+            0 => frand(s, 0.0, 1.0),
+            1 => frand(s, -0.2, 1.2),
+            _ => fuzz_f32(s),
+        };
+        let light = [comp(&mut s), comp(&mut s), comp(&mut s)];
+        case(&mut e, &mut s, a, light, &format!("fuzz[{i}]"));
+    }
+    assert!(
+        seen_reg.0 && seen_reg.1,
+        "both the install and its skip ran"
+    );
+    eprintln!("create_entity_node: 3068 cases bit-exact vs WoW.exe @ 0x670db0, whole function");
 }
 
 /// `0x69e280`'s colour block.

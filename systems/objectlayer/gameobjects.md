@@ -201,7 +201,7 @@ then the object's own. Reactivation runs the object's own, then the handler's sl
 model, 0x613e10; without the record it passes the GUID to 0x468270 again. The model path is the
 display row's, none for types 11, 14 and 15, whose world entity carries the model. Slot 23
 returns whether the `floatingTooltip` column is set. `0x5f8c90(x)` hands the world object at
-`+0xe0` to `CWorld::UpdateLightObject`.
+`+0xe0` to `AnimateMapEntityLightThunk`.
 
 Addresses: `0x5f7e40`, `0x5f7e80`, `0x5f80e0`, `0x5f8630`, `0x5f8c90`, `0x5f8090`, `0x6145e0`, `0x614640`, `0x671a90`
 Confidence: verified

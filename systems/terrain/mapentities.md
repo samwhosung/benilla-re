@@ -305,3 +305,33 @@ def's matrix diagonal at `+0xcc`, `+0xe0`, `+0xf4` and `+0x108`, so `+0xf8` lies
 has two entries, `0x671a73` and `0x69e913`; `0x69e770` has one, the thunk `0x671a90`, called at `0x60a97f` and
 `0x5f8c9a` by the animators `0x482cd0` dispatches by object type. `0x6717d0` has six callers, each loading the
 light pointer of a game object, unit, missile, effect or the zone record. A def's own gate is `0x698c9c` (interior bit).
+
+## Unit light node lifecycle
+
+`0x613e10` creates a unit's or player's node through `0x670db0`, which sets the intensity `+0xa4`
+and its target `+0xf8` to 1.0 and the position `+0x24` to 1.0e7. The same call's sync moves the
+node off 1.0e7 and so recomputes the target (Entity environment): 1.0 as an interior, else 2.5, or
+0.5 in the chunk's shadow, unsampled on a map object. Each unit tick with its model loaded, before
+the draw, steps `+0xa4` toward the target by 3.3333333 × `0xc62510`, the previous frame's time, and
+stops at it; step and sum stay in the 53-bit register, the store rounds to f32 and the clamp
+compares the register. From 1.0 toward 2.5 the first loaded tick gives min(2.5, 1.0 +
+3.3333333·dt).
+
+Addresses: `0x613e10`, `0x613ee1`, `0x670db0`, `0x670dfd`, `0x670e75`, `0x670e7b`, `0x614092`, `0x6717d0`, `0x67183f`, `0x671a73`, `0x69e280`, `0x69e365`, `0x69e36b`, `0x69e483`, `0x69e496`, `0x69e4ad`, `0x810a64`, `0x810a68`, `0x482d70`, `0x482e6e`, `0x482e75`, `0x48322f`, `0x48323f`, `0x66fd0b`, `0x60a843`, `0x60a92b`, `0x60a97f`, `0x671a90`, `0x69e770`, `0x69e880`, `0x69e894`, `0x69e8ba`, `0x69e8c0`, `0x69e8db`, `0x69e8ef`, `0xc62510`, `0x810808`
+Confidence: verified
+Proof: two
+Test: `terrain::create_entity_node_difftest`, `terrain::intensity_ramp_difftest`
+
+`0x670dfd` onward store 1.0e7 (`0x4b189680`) at `+0x24` to `+0x2c` and `+0xa8` to `+0xb0`;
+`0x670e75` and `0x670e7b` store `0x3f800000`. `0x613ee1` reaches `0x6717d0` (`0x614092`), whose
+squared move against 0.001 sets the moved flag (`0x67183f`, NaN moves), and moved, `0x671a73`
+calls `0x69e280`. There `0x69e365` takes 1.0 for `+0xc` bit 0x2 (`0x69e36b`); `0x69e483` skips
+the shadow sample for `+0xd` bit 1; `0x69e496` stores `[0x810a64]` = 0.5 and `0x69e4ad`
+`[0x810a68]` = 2.5, both in .rdata. `0x482d70` runs `0x482ea0` (`0x482e6e`), which ticks at
+`0x48322f` and then stores the frame time (`0x48323f`; `0x66fd0b` is the one writer of
+`0xc62510`), then the draw `0x483460` (`0x482e75`). The tick ramps at `0x60a97f` through
+`0x671a90` behind `0x60a843` (loaded) and `0x60a92b` (node). `0x69e880` loads 0x40555555;
+`0x69e894` is `d8 a6`, FSUB, `+0xa4` − `+0xf8`; below, the sum is stored by `fst` at `0x69e8ba`
+and `0x69e8c0` compares the register; above or NaN, `0x69e8db` is `d8 ae`, FSUBR, `+0xa4` − step,
+clamped at `0x69e8ef`. `create_entity_node_difftest` runs `0x670db0` whole with `0x6a0930`
+stubbed; `intensity_ramp_difftest` runs `0x69e880` to `0x69e906`.

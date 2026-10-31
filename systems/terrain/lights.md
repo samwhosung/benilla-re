@@ -35,6 +35,78 @@ state's `+0x7c` for zero and the camera claim `0xc7b748` against the group; then
 `0x6a75fd` adds the directional pair, and `0x6a7608` onward the lights of the list at `+0x84`
 with a nonzero `+0x64`.
 
+## Unit model sun commit
+
+Each draw, `0x7192b0` zeroes a unit model's record, adds the scene's own lights and calls
+`0x672a20` (models Instance lighting). `0x672a20` runs slot 2 only while `+0x78` − `+0x68` is below
+the fog end (world Model lighting callback), and slot 2 adds the directional colour × `+0xa4`: the
+sun's with `+0xc` bit 0x4, else the `+0xa0` bytes (Entity lighting). When slot 2 runs with bit
+0x4, a unit commits the sun × the ramped intensity (mapentities Unit light node lifecycle). With
+slot 2 skipped the record holds no sun and nothing from the previous frame, and with no
+directional scene light the dominant direction is (0, 0, −1).
+The node's last down-ray attach sets the bits:
+
+| attach (`0x6a8a20`) | `+0xc` and `+0xd` | target |
+|---|---|---|
+| terrain | 0x4 (`0x6a92ae`); `+0xd` bit 1 cleared (`0x6a8bed`) | 2.5, or 0.5 shadowed |
+| map object group with flag 0x8 or 0x40 | 0x4 (`0x6a8811`, `0x6a882d`); `+0xd` bit 1 (`0x6a8bc7`) | 2.5 unsampled |
+| other map object group | 0x2 (`0x6a8836`); `+0xd` bit 1 | 1.0 |
+| no hit | neither; `+0xd` kept (`0x6a8bcf`); slot 2 scales the `+0xa0` bytes | by the kept `+0xd` bit 1 |
+
+Addresses: `0x7192b0`, `0x7192fd`, `0x71bc30`, `0x71bc3a`, `0x719306`, `0x70a0f0`, `0x672a20`, `0x672a39`, `0x672a4a`, `0xc62964`, `0x6a7300`, `0x6a7316`, `0x6a734e`, `0x6a73d5`, `0x71c2f0`, `0x71c36d`, `0x69e280`, `0x69e2a3`, `0x69e2af`, `0x6a86d0`, `0x6a8a20`, `0x6a8b2d`, `0x6a8b47`, `0x6a87f0`, `0x6a8811`, `0x6a882d`, `0x6a8836`, `0x6a8bc7`, `0x6a8bcf`, `0x6a8bd6`, `0x6a8bed`, `0x6a91f0`, `0x6a92ae`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7192fd` calls `0x71bc30`, whose `rep stos` (`0x71bc3a`) zeroes 0x6d dwords of the record, and
+`0x719306` adds the scene's lights through `0x70a0f0`; the callback runs on that record.
+`0x672a39` to `0x672a4a` subtract `+0x68` from `+0x78` and compare `[0xc62964]` with `test ah,5;
+jp`: equal, larger and NaN skip slot 2. Slot 1 sets fog and slot 3 a plane, so a skip leaves the
+directional and ambient sums at the scene's lights alone, and `0x71c2f0` takes (0, 0, −1) for a
+squared direction of at most 1e-5 (`0x71c36d`). `0x6a734e` loads `+0xa4` for the sun's colour,
+`0x6a73d5` for the `+0xa0` bytes. `0x69e280` clears `+0xc` bits 0x2 and 0x4 (`0x69e2a3`) and
+re-attaches (`0x69e2af`); a unit's node, without `+0x90` bit 0x2000, takes `0x6a8a20` through
+`0x6a86d0`. Its map object leg (`0x6a8b2d` not taken) calls `0x6a87f0` (`0x6a8b47`), which tests
+the group's flags: 0x8 or 0x40 ORs 0x4, else 0x2; `0x6a8bc7` then sets `+0xd` bit 1. The terrain
+leg calls `0x6a91f0` (`0x6a8bd6`), whose every path reaches `0x6a92ae`, and clears `+0xd` bit 1
+(`0x6a8bed`). With neither hit `0x6a8bcf` skips both legs.
+
+## Unit model light callback
+
+`0x670db0` stores the model it is handed at `+0x88` with a reference and installs `0x672a20` with
+the node only on a nonzero model; `0x613e10` hands it the mount `+0xdc`, else the body `+0xd8`.
+The callback on a unit's or player's model:
+
+| event | callback |
+|---|---|
+| create or reactivate (`0x613e10`) with a model | installed (`0x670fda`) |
+| body set with no mount (`0x613cf0`), mount set or cleared (`0x613d80`), with a node | old model cleared (`0x671704`), new installed (`0x671726`) |
+| each frame in the entity draw list (`0x683dd0`) | installed again (`0x683e74`) |
+| node destroyed | cleared (`0x69d78c`, `0x69f13a`) |
+| mounted (`0x607a00`) | moved from the body to the mount (`0x613df9`) |
+
+A mount has no node of its own: mounting moves the unit's node onto it. The mount is created with
+flags 0, so the body parented to it builds no record and draws with the mount's (models Instance
+lighting): the rider commits nothing itself and is lit by the unit's `+0xa4`.
+
+Addresses: `0x613e10`, `0x613eb1`, `0x613ec0`, `0x613e4d`, `0x613ecb`, `0x600320`, `0x707350`, `0x670db0`, `0x670dbe`, `0x670e18`, `0x670fd2`, `0x670fda`, `0x70e0be`, `0x719313`, `0x672a20`, `0x672a2a`, `0x6716f0`, `0x671704`, `0x671716`, `0x671726`, `0x613cf0`, `0x613d44`, `0x613d80`, `0x613df9`, `0x683dd0`, `0x683e3d`, `0x683e74`, `0x69d78c`, `0x69f13a`, `0x607a00`, `0x607a78`, `0x607acb`, `0x607b28`, `0x70ea53`, `0x712f70`, `0x712fb7`, `0x7192c4`, `0x718982`, `0x718995`
+Confidence: verified
+Proof: one
+Test: `terrain::create_entity_node_difftest`
+
+`0x613eb1` to `0x613ec0` load `ecx` with `+0xdc`, else `+0xd8`, which `0x613e4d` fills on the
+creating path; `0x600320` falls back to `Spells\ErrorCube.mdx`, so `ecx` is 0 only when `0x707350`
+fails. The zero at `0x613ecb` is the callback argument, stored at `+0xb8`. `0x670dbe` keeps `ecx`,
+`0x670e18` stores it and `0x670fd2` skips the install for 0. A new instance's callback is 0
+(`0x70e0be`) and `0x719313` calls none; `0x672a20`'s null arm tests the argument (`0x672a2a`), and
+all seven installers push a node they dereference, so it does not run. `0x683e3d` installs only
+for a node with a model. `0x607a78` pushes the create flags 0, which `0x70ea53` stores at the
+mount's `+0x4`; `0x607acb` sets the mount, and `0x613df9` hands it to `0x6716f0`, which clears the
+body (`0x671704`), stores the mount at `+0x88` (`0x671716`) and installs the callback with the
+unit's node (`0x671726`). `0x607b28` parents the body (`0x712fb7`); with the parent's `+0x4` bit 0
+clear, `0x7192c4` skips the body's own record and `0x718982` takes the mount's (`0x718995`).
+`create_entity_node_difftest` runs `0x670db0` whole with `0x6a0930` stubbed.
+
 ## Doodad def lighting
 
 `0x6a8050` is the doodad def's light slot. It gathers map object lights when `+0xc` bit 1 is set. With
