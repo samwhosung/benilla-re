@@ -130,6 +130,51 @@ testing `bl` against 1 to 0x20 and its sign (`0x4031cd`, `jns`) for 0x80; nothin
 prints with `ConsolePrintf`. Its one caller is `0x4030f0`. The two callbacks are named for their
 settings, `ErrorsCallback` and `ShowErrorsCallback`, as `GammaCallback` is.
 
+## Error level settings
+
+`ErrorLevelMin` (default `1`) and `ErrorLevelMax` (default `3`) are registered with the callbacks `0x402f60` and
+`0x4030b0`. Each reads the new text with `SStrToInt` and takes it only for a value of 0 to 3. `0x402f60` then calls
+`SysMsgSetMinDisplayLevel`, which raises the high level to the value when it is below; `0x4030b0` calls
+`SysMsgSetMaxDisplayLevel`, which lowers the low level to it when it is above. Both then call `0x402fa0` and return 1.
+Any other value is refused: the callback writes `%i is not valid, valid values are 0 - %i` with the value and 3 in
+console class 0 and returns 0, which vetoes the new text.
+
+Addresses: `0x402f60`, `0x4030b0`, `0x402ccc`, `0x402cef`, `0x402f6e`, `0x402f73`, `0x402f77`, `0x402f7c`, `0x402f87`, `0x402f91`, `0x402f99`, `0x4030c7`, `0x4030cc`, `0x4030d7`, `0x4030e1`, `0x63cd00`, `0x64ac60`, `0x44cc20`, `0x44cc40`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x402ccc` and `0x402cef` push the callbacks to the registration. `0x402f66` pushes the text to `0x64ac60`; `0x402f6e`
+and `0x402f73` bound the signed result (`jl`, `cmp eax,4; jge`); `0x402f77` calls `0x44cc20`, `0x402f7c` the printer and
+`0x402f81` returns `al` 1 with `ret 8`. The refusal pushes 3, the value, 0 and the format (`0x402f87` to `0x402f91`), calls
+`ConsoleWriteA` (`0x63cd00`, class 0), drops 16 bytes and returns `al` 0 (`0x402f99`). `0x4030b0` is the same with
+`0x44cc40` (`0x4030c7`) and the printer call at `0x4030cc`. The pair rule lives in the setters, not the callbacks.
+
+## Error level status line
+
+`0x402fa0` reads the window's low and high levels (`0x44cc60`, `0x44cc70`) and writes one line to the console in class
+0, whose colour is `ffffffff` until a `fontcolor` command changes it (`console/screen#colour-classes`):
+
+| low, high | line |
+|---|---|
+| 0, 3 | `Displaying all system messages` |
+| equal | `Displaying only ` and the level's name |
+| low below high | `Displaying `, the low level's name, ` through ` and the high level's name |
+
+The names are 0 `informational messages`, 1 `warnings`, 2 `errors` and 3 `fatal errors`. A high level of 0 can meet a
+low level of 0 only in the equal case, so the tail never names it.
+
+Addresses: `0x402fa0`, `0x402fba`, `0x402fc6`, `0x402fd1`, `0x402fdc`, `0x402ff3`, `0x402ffd`, `0x40303e`, `0x403043`, `0x403083`, `0x403088`, `0x63cb50`, `0x64a5a0`, `0x64a760`, `0x44cc60`, `0x44cc70`
+Confidence: verified
+Proof: one
+Test: none
+
+`esi` is the low level and `edi` the high. `0x402fba` takes 0 and 3 to the all-messages text, written through `ConsoleWrite`
+with `edx` 0 (`0x402fc6`). Otherwise `SStrCopy` puts `Displaying ` in an 80-byte buffer (`0x402fd1` to `0x402fdc`) and equal
+levels `SStrPack` `only ` (`0x402ff3`). A low level up to 3 jumps through the table `0x403094` (`0x402ffd`) to its name, packed at
+`0x40303e`. `0x403043` compares the levels; unequal ones test the high level and pack ` through warnings`, ` through errors`
+or ` through fatal errors`. `0x403083` writes the buffer through `ConsoleWrite` with `edx` 0 (`0x403088`).
+
 ## Error filter setting
 
 `ErrorFilter`, default `all`, is a list of filter names separated by tabs, line breaks, double

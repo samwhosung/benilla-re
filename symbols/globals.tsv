@@ -2715,10 +2715,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x885658	uint32_t[4]	s_asyncWaitCounters		client	Holds the array of pending-read counters the async wait adds up: its capacity, count, data and growth step	verified	one	glue/enterworld#waiting-for-every-read
 0x885668	void *	s_asyncWaitProgressCallback		client	Points to the progress callback of the async wait, 0 when none is set	verified	one	glue/enterworld#waiting-for-every-read
 0x88567c	uint32_t	s_asyncWaitRemaining		client	Holds the reads still pending in the async wait, starting at the total	verified	one	glue/enterworld#waiting-for-every-read
+0x885680	void *	s_asyncReaderProps		client	Holds the property context of the thread that started the reader, which the reader thread adopts	verified	one	glue/enterworld#starting-the-reader
 0x885684	void *	s_asyncAwaitedRead		client	Points to the asynchronous read being waited for, cleared when it finishes	verified	one	glue/enterworld#waiting-for-one-read
 0x885688	uint32_t[3]	s_asyncReadQueue		client	Holds the queue of asynchronous reads: link offset 0x20 and terminator	verified	one	glue/enterworld#waiting-for-one-read
+0x885694	void *	s_asyncReaderThread		client	Holds the handle of the reader thread	verified	one	glue/enterworld#starting-the-reader
+0x885698	void *	s_asyncReaderWork		client	Holds the reader's work event: auto-reset, set by each queued read, the drain, the shutdown and the thread's exit	verified	one	glue/enterworld#starting-the-reader
+0x88569c	uint32_t[6]	s_asyncReaderLock		client	Holds the critical section that guards the read queues	verified	one	glue/enterworld#the-reader-loop
+0x8856c4	uint32_t[3]	s_asyncFinishedQueue		client	Holds the queue of finished asynchronous reads: link offset 0x20 and terminator	verified	one	glue/enterworld#reading-a-file
 0x8856d0	void *	s_asyncReadInProgress		client	Points to the asynchronous read in progress	verified	one	glue/enterworld#waiting-for-one-read
 0x8856d8	void *	s_asyncWaitProgressArgument		client	Holds the argument the async wait passes to its progress callback	verified	one	glue/enterworld#waiting-for-every-read
+0x8856dc	void *	s_asyncReaderStop		client	Holds the reader's stop event: manual-reset, set at the shutdown	verified	one	glue/enterworld#starting-the-reader
 0x8856e0	uint32_t	s_asyncWaitDepth		client	Holds how many single-read waits are running	verified	one	glue/enterworld#waiting-for-one-read
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t	s_failedTextureColour		gx	Holds 0xff00ff00, the colour of the solid texture that replaces a texture that failed to load	verified	one	gx/textures#texture-creation

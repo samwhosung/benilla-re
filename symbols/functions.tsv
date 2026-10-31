@@ -83,9 +83,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402ec0	30	MouseSpeedCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies a new mouseSpeed value to the host pointer speed and returns 1	verified	one	core/input#mouse-speed-and-num-lock	
 0x402ee0	62	ErrorsCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies the Errors setting: enables or disables the error display and prints which	verified	one	sysmsg#error-display-settings	
 0x402f20	62	ShowErrorsCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies the ShowErrors setting: shows or hides the error display and prints which	verified	one	sysmsg#error-display-settings	
-0x402f60	63	ErrorDisplayMinLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMinDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
-0x402fa0	243	DisplayErrorLevelStatus	idb	client			Runs Client.cpp code that calls 0x44cc60, 0x44cc70, ConsoleWrite and 2 more; not read here	inferred	none		
-0x4030b0	63	ErrorDisplayMaxLevelCallback	idb	client			Runs Client.cpp code that calls 0x64ac60, SysMsgSetMaxDisplayLevel, DisplayErrorLevelStatus and 1 more; not read here	inferred	none		
+0x402f60	63	ErrorDisplayMinLevelCallback	idb	client	orchestration	bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies ErrorLevelMin: refuses a value outside 0 to 3 with a message, else sets the low level and prints the status	verified	one	sysmsg#error-level-settings	
+0x402fa0	243	DisplayErrorLevelStatus	idb	client	orchestration	void __cdecl (void)	Prints which message levels the console shows: all, one level only, or a low level through a high one	verified	one	sysmsg#error-level-status-line	
+0x4030b0	63	ErrorDisplayMaxLevelCallback	idb	client	orchestration	bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies ErrorLevelMax: refuses a value outside 0 to 3 with a message, else sets the high level and prints the status	verified	one	sysmsg#error-level-settings	
 0x4030f0	32	ErrorFilterCallback		client		bool __fastcall (CVar *cvar, const char *oldText, const char *newText, void *callbackArg)	Applies a new ErrorFilter list and prints the filter, or returns 0 to refuse a list with an unknown name	verified	one	sysmsg#error-filter-setting	
 0x403110	229	PrintSysMsgFilter		client		void __cdecl (void)	Prints the error display's filter: all messages, or the category names of the selector's bits	verified	one	sysmsg#error-display-settings	
 0x403200	624	SetErrorFilter		client		uint32_t __fastcall (const char *text)	Parses an error filter list into the selected message mask, or prints help and returns 0 for an unknown name	verified	one	sysmsg#error-filter-setting	
@@ -3295,7 +3295,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4432e0	5			client			Runs its object file code not read here	inferred	none		
 0x4432f0	11			client			Runs its object file code not read here	inferred	none		
 0x443300	93			client	orchestration		Registers the asynchronous-read drain 0x443e70 on event category 6 at priority 0.0 and clears its state	inferred	none	core/loop#what-one-tick-runs	
-0x443360	435			client			Runs its object file code that calls SetThreadPropContext, SEventWait, SCritSect::Enter and 5 more; not read here	inferred	none		
+0x443360	435	AsyncFileReadThread		client	host	uint32_t __stdcall (void *arg)	Reads each queued file, ten tries each, and queues it as finished, waiting on the work event until stop	verified	one	glue/enterworld#the-reader-loop	
 0x443520	132			client			Runs its object file code that calls SEvent::Set, SEventWait, 0x4435b0 and 3 more; not read here	inferred	none		
 0x4435b0	99			client			Runs its object file code not read here	inferred	none		
 0x443620	13			client			Runs its object file code not read here	inferred	none		
