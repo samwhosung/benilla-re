@@ -17,7 +17,7 @@ model's) and the blood levels at `+0xb48`. An unknown display id prints `NOUNITD
 falls back to the table's first row. The model path (vtable slot 10) falls back to
 `Spells\ErrorCube.mdx` instead.
 
-Addresses: `0x60afb0`, `0x60b131`, `0x60ae10`, `0x600320`, `0x60d2d0`, `0x5fc310`, `0x60c690`, `0x60c6a0`, `0x60c6c0`, `0x60c6e0`, `0x60a390`
+Addresses: `0x60afb0`, `0x60b131`, `0x600320`, `0x60d2d0`, `0x5fc310`, `0x60c690`, `0x60c6a0`, `0x60c6c0`, `0x60c6e0`, `0x60a390`
 Confidence: verified
 Proof: one
 Test: `objectlayer::base_render_alpha_difftest`, `objectlayer::diff_transform_scale_copy`
@@ -26,13 +26,26 @@ The rows come from the index tables 0xc0de90 (display), 0xc0dea4 (extra, by disp
 0xc0de68 (model, `+0x4`), 0xc0de54 (sound, display `+0x8` else model `+0x34`) and 0xc0d634
 (blood levels, display `+0x28` else model `+0x14` else the first row). At `0x60b131` a creature
 (type word 9) asks the creature cache 0xc0e354 for `+0xb30`. Bit 0x100 of `+0xc58` marks the native display (field 131 equals field 132); model
-flag 0x8 sets bit 0x20000 of `+0xd58`. `0x60ae10` returns 1 when the row, the extra id, the model
-row or the sound row differs from those held. `0x600320` prints `NOCREATUREDISPLAYIDFOUND` or
+flag 0x8 sets bit 0x20000 of `+0xd58`. `0x600320` prints `NOCREATUREDISPLAYIDFOUND` or
 `INVALIDDISPLAYMODELRECORD` before returning 0x860c9c. `0x60d2d0` (slot 27) is the display's
 `+0x14` over 255. `0x60c6a0` and
 `0x60c6c0` give race and gender from the extra row, else `UNIT_FIELD_BYTES_0` bytes 0 and 2;
 `0x60c6e0` gives its baked texture name `+0x48`. `0x60a390` picks the
 `UnitBlood` row (0xc0d620) at `+0x4 + 4·level` of the blood levels row, by the violence level.
+
+## When a display rebuilds a unit
+
+Addresses: `0x60ae10`, `0x60ae21`, `0x60ae54`, `0x60ae65`, `0x60ae8d`, `0x60aebc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60ae10` tests in order: a display id (`+0x1f4` of the fields) with no row prints `NOUNITDISPLAYID` and returns 0
+(`0x60ae21` to `0x60ae50`); the same row as the held `+0xb34` returns 0 (`0x60ae54` to `0x60ae61`); a different extra id
+(row `+0xc`) returns 1 (`0x60ae65` to `0x60ae70`); a different model row (display `+0x4` through `0xc0de68`, 0 when out of range)
+from `+0xb3c` returns 1 (`0x60ae8d` to `0x60ae9b`); otherwise it returns whether the sound row (display `+0x8` through `0xc0de54`, 0 when out of range)
+differs from `+0xb40` (`0x60aebc` to `0x60aed7`). A new display row alone returns 0: it counts only when its extra id, model row or
+sound row differs, and textures, scale and alpha are never compared.
 
 ## Creatures that animate out of sight
 
