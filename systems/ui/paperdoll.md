@@ -11,10 +11,10 @@ Roots: `0x524cd0`, `0x524e10`, `0x491a50`, `0x51bbb0`
 
 `UNIT_PORTRAIT_UPDATE` (0xb8) and `UNIT_MODEL_CHANGED` (0xb9) are signalled together from one place, the drain of the
 pending-portrait list, once per drained unit, for every unit token that names it. Nothing else in the client signals
-0xb9. The generic field watching `0x51bbb0` registers `0x51bd50` for event ids up to 0xb5 only (its loop ends at `cmp esi,0xb6`, `0x51bc1d`; the registering call is `0x51bc05`), so a unit field never
+0xb9. The field watching `0x51bbb0` registers `0x51bd50` for event ids up to 0xb5 only (its loop ends at `cmp esi,0xb6`, `0x51bc1d`; `0x51bc05` pushes the callback and the call is `0x51bc17`), so a unit field never
 raises either event by itself.
 
-Addresses: `0x524cd0`, `0x524de4`, `0x524de9`, `0x524df1`, `0x515e50`, `0x51bbb0`, `0x51bc05`, `0x51bc1d`, `0x51bd50`, `0x483228`
+Addresses: `0x524cd0`, `0x524de4`, `0x524de9`, `0x524df1`, `0x515e50`, `0x51bbb0`, `0x51bc05`, `0x51bc17`, `0x51bc1d`, `0x51bd50`, `0x483228`
 Confidence: verified
 Proof: one
 Test: none

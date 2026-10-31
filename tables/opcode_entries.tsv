@@ -282,7 +282,7 @@ opcode	name	role	site	function	entries	basis
 0x130	SMSG_CAST_RESULT	handler	0x6e715f	0x6e7330	spell/failures#reporter-inputs-and-first-effects|spell/handlers#cast-result	opcode
 0x131	SMSG_SPELL_START	handler	0x6e716f	0x6e7640	spell/handlers#start-and-go-dispatch|spell/visuals#precast-visual-at-cast-start	opcode
 0x132	SMSG_SPELL_GO	handler	0x6e717f	0x6e7640	spell/handlers#start-and-go-dispatch	opcode
-0x133	SMSG_SPELL_FAILURE	handler	0x6e718f	0x6e8d80	spell/failures#spell-failure-packets	opcode
+0x133	SMSG_SPELL_FAILURE	handler	0x6e718f	0x6e8d80	spell/failures#spell-failure-packets|spell/failures#what-the-failure-handler-signals	opcode
 0x134	SMSG_SPELL_COOLDOWN	handler	0x6e71af	0x6e9460	spell/cooldowns#spell-cooldown-packet	opcode
 0x135	SMSG_COOLDOWN_EVENT	handler	0x6e71cf	0x6e9670	spell/cooldowns#cooldown-event-clear-and-cheat	opcode
 0x136	CMSG_CANCEL_AURA	send	0x6e70ff	0x6e7040	spell/cancel#channel-and-aura-cancels|ui/popups#the-area-spirit-healer	opcode
@@ -316,7 +316,7 @@ opcode	name	role	site	function	entries	basis
 0x15d	CMSG_LOOT	send	0x5df249	0x5df130	objectlayer/interaction#looting|ui/autoloot#looting-with-a-window-open	opcode
 0x15d	CMSG_LOOT	send	0x5df403	0x5df2a0	objectlayer/interaction#looting|ui/autoloot#looting-with-a-window-open	opcode
 0x15e	CMSG_LOOT_MONEY	send	0x5ea904	0x5ea8c0	objectlayer/inventory#loot|ui/autoloot#auto-loot|ui/loot#taking-a-slot	opcode
-0x15f	CMSG_LOOT_RELEASE	send	0x48f311	0x48f200	core/close#leave-world-cascade|core/close#packets-sent-in-the-world|ui/loot#no-walk-away-leash	opcode
+0x15f	CMSG_LOOT_RELEASE	send	0x48f311	0x48f200	core/close#leave-world-cascade|core/close#packets-sent-in-the-world|spell/failures#a-failure-closes-the-loot-window|ui/loot#no-walk-away-leash	opcode
 0x15f	CMSG_LOOT_RELEASE	send	0x5eb9a7	0x5eb900	objectlayer/inventory#loot	opcode
 0x160	SMSG_LOOT_RESPONSE	handler	0x5e30b5	0x5e6010	objectlayer/inventory#loot	opcode
 0x161	SMSG_LOOT_RELEASE_RESPONSE	handler	0x5e30c6	0x5e6010	objectlayer/inventory#loot	opcode
@@ -559,7 +559,7 @@ opcode	name	role	site	function	entries	basis
 0x26a	CMSG_SET_ACTIVE_MOVER	send	0x6007ea	0x6006e0	objectlayer/unitmovement#the-active-mover	opcode
 0x26b	CMSG_PET_CANCEL_AURA	send	0x4b3434	0x4b3300	ui/spellbook#casting-a-book-spell	opcode
 0x26b	CMSG_PET_CANCEL_AURA	send	0x4bd2ad	0x4bd1d0	ui/petbar#pressing-a-pet-action	opcode
-0x26d	CMSG_CANCEL_AUTO_REPEAT_SPELL	send	0x6ea0d9	0x6ea080	spell/cancel#auto-repeat-stop|spell/failures#spell-failure-packets|spell/reasons#packets-of-a-local-refusal	opcode
+0x26d	CMSG_CANCEL_AUTO_REPEAT_SPELL	send	0x6ea0d9	0x6ea080	spell/cancel#auto-repeat-stop|spell/failures#what-the-failure-handler-signals|spell/reasons#packets-of-a-local-refusal	opcode
 0x26f	MSG_LIST_STABLED_PETS	handler	0x4caa8c	0x4cab10	ui/stable#the-list-message	opcode
 0x26f	MSG_LIST_STABLED_PETS	send	0x4bd7ec	0x4bd740	ui/petbar#abandon-and-rename	opcode
 0x26f	MSG_LIST_STABLED_PETS	send	0x4cad50	0x4cacb0	ui/stable#the-result-message	opcode

@@ -35,6 +35,8 @@ flag 0x8 sets bit 0x20000 of `+0xd58`. `0x600320` prints `NOCREATUREDISPLAYIDFOU
 
 ## When a display rebuilds a unit
 
+A new display id rebuilds a unit only when its extra id, model row or sound row differs from the held ones; a new display row alone changes nothing.
+
 Addresses: `0x60ae10`, `0x60ae21`, `0x60ae54`, `0x60ae65`, `0x60ae8d`, `0x60aebc`
 Confidence: verified
 Proof: one

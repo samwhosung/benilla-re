@@ -10443,7 +10443,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
 0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
-0x4e7fc0	210	IsPartyPet		ui	primitive	int __thiscall (uint64_t *this)	Returns 1 when a GUID is the charm or summon of the active player or of a party member, or a party record's pet	verified	one	objectlayer/units#reactions-tokens-and-groups	
+0x4e7fc0	210	IsPartyPet		ui	orchestration	int __thiscall (uint64_t *this)	Returns 1 when a GUID is the charm, else summon, of the active player or a party member, or a record pet	verified	one	objectlayer/units#reactions-tokens-and-groups	
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	orchestration	int32_t __thiscall (uint64_t *this)	Returns 1 when a GUID is the active player, a party member or the pet of either, 0 for a zero GUID	verified	one	ui/party#member-or-pet	
 0x4e81a0	43	GetPartyMemberGuid		ui	orchestration		Returns the GUID of party slot 0 to 3, 0 with no object manager or out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4e81d0	116	GetPartyMemberPetGuid		ui	primitive		Returns the pet GUID of a party slot from its member or its record, with no index bound	verified	one	ui/unittokens#indexed-tokens	
@@ -20458,7 +20458,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60ab20	123	DrunkSway		objectlayer	primitive		Returns a drunk sway angle: drunkenness times 0.75° times the mean of three slow cosines of the time	verified	one	objectlayer/unitbody#drunk-sway	objectlayer::cosine_pulse_difftest
 0x60aba0	62	ClampToHalfPi		objectlayer	primitive		Clamps an angle to -π/2 to π/2	verified	one	objectlayer/unitbody#drunk-sway	
 0x60abe0	558	CGUnit_C::OnDisplayChanged		objectlayer	primitive		Rebuilds the body model, textures, name, auras and mount when the display records change	verified	one	objectlayer/unitdisplay#changing-the-display	
-0x60ae10	200	CGUnit_C::DisplayNeedsRebuild		objectlayer	orchestration		Returns 1 when a new display's extra id, model row or sound row differs from the held ones, else 0	verified	one	objectlayer/unitdisplay#when-a-display-rebuilds-a-unit	
+0x60ae10	200	CGUnit_C::DisplayNeedsRebuild		objectlayer	primitive		Returns 1 when a new display's extra id, model row or sound row differs from the held ones, else 0	verified	one	objectlayer/unitdisplay#when-a-display-rebuilds-a-unit	
 0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	objectlayer::camera_model_scale_difftest
 0x60afb0	540	CGUnit_C::ResolveDisplayRecords		objectlayer	primitive		Resolves the display, extra, model, sound and blood records into +0xb34 to +0xb48, falling back to first rows	verified	one	objectlayer/unitdisplay#display-records	
 0x60b1d0	147	CGUnit_C::OnScaleChanged		objectlayer	orchestration		Resizes the mover for a new scale, sends opcode 0x29b when that fails, rescales the quest marker	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
