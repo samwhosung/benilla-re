@@ -338,9 +338,9 @@ CM2Model	0x0034	4	CM2Model *	m_copySource	models	Holds the instance copied from,
 CM2Model	0x0038	4	void *	m_deferredHead	models	Holds the first deferred call record	verified	one	models/model#instance-object
 CM2Model	0x003c	4	void *	m_deferredTail	models	Holds the address of the deferred queue's tail link	verified	one	models/model#instance-object
 CM2Model	0x0040	4	uint32_t	m_animatedFrame	models	Holds the scene frame the instance last animated in	verified	one	models/model#instance-object
-CM2Model	0x0070	4	void *	m_doneCallback	models	Holds the animation-done callback, or null	verified	one	models/animation#update-and-events
-CM2Model	0x0078	4	uint32_t	m_doneArg1	models	Holds the first stored argument the done callback is called with	verified	one	models/animation#update-and-events
-CM2Model	0x007c	4	uint32_t	m_doneArg2	models	Holds the second stored argument the done callback is called with	verified	one	models/animation#update-and-events
+CM2Model	0x0070	4	void *	m_doneCallback	models	Holds the animation-done callback, or null	verified	one	animation/hosts#doodad-model
+CM2Model	0x0078	4	uint32_t	m_doneArg1	models	Holds the first stored argument the done callback is called with	verified	one	animation/hosts#doodad-model
+CM2Model	0x007c	4	uint32_t	m_doneArg2	models	Holds the second stored argument the done callback is called with	verified	one	animation/hosts#doodad-model
 CM2Model	0x0090	4	void *	m_boneStates	models	Holds the bone states, 0x118 bytes each	verified	one	models/model#instance-object
 CM2Model	0x0094	4	void *	m_boneMatrices	models	Holds the bone matrices, 64 bytes each	verified	one	models/model#instance-object
 CM2Model	0x00bc	64	float[16]	m_baseMatrix	models	Holds the instance's base matrix	verified	one	models/model#instance-object

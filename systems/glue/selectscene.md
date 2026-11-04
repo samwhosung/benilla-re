@@ -231,29 +231,29 @@ chain 2, 8, 9, 10: 1333, 2667, 3000, 4000 ms; probabilities 27247, 2184, 3276, 6
 
 The create model's callback `0x470c90` and the select models' `0x473090` have one body. It takes the
 model in `ecx`, the key bone in `edx` and five stack arguments: the animation id, a reason, the
-overrun and two stored values. A nonzero reason returns. Reason 0 comes when a bone's window ends:
-for key bone −1 or 0x1a it calls `0x7121a0(-1, 0, -1, 0, 1.0, 1, 1)` on the model, a Stand with a
-random variation; for another key bone, unless the animation id is 15, it calls `0x7121a0(keyBone,
--1, -1, 0, 1.0, 1, 1)`, which stops that bone. Reason 1 comes from a play that replaces a running
-sequence, and does nothing.
+overrun (0 on reason 1) and two stored values. A nonzero reason returns. Reason 0, a bone's window
+end: key bone −1 or 0x1a calls `0x7121a0(-1, 0, -1, 0, 1.0, 1, 1)`, a Stand with a random variation;
+another key bone, unless the animation id is 15, calls `0x7121a0(keyBone, -1, -1, 0, 1.0, 1, 1)`,
+which stops it. Reason 1 comes from any `0x7121a0` call, play or stop, on a bone whose sequence has
+not ended, and does nothing.
 
-Addresses: `0x470c90`, `0x470c98`, `0x470cc3`, `0x470bf3`, `0x473090`, `0x473098`, `0x4730c3`, `0x472b82`, `0x711bb0`, `0x719370`, `0x7194bc`, `0x7194fe`, `0x70a280`, `0x7074b0`, `0x7075af`, `0x71226d`, `0x7122c1`, `0x7121a0`
+Addresses: `0x470c90`, `0x470c98`, `0x470cc3`, `0x470bf3`, `0x473090`, `0x473098`, `0x4730c3`, `0x472b82`, `0x711bb0`, `0x719370`, `0x7194bc`, `0x7194cc`, `0x7194d9`, `0x7194fe`, `0x70a280`, `0x70a287`, `0x7074b0`, `0x7075af`, `0x71226d`, `0x71227a`, `0x71227c`, `0x712280`, `0x712289`, `0x712297`, `0x7122a1`, `0x7122c1`, `0x7122dd`, `0x7121a0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x470c98 jne` leaves for a nonzero second argument, and `0x470c9d`, `0x470ca2` send −1 and 0x1a to
-`0x470cc3`; `0x473098` and `0x4730c3` are the same steps. `0x470bf3` and `0x472b82` push the
-callbacks for `0x711bb0`. Two paths read `+0x70`. `0x7122c1 call [esi+0x70]` pushes 1 as the
-second argument. `0x719370` reads it at `0x7194f8` once the window reaches its end stamp and the
-bone's latch `+0xc0` is clear, sets the latch (`0x7194bc`), and queues `0x70a280(callback, model,
-key bone, anim id, 0, overrun, +0x78, +0x7c)` (`0x7194fe`, the 0 at `0x7194f5`). `0x70a280` stores
-them in a 0x30-byte record, and `0x7074b0` drains the queue after the updates: a mode-0 record
-calls `[record+0x4]` with `ecx` the model, `edx` the key bone and the other five pushed
-(`0x7075af`). So at a window's end the second argument is 0. Census: the dword `0x470c90` occurs
-once in the image, the push at `0x470bf3` (control `0x470ce0`, once); `call [reg+0x70]` has 25
-sites and `0x7122c1` is the one in a model function; the one register load of `[reg+0x70]` that is
-then called, `0x433073`, belongs to an unrelated object.
+`0x470c98 jne` leaves for a nonzero second argument; `0x470c9d`, `0x470ca2` send −1 and 0x1a to
+`0x470cc3`, as `0x473098` and `0x4730c3` do. Two paths call `+0x70`. `0x7122c1` runs before `0x7122dd`
+tests the animation, so a stop fires it, given a callback (`0x71227c`), a sequence on the bone
+(`0x712280`), a clear latch (`0x712289`) and a key bone or bone 0 (`0x712297` to `0x7122a1`); it
+pushes reason 1 and overrun 0 (`0x71227a`). `0x719370` reaches `0x7194f8` when the window hits its
+end stamp and the latch `+0xc0` is clear, sets the latch (`0x7194bc`), skips a bone other than 0
+with key bone id −1 (`0x7194cc` to `0x7194d9`) and queues `0x70a280(callback, model, key bone, anim
+id, 0, overrun, +0x78, +0x7c)` (`0x7194fe`), unless 0x10000 records are pending (`0x70a287`).
+`0x7074b0` drains it, calling `[record+0x4]` with the model in `ecx` (`0x7075af`): reason 0. Census:
+the dword `0x470c90` occurs once, the push at `0x470bf3` (control `0x470ce0`, once); `call [reg+0x70]`
+has 25 sites, `0x7122c1` the one in a model function; the one register load of `[reg+0x70]` then
+called, `0x433073`, is an unrelated object's.
 
 ## Held weapons at select
 
