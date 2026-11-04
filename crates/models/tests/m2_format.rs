@@ -259,6 +259,10 @@ fn m2_corpus_unit_layers() {
             }
         }
     }
+    eprintln!(
+        "{groups} view and submesh groups, {layered} of two or more units, \
+         {out_of_file_order} out of file order"
+    );
     assert!(
         groups > 10_000 && layered > 1000,
         "expected many submeshes and layered ones, got {groups} and {layered}"
