@@ -16,24 +16,29 @@ use wow_mpq::PatchChain;
 /// keeps the pointer at chunk `+0xf1c` (`systems/terrain/chunk.md`).
 const HDR_OFS_MCSH: usize = 0x2c;
 
-/// The archives an ADT can come from: the terrain archive, then the patches over it in order.
+/// The archives an ADT can come from: the terrain archive, then the patches over it in the
+/// client's order (`systems/storm/mount.md#patch-archives`): `patch.MPQ` lowest, then each
+/// `patch-?.MPQ` above the one before, ascending case-insensitively.
 fn mount(dir: &Path) -> PatchChain {
     let mut chain = PatchChain::new();
     chain
         .add_archive(dir.join("terrain.MPQ"), 0)
         .expect("mount terrain.MPQ");
-    let mut patches: Vec<_> = std::fs::read_dir(dir)
+    let mut patches: Vec<(String, std::path::PathBuf)> = std::fs::read_dir(dir)
         .expect("read Data")
         .flatten()
         .map(|entry| entry.path())
-        .filter(|path| {
-            path.file_name()
-                .and_then(|n| n.to_str())
-                .map(str::to_ascii_lowercase)
-                .is_some_and(|n| n.starts_with("patch") && n.ends_with(".mpq"))
+        .filter_map(|path| {
+            let name = path.file_name()?.to_str()?.to_ascii_lowercase();
+            let wildcard = name.len() == "patch-x.mpq".len()
+                && name.starts_with("patch-")
+                && name.ends_with(".mpq");
+            (name == "patch.mpq" || wildcard).then_some((name, path))
         })
         .collect();
-    patches.sort_by_key(|p| p.file_name().map(|n| n.to_ascii_lowercase()));
+    // `patch.MPQ` first, then the `patch-?` names in byte order.
+    patches.sort_by(|(a, _), (b, _)| (a != "patch.mpq", a).cmp(&(b != "patch.mpq", b)));
+    let patches: Vec<_> = patches.into_iter().map(|(_, path)| path).collect();
     for (i, patch) in patches.iter().enumerate() {
         chain
             .add_archive(patch, 100 + i as i32)

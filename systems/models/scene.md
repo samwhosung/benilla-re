@@ -284,20 +284,27 @@ marked; `mode` is the scene's copy `+0x148` of the cache mode.
 
 | order | keys |
 |---|---|
-| transparent | under mode bit 4, the priority of the kind in `0x873184`; depth `+0x14` descending; `+0x8` descending (signed); `+0x28` ascending (signed); under mode bit 2, `+0x38`; depth `+0x18` descending; instance `+0x4`; kind (signed); for kinds 0 to 2, the batch's `+0xc` word; then the opaque order |
+| transparent | under mode bit 4, the priority of the kind in `0x873184`; depth `+0x14` descending; `+0x8` descending (signed); `+0x28` ascending (signed); under mode bit 2, `+0x38` ascending; depth `+0x18` descending; instance `+0x4` ascending; kind (signed); for kinds 0 to 2, the layer `+0xc` of the unit `+0x2c` ascending (`records#texture-unit-layer`); then the opaque order |
 | opaque, all kinds | kind (signed) |
 | opaque, kind 0 | under mode bit 1, vertex shader `+0x38`; the shared header; `+0x34` (signed); instance `+0x4`; the submesh's `+0xe`; vertex shader `+0x38`; pixel shader `+0x3c` |
-| opaque, kinds 0 and 1 | material flags word; blend word; each of the first `min(nA, nB)` textures by handle; texture count `+0xe`; each of the first `min(nA, nB)` texture unit entries; the batch pointer |
+| opaque, kinds 0 and 1 | material flags word; blend word; each of the first `min(nA, nB)` textures by handle; texture count `+0xe`; each of the first `min(nA, nB)` texture unit entries; the unit pointer `+0x2c` ascending: file order within one view, or the order of the instance's own table `+0x3ec`, which keeps its units in file order; kind 1 has no model or instance key, so between instances it is address order |
 | opaque, kind 3 | each of the first `min` ribbon textures by handle; the ribbon's texture count; the ribbon index `+0x1c` |
 | opaque, kind 4 | the emitter index `+0x1c` |
 
-Addresses: `0x70ae10`, `0x70aa30`, `0x873184`, `0x41af70`
+Addresses: `0x70ae10`, `0x70aefa`, `0x70af08`, `0x70af56`, `0x70af64`, `0x70af98`, `0x70afa3`, `0x70afab`, `0x70afd5`, `0x70aa30`, `0x70ad14`, `0x711627`, `0x873184`, `0x41af70`
 Confidence: verified
 Proof: one
 Test: none
 
 The float keys compare with `fcomp` and `test ah,0x41` (greater returns −1) then `test ah,5` (less
-returns 1), so a NaN depth compares equal. Kind 1 skips the kind-0 keys (`jne 0x70ab7d`). A batch's
+returns 1), so a NaN depth compares equal. `+0x38` and `+0x4` take `jae` and `jbe` (`0x70aefa`,
+`0x70af08`, `0x70af56`, `0x70af64`). After the kind, `cmp eax,2; jg` (`0x70af98`) sends
+kinds above 2 to the opaque order; the others load the units `+0x2c` and their words `+0xc`
+(`0x70afa3`), and `cmp ax,si; jae` (`0x70afab`) returns −1 for the lower. `0x70afd5` calls the
+opaque order with the same two indices; it reads units `+0xa`, `+0xe`, `+0x10` and `+0x12`, never
+`+0xc`, and compares the pointers last (`0x70ad14`, `jae`). Kind 1 skips the kind-0 keys (`jne 0x70ab7d`),
+the shared header and instance among them. `0x711230` appends the units it keeps while walking the view
+upward (`0x711627`). A batch's
 material is header `+0x88` at batch `+0xa`; its textures are instance `+0xa4` at the header lookup
 `+0x98` from batch `+0x10`, 0 past header `+0x5c`, compared with `0x41af70`; texture units are the
 header lookup `+0xa0` from batch `+0x12`. Kind 3 reads the ribbon records `+0x138` (0xdc bytes):

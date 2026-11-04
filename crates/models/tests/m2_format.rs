@@ -1,7 +1,8 @@
-//! The M2 header fixup of `systems/models/shared.md#header-fixup` (`0x71cdf0`) and the particle
-//! records of `systems/models/emission.md#particle-record`, checked over the install's `.m2`
-//! files: every one passes the fixup's checks, and every emitter's gradient midpoint lies inside
-//! (0, 1).
+//! The M2 header fixup of `systems/models/shared.md#header-fixup` (`0x71cdf0`), the particle
+//! records of `systems/models/emission.md#particle-record` and the texture unit layers of
+//! `systems/models/records.md#texture-unit-record`, checked over the install's `.m2` files: every
+//! one passes the fixup's checks, every emitter's gradient midpoint lies inside (0, 1), and the
+//! layers of a submesh's units are 0 to n−1.
 
 mod common;
 
@@ -190,5 +191,90 @@ fn m2_corpus_particle_cell_ramp_population() {
         "{} emitters have a midpoint outside (0, 1): {:?}",
         mid_non_interior.len(),
         &mid_non_interior[..mid_non_interior.len().min(10)]
+    );
+}
+
+/// The texture unit word `+0x0c` (`systems/models/records.md#texture-unit-record`), the key
+/// `0x70afa3` compares: in every view, the words of the units on one submesh are 0 to n−1, each
+/// once, and in some submeshes their order is not file order.
+///
+/// The views are header `+0x4c` (count) and `+0x50` (offset), 0x2c bytes each; a view's units are
+/// `+0x20` and `+0x24`, 0x18 bytes each, with the submesh index at `+0x4`.
+#[test]
+fn m2_corpus_unit_layers() {
+    let Some(dir) = data_dir() else {
+        return;
+    };
+    let mut chain = mount(&dir, "model.MPQ");
+    let m2_paths = list_files(&mut chain, ".m2");
+    let rd_u16 = |b: &[u8], at: usize| u16::from_le_bytes(b[at..at + 2].try_into().unwrap());
+    let fits = |b: &[u8], off: usize, cnt: usize, size: usize| {
+        cnt.checked_mul(size)
+            .and_then(|s| s.checked_add(off))
+            .is_some_and(|end| end <= b.len())
+    };
+
+    let (mut groups, mut layered, mut out_of_file_order) = (0usize, 0usize, 0usize);
+    let mut not_ranks: Vec<String> = Vec::new();
+    for p in &m2_paths {
+        let Ok(b) = chain.read_file(p) else { continue };
+        if b.is_empty() || m2_accept(&b).is_err() {
+            continue;
+        }
+        let (nviews, voff) = (rd_u32(&b, 0x4c) as usize, rd_u32(&b, 0x50) as usize);
+        if !fits(&b, voff, nviews, 0x2c) {
+            continue;
+        }
+        for v in 0..nviews {
+            let view = voff + v * 0x2c;
+            let (nunits, uoff) = (
+                rd_u32(&b, view + 0x20) as usize,
+                rd_u32(&b, view + 0x24) as usize,
+            );
+            if !fits(&b, uoff, nunits, 0x18) {
+                continue;
+            }
+            // The words of each submesh's units, in file order.
+            let mut by_submesh: std::collections::BTreeMap<u16, Vec<u16>> = Default::default();
+            for u in 0..nunits {
+                let unit = uoff + u * 0x18;
+                by_submesh
+                    .entry(rd_u16(&b, unit + 0x4))
+                    .or_default()
+                    .push(rd_u16(&b, unit + 0xc));
+            }
+            for (submesh, words) in &by_submesh {
+                groups += 1;
+                let mut ranks = words.clone();
+                ranks.sort_unstable();
+                if !ranks.iter().enumerate().all(|(i, &w)| usize::from(w) == i) {
+                    not_ranks.push(format!("{p} view {v} submesh {submesh}: {words:?}"));
+                }
+                if words.len() > 1 {
+                    layered += 1;
+                    if *words != ranks {
+                        out_of_file_order += 1;
+                    }
+                }
+            }
+        }
+    }
+    eprintln!(
+        "{groups} view and submesh groups, {layered} of two or more units, \
+         {out_of_file_order} out of file order"
+    );
+    assert!(
+        groups > 10_000 && layered > 1000,
+        "expected many submeshes and layered ones, got {groups} and {layered}"
+    );
+    assert!(
+        out_of_file_order > 0,
+        "no submesh whose layers leave file order"
+    );
+    assert!(
+        not_ranks.is_empty(),
+        "{} submeshes whose words are not 0 to n-1: {:?}",
+        not_ranks.len(),
+        &not_ranks[..not_ranks.len().min(10)]
     );
 }

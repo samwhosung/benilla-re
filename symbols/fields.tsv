@@ -359,6 +359,7 @@ CM2Model	0x03b8	4	M2Lighting *	m_lighting	models	Holds the lighting record the i
 CM2Model	0x03bc	4	void *	m_lightingCallback	models	Holds the callback that adds to the instance lighting record	verified	one	models/model#instance-setters
 CM2Model	0x03c0	4	void *	m_lightingArg	models	Holds the lighting callback argument	verified	one	models/model#instance-setters
 CM2Model	0x03c4	4	void *	m_cameraStates	models	Holds the camera states, 0x84 bytes each with the camera at +0x80	verified	one	models/model#key-bones-and-cameras
+CM2Model	0x03ec	4	M2TextureUnit *	m_ownUnits	models	Holds the instance's own batch table: whole copies of the first unit of each run it keeps	verified	two	models/records#texture-unit-layer
 CM2Shared	0x0000	4	uint32_t	m_refCount	models	Holds the shared model's reference count	verified	one	models/shared#shared-model-object
 CM2Shared	0x0004	4	M2Cache *	m_cache	models	Holds the cache the shared model belongs to	verified	one	models/shared#shared-model-object
 CM2Shared	0x0008	4	uint32_t	m_flags	models	Holds flag 1 when loaded and flag 2 when the load's open flag allows loose files	verified	one	models/shared#shared-model-object
@@ -957,6 +958,7 @@ M2Cache	0x1024	4	void *	m_job	models	Holds the helper thread's job function	veri
 M2Cache	0x1028	4	void *	m_jobArg	models	Holds the helper thread job's argument	verified	one	models/cache#cache-object
 M2Cache	0x102c	4	void *	m_vertexShaders	models	Holds the array of 1800 vertex shader handles	verified	one	models/cache#cache-object
 M2Cache	0x1030	4	void *	m_pixelShaders	models	Holds the array of 32 pixel shader handles	verified	one	models/cache#cache-object
+M2Element	0x002c	4	M2TextureUnit *	m_unit	models	Holds the batch's texture unit: a record of the selected view, or of the instance's own batch table	verified	two	models/records#texture-unit-layer
 M2Header	0x0000	4	uint32_t	m_magic	models	Holds MD20	verified	one	models/shared#header-fixup
 M2Header	0x0004	4	uint32_t	m_version	models	Holds the version, 0x100 or 0x101	verified	one	models/shared#header-fixup
 M2Header	0x0008	4	uint32_t	m_nName	models	Holds the count of the name	verified	one	models/shared#header-fixup
@@ -1117,6 +1119,7 @@ M2TextureUnit	0x0000	1	uint8_t	m_flags	models	Holds the flags: 4 a special batch
 M2TextureUnit	0x0002	2	int16_t	m_priority	models	Holds the priority plane	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0004	2	uint16_t	m_submesh	models	Holds the submesh index	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0008	4	uint16_t[2]	m_colorMaterial	models	Holds the colour index and the material index	verified	one	models/records#texture-unit-record
+M2TextureUnit	0x000c	2	uint16_t	m_layer	models	Holds the unit's layer, 0 to n−1 over the view's n units on its submesh: the transparent order's tie key	verified	two	models/records#texture-unit-layer
 M2TextureUnit	0x000e	2	uint16_t	m_textureCount	models	Holds the number of texture stages	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0010	8	uint16_t[4]	m_lookups	models	Holds the first texture, coordinate, transparency and transform lookups	verified	one	models/records#texture-unit-record
 M2View	0x0000	4	uint32_t	m_vertexCount	models	Holds the number of vertex lookup entries	verified	one	models/records#view-record

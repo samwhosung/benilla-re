@@ -30297,7 +30297,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x70a710	746	M2ElementCompareGroup		models	primitive		Compares two elements' shared model, batch, lighting and colour inputs for grouping	verified	one	models/scene#batch-grouping	
 0x70aa00	44	M2ElementCompareGroupKey		models	primitive		Orders elements by their group representative index	verified	one	models/scene#batch-grouping	
 0x70aa30	977	M2ElementCompareOpaque		models	primitive		Orders opaque elements by kind, shader, model, material and textures to minimize state changes	verified	one	models/scene#batch-grouping	
-0x70ae10	467	M2ElementCompareTransparent		models	primitive		Orders transparent elements by priority, depth, sort keys, instance, kind and batch, then the opaque order	verified	one	models/scene#batch-grouping	
+0x70ae10	467	M2ElementCompareTransparent		models	primitive		Orders transparent elements by priority, depth, sort keys, instance, kind and unit layer, then the opaque order	verified	one	models/scene#element-sort-orders	
 0x70aff0	80	M2DecodeVertexShaderId		models	primitive		Splits a vertex shader id into its seven mixed-radix digits	verified	one	models/scene#vertex-shader-id-remap	
 0x70b040	145	M2SceneRemapVertexShaderId		models	primitive		Rewrites a vertex shader id's bone-weight digit for the cache's shader mode, memoized per scene	verified	one	models/scene#vertex-shader-id-remap	
 0x70b0e0	548	M2DrawStateInitialize		models	primitive		Clears a draw state: identity matrix, scene and cache pointers, unset previous-element keys	verified	one	models/render#list-draw	
