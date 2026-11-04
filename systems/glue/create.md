@@ -134,9 +134,7 @@ frame's scene (`0x470bdf`) and the record's `+0x20`; null returns
 (`0x470be9`). `0x7121a0` gets −1, 0, −1, 0, 1.0, 1, 1. Then `0x476b90(record)` (`0x470c2e`),
 `0x470a50` (`0x470c33`), `0x4706b0`, `0x470800`, `0x477860(1)` (`0x470c59`), `0x712f70`
 (`0x470c79`). The callers' `dl` is never read (`0x470b73`). `0x470bfa` stores
-`0x470c90` at the model's `+0x70`; it re-issues the animation call only when its second stack
-argument is 0 (`0x470c98`), and the one `call [reg+0x70]` found, `0x7122c1`, pushes 1 there.
-`0x470c09` stores `0x470ce0` at `+0x3bc`; it stores 1 at `+0x1b0` of `edx`.
+`0x470c90` at the model's `+0x70` (`selectscene`, "Done callback paths"). `0x470c09` stores `0x470ce0` at `+0x3bc`; it stores 1 at `+0x1b0` of `edx`.
 
 ## Reset and selection
 
