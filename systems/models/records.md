@@ -56,7 +56,12 @@ palette `+0xc` and `+0xe` (`0x70cc04`, `0x70cc14`). The depth key reads `+0x12` 
 
 ## Texture unit record
 
-A texture unit is 0x18 bytes and pairs a submesh with its material and textures.
+A texture unit is 0x18 bytes and pairs a submesh with its material and textures. A batch's unit
+is the record in the loaded file, or, for an instance with its own batch table, a whole copy of
+the first record of its run (`model#own-batches`). The copy keeps `+0x0c`, no other instruction
+of the model files writes it, and only the transparent order reads it (`scene#element-sort-orders`). In the shipped
+models the `+0x0c` words of a view's n units on one submesh are 0 to n−1, each once: the unit's
+layer on its submesh. Layers 0, 1 and 2 occur, and layer order is not always file order.
 
 | offset | holds |
 |---|---|
@@ -64,18 +69,29 @@ A texture unit is 0x18 bytes and pairs a submesh with its material and textures.
 | `+0x02` | priority plane, signed, copied to the element `+0x28` |
 | `+0x04` | submesh index |
 | `+0x08`, `+0x0a` | colour index, material index |
+| `+0x0c` | layer: the unit's rank, 0 to n−1, among the view's n units on its submesh; the transparent order's tie key |
 | `+0x0e` | texture count, the stage loop bound |
 | `+0x10`, `+0x12` | first texture lookup, first coordinate lookup |
 | `+0x14`, `+0x16` | first transparency lookup, first transform lookup |
 
-Addresses: `0x707b6f`, `0x707c19`, `0x707c76`, `0x707aa2`, `0x707af0`, `0x70d352`, `0x70b75e`, `0x70b768`, `0x70b8a4`, `0x707b19`, `0x70b897`
+Addresses: `0x707b6f`, `0x707c19`, `0x707c76`, `0x707aa2`, `0x70afa3`, `0x707af0`, `0x70d352`, `0x70b75e`, `0x70b768`, `0x70b8a4`, `0x707b19`, `0x70b897`, `0x71cdc0`, `0x707a33`, `0x707ac1`, `0x707a9f`, `0x707c89`, `0x7115aa`, `0x7115b6`, `0x706440`, `0x71faa0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x707b6f` tests flag 4 before taking scene `+0x11c`, the special callback, which makes the element
 kind 1; `0x707c19` tests 0x10 for the grouped kind 2 (`scene#element-collection`). `0x707c76` loads `+0x2` with `movsx`. The other
-fields are `movzx` reads at the addresses listed, in the order of the table.
+fields are `movzx` reads at the addresses listed, in table order; `0x70afa3` loads `+0xc` as a
+word. `0x71cdc0` stores file base plus offset in view `+0x24`. An element's unit `+0x2c`
+(`0x707c89`) is `+0x24` of the shared model's view `+0x138` (`0x707a33`) plus 0x18 times the index
+(`0x707ac1`), or an entry of instance `+0x3ec` (`0x707a9f`), which `0x7115aa` copies as six
+dwords before `0x7115b6` rewrites `+0x4`. The census of 16-bit accesses at `+0xc`, any addressing
+form, over `0x706440` through `0x71faa0` finds 24: `0x70afa3` and `0x70afa7`, the control, 15 on
+submesh `+0xc`, five on track states, a stack slot and a texture slot table. Registers loaded from
+element `+0x2c`, render `+0x3338` and `+0x333c`, and view `+0x24` reach no other `+0xc`. The
+install's 9,663 `.m2` files hold 38,652 views and 83,659 units; all 76,932 view and submesh groups
+hold 0 to n−1, the words 0, 1 and 2 occurring 76,932, 5,796 and 931 times. In 203 of the 5,796
+groups of two or more units layer order is not file order.
 
 ## Sequence record
 

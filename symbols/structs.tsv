@@ -79,7 +79,7 @@ M2Scene		7532		models	Holds a scene: clock, model lists, light grid, elements, d
 M2Sequence		68		models	Holds a sequence record of an MD20 file: time range, flags, variation data, repeats, blend time and bounds	verified	one	models/records#sequence-record
 M2SequenceInfo		60		models	Holds what GetSequenceInfo reports of a sequence: flags, length, speed, box, centre, radius, id and class	verified	one	models/model#sequence-info
 M2Submesh		32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
-M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
+M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material, layer and lookup starts	verified	one	models/records#texture-unit-record
 M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
 MapEntity		264	0x810810	terrain	Holds a map light node: the light of a unit, player, game object, missile or effect, and its model	verified	one	terrain/mapentities#light-node-classes
 Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#matrices
