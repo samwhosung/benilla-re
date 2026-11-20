@@ -299,8 +299,9 @@ fn sand_vel_xy_difftest() {
 
     let run_xy = |emu: &mut Emu, mag: f32, cos: f32, sin: f32, tag: &str| {
         emu.write_u32(frame + 8, mag.to_bits());
-        emu.write_u32(frame - 4, cos.to_bits());
-        emu.write_u32(frame - 8, sin.to_bits());
+        // The slots `fsincos` fills at `0x679514`/`0x679516`: the cosine at -8, the sine at -4.
+        emu.write_u32(frame - 8, cos.to_bits());
+        emu.write_u32(frame - 4, sin.to_bits());
         emu.write_u32(frame - 0x20, 0xdead_beef);
         emu.write_u32(frame - 0x1c, 0xdead_beef);
         emu.set_reg(RegisterX86::EBP, frame);
@@ -316,7 +317,7 @@ fn sand_vel_xy_difftest() {
     run_mag(&mut emu, 1.0, "rng1");
     run_mag(&mut emu, 1.5, "mid");
     run_mag(&mut emu, rng_unit_float(0x7fff_ffff), "hi");
-    run_xy(&mut emu, 18.0, 1.0, 0.0, "xonly");
+    run_xy(&mut emu, 18.0, 1.0, 0.0, "yonly");
     run_xy(&mut emu, 18.666, 0.5, 0.866_025_4, "30deg");
     run_xy(&mut emu, 0.0, 0.5, 0.5, "zeromag");
     run_xy(&mut emu, f32::NAN, 1.0, 1.0, "nan");

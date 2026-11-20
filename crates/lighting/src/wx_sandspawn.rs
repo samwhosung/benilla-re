@@ -117,18 +117,18 @@ pub fn sand_vel_mag(rng: f32) -> f32 {
 
 /// The horizontal velocity from `0x679557` to `0x679580`.
 pub struct SandVelXy {
-    /// `[ebp-0x20]`: speed times the cosine.
+    /// `[ebp-0x20]`: speed times the sine (`[ebp-4]`, `0x67955f`).
     pub vx: f32,
-    /// `[ebp-0x1c]`: speed times the sine.
+    /// `[ebp-0x1c]`: speed times the cosine (`[ebp-8]`, `0x679576`).
     pub vy: f32,
 }
 
-/// `0x6793f0` from `0x679557` to `0x679580`: the stored speed times the cosine and the sine, each
-/// rounded.
+/// `0x6793f0` from `0x679557` to `0x679580`: the stored speed times the sine for x and the cosine
+/// for y, each rounded.
 pub fn sand_vel_xy(mag: f32, cos: f32, sin: f32) -> SandVelXy {
     SandVelXy {
-        vx: (f64::from(mag) * f64::from(cos)) as f32,
-        vy: (f64::from(mag) * f64::from(sin)) as f32,
+        vx: (f64::from(mag) * f64::from(sin)) as f32,
+        vy: (f64::from(mag) * f64::from(cos)) as f32,
     }
 }
 
